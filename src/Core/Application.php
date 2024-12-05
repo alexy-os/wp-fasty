@@ -47,12 +47,16 @@ class Application {
             return new \WPFasty\Hooks\AssetsHooks($container);
         });
 
-        $this->container->bind('hooks.header', function($container) {
+        $this->container->singleton('hooks.header', function($container) {
             return new \WPFasty\Hooks\HeaderHooks($container);
         });
 
         $this->container->bind('templates.fullpage', function($container) {
             return new \WPFasty\Templates\FullPageTemplate();
+        });
+
+        $this->container->singleton('hooks.page_template', function($container) {
+            return new \WPFasty\Hooks\PageTemplateHooks($container);
         });
     }
 
@@ -61,6 +65,7 @@ class Application {
         $this->container->get('hooks.assets')->register();
         $this->container->get('hooks.header')->register();
         $this->container->get('templates.fullpage');
+        $this->container->get('hooks.page_template')->register();
     }
 
     public function getContainer(): Container {

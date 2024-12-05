@@ -15,6 +15,7 @@ abstract class AbstractHooks {
     }
 
     protected function addFilter(string $hook, string $method, int $priority = 10, int $args = 1): void {
-        add_filter($hook, \Closure::bind([$this, $method], $this), $priority, $args);
+        add_filter($hook, [$this, $method], $priority, $args);
     }
 } 
+
