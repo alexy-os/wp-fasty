@@ -4,16 +4,16 @@ A high-performance WordPress theme built with modern architectural patterns and 
 
 <div align="center">
 
-> *Copy nothing - create your own.*
+*Copy nothing - create your own.*
 
 The world's fastest WordPress theme where every line of code is just your handwriting. Don't copy other people's themes anymore - create unique things yourself.
 
 https://wpfasty.app-server.ru
 
-> *FastY is a WordPress framework for those who think differently.*
-</div>
+*FastY is a WordPress framework for those who think differently.*
 
 ## PageSpeed Insights 100%
+</div>
 
 <div align="center">
     <img src="https://raw.githubusercontent.com/alexy-os/wp-fasty/refs/heads/main/screenshot.png" alt="FastY Theme" width="600">
