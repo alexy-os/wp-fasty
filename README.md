@@ -1,8 +1,9 @@
 A high-performance WordPress theme built with modern architectural patterns and optimised delivery methods.
 
-# WP FastY Theme
-
 <div align="center">
+    <img src="https://raw.githubusercontent.com/alexy-os/wp-fasty/refs/heads/main/screenshot.png" alt="FastY Theme" width="600">
+
+# WP FastY Theme
 
 *Copy nothing - create your own.*
 
@@ -13,13 +14,10 @@ https://wpfasty.app-server.ru
 *FastY is a WordPress framework for those who think differently.*
 
 ## PageSpeed Insights 100%
-</div>
-
-<div align="center">
-    <img src="https://raw.githubusercontent.com/alexy-os/wp-fasty/refs/heads/main/screenshot.png" alt="FastY Theme" width="600">
-</div>
 
 Take a walk to test the page speed: [PageSpeed Insights](https://pagespeed.web.dev/analysis/https-wpfasty-app-server-ru/z58kehvfbr?form_factor=mobile)
+
+</div>
 
 ## Architectural Advantages
 
