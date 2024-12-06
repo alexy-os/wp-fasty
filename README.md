@@ -1,5 +1,19 @@
 A high-performance WordPress theme built with modern architectural patterns and optimised delivery methods. FastY combines cutting-edge technologies with clean architecture principles to deliver exceptional performance and developer experience. Built with PHP 8.1+, modern Tailwind CSS, and implementing robust dependency injection patterns, this theme achieves perfect PageSpeed scores while maintaining code elegance and maintainability. Whether you're building a high-traffic blog, corporate website, or e-commerce platform, FastY provides the solid foundation you need without the bloat of traditional WordPress themes.
 
+## Three WhalY - *Core Principles*
+
+### 1. Zero Redundant Code
+*Every line serves a purpose. No bloat, no legacy code, no unnecessary abstractions. Pure, efficient implementation focused on your specific needs.*
+
+### 2. Zero Database Queries
+*Intelligent caching and state management eliminate redundant database operations, delivering lightning-fast response times and reduced server load.*
+
+### 3. Perfect PageSpeed Score
+100/100 *Performance*
+100/100 *Accessibility*
+100/100 *Best Practices*
+100/100 *SEO*
+
 <div align="center">
     <img src="https://raw.githubusercontent.com/alexy-os/wp-fasty/refs/heads/main/screenshot.png" alt="FastY Theme" width="600">
 
