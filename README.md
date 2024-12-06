@@ -2,6 +2,8 @@ A high-performance WordPress theme built with modern architectural patterns and 
 
 # WP FastY Theme
 
+<div align="center">
+
 > *Copy nothing - create your own.*
 
 The world's fastest WordPress theme where every line of code is just your handwriting. Don't copy other people's themes anymore - create unique things yourself.
@@ -9,14 +11,15 @@ The world's fastest WordPress theme where every line of code is just your handwr
 https://wpfasty.app-server.ru
 
 > *FastY is a WordPress framework for those who think differently.*
+</div>
+
+## PageSpeed Insights 100%
 
 <div align="center">
     <img src="https://raw.githubusercontent.com/alexy-os/wp-fasty/refs/heads/main/screenshot.png" alt="FastY Theme" width="600">
 </div>
 
-## PageSpeed Insights
-
-![PageSpeed Insights](https://pagespeed.web.dev/analysis/https-wpfasty-app-server-ru/z58kehvfbr?form_factor=mobile)
+Take a walk to test the page speed: [PageSpeed Insights](https://pagespeed.web.dev/analysis/https-wpfasty-app-server-ru/z58kehvfbr?form_factor=mobile)
 
 ## Architectural Advantages
 
