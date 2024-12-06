@@ -2,6 +2,10 @@
 
 A high-performance WordPress theme built with modern architectural patterns and optimised delivery methods.
 
+## PageSpeed Insights
+
+![PageSpeed Insights](https://pagespeed.web.dev/analysis/https-wpfasty-app-server-ru/sydb8kpd4o?form_factor=mobile)
+
 ## Architectural Advantages
 
 This theme implements a robust Dependency Injection (DI) and Closure-based architecture, offering significant advantages over traditional Full Site Editing (FSE) approaches:
