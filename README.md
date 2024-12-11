@@ -29,7 +29,9 @@ https://wpfasty.app-server.ru
 
 ## PageSpeed Insights 100%
 
-Take a walk to test the page speed: [PageSpeed Insights](https://pagespeed.web.dev/analysis/https-wpfasty-app-server-ru/z58kehvfbr?form_factor=mobile)
+***Take a look at the results PageSpeed produces: 100/100/100/100 - a page consisting of 8 blocks, including images:***
+
+[**[ PageSpeed Insights ]**](https://pagespeed.web.dev/analysis/https-wpfasty-app-server-ru-image/191oatxlw8?form_factor=mobile)
 
 </div>
 
