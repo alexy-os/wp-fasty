@@ -65,6 +65,18 @@ $container = new class {
 // Bootstrap the application
 WPFasty\Core\Application::getInstance();
 
+// Инициализация редактора шаблонов
+add_action('init', function() {
+    // Создание экземпляра напрямую через Application
+    if (is_admin()) {
+        $app = WPFasty\Core\Application::getInstance();
+        $container = $app->getContainer();
+        
+        // Теперь передаем правильный тип контейнера
+        new WPFasty\Admin\TemplateEditor($container);
+    }
+});
+
 add_action('init', function() {
     load_theme_textdomain('wp-fasty', get_template_directory() . '/languages');
 });
