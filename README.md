@@ -25,13 +25,17 @@ The world's fastest WordPress theme where every line of code is just your handwr
 
 https://wpfasty.app-server.ru
 
+Ok. Here is a heavier version with 8 blocks with images:
+
+https://wpfasty.app-server.ru/image/
+
 *FastY is a WordPress framework for those who think differently.*
 
 ## PageSpeed Insights 100%
 
 ***Take a look at the results PageSpeed produces: 100/100/100/100 - a page consisting of 8 blocks, including images:***
 
-[**[ PageSpeed Insights ]**](https://pagespeed.web.dev/analysis/https-wpfasty-app-server-ru-image/191oatxlw8?form_factor=mobile)
+[**[ PageSpeed Insights ]**](https://pagespeed.web.dev/analysis/https-wpfasty-app-server-ru-image/pixb8lmvgm?form_factor=desktop)
 
 </div>
 
