@@ -38,6 +38,7 @@
             });
             
             templateEditor.onDidChangeModelContent(function() {
+                // Обновляем скрытое поле при изменении содержимого
                 $('#wp_fasty_template').val(templateEditor.getValue());
             });
             
@@ -51,6 +52,7 @@
             });
             
             dataEditor.onDidChangeModelContent(function() {
+                // Обновляем скрытое поле при изменении содержимого
                 $('#wp_fasty_template_data').val(dataEditor.getValue());
             });
             
@@ -271,6 +273,94 @@
         });
     }
     
+    // Функция для сохранения черновика в localStorage
+    function saveDraft() {
+        if (!templateEditor || !dataEditor) return;
+        
+        const template = templateEditor.getValue();
+        const data = dataEditor.getValue();
+        const postId = wpFasty.postId;
+        
+        const draft = {
+            template: template,
+            data: data,
+            timestamp: new Date().toISOString()
+        };
+        
+        localStorage.setItem(`wp_fasty_draft_${postId}`, JSON.stringify(draft));
+        
+        // Показываем уведомление
+        showNotification('Черновик сохранен локально', 'success');
+    }
+    
+    // Функция для загрузки черновика из localStorage
+    function loadDraft() {
+        const postId = wpFasty.postId;
+        const draftJson = localStorage.getItem(`wp_fasty_draft_${postId}`);
+        
+        if (!draftJson) {
+            showNotification('Черновик не найден', 'error');
+            return;
+        }
+        
+        try {
+            const draft = JSON.parse(draftJson);
+            
+            if (templateEditor) {
+                templateEditor.setValue(draft.template);
+            }
+            
+            if (dataEditor) {
+                dataEditor.setValue(draft.data);
+            }
+            
+            // Показываем уведомление с временем последнего сохранения
+            const timestamp = new Date(draft.timestamp);
+            showNotification(`Черновик загружен (сохранен ${timestamp.toLocaleString()})`, 'success');
+        } catch (e) {
+            showNotification('Ошибка загрузки черновика: ' + e.message, 'error');
+        }
+    }
+    
+    // Функция для автоматического сохранения черновика
+    function setupAutosave() {
+        // Сохраняем черновик каждые 30 секунд
+        setInterval(saveDraft, 30000);
+        
+        // Сохраняем черновик при закрытии страницы
+        window.addEventListener('beforeunload', saveDraft);
+    }
+    
+    // Добавляем кнопки для работы с черновиками
+    function addDraftButtons() {
+        const $templateActions = $('.template-actions');
+        
+        $templateActions.append(`
+            <button type="button" id="save-draft" class="button">Сохранить черновик</button>
+            <button type="button" id="load-draft" class="button">Загрузить черновик</button>
+        `);
+        
+        $('#save-draft').on('click', saveDraft);
+        $('#load-draft').on('click', loadDraft);
+        
+        // Настраиваем автосохранение
+        setupAutosave();
+    }
+    
+    // Функция для отображения уведомлений
+    function showNotification(message, type = 'info') {
+        const $notification = $(`<div class="notification ${type}">${message}</div>`);
+        
+        $('.wp-fasty-template-editor').prepend($notification);
+        
+        // Удаляем уведомление через 3 секунды
+        setTimeout(function() {
+            $notification.fadeOut(300, function() {
+                $(this).remove();
+            });
+        }, 3000);
+    }
+    
     // Инициализация интерфейса
     $(document).ready(function() {
         // Инициализация редакторов
@@ -320,5 +410,30 @@
                 }
             });
         });
+        
+        // Предотвращаем отправку формы при нажатии Enter в редакторах
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Enter' && $(e.target).closest('.wp-fasty-template-editor').length) {
+                // Проверяем, что это не textarea или другое поле ввода
+                if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+        
+        // Сохраняем данные перед отправкой формы
+        $('#post').on('submit', function() {
+            if (templateEditor) {
+                $('#wp_fasty_template').val(templateEditor.getValue());
+            }
+            
+            if (dataEditor) {
+                $('#wp_fasty_template_data').val(dataEditor.getValue());
+            }
+        });
+        
+        // Добавляем кнопки для работы с черновиками
+        addDraftButtons();
     });
 })(jQuery); 

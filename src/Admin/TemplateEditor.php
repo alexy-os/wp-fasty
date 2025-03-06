@@ -18,6 +18,192 @@ class TemplateEditor {
         add_action('wp_ajax_analyze_template', [$this, 'ajaxAnalyzeTemplate']);
         add_action('wp_ajax_create_missing_fields', [$this, 'ajaxCreateMissingFields']);
     }
+
+    public function saveTemplateData($postId): void {
+        // Проверки безопасности (nonce, автосохранение, права доступа)
+        if (!isset($_POST['wp_fasty_template_nonce']) || 
+            !wp_verify_nonce($_POST['wp_fasty_template_nonce'], 'wp_fasty_template_nonce')) {
+            return;
+        }
+        
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+        
+        if (!current_user_can('edit_post', $postId)) {
+            return;
+        }
+        
+        $post = get_post($postId);
+        $post_type = $post->post_type;
+        $post_slug = $post->post_name;
+        
+        // Если slug пустой (новый пост), используем ID
+        if (empty($post_slug)) {
+            $post_slug = 'id-' . $postId;
+        }
+        
+        // Получаем данные шаблона
+        $template = isset($_POST['wp_fasty_template']) ? $_POST['wp_fasty_template'] : '';
+        $templateData = isset($_POST['wp_fasty_template_data']) ? $_POST['wp_fasty_template_data'] : '{}';
+        
+        // Создаем директории, если они не существуют
+        $templates_dir = get_template_directory() . '/templates/' . $post_type . 's';
+        $data_dir = get_template_directory() . '/data/' . $post_type . 's';
+        
+        if (!file_exists($templates_dir)) {
+            wp_mkdir_p($templates_dir);
+        }
+        
+        if (!file_exists($data_dir)) {
+            wp_mkdir_p($data_dir);
+        }
+        
+        // Сохраняем шаблон в файл
+        $template_file = $templates_dir . '/' . $post_slug . '.hbs';
+        file_put_contents($template_file, $template);
+        
+        // Сохраняем данные в файл
+        $data_file = $data_dir . '/' . $post_slug . '.json';
+        file_put_contents($data_file, $templateData);
+        
+        // Сохраняем пути к файлам в мета-данных для быстрого доступа
+        update_post_meta($postId, '_wp_fasty_template_file', $template_file);
+        update_post_meta($postId, '_wp_fasty_data_file', $data_file);
+        
+        // Генерируем статичный HTML
+        if (!empty($template)) {
+            $this->generateStaticHtml($postId, $template, $templateData);
+        }
+    }
+    
+    private function generateStaticHtml($postId, $template, $templateData): void {
+        $post = get_post($postId);
+        $post_type = $post->post_type;
+        $post_slug = $post->post_name;
+        
+        // Если slug пустой (новый пост), используем ID
+        if (empty($post_slug)) {
+            $post_slug = 'id-' . $postId;
+        }
+        
+        // Получаем данные поста для шаблона
+        $postData = $this->getPostData($postId);
+        
+        // Объединяем с пользовательскими данными
+        $customData = json_decode($templateData, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $customData = [];
+        }
+        
+        $data = array_merge($postData, $customData);
+        
+        // Рендерим шаблон
+        try {
+            // Используем клиентский JavaScript Handlebars для рендеринга
+            // Временно сохраняем только исходный шаблон
+            
+            // Создаем директорию для статичного HTML
+            $static_dir = WP_CONTENT_DIR . '/static/' . $post_type . 's/' . $post_slug;
+            if (!file_exists($static_dir)) {
+                wp_mkdir_p($static_dir);
+            }
+            
+            // Сохраняем данные для последующего рендеринга
+            $template_data = [
+                'template' => $template,
+                'data' => $data
+            ];
+            
+            // Сохраняем данные в JSON-файл
+            file_put_contents($static_dir . '/template-data.json', json_encode($template_data, JSON_PRETTY_PRINT));
+            
+            // Создаем простой HTML-файл с подключением Handlebars
+            $html = $this->createStaticHtmlWrapper($template, $data);
+            
+            // Сохраняем HTML в файл
+            file_put_contents($static_dir . '/index.html', $html);
+            
+            // Сохраняем путь к статичному файлу в мета-данных
+            update_post_meta($postId, '_wp_fasty_static_file', $static_dir . '/index.html');
+        } catch (\Exception $e) {
+            // Логируем ошибку
+            error_log('Ошибка генерации HTML: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Создает HTML-обертку для статичного файла
+     */
+    private function createStaticHtmlWrapper($template, $data): string {
+        $json_data = json_encode($data, JSON_HEX_APOS | JSON_HEX_QUOT);
+        $escaped_template = htmlspecialchars($template, ENT_QUOTES, 'UTF-8');
+        
+        return <<<HTML
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{$data['page']['title']} - {$data['site']['title']}</title>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"></script>
+</head>
+<body>
+    <div id="content"></div>
+    
+    <script id="template" type="text/x-handlebars-template">
+{$escaped_template}
+    </script>
+    
+    <script>
+        // Данные для шаблона
+        var data = {$json_data};
+        
+        // Компиляция шаблона
+        var source = document.getElementById('template').innerHTML;
+        var template = Handlebars.compile(source);
+        
+        // Рендеринг
+        document.getElementById('content').innerHTML = template(data);
+    </script>
+</body>
+</html>
+HTML;
+    }
+    
+    private function getPostData($postId): array {
+        $post = get_post($postId);
+        
+        // Базовые данные поста
+        $data = [
+            'page' => [
+                'id' => $post->ID,
+                'title' => $post->post_title,
+                'content' => $post->post_content,
+                'excerpt' => get_the_excerpt($post),
+                'date' => $post->post_date,
+                'modified' => $post->post_modified,
+                'slug' => $post->post_name,
+                'type' => $post->post_type,
+                'status' => $post->post_status
+            ],
+            'site' => [
+                'title' => get_bloginfo('name'),
+                'description' => get_bloginfo('description'),
+                'url' => get_site_url()
+            ]
+        ];
+        
+        // Добавляем произвольные поля
+        $meta = get_post_meta($postId);
+        foreach ($meta as $key => $values) {
+            if (substr($key, 0, 1) !== '_') {
+                $data['page'][$key] = maybe_unserialize($values[0]);
+            }
+        }
+        
+        return $data;
+    }
     
     /**
      * Добавляет пункт меню в админ-панель
@@ -119,29 +305,49 @@ class TemplateEditor {
     public function renderTemplateMetaBox($post): void {
         wp_nonce_field('wp_fasty_template_nonce', 'wp_fasty_template_nonce');
         
-        $template = get_post_meta($post->ID, '_wp_fasty_template', true) ?: '';
-        $templateData = get_post_meta($post->ID, '_wp_fasty_template_data', true) ?: '{}';
+        $template_file = get_post_meta($post->ID, '_wp_fasty_template_file', true);
+        $data_file = get_post_meta($post->ID, '_wp_fasty_data_file', true);
         
+        // Загружаем шаблон из файла, если он существует
+        if ($template_file && file_exists($template_file)) {
+            $template = file_get_contents($template_file);
+        } else {
+            // Иначе пытаемся загрузить из мета-поля или используем пустую строку
+            $template = get_post_meta($post->ID, '_wp_fasty_template', true) ?: '';
+        }
+        
+        // Загружаем данные из файла, если он существует
+        if ($data_file && file_exists($data_file)) {
+            $templateData = file_get_contents($data_file);
+        } else {
+            // Иначе пытаемся загрузить из мета-поля или используем пустой объект
+            $templateData = get_post_meta($post->ID, '_wp_fasty_template_data', true) ?: '{}';
+        }
+        
+        // Рендерим интерфейс редактора
         ?>
         <div class="wp-fasty-template-editor">
+            <input type="hidden" name="wp_fasty_template" id="wp_fasty_template" value="<?php echo esc_attr($template); ?>">
+            <input type="hidden" name="wp_fasty_template_data" id="wp_fasty_template_data" value="<?php echo esc_attr($templateData); ?>">
+            
             <div class="wp-fasty-tabs">
-                <button class="wp-fasty-tab active" data-tab="template">Шаблон</button>
-                <button class="wp-fasty-tab" data-tab="data">Данные</button>
-                <button class="wp-fasty-tab" data-tab="preview">Предпросмотр</button>
-                <button class="wp-fasty-tab" data-tab="fields">Поля</button>
+                <button type="button" class="wp-fasty-tab active" data-tab="template">Шаблон</button>
+                <button type="button" class="wp-fasty-tab" data-tab="data">Данные</button>
+                <button type="button" class="wp-fasty-tab" data-tab="preview">Предпросмотр</button>
+                <button type="button" class="wp-fasty-tab" data-tab="fields">Поля</button>
             </div>
             
             <div class="wp-fasty-tab-content active" data-tab="template">
                 <div id="template-editor" style="height: 400px; width: 100%;"></div>
-                <textarea name="wp_fasty_template" id="wp_fasty_template" style="display: none;"><?php echo esc_textarea($template); ?></textarea>
                 <div class="template-actions">
                     <button type="button" id="analyze-template" class="button">Анализировать шаблон</button>
+                    <button type="button" id="save-draft" class="button">Сохранить черновик</button>
+                    <button type="button" id="load-draft" class="button">Загрузить черновик</button>
                 </div>
             </div>
             
             <div class="wp-fasty-tab-content" data-tab="data">
                 <div id="data-editor" style="height: 400px; width: 100%;"></div>
-                <textarea name="wp_fasty_template_data" id="wp_fasty_template_data" style="display: none;"><?php echo esc_textarea($templateData); ?></textarea>
             </div>
             
             <div class="wp-fasty-tab-content" data-tab="preview">
@@ -417,59 +623,5 @@ class TemplateEditor {
         }
         
         file_put_contents($dir . '/index.html', $html);
-    }
-    
-    /**
-     * Сохраняет данные шаблона при сохранении поста
-     *
-     * @param int $postId ID поста
-     */
-    public function saveTemplateData($postId): void {
-        // Проверка nonce
-        if (!isset($_POST['wp_fasty_template_nonce']) || 
-            !wp_verify_nonce($_POST['wp_fasty_template_nonce'], 'wp_fasty_template_nonce')) {
-            return;
-        }
-        
-        // Проверка автосохранения
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
-        }
-        
-        // Проверка прав доступа
-        if (!current_user_can('edit_post', $postId)) {
-            return;
-        }
-        
-        // Сохранение шаблона
-        if (isset($_POST['wp_fasty_template'])) {
-            update_post_meta($postId, '_wp_fasty_template', $_POST['wp_fasty_template']);
-        }
-        
-        // Сохранение данных шаблона
-        if (isset($_POST['wp_fasty_template_data'])) {
-            update_post_meta($postId, '_wp_fasty_template_data', $_POST['wp_fasty_template_data']);
-        }
-        
-        // Генерация статичного HTML
-        if (isset($_POST['wp_fasty_template']) && !empty($_POST['wp_fasty_template'])) {
-            $this->generateStaticHtml($postId);
-        }
-    }
-    
-    /**
-     * Генерирует статичный HTML на основе шаблона
-     *
-     * @param int $postId ID поста
-     */
-    private function generateStaticHtml(int $postId): void {
-        $template = get_post_meta($postId, '_wp_fasty_template', true);
-        if (empty($template)) {
-            return;
-        }
-        
-        // Здесь можно добавить логику для генерации HTML
-        // Но пока просто сохраним пустую строку, чтобы избежать ошибок
-        update_post_meta($postId, '_wp_fasty_static_html', '');
     }
 } 
