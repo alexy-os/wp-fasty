@@ -48,6 +48,10 @@ class TemplateEditor {
         $template = isset($_POST['wp_fasty_template']) ? $_POST['wp_fasty_template'] : '';
         $templateData = isset($_POST['wp_fasty_template_data']) ? $_POST['wp_fasty_template_data'] : '{}';
         
+        // Валидация и санитизация данных
+        $template = $this->sanitizeTemplate($template);
+        $templateData = $this->sanitizeJsonData($templateData);
+        
         // Создаем директории, если они не существуют
         $templates_dir = get_template_directory() . '/templates/' . $post_type . 's';
         $data_dir = get_template_directory() . '/data/' . $post_type . 's';
@@ -68,13 +72,9 @@ class TemplateEditor {
         $data_file = $data_dir . '/' . $post_slug . '.json';
         file_put_contents($data_file, $templateData);
         
-        // Сохраняем пути к файлам в мета-данных для быстрого доступа
+        // Сохраняем только пути к файлам в мета-данных
         update_post_meta($postId, '_wp_fasty_template_file', $template_file);
         update_post_meta($postId, '_wp_fasty_data_file', $data_file);
-        
-        // Сохраняем также в мета-данных для совместимости и быстрого доступа
-        update_post_meta($postId, '_wp_fasty_template', $template);
-        update_post_meta($postId, '_wp_fasty_template_data', $templateData);
         
         // Генерируем статичный HTML
         if (!empty($template)) {
@@ -83,6 +83,69 @@ class TemplateEditor {
         
         // Сохраняем ревизию
         $this->saveRevision($postId, $template, $templateData);
+    }
+    
+    /**
+     * Санитизация шаблона Handlebars
+     */
+    private function sanitizeTemplate($template) {
+        // Ограничение размера шаблона (например, 100 КБ)
+        if (strlen($template) > 102400) {
+            $template = substr($template, 0, 102400);
+        }
+        
+        // Базовая санитизация
+        $template = wp_check_invalid_utf8($template);
+        
+        return $template;
+    }
+    
+    /**
+     * Санитизация JSON-данных
+     */
+    private function sanitizeJsonData($jsonData) {
+        // Ограничение размера данных (например, 1 МБ)
+        if (strlen($jsonData) > 1048576) {
+            return '{"error": "Data size exceeds limit"}';
+        }
+        
+        // Проверяем, что это валидный JSON
+        $data = json_decode($jsonData, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            // Если JSON невалидный, возвращаем пустой объект
+            return '{}';
+        }
+        
+        // Рекурсивная санитизация данных
+        $sanitizedData = $this->sanitizeArray($data);
+        
+        // Возвращаем санитизированный JSON
+        return json_encode($sanitizedData, JSON_PRETTY_PRINT);
+    }
+    
+    /**
+     * Рекурсивная санитизация массива данных
+     */
+    private function sanitizeArray($array) {
+        $result = [];
+        
+        foreach ($array as $key => $value) {
+            // Санитизация ключа
+            $key = sanitize_text_field($key);
+            
+            if (is_array($value)) {
+                // Рекурсивная санитизация вложенных массивов
+                $result[$key] = $this->sanitizeArray($value);
+            } else if (is_string($value)) {
+                // Санитизация строковых значений
+                $result[$key] = sanitize_text_field($value);
+            } else {
+                // Другие типы данных (числа, булевы значения и т.д.)
+                $result[$key] = $value;
+            }
+        }
+        
+        return $result;
     }
     
     private function generateStaticHtml($postId, $template, $templateData): void {
@@ -108,9 +171,6 @@ class TemplateEditor {
         
         // Рендерим шаблон
         try {
-            // Используем клиентский JavaScript Handlebars для рендеринга
-            // Временно сохраняем только исходный шаблон
-            
             // Создаем директорию для статичного HTML
             $static_dir = WP_CONTENT_DIR . '/static/' . $post_type . 's/' . $post_slug;
             if (!file_exists($static_dir)) {
@@ -132,7 +192,7 @@ class TemplateEditor {
             // Сохраняем HTML в файл
             file_put_contents($static_dir . '/index.html', $html);
             
-            // Сохраняем путь к статичному файлу в мета-данных
+            // Сохраняем только путь к статичному файлу в мета-данных
             update_post_meta($postId, '_wp_fasty_static_file', $static_dir . '/index.html');
         } catch (\Exception $e) {
             // Логируем ошибку
@@ -410,11 +470,11 @@ HTML;
             
             <div class="template-info">
                 <?php if ($template_file && file_exists($template_file)): ?>
-                    <p><strong>Файл шаблона:</strong> <?php echo esc_html(str_replace(get_template_directory(), '', $template_file)); ?></p>
+                    <p><strong>Файл шаблона:</strong> <?php echo esc_html($this->getRelativePath($template_file)); ?></p>
                 <?php endif; ?>
                 
                 <?php if ($data_file && file_exists($data_file)): ?>
-                    <p><strong>Файл данных:</strong> <?php echo esc_html(str_replace(get_template_directory(), '', $data_file)); ?></p>
+                    <p><strong>Файл данных:</strong> <?php echo esc_html($this->getRelativePath($data_file)); ?></p>
                 <?php endif; ?>
             </div>
         </div>
@@ -461,6 +521,12 @@ HTML;
         $postId = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
         if (!$postId) {
             wp_send_json_error(['message' => 'ID поста не указан']);
+        }
+        
+        // Проверка прав доступа
+        if (!current_user_can('edit_post', $postId)) {
+            wp_send_json_error(['message' => 'Недостаточно прав для редактирования']);
+            return;
         }
         
         $post = get_post($postId);
@@ -735,7 +801,7 @@ HTML;
         $data_revision_file = $data_revisions_dir . '/' . $revision_name . '.json';
         file_put_contents($data_revision_file, $templateData);
         
-        // Сохраняем информацию о ревизии
+        // Сохраняем информацию о ревизии (только пути к файлам)
         $revisions = get_post_meta($postId, '_wp_fasty_revisions', true) ?: [];
         $revisions[] = [
             'timestamp' => time(),
@@ -779,5 +845,39 @@ HTML;
             'template' => $template,
             'data' => $data
         ]);
+    }
+
+    /**
+     * Проверяет, что путь к файлу находится в пределах директории темы
+     */
+    private function isPathSafe($path): bool {
+        $theme_dir = wp_normalize_path(get_template_directory());
+        $path = wp_normalize_path($path);
+        
+        return strpos($path, $theme_dir) === 0;
+    }
+
+    private function detectXssInTemplate($template): array {
+        $warnings = [];
+        
+        // Проверка на потенциальные XSS-уязвимости
+        if (preg_match('/<script\b[^>]*>(.*?)<\/script>/is', $template)) {
+            $warnings[] = 'Шаблон содержит теги <script>, что может представлять угрозу безопасности.';
+        }
+        
+        if (preg_match('/on\w+\s*=/i', $template)) {
+            $warnings[] = 'Шаблон содержит обработчики событий (onclick, onload и т.д.), что может представлять угрозу безопасности.';
+        }
+        
+        if (preg_match('/javascript:/i', $template)) {
+            $warnings[] = 'Шаблон содержит javascript: URL, что может представлять угрозу безопасности.';
+        }
+        
+        return $warnings;
+    }
+
+    private function getRelativePath($path): string {
+        $theme_dir = get_template_directory();
+        return str_replace($theme_dir, '[THEME]', $path);
     }
 } 
