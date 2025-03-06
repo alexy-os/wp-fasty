@@ -361,6 +361,43 @@
         }, 3000);
     }
     
+    // Функция для восстановления ревизии
+    function restoreRevision(templateFile, dataFile) {
+        $.ajax({
+            url: wpFasty.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'restore_revision',
+                template_file: templateFile,
+                data_file: dataFile,
+                post_id: wpFasty.postId,
+                nonce: wpFasty.nonce
+            },
+            beforeSend: function() {
+                showNotification('Загрузка ревизии...', 'info');
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Обновляем редакторы
+                    if (templateEditor && response.data.template) {
+                        templateEditor.setValue(response.data.template);
+                    }
+                    
+                    if (dataEditor && response.data.data) {
+                        dataEditor.setValue(response.data.data);
+                    }
+                    
+                    showNotification('Ревизия восстановлена', 'success');
+                } else {
+                    showNotification('Ошибка: ' + response.data.message, 'error');
+                }
+            },
+            error: function() {
+                showNotification('Ошибка при загрузке ревизии', 'error');
+            }
+        });
+    }
+    
     // Инициализация интерфейса
     $(document).ready(function() {
         // Инициализация редакторов
@@ -435,5 +472,15 @@
         
         // Добавляем кнопки для работы с черновиками
         addDraftButtons();
+        
+        // Обработчик для кнопок восстановления ревизий
+        $(document).on('click', '.restore-revision', function() {
+            const templateFile = $(this).data('template');
+            const dataFile = $(this).data('data');
+            
+            if (confirm('Вы уверены, что хотите восстановить эту ревизию? Несохраненные изменения будут потеряны.')) {
+                restoreRevision(templateFile, dataFile);
+            }
+        });
     });
 })(jQuery); 

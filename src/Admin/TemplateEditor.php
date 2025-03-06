@@ -17,6 +17,7 @@ class TemplateEditor {
         add_action('wp_ajax_save_template_json', [$this, 'ajaxSaveTemplateJson']);
         add_action('wp_ajax_analyze_template', [$this, 'ajaxAnalyzeTemplate']);
         add_action('wp_ajax_create_missing_fields', [$this, 'ajaxCreateMissingFields']);
+        add_action('wp_ajax_restore_revision', [$this, 'ajaxRestoreRevision']);
     }
 
     public function saveTemplateData($postId): void {
@@ -71,10 +72,17 @@ class TemplateEditor {
         update_post_meta($postId, '_wp_fasty_template_file', $template_file);
         update_post_meta($postId, '_wp_fasty_data_file', $data_file);
         
+        // Сохраняем также в мета-данных для совместимости и быстрого доступа
+        update_post_meta($postId, '_wp_fasty_template', $template);
+        update_post_meta($postId, '_wp_fasty_template_data', $templateData);
+        
         // Генерируем статичный HTML
         if (!empty($template)) {
             $this->generateStaticHtml($postId, $template, $templateData);
         }
+        
+        // Сохраняем ревизию
+        $this->saveRevision($postId, $template, $templateData);
     }
     
     private function generateStaticHtml($postId, $template, $templateData): void {
@@ -305,8 +313,32 @@ HTML;
     public function renderTemplateMetaBox($post): void {
         wp_nonce_field('wp_fasty_template_nonce', 'wp_fasty_template_nonce');
         
+        // Получаем пути к файлам
         $template_file = get_post_meta($post->ID, '_wp_fasty_template_file', true);
         $data_file = get_post_meta($post->ID, '_wp_fasty_data_file', true);
+        
+        // Определяем slug страницы
+        $post_slug = $post->post_name;
+        if (empty($post_slug)) {
+            $post_slug = 'id-' . $post->ID;
+        }
+        
+        // Проверяем существование файлов по slug, если пути не сохранены
+        if (empty($template_file)) {
+            $potential_template_file = get_template_directory() . '/templates/' . $post->post_type . 's/' . $post_slug . '.hbs';
+            if (file_exists($potential_template_file)) {
+                $template_file = $potential_template_file;
+                update_post_meta($post->ID, '_wp_fasty_template_file', $template_file);
+            }
+        }
+        
+        if (empty($data_file)) {
+            $potential_data_file = get_template_directory() . '/data/' . $post->post_type . 's/' . $post_slug . '.json';
+            if (file_exists($potential_data_file)) {
+                $data_file = $potential_data_file;
+                update_post_meta($post->ID, '_wp_fasty_data_file', $data_file);
+            }
+        }
         
         // Загружаем шаблон из файла, если он существует
         if ($template_file && file_exists($template_file)) {
@@ -335,6 +367,7 @@ HTML;
                 <button type="button" class="wp-fasty-tab" data-tab="data">Данные</button>
                 <button type="button" class="wp-fasty-tab" data-tab="preview">Предпросмотр</button>
                 <button type="button" class="wp-fasty-tab" data-tab="fields">Поля</button>
+                <button type="button" class="wp-fasty-tab" data-tab="revisions">Ревизии</button>
             </div>
             
             <div class="wp-fasty-tab-content active" data-tab="template">
@@ -368,8 +401,58 @@ HTML;
                     <button type="button" id="create-missing-fields" class="button button-primary">Создать недостающие поля</button>
                 </div>
             </div>
+            
+            <div class="wp-fasty-tab-content" data-tab="revisions">
+                <div id="template-revisions" class="template-revisions">
+                    <?php $this->renderRevisions($post->ID); ?>
+                </div>
+            </div>
+            
+            <div class="template-info">
+                <?php if ($template_file && file_exists($template_file)): ?>
+                    <p><strong>Файл шаблона:</strong> <?php echo esc_html(str_replace(get_template_directory(), '', $template_file)); ?></p>
+                <?php endif; ?>
+                
+                <?php if ($data_file && file_exists($data_file)): ?>
+                    <p><strong>Файл данных:</strong> <?php echo esc_html(str_replace(get_template_directory(), '', $data_file)); ?></p>
+                <?php endif; ?>
+            </div>
         </div>
         <?php
+    }
+    
+    /**
+     * Отображает список ревизий шаблона
+     */
+    private function renderRevisions($postId): void {
+        $revisions = get_post_meta($postId, '_wp_fasty_revisions', true) ?: [];
+        
+        if (empty($revisions)) {
+            echo '<p>Ревизии не найдены.</p>';
+            return;
+        }
+        
+        // Сортируем ревизии по времени (новые сверху)
+        usort($revisions, function($a, $b) {
+            return $b['timestamp'] - $a['timestamp'];
+        });
+        
+        echo '<ul class="revisions-list">';
+        
+        foreach ($revisions as $index => $revision) {
+            $date = date('d.m.Y H:i:s', $revision['timestamp']);
+            $template_file = $revision['template_file'];
+            $data_file = $revision['data_file'];
+            
+            echo '<li class="revision-item">';
+            echo '<div class="revision-info">';
+            echo '<span class="revision-date">' . esc_html($date) . '</span>';
+            echo '<button type="button" class="button restore-revision" data-template="' . esc_attr($template_file) . '" data-data="' . esc_attr($data_file) . '">Восстановить</button>';
+            echo '</div>';
+            echo '</li>';
+        }
+        
+        echo '</ul>';
     }
     
     public function ajaxGetPostData(): void {
@@ -623,5 +706,78 @@ HTML;
         }
         
         file_put_contents($dir . '/index.html', $html);
+    }
+    
+    /**
+     * Сохраняет ревизию шаблона и данных
+     */
+    private function saveRevision($postId, $template, $templateData): void {
+        // Создаем директории для ревизий, если они не существуют
+        $templates_revisions_dir = get_template_directory() . '/templates/revisions';
+        $data_revisions_dir = get_template_directory() . '/data/revisions';
+        
+        if (!file_exists($templates_revisions_dir)) {
+            wp_mkdir_p($templates_revisions_dir);
+        }
+        
+        if (!file_exists($data_revisions_dir)) {
+            wp_mkdir_p($data_revisions_dir);
+        }
+        
+        // Формируем имя файла ревизии
+        $revision_name = $postId . '-' . time();
+        
+        // Сохраняем ревизию шаблона
+        $template_revision_file = $templates_revisions_dir . '/' . $revision_name . '.hbs';
+        file_put_contents($template_revision_file, $template);
+        
+        // Сохраняем ревизию данных
+        $data_revision_file = $data_revisions_dir . '/' . $revision_name . '.json';
+        file_put_contents($data_revision_file, $templateData);
+        
+        // Сохраняем информацию о ревизии
+        $revisions = get_post_meta($postId, '_wp_fasty_revisions', true) ?: [];
+        $revisions[] = [
+            'timestamp' => time(),
+            'template_file' => $template_revision_file,
+            'data_file' => $data_revision_file
+        ];
+        
+        // Ограничиваем количество ревизий (например, 10 последних)
+        if (count($revisions) > 10) {
+            $revisions = array_slice($revisions, -10);
+        }
+        
+        update_post_meta($postId, '_wp_fasty_revisions', $revisions);
+    }
+
+    /**
+     * Обработчик AJAX для восстановления ревизии
+     */
+    public function ajaxRestoreRevision(): void {
+        check_ajax_referer('wp_fasty_ajax_nonce', 'nonce');
+        
+        $postId = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+        $template_file = isset($_POST['template_file']) ? $_POST['template_file'] : '';
+        $data_file = isset($_POST['data_file']) ? $_POST['data_file'] : '';
+        
+        if (!$postId || empty($template_file) || empty($data_file)) {
+            wp_send_json_error(['message' => 'Недостаточно данных']);
+        }
+        
+        // Проверяем существование файлов
+        if (!file_exists($template_file) || !file_exists($data_file)) {
+            wp_send_json_error(['message' => 'Файлы ревизии не найдены']);
+        }
+        
+        // Загружаем содержимое файлов
+        $template = file_get_contents($template_file);
+        $data = file_get_contents($data_file);
+        
+        // Отправляем данные
+        wp_send_json_success([
+            'template' => $template,
+            'data' => $data
+        ]);
     }
 } 
