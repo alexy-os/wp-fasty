@@ -1,6 +1,6 @@
     <script>
         const darkModeToggl = document.createElement('button');
-        darkModeToggl.innerHTML = '🌓';
+        darkModeToggl.innerHTML = 'theme';
         darkModeToggl.className = 'fixed bottom-4 left-4 bg-slate-200 dark:bg-slate-700 p-2 rounded-full text-xs focus:outline-none transition duration-300 ease-in-out transform hover:scale-110';
         document.body.appendChild(darkModeToggl);
         darkModeToggl.addEventListener('click', () => {
