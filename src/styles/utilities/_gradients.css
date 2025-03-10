@@ -1,0 +1,24 @@
+
+  .gradient-primary {
+    @apply bg-gradient-to-br from-primary/80 via-primary to-primary/90;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/90 to-primary/80;
+  }
+
+  .gradient-border {
+    @apply border border-transparent bg-gradient-to-br from-primary/50 via-primary/20 to-transparent;
+  }
+
+  .gradient-glow {
+    @apply relative;
+  }
+
+  .gradient-glow::before {
+    @apply content-[''] absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-primary/30 rounded-[inherit] opacity-0 transition-opacity duration-100;
+  }
+
+  .gradient-glow:hover::before {
+    @apply opacity-100;
+  }

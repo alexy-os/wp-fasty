@@ -3,10 +3,17 @@
   "version": "1.0.0",
   "scripts": {
     "tokens": "bun run src/scripts/tokens/generate.ts",
-    "tailwind": "bun x tailwindcss -i ./src/styles/input.css -o ./wp-fasty-a/style.css --watch"
+    "tailwind": "tailwindcss -i ./src/styles/input.css -o ./wp-fasty-oop/theme.css --postcss",
+    "tailwind:watch": "tailwindcss -i ./src/styles/input.css -o ./wp-fasty-oop/theme.css --postcss --watch",
+    "tailwind:build": "tailwindcss -i ./src/styles/input.css -o ./wp-fasty-oop/theme.css --postcss --minify"
   },
   "devDependencies": {
+    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
+    "autoprefixer": "^10.4.21",
     "bun-types": "latest",
+    "postcss": "^8.5.3",
+    "postcss-import": "^16.1.0",
+    "postcss-nesting": "^13.0.1",
     "tailwindcss": "3"
   }
 }
