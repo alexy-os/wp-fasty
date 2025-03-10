@@ -1,0 +1,12 @@
+{
+  "name": "wp-fasty",
+  "version": "1.0.0",
+  "scripts": {
+    "tokens": "bun run src/scripts/tokens/generate.ts",
+    "tailwind": "bun x tailwindcss -i ./src/styles/input.css -o ./wp-fasty-a/style.css --watch"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "tailwindcss": "3"
+  }
+}
