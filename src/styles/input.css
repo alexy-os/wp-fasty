@@ -2,9 +2,9 @@
   @import "./shadcn.css";
 
 @import "tailwindcss/components";
-  @import "./components/_wordpress.css";
-  @import "./components/_theme.css";
+  /*@import "./components/_wordpress.css";
+  @import "./components/_theme.css";*/
 
 @import "tailwindcss/utilities";
-  @import "./utilities/_gradients.css";
-  @import "./utilities/_animations.css";
+  /*@import "./utilities/_gradients.css";*/
+  /*@import "./utilities/_animations.css";*/
