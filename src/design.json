@@ -2,84 +2,84 @@
   "color": {
     "background": {
       "light": "hsl(0 0% 100%)",
-      "dark": "hsl(222.2 84% 4.9%)"
+      "dark": "hsl(20 14.3% 4.1%)"
     },
     "foreground": {
-      "light": "hsl(222.2 84% 4.9%)",
-      "dark": "hsl(210 40% 98%)"
+      "light": "hsl(240 10% 3.9%)",
+      "dark": "hsl(0 0% 95%)"
     },
     "card": {
       "light": "hsl(0 0% 100%)",
-      "dark": "hsl(222.2 84% 4.9%)"
+      "dark": "hsl(24 9.8% 10%)"
     },
     "card-foreground": {
-      "light": "hsl(222.2 84% 4.9%)",
-      "dark": "hsl(210 40% 98%)"
+      "light": "hsl(240 10% 3.9%)",
+      "dark": "hsl(0 0% 95%)"
     },
     "popover": {
       "light": "hsl(0 0% 100%)",
-      "dark": "hsl(222.2 84% 4.9%)"
+      "dark": "hsl(0 0% 9%)"
     },
     "popover-foreground": {
-      "light": "hsl(222.2 84% 4.9%)",
-      "dark": "hsl(210 40% 98%)"
+      "light": "hsl(240 10% 3.9%)",
+      "dark": "hsl(0 0% 95%)"
     },
     "primary": {
-      "light": "hsl(221.2 83.2% 53.3%)",
-      "dark": "hsl(217.2 91.2% 59.8%)"
+      "light": "hsl(346.8 77.2% 49.8%)",
+      "dark": "hsl(346.8 77.2% 49.8%)"
     },
     "primary-foreground": {
-      "light": "hsl(210 40% 98%)",
-      "dark": "hsl(222.2 47.4% 11.2%)"
+      "light": "hsl(355.7 100% 97.3%)",
+      "dark": "hsl(355.7 100% 97.3%)"
     },
     "secondary": {
-      "light": "hsl(210 40% 96.1%)",
-      "dark": "hsl(217.2 32.6% 17.5%)"
+      "light": "hsl(240 4.8% 95.9%)",
+      "dark": "hsl(240 3.7% 15.9%)"
     },
     "secondary-foreground": {
-      "light": "hsl(222.2 47.4% 11.2%)",
-      "dark": "hsl(210 40% 98%)"
+      "light": "hsl(240 5.9% 10%)",
+      "dark": "hsl(0 0% 98%)"
     },
     "muted": {
-      "light": "hsl(210 40% 96.1%)",
-      "dark": "hsl(217.2 32.6% 17.5%)"
+      "light": "hsl(240 4.8% 95.9%)",
+      "dark": "hsl(0 0% 15%)"
     },
     "muted-foreground": {
-      "light": "hsl(215.4 16.3% 46.9%)",
-      "dark": "hsl(215 20.2% 65.1%)"
+      "light": "hsl(240 3.8% 46.1%)",
+      "dark": "hsl(240 5% 64.9%)"
     },
     "accent": {
-      "light": "hsl(210 40% 96.1%)",
-      "dark": "hsl(217.2 32.6% 17.5%)"
+      "light": "hsl(240 4.8% 95.9%)",
+      "dark": "hsl(12 6.5% 15.1%)"
     },
     "accent-foreground": {
-      "light": "hsl(222.2 47.4% 11.2%)",
-      "dark": "hsl(210 40% 98%)"
+      "light": "hsl(240 5.9% 10%)",
+      "dark": "hsl(0 0% 98%)"
     },
     "destructive": {
       "light": "hsl(0 84.2% 60.2%)",
       "dark": "hsl(0 62.8% 30.6%)"
     },
     "destructive-foreground": {
-      "light": "hsl(210 40% 98%)",
-      "dark": "hsl(210 40% 98%)"
+      "light": "hsl(0 0% 98%)",
+      "dark": "hsl(0 85.7% 97.3%)"
     },
     "border": {
-      "light": "hsl(214.3 31.8% 91.4%)",
-      "dark": "hsl(217.2 32.6% 17.5%)"
+      "light": "hsl(240 5.9% 90%)",
+      "dark": "hsl(240 3.7% 15.9%)"
     },
     "input": {
-      "light": "hsl(214.3 31.8% 91.4%)",
-      "dark": "hsl(217.2 32.6% 17.5%)"
+      "light": "hsl(240 5.9% 90%)",
+      "dark": "hsl(240 3.7% 15.9%)"
     },
     "ring": {
-      "light": "hsl(221.2 83.2% 53.3%)",
-      "dark": "hsl(224.3 76.3% 48%)"
+      "light": "hsl(346.8 77.2% 49.8%)",
+      "dark": "hsl(346.8 77.2% 49.8%)"
     }
   },
   "radius": {
     "default": {
-      "value": "0.3rem"
+      "value": "0.75rem"
     }
   },
   "container": {

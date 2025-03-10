@@ -4,7 +4,7 @@ import { defaultTokens } from './defaults';
 import { ColorToken, TokenValue, Tokens } from './types';
 
 // shadcn/ui setting
-const cssGlobalPath = 'src/styles/shadcn-base.css';
+const cssGlobalPath = 'src/styles/shadcn.css';
 const fileTokens = 'src/design.json';
   
 // List of all shadcn color variables
