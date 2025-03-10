@@ -4,9 +4,8 @@
   "scripts": {
     "tokens": "bun run src/scripts/tokens/generate.ts",
     "css": "tailwindcss -i ./src/styles/input.css -o ./wp-fasty-oop/theme.css",
-    "css:watch": "tailwindcss -i ./src/styles/input.css -o ./wp-fasty-oop/theme.css --watch",
-    "css:build": "tailwindcss -i ./src/styles/input.css -o ./wp-fasty-oop/theme.css --minify",
-    "css:purge": "bun run postcss.purge.js"
+    "css:watch": "tailwindcss -i ./src/styles/input.css -o ./wp-fasty-oop/theme.min.css --watch --minify",
+    "css:build": "tailwindcss -i ./src/styles/input.css -o ./wp-fasty-oop/theme.min.css --minify"
   },
   "devDependencies": {
     "bun-types": "latest",
