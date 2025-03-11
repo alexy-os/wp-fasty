@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" className="q-d">
+<html lang="ru" class="q-d">
 
 <head>
   <meta charset="utf-8">
@@ -32,85 +32,85 @@
   </script>
 </head>
 
-<body className="q-bbfbmhstf">
-  <div className="q-ffcmhs">
-    <header className="q-bbsbbbbst0z5">
-      <div className="q-cfh1icjbp6map4">
-        <a className="q-ffmg2ictl" href="/">
-          <i data-lucide="award" className="q-h5w5"></i>
+<body class="q-bbfbmhstf">
+  <div class="q-ffcmhs">
+    <header class="q-bbsbbbbst0z5">
+      <div class="q-cfh1icjbp6map4">
+        <a class="q-ffmg2ictl" href="/">
+          <i data-lucide="award" class="q-h5w5"></i>
           <span>Топ 100 Инфобизнесменов</span>
         </a>
-        <div className="q-f1hmwmfm4">
-          <div className="q-rwf">
-            <i data-lucide="search" className="q-ah4l3tmft2w4"></i>
+        <div class="q-f1hmwmfm4">
+          <div class="q-rwf">
+            <i data-lucide="search" class="q-ah4l3tmft2w4"></i>
             <input type="search"
-              className="q-bab0bicnao5btb0fmtftsfonr1ro2rrh1tsp1tmfp3p2robrftbwf"
+              class="q-bab0bicnao5btb0fmtftsfonr1ro2rrh1tsp1tmfp3p2robrftbwf"
               placeholder="Поиск по имени...">
           </div>
         </div>
-        <nav className="q-g8hf"><a className="q-fmtmftstc"
-            href="/">Главная</a><a className="q-fmtmftstc"
+        <nav class="q-g8hf"><a class="q-fmtmftstc"
+            href="/">Главная</a><a class="q-fmtmftstc"
             href="#professionals">Рейтинг</a><a
-            className="q-fmtmftstc" href="/videos">Лента</a><a
-            className="q-fmtmftstc" href="#about">О проекте</a></nav>
-        <div className="q-fg4ic"><button onclick="toggleDarkMode()"
-            className="q-bah1baificjcrrftaftcw1">
+            class="q-fmtmftstc" href="/videos">Лента</a><a
+            class="q-fmtmftstc" href="#about">О проекте</a></nav>
+        <div class="q-fg4ic"><button onclick="toggleDarkMode()"
+            class="q-bah1baificjcrrftaftcw1">
             <i data-lucide="sun"
-              className="q-ar9s0d1h1r0s1taw1"></i>
+              class="q-ar9s0d1h1r0s1taw1"></i>
             <i data-lucide="moon"
-              className="q-ar0s1d1h1r9s0taw1"></i>
-            <span className="q-so">Переключить тему</span>
+              class="q-ar0s1d1h1r9s0taw1"></i>
+            <span class="q-so">Переключить тему</span>
           </button><button
             id="mobileMenuButton"
-            className="q-pens0s4bab0bio5penonr2ro2rrfmg2h1batafificjchrobrftaftstcw1wn">
-            <span className="q-so">Открыть меню</span>
-            <i data-lucide="menu" className="q-h5w5"></i>
+            class="q-pens0s4bab0bio5penonr2ro2rrfmg2h1batafificjchrobrftaftstcw1wn">
+            <span class="q-so">Открыть меню</span>
+            <i data-lucide="menu" class="q-h5w5"></i>
           </button></div>
       </div>
-      <div className="q-bbbthp2">
-        <div className="q-cmap4p2">
-          <div className="q-rwf"><i data-lucide="search"
-              className=" absolute left-3 top-2.5 h-4 w-4 text-muted-foreground"></i><input type="search"
-              className="q-bab0bicnao5btb0fmtftsfonr1ro2rrh1tsp1tmfp3p2robrftbwf"
+      <div class="q-bbbthp2">
+        <div class="q-cmap4p2">
+          <div class="q-rwf"><i data-lucide="search"
+              class=" absolute left-3 top-2.5 h-4 w-4 text-muted-foreground"></i><input type="search"
+              class="q-bab0bicnao5btb0fmtftsfonr1ro2rrh1tsp1tmfp3p2robrftbwf"
               placeholder="Поиск по имени..."></div>
         </div>
       </div>
     </header>
-    <main className="q-f1">
-      <section className="q-bmp4p3ohp2rwf">
-        <div className="q-abgtbfpi0ttvt"></div>
-        <div className="q-cp6map4r">
-          <div className="q-g1gicg1gc2">
-            <div className="q-afusy6">
-              <h1 className="q-fmt6t5t4tt">
+    <main class="q-f1">
+      <section class="q-bmp4p3ohp2rwf">
+        <div class="q-abgtbfpi0ttvt"></div>
+        <div class="q-cp6map4r">
+          <div class="q-g1gicg1gc2">
+            <div class="q-afusy6">
+              <h1 class="q-fmt6t5t4tt">
                 Топ 100
-                <span className="q-fsgt">Инфобизнесменов</span>
+                <span class="q-fsgt">Инфобизнесменов</span>
                 России
               </h1>
-              <p className="q-mw6tltmf">Рейтинг самых успешных и влиятельных
+              <p class="q-mw6tltmf">Рейтинг самых успешных и влиятельных
                 предпринимателей в сфере информационного бизнеса</p>
-              <div className="q-ffcg4p4fr">
-                <a className="q-pens0s4bpo5penonr2ro2rrfmg2ggh1bpificjcp8robrftpftstcwn"
+              <div class="q-ffcg4p4fr">
+                <a class="q-pens0s4bpo5penonr2ro2rrfmg2ggh1bpificjcp8robrftpftstcwn"
                   href="#professionals">Смотреть рейтинг</a>
-                <a className="q-pens0s4bbbbio5penonr2ro2rrfmg2h1batafificjcp8robrftstcwn"
+                <a class="q-pens0s4bbbbio5penonr2ro2rrfmg2h1batafificjcp8robrftstcwn"
                   href="#about">Узнать больше</a>
               </div>
             </div>
-            <div className="q-afifjc">
+            <div class="q-afifjc">
               <div
-                className="q-a4gbmw5ohrr3s2wf">
+                class="q-a4gbmw5ohrr3s2wf">
                 <div
-                  className="q-abbsbgtbffbi0icjctm">
-                  <div className="q-g6ggc2p8">
+                  class="q-abbsbgtbffbi0icjctm">
+                  <div class="q-g6ggc2p8">
                     <div
-                      className="q-bbsbbbbbbbffcicp4rxsl">
-                      <i data-lucide="users" className="q-h8m3tpw8"></i>
-                      <span className="q-fmtfts">100+ Профессионалов</span>
+                      class="q-bbsbbbbbbbffcicp4rxsl">
+                      <i data-lucide="users" class="q-h8m3tpw8"></i>
+                      <span class="q-fmtfts">100+ Профессионалов</span>
                     </div>
                     <div
-                      className="q-bbsbbbbbbbffcicp4rxsl">
-                      <i data-lucide="trending-up" className="q-h8m3tpw8"></i>
-                      <span className="q-fmtfts">Актуальный рейтинг</span>
+                      class="q-bbsbbbbbbbffcicp4rxsl">
+                      <i data-lucide="trending-up" class="q-h8m3tpw8"></i>
+                      <span class="q-fmtfts">Актуальный рейтинг</span>
                     </div>
                   </div>
                 </div>
@@ -119,80 +119,80 @@
           </div>
         </div>
       </section>
-      <section id="professionals" className="q-p3p2wf">
-        <div className="q-cp6map4">
-          <div className="q-ffcicjcm1sy4tc">
-            <div className="q-mw3sy3">
-              <h2 className="q-fmt4t3tt">Рейтинг инфобизнесменов</h2>
-              <p className="q-tltmf">Ознакомьтесь с нашим рейтингом самых успешных
+      <section id="professionals" class="q-p3p2wf">
+        <div class="q-cp6map4">
+          <div class="q-ffcicjcm1sy4tc">
+            <div class="q-mw3sy3">
+              <h2 class="q-fmt4t3tt">Рейтинг инфобизнесменов</h2>
+              <p class="q-tltmf">Ознакомьтесь с нашим рейтингом самых успешных
                 предпринимателей в сфере информационного бизнеса</p>
             </div>
           </div>
           <div id="businessmenContainer"
-            className="q-g6ggc1gc3gc2p4gc4">
+            class="q-g6ggc1gc3gc2p4gc4">
           </div>
-          <div className="q-fjcm1"><a
-              className="q-pens0s4ababsbbbbio5penonr2ro2rrfmg2h1batafificjcp8robrftstcwn"
+          <div class="q-fjcm1"><a
+              class="q-pens0s4ababsbbbbio5penonr2ro2rrfmg2h1batafificjcp8robrftstcwn"
               href="/all-professionals">Показать всех 100 инфобизнесменов</a></div>
         </div>
       </section>
-      <section className="q-p3p2wf">
-        <div className="q-cp6map4">
-          <div className="q-ffcicjcm1sy4tc">
-            <div className="q-mw3sy3">
-              <h2 className="q-fmt4t3tt">Лента инфобиза</h2>
-              <p className="q-tltmf">Последние видео от ведущих инфобизнесменов
+      <section class="q-p3p2wf">
+        <div class="q-cp6map4">
+          <div class="q-ffcicjcm1sy4tc">
+            <div class="q-mw3sy3">
+              <h2 class="q-fmt4t3tt">Лента инфобиза</h2>
+              <p class="q-tltmf">Последние видео от ведущих инфобизнесменов
                 России</p>
             </div>
           </div>
-          <div id="newsContainer" className="q-g6ggc1gc3gc2p4gc4">
+          <div id="newsContainer" class="q-g6ggc1gc3gc2p4gc4">
           </div>
-          <div className="q-fjcm1"><a
-              className="q-pens0s4ababsbbbbio5penonr2ro2rrfmg2h1batafificjcp8robrftstcwn"
+          <div class="q-fjcm1"><a
+              class="q-pens0s4ababsbbbbio5penonr2ro2rrfmg2h1batafificjcp8robrftstcwn"
               href="/videos">Смотреть все видео</a></div>
         </div>
       </section>
-      <section id="about" className="q-bmp3p2wf">
-        <div className="q-cp6map4">
-          <div className="q-ffcicjcm1sy4tc">
-            <div className="q-mw3sy3">
-              <h2 className="q-fmt4t3tt">О проекте</h2>
-              <p className="q-tltmf">Наш рейтинг составлен на основе объективных показателей
+      <section id="about" class="q-bmp3p2wf">
+        <div class="q-cp6map4">
+          <div class="q-ffcicjcm1sy4tc">
+            <div class="q-mw3sy3">
+              <h2 class="q-fmt4t3tt">О проекте</h2>
+              <p class="q-tltmf">Наш рейтинг составлен на основе объективных показателей
                 успешности</p>
             </div>
           </div>
-          <div className="q-g1gicg1gc2mw5map8">
-            <div className="q-sy5">
-              <div className="q-baibp3p1rftafts">Методология
+          <div class="q-g1gicg1gc2mw5map8">
+            <div class="q-sy5">
+              <div class="q-baibp3p1rftafts">Методология
               </div>
-              <h3 className="q-fmt2">Как мы составляем рейтинг</h3>
-              <p className="q-lrtltmf">Наш рейтинг основан на комплексной оценке
+              <h3 class="q-fmt2">Как мы составляем рейтинг</h3>
+              <p class="q-lrtltmf">Наш рейтинг основан на комплексной оценке
                 различных факторов, включая доход, охват аудитории, влияние в социальных сетях,
                 качество контента и отзывы клиентов. Мы регулярно обновляем данные, чтобы предоставить вам самую
                 актуальную информацию о лидерах инфобиза.</p>
             </div>
-            <div className="q-sy5">
-              <div className="q-baibp3p1rftafts">Критерии</div>
-              <h3 className="q-fmt2">Что мы оцениваем</h3>
-              <ul className="q-g3gtltmf">
-                <li className="q-fg3ic">
-                  <div className="q-bap1rftaf">
-                    <i data-lucide="check" className="q-h4w4"></i>
+            <div class="q-sy5">
+              <div class="q-baibp3p1rftafts">Критерии</div>
+              <h3 class="q-fmt2">Что мы оцениваем</h3>
+              <ul class="q-g3gtltmf">
+                <li class="q-fg3ic">
+                  <div class="q-bap1rftaf">
+                    <i data-lucide="check" class="q-h4w4"></i>
                   </div>Годовой доход от информационных продуктов
                 </li>
-                <li className="q-fg3ic">
-                  <div className="q-bap1rftaf">
-                    <i data-lucide="check" className="q-h4w4"></i>
+                <li class="q-fg3ic">
+                  <div class="q-bap1rftaf">
+                    <i data-lucide="check" class="q-h4w4"></i>
                   </div>Размер и вовлеченность аудитории
                 </li>
-                <li className="q-fg3ic">
-                  <div className="q-bap1rftaf">
-                    <i data-lucide="check" className="q-h4w4"></i>
+                <li class="q-fg3ic">
+                  <div class="q-bap1rftaf">
+                    <i data-lucide="check" class="q-h4w4"></i>
                   </div>Качество и уникальность контента
                 </li>
-                <li className="q-fg3ic">
-                  <div className="q-bap1rftaf">
-                    <i data-lucide="check" className="q-h4w4"></i>
+                <li class="q-fg3ic">
+                  <div class="q-bap1rftaf">
+                    <i data-lucide="check" class="q-h4w4"></i>
                   </div>Отзывы и удовлетворенность клиентов
                 </li>
               </ul>
@@ -201,45 +201,45 @@
         </div>
       </section>
     </main>
-    <footer className="q-bbbtp1">
-      <div className="q-cp6map4">
-        <div className="q-ffcg6icjbfr">
-          <div className="q-fg2ic"><i data-lucide="circle" className="q-h5w5"></i><span
-              className="q-fmtl">Топ 100 Инфобизнесменов</span></div>
-          <p className="q-tltctmfts">2025 Топ 100 Инфобизнесменов. Все права
+    <footer class="q-bbbtp1">
+      <div class="q-cp6map4">
+        <div class="q-ffcg6icjbfr">
+          <div class="q-fg2ic"><i data-lucide="circle" class="q-h5w5"></i><span
+              class="q-fmtl">Топ 100 Инфобизнесменов</span></div>
+          <p class="q-tltctmfts">2025 Топ 100 Инфобизнесменов. Все права
             защищены.</p>
-          <div className="q-fg6"><a
-              className="q-fmtftmftstc"
+          <div class="q-fg6"><a
+              class="q-fmtftmftstc"
               href="#">Политика конфиденциальности</a><a
-              className="q-fmtftmftstc" href="#">Условия
+              class="q-fmtftmftstc" href="#">Условия
               использования</a></div>
         </div>
       </div>
     </footer>
   </div>
   <div id="mobileMenu" 
-    className="q-bbsbbd3fi0o0pentoz5"
+    class="q-bbsbbd3fi0o0pentoz5"
     aria-hidden="true">
-    <div className="q-b0fix0maz5">
-      <div className="q-d3tttyf" data-state="closed">
-        <div className="q-bbbbbtffchc4rrt1">
-          <div className="q-bmh2m4marfw1"></div>
-          <div className="q-p6p8">
-            <nav className="q-g6g">
-              <a className="q-ffmg2gbataficp3p2rmtbtcwf" href="/">
-                <i data-lucide="home" className="q-h5w5"></i>
+    <div class="q-b0fix0maz5">
+      <div class="q-d3tttyf" data-state="closed">
+        <div class="q-bbbbbtffchc4rrt1">
+          <div class="q-bmh2m4marfw1"></div>
+          <div class="q-p6p8">
+            <nav class="q-g6g">
+              <a class="q-ffmg2gbataficp3p2rmtbtcwf" href="/">
+                <i data-lucide="home" class="q-h5w5"></i>
                 Главная
               </a>
-              <a className="q-ffmg2gbataficp3p2rmtbtcwf" href="#professionals">
-                <i data-lucide="users" className="q-h5w5"></i>
+              <a class="q-ffmg2gbataficp3p2rmtbtcwf" href="#professionals">
+                <i data-lucide="users" class="q-h5w5"></i>
                 Рейтинг
               </a>
-              <a className="q-ffmg2gbataficp3p2rmtbtcwf" href="/videos">
-                <i data-lucide="play" className="q-h5w5"></i>
+              <a class="q-ffmg2gbataficp3p2rmtbtcwf" href="/videos">
+                <i data-lucide="play" class="q-h5w5"></i>
                 Лента
               </a>
-              <a className="q-ffmg2gbataficp3p2rmtbtcwf" href="#about">
-                <i data-lucide="info" className="q-h5w5"></i>
+              <a class="q-ffmg2gbataficp3p2rmtbtcwf" href="#about">
+                <i data-lucide="info" class="q-h5w5"></i>
                 О проекте
               </a>
             </nav>
@@ -435,54 +435,54 @@
     
     const cardTemplates = new Map([
       ['businessman', (data) => `
-        <div className="q-bbbbbd1eiogty1sxohrxsstftta">
-          <div className="q-h5ohrrtxwf">
-            <div className="q-al4t4z1">
-              <div className="q-bbsbbbbfmp3p1rftftxtc">
+        <div class="q-bbbbbd1eiogty1sxohrxsstftta">
+          <div class="q-h5ohrrtxwf">
+            <div class="q-al4t4z1">
+              <div class="q-bbsbbbbfmp3p1rftftxtc">
                 #${data.rank}
               </div>
             </div>
             <img alt="${data.name}" 
               src="${data.image}" 
-              className="q-d5s1hfocttwf"
+              class="q-d5s1hfocttwf"
             />
           </div>
-          <div className="q-p4">
-            <h3 className="q-fmtftx">${data.name}</h3>
-            <p className="q-m1tmfts">${data.category}</p>
-            <div className="q-g4ggc2m5">
+          <div class="q-p4">
+            <h3 class="q-fmtftx">${data.name}</h3>
+            <p class="q-m1tmfts">${data.category}</p>
+            <div class="q-g4ggc2m5">
               <div>
-                <p className="q-tmftxtwu">Годовой доход</p>
-                <p className="q-fmm1tf">${data.revenue}</p>
+                <p class="q-tmftxtwu">Годовой доход</p>
+                <p class="q-fmm1tf">${data.revenue}</p>
               </div>
               <div>
-                <p className="q-tmftxtwu">Аудитория</p>
-                <p className="q-fmm1tf">${data.subscribers}</p>
+                <p class="q-tmftxtwu">Аудитория</p>
+                <p class="q-fmm1tf">${data.subscribers}</p>
               </div>
             </div>
-            <div className="q-ffwg2m5">
+            <div class="q-ffwg2m5">
               ${data.tags.map(tag => `
-                <span className="q-bafmbaificp2p0rftaftxtc">
+                <span class="q-bafmbaificp2p0rftaftxtc">
                   ${tag}
                 </span>
               `).join('')}
             </div>
           </div>
-          <div className="q-ficjbp4p0">
-            <div className="q-fg2">
+          <div class="q-ficjbp4p0">
+            <div class="q-fg2">
               ${Object.entries(data.socialLinks).map(([platform, url]) => `
                 <a href="${url}" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="q-bah9baificjcrftaftcw9"
+                  class="q-bah9baificjcrftaftcw9"
                 >
-                  <span className="q-so">${platform}</span>
+                  <span class="q-so">${platform}</span>
                   ${getSocialIcon(platform)}
                 </a>
               `).join('')}
             </div>
             <a href="${data.profileUrl}" 
-              className="q-bbifmh9batafificjcp4rftstc"
+              class="q-bbifmh9batafificjcp4rftstc"
             >
               Подробнее
             </a>
@@ -490,21 +490,21 @@
         </div>
       `],
       ['news', (data) => `
-        <div className="q-bbbbbd1eioty1sxohrlsstftta">
-          <div className="q-avgohrrt2wf">
-            <div className="q-abfbfi0tcz1"></div>
-            <div className="q-ad1fo1i0icjco0toz2">
-              <button className="q-pens0s4bbsbbbbbptpftpo5pend1onr2ro2rrfmg2h1bps1tpfificjcrobrftptstaw1wn">
-                <i data-lucide="play" className="q-h6w6"></i>
-                <span className="q-so">Смотреть видео</span>
+        <div class="q-bbbbbd1eioty1sxohrlsstftta">
+          <div class="q-avgohrrt2wf">
+            <div class="q-abfbfi0tcz1"></div>
+            <div class="q-ad1fo1i0icjco0toz2">
+              <button class="q-pens0s4bbsbbbbbptpftpo5pend1onr2ro2rrfmg2h1bps1tpfificjcrobrftptstaw1wn">
+                <i data-lucide="play" class="q-h6w6"></i>
+                <span class="q-so">Смотреть видео</span>
               </button>
             </div>
-            <div className="q-abbsbbb3tffmp2p1r3rmtftxz2">
+            <div class="q-abbsbbb3tffmp2p1r3rmtftxz2">
               ${data.duration || '15:18'}
             </div>
-            <div className="q-al3t3z2">
-              <div className="q-bbsbpbpbptpftpfd1fmg1bptpfificp2p1rftptxtc">
-                <i data-lucide="youtube" className="q-h3w3"></i>
+            <div class="q-al3t3z2">
+              <div class="q-bbsbpbpbptpftpfd1fmg1bptpfificp2p1rftptxtc">
+                <i data-lucide="youtube" class="q-h3w3"></i>
                 <span>${data.platform || 'YouTube'}</span>
               </div>
             </div>
@@ -512,33 +512,33 @@
               alt="${data.title}" 
               loading="lazy"
               decoding="async"
-              className="q-ad5s1hfi0octtwf"
+              class="q-ad5s1hfi0octtwf"
               src="${data.image}"
             >
           </div>
-          <div className="q-p5">
-            <a className="q-bg" href="${data.url || '#'}">
-              <h3 className="q-fmtplc2tftltc">
+          <div class="q-p5">
+            <a class="q-bg" href="${data.url || '#'}">
+              <h3 class="q-fmtplc2tftltc">
                 ${data.title}
               </h3>
             </a>
-            <div className="q-ficjbm4">
-              <div className="q-fg2ic">
-                <span className="q-fh8ohrr1rbrfs0w8">
+            <div class="q-ficjbm4">
+              <div class="q-fg2ic">
+                <span class="q-fh8ohrr1rbrfs0w8">
                   <img 
-                    className="q-ashfwf" 
+                    class="q-ashfwf" 
                     alt="${data.author}"
                     src="${data.authorImage || 'https://v0-topchik-infobiza.vercel.app/placeholder.svg?height=100&width=100'}"
                   >
                 </span>
-                <a className="q-fmtptmftstc" href="${data.authorUrl || '#'}">
+                <a class="q-fmtptmftstc" href="${data.authorUrl || '#'}">
                   ${data.author}
                 </a>
               </div>
             </div>
           </div>
-          <div className="q-bbbtficp5p3tmftx">
-            <div className="q-fg2ic">
+          <div class="q-bbbtficp5p3tmftx">
+            <div class="q-fg2ic">
               <span>${data.views || '203K'} просмотров</span>
               <span>•</span>
               <span>${data.publishedAt || '2 недели назад'}</span>
@@ -555,7 +555,7 @@
         youtube: 'youtube'
       };
 
-      return `<i data-lucide="${iconMap[platform]}" className="q-h4w4"></i>`;
+      return `<i data-lucide="${iconMap[platform]}" class="q-h4w4"></i>`;
     }
     
     function renderCards(containerId, dataArray, templateType) {

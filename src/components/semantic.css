@@ -1,54 +1,54 @@
-.html-dark { @apply dark; }
-.body-shadcn { @apply font-base bg-background text-foreground min-h-screen; }
-.s-index-div-flex-flex-col-min-h-screen { @apply flex flex-col min-h-screen; }
-.s-index-header-backdrop-blur-sm-border-b-border-border-50-sticky-top-0-z-50 { @apply sticky top-0 z-50 backdrop-blur-sm border-b border-border/50; }
+.dark-mode { @apply dark; }
+.page-layout { @apply font-base bg-background text-foreground min-h-screen; }
+.page-container { @apply flex flex-col min-h-screen; }
+.site-header { @apply sticky top-0 z-50 backdrop-blur-sm border-b border-border/50; }
 .s-index-div-container-flex-h-16-items-center-justify-between-px-6-mx-auto-px-4 { @apply container mx-auto px-4 md:px-6 flex h-16 items-center justify-between; }
-.s-index-a-flex-font-medium-gap-2-items-center-text-lg { @apply flex items-center gap-2 text-lg font-medium; }
+.site-logo { @apply flex items-center gap-2 text-lg font-medium; }
 .s-index-i-h-5-w-5 { @apply h-5 w-5; }
-.s-index-div-flex-1-hidden-max-w-md-flex-mx-4 { @apply hidden md:flex flex-1 max-w-md mx-4; }
+.main-search-container { @apply hidden md:flex flex-1 max-w-md mx-4; }
 .s-index-div-relative-w-full { @apply relative w-full; }
 .s-index-i-absolute-h-4-left-3-text-muted-foreground-top-25-w-4 { @apply absolute left-3 top-2.5 h-4 w-4 text-muted-foreground; }
 .s-index-input-bg-accent-50-border-0-border-input-cursor-not-allowed-opacity-50-bg-transparent-border-0-font-medium-text-foreground-text-sm-flex-outline-none-ring-1-ring-offset-2-ring-ring-h-10-text-sm-pl-10-text-muted-foreground-px-3-py-2-ring-offset-background-rounded-full-text-base-w-full { @apply flex border-input px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-accent/50 border-0 rounded-full pl-10 h-10 focus-visible:ring-1 focus-visible:ring-ring; }
-.s-index-nav-gap-8-hidden-flex { @apply hidden md:flex gap-8; }
+.main-navigation { @apply hidden md:flex gap-8; }
 .s-index-a-font-medium-text-muted-foreground-text-sm-transition-colors { @apply text-sm font-medium hover:text-muted-foreground transition-colors; }
-.s-index-div-flex-gap-4-items-center { @apply flex items-center gap-4; }
-.s-index-button-bg-accent-h-10-bg-accent-80-inline-flex-items-center-justify-center-relative-rounded-full-text-accent-foreground-transition-colors-w-10 { @apply inline-flex items-center justify-center relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
+.header-actions { @apply flex items-center gap-4; }
+.dark-mode-toggle { @apply inline-flex items-center justify-center relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
 .s-index-i-absolute-rotate-90-scale-0-duration-100-h-12rem-rotate-0-scale-100-transition-all-w-12rem { @apply h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-0 scale-100 dark:rotate-90 dark:scale-0; }
 .s-index-i-absolute-rotate-0-scale-100-duration-100-h-12rem-rotate-90-scale-0-transition-all-w-12rem { @apply h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-90 scale-0 dark:rotate-0 dark:scale-100; }
 .s-index-span-sr-only { @apply sr-only; }
 .s-index-button-pointer-events-none-shrink-0-size-4-bg-accent-border-0-border-input-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-font-medium-gap-2-h-10-bg-accent-text-accent-foreground-inline-flex-items-center-justify-center-hidden-ring-offset-background-rounded-full-text-accent-foreground-text-sm-transition-colors-w-10-whitespace-nowrap { @apply inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-input hover:bg-accent hover:text-accent-foreground md:hidden rounded-full w-10 h-10 bg-accent text-accent-foreground border-0; }
 .s-index-div-border-border-border-t-hidden-py-2 { @apply md:hidden border-t border-border py-2; }
 .s-index-div-container-mx-auto-px-4-py-2 { @apply container mx-auto px-4 py-2; }
-.s-index-main-flex-1 { @apply flex-1; }
-.s-index-section-bg-muted-py-40-py-32-overflow-hidden-py-24-relative-w-full { @apply w-full py-24 md:py-32 lg:py-40 bg-muted relative overflow-hidden; }
+.main-content { @apply flex-1; }
+.about-section { @apply w-full py-24 md:py-32 lg:py-40 bg-muted relative overflow-hidden; }
 .s-index-div-absolute-bg-gradient-to-br-from-primary-10-inset-0-to-transparent-via-transparent { @apply absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent; }
 .s-index-div-container-px-6-mx-auto-px-4-relative { @apply container mx-auto px-4 md:px-6 relative; }
-.s-index-div-gap-12-grid-items-center-gap-16-grid-cols-2 { @apply grid gap-12 lg:grid-cols-2 lg:gap-16 items-center; }
-.s-index-div-animate-fade-up-space-y-6 { @apply space-y-6 animate-fade-up; }
-.s-index-h1-font-medium-text-6xl-text-5xl-text-4xl-tracking-tight { @apply text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight; }
-.s-index-span-font-semibold-gradient-text { @apply gradient-text font-semibold; }
-.s-index-p-max-w-600px-text-lg-text-muted-foreground { @apply text-lg text-muted-foreground max-w-[600px]; }
-.s-index-div-flex-flex-col-gap-4-pt-4-flex-row { @apply flex flex-col sm:flex-row gap-4 pt-4; }
+.professionals-grid { @apply grid gap-12 lg:grid-cols-2 lg:gap-16 items-center; }
+.hero-content { @apply space-y-6 animate-fade-up; }
+.hero-title { @apply text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight; }
+.hero-title-highlight { @apply gradient-text font-semibold; }
+.hero-subtitle { @apply text-lg text-muted-foreground max-w-[600px]; }
+.hero-cta-group { @apply flex flex-col sm:flex-row gap-4 pt-4; }
 .s-index-a-pointer-events-none-shrink-0-size-4-bg-primary-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-font-medium-gap-2-gradient-glow-h-11-bg-primary-90-inline-flex-items-center-justify-center-px-8-ring-offset-background-rounded-full-text-primary-foreground-text-sm-transition-colors-whitespace-nowrap { @apply gradient-glow inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-full px-8; }
 .s-index-a-pointer-events-none-shrink-0-size-4-bg-background-border-border-input-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-font-medium-gap-2-h-11-bg-accent-text-accent-foreground-inline-flex-items-center-justify-center-px-8-ring-offset-background-rounded-full-text-sm-transition-colors-whitespace-nowrap { @apply inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-full px-8; }
-.s-index-div-animate-fade-in-flex-justify-center { @apply flex justify-center animate-fade-in; }
+.hero-illustration-container { @apply flex justify-center animate-fade-in; }
 .s-index-div-aspect-4-3-gradient-border-max-w-500px-overflow-hidden-relative-rounded-3xl-shadow-2xl-w-full { @apply relative w-full max-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl gradient-border; }
 .s-index-div-absolute-backdrop-blur-sm-bg-gradient-to-br-flex-from-background-20-inset-0-items-center-justify-center-to-muted-20 { @apply absolute inset-0 bg-gradient-to-br from-background/20 to-muted/20 backdrop-blur-sm flex items-center justify-center; }
 .s-index-div-gap-6-grid-grid-cols-2-p-8 { @apply grid grid-cols-2 gap-6 p-8; }
 .s-index-div-backdrop-blur-sm-bg-background-90-border-border-border-50-bg-background-80-flex-flex-col-items-center-p-4-rounded-xl-shadow-lg { @apply bg-background/90 dark:bg-background/80 p-4 rounded-xl shadow-lg flex flex-col items-center backdrop-blur-sm border border-border/50; }
 .s-index-i-h-8-mb-3-text-primary-w-8 { @apply h-8 w-8 text-primary mb-3; }
 .s-index-span-font-medium-text-foreground-text-sm { @apply text-sm font-medium text-foreground; }
-.s-index-section-py-32-py-24-w-full { @apply w-full py-24 md:py-32; }
+.about-section { @apply w-full py-24 md:py-32; }
 .s-index-div-container-px-6-mx-auto-px-4 { @apply container mx-auto px-4 md:px-6; }
 .s-index-div-flex-flex-col-items-center-justify-center-mb-16-space-y-4-text-center { @apply flex flex-col items-center justify-center space-y-4 text-center mb-16; }
 .s-index-div-max-w-3xl-space-y-3 { @apply space-y-3 max-w-3xl; }
 .s-index-h2-font-medium-text-4xl-text-3xl-tracking-tight { @apply text-3xl md:text-4xl font-medium tracking-tight; }
 .s-index-p-text-lg-text-muted-foreground { @apply text-lg text-muted-foreground; }
-.s-index-div-gap-6-grid-grid-cols-1-grid-cols-3-grid-cols-2-p-4-grid-cols-4 { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4; }
-.s-index-div-flex-justify-center-mt-16 { @apply flex justify-center mt-16; }
+.news-feed { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4; }
+.professionals-cta { @apply flex justify-center mt-16; }
 .s-index-a-pointer-events-none-shrink-0-size-4-apple-button-apple-button-secondary-bg-background-border-border-input-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-font-medium-gap-2-h-11-bg-accent-text-accent-foreground-inline-flex-items-center-justify-center-px-8-ring-offset-background-rounded-full-text-sm-transition-colors-whitespace-nowrap { @apply inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-full px-8 apple-button apple-button-secondary; }
 .s-index-section-bg-muted-py-32-py-24-w-full { @apply w-full py-24 md:py-32 bg-muted; }
-.s-index-div-gap-12-grid-items-center-gap-16-grid-cols-2-max-w-5xl-mx-auto-py-8 { @apply mx-auto grid max-w-5xl items-center gap-12 py-8 lg:grid-cols-2 lg:gap-16; }
+.about-content { @apply mx-auto grid max-w-5xl items-center gap-12 py-8 lg:grid-cols-2 lg:gap-16; }
 .s-index-div-space-y-5 { @apply space-y-5; }
 .s-index-div-bg-accent-inline-block-px-3-py-1-rounded-full-text-accent-foreground-text-sm { @apply inline-block rounded-full bg-accent text-accent-foreground px-3 py-1 text-sm; }
 .s-index-h3-font-medium-text-2xl { @apply text-2xl font-medium; }
@@ -113,4 +113,24 @@
 .s-index-span-flex-h-8-overflow-hidden-relative-ring-1-ring-border-rounded-full-shrink-0-w-8 { @apply relative flex shrink-0 overflow-hidden rounded-full h-8 w-8 ring-1 ring-border; }
 .s-index-img-aspect-square-h-full-w-full { @apply aspect-square h-full w-full; }
 .s-index-a-font-medium-text-primary-text-muted-foreground-text-sm-transition-colors { @apply text-sm font-medium text-muted-foreground hover:text-primary transition-colors; }
-.s-index-div-border-border-border-t-flex-items-center-px-5-py-3-text-muted-foreground-text-xs { @apply flex items-center px-5 py-3 border-t border-border text-xs text-muted-foreground; }
+.news-card-footer { @apply flex items-center px-5 py-3 border-t border-border text-xs text-muted-foreground; }
+.news-author-link { @apply text-sm font-medium text-muted-foreground hover:text-primary transition-colors; }
+.news-card-image-hover-effect { @apply absolute h-full w-full inset-0 object-cover transition-transform duration-500 group-hover:scale-105; }
+.news-card-content-padding { @apply p-5; }
+.news-card-link { @apply block group/title; }
+.news-tag-icon { @apply h-3 w-3; }
+.news-tag-badge { @apply inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full
+                bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground
+                dark:bg-primary/20 dark:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground
+                backdrop-blur-sm transition-colors duration-100; }
+.news-card-tag-container { @apply absolute top-3 left-3 z-20; }
+.news-card-duration-badge { @apply absolute bottom-3 right-3 bg-background/95 text-foreground dark:text-foreground backdrop-blur-sm text-xs font-medium px-2 py-1 rounded-md z-20; }
+.news-card-action-icon { @apply h-6 w-6; }
+.news-card-action-button { @apply inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full 
+                bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground
+                dark:bg-background/95 dark:text-primary dark:hover:bg-primary dark:hover:text-primary-foreground
+                backdrop-blur-sm hover:scale-105 transition-all duration-100; }
+.news-card-hover-overlay { @apply absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-100 z-20; }
+.news-card-hover-background { @apply absolute inset-0 bg-foreground/5 group-hover:bg-foreground/10 transition-colors z-10; }
+.news-card-image-container { @apply relative aspect-video w-full overflow-hidden rounded-t-2xl group; }
+.news-card-container { @apply rounded-lg border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden; }

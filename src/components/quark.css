@@ -114,3 +114,23 @@
 .q-ashfwf { @apply aspect-square h-full w-full; }
 .q-fmtptmftstc { @apply text-sm font-medium text-muted-foreground hover:text-primary transition-colors; }
 .q-bbbtficp5p3tmftx { @apply flex items-center px-5 py-3 border-t border-border text-xs text-muted-foreground; }
+.q-fmtptmftstc { @apply text-sm font-medium text-muted-foreground hover:text-primary transition-colors; }
+.q-ad5s1hfi0octtwf { @apply absolute h-full w-full inset-0 object-cover transition-transform duration-500 group-hover:scale-105; }
+.q-p5 { @apply p-5; }
+.q-bg { @apply block group/title; }
+.q-h3w3 { @apply h-3 w-3; }
+.q-bbsbpbpbptpftpfd1fmg1bptpfificp2p1rftptxtc { @apply inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full
+                bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground
+                dark:bg-primary/20 dark:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground
+                backdrop-blur-sm transition-colors duration-100; }
+.q-al3t3z2 { @apply absolute top-3 left-3 z-20; }
+.q-abbsbbb3tffmp2p1r3rmtftxz2 { @apply absolute bottom-3 right-3 bg-background/95 text-foreground dark:text-foreground backdrop-blur-sm text-xs font-medium px-2 py-1 rounded-md z-20; }
+.q-h6w6 { @apply h-6 w-6; }
+.q-pens0s4bbsbbbbbptpftpo5pend1onr2ro2rrfmg2h1bps1tpfificjcrobrftptstaw1wn { @apply inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full 
+                bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground
+                dark:bg-background/95 dark:text-primary dark:hover:bg-primary dark:hover:text-primary-foreground
+                backdrop-blur-sm hover:scale-105 transition-all duration-100; }
+.q-ad1fo1i0icjco0toz2 { @apply absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-100 z-20; }
+.q-abfbfi0tcz1 { @apply absolute inset-0 bg-foreground/5 group-hover:bg-foreground/10 transition-colors z-10; }
+.q-avgohrrt2wf { @apply relative aspect-video w-full overflow-hidden rounded-t-2xl group; }
+.q-bbbbbd1eioty1sxohrlsstftta { @apply rounded-lg border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden; }
