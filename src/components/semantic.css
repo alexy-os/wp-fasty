@@ -1,5 +1,5 @@
-.s-index-html-dark { @apply dark; }
-.s-index-body-bg-background-font-base-min-h-screen-text-foreground { @apply font-base bg-background text-foreground min-h-screen; }
+.html-dark { @apply dark; }
+.body-shadcn { @apply font-base bg-background text-foreground min-h-screen; }
 .s-index-div-flex-flex-col-min-h-screen { @apply flex flex-col min-h-screen; }
 .s-index-header-backdrop-blur-sm-border-b-border-border-50-sticky-top-0-z-50 { @apply sticky top-0 z-50 backdrop-blur-sm border-b border-border/50; }
 .s-index-div-container-flex-h-16-items-center-justify-between-px-6-mx-auto-px-4 { @apply container mx-auto px-4 md:px-6 flex h-16 items-center justify-between; }
