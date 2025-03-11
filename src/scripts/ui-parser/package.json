@@ -1,0 +1,51 @@
+{
+  "name": "@ui-factory/ui-parser",
+  "version": "0.0.1",
+  "description": "UI Parser for extracting and analyzing UI components",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./cli": {
+      "import": "./dist/cli/index.js",
+      "types": "./dist/cli/index.d.ts"
+    }
+  },
+  "bin": {
+    "ui-parser": "./dist/cli/bin.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src/**/*.ts",
+    "cli": "node dist/cli/bin.js",
+    "analyze": "node dist/cli/bin.js analyze",
+    "generate": "node dist/cli/bin.js generate",
+    "transform": "node dist/cli/bin.js transform",
+    "all": "node dist/cli/bin.js all"
+  },
+  "dependencies": {
+    "jsdom": "^26.0.0",
+    "tailwind-merge": "^3.0.2",
+    "commander": "^11.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
+} 
