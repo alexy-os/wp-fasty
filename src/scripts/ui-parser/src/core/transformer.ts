@@ -5,6 +5,7 @@ import { componentAnalyzer } from './analyzer';
 import { 
   EnhancedClassEntry,
   TransformationResult,
+  ModifierEntry,
 } from './types';
 
 /**
@@ -62,41 +63,47 @@ export class ComponentTransformer {
       };
     }
     
-    const classMap = new Map<string, { semantic: string, crypto: string }>();
+    const classMap = new Map<string, { 
+      semantic: string, 
+      crypto: string,
+      modifiers?: ModifierEntry[]
+    }>();
     
     domAnalysisData.forEach(entry => {
-      const baseReplacements = {
-        semantic: entry.semantic,
-        crypto: entry.crypto
-      };
-      
-      // Main class
-      classMap.set(entry.classes, baseReplacements);
-      
-      // If there are modifiers, create also variants with modifiers
-      if (entry.modifiers && entry.modifiers.length > 0) {
-        const modSemanticClasses = [entry.semantic, ...entry.modifiers.map(m => m.semantic)].join(' ');
-        const modCryptoClasses = [entry.crypto, ...entry.modifiers.map(m => m.crypto)].join(' ');
+      if (entry.modifiers.length > 0) {
+        // We have modifiers
+        const modSemanticClasses = entry.modifiers.map(m => m.semantic).join(' ');
+        const modCryptoClasses = entry.modifiers.map(m => m.crypto).join(' ');
         
-        // Modifier variants
-        classMap.set(`${entry.classes}:with-modifiers`, {
+        classMap.set(entry.classes, {
           semantic: modSemanticClasses,
-          crypto: modCryptoClasses
+          crypto: modCryptoClasses,
+          modifiers: entry.modifiers
+        });
+      } else {
+        // No modifiers, using original crypto/semantic
+        classMap.set(entry.classes, {
+          semantic: entry.semantic,
+          crypto: entry.crypto
         });
       }
       
-      // Also add normalized variant
+      // Also for normalized classes
       const normalizedClasses = this.normalizeClassString(entry.classes);
       if (normalizedClasses !== entry.classes) {
-        classMap.set(normalizedClasses, baseReplacements);
-        
-        if (entry.modifiers && entry.modifiers.length > 0) {
-          const modSemanticClasses = [entry.semantic, ...entry.modifiers.map(m => m.semantic)].join(' ');
-          const modCryptoClasses = [entry.crypto, ...entry.modifiers.map(m => m.crypto)].join(' ');
+        if (entry.modifiers.length > 0) {
+          const modSemanticClasses = entry.modifiers.map(m => m.semantic).join(' ');
+          const modCryptoClasses = entry.modifiers.map(m => m.crypto).join(' ');
           
-          classMap.set(`${normalizedClasses}:with-modifiers`, {
+          classMap.set(normalizedClasses, {
             semantic: modSemanticClasses,
-            crypto: modCryptoClasses
+            crypto: modCryptoClasses,
+            modifiers: entry.modifiers
+          });
+        } else {
+          classMap.set(normalizedClasses, {
+            semantic: entry.semantic,
+            crypto: entry.crypto
           });
         }
       }
@@ -158,8 +165,17 @@ export class ComponentTransformer {
                 quarkContent.substring(index + fullMatch.length);
             }
             
+            // Add information about modifiers to the log
+            if (replacement.modifiers && replacement.modifiers.length > 0) {
+              console.log(`Replaced "${classValue}" with modifiers:`);
+              replacement.modifiers.forEach(mod => {
+                console.log(`  - ${mod.type}: "${mod.name}" (${mod.classes})`);
+              });
+            } else {
+              console.log(`Replaced "${classValue}" with semantic: "${replacement.semantic}" and crypto: "${replacement.crypto}"`);
+            }
+            
             result.classesReplaced++;
-            console.log(`Replaced "${classValue}" with semantic: "${replacement.semantic}" and crypto: "${replacement.crypto}"`);
             continue;
           }
           

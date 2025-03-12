@@ -14,16 +14,26 @@ export function createClassEntry(
   config: ClassNameConfig
 ): EnhancedClassEntry {
   // Extract modifiers
-  const { modifiers, remainingClasses } = extractModifiers(classes, componentName, elementType);
+  const { modifiers } = extractModifiers(classes, componentName, elementType);
   
-  // Use remaining classes for the main element
-  const quark = generateQuarkName(remainingClasses, config.quarkPrefix);
+  // Generate main name only if there are no modifiers
+  const quark = modifiers.length === 0 
+    ? generateQuarkName(classes, config.quarkPrefix)
+    : '';
+  
+  const crypto = modifiers.length === 0 
+    ? generateCryptoFromQuark(quark)
+    : '';
+  
+  const semantic = modifiers.length === 0 
+    ? generateSemanticName(componentName, elementType, classes, config.semanticPrefix)
+    : '';
   
   return {
     quark,
-    crypto: generateCryptoFromQuark(quark),
-    semantic: generateSemanticName(componentName, elementType, remainingClasses, config.semanticPrefix),
-    classes: classes.trim(),
+    crypto,
+    semantic,
+    classes: classes.trim(), // Save all original classes
     componentName,
     elementType,
     variants,
@@ -34,7 +44,7 @@ export function createClassEntry(
         name: componentName
       }
     },
-    modifiers
+    modifiers // Add modifiers
   };
 }
 

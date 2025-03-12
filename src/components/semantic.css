@@ -1,0 +1,367 @@
+.s-index-html-dark { @apply dark; }
+/* Original classes: dark */
+
+.s-index-body-bg-background-font-base-min-h-screen-text-foreground { @apply font-base bg-background text-foreground min-h-screen; }
+/* Original classes: font-base bg-background text-foreground min-h-screen */
+
+.s-index-div-flex-flex-col-min-h-screen { @apply flex flex-col min-h-screen; }
+/* Original classes: flex flex-col min-h-screen */
+
+.s-index-header-backdrop-blur-sm-border-b-border-border-50-sticky-top-0-z-50 { @apply sticky top-0 z-50 backdrop-blur-sm border-b border-border/50; }
+/* Original classes: sticky top-0 z-50 backdrop-blur-sm border-b border-border/50 */
+
+.s-index-div-container-flex-h-16-items-center-justify-between-px-6-mx-auto-px-4 { @apply container mx-auto px-4 md:px-6 flex h-16 items-center justify-between; }
+/* Original classes: container mx-auto px-4 md:px-6 flex h-16 items-center justify-between */
+
+.s-index-a-flex-font-medium-gap-2-items-center-text-lg { @apply flex items-center gap-2 text-lg font-medium; }
+/* Original classes: flex items-center gap-2 text-lg font-medium */
+
+.s-index-i-h-5-w-5 { @apply h-5 w-5; }
+/* Original classes: h-5 w-5 */
+
+.s-index-div-flex-1-hidden-max-w-md-flex-mx-4 { @apply hidden md:flex flex-1 max-w-md mx-4; }
+/* Original classes: hidden md:flex flex-1 max-w-md mx-4 */
+
+.s-index-div-relative-w-full { @apply relative w-full; }
+/* Original classes: relative w-full */
+
+.s-index-i-absolute-h-4-left-3-text-muted-foreground-top-25-w-4 { @apply absolute left-3 top-2.5 h-4 w-4 text-muted-foreground; }
+/* Original classes: absolute left-3 top-2.5 h-4 w-4 text-muted-foreground */
+
+.s-index-input-bg-accent-50-border-0-border-input-cursor-not-allowed-opacity-50-bg-transparent-border-0-font-medium-text-foreground-text-sm-flex-outline-none-ring-1-ring-offset-2-ring-ring-h-10-text-sm-pl-10-text-muted-foreground-px-3-py-2-ring-offset-background-rounded-full-text-base-w-full { @apply flex border-input px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-accent/50 border-0 rounded-full pl-10 h-10 focus-visible:ring-1 focus-visible:ring-ring; }
+/* Original classes: flex border-input px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-accent/50 border-0 rounded-full pl-10 h-10 focus-visible:ring-1 focus-visible:ring-ring */
+
+.s-index-nav-gap-8-hidden-flex { @apply hidden md:flex gap-8; }
+/* Original classes: hidden md:flex gap-8 */
+
+.sc-text-normal { @apply font-medium text-sm; }
+.sc-index-a-base { @apply hover:text-muted-foreground transition-colors; }
+/* Original classes: text-sm font-medium hover:text-muted-foreground transition-colors */
+
+.s-index-div-flex-gap-4-items-center { @apply flex items-center gap-4; }
+/* Original classes: flex items-center gap-4 */
+
+.sc-layout-center { @apply inline-flex items-center justify-center; }
+.sc-index-button-base { @apply relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
+/* Original classes: inline-flex items-center justify-center relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80 */
+
+.s-index-i-absolute-rotate-90-scale-0-duration-100-h-12rem-rotate-0-scale-100-transition-all-w-12rem { @apply h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-0 scale-100 dark:rotate-90 dark:scale-0; }
+/* Original classes: h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-0 scale-100 dark:rotate-90 dark:scale-0 */
+
+.s-index-i-absolute-rotate-0-scale-100-duration-100-h-12rem-rotate-90-scale-0-transition-all-w-12rem { @apply h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-90 scale-0 dark:rotate-0 dark:scale-100; }
+/* Original classes: h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-90 scale-0 dark:rotate-0 dark:scale-100 */
+
+.s-index-span-sr-only { @apply sr-only; }
+/* Original classes: sr-only */
+
+.sc-layout-center { @apply inline-flex items-center justify-center; }
+.sc-text-normal { @apply font-medium text-sm; }
+.sc-interactive { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
+.sc-index-button-base { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-input md:hidden rounded-full w-10 h-10 bg-accent text-accent-foreground border-0; }
+/* Original classes: inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-input hover:bg-accent hover:text-accent-foreground md:hidden rounded-full w-10 h-10 bg-accent text-accent-foreground border-0 */
+
+.s-index-div-border-border-border-t-hidden-py-2 { @apply md:hidden border-t border-border py-2; }
+/* Original classes: md:hidden border-t border-border py-2 */
+
+.s-index-div-container-mx-auto-px-4-py-2 { @apply container mx-auto px-4 py-2; }
+/* Original classes: container mx-auto px-4 py-2 */
+
+.s-index-main-flex-1 { @apply flex-1; }
+/* Original classes: flex-1 */
+
+.s-index-section-bg-muted-py-40-py-32-overflow-hidden-py-24-relative-w-full { @apply w-full py-24 md:py-32 lg:py-40 bg-muted relative overflow-hidden; }
+/* Original classes: w-full py-24 md:py-32 lg:py-40 bg-muted relative overflow-hidden */
+
+.s-index-div-absolute-bg-gradient-to-br-from-primary-10-inset-0-to-transparent-via-transparent { @apply absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent; }
+/* Original classes: absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent */
+
+.s-index-div-container-px-6-mx-auto-px-4-relative { @apply container mx-auto px-4 md:px-6 relative; }
+/* Original classes: container mx-auto px-4 md:px-6 relative */
+
+.s-index-div-gap-12-grid-items-center-gap-16-grid-cols-2 { @apply grid gap-12 lg:grid-cols-2 lg:gap-16 items-center; }
+/* Original classes: grid gap-12 lg:grid-cols-2 lg:gap-16 items-center */
+
+.s-index-div-animate-fade-up-space-y-6 { @apply space-y-6 animate-fade-up; }
+/* Original classes: space-y-6 animate-fade-up */
+
+.s-index-h1-font-medium-text-6xl-text-5xl-text-4xl-tracking-tight { @apply text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight; }
+/* Original classes: text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight */
+
+.s-index-span-font-semibold-gradient-text { @apply gradient-text font-semibold; }
+/* Original classes: gradient-text font-semibold */
+
+.s-index-p-max-w-600px-text-lg-text-muted-foreground { @apply text-lg text-muted-foreground max-w-[600px]; }
+/* Original classes: text-lg text-muted-foreground max-w-[600px] */
+
+.s-index-div-flex-flex-col-gap-4-pt-4-flex-row { @apply flex flex-col sm:flex-row gap-4 pt-4; }
+/* Original classes: flex flex-col sm:flex-row gap-4 pt-4 */
+
+.sc-layout-center { @apply inline-flex items-center justify-center; }
+.sc-text-normal { @apply font-medium text-sm; }
+.sc-index-a-base { @apply gradient-glow gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-full px-8; }
+/* Original classes: gradient-glow inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-full px-8 */
+
+.sc-layout-center { @apply inline-flex items-center justify-center; }
+.sc-text-normal { @apply font-medium text-sm; }
+.sc-interactive { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
+.sc-pill { @apply rounded-full border border-input; }
+.sc-index-a-base { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-background h-11 px-8; }
+/* Original classes: inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-full px-8 */
+
+.s-index-div-animate-fade-in-flex-justify-center { @apply flex justify-center animate-fade-in; }
+/* Original classes: flex justify-center animate-fade-in */
+
+.s-index-div-aspect-4-3-gradient-border-max-w-500px-overflow-hidden-relative-rounded-3xl-shadow-2xl-w-full { @apply relative w-full max-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl gradient-border; }
+/* Original classes: relative w-full max-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl gradient-border */
+
+.s-index-div-absolute-backdrop-blur-sm-bg-gradient-to-br-flex-from-background-20-inset-0-items-center-justify-center-to-muted-20 { @apply absolute inset-0 bg-gradient-to-br from-background/20 to-muted/20 backdrop-blur-sm flex items-center justify-center; }
+/* Original classes: absolute inset-0 bg-gradient-to-br from-background/20 to-muted/20 backdrop-blur-sm flex items-center justify-center */
+
+.s-index-div-gap-6-grid-grid-cols-2-p-8 { @apply grid grid-cols-2 gap-6 p-8; }
+/* Original classes: grid grid-cols-2 gap-6 p-8 */
+
+.s-index-div-backdrop-blur-sm-bg-background-90-border-border-border-50-bg-background-80-flex-flex-col-items-center-p-4-rounded-xl-shadow-lg { @apply bg-background/90 dark:bg-background/80 p-4 rounded-xl shadow-lg flex flex-col items-center backdrop-blur-sm border border-border/50; }
+/* Original classes: bg-background/90 dark:bg-background/80 p-4 rounded-xl shadow-lg flex flex-col items-center backdrop-blur-sm border border-border/50 */
+
+.s-index-i-h-8-mb-3-text-primary-w-8 { @apply h-8 w-8 text-primary mb-3; }
+/* Original classes: h-8 w-8 text-primary mb-3 */
+
+.sc-text-normal { @apply font-medium text-sm; }
+.sc-index-span-base { @apply text-foreground; }
+/* Original classes: text-sm font-medium text-foreground */
+
+.s-index-section-py-32-py-24-w-full { @apply w-full py-24 md:py-32; }
+/* Original classes: w-full py-24 md:py-32 */
+
+.s-index-div-container-px-6-mx-auto-px-4 { @apply container mx-auto px-4 md:px-6; }
+/* Original classes: container mx-auto px-4 md:px-6 */
+
+.s-index-div-flex-flex-col-items-center-justify-center-mb-16-space-y-4-text-center { @apply flex flex-col items-center justify-center space-y-4 text-center mb-16; }
+/* Original classes: flex flex-col items-center justify-center space-y-4 text-center mb-16 */
+
+.s-index-div-max-w-3xl-space-y-3 { @apply space-y-3 max-w-3xl; }
+/* Original classes: space-y-3 max-w-3xl */
+
+.s-index-h2-font-medium-text-4xl-text-3xl-tracking-tight { @apply text-3xl md:text-4xl font-medium tracking-tight; }
+/* Original classes: text-3xl md:text-4xl font-medium tracking-tight */
+
+.s-index-p-text-lg-text-muted-foreground { @apply text-lg text-muted-foreground; }
+/* Original classes: text-lg text-muted-foreground */
+
+.s-index-div-gap-6-grid-grid-cols-1-grid-cols-3-grid-cols-2-p-4-grid-cols-4 { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4; }
+/* Original classes: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4 */
+
+.s-index-div-flex-justify-center-mt-16 { @apply flex justify-center mt-16; }
+/* Original classes: flex justify-center mt-16 */
+
+.sc-layout-center { @apply inline-flex items-center justify-center; }
+.sc-text-normal { @apply font-medium text-sm; }
+.sc-interactive { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
+.sc-pill { @apply rounded-full border border-input; }
+.sc-index-a-base { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-background h-11 px-8 apple-button apple-button-secondary; }
+/* Original classes: inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-full px-8 apple-button apple-button-secondary */
+
+.s-index-section-bg-muted-py-32-py-24-w-full { @apply w-full py-24 md:py-32 bg-muted; }
+/* Original classes: w-full py-24 md:py-32 bg-muted */
+
+.s-index-div-gap-12-grid-items-center-gap-16-grid-cols-2-max-w-5xl-mx-auto-py-8 { @apply mx-auto grid max-w-5xl items-center gap-12 py-8 lg:grid-cols-2 lg:gap-16; }
+/* Original classes: mx-auto grid max-w-5xl items-center gap-12 py-8 lg:grid-cols-2 lg:gap-16 */
+
+.s-index-div-space-y-5 { @apply space-y-5; }
+/* Original classes: space-y-5 */
+
+.s-index-div-bg-accent-inline-block-px-3-py-1-rounded-full-text-accent-foreground-text-sm { @apply inline-block rounded-full bg-accent text-accent-foreground px-3 py-1 text-sm; }
+/* Original classes: inline-block rounded-full bg-accent text-accent-foreground px-3 py-1 text-sm */
+
+.s-index-h3-font-medium-text-2xl { @apply text-2xl font-medium; }
+/* Original classes: text-2xl font-medium */
+
+.s-index-p-leading-relaxed-text-lg-text-muted-foreground { @apply text-muted-foreground text-lg leading-relaxed; }
+/* Original classes: text-muted-foreground text-lg leading-relaxed */
+
+.s-index-ul-gap-3-grid-text-lg-text-muted-foreground { @apply grid gap-3 text-muted-foreground text-lg; }
+/* Original classes: grid gap-3 text-muted-foreground text-lg */
+
+.s-index-li-flex-gap-3-items-center { @apply flex items-center gap-3; }
+/* Original classes: flex items-center gap-3 */
+
+.s-index-div-bg-accent-p-1-rounded-full-text-accent-foreground { @apply rounded-full bg-accent text-accent-foreground p-1; }
+/* Original classes: rounded-full bg-accent text-accent-foreground p-1 */
+
+.s-index-i-h-4-w-4 { @apply h-4 w-4; }
+/* Original classes: h-4 w-4 */
+
+.s-index-footer-border-border-border-t-py-12 { @apply border-t border-border py-12; }
+/* Original classes: border-t border-border py-12 */
+
+.s-index-div-flex-flex-col-gap-6-items-center-justify-between-flex-row { @apply flex flex-col md:flex-row items-center justify-between gap-6; }
+/* Original classes: flex flex-col md:flex-row items-center justify-between gap-6 */
+
+.s-index-div-flex-gap-2-items-center { @apply flex items-center gap-2; }
+/* Original classes: flex items-center gap-2 */
+
+.s-index-span-font-medium-text-lg { @apply text-lg font-medium; }
+/* Original classes: text-lg font-medium */
+
+.s-index-p-text-left-text-center-text-muted-foreground-text-sm { @apply text-center text-sm text-muted-foreground md:text-left; }
+/* Original classes: text-center text-sm text-muted-foreground md:text-left */
+
+.s-index-div-flex-gap-6 { @apply flex gap-6; }
+/* Original classes: flex gap-6 */
+
+.sc-text-normal { @apply font-medium text-sm; }
+.sc-index-a-base { @apply text-muted-foreground hover:text-foreground transition-colors; }
+/* Original classes: text-sm font-medium text-muted-foreground hover:text-foreground transition-colors */
+
+.s-index-div-backdrop-blur-sm-bg-background-80-duration-300-fixed-inset-0-opacity-0-pointer-events-none-transition-opacity-z-50 { @apply fixed inset-0 z-50 bg-background/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300; }
+/* Original classes: fixed inset-0 z-50 bg-background/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 */
+
+.s-index-div-bottom-0-fixed-inset-x-0-mt-auto-z-50 { @apply fixed inset-x-0 bottom-0 z-50 mt-auto; }
+/* Original classes: fixed inset-x-0 bottom-0 z-50 mt-auto */
+
+.s-index-div-duration-300-transition-transform-translate-y-full { @apply translate-y-full transition-transform duration-300; }
+/* Original classes: translate-y-full transition-transform duration-300 */
+
+.s-index-div-bg-background-border-border-border-t-flex-flex-col-h-calc-100vh-4rem-relative-rounded-t-125rem { @apply relative h-[calc(100vh-4rem)] bg-background border-t border-border rounded-t-[1.25rem] flex flex-col; }
+/* Original classes: relative h-[calc(100vh-4rem)] bg-background border-t border-border rounded-t-[1.25rem] flex flex-col */
+
+.s-index-div-bg-muted-h-2-mt-4-mx-auto-rounded-full-w-100px { @apply mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted; }
+/* Original classes: mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted */
+
+.s-index-div-p-6-pt-8 { @apply p-6 pt-8; }
+/* Original classes: p-6 pt-8 */
+
+.s-index-nav-gap-6-grid { @apply grid gap-6; }
+/* Original classes: grid gap-6 */
+
+.sc-interactive { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
+.sc-index-a-base { @apply group flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium; }
+/* Original classes: group flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium hover:bg-accent hover:text-accent-foreground transition-colors */
+
+.s-index-div-bg-background-border-border-border-duration-100-ease-in-out-group-translate-y-1-shadow-xl-overflow-hidden-rounded-xl-shadow-sm-text-foreground-transform-transition-all { @apply group rounded-xl border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden; }
+/* Original classes: group rounded-xl border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden */
+
+.s-index-div-h-56-overflow-hidden-relative-rounded-t-xl-w-full { @apply relative h-56 w-full overflow-hidden rounded-t-xl; }
+/* Original classes: relative h-56 w-full overflow-hidden rounded-t-xl */
+
+.s-index-div-absolute-left-4-top-4-z-10 { @apply absolute top-4 left-4 z-10; }
+/* Original classes: absolute top-4 left-4 z-10 */
+
+.s-index-div-backdrop-blur-sm-bg-background-90-bg-background-font-medium-px-3-py-1-rounded-full-text-foreground-text-xs-transition-colors { @apply bg-background/90 dark:bg-background text-foreground px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm transition-colors; }
+/* Original classes: bg-background/90 dark:bg-background text-foreground px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm transition-colors */
+
+.s-index-img-duration-500-scale-105-h-full-object-cover-transition-transform-w-full { @apply h-full w-full object-cover transition-transform duration-500 group-hover:scale-105; }
+/* Original classes: h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 */
+
+.s-index-div-p-4 { @apply p-4; }
+/* Original classes: p-4 */
+
+.s-index-h3-font-medium-text-foreground-text-xl { @apply text-xl font-medium text-foreground; }
+/* Original classes: text-xl font-medium text-foreground */
+
+.s-index-p-mt-1-text-muted-foreground-text-sm { @apply mt-1 text-sm text-muted-foreground; }
+/* Original classes: mt-1 text-sm text-muted-foreground */
+
+.s-index-div-gap-4-grid-grid-cols-2-mt-5 { @apply mt-5 grid grid-cols-2 gap-4; }
+/* Original classes: mt-5 grid grid-cols-2 gap-4 */
+
+.s-index-p-text-muted-foreground-text-xs-tracking-wide-uppercase { @apply text-xs text-muted-foreground uppercase tracking-wide; }
+/* Original classes: text-xs text-muted-foreground uppercase tracking-wide */
+
+.s-index-p-font-medium-mt-1-text-foreground { @apply mt-1 font-medium text-foreground; }
+/* Original classes: mt-1 font-medium text-foreground */
+
+.s-index-div-flex-flex-wrap-gap-2-mt-5 { @apply mt-5 flex flex-wrap gap-2; }
+/* Original classes: mt-5 flex flex-wrap gap-2 */
+
+.s-index-span-bg-accent-font-medium-bg-accent-80-inline-flex-items-center-px-25-py-05-rounded-full-text-accent-foreground-text-xs-transition-colors { @apply inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-xs font-medium text-accent-foreground transition-colors hover:bg-accent/80; }
+/* Original classes: inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-xs font-medium text-accent-foreground transition-colors hover:bg-accent/80 */
+
+.s-index-div-flex-items-center-justify-between-p-4-pt-0 { @apply flex items-center justify-between p-4 pt-0; }
+/* Original classes: flex items-center justify-between p-4 pt-0 */
+
+.s-index-div-flex-gap-2 { @apply flex gap-2; }
+/* Original classes: flex gap-2 */
+
+.sc-layout-center { @apply inline-flex items-center justify-center; }
+.sc-index-a-base { @apply h-9 w-9 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
+/* Original classes: inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80 */
+
+.sc-layout-center { @apply inline-flex items-center justify-center; }
+.sc-size-sm { @apply px-4 h-9 text-sm; }
+.sc-interactive { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
+.sc-pill { @apply rounded-full border border-input; }
+.sc-index-a-base { @apply font-medium; }
+/* Original classes: inline-flex items-center justify-center rounded-full border border-input px-4 h-9 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground */
+
+.s-index-div-bg-background-border-border-border-duration-100-ease-in-out-translate-y-1-shadow-xl-overflow-hidden-rounded-lg-shadow-sm-text-foreground-transform-transition-all { @apply rounded-lg border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden; }
+/* Original classes: rounded-lg border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden */
+
+.s-index-div-aspect-video-group-overflow-hidden-relative-rounded-t-2xl-w-full { @apply relative aspect-video w-full overflow-hidden rounded-t-2xl group; }
+/* Original classes: relative aspect-video w-full overflow-hidden rounded-t-2xl group */
+
+.s-index-div-absolute-bg-foreground-5-bg-foreground-10-inset-0-transition-colors-z-10 { @apply absolute inset-0 bg-foreground/5 group-hover:bg-foreground/10 transition-colors z-10; }
+/* Original classes: absolute inset-0 bg-foreground/5 group-hover:bg-foreground/10 transition-colors z-10 */
+
+.s-index-div-absolute-duration-100-flex-opacity-100-inset-0-items-center-justify-center-opacity-0-transition-opacity-z-20 { @apply absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-100 z-20; }
+/* Original classes: absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-100 z-20 */
+
+.sc-layout-center { @apply inline-flex items-center justify-center; }
+.sc-text-normal { @apply font-medium text-sm; }
+.sc-index-button-base { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground
+ dark:bg-background/95 dark:text-primary dark:hover:bg-primary dark:hover:text-primary-foreground
+ backdrop-blur-sm hover:scale-105 transition-all duration-100; }
+/* Original classes: inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full 
+                bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground
+                dark:bg-background/95 dark:text-primary dark:hover:bg-primary dark:hover:text-primary-foreground
+                backdrop-blur-sm hover:scale-105 transition-all duration-100 */
+
+.s-index-i-h-6-w-6 { @apply h-6 w-6; }
+/* Original classes: h-6 w-6 */
+
+.s-index-div-absolute-backdrop-blur-sm-bg-background-95-bottom-3-text-foreground-font-medium-px-2-py-1-right-3-rounded-md-text-foreground-text-xs-z-20 { @apply absolute bottom-3 right-3 bg-background/95 text-foreground dark:text-foreground backdrop-blur-sm text-xs font-medium px-2 py-1 rounded-md z-20; }
+/* Original classes: absolute bottom-3 right-3 bg-background/95 text-foreground dark:text-foreground backdrop-blur-sm text-xs font-medium px-2 py-1 rounded-md z-20 */
+
+.s-index-div-absolute-left-3-top-3-z-20 { @apply absolute top-3 left-3 z-20; }
+/* Original classes: absolute top-3 left-3 z-20 */
+
+.s-index-div-backdrop-blur-sm-bg-primary-10-bg-primary-20-bg-primary-text-primary-foreground-text-primary-foreground-duration-100-font-medium-gap-1-bg-primary-text-primary-foreground-inline-flex-items-center-px-2-py-1-rounded-full-text-primary-text-xs-transition-colors { @apply inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full
+                bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground
+                dark:bg-primary/20 dark:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground
+                backdrop-blur-sm transition-colors duration-100; }
+/* Original classes: inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full
+                bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground
+                dark:bg-primary/20 dark:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground
+                backdrop-blur-sm transition-colors duration-100 */
+
+.s-index-i-h-3-w-3 { @apply h-3 w-3; }
+/* Original classes: h-3 w-3 */
+
+.s-index-img-absolute-duration-500-scale-105-h-full-inset-0-object-cover-transition-transform-w-full { @apply absolute h-full w-full inset-0 object-cover transition-transform duration-500 group-hover:scale-105; }
+/* Original classes: absolute h-full w-full inset-0 object-cover transition-transform duration-500 group-hover:scale-105 */
+
+.s-index-div-p-5 { @apply p-5; }
+/* Original classes: p-5 */
+
+.s-index-a-block-group-title { @apply block group/title; }
+/* Original classes: block group/title */
+
+.s-index-h3-font-medium-text-primary-line-clamp-2-text-foreground-text-lg-transition-colors { @apply font-medium text-lg line-clamp-2 text-foreground group-hover/title:text-primary transition-colors; }
+/* Original classes: font-medium text-lg line-clamp-2 text-foreground group-hover/title:text-primary transition-colors */
+
+.s-index-div-flex-items-center-justify-between-mt-4 { @apply flex items-center justify-between mt-4; }
+/* Original classes: flex items-center justify-between mt-4 */
+
+.s-index-span-flex-h-8-overflow-hidden-relative-ring-1-ring-border-rounded-full-shrink-0-w-8 { @apply relative flex shrink-0 overflow-hidden rounded-full h-8 w-8 ring-1 ring-border; }
+/* Original classes: relative flex shrink-0 overflow-hidden rounded-full h-8 w-8 ring-1 ring-border */
+
+.s-index-img-aspect-square-h-full-w-full { @apply aspect-square h-full w-full; }
+/* Original classes: aspect-square h-full w-full */
+
+.sc-text-normal { @apply font-medium text-sm; }
+.sc-index-a-base { @apply text-muted-foreground hover:text-primary transition-colors; }
+/* Original classes: text-sm font-medium text-muted-foreground hover:text-primary transition-colors */
+
+.s-index-div-border-border-border-t-flex-items-center-px-5-py-3-text-muted-foreground-text-xs { @apply flex items-center px-5 py-3 border-t border-border text-xs text-muted-foreground; }
+/* Original classes: flex items-center px-5 py-3 border-t border-border text-xs text-muted-foreground */
+

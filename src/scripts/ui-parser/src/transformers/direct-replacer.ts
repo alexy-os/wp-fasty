@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { EnhancedClassEntry } from '../core/types';
+import { EnhancedClassEntry, ModifierEntry } from '../core/types';
 
 /**
  * Options for the DirectReplacer
@@ -20,7 +20,11 @@ export interface DirectReplacerOptions {
 
 export class DirectReplacer {
   private classEntries: EnhancedClassEntry[];
-  private classMap: Map<string, { semantic: string, crypto: string }>;
+  private classMap: Map<string, { 
+    semantic: string, 
+    crypto: string,
+    modifiers?: ModifierEntry[]
+  }>;
 
   constructor(classEntries: EnhancedClassEntry[]) {
     this.classEntries = classEntries;
@@ -28,18 +32,42 @@ export class DirectReplacer {
 
     // Create a map of correspondences for fast search
     this.classEntries.forEach(entry => {
-      this.classMap.set(entry.classes, {
-        semantic: entry.semantic,
-        crypto: entry.crypto  // Use crypto instead of quark
-      });
-
-      // Also add the normalized version
+      if (entry.modifiers.length > 0) {
+        // We have modifiers
+        const modSemanticClasses = entry.modifiers.map(m => m.semantic).join(' ');
+        const modCryptoClasses = entry.modifiers.map(m => m.crypto).join(' ');
+        
+        this.classMap.set(entry.classes, {
+          semantic: modSemanticClasses,
+          crypto: modCryptoClasses,
+          modifiers: entry.modifiers
+        });
+      } else {
+        // No modifiers, using original crypto/semantic
+        this.classMap.set(entry.classes, {
+          semantic: entry.semantic,
+          crypto: entry.crypto
+        });
+      }
+      
+      // Also for normalized classes
       const normalizedClasses = this.normalizeClassString(entry.classes);
       if (normalizedClasses !== entry.classes) {
-        this.classMap.set(normalizedClasses, {
-          semantic: entry.semantic,
-          crypto: entry.crypto  // Use crypto instead of quark
-        });
+        if (entry.modifiers.length > 0) {
+          const modSemanticClasses = entry.modifiers.map(m => m.semantic).join(' ');
+          const modCryptoClasses = entry.modifiers.map(m => m.crypto).join(' ');
+          
+          this.classMap.set(normalizedClasses, {
+            semantic: modSemanticClasses,
+            crypto: modCryptoClasses,
+            modifiers: entry.modifiers
+          });
+        } else {
+          this.classMap.set(normalizedClasses, {
+            semantic: entry.semantic,
+            crypto: entry.crypto
+          });
+        }
       }
     });
   }
@@ -110,7 +138,7 @@ export class DirectReplacer {
     try {
       const content = fs.readFileSync(sourceFile, 'utf-8');
       let semanticContent = content;
-      let cryptoContent = content;  // Переименовали из quarkContent
+      let cryptoContent = content;  // Renamed from quarkContent
 
       const classRegex = /className=["']([^"']+)["']/g;
       let match;

@@ -45,18 +45,24 @@ export class CSSGenerator {
     let semanticCSS = '';
     
     entries.forEach(entry => {
-      // Main element classes (without modifiers)
-      quarkCSS += `.${entry.crypto} { @apply ${entry.classes}; }\n`;
-      semanticCSS += `.${entry.semantic} { @apply ${entry.classes}; }\n`;
+      if (entry.modifiers.length > 0) {
+        // We have modifiers, generate CSS for each of them
+        entry.modifiers.forEach(mod => {
+          // For crypto file
+          quarkCSS += `.${mod.crypto} { @apply ${mod.classes}; }\n`;
+          
+          // For semantic file
+          semanticCSS += `.${mod.semantic} { @apply ${mod.classes}; }\n`;
+        });
+      } else {
+        // No modifiers, using the original class
+        quarkCSS += `.${entry.crypto} { @apply ${entry.classes}; }\n`;
+        semanticCSS += `.${entry.semantic} { @apply ${entry.classes}; }\n`;
+      }
       
-      // Element modifiers
-      entry.modifiers.forEach(mod => {
-        // For crypto file
-        quarkCSS += `.${mod.crypto} { @apply ${mod.classes}; }\n`;
-        
-        // For semantic file
-        semanticCSS += `.${mod.semantic} { @apply ${mod.classes}; }\n`;
-      });
+      // Add comment with full set of classes for debugging
+      quarkCSS += `/* Original classes: ${entry.classes} */\n\n`;
+      semanticCSS += `/* Original classes: ${entry.classes} */\n\n`;
     });
     
     return { quarkCSS, semanticCSS };

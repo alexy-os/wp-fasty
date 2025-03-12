@@ -1,6 +1,6 @@
 import { configManager } from '../config';
 import { generateCryptoFromQuark } from './crypto-generator';
-import { ModifierEntry } from '../core/types';
+import { ModifierEntry, ModifierType } from '../core/types';
 
 export interface ExtractedModifier {
   name: string;
@@ -9,21 +9,19 @@ export interface ExtractedModifier {
 }
 
 /**
- * Extracts modifiers from a set of classes
+ * Finds and extracts modifiers from a set of classes
  */
 export function extractModifiers(
   classes: string, 
   componentName: string, 
   elementType: string
 ): { 
-  modifiers: ModifierEntry[]; 
-  remainingClasses: string;
+  modifiers: ModifierEntry[];
 } {
   const modifiers: ModifierEntry[] = [];
-  let remainingClasses = classes;
-  const classesSet = new Set(classes.split(' '));
+  const classesSet = new Set(classes.split(' ').filter(c => c.trim()));
   
-  // Get all patterns from configuration
+  // Get all patterns from the configuration
   const patterns = [
     ...configManager.getConfig().patterns.layout,
     ...configManager.getConfig().patterns.sizing,
@@ -40,6 +38,9 @@ export function extractModifiers(
     const matches = patternClasses.every(cls => classesSet.has(cls));
     
     if (matches) {
+      // Determine modifier type
+      const modType = determineModifierType(pattern.pattern);
+      
       // Generate semantic identifier for modifier
       const semanticName = pattern.name || generateSemanticModifierName(pattern.pattern, componentName, elementType);
       
@@ -52,7 +53,8 @@ export function extractModifiers(
         name: semanticName,
         classes: pattern.pattern,
         crypto: modCrypto,
-        semantic: `${configManager.getConfig().classNames.semanticPrefix}${semanticName}`
+        semantic: `${configManager.getConfig().classNames.semanticPrefix}${semanticName}`,
+        type: modType
       };
       
       modifiers.push(modifier);
@@ -62,10 +64,55 @@ export function extractModifiers(
     }
   }
   
-  // Convert remaining classes back to string
-  remainingClasses = Array.from(classesSet).join(' ');
+  // If modifiers were found or we force create source
+  if (modifiers.length > 0) {
+    // Convert remaining classes to source modifier
+    const remainingClasses = Array.from(classesSet).join(' ');
+    
+    if (remainingClasses) {
+      // Create source modifier for remaining classes
+      const sourceName = `${componentName}-${elementType}-base`;
+      const sourceQuark = `q-src-${sourceName.replace(/[^a-z0-9]/g, '')}`;
+      const sourceCrypto = generateCryptoFromQuark(sourceQuark);
+      
+      modifiers.push({
+        name: sourceName,
+        classes: remainingClasses,
+        crypto: sourceCrypto,
+        semantic: `${configManager.getConfig().classNames.semanticPrefix}${sourceName}`,
+        type: 'source'
+      });
+    }
+  }
   
-  return { modifiers, remainingClasses };
+  return { modifiers };
+}
+
+/**
+ * Determines modifier type based on pattern
+ */
+function determineModifierType(pattern: string): ModifierType {
+  if (pattern.includes('flex') || pattern.includes('grid') || pattern.includes('items-')) {
+    return 'layout';
+  }
+  
+  if (pattern.includes('px-') || pattern.includes('py-') || pattern.includes('h-') || pattern.includes('w-')) {
+    return 'sizing';
+  }
+  
+  if (pattern.includes('font-') || pattern.includes('text-')) {
+    return 'typography';
+  }
+  
+  if (pattern.includes('hover:') || pattern.includes('focus:') || pattern.includes('active:')) {
+    return 'interaction';
+  }
+  
+  if (pattern.includes('rounded') || pattern.includes('border') || pattern.includes('shadow')) {
+    return 'decoration';
+  }
+  
+  return 'source';
 }
 
 /**
