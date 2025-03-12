@@ -1,23 +1,23 @@
 import { EnhancedClassEntry } from '../core/types';
 
 /**
- * Removes duplicate entries by quark field
+ * Removes duplicate entries by crypto field
  */
 export function deduplicateEntries(entries: EnhancedClassEntry[]): EnhancedClassEntry[] {
-  const quarkMap = new Map<string, EnhancedClassEntry>();
+  const cryptoMap = new Map<string, EnhancedClassEntry>();
   
   entries.forEach(entry => {
-    const existingEntry = quarkMap.get(entry.quark);
+    const existingEntry = cryptoMap.get(entry.crypto);
     
     if (!existingEntry) {
-            quarkMap.set(entry.quark, entry);
+      cryptoMap.set(entry.crypto, entry);
     } else {
-            existingEntry.components = {
+      existingEntry.components = {
         ...existingEntry.components,
         ...entry.components
       };
     }
   });
   
-  return Array.from(quarkMap.values());
+  return Array.from(cryptoMap.values());
 } 

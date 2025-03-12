@@ -62,19 +62,19 @@ export class ComponentTransformer {
       };
     }
     
-    const classMap = new Map<string, { semantic: string, quark: string }>();
+    const classMap = new Map<string, { semantic: string, crypto: string }>();
     
     domAnalysisData.forEach(entry => {
       classMap.set(entry.classes, {
         semantic: entry.semantic,
-        quark: entry.quark
+        crypto: entry.crypto
       });
       
       const normalizedClasses = this.normalizeClassString(entry.classes);
       if (normalizedClasses !== entry.classes) {
         classMap.set(normalizedClasses, {
           semantic: entry.semantic,
-          quark: entry.quark
+          crypto: entry.crypto
         });
       }
     });
@@ -131,12 +131,12 @@ export class ComponentTransformer {
             if (transformationType === 'quark' || transformationType === 'both') {
               quarkContent = 
                 quarkContent.substring(0, index) + 
-                `className="${replacement.quark}"` + 
+                `className="${replacement.crypto}"` +
                 quarkContent.substring(index + fullMatch.length);
             }
             
             result.classesReplaced++;
-            console.log(`Replaced "${classValue}" with semantic: "${replacement.semantic}" and quark: "${replacement.quark}"`);
+            console.log(`Replaced "${classValue}" with semantic: "${replacement.semantic}" and crypto: "${replacement.crypto}"`);
             continue;
           }
           
@@ -154,12 +154,12 @@ export class ComponentTransformer {
             if (transformationType === 'quark' || transformationType === 'both') {
               quarkContent = 
                 quarkContent.substring(0, index) + 
-                `className="${replacement.quark}"` + 
+                `className="${replacement.crypto}"` +
                 quarkContent.substring(index + fullMatch.length);
             }
             
             result.classesReplaced++;
-            console.log(`Replaced normalized "${normalizedClassValue}" with semantic: "${replacement.semantic}" and quark: "${replacement.quark}"`);
+            console.log(`Replaced normalized "${normalizedClassValue}" with semantic: "${replacement.semantic}" and crypto: "${replacement.crypto}"`);
             continue;
           }
           
@@ -182,8 +182,8 @@ export class ComponentTransformer {
         }
         
         if (transformationType === 'quark' || transformationType === 'both') {
-          const quarkOutputPath = path.join(outputDir, `${baseName}.quark${extension}`);
-          fs.writeFileSync(quarkOutputPath, quarkContent);
+          const cryptoOutputPath = path.join(outputDir, `${baseName}.crypto${extension}`);
+          fs.writeFileSync(cryptoOutputPath, quarkContent);
         }
         
         result.componentsTransformed++;

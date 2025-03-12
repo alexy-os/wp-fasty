@@ -9,6 +9,7 @@ export interface ComponentMap {
 
 export interface EnhancedClassEntry {
   quark: string;
+  crypto: string;
   semantic: string;
   classes: string;
   componentName: string;

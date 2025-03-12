@@ -13,37 +13,41 @@ export interface DirectReplacerOptions {
   transformationType?: 'semantic' | 'quark' | 'both';  // Type of transformation
 }
 
-interface ReplacementResult {
+/*interface ReplacementResult {
   result: string;
   replacementCount: number;
-}
+}*/
 
 export class DirectReplacer {
-  // private classEntries: EnhancedClassEntry[];
-  private classMap: Map<string, { quark: string; semantic: string }>;
+  private classEntries: EnhancedClassEntry[];
+  private classMap: Map<string, { semantic: string, crypto: string }>;
 
   constructor(classEntries: EnhancedClassEntry[]) {
-    // this.classEntries = classEntries;
-    const sortedEntries = classEntries
-      .map(entry => ({
-        original: entry.classes,
-        quark: entry.quark,
-        semantic: entry.semantic
-      }))
-      .sort((a, b) => b.original.length - a.original.length);
+    this.classEntries = classEntries;
+    this.classMap = new Map();
 
-    this.classMap = new Map(
-      sortedEntries.map(entry => [
-        entry.original,
-        { quark: entry.quark, semantic: entry.semantic }
-      ])
-    );
+    // Create a map of correspondences for fast search
+    this.classEntries.forEach(entry => {
+      this.classMap.set(entry.classes, {
+        semantic: entry.semantic,
+        crypto: entry.crypto  // Use crypto instead of quark
+      });
+
+      // Also add the normalized version
+      const normalizedClasses = this.normalizeClassString(entry.classes);
+      if (normalizedClasses !== entry.classes) {
+        this.classMap.set(normalizedClasses, {
+          semantic: entry.semantic,
+          crypto: entry.crypto  // Use crypto instead of quark
+        });
+      }
+    });
   }
 
   /**
    * Updates import statements in the content
    */
-  private updateImports(content: string, variant: 'quark' | 'semantic'): string {
+  /*private updateImports(content: string, variant: 'quark' | 'semantic'): string {
     let result = content;
 
     
@@ -77,9 +81,9 @@ export class DirectReplacer {
     });
 
     return result;
-  }
+  }*/
 
-  private replaceClassesInContent(content: string, useQuark: boolean): ReplacementResult {
+  /*private replaceClassesInContent(content: string, useQuark: boolean): ReplacementResult {
     let result = content;
     let replacementCount = 0;
 
@@ -95,78 +99,67 @@ export class DirectReplacer {
     }
 
     return { result, replacementCount };
-  }
+  }*/
 
   /**
    * Transform a component file
    */
   public async transform(options: DirectReplacerOptions): Promise<void> {
     const { sourceFile, quarkOutput, semanticOutput } = options;
-    
-    // Use provided classEntries or fall back to the ones provided in constructor
-    // const entries = classEntries || this.classEntries;
 
     try {
-      if (!fs.existsSync(sourceFile)) {
-        throw new Error(`Source file not found: ${sourceFile}`);
+      const content = fs.readFileSync(sourceFile, 'utf-8');
+      let semanticContent = content;
+      let cryptoContent = content;  // Переименовали из quarkContent
+
+      const classRegex = /className=["']([^"']+)["']/g;
+      let match;
+      const matches: Array<{ index: number, length: number, classes: string }> = [];
+
+      while ((match = classRegex.exec(content)) !== null) {
+        matches.push({
+          index: match.index,
+          length: match[0].length,
+          classes: match[1]
+        });
       }
 
-      
-      const content = fs.readFileSync(sourceFile, 'utf-8');
-      const componentName = path.basename(sourceFile, path.extname(sourceFile));
+      // Process from the end to avoid index shifts
+      for (let i = matches.length - 1; i >= 0; i--) {
+        const { index, length, classes } = matches[i];
+        
+        const replacement = this.classMap.get(classes) || 
+                          this.classMap.get(this.normalizeClassString(classes));
 
-      
-      const quarkContent = this.replaceClassesInContent(content, true);
-      const semanticContent = this.replaceClassesInContent(content, false);
+        if (replacement) {
+          semanticContent = 
+            semanticContent.slice(0, index) + 
+            `className="${replacement.semantic}"` + 
+            semanticContent.slice(index + length);
 
-      
-      const quarkWithImports = this.updateImports(quarkContent.result, 'quark');
-      const semanticWithImports = this.updateImports(semanticContent.result, 'semantic');
+          cryptoContent = 
+            cryptoContent.slice(0, index) + 
+            `className="${replacement.crypto}"` +  // Use crypto
+            cryptoContent.slice(index + length);
+        }
+      }
 
-      
-      const wrappedQuarkContent = this.wrapWithExport(quarkWithImports, componentName, 'Quark');
-      const wrappedSemanticContent = this.wrapWithExport(semanticWithImports, componentName, 'Semantic');
+      // Create directories if they don't exist
+      fs.mkdirSync(path.dirname(semanticOutput), { recursive: true });
+      fs.mkdirSync(path.dirname(quarkOutput), { recursive: true });
 
-      
-      const outputDir = path.dirname(quarkOutput);
-      fs.mkdirSync(outputDir, { recursive: true });
+      // Save results
+      fs.writeFileSync(semanticOutput, semanticContent);
+      fs.writeFileSync(quarkOutput, cryptoContent);  // Save crypto version
 
-      
-      fs.writeFileSync(quarkOutput, wrappedQuarkContent);
-      fs.writeFileSync(semanticOutput, wrappedSemanticContent);
-
-      console.log(`✓ Component ${componentName} transformed successfully`);
     } catch (error) {
-      console.error('Error during transformation:', error instanceof Error ? error.message : error);
+      console.error('Error during direct replacement:', error);
       throw error;
     }
   }
 
-  /**
-   * Wraps component content with proper export
-   */
-  private wrapWithExport(content: string, componentName: string, variant: 'Quark' | 'Semantic'): string {
-    
-    const exportMatch = content.match(/export\s+(?:default\s+)?(?:function|const|class)\s+(\w+)/);
-    
-    if (!exportMatch) {
-      
-      return content;
-    }
-
-    
-    const modifiedContent = content.replace(
-      /export\s+(?:default\s+)?(?=(?:function|const|class)\s+\w+)/,
-      ''
-    );
-
-    
-    return `${modifiedContent}
-
-
-export { ${componentName} as ${componentName}${variant} };
-export default ${componentName};
-`;
+  private normalizeClassString(classString: string): string {
+    return classString.split(' ').sort().join(' ');
   }
 
   public supportsFile(filePath: string): boolean {

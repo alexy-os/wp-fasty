@@ -4,6 +4,7 @@
 export interface EnhancedClassEntry {
   quark: string;
   semantic: string;
+  crypto: string;
   classes: string;
   componentName: string;     
   elementType: string;       

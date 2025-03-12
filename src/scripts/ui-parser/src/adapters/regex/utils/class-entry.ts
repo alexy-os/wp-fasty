@@ -1,4 +1,5 @@
 import { EnhancedClassEntry, ClassNameConfig } from '../types';
+import { generateCryptoFromQuark } from '../../../utils/crypto-generator';
 
 /**
  * Creates an enhanced class entry from extracted class information
@@ -11,8 +12,11 @@ export function createClassEntry(
   variants: Record<string, string> = {},
   config: ClassNameConfig
 ): EnhancedClassEntry {
+  const quark = generateQuarkName(classes, config.quarkPrefix);
+  
   return {
-    quark: generateQuarkName(classes, config.quarkPrefix),
+    quark,
+    crypto: generateCryptoFromQuark(quark),
     semantic: generateSemanticName(componentName, elementType, classes, config.semanticPrefix),
     classes: classes.trim(),
     componentName,

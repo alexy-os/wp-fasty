@@ -45,7 +45,7 @@ export class CSSGenerator {
     let semanticCSS = '';
     
     entries.forEach(entry => {
-      quarkCSS += `.${entry.quark} { @apply ${entry.classes}; }\n`;
+      quarkCSS += `.${entry.crypto} { @apply ${entry.classes}; }\n`;
       semanticCSS += `.${entry.semantic} { @apply ${entry.classes}; }\n`;
     });
     
