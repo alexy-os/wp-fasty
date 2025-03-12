@@ -13,7 +13,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bbfbmhstf",
@@ -29,7 +30,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ffcmhs",
@@ -45,7 +47,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bbsbbbbst0z5",
@@ -61,7 +64,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-cfh1icjbp6map4",
@@ -77,7 +81,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ffmg2ictl",
@@ -93,7 +98,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-h5w5",
@@ -109,7 +115,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-f1hmwmfm4",
@@ -125,7 +132,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-rwf",
@@ -141,7 +149,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ah4l3tmft2w4",
@@ -157,7 +166,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bab0bicnao5btb0fmtftsfonr1ro2rrh1tsp1tmfp3p2robrftbwf",
@@ -173,7 +183,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-g8hf",
@@ -189,12 +200,13 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
-    "quark": "q-fmtmftstc",
-    "crypto": "uiqwe",
-    "semantic": "s-index-a-font-medium-text-muted-foreground-text-sm-transition-colors",
+    "quark": "q-tmftc",
+    "crypto": "2bqlj",
+    "semantic": "s-index-a-text-muted-foreground-transition-colors",
     "classes": "text-sm font-medium hover:text-muted-foreground transition-colors",
     "componentName": "index",
     "elementType": "a",
@@ -205,7 +217,15 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "text-normal",
+        "classes": "font-medium text-sm",
+        "crypto": "55wia",
+        "semantic": "sc-text-normal"
+      }
+    ]
   },
   {
     "quark": "q-fg4ic",
@@ -221,12 +241,13 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
-    "quark": "q-bah1baificjcrrftaftcw1",
-    "crypto": "t1t0c",
-    "semantic": "s-index-button-bg-accent-h-10-bg-accent-80-inline-flex-items-center-justify-center-relative-rounded-full-text-accent-foreground-transition-colors-w-10",
+    "quark": "q-bah1barrftaftcw1",
+    "crypto": "dsghg",
+    "semantic": "s-index-button-bg-accent-h-10-bg-accent-80-relative-rounded-full-text-accent-foreground-transition-colors-w-10",
     "classes": "inline-flex items-center justify-center relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80",
     "componentName": "index",
     "elementType": "button",
@@ -237,7 +258,15 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "layout-center",
+        "classes": "inline-flex items-center justify-center",
+        "crypto": "wytwc",
+        "semantic": "sc-layout-center"
+      }
+    ]
   },
   {
     "quark": "q-ar9s0d1h1r0s1taw1",
@@ -253,7 +282,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ar0s1d1h1r9s0taw1",
@@ -269,7 +299,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-so",
@@ -285,12 +316,13 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
-    "quark": "q-pens0s4bab0bio5penonr2ro2rrfmg2h1batafificjchrobrftaftstcw1wn",
-    "crypto": "0vbzp",
-    "semantic": "s-index-button-pointer-events-none-shrink-0-size-4-bg-accent-border-0-border-input-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-font-medium-gap-2-h-10-bg-accent-text-accent-foreground-inline-flex-items-center-justify-center-hidden-ring-offset-background-rounded-full-text-accent-foreground-text-sm-transition-colors-w-10-whitespace-nowrap",
+    "quark": "q-pens0s4bab0bio5penonr2ro2rrg2h1hrobrftafw1wn",
+    "crypto": "jyfjh",
+    "semantic": "s-index-button-pointer-events-none-shrink-0-size-4-bg-accent-border-0-border-input-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-gap-2-h-10-hidden-ring-offset-background-rounded-full-text-accent-foreground-w-10-whitespace-nowrap",
     "classes": "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-input hover:bg-accent hover:text-accent-foreground md:hidden rounded-full w-10 h-10 bg-accent text-accent-foreground border-0",
     "componentName": "index",
     "elementType": "button",
@@ -301,7 +333,27 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "layout-center",
+        "classes": "inline-flex items-center justify-center",
+        "crypto": "wytwc",
+        "semantic": "sc-layout-center"
+      },
+      {
+        "name": "text-normal",
+        "classes": "font-medium text-sm",
+        "crypto": "55wia",
+        "semantic": "sc-text-normal"
+      },
+      {
+        "name": "interactive",
+        "classes": "transition-colors hover:bg-accent hover:text-accent-foreground",
+        "crypto": "xefuo",
+        "semantic": "sc-interactive"
+      }
+    ]
   },
   {
     "quark": "q-bbbthp2",
@@ -317,7 +369,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-cmap4p2",
@@ -333,7 +386,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-f1",
@@ -349,7 +403,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bmp4p3ohp2rwf",
@@ -365,7 +420,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-abgtbfpi0ttvt",
@@ -381,7 +437,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-cp6map4r",
@@ -397,7 +454,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-g1gicg1gc2",
@@ -413,7 +471,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-afusy6",
@@ -429,7 +488,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fmt6t5t4tt",
@@ -445,7 +505,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fsgt",
@@ -461,7 +522,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-mw6tltmf",
@@ -477,7 +539,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ffcg4p4fr",
@@ -493,12 +556,13 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
-    "quark": "q-pens0s4bpo5penonr2ro2rrfmg2ggh1bpificjcp8robrftpftstcwn",
-    "crypto": "5aj5e",
-    "semantic": "s-index-a-pointer-events-none-shrink-0-size-4-bg-primary-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-font-medium-gap-2-gradient-glow-h-11-bg-primary-90-inline-flex-items-center-justify-center-px-8-ring-offset-background-rounded-full-text-primary-foreground-text-sm-transition-colors-whitespace-nowrap",
+    "quark": "q-pens0s4bpo5penonr2ro2rrg2ggh1bpp8robrftpftcwn",
+    "crypto": "xmjyx",
+    "semantic": "s-index-a-pointer-events-none-shrink-0-size-4-bg-primary-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-gap-2-gradient-glow-h-11-bg-primary-90-px-8-ring-offset-background-rounded-full-text-primary-foreground-transition-colors-whitespace-nowrap",
     "classes": "gradient-glow inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-full px-8",
     "componentName": "index",
     "elementType": "a",
@@ -509,12 +573,26 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "layout-center",
+        "classes": "inline-flex items-center justify-center",
+        "crypto": "wytwc",
+        "semantic": "sc-layout-center"
+      },
+      {
+        "name": "text-normal",
+        "classes": "font-medium text-sm",
+        "crypto": "55wia",
+        "semantic": "sc-text-normal"
+      }
+    ]
   },
   {
-    "quark": "q-pens0s4bbbbio5penonr2ro2rrfmg2h1batafificjcp8robrftstcwn",
-    "crypto": "eik5y",
-    "semantic": "s-index-a-pointer-events-none-shrink-0-size-4-bg-background-border-border-input-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-font-medium-gap-2-h-11-bg-accent-text-accent-foreground-inline-flex-items-center-justify-center-px-8-ring-offset-background-rounded-full-text-sm-transition-colors-whitespace-nowrap",
+    "quark": "q-pens0s4bbo5penonr2ro2rrg2h1p8robwn",
+    "crypto": "0bn33",
+    "semantic": "s-index-a-pointer-events-none-shrink-0-size-4-bg-background-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-gap-2-h-11-px-8-ring-offset-background-whitespace-nowrap",
     "classes": "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-full px-8",
     "componentName": "index",
     "elementType": "a",
@@ -525,7 +603,33 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "layout-center",
+        "classes": "inline-flex items-center justify-center",
+        "crypto": "wytwc",
+        "semantic": "sc-layout-center"
+      },
+      {
+        "name": "text-normal",
+        "classes": "font-medium text-sm",
+        "crypto": "55wia",
+        "semantic": "sc-text-normal"
+      },
+      {
+        "name": "interactive",
+        "classes": "transition-colors hover:bg-accent hover:text-accent-foreground",
+        "crypto": "xefuo",
+        "semantic": "sc-interactive"
+      },
+      {
+        "name": "pill",
+        "classes": "rounded-full border border-input",
+        "crypto": "2w2r5",
+        "semantic": "sc-pill"
+      }
+    ]
   },
   {
     "quark": "q-afifjc",
@@ -541,7 +645,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-a4gbmw5ohrr3s2wf",
@@ -557,7 +662,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-abbsbgtbffbi0icjctm",
@@ -573,7 +679,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-g6ggc2p8",
@@ -589,7 +696,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bbsbbbbbbbffcicp4rxsl",
@@ -605,7 +713,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-h8m3tpw8",
@@ -621,12 +730,13 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
-    "quark": "q-fmtfts",
-    "crypto": "iszw1",
-    "semantic": "s-index-span-font-medium-text-foreground-text-sm",
+    "quark": "q-tf",
+    "crypto": "stdaa",
+    "semantic": "s-index-span-text-foreground",
     "classes": "text-sm font-medium text-foreground",
     "componentName": "index",
     "elementType": "span",
@@ -637,7 +747,15 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "text-normal",
+        "classes": "font-medium text-sm",
+        "crypto": "55wia",
+        "semantic": "sc-text-normal"
+      }
+    ]
   },
   {
     "quark": "q-p3p2wf",
@@ -653,7 +771,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-cp6map4",
@@ -669,7 +788,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ffcicjcm1sy4tc",
@@ -685,7 +805,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-mw3sy3",
@@ -701,7 +822,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fmt4t3tt",
@@ -717,7 +839,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-tltmf",
@@ -733,7 +856,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-g6ggc1gc3gc2p4gc4",
@@ -749,7 +873,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fjcm1",
@@ -765,12 +890,13 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
-    "quark": "q-pens0s4ababsbbbbio5penonr2ro2rrfmg2h1batafificjcp8robrftstcwn",
-    "crypto": "zlpfp",
-    "semantic": "s-index-a-pointer-events-none-shrink-0-size-4-apple-button-apple-button-secondary-bg-background-border-border-input-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-font-medium-gap-2-h-11-bg-accent-text-accent-foreground-inline-flex-items-center-justify-center-px-8-ring-offset-background-rounded-full-text-sm-transition-colors-whitespace-nowrap",
+    "quark": "q-pens0s4ababsbbo5penonr2ro2rrg2h1p8robwn",
+    "crypto": "3puqv",
+    "semantic": "s-index-a-pointer-events-none-shrink-0-size-4-apple-button-apple-button-secondary-bg-background-opacity-50-pointer-events-none-outline-none-ring-2-ring-offset-2-ring-ring-gap-2-h-11-px-8-ring-offset-background-whitespace-nowrap",
     "classes": "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-full px-8 apple-button apple-button-secondary",
     "componentName": "index",
     "elementType": "a",
@@ -781,7 +907,33 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "layout-center",
+        "classes": "inline-flex items-center justify-center",
+        "crypto": "wytwc",
+        "semantic": "sc-layout-center"
+      },
+      {
+        "name": "text-normal",
+        "classes": "font-medium text-sm",
+        "crypto": "55wia",
+        "semantic": "sc-text-normal"
+      },
+      {
+        "name": "interactive",
+        "classes": "transition-colors hover:bg-accent hover:text-accent-foreground",
+        "crypto": "xefuo",
+        "semantic": "sc-interactive"
+      },
+      {
+        "name": "pill",
+        "classes": "rounded-full border border-input",
+        "crypto": "2w2r5",
+        "semantic": "sc-pill"
+      }
+    ]
   },
   {
     "quark": "q-bmp3p2wf",
@@ -797,7 +949,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-g1gicg1gc2mw5map8",
@@ -813,7 +966,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-sy5",
@@ -829,7 +983,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-baibp3p1rftafts",
@@ -845,7 +1000,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fmt2",
@@ -861,7 +1017,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-lrtltmf",
@@ -877,7 +1034,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-g3gtltmf",
@@ -893,7 +1051,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fg3ic",
@@ -909,7 +1068,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bap1rftaf",
@@ -925,7 +1085,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-h4w4",
@@ -941,7 +1102,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bbbtp1",
@@ -957,7 +1119,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ffcg6icjbfr",
@@ -973,7 +1136,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fg2ic",
@@ -989,7 +1153,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fmtl",
@@ -1005,7 +1170,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-tltctmfts",
@@ -1021,7 +1187,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fg6",
@@ -1037,12 +1204,13 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
-    "quark": "q-fmtftmftstc",
-    "crypto": "44avl",
-    "semantic": "s-index-a-font-medium-text-foreground-text-muted-foreground-text-sm-transition-colors",
+    "quark": "q-tftmftc",
+    "crypto": "wxfsq",
+    "semantic": "s-index-a-text-foreground-text-muted-foreground-transition-colors",
     "classes": "text-sm font-medium text-muted-foreground hover:text-foreground transition-colors",
     "componentName": "index",
     "elementType": "a",
@@ -1053,7 +1221,15 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "text-normal",
+        "classes": "font-medium text-sm",
+        "crypto": "55wia",
+        "semantic": "sc-text-normal"
+      }
+    ]
   },
   {
     "quark": "q-bbsbbd3fi0o0pentoz5",
@@ -1069,7 +1245,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-b0fix0maz5",
@@ -1085,7 +1262,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-d3tttyf",
@@ -1101,7 +1279,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bbbbbtffchc4rrt1",
@@ -1117,7 +1296,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bmh2m4marfw1",
@@ -1133,7 +1313,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-p6p8",
@@ -1149,7 +1330,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-g6g",
@@ -1165,12 +1347,13 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
-    "quark": "q-ffmg2gbataficp3p2rmtbtcwf",
-    "crypto": "ptttm",
-    "semantic": "s-index-a-flex-font-medium-gap-2-group-bg-accent-text-accent-foreground-items-center-px-3-py-2-rounded-md-text-base-transition-colors-w-full",
+    "quark": "q-ffmg2gicp3p2rmtbwf",
+    "crypto": "gpomi",
+    "semantic": "s-index-a-flex-font-medium-gap-2-group-items-center-px-3-py-2-rounded-md-text-base-w-full",
     "classes": "group flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium hover:bg-accent hover:text-accent-foreground transition-colors",
     "componentName": "index",
     "elementType": "a",
@@ -1181,7 +1364,15 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "interactive",
+        "classes": "transition-colors hover:bg-accent hover:text-accent-foreground",
+        "crypto": "xefuo",
+        "semantic": "sc-interactive"
+      }
+    ]
   },
   {
     "quark": "q-bbbbbd1eiogty1sxohrxsstftta",
@@ -1197,7 +1388,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-h5ohrrtxwf",
@@ -1213,7 +1405,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-al4t4z1",
@@ -1229,7 +1422,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bbsbbbbfmp3p1rftftxtc",
@@ -1245,7 +1439,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-d5s1hfocttwf",
@@ -1261,7 +1456,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-p4",
@@ -1277,7 +1473,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fmtftx",
@@ -1293,7 +1490,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-m1tmfts",
@@ -1309,7 +1507,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-g4ggc2m5",
@@ -1325,7 +1524,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-tmftxtwu",
@@ -1341,7 +1541,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fmm1tf",
@@ -1357,7 +1558,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ffwg2m5",
@@ -1373,7 +1575,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bafmbaificp2p0rftaftxtc",
@@ -1389,7 +1592,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ficjbp4p0",
@@ -1405,7 +1609,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fg2",
@@ -1421,12 +1626,13 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
-    "quark": "q-bah9baificjcrftaftcw9",
-    "crypto": "xo3g0",
-    "semantic": "s-index-a-bg-accent-h-9-bg-accent-80-inline-flex-items-center-justify-center-rounded-full-text-accent-foreground-transition-colors-w-9",
+    "quark": "q-bah9barftaftcw9",
+    "crypto": "hyk3a",
+    "semantic": "s-index-a-bg-accent-h-9-bg-accent-80-rounded-full-text-accent-foreground-transition-colors-w-9",
     "classes": "inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80",
     "componentName": "index",
     "elementType": "a",
@@ -1437,12 +1643,20 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "layout-center",
+        "classes": "inline-flex items-center justify-center",
+        "crypto": "wytwc",
+        "semantic": "sc-layout-center"
+      }
+    ]
   },
   {
-    "quark": "q-bbifmh9batafificjcp4rftstc",
-    "crypto": "px3vf",
-    "semantic": "s-index-a-border-border-input-font-medium-h-9-bg-accent-text-accent-foreground-inline-flex-items-center-justify-center-px-4-rounded-full-text-sm-transition-colors",
+    "quark": "q-fm",
+    "crypto": "hgdaa",
+    "semantic": "s-index-a-font-medium",
     "classes": "inline-flex items-center justify-center rounded-full border border-input px-4 h-9 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
     "componentName": "index",
     "elementType": "a",
@@ -1453,7 +1667,33 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "layout-center",
+        "classes": "inline-flex items-center justify-center",
+        "crypto": "wytwc",
+        "semantic": "sc-layout-center"
+      },
+      {
+        "name": "size-sm",
+        "classes": "px-4 h-9 text-sm",
+        "crypto": "0fufg",
+        "semantic": "sc-size-sm"
+      },
+      {
+        "name": "interactive",
+        "classes": "transition-colors hover:bg-accent hover:text-accent-foreground",
+        "crypto": "xefuo",
+        "semantic": "sc-interactive"
+      },
+      {
+        "name": "pill",
+        "classes": "rounded-full border border-input",
+        "crypto": "2w2r5",
+        "semantic": "sc-pill"
+      }
+    ]
   },
   {
     "quark": "q-bbbbbd1eioty1sxohrlsstftta",
@@ -1469,7 +1709,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-avgohrrt2wf",
@@ -1485,7 +1726,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-abfbfi0tcz1",
@@ -1501,7 +1743,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ad1fo1i0icjco0toz2",
@@ -1517,12 +1760,13 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
-    "quark": "q-pens0s4bbsbbbbbptpftpo5pend1onr2ro2rrfmg2h1bps1tpfificjcrobrftptstaw1wn",
-    "crypto": "pttt1",
-    "semantic": "s-index-button-pointer-events-none-shrink-0-size-4-backdrop-blur-sm-bg-background-95-bg-background-95-bg-primary-text-primary-foreground-text-primary-opacity-50-pointer-events-none-duration-100-outline-none-ring-2-ring-offset-2-ring-ring-font-medium-gap-2-h-14-bg-primary-scale-105-text-primary-foreground-inline-flex-items-center-justify-center-ring-offset-background-rounded-full-text-primary-text-sm-transition-all-w-14-whitespace-nowrap",
+    "quark": "q-pens0s4bbsbbbbbptpftpo5pend1onr2ro2rrg2h1bps1tpfrobrftptaw1wn",
+    "crypto": "13uoh",
+    "semantic": "s-index-button-pointer-events-none-shrink-0-size-4-backdrop-blur-sm-bg-background-95-bg-background-95-bg-primary-text-primary-foreground-text-primary-opacity-50-pointer-events-none-duration-100-outline-none-ring-2-ring-offset-2-ring-ring-gap-2-h-14-bg-primary-scale-105-text-primary-foreground-ring-offset-background-rounded-full-text-primary-transition-all-w-14-whitespace-nowrap",
     "classes": "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full \r\n                bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground\r\n                dark:bg-background/95 dark:text-primary dark:hover:bg-primary dark:hover:text-primary-foreground\r\n                backdrop-blur-sm hover:scale-105 transition-all duration-100",
     "componentName": "index",
     "elementType": "button",
@@ -1533,7 +1777,21 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "layout-center",
+        "classes": "inline-flex items-center justify-center",
+        "crypto": "wytwc",
+        "semantic": "sc-layout-center"
+      },
+      {
+        "name": "text-normal",
+        "classes": "font-medium text-sm",
+        "crypto": "55wia",
+        "semantic": "sc-text-normal"
+      }
+    ]
   },
   {
     "quark": "q-h6w6",
@@ -1549,7 +1807,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-abbsbbb3tffmp2p1r3rmtftxz2",
@@ -1565,7 +1824,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-al3t3z2",
@@ -1581,7 +1841,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bbsbpbpbptpftpfd1fmg1bptpfificp2p1rftptxtc",
@@ -1597,7 +1858,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-h3w3",
@@ -1613,7 +1875,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ad5s1hfi0octtwf",
@@ -1629,7 +1892,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-p5",
@@ -1645,7 +1909,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-bg",
@@ -1661,7 +1926,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fmtplc2tftltc",
@@ -1677,7 +1943,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ficjbm4",
@@ -1693,7 +1960,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-fh8ohrr1rbrfs0w8",
@@ -1709,7 +1977,8 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
     "quark": "q-ashfwf",
@@ -1725,12 +1994,13 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   },
   {
-    "quark": "q-fmtptmftstc",
-    "crypto": "izq34",
-    "semantic": "s-index-a-font-medium-text-primary-text-muted-foreground-text-sm-transition-colors",
+    "quark": "q-tptmftc",
+    "crypto": "agir5",
+    "semantic": "s-index-a-text-primary-text-muted-foreground-transition-colors",
     "classes": "text-sm font-medium text-muted-foreground hover:text-primary transition-colors",
     "componentName": "index",
     "elementType": "a",
@@ -1741,7 +2011,15 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": [
+      {
+        "name": "text-normal",
+        "classes": "font-medium text-sm",
+        "crypto": "55wia",
+        "semantic": "sc-text-normal"
+      }
+    ]
   },
   {
     "quark": "q-bbbtficp5p3tmftx",
@@ -1757,6 +2035,7 @@
         "path": "D:\\xampp\\htdocs\\wp-content\\themes\\wp-fasty\\src\\source",
         "name": "index"
       }
-    }
+    },
+    "modifiers": []
   }
 ]

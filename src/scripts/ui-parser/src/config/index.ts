@@ -17,6 +17,14 @@ export interface FileFormatConfig {
 }
 
 /**
+ * Pattern configuration
+ */
+export interface PatternConfig {
+  pattern: string;
+  name?: string;
+}
+
+/**
  * UI Parser configuration
  */
 export interface UIParserConfig {
@@ -32,6 +40,13 @@ export interface UIParserConfig {
   extractor: ExtractorType;
   formats: {
     [key: string]: FileFormatConfig;
+  };
+  patterns: {
+    layout: PatternConfig[];
+    sizing: PatternConfig[];
+    typography: PatternConfig[];
+    interaction: PatternConfig[];
+    decoration: PatternConfig[];
   };
 }
 
@@ -109,6 +124,30 @@ export class ConfigManager {
             contextType: 'svelte'
           }
         }
+      },
+      patterns: {
+        layout: [
+          { pattern: "inline-flex items-center justify-center", name: "layout-center" },
+          { pattern: "flex items-start", name: "layout-start" },
+          { pattern: "grid grid-cols-1 gap-4", name: "grid-stack" }
+        ],
+        sizing: [
+          { pattern: "px-4 h-9 text-sm", name: "size-sm" },
+          { pattern: "px-6 h-12 text-base", name: "size-md" },
+          { pattern: "px-8 h-14 text-lg", name: "size-lg" }
+        ],
+        typography: [
+          { pattern: "font-medium text-sm", name: "text-normal" },
+          { pattern: "font-bold text-lg", name: "text-heading" }
+        ],
+        interaction: [
+          { pattern: "transition-colors hover:bg-accent hover:text-accent-foreground", name: "interactive" },
+          { pattern: "focus:ring-2 focus:ring-offset-2 focus:outline-none", name: "focusable" }
+        ],
+        decoration: [
+          { pattern: "rounded-full border border-input", name: "pill" },
+          { pattern: "rounded-md shadow-sm", name: "card" }
+        ]
       }
     };
   }
@@ -148,6 +187,10 @@ export class ConfigManager {
       formats: {
         ...this.config.formats,
         ...(newConfig.formats || {}),
+      },
+      patterns: {
+        ...this.config.patterns,
+        ...(newConfig.patterns || {}),
       }
     };
   }

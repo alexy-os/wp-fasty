@@ -65,17 +65,40 @@ export class ComponentTransformer {
     const classMap = new Map<string, { semantic: string, crypto: string }>();
     
     domAnalysisData.forEach(entry => {
-      classMap.set(entry.classes, {
+      const baseReplacements = {
         semantic: entry.semantic,
         crypto: entry.crypto
-      });
+      };
       
+      // Main class
+      classMap.set(entry.classes, baseReplacements);
+      
+      // If there are modifiers, create also variants with modifiers
+      if (entry.modifiers && entry.modifiers.length > 0) {
+        const modSemanticClasses = [entry.semantic, ...entry.modifiers.map(m => m.semantic)].join(' ');
+        const modCryptoClasses = [entry.crypto, ...entry.modifiers.map(m => m.crypto)].join(' ');
+        
+        // Modifier variants
+        classMap.set(`${entry.classes}:with-modifiers`, {
+          semantic: modSemanticClasses,
+          crypto: modCryptoClasses
+        });
+      }
+      
+      // Also add normalized variant
       const normalizedClasses = this.normalizeClassString(entry.classes);
       if (normalizedClasses !== entry.classes) {
-        classMap.set(normalizedClasses, {
-          semantic: entry.semantic,
-          crypto: entry.crypto
-        });
+        classMap.set(normalizedClasses, baseReplacements);
+        
+        if (entry.modifiers && entry.modifiers.length > 0) {
+          const modSemanticClasses = [entry.semantic, ...entry.modifiers.map(m => m.semantic)].join(' ');
+          const modCryptoClasses = [entry.crypto, ...entry.modifiers.map(m => m.crypto)].join(' ');
+          
+          classMap.set(`${normalizedClasses}:with-modifiers`, {
+            semantic: modSemanticClasses,
+            crypto: modCryptoClasses
+          });
+        }
       }
     });
     

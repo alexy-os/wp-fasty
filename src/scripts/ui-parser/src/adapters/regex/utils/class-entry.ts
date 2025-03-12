@@ -1,5 +1,6 @@
 import { EnhancedClassEntry, ClassNameConfig } from '../types';
 import { generateCryptoFromQuark } from '../../../utils/crypto-generator';
+import { extractModifiers } from '../../../utils/pattern-extractor';
 
 /**
  * Creates an enhanced class entry from extracted class information
@@ -12,12 +13,16 @@ export function createClassEntry(
   variants: Record<string, string> = {},
   config: ClassNameConfig
 ): EnhancedClassEntry {
-  const quark = generateQuarkName(classes, config.quarkPrefix);
+  // Extract modifiers
+  const { modifiers, remainingClasses } = extractModifiers(classes, componentName, elementType);
+  
+  // Use remaining classes for the main element
+  const quark = generateQuarkName(remainingClasses, config.quarkPrefix);
   
   return {
     quark,
     crypto: generateCryptoFromQuark(quark),
-    semantic: generateSemanticName(componentName, elementType, classes, config.semanticPrefix),
+    semantic: generateSemanticName(componentName, elementType, remainingClasses, config.semanticPrefix),
     classes: classes.trim(),
     componentName,
     elementType,
@@ -28,7 +33,8 @@ export function createClassEntry(
         path: componentDir,
         name: componentName
       }
-    }
+    },
+    modifiers
   };
 }
 

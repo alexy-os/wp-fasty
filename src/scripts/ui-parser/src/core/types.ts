@@ -16,6 +16,7 @@ export interface EnhancedClassEntry {
     path: string;
     name: string;
   }>;
+  modifiers: ModifierEntry[];
 }
 
 /**
@@ -90,4 +91,11 @@ export interface TransformationOptions {
  * Direct Replacer options
  */
 export interface DirectReplacerOptions extends TransformationOptions {
+}
+
+export interface ModifierEntry {
+  name: string;          
+  classes: string;       
+  crypto: string;        
+  semantic: string;      
 } 

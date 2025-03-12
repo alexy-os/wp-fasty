@@ -1,3 +1,5 @@
+import { ModifierEntry } from "@/core/types";
+
 export interface Component {
   path: string;
   name: string;
@@ -17,4 +19,5 @@ export interface EnhancedClassEntry {
   variants: Record<string, string>;
   isPublic: boolean;
   components: ComponentMap;
+  modifiers: ModifierEntry[];
 } 
