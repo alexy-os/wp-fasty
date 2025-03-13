@@ -28,49 +28,85 @@ export class DirectReplacer {
   }>;
 
   constructor(classEntries: EnhancedClassEntry[]) {
+    // Validate input
+    if (!classEntries || !Array.isArray(classEntries)) {
+      throw new Error('DirectReplacer requires valid class entries array');
+    }
+    
     this.classEntries = classEntries;
     this.classMap = new Map();
 
     // Create a map of correspondences for fast search
     this.classEntries.forEach(entry => {
-      if (entry.modifiers.length > 0) {
-        // We have modifiers
-        const modSemanticClasses = entry.modifiers.map(m => m.semantic).join(' ');
-        const modCryptoClasses = entry.modifiers.map(m => m.crypto).join(' ');
-        
-        this.classMap.set(entry.classes, {
-          semantic: modSemanticClasses,
-          crypto: modCryptoClasses,
-          modifiers: entry.modifiers
-        });
-      } else {
-        // No modifiers, using original crypto/semantic
-        this.classMap.set(entry.classes, {
-          semantic: entry.semantic,
-          crypto: entry.crypto
-        });
+      if (!entry || typeof entry !== 'object') {
+        return; // Skip invalid entries
       }
       
-      // Also for normalized classes
-      const normalizedClasses = this.normalizeClassString(entry.classes);
-      if (normalizedClasses !== entry.classes) {
-        if (entry.modifiers.length > 0) {
-          const modSemanticClasses = entry.modifiers.map(m => m.semantic).join(' ');
-          const modCryptoClasses = entry.modifiers.map(m => m.crypto).join(' ');
+      try {
+        if (Array.isArray(entry.modifiers) && entry.modifiers.length > 0) {
+          // We have modifiers
+          const modSemanticClasses = entry.modifiers
+            .filter(m => m && m.semantic)
+            .map(m => m.semantic)
+            .join(' ');
           
-          this.classMap.set(normalizedClasses, {
-            semantic: modSemanticClasses,
-            crypto: modCryptoClasses,
-            modifiers: entry.modifiers
-          });
-        } else {
-          this.classMap.set(normalizedClasses, {
+          const modCryptoClasses = entry.modifiers
+            .filter(m => m && m.crypto)
+            .map(m => m.crypto)
+            .join(' ');
+          
+          if (entry.classes) {
+            this.classMap.set(entry.classes, {
+              semantic: modSemanticClasses,
+              crypto: modCryptoClasses,
+              modifiers: entry.modifiers
+            });
+          }
+        } else if (entry.classes && entry.semantic && entry.crypto) {
+          // No modifiers, using original crypto/semantic
+          this.classMap.set(entry.classes, {
             semantic: entry.semantic,
             crypto: entry.crypto
           });
         }
+        
+        // Also for normalized classes
+        if (entry.classes) {
+          const normalizedClasses = this.normalizeClassString(entry.classes);
+          if (normalizedClasses !== entry.classes) {
+            if (Array.isArray(entry.modifiers) && entry.modifiers.length > 0) {
+              const modSemanticClasses = entry.modifiers
+                .filter(m => m && m.semantic)
+                .map(m => m.semantic)
+                .join(' ');
+              
+              const modCryptoClasses = entry.modifiers
+                .filter(m => m && m.crypto)
+                .map(m => m.crypto)
+                .join(' ');
+              
+              this.classMap.set(normalizedClasses, {
+                semantic: modSemanticClasses,
+                crypto: modCryptoClasses,
+                modifiers: entry.modifiers
+              });
+            } else if (entry.semantic && entry.crypto) {
+              this.classMap.set(normalizedClasses, {
+                semantic: entry.semantic,
+                crypto: entry.crypto
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error processing class entry:', error);
+        // Continue with next entry
       }
     });
+    
+    if (this.classMap.size === 0) {
+      console.warn('DirectReplacer initialized with no valid class entries');
+    }
   }
 
   /**
@@ -134,9 +170,38 @@ export class DirectReplacer {
    * Transform a component file
    */
   public async transform(options: DirectReplacerOptions): Promise<void> {
+    // Validate options
+    if (!options || typeof options !== 'object') {
+      throw new Error('Invalid options provided to transform method');
+    }
+    
     const { sourceFile, quarkOutput, semanticOutput } = options;
+    
+    // Validate required paths
+    if (!sourceFile || typeof sourceFile !== 'string') {
+      throw new Error('sourceFile is required and must be a string');
+    }
+    
+    if (!quarkOutput || typeof quarkOutput !== 'string') {
+      throw new Error('quarkOutput is required and must be a string');
+    }
+    
+    if (!semanticOutput || typeof semanticOutput !== 'string') {
+      throw new Error('semanticOutput is required and must be a string');
+    }
+    
+    // Verify that configuration is valid
+    if (!configManager.isValid()) {
+      console.warn('Configuration validation failed. Continuing with limited functionality.');
+      // We'll continue but with caution
+    }
 
     try {
+      // Check if source file exists
+      if (!fs.existsSync(sourceFile)) {
+        throw new Error(`Source file not found: ${sourceFile}`);
+      }
+      
       const content = fs.readFileSync(sourceFile, 'utf-8');
       let semanticContent = content;
       let cryptoContent = content;  // Renamed from quarkContent
@@ -145,11 +210,8 @@ export class DirectReplacer {
       const filePatterns = configManager.getPatternsForFile(sourceFile);
       
       if (!filePatterns) {
-        console.warn(`No patterns found for file type: ${sourceFile}`);
-        return;
+        throw new Error(`No patterns found for file type: ${sourceFile}`);
       }
-      
-      //console.log(`Using patterns for context type: ${filePatterns.contextType}`);
       
       const foundClasses: Array<{
         fullMatch: string;
@@ -159,62 +221,86 @@ export class DirectReplacer {
       
       // Apply all available patterns for this file type
       for (const patternObj of filePatterns.patterns) {
+        if (!patternObj || !patternObj.pattern || !(patternObj.pattern instanceof RegExp)) {
+          continue; // Skip invalid patterns
+        }
+        
         const regex = patternObj.pattern;
         let match;
         
-        // Create a new regex instance to reset lastIndex for each pattern
-        const patternRegex = new RegExp(regex.source, regex.flags);
-        
-        //console.log(`Applying pattern: ${patternObj.name} - ${patternRegex}`);
-        
-        while ((match = patternRegex.exec(content)) !== null) {
-          // The pattern's first capturing group should contain the class values
-          if (match[1]) {
-            //console.log(`  Found match: "${match[0]}" with class value: "${match[1]}"`);
-            foundClasses.push({
-              fullMatch: match[0],
-              classValue: match[1],
-              index: match.index
-            });
+        try {
+          // Create a new regex instance to reset lastIndex for each pattern
+          const patternRegex = new RegExp(regex.source, regex.flags);
+          
+          while ((match = patternRegex.exec(content)) !== null) {
+            // The pattern's first capturing group should contain the class values
+            if (match[1]) {
+              foundClasses.push({
+                fullMatch: match[0],
+                classValue: match[1],
+                index: match.index
+              });
+            }
           }
+        } catch (error) {
+          console.error(`Error applying pattern ${patternObj.name}:`, error);
+          // Continue with next pattern
         }
       }
       
-      //console.log(`Found ${foundClasses.length} class declarations in ${sourceFile}`);
+      if (foundClasses.length === 0) {
+        console.warn(`No class declarations found in ${sourceFile}`);
+      }
       
       // Process found classes, starting from the end to avoid index issues
       foundClasses.sort((a, b) => b.index - a.index);
+      
+      let replacementCount = 0;
       
       for (const { fullMatch, classValue, index } of foundClasses) {
         const replacement = this.classMap.get(classValue) || 
                           this.classMap.get(this.normalizeClassString(classValue));
 
         if (replacement) {
-          // The replacement pattern depends on the original pattern
-          // We need to preserve the attribute type (class or className)
-          const attributeType = fullMatch.startsWith('class=') ? 'class' : 'className';
-          
-          semanticContent = 
-            semanticContent.substring(0, index) + 
-            `${attributeType}="${replacement.semantic}"` + 
-            semanticContent.substring(index + fullMatch.length);
-
-          cryptoContent = 
-            cryptoContent.substring(0, index) + 
-            `${attributeType}="${replacement.crypto}"` + 
-            cryptoContent.substring(index + fullMatch.length);
+          try {
+            // The replacement pattern depends on the original pattern
+            // We need to preserve the attribute type (class or className)
+            const attributeType = fullMatch.startsWith('class=') ? 'class' : 'className';
             
-          //console.log(`Replaced "${classValue}" with semantic: "${replacement.semantic}" and crypto: "${replacement.crypto}"`);
+            semanticContent = 
+              semanticContent.substring(0, index) + 
+              `${attributeType}="${replacement.semantic}"` + 
+              semanticContent.substring(index + fullMatch.length);
+
+            cryptoContent = 
+              cryptoContent.substring(0, index) + 
+              `${attributeType}="${replacement.crypto}"` + 
+              cryptoContent.substring(index + fullMatch.length);
+              
+            replacementCount++;
+          } catch (error) {
+            console.error(`Error replacing class "${classValue}":`, error);
+            // Continue with next replacement
+          }
         }
       }
+      
+      if (replacementCount === 0 && foundClasses.length > 0) {
+        console.warn(`Found ${foundClasses.length} classes but made 0 replacements in ${sourceFile}`);
+      }
 
-      // Create directories if they don't exist
-      fs.mkdirSync(path.dirname(semanticOutput), { recursive: true });
-      fs.mkdirSync(path.dirname(quarkOutput), { recursive: true });
+      try {
+        // Create directories if they don't exist
+        fs.mkdirSync(path.dirname(semanticOutput), { recursive: true });
+        fs.mkdirSync(path.dirname(quarkOutput), { recursive: true });
 
-      // Save results
-      fs.writeFileSync(semanticOutput, semanticContent);
-      fs.writeFileSync(quarkOutput, cryptoContent);  // Save crypto version
+        // Save results
+        fs.writeFileSync(semanticOutput, semanticContent);
+        fs.writeFileSync(quarkOutput, cryptoContent);  // Save crypto version
+      } catch (error) {
+        console.error('Error saving transformed files:', error);
+        throw error;
+      }
 
     } catch (error) {
       console.error('Error during direct replacement:', error);
@@ -223,10 +309,16 @@ export class DirectReplacer {
   }
 
   private normalizeClassString(classString: string): string {
+    if (!classString || typeof classString !== 'string') {
+      return '';
+    }
     return classString.split(' ').sort().join(' ');
   }
 
   public supportsFile(filePath: string): boolean {
+    if (!filePath || typeof filePath !== 'string') {
+      return false;
+    }
     // Use the configuration manager to determine supported files
     return configManager.isFileSupported(filePath);
   }
