@@ -1,0 +1,128 @@
+{
+  "formats": {
+    "react": {
+      "extensions": [".tsx", ".jsx"],
+      "patterns": {
+        "className": [
+          {
+            "name": "jsxClassName",
+            "pattern": "className=[\"']([^\"']+)[\"']"
+          },
+          {
+            "name": "dynamicClassName",
+            "pattern": "className=\\{(?:clsx|cn)\\(\\s*(?:['\"`]([^'\"`]+)['\"`](?:\\s*,\\s*['\"`]([^'\"`]+)['\"`])*)\\s*\\)\\}"
+          },
+          {
+            "name": "templateClassName",
+            "pattern": "className=\\{`([^`]+)`\\}"
+          },
+          {
+            "name": "tvVariants",
+            "pattern": "tv\\(\\s*\\{([\\s\\S]*?)\\}\\s*\\)"
+          }
+        ],
+        "contextType": "jsx"
+      }
+    },
+    "javascript": {
+      "extensions": [".js", ".ts"],
+      "patterns": {
+        "className": [
+          {
+            "name": "constClassName",
+            "pattern": "className:\\s*[\"']([^\"']+)[\"']"
+          },
+          {
+            "name": "configClassName",
+            "pattern": "\\bclassName:\\s*[\"']([^\"']+)[\"']"
+          }
+        ],
+        "contextType": "const"
+      }
+    },
+    "php": {
+      "extensions": [".php"],
+      "patterns": {
+        "className": [
+          {
+            "name": "phpClassName",
+            "pattern": "className=[\"']([^\"']+)[\"']"
+          },
+          {
+            "name": "phpClass",
+            "pattern": "class=[\"']([^\"']+)[\"']"
+          }
+        ],
+        "contextType": "php"
+      }
+    },
+    "html": {
+      "extensions": [".html", ".hbs", ".handlebars"],
+      "patterns": {
+        "className": [
+          {
+            "name": "htmlClass",
+            "pattern": "class=[\"']([^\"']+)[\"']"
+          }
+        ],
+        "contextType": "html"
+      }
+    },
+    "vue": {
+      "extensions": [".vue"],
+      "patterns": {
+        "className": [
+          {
+            "name": "vueClass",
+            "pattern": "class=[\"']([^\"']+)[\"']"
+          },
+          {
+            "name": "vueDynamicClass",
+            "pattern": ":class=[\"']\\{([^}]+)\\}[\"']"
+          }
+        ],
+        "contextType": "vue"
+      }
+    },
+    "svelte": {
+      "extensions": [".svelte"],
+      "patterns": {
+        "className": [
+          {
+            "name": "svelteClass",
+            "pattern": "class=[\"']([^\"']+)[\"']"
+          },
+          {
+            "name": "svelteDynamicClass",
+            "pattern": "class:([^=]+)=[\"']([^\"']+)[\"']"
+          }
+        ],
+        "contextType": "svelte"
+      }
+    }
+  },
+  "patterns": {
+    "layout": [
+      { "pattern": "inline-flex items-center justify-center", "name": "layout-center" },
+      { "pattern": "flex items-start", "name": "layout-start" },
+      { "pattern": "grid grid-cols-1 gap-4", "name": "grid-stack" }
+    ],
+    "sizing": [
+      { "pattern": "px-4 h-9 text-sm", "name": "size-sm" },
+      { "pattern": "px-6 h-12 text-base", "name": "size-md" },
+      { "pattern": "px-8 h-14 text-lg", "name": "size-lg" }
+    ],
+    "typography": [
+      { "pattern": "font-medium text-sm", "name": "text-normal" },
+      { "pattern": "font-bold text-lg", "name": "text-heading" }
+    ],
+    "interaction": [
+      { "pattern": "transition-colors hover:bg-accent hover:text-accent-foreground", "name": "interactive" },
+      { "pattern": "focus:ring-2 focus:ring-offset-2 focus:outline-none", "name": "focusable" }
+    ],
+    "decoration": [
+      { "pattern": "rounded-full border border-input", "name": "pill" },
+      { "pattern": "rounded-md shadow-sm", "name": "card" }
+    ]
+  }
+} 
