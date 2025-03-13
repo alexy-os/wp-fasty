@@ -2,10 +2,10 @@
   {
     "quark": "q-d",
     "crypto": "wdaaa",
-    "semantic": "s-index-html-dark",
+    "semantic": "s-index-div-dark",
     "classes": "dark",
     "componentName": "index",
-    "elementType": "html",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -19,10 +19,10 @@
   {
     "quark": "q-bbfbmhstf",
     "crypto": "szo0y",
-    "semantic": "s-index-body-bg-background-font-base-min-h-screen-text-foreground",
+    "semantic": "s-index-div-bg-background-font-base-min-h-screen-text-foreground",
     "classes": "font-base bg-background text-foreground min-h-screen",
     "componentName": "index",
-    "elementType": "body",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -53,10 +53,10 @@
   {
     "quark": "q-bbsbbbbst0z5",
     "crypto": "xoyrn",
-    "semantic": "s-index-header-backdrop-blur-sm-border-b-border-border-50-sticky-top-0-z-50",
+    "semantic": "s-index-div-backdrop-blur-sm-border-b-border-border-50-sticky-top-0-z-50",
     "classes": "sticky top-0 z-50 backdrop-blur-sm border-b border-border/50",
     "componentName": "index",
-    "elementType": "header",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -87,10 +87,10 @@
   {
     "quark": "q-ffmg2ictl",
     "crypto": "kolpe",
-    "semantic": "s-index-a-flex-font-medium-gap-2-items-center-text-lg",
+    "semantic": "s-index-div-flex-font-medium-gap-2-items-center-text-lg",
     "classes": "flex items-center gap-2 text-lg font-medium",
     "componentName": "index",
-    "elementType": "a",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -104,10 +104,10 @@
   {
     "quark": "q-h5w5",
     "crypto": "xbhad",
-    "semantic": "s-index-i-h-5-w-5",
+    "semantic": "s-index-div-h-5-w-5",
     "classes": "h-5 w-5",
     "componentName": "index",
-    "elementType": "i",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -155,10 +155,10 @@
   {
     "quark": "q-ah4l3tmft2w4",
     "crypto": "kmayp",
-    "semantic": "s-index-i-absolute-h-4-left-3-text-muted-foreground-top-25-w-4",
+    "semantic": "s-index-div-absolute-h-4-left-3-text-muted-foreground-top-25-w-4",
     "classes": "absolute left-3 top-2.5 h-4 w-4 text-muted-foreground",
     "componentName": "index",
-    "elementType": "i",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -172,10 +172,10 @@
   {
     "quark": "q-bab0bicnao5btb0fmtftsfonr1ro2rrh1tsp1tmfp3p2robrftbwf",
     "crypto": "otgiy",
-    "semantic": "s-index-input-bg-accent-50-border-0-border-input-cursor-not-allowed-opacity-50-bg-transparent-border-0-font-medium-text-foreground-text-sm-flex-outline-none-ring-1-ring-offset-2-ring-ring-h-10-text-sm-pl-10-text-muted-foreground-px-3-py-2-ring-offset-background-rounded-full-text-base-w-full",
+    "semantic": "s-index-div-bg-accent-50-border-0-border-input-cursor-not-allowed-opacity-50-bg-transparent-border-0-font-medium-text-foreground-text-sm-flex-outline-none-ring-1-ring-offset-2-ring-ring-h-10-text-sm-pl-10-text-muted-foreground-px-3-py-2-ring-offset-background-rounded-full-text-base-w-full",
     "classes": "flex border-input px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-accent/50 border-0 rounded-full pl-10 h-10 focus-visible:ring-1 focus-visible:ring-ring",
     "componentName": "index",
-    "elementType": "input",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -189,10 +189,10 @@
   {
     "quark": "q-g8hf",
     "crypto": "zlm5c",
-    "semantic": "s-index-nav-gap-8-hidden-flex",
+    "semantic": "s-index-div-gap-8-hidden-flex",
     "classes": "hidden md:flex gap-8",
     "componentName": "index",
-    "elementType": "nav",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -209,7 +209,7 @@
     "semantic": "",
     "classes": "text-sm font-medium hover:text-muted-foreground transition-colors",
     "componentName": "index",
-    "elementType": "a",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -227,10 +227,10 @@
         "type": "typography"
       },
       {
-        "name": "index-a-base",
+        "name": "index-div-base",
         "classes": "hover:text-muted-foreground transition-colors",
-        "crypto": "l0lfi",
-        "semantic": "sc-index-a-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -258,7 +258,7 @@
     "semantic": "",
     "classes": "inline-flex items-center justify-center relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80",
     "componentName": "index",
-    "elementType": "button",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -276,10 +276,10 @@
         "type": "layout"
       },
       {
-        "name": "index-button-base",
+        "name": "index-div-base",
         "classes": "relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80",
-        "crypto": "yu4ca",
-        "semantic": "sc-index-button-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -287,10 +287,10 @@
   {
     "quark": "q-ar9s0d1h1r0s1taw1",
     "crypto": "ox5ar",
-    "semantic": "s-index-i-absolute-rotate-90-scale-0-duration-100-h-12rem-rotate-0-scale-100-transition-all-w-12rem",
+    "semantic": "s-index-div-absolute-rotate-90-scale-0-duration-100-h-12rem-rotate-0-scale-100-transition-all-w-12rem",
     "classes": "h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-0 scale-100 dark:rotate-90 dark:scale-0",
     "componentName": "index",
-    "elementType": "i",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -304,10 +304,10 @@
   {
     "quark": "q-ar0s1d1h1r9s0taw1",
     "crypto": "aiosr",
-    "semantic": "s-index-i-absolute-rotate-0-scale-100-duration-100-h-12rem-rotate-90-scale-0-transition-all-w-12rem",
+    "semantic": "s-index-div-absolute-rotate-0-scale-100-duration-100-h-12rem-rotate-90-scale-0-transition-all-w-12rem",
     "classes": "h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-90 scale-0 dark:rotate-0 dark:scale-100",
     "componentName": "index",
-    "elementType": "i",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -321,10 +321,10 @@
   {
     "quark": "q-so",
     "crypto": "ksdaa",
-    "semantic": "s-index-span-sr-only",
+    "semantic": "s-index-div-sr-only",
     "classes": "sr-only",
     "componentName": "index",
-    "elementType": "span",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -341,7 +341,7 @@
     "semantic": "",
     "classes": "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-input hover:bg-accent hover:text-accent-foreground md:hidden rounded-full w-10 h-10 bg-accent text-accent-foreground border-0",
     "componentName": "index",
-    "elementType": "button",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -373,10 +373,10 @@
         "type": "typography"
       },
       {
-        "name": "index-button-base",
+        "name": "index-div-base",
         "classes": "gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-input md:hidden rounded-full w-10 h-10 bg-accent text-accent-foreground border-0",
-        "crypto": "yu4ca",
-        "semantic": "sc-index-button-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -418,10 +418,10 @@
   {
     "quark": "q-f1",
     "crypto": "nedaa",
-    "semantic": "s-index-main-flex-1",
+    "semantic": "s-index-div-flex-1",
     "classes": "flex-1",
     "componentName": "index",
-    "elementType": "main",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -435,10 +435,10 @@
   {
     "quark": "q-bmp4p3ohp2rwf",
     "crypto": "oq45n",
-    "semantic": "s-index-section-bg-muted-py-40-py-32-overflow-hidden-py-24-relative-w-full",
+    "semantic": "s-index-div-bg-muted-py-40-py-32-overflow-hidden-py-24-relative-w-full",
     "classes": "w-full py-24 md:py-32 lg:py-40 bg-muted relative overflow-hidden",
     "componentName": "index",
-    "elementType": "section",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -520,10 +520,10 @@
   {
     "quark": "q-fmt6t5t4tt",
     "crypto": "mipdb",
-    "semantic": "s-index-h1-font-medium-text-6xl-text-5xl-text-4xl-tracking-tight",
+    "semantic": "s-index-div-font-medium-text-6xl-text-5xl-text-4xl-tracking-tight",
     "classes": "text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight",
     "componentName": "index",
-    "elementType": "h1",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -537,10 +537,10 @@
   {
     "quark": "q-fsgt",
     "crypto": "gtgad",
-    "semantic": "s-index-span-font-semibold-gradient-text",
+    "semantic": "s-index-div-font-semibold-gradient-text",
     "classes": "gradient-text font-semibold",
     "componentName": "index",
-    "elementType": "span",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -554,10 +554,10 @@
   {
     "quark": "q-mw6tltmf",
     "crypto": "f0vbk",
-    "semantic": "s-index-p-max-w-600px-text-lg-text-muted-foreground",
+    "semantic": "s-index-div-max-w-600px-text-lg-text-muted-foreground",
     "classes": "text-lg text-muted-foreground max-w-[600px]",
     "componentName": "index",
-    "elementType": "p",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -591,7 +591,7 @@
     "semantic": "",
     "classes": "gradient-glow inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-full px-8",
     "componentName": "index",
-    "elementType": "a",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -616,10 +616,10 @@
         "type": "typography"
       },
       {
-        "name": "index-a-base",
+        "name": "index-div-base",
         "classes": "gradient-glow gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-full px-8",
-        "crypto": "l0lfi",
-        "semantic": "sc-index-a-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -630,7 +630,7 @@
     "semantic": "",
     "classes": "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-full px-8",
     "componentName": "index",
-    "elementType": "a",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -669,10 +669,10 @@
         "type": "decoration"
       },
       {
-        "name": "index-a-base",
+        "name": "index-div-base",
         "classes": "gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-background h-11 px-8",
-        "crypto": "l0lfi",
-        "semantic": "sc-index-a-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -765,10 +765,10 @@
   {
     "quark": "q-h8m3tpw8",
     "crypto": "jv3gs",
-    "semantic": "s-index-i-h-8-mb-3-text-primary-w-8",
+    "semantic": "s-index-div-h-8-mb-3-text-primary-w-8",
     "classes": "h-8 w-8 text-primary mb-3",
     "componentName": "index",
-    "elementType": "i",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -785,7 +785,7 @@
     "semantic": "",
     "classes": "text-sm font-medium text-foreground",
     "componentName": "index",
-    "elementType": "span",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -803,10 +803,10 @@
         "type": "typography"
       },
       {
-        "name": "index-span-base",
+        "name": "index-div-base",
         "classes": "text-foreground",
-        "crypto": "eb2y2",
-        "semantic": "sc-index-span-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -814,10 +814,10 @@
   {
     "quark": "q-p3p2wf",
     "crypto": "a3v33",
-    "semantic": "s-index-section-py-32-py-24-w-full",
+    "semantic": "s-index-div-py-32-py-24-w-full",
     "classes": "w-full py-24 md:py-32",
     "componentName": "index",
-    "elementType": "section",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -882,10 +882,10 @@
   {
     "quark": "q-fmt4t3tt",
     "crypto": "wj1yt",
-    "semantic": "s-index-h2-font-medium-text-4xl-text-3xl-tracking-tight",
+    "semantic": "s-index-div-font-medium-text-4xl-text-3xl-tracking-tight",
     "classes": "text-3xl md:text-4xl font-medium tracking-tight",
     "componentName": "index",
-    "elementType": "h2",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -899,10 +899,10 @@
   {
     "quark": "q-tltmf",
     "crypto": "d25kj",
-    "semantic": "s-index-p-text-lg-text-muted-foreground",
+    "semantic": "s-index-div-text-lg-text-muted-foreground",
     "classes": "text-lg text-muted-foreground",
     "componentName": "index",
-    "elementType": "p",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -953,7 +953,7 @@
     "semantic": "",
     "classes": "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-full px-8 apple-button apple-button-secondary",
     "componentName": "index",
-    "elementType": "a",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -992,10 +992,10 @@
         "type": "decoration"
       },
       {
-        "name": "index-a-base",
+        "name": "index-div-base",
         "classes": "gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-background h-11 px-8 apple-button apple-button-secondary",
-        "crypto": "l0lfi",
-        "semantic": "sc-index-a-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -1003,10 +1003,10 @@
   {
     "quark": "q-bmp3p2wf",
     "crypto": "zcexf",
-    "semantic": "s-index-section-bg-muted-py-32-py-24-w-full",
+    "semantic": "s-index-div-bg-muted-py-32-py-24-w-full",
     "classes": "w-full py-24 md:py-32 bg-muted",
     "componentName": "index",
-    "elementType": "section",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1071,10 +1071,10 @@
   {
     "quark": "q-fmt2",
     "crypto": "lkbad",
-    "semantic": "s-index-h3-font-medium-text-2xl",
+    "semantic": "s-index-div-font-medium-text-2xl",
     "classes": "text-2xl font-medium",
     "componentName": "index",
-    "elementType": "h3",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1088,10 +1088,10 @@
   {
     "quark": "q-lrtltmf",
     "crypto": "lo33d",
-    "semantic": "s-index-p-leading-relaxed-text-lg-text-muted-foreground",
+    "semantic": "s-index-div-leading-relaxed-text-lg-text-muted-foreground",
     "classes": "text-muted-foreground text-lg leading-relaxed",
     "componentName": "index",
-    "elementType": "p",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1105,10 +1105,10 @@
   {
     "quark": "q-g3gtltmf",
     "crypto": "kza52",
-    "semantic": "s-index-ul-gap-3-grid-text-lg-text-muted-foreground",
+    "semantic": "s-index-div-gap-3-grid-text-lg-text-muted-foreground",
     "classes": "grid gap-3 text-muted-foreground text-lg",
     "componentName": "index",
-    "elementType": "ul",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1122,10 +1122,10 @@
   {
     "quark": "q-fg3ic",
     "crypto": "eb5z2",
-    "semantic": "s-index-li-flex-gap-3-items-center",
+    "semantic": "s-index-div-flex-gap-3-items-center",
     "classes": "flex items-center gap-3",
     "componentName": "index",
-    "elementType": "li",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1156,10 +1156,10 @@
   {
     "quark": "q-h4w4",
     "crypto": "xdgad",
-    "semantic": "s-index-i-h-4-w-4",
+    "semantic": "s-index-div-h-4-w-4",
     "classes": "h-4 w-4",
     "componentName": "index",
-    "elementType": "i",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1173,10 +1173,10 @@
   {
     "quark": "q-bbbtp1",
     "crypto": "drrdt",
-    "semantic": "s-index-footer-border-border-border-t-py-12",
+    "semantic": "s-index-div-border-border-border-t-py-12",
     "classes": "border-t border-border py-12",
     "componentName": "index",
-    "elementType": "footer",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1224,10 +1224,10 @@
   {
     "quark": "q-fmtl",
     "crypto": "rlbad",
-    "semantic": "s-index-span-font-medium-text-lg",
+    "semantic": "s-index-div-font-medium-text-lg",
     "classes": "text-lg font-medium",
     "componentName": "index",
-    "elementType": "span",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1241,10 +1241,10 @@
   {
     "quark": "q-tltctmfts",
     "crypto": "hrzmc",
-    "semantic": "s-index-p-text-left-text-center-text-muted-foreground-text-sm",
+    "semantic": "s-index-div-text-left-text-center-text-muted-foreground-text-sm",
     "classes": "text-center text-sm text-muted-foreground md:text-left",
     "componentName": "index",
-    "elementType": "p",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1278,7 +1278,7 @@
     "semantic": "",
     "classes": "text-sm font-medium text-muted-foreground hover:text-foreground transition-colors",
     "componentName": "index",
-    "elementType": "a",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1296,10 +1296,10 @@
         "type": "typography"
       },
       {
-        "name": "index-a-base",
+        "name": "index-div-base",
         "classes": "text-muted-foreground hover:text-foreground transition-colors",
-        "crypto": "l0lfi",
-        "semantic": "sc-index-a-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -1409,10 +1409,10 @@
   {
     "quark": "q-g6g",
     "crypto": "kmcda",
-    "semantic": "s-index-nav-gap-6-grid",
+    "semantic": "s-index-div-gap-6-grid",
     "classes": "grid gap-6",
     "componentName": "index",
-    "elementType": "nav",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1429,7 +1429,7 @@
     "semantic": "",
     "classes": "group flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium hover:bg-accent hover:text-accent-foreground transition-colors",
     "componentName": "index",
-    "elementType": "a",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1447,10 +1447,10 @@
         "type": "typography"
       },
       {
-        "name": "index-a-base",
+        "name": "index-div-base",
         "classes": "group flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium",
-        "crypto": "l0lfi",
-        "semantic": "sc-index-a-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -1526,10 +1526,10 @@
   {
     "quark": "q-d5s1hfocttwf",
     "crypto": "mj5do",
-    "semantic": "s-index-img-duration-500-scale-105-h-full-object-cover-transition-transform-w-full",
+    "semantic": "s-index-div-duration-500-scale-105-h-full-object-cover-transition-transform-w-full",
     "classes": "h-full w-full object-cover transition-transform duration-500 group-hover:scale-105",
     "componentName": "index",
-    "elementType": "img",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1560,10 +1560,10 @@
   {
     "quark": "q-fmtftx",
     "crypto": "jszw1",
-    "semantic": "s-index-h3-font-medium-text-foreground-text-xl",
+    "semantic": "s-index-div-font-medium-text-foreground-text-xl",
     "classes": "text-xl font-medium text-foreground",
     "componentName": "index",
-    "elementType": "h3",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1577,10 +1577,10 @@
   {
     "quark": "q-m1tmfts",
     "crypto": "yudl2",
-    "semantic": "s-index-p-mt-1-text-muted-foreground-text-sm",
+    "semantic": "s-index-div-mt-1-text-muted-foreground-text-sm",
     "classes": "mt-1 text-sm text-muted-foreground",
     "componentName": "index",
-    "elementType": "p",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1611,10 +1611,10 @@
   {
     "quark": "q-tmftxtwu",
     "crypto": "hdvrl",
-    "semantic": "s-index-p-text-muted-foreground-text-xs-tracking-wide-uppercase",
+    "semantic": "s-index-div-text-muted-foreground-text-xs-tracking-wide-uppercase",
     "classes": "text-xs text-muted-foreground uppercase tracking-wide",
     "componentName": "index",
-    "elementType": "p",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1628,10 +1628,10 @@
   {
     "quark": "q-fmm1tf",
     "crypto": "r5w41",
-    "semantic": "s-index-p-font-medium-mt-1-text-foreground",
+    "semantic": "s-index-div-font-medium-mt-1-text-foreground",
     "classes": "mt-1 font-medium text-foreground",
     "componentName": "index",
-    "elementType": "p",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1662,10 +1662,10 @@
   {
     "quark": "q-bafmbaificp2p0rftaftxtc",
     "crypto": "qusoe",
-    "semantic": "s-index-span-bg-accent-font-medium-bg-accent-80-inline-flex-items-center-px-25-py-05-rounded-full-text-accent-foreground-text-xs-transition-colors",
+    "semantic": "s-index-div-bg-accent-font-medium-bg-accent-80-inline-flex-items-center-px-25-py-05-rounded-full-text-accent-foreground-text-xs-transition-colors",
     "classes": "inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-xs font-medium text-accent-foreground transition-colors hover:bg-accent/80",
     "componentName": "index",
-    "elementType": "span",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1716,7 +1716,7 @@
     "semantic": "",
     "classes": "inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80",
     "componentName": "index",
-    "elementType": "a",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1734,10 +1734,10 @@
         "type": "layout"
       },
       {
-        "name": "index-a-base",
+        "name": "index-div-base",
         "classes": "h-9 w-9 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80",
-        "crypto": "l0lfi",
-        "semantic": "sc-index-a-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -1748,7 +1748,7 @@
     "semantic": "",
     "classes": "inline-flex items-center justify-center rounded-full border border-input px-4 h-9 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
     "componentName": "index",
-    "elementType": "a",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1787,10 +1787,10 @@
         "type": "decoration"
       },
       {
-        "name": "index-a-base",
+        "name": "index-div-base",
         "classes": "font-medium",
-        "crypto": "l0lfi",
-        "semantic": "sc-index-a-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -1869,7 +1869,7 @@
     "semantic": "",
     "classes": "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full \r\n                bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground\r\n                dark:bg-background/95 dark:text-primary dark:hover:bg-primary dark:hover:text-primary-foreground\r\n                backdrop-blur-sm hover:scale-105 transition-all duration-100",
     "componentName": "index",
-    "elementType": "button",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1894,10 +1894,10 @@
         "type": "typography"
       },
       {
-        "name": "index-button-base",
+        "name": "index-div-base",
         "classes": "gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground\r\n dark:bg-background/95 dark:text-primary dark:hover:bg-primary dark:hover:text-primary-foreground\r\n backdrop-blur-sm hover:scale-105 transition-all duration-100",
-        "crypto": "yu4ca",
-        "semantic": "sc-index-button-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]
@@ -1905,10 +1905,10 @@
   {
     "quark": "q-h6w6",
     "crypto": "x5had",
-    "semantic": "s-index-i-h-6-w-6",
+    "semantic": "s-index-div-h-6-w-6",
     "classes": "h-6 w-6",
     "componentName": "index",
-    "elementType": "i",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1973,10 +1973,10 @@
   {
     "quark": "q-h3w3",
     "crypto": "xffad",
-    "semantic": "s-index-i-h-3-w-3",
+    "semantic": "s-index-div-h-3-w-3",
     "classes": "h-3 w-3",
     "componentName": "index",
-    "elementType": "i",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -1990,10 +1990,10 @@
   {
     "quark": "q-ad5s1hfi0octtwf",
     "crypto": "qoe2s",
-    "semantic": "s-index-img-absolute-duration-500-scale-105-h-full-inset-0-object-cover-transition-transform-w-full",
+    "semantic": "s-index-div-absolute-duration-500-scale-105-h-full-inset-0-object-cover-transition-transform-w-full",
     "classes": "absolute h-full w-full inset-0 object-cover transition-transform duration-500 group-hover:scale-105",
     "componentName": "index",
-    "elementType": "img",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -2024,10 +2024,10 @@
   {
     "quark": "q-bg",
     "crypto": "vcdaa",
-    "semantic": "s-index-a-block-group-title",
+    "semantic": "s-index-div-block-group-title",
     "classes": "block group/title",
     "componentName": "index",
-    "elementType": "a",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -2041,10 +2041,10 @@
   {
     "quark": "q-fmtplc2tftltc",
     "crypto": "pdxj1",
-    "semantic": "s-index-h3-font-medium-text-primary-line-clamp-2-text-foreground-text-lg-transition-colors",
+    "semantic": "s-index-div-font-medium-text-primary-line-clamp-2-text-foreground-text-lg-transition-colors",
     "classes": "font-medium text-lg line-clamp-2 text-foreground group-hover/title:text-primary transition-colors",
     "componentName": "index",
-    "elementType": "h3",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -2075,10 +2075,10 @@
   {
     "quark": "q-fh8ohrr1rbrfs0w8",
     "crypto": "sl1ss",
-    "semantic": "s-index-span-flex-h-8-overflow-hidden-relative-ring-1-ring-border-rounded-full-shrink-0-w-8",
+    "semantic": "s-index-div-flex-h-8-overflow-hidden-relative-ring-1-ring-border-rounded-full-shrink-0-w-8",
     "classes": "relative flex shrink-0 overflow-hidden rounded-full h-8 w-8 ring-1 ring-border",
     "componentName": "index",
-    "elementType": "span",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -2092,10 +2092,10 @@
   {
     "quark": "q-ashfwf",
     "crypto": "xecj5",
-    "semantic": "s-index-img-aspect-square-h-full-w-full",
+    "semantic": "s-index-div-aspect-square-h-full-w-full",
     "classes": "aspect-square h-full w-full",
     "componentName": "index",
-    "elementType": "img",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -2112,7 +2112,7 @@
     "semantic": "",
     "classes": "text-sm font-medium text-muted-foreground hover:text-primary transition-colors",
     "componentName": "index",
-    "elementType": "a",
+    "elementType": "div",
     "variants": {},
     "isPublic": true,
     "components": {
@@ -2130,10 +2130,10 @@
         "type": "typography"
       },
       {
-        "name": "index-a-base",
+        "name": "index-div-base",
         "classes": "text-muted-foreground hover:text-primary transition-colors",
-        "crypto": "l0lfi",
-        "semantic": "sc-index-a-base",
+        "crypto": "hhz4m",
+        "semantic": "sc-index-div-base",
         "type": "source"
       }
     ]

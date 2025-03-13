@@ -62,10 +62,10 @@ export const defaultFormats: Record<string, FileFormatConfig> = {
     extensions: ['.php'],
     patterns: {
       className: [
-        {
+        /*{
           name: 'phpClassName',
           pattern: /className=["']([^"']+)["']/g
-        },
+        },*/
         {
           name: 'phpClass',
           pattern: /class=["']([^"']+)["']/g

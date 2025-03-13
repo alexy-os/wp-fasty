@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" className="wdaaa">
+<html lang="ru" class="wdaaa">
 
 <head>
   <meta charset="utf-8">
@@ -32,85 +32,85 @@
   </script>
 </head>
 
-<body className="szo0y">
-  <div className="dcllc">
-    <header className="xoyrn">
-      <div className="qzmjn">
-        <a className="kolpe" href="/">
-          <i data-lucide="award" className="xbhad"></i>
+<body class="szo0y">
+  <div class="dcllc">
+    <header class="xoyrn">
+      <div class="qzmjn">
+        <a class="kolpe" href="/">
+          <i data-lucide="award" class="xbhad"></i>
           <span>Топ 100 Инфобизнесменов</span>
         </a>
-        <div className="zhjm0">
-          <div className="lwoda">
-            <i data-lucide="search" className="kmayp"></i>
+        <div class="zhjm0">
+          <div class="lwoda">
+            <i data-lucide="search" class="kmayp"></i>
             <input type="search"
-              className="otgiy"
+              class="otgiy"
               placeholder="Поиск по имени...">
           </div>
         </div>
-        <nav className="zlm5c"><a className="z5wia l0lfi"
-            href="/">Главная</a><a className="z5wia l0lfi"
+        <nav class="zlm5c"><a class="z5wia hhz4m"
+            href="/">Главная</a><a class="z5wia hhz4m"
             href="#professionals">Рейтинг</a><a
-            className="z5wia l0lfi" href="/videos">Лента</a><a
-            className="z5wia l0lfi" href="#about">О проекте</a></nav>
-        <div className="d55z2"><button onclick="toggleDarkMode()"
-            className="cytwc yu4ca">
+            class="z5wia hhz4m" href="/videos">Лента</a><a
+            class="z5wia hhz4m" href="#about">О проекте</a></nav>
+        <div class="d55z2"><button onclick="toggleDarkMode()"
+            class="cytwc hhz4m">
             <i data-lucide="sun"
-              className="ox5ar"></i>
+              class="ox5ar"></i>
             <i data-lucide="moon"
-              className="aiosr"></i>
-            <span className="ksdaa">Переключить тему</span>
+              class="aiosr"></i>
+            <span class="ksdaa">Переключить тему</span>
           </button><button
             id="mobileMenuButton"
-            className="cytwc z5wia defuo yu4ca">
-            <span className="ksdaa">Открыть меню</span>
-            <i data-lucide="menu" className="xbhad"></i>
+            class="cytwc z5wia defuo hhz4m">
+            <span class="ksdaa">Открыть меню</span>
+            <i data-lucide="menu" class="xbhad"></i>
           </button></div>
       </div>
-      <div className="unfoq">
-        <div className="bbshj">
-          <div className="lwoda"><i data-lucide="search"
-              className=" absolute left-3 top-2.5 h-4 w-4 text-muted-foreground"></i><input type="search"
-              className="otgiy"
+      <div class="unfoq">
+        <div class="bbshj">
+          <div class="lwoda"><i data-lucide="search"
+              class=" absolute left-3 top-2.5 h-4 w-4 text-muted-foreground"></i><input type="search"
+              class="otgiy"
               placeholder="Поиск по имени..."></div>
         </div>
       </div>
     </header>
-    <main className="nedaa">
-      <section className="oq45n">
-        <div className="bvaeg"></div>
-        <div className="dvq2n">
-          <div className="luu5j">
-            <div className="wdilk">
-              <h1 className="mipdb">
+    <main class="nedaa">
+      <section class="oq45n">
+        <div class="bvaeg"></div>
+        <div class="dvq2n">
+          <div class="luu5j">
+            <div class="wdilk">
+              <h1 class="mipdb">
                 Топ 100
-                <span className="gtgad">Инфобизнесменов</span>
+                <span class="gtgad">Инфобизнесменов</span>
                 России
               </h1>
-              <p className="f0vbk">Рейтинг самых успешных и влиятельных
+              <p class="f0vbk">Рейтинг самых успешных и влиятельных
                 предпринимателей в сфере информационного бизнеса</p>
-              <div className="gxuos">
-                <a className="cytwc z5wia l0lfi"
+              <div class="gxuos">
+                <a class="cytwc z5wia hhz4m"
                   href="#professionals">Смотреть рейтинг</a>
-                <a className="cytwc z5wia defuo ww2r5 l0lfi"
+                <a class="cytwc z5wia defuo ww2r5 hhz4m"
                   href="#about">Узнать больше</a>
               </div>
             </div>
-            <div className="f0rwk">
+            <div class="f0rwk">
               <div
-                className="pvwjw">
+                class="pvwjw">
                 <div
-                  className="oip0h">
-                  <div className="a1cud">
+                  class="oip0h">
+                  <div class="a1cud">
                     <div
-                      className="lnubu">
-                      <i data-lucide="users" className="jv3gs"></i>
-                      <span className="z5wia eb2y2">100+ Профессионалов</span>
+                      class="lnubu">
+                      <i data-lucide="users" class="jv3gs"></i>
+                      <span class="z5wia hhz4m">100+ Профессионалов</span>
                     </div>
                     <div
-                      className="lnubu">
-                      <i data-lucide="trending-up" className="jv3gs"></i>
-                      <span className="z5wia eb2y2">Актуальный рейтинг</span>
+                      class="lnubu">
+                      <i data-lucide="trending-up" class="jv3gs"></i>
+                      <span class="z5wia hhz4m">Актуальный рейтинг</span>
                     </div>
                   </div>
                 </div>
@@ -119,80 +119,80 @@
           </div>
         </div>
       </section>
-      <section id="professionals" className="a3v33">
-        <div className="x0khv">
-          <div className="valvo">
-            <div className="io0tv">
-              <h2 className="wj1yt">Рейтинг инфобизнесменов</h2>
-              <p className="d25kj">Ознакомьтесь с нашим рейтингом самых успешных
+      <section id="professionals" class="a3v33">
+        <div class="x0khv">
+          <div class="valvo">
+            <div class="io0tv">
+              <h2 class="wj1yt">Рейтинг инфобизнесменов</h2>
+              <p class="d25kj">Ознакомьтесь с нашим рейтингом самых успешных
                 предпринимателей в сфере информационного бизнеса</p>
             </div>
           </div>
           <div id="businessmenContainer"
-            className="ixmdj">
+            class="ixmdj">
           </div>
-          <div className="pod42"><a
-              className="cytwc z5wia defuo ww2r5 l0lfi"
+          <div class="pod42"><a
+              class="cytwc z5wia defuo ww2r5 hhz4m"
               href="/all-professionals">Показать всех 100 инфобизнесменов</a></div>
         </div>
       </section>
-      <section className="a3v33">
-        <div className="x0khv">
-          <div className="valvo">
-            <div className="io0tv">
-              <h2 className="wj1yt">Лента инфобиза</h2>
-              <p className="d25kj">Последние видео от ведущих инфобизнесменов
+      <section class="a3v33">
+        <div class="x0khv">
+          <div class="valvo">
+            <div class="io0tv">
+              <h2 class="wj1yt">Лента инфобиза</h2>
+              <p class="d25kj">Последние видео от ведущих инфобизнесменов
                 России</p>
             </div>
           </div>
-          <div id="newsContainer" className="ixmdj">
+          <div id="newsContainer" class="ixmdj">
           </div>
-          <div className="pod42"><a
-              className="cytwc z5wia defuo ww2r5 l0lfi"
+          <div class="pod42"><a
+              class="cytwc z5wia defuo ww2r5 hhz4m"
               href="/videos">Смотреть все видео</a></div>
         </div>
       </section>
-      <section id="about" className="zcexf">
-        <div className="x0khv">
-          <div className="valvo">
-            <div className="io0tv">
-              <h2 className="wj1yt">О проекте</h2>
-              <p className="d25kj">Наш рейтинг составлен на основе объективных показателей
+      <section id="about" class="zcexf">
+        <div class="x0khv">
+          <div class="valvo">
+            <div class="io0tv">
+              <h2 class="wj1yt">О проекте</h2>
+              <p class="d25kj">Наш рейтинг составлен на основе объективных показателей
                 успешности</p>
             </div>
           </div>
-          <div className="gmbf0">
-            <div className="xupda">
-              <div className="oneuv">Методология
+          <div class="gmbf0">
+            <div class="xupda">
+              <div class="oneuv">Методология
               </div>
-              <h3 className="lkbad">Как мы составляем рейтинг</h3>
-              <p className="lo33d">Наш рейтинг основан на комплексной оценке
+              <h3 class="lkbad">Как мы составляем рейтинг</h3>
+              <p class="lo33d">Наш рейтинг основан на комплексной оценке
                 различных факторов, включая доход, охват аудитории, влияние в социальных сетях,
                 качество контента и отзывы клиентов. Мы регулярно обновляем данные, чтобы предоставить вам самую
                 актуальную информацию о лидерах инфобиза.</p>
             </div>
-            <div className="xupda">
-              <div className="oneuv">Критерии</div>
-              <h3 className="lkbad">Что мы оцениваем</h3>
-              <ul className="kza52">
-                <li className="eb5z2">
-                  <div className="rkc1k">
-                    <i data-lucide="check" className="xdgad"></i>
+            <div class="xupda">
+              <div class="oneuv">Критерии</div>
+              <h3 class="lkbad">Что мы оцениваем</h3>
+              <ul class="kza52">
+                <li class="eb5z2">
+                  <div class="rkc1k">
+                    <i data-lucide="check" class="xdgad"></i>
                   </div>Годовой доход от информационных продуктов
                 </li>
-                <li className="eb5z2">
-                  <div className="rkc1k">
-                    <i data-lucide="check" className="xdgad"></i>
+                <li class="eb5z2">
+                  <div class="rkc1k">
+                    <i data-lucide="check" class="xdgad"></i>
                   </div>Размер и вовлеченность аудитории
                 </li>
-                <li className="eb5z2">
-                  <div className="rkc1k">
-                    <i data-lucide="check" className="xdgad"></i>
+                <li class="eb5z2">
+                  <div class="rkc1k">
+                    <i data-lucide="check" class="xdgad"></i>
                   </div>Качество и уникальность контента
                 </li>
-                <li className="eb5z2">
-                  <div className="rkc1k">
-                    <i data-lucide="check" className="xdgad"></i>
+                <li class="eb5z2">
+                  <div class="rkc1k">
+                    <i data-lucide="check" class="xdgad"></i>
                   </div>Отзывы и удовлетворенность клиентов
                 </li>
               </ul>
@@ -201,45 +201,45 @@
         </div>
       </section>
     </main>
-    <footer className="drrdt">
-      <div className="x0khv">
-        <div className="oohxc">
-          <div className="fd4z2"><i data-lucide="circle" className="xbhad"></i><span
-              className="rlbad">Топ 100 Инфобизнесменов</span></div>
-          <p className="hrzmc">2025 Топ 100 Инфобизнесменов. Все права
+    <footer class="drrdt">
+      <div class="x0khv">
+        <div class="oohxc">
+          <div class="fd4z2"><i data-lucide="circle" class="xbhad"></i><span
+              class="rlbad">Топ 100 Инфобизнесменов</span></div>
+          <p class="hrzmc">2025 Топ 100 Инфобизнесменов. Все права
             защищены.</p>
-          <div className="z2cda"><a
-              className="z5wia l0lfi"
+          <div class="z2cda"><a
+              class="z5wia hhz4m"
               href="#">Политика конфиденциальности</a><a
-              className="z5wia l0lfi" href="#">Условия
+              class="z5wia hhz4m" href="#">Условия
               использования</a></div>
         </div>
       </div>
     </footer>
   </div>
   <div id="mobileMenu" 
-    className="vnpuy"
+    class="vnpuy"
     aria-hidden="true">
-    <div className="awrkl">
-      <div className="ci24y" data-state="closed">
-        <div className="vagfv">
-          <div className="egnl2"></div>
-          <div className="cqqhd">
-            <nav className="kmcda">
-              <a className="defuo l0lfi" href="/">
-                <i data-lucide="home" className="xbhad"></i>
+    <div class="awrkl">
+      <div class="ci24y" data-state="closed">
+        <div class="vagfv">
+          <div class="egnl2"></div>
+          <div class="cqqhd">
+            <nav class="kmcda">
+              <a class="defuo hhz4m" href="/">
+                <i data-lucide="home" class="xbhad"></i>
                 Главная
               </a>
-              <a className="defuo l0lfi" href="#professionals">
-                <i data-lucide="users" className="xbhad"></i>
+              <a class="defuo hhz4m" href="#professionals">
+                <i data-lucide="users" class="xbhad"></i>
                 Рейтинг
               </a>
-              <a className="defuo l0lfi" href="/videos">
-                <i data-lucide="play" className="xbhad"></i>
+              <a class="defuo hhz4m" href="/videos">
+                <i data-lucide="play" class="xbhad"></i>
                 Лента
               </a>
-              <a className="defuo l0lfi" href="#about">
-                <i data-lucide="info" className="xbhad"></i>
+              <a class="defuo hhz4m" href="#about">
+                <i data-lucide="info" class="xbhad"></i>
                 О проекте
               </a>
             </nav>
@@ -435,54 +435,54 @@
     
     const cardTemplates = new Map([
       ['businessman', (data) => `
-        <div className="et0wm">
-          <div className="dl2bt">
-            <div className="spvlw">
-              <div className="rd1ym">
+        <div class="et0wm">
+          <div class="dl2bt">
+            <div class="spvlw">
+              <div class="rd1ym">
                 #${data.rank}
               </div>
             </div>
             <img alt="${data.name}" 
               src="${data.image}" 
-              className="mj5do"
+              class="mj5do"
             />
           </div>
-          <div className="oodaa">
-            <h3 className="jszw1">${data.name}</h3>
-            <p className="yudl2">${data.category}</p>
-            <div className="gn5s5">
+          <div class="oodaa">
+            <h3 class="jszw1">${data.name}</h3>
+            <p class="yudl2">${data.category}</p>
+            <div class="gn5s5">
               <div>
-                <p className="hdvrl">Годовой доход</p>
-                <p className="r5w41">${data.revenue}</p>
+                <p class="hdvrl">Годовой доход</p>
+                <p class="r5w41">${data.revenue}</p>
               </div>
               <div>
-                <p className="hdvrl">Аудитория</p>
-                <p className="r5w41">${data.subscribers}</p>
+                <p class="hdvrl">Аудитория</p>
+                <p class="r5w41">${data.subscribers}</p>
               </div>
             </div>
-            <div className="cddtx">
+            <div class="cddtx">
               ${data.tags.map(tag => `
-                <span className="qusoe">
+                <span class="qusoe">
                   ${tag}
                 </span>
               `).join('')}
             </div>
           </div>
-          <div className="ecc03">
-            <div className="v2cda">
+          <div class="ecc03">
+            <div class="v2cda">
               ${Object.entries(data.socialLinks).map(([platform, url]) => `
                 <a href="${url}" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="cytwc l0lfi"
+                  class="cytwc hhz4m"
                 >
-                  <span className="ksdaa">${platform}</span>
+                  <span class="ksdaa">${platform}</span>
                   ${getSocialIcon(platform)}
                 </a>
               `).join('')}
             </div>
             <a href="${data.profileUrl}" 
-              className="cytwc ufufg defuo ww2r5 l0lfi"
+              class="cytwc ufufg defuo ww2r5 hhz4m"
             >
               Подробнее
             </a>
@@ -490,21 +490,21 @@
         </div>
       `],
       ['news', (data) => `
-        <div className="flfgq">
-          <div className="qc5mm">
-            <div className="ic3aa"></div>
-            <div className="q5rnb">
-              <button className="cytwc z5wia yu4ca">
-                <i data-lucide="play" className="x5had"></i>
-                <span className="ksdaa">Смотреть видео</span>
+        <div class="flfgq">
+          <div class="qc5mm">
+            <div class="ic3aa"></div>
+            <div class="q5rnb">
+              <button class="cytwc z5wia hhz4m">
+                <i data-lucide="play" class="x5had"></i>
+                <span class="ksdaa">Смотреть видео</span>
               </button>
             </div>
-            <div className="baks2">
+            <div class="baks2">
               ${data.duration || '15:18'}
             </div>
-            <div className="rj2hx">
-              <div className="yg4wx">
-                <i data-lucide="youtube" className="xffad"></i>
+            <div class="rj2hx">
+              <div class="yg4wx">
+                <i data-lucide="youtube" class="xffad"></i>
                 <span>${data.platform || 'YouTube'}</span>
               </div>
             </div>
@@ -512,33 +512,33 @@
               alt="${data.title}" 
               loading="lazy"
               decoding="async"
-              className="qoe2s"
+              class="qoe2s"
               src="${data.image}"
             >
           </div>
-          <div className="podaa">
-            <a className="vcdaa" href="${data.url || '#'}">
-              <h3 className="pdxj1">
+          <div class="podaa">
+            <a class="vcdaa" href="${data.url || '#'}">
+              <h3 class="pdxj1">
                 ${data.title}
               </h3>
             </a>
-            <div className="t1rfx">
-              <div className="fd4z2">
-                <span className="sl1ss">
+            <div class="t1rfx">
+              <div class="fd4z2">
+                <span class="sl1ss">
                   <img 
-                    className="xecj5" 
+                    class="xecj5" 
                     alt="${data.author}"
                     src="${data.authorImage || 'https://v0-topchik-infobiza.vercel.app/placeholder.svg?height=100&width=100'}"
                   >
                 </span>
-                <a className="z5wia l0lfi" href="${data.authorUrl || '#'}">
+                <a class="z5wia hhz4m" href="${data.authorUrl || '#'}">
                   ${data.author}
                 </a>
               </div>
             </div>
           </div>
-          <div className="j1hfq">
-            <div className="fd4z2">
+          <div class="j1hfq">
+            <div class="fd4z2">
               <span>${data.views || '203K'} просмотров</span>
               <span>•</span>
               <span>${data.publishedAt || '2 недели назад'}</span>
@@ -555,7 +555,7 @@
         youtube: 'youtube'
       };
 
-      return `<i data-lucide="${iconMap[platform]}" className="xdgad"></i>`;
+      return `<i data-lucide="${iconMap[platform]}" class="xdgad"></i>`;
     }
     
     function renderCards(containerId, dataArray, templateType) {

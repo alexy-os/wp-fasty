@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { EnhancedClassEntry, ModifierEntry } from '../core/types';
+import { configManager } from '../config';
 
 /**
  * Options for the DirectReplacer
@@ -140,35 +141,70 @@ export class DirectReplacer {
       let semanticContent = content;
       let cryptoContent = content;  // Renamed from quarkContent
 
-      const classRegex = /className=["']([^"']+)["']/g;
-      let match;
-      const matches: Array<{ index: number, length: number, classes: string }> = [];
-
-      while ((match = classRegex.exec(content)) !== null) {
-        matches.push({
-          index: match.index,
-          length: match[0].length,
-          classes: match[1]
-        });
+      // Get the patterns for this file type from configuration
+      const filePatterns = configManager.getPatternsForFile(sourceFile);
+      
+      if (!filePatterns) {
+        console.warn(`No patterns found for file type: ${sourceFile}`);
+        return;
       }
-
-      // Process from the end to avoid index shifts
-      for (let i = matches.length - 1; i >= 0; i--) {
-        const { index, length, classes } = matches[i];
+      
+      //console.log(`Using patterns for context type: ${filePatterns.contextType}`);
+      
+      const foundClasses: Array<{
+        fullMatch: string;
+        classValue: string;
+        index: number;
+      }> = [];
+      
+      // Apply all available patterns for this file type
+      for (const patternObj of filePatterns.patterns) {
+        const regex = patternObj.pattern;
+        let match;
         
-        const replacement = this.classMap.get(classes) || 
-                          this.classMap.get(this.normalizeClassString(classes));
+        // Create a new regex instance to reset lastIndex for each pattern
+        const patternRegex = new RegExp(regex.source, regex.flags);
+        
+        //console.log(`Applying pattern: ${patternObj.name} - ${patternRegex}`);
+        
+        while ((match = patternRegex.exec(content)) !== null) {
+          // The pattern's first capturing group should contain the class values
+          if (match[1]) {
+            //console.log(`  Found match: "${match[0]}" with class value: "${match[1]}"`);
+            foundClasses.push({
+              fullMatch: match[0],
+              classValue: match[1],
+              index: match.index
+            });
+          }
+        }
+      }
+      
+      //console.log(`Found ${foundClasses.length} class declarations in ${sourceFile}`);
+      
+      // Process found classes, starting from the end to avoid index issues
+      foundClasses.sort((a, b) => b.index - a.index);
+      
+      for (const { fullMatch, classValue, index } of foundClasses) {
+        const replacement = this.classMap.get(classValue) || 
+                          this.classMap.get(this.normalizeClassString(classValue));
 
         if (replacement) {
+          // The replacement pattern depends on the original pattern
+          // We need to preserve the attribute type (class or className)
+          const attributeType = fullMatch.startsWith('class=') ? 'class' : 'className';
+          
           semanticContent = 
-            semanticContent.slice(0, index) + 
-            `className="${replacement.semantic}"` + 
-            semanticContent.slice(index + length);
+            semanticContent.substring(0, index) + 
+            `${attributeType}="${replacement.semantic}"` + 
+            semanticContent.substring(index + fullMatch.length);
 
           cryptoContent = 
-            cryptoContent.slice(0, index) + 
-            `className="${replacement.crypto}"` +  // Use crypto
-            cryptoContent.slice(index + length);
+            cryptoContent.substring(0, index) + 
+            `${attributeType}="${replacement.crypto}"` + 
+            cryptoContent.substring(index + fullMatch.length);
+            
+          //console.log(`Replaced "${classValue}" with semantic: "${replacement.semantic}" and crypto: "${replacement.crypto}"`);
         }
       }
 
@@ -191,7 +227,7 @@ export class DirectReplacer {
   }
 
   public supportsFile(filePath: string): boolean {
-    const ext = path.extname(filePath).toLowerCase();
-    return ['.tsx', '.jsx', '.js', '.vue', '.svelte', '.html', '.hbs', '.handlebars', '.php'].includes(ext);
+    // Use the configuration manager to determine supported files
+    return configManager.isFileSupported(filePath);
   }
 }

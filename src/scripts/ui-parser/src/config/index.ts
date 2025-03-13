@@ -293,19 +293,34 @@ export class ConfigManager {
     patterns: Array<{ pattern: RegExp; name: string }>;
     contextType: PatternContextType; 
   } | null {
-    const fileExt = filePath.substring(filePath.lastIndexOf('.'));
-    
-    for (const formatKey in this.config.formats) {
-      const format = this.config.formats[formatKey];
-      if (format.extensions.includes(fileExt)) {
-        return {
-          patterns: format.patterns.className,
-          contextType: format.patterns.contextType
-        };
+    try {
+      const fileExt = filePath.substring(filePath.lastIndexOf('.'));
+      //console.log(`Looking for patterns for file extension: ${fileExt}`);
+      
+      for (const formatKey in this.config.formats) {
+        const format = this.config.formats[formatKey];
+        if (format.extensions.includes(fileExt)) {
+          console.log(`Found format configuration for: ${formatKey}`);
+          console.log(`Format has ${format.patterns.className.length} patterns`);
+          
+          // Log all patterns to help with debugging
+          format.patterns.className.forEach((p, i) => {
+            console.log(`  Pattern ${i+1}: ${p.name} - ${p.pattern}`);
+          });
+          
+          return {
+            patterns: format.patterns.className,
+            contextType: format.patterns.contextType
+          };
+        }
       }
+      
+      console.log(`No format configuration found for extension: ${fileExt}`);
+      return null;
+    } catch (error) {
+      console.error('Error in getPatternsForFile:', error);
+      return null;
     }
-    
-    return null;
   }
 
   /**

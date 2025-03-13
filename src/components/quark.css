@@ -11,17 +11,17 @@
 .otgiy { @apply flex border-input px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-accent/50 border-0 rounded-full pl-10 h-10 focus-visible:ring-1 focus-visible:ring-ring; }
 .zlm5c { @apply hidden md:flex gap-8; }
 .z5wia { @apply font-medium text-sm; }
-.l0lfi { @apply hover:text-muted-foreground transition-colors; }
+.hhz4m { @apply hover:text-muted-foreground transition-colors; }
 .d55z2 { @apply flex items-center gap-4; }
 .cytwc { @apply inline-flex items-center justify-center; }
-.yu4ca { @apply relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
+.hhz4m { @apply relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
 .ox5ar { @apply h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-0 scale-100 dark:rotate-90 dark:scale-0; }
 .aiosr { @apply h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-90 scale-0 dark:rotate-0 dark:scale-100; }
 .ksdaa { @apply sr-only; }
 .cytwc { @apply inline-flex items-center justify-center; }
 .z5wia { @apply font-medium text-sm; }
 .defuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
-.yu4ca { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-input md:hidden rounded-full w-10 h-10 bg-accent text-accent-foreground border-0; }
+.hhz4m { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-input md:hidden rounded-full w-10 h-10 bg-accent text-accent-foreground border-0; }
 .unfoq { @apply md:hidden border-t border-border py-2; }
 .bbshj { @apply container mx-auto px-4 py-2; }
 .nedaa { @apply flex-1; }
@@ -36,12 +36,12 @@
 .gxuos { @apply flex flex-col sm:flex-row gap-4 pt-4; }
 .cytwc { @apply inline-flex items-center justify-center; }
 .z5wia { @apply font-medium text-sm; }
-.l0lfi { @apply gradient-glow gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-full px-8; }
+.hhz4m { @apply gradient-glow gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-full px-8; }
 .cytwc { @apply inline-flex items-center justify-center; }
 .z5wia { @apply font-medium text-sm; }
 .defuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
 .ww2r5 { @apply rounded-full border border-input; }
-.l0lfi { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-background h-11 px-8; }
+.hhz4m { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-background h-11 px-8; }
 .f0rwk { @apply flex justify-center animate-fade-in; }
 .pvwjw { @apply relative w-full max-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl gradient-border; }
 .oip0h { @apply absolute inset-0 bg-gradient-to-br from-background/20 to-muted/20 backdrop-blur-sm flex items-center justify-center; }
@@ -49,7 +49,7 @@
 .lnubu { @apply bg-background/90 dark:bg-background/80 p-4 rounded-xl shadow-lg flex flex-col items-center backdrop-blur-sm border border-border/50; }
 .jv3gs { @apply h-8 w-8 text-primary mb-3; }
 .z5wia { @apply font-medium text-sm; }
-.eb2y2 { @apply text-foreground; }
+.hhz4m { @apply text-foreground; }
 .a3v33 { @apply w-full py-24 md:py-32; }
 .x0khv { @apply container mx-auto px-4 md:px-6; }
 .valvo { @apply flex flex-col items-center justify-center space-y-4 text-center mb-16; }
@@ -62,7 +62,7 @@
 .z5wia { @apply font-medium text-sm; }
 .defuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
 .ww2r5 { @apply rounded-full border border-input; }
-.l0lfi { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-background h-11 px-8 apple-button apple-button-secondary; }
+.hhz4m { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-background h-11 px-8 apple-button apple-button-secondary; }
 .zcexf { @apply w-full py-24 md:py-32 bg-muted; }
 .gmbf0 { @apply mx-auto grid max-w-5xl items-center gap-12 py-8 lg:grid-cols-2 lg:gap-16; }
 .xupda { @apply space-y-5; }
@@ -80,7 +80,7 @@
 .hrzmc { @apply text-center text-sm text-muted-foreground md:text-left; }
 .z2cda { @apply flex gap-6; }
 .z5wia { @apply font-medium text-sm; }
-.l0lfi { @apply text-muted-foreground hover:text-foreground transition-colors; }
+.hhz4m { @apply text-muted-foreground hover:text-foreground transition-colors; }
 .vnpuy { @apply fixed inset-0 z-50 bg-background/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300; }
 .awrkl { @apply fixed inset-x-0 bottom-0 z-50 mt-auto; }
 .ci24y { @apply translate-y-full transition-transform duration-300; }
@@ -89,7 +89,7 @@
 .cqqhd { @apply p-6 pt-8; }
 .kmcda { @apply grid gap-6; }
 .defuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
-.l0lfi { @apply group flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium; }
+.hhz4m { @apply group flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium; }
 .et0wm { @apply group rounded-xl border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden; }
 .dl2bt { @apply relative h-56 w-full overflow-hidden rounded-t-xl; }
 .spvlw { @apply absolute top-4 left-4 z-10; }
@@ -106,19 +106,19 @@
 .ecc03 { @apply flex items-center justify-between p-4 pt-0; }
 .v2cda { @apply flex gap-2; }
 .cytwc { @apply inline-flex items-center justify-center; }
-.l0lfi { @apply h-9 w-9 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
+.hhz4m { @apply h-9 w-9 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
 .cytwc { @apply inline-flex items-center justify-center; }
 .ufufg { @apply px-4 h-9 text-sm; }
 .defuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
 .ww2r5 { @apply rounded-full border border-input; }
-.l0lfi { @apply font-medium; }
+.hhz4m { @apply font-medium; }
 .flfgq { @apply rounded-lg border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden; }
 .qc5mm { @apply relative aspect-video w-full overflow-hidden rounded-t-2xl group; }
 .ic3aa { @apply absolute inset-0 bg-foreground/5 group-hover:bg-foreground/10 transition-colors z-10; }
 .q5rnb { @apply absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-100 z-20; }
 .cytwc { @apply inline-flex items-center justify-center; }
 .z5wia { @apply font-medium text-sm; }
-.yu4ca { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground
+.hhz4m { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground
  dark:bg-background/95 dark:text-primary dark:hover:bg-primary dark:hover:text-primary-foreground
  backdrop-blur-sm hover:scale-105 transition-all duration-100; }
 .x5had { @apply h-6 w-6; }
@@ -137,5 +137,5 @@
 .sl1ss { @apply relative flex shrink-0 overflow-hidden rounded-full h-8 w-8 ring-1 ring-border; }
 .xecj5 { @apply aspect-square h-full w-full; }
 .z5wia { @apply font-medium text-sm; }
-.l0lfi { @apply text-muted-foreground hover:text-primary transition-colors; }
+.hhz4m { @apply text-muted-foreground hover:text-primary transition-colors; }
 .j1hfq { @apply flex items-center px-5 py-3 border-t border-border text-xs text-muted-foreground; }

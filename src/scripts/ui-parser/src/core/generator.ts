@@ -8,6 +8,8 @@ import { EnhancedClassEntry, CSSGenerationResult, GenerationOptions } from './ty
  */
 export class CSSGenerator {
   private static instance: CSSGenerator;
+  private cachedResults: Map<string, EnhancedClassEntry[]> = new Map();
+  private cachedCSS: Map<string, CSSGenerationResult> = new Map();
   
   private constructor() {}
   
@@ -25,11 +27,23 @@ export class CSSGenerator {
    * Loads analysis results
    */
   private loadAnalysisResults(): EnhancedClassEntry[] {
+    const domAnalysisPath = configManager.getPath('domAnalysisResults');
+    
+    // Check if we already have cached results for this file
+    if (this.cachedResults.has(domAnalysisPath)) {
+      console.log(`Using cached analysis results for CSS generation`);
+      return this.cachedResults.get(domAnalysisPath) || [];
+    }
+    
     try {
-      const domAnalysisPath = configManager.getPath('domAnalysisResults');
       if (fs.existsSync(domAnalysisPath)) {
         const jsonContent = fs.readFileSync(domAnalysisPath, 'utf-8');
-        return JSON.parse(jsonContent);
+        const results = JSON.parse(jsonContent);
+        
+        // Cache the results
+        this.cachedResults.set(domAnalysisPath, results);
+        
+        return results;
       }
       return [];
     } catch (error) {
@@ -42,6 +56,15 @@ export class CSSGenerator {
    * Generates CSS with semantic and quark classes
    */
   private generateCSS(entries: EnhancedClassEntry[]): CSSGenerationResult {
+    // Create a cache key based on entries
+    const cacheKey = JSON.stringify(entries.map(e => e.classes).sort());
+    
+    // Check if we have this CSS already generated
+    if (this.cachedCSS.has(cacheKey)) {
+      console.log('Using cached CSS generation result');
+      return this.cachedCSS.get(cacheKey) || { quarkCSS: '', semanticCSS: '' };
+    }
+    
     let quarkCSS = '';
     let semanticCSS = '';
     
@@ -66,7 +89,12 @@ export class CSSGenerator {
       // semanticCSS += `/* Original classes: ${entry.classes} */\n\n`;
     });
     
-    return { quarkCSS, semanticCSS };
+    const result = { quarkCSS, semanticCSS };
+    
+    // Cache the generated CSS
+    this.cachedCSS.set(cacheKey, result);
+    
+    return result;
   }
   
   /**
@@ -94,18 +122,23 @@ export class CSSGenerator {
   public generate(options: GenerationOptions = {}): CSSGenerationResult {
     const outputDir = options.outputPath || configManager.getPath('componentOutput');
     
+    // Clear caches if minify or format options change
+    if (options.minify !== undefined || options.format !== undefined) {
+      this.clearCaches();
+    }
+    
     try {
-            const entries = this.loadAnalysisResults();
+      const entries = this.loadAnalysisResults();
       
       if (entries.length === 0) {
         throw new Error('No class entries found for CSS generation');
       }
       
-            const css = this.generateCSS(entries);
+      const css = this.generateCSS(entries);
       
-            this.saveCSS(css, outputDir);
+      this.saveCSS(css, outputDir);
       
-            console.log(`✓ Generated CSS files:
+      console.log(`✓ Generated CSS files:
   - quark.css (${css.quarkCSS.length} bytes)
   - semantic.css (${css.semanticCSS.length} bytes)`);
       
@@ -114,6 +147,15 @@ export class CSSGenerator {
       console.error('Failed to generate CSS:', error);
       throw error;
     }
+  }
+  
+  /**
+   * Clear all caches
+   */
+  public clearCaches(): void {
+    this.cachedResults.clear();
+    this.cachedCSS.clear();
+    console.log('CSS generator caches cleared');
   }
 }
 

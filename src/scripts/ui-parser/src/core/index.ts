@@ -10,6 +10,7 @@ export { componentAnalyzer, cssGenerator, componentTransformer };
  */
 export class UIParser {
   private static instance: UIParser;
+  private latestAnalysisResults: any[] | null = null;
   
   private constructor() {}
   
@@ -27,7 +28,9 @@ export class UIParser {
    * Analyzes components
    */
   public async analyze(options = {}) {
-    return componentAnalyzer.analyzeAllComponents(options);
+    const results = await componentAnalyzer.analyzeAllComponents(options);
+    this.latestAnalysisResults = results;
+    return results;
   }
   
   /**
@@ -41,6 +44,14 @@ export class UIParser {
    * Transforms components
    */
   public transform(options = {}) {
+    // If we have analysis results, pass them to the transformer
+    if (this.latestAnalysisResults) {
+      const enhancedOptions = {
+        ...options,
+        classEntries: this.latestAnalysisResults
+      };
+      return componentTransformer.transformComponents(enhancedOptions);
+    }
     return componentTransformer.transformComponents(options);
   }
   
@@ -51,16 +62,19 @@ export class UIParser {
     console.log('Starting UI Parser all operations...');
     
     try {
-            console.log('Step 1: Analyzing components...');
+      // Clear caches at the beginning of a full run
+      this.clearAllCaches();
+      
+      console.log('Step 1: Analyzing components...');
       const analysisResults = await this.analyze(options);
       console.log(`Found ${analysisResults.length} class entries`);
       
-            console.log('\nStep 2: Generating CSS...');
+      console.log('\nStep 2: Generating CSS...');
       const cssResults = this.generate(options);
       console.log(`Generated quark.css (${cssResults.quarkCSS.length} bytes)`);
       console.log(`Generated semantic.css (${cssResults.semanticCSS.length} bytes)`);
       
-            console.log('\nStep 3: Transforming components...');
+      console.log('\nStep 3: Transforming components...');
       const transformResults = this.transform(options);
       console.log(`Transformed ${transformResults.componentsTransformed} components`);
       
@@ -75,6 +89,18 @@ export class UIParser {
       console.error('Error during operations:', error);
       throw error;
     }
+  }
+  
+  /**
+   * Clears all caches in the system
+   */
+  public clearAllCaches(): void {
+    console.log('Clearing all caches...');
+    componentAnalyzer.clearComponentCache();
+    componentAnalyzer.clearAnalysisCache();
+    cssGenerator.clearCaches();
+    componentTransformer.clearCaches();
+    this.latestAnalysisResults = null;
   }
 }
 
