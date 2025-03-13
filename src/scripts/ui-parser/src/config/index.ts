@@ -1,5 +1,7 @@
-import path from 'path';
 import { PatternContextType } from '../adapters/regex/types/pattern-types';
+import { defaultPaths, PathsConfig } from './paths-config';
+import { defaultFormats, FileFormatConfig } from './file-formats-config';
+import { defaultPatterns, PatternConfig, PatternsConfig } from './patterns-config';
 
 /**
  * Extractor type
@@ -7,51 +9,24 @@ import { PatternContextType } from '../adapters/regex/types/pattern-types';
 export type ExtractorType = 'dom' | 'regex';
 
 /**
- * Supported file formats configuration
+ * Re-export types from configuration modules
  */
-export interface FileFormatConfig {
-  extensions: string[];
-  patterns: {
-    className: Array<{
-      pattern: RegExp;
-      name: string;
-    }>;
-    contextType: PatternContextType;
-  };
-}
-
-/**
- * Pattern configuration
- */
-export interface PatternConfig {
-  pattern: string;
-  name?: string;
-}
+export type { PathsConfig } from './paths-config';
+export type { FileFormatConfig } from './file-formats-config';
+export type { PatternConfig, PatternsConfig } from './patterns-config';
 
 /**
  * UI Parser configuration
  */
 export interface UIParserConfig {
-  paths: {
-    sourceDir: string;
-    componentOutput: string;
-    domAnalysisResults: string;
-  };
+  paths: PathsConfig;
   classNames: {
     semanticPrefix: string;
     quarkPrefix: string;
   };
   extractor: ExtractorType;
-  formats: {
-    [key: string]: FileFormatConfig;
-  };
-  patterns: {
-    layout: PatternConfig[];
-    sizing: PatternConfig[];
-    typography: PatternConfig[];
-    interaction: PatternConfig[];
-    decoration: PatternConfig[];
-  };
+  formats: Record<string, FileFormatConfig>;
+  patterns: PatternsConfig;
 }
 
 /**
@@ -63,142 +38,14 @@ export class ConfigManager {
 
   private constructor() {
     this.config = {
-      paths: {
-        sourceDir: path.resolve(process.cwd(), './src/source'),
-        componentOutput: path.resolve(process.cwd(), './src/components'),
-        domAnalysisResults: path.resolve(process.cwd(), './src/components/domAnalysis.json'),
-      },
+      paths: defaultPaths,
       classNames: {
         semanticPrefix: 'sc-',
         quarkPrefix: 'q-',
       },
       extractor: 'regex',
-      formats: {
-        react: {
-          extensions: ['.tsx', '.jsx'],
-          patterns: {
-            className: [
-              {
-                name: 'jsxClassName',
-                pattern: /className=["']([^"']+)["']/g
-              },
-              {
-                name: 'dynamicClassName',
-                pattern: /className=\{(?:clsx|cn)\(\s*(?:['"`]([^'"`]+)['"`](?:\s*,\s*['"`]([^'"`]+)['"`])*)\s*\)\}/g
-              },
-              {
-                name: 'templateClassName',
-                pattern: /className=\{`([^`]+)`\}/g
-              },
-              {
-                name: 'tvVariants',
-                pattern: /tv\(\s*\{([\s\S]*?)\}\s*\)/gs
-              }
-            ],
-            contextType: 'jsx' as PatternContextType
-          }
-        },
-        javascript: {
-          extensions: ['.js', '.ts'],
-          patterns: {
-            className: [
-              {
-                name: 'constClassName',
-                pattern: /className:\s*["']([^"']+)["']/g
-              },
-              {
-                name: 'configClassName',
-                pattern: /\bclassName:\s*["']([^"']+)["']/g
-              }
-            ],
-            contextType: 'const' as PatternContextType
-          }
-        },
-        php: {
-          extensions: ['.php'],
-          patterns: {
-            className: [
-              {
-                name: 'phpClassName',
-                pattern: /className=["']([^"']+)["']/g
-              },
-              {
-                name: 'phpClass',
-                pattern: /class=["']([^"']+)["']/g
-              }
-            ],
-            contextType: 'php' as PatternContextType
-          }
-        },
-        html: {
-          extensions: ['.html', '.hbs', '.handlebars'],
-          patterns: {
-            className: [
-              {
-                name: 'htmlClass',
-                pattern: /class=["']([^"']+)["']/g
-              }
-            ],
-            contextType: 'html' as PatternContextType
-          }
-        },
-        vue: {
-          extensions: ['.vue'],
-          patterns: {
-            className: [
-              {
-                name: 'vueClass',
-                pattern: /class=["']([^"']+)["']/g
-              },
-              {
-                name: 'vueDynamicClass',
-                pattern: /:class=["']\{([^}]+)\}["']/g
-              }
-            ],
-            contextType: 'vue' as PatternContextType
-          }
-        },
-        svelte: {
-          extensions: ['.svelte'],
-          patterns: {
-            className: [
-              {
-                name: 'svelteClass',
-                pattern: /class=["']([^"']+)["']/g
-              },
-              {
-                name: 'svelteDynamicClass',
-                pattern: /class:([^=]+)=["']([^"']+)["']/g
-              }
-            ],
-            contextType: 'svelte' as PatternContextType
-          }
-        }
-      },
-      patterns: {
-        layout: [
-          { pattern: "inline-flex items-center justify-center", name: "layout-center" },
-          { pattern: "flex items-start", name: "layout-start" },
-          { pattern: "grid grid-cols-1 gap-4", name: "grid-stack" }
-        ],
-        sizing: [
-          { pattern: "px-4 h-9 text-sm", name: "size-sm" },
-          { pattern: "px-6 h-12 text-base", name: "size-md" },
-          { pattern: "px-8 h-14 text-lg", name: "size-lg" }
-        ],
-        typography: [
-          { pattern: "font-medium text-sm", name: "text-normal" },
-          { pattern: "font-bold text-lg", name: "text-heading" }
-        ],
-        interaction: [
-          { pattern: "transition-colors hover:bg-accent hover:text-accent-foreground", name: "interactive" },
-          { pattern: "focus:ring-2 focus:ring-offset-2 focus:outline-none", name: "focusable" }
-        ],
-        decoration: [
-          { pattern: "rounded-full border border-input", name: "pill" },
-          { pattern: "rounded-md shadow-sm", name: "card" }
-        ]
-      }
+      formats: defaultFormats,
+      patterns: defaultPatterns
     };
   }
 
@@ -248,7 +95,7 @@ export class ConfigManager {
   /**
    * Update paths in configuration
    */
-  public updatePaths(paths: Partial<UIParserConfig['paths']>): void {
+  public updatePaths(paths: Partial<PathsConfig>): void {
     this.config.paths = {
       ...this.config.paths,
       ...paths,
@@ -256,7 +103,7 @@ export class ConfigManager {
   }
 
   /**
-   * Update class name settings
+   * Update classNames in configuration
    */
   public updateClassNames(classNames: Partial<UIParserConfig['classNames']>): void {
     this.config.classNames = {
@@ -265,16 +112,22 @@ export class ConfigManager {
     };
   }
 
+  /**
+   * Set extractor type
+   */
   public setExtractor(type: ExtractorType): void {
     this.config.extractor = type;
   }
 
+  /**
+   * Get extractor type
+   */
   public getExtractor(): ExtractorType {
     return this.config.extractor;
   }
 
   /**
-   * Get supported file extensions
+   * Get all supported file extensions
    */
   public getSupportedExtensions(): string[] {
     return Object.values(this.config.formats)
@@ -282,30 +135,32 @@ export class ConfigManager {
   }
 
   /**
-   * Get patterns for file type
+   * Get patterns for a specific file
    */
   public getPatternsForFile(filePath: string): { 
     patterns: Array<{ pattern: RegExp; name: string }>;
     contextType: PatternContextType; 
   } | null {
-    const ext = path.extname(filePath).toLowerCase();
-    const format = Object.values(this.config.formats)
-      .find(f => f.extensions.includes(ext));
-
-    if (!format) return null;
-
-    return {
-      patterns: format.patterns.className,
-      contextType: format.patterns.contextType
-    };
+    const fileExt = filePath.substring(filePath.lastIndexOf('.'));
+    
+    for (const formatKey in this.config.formats) {
+      const format = this.config.formats[formatKey];
+      if (format.extensions.includes(fileExt)) {
+        return {
+          patterns: format.patterns.className,
+          contextType: format.patterns.contextType
+        };
+      }
+    }
+    
+    return null;
   }
 
   /**
-   * Check if file type is supported
+   * Check if file is supported
    */
   public isFileSupported(filePath: string): boolean {
-    const ext = path.extname(filePath).toLowerCase();
-    return this.getSupportedExtensions().includes(ext);
+    return !!this.getPatternsForFile(filePath);
   }
 }
 
