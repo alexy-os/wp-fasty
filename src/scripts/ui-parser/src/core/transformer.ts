@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { CONFIG } from '../config';
+import { configManager } from '../config';
 import { componentAnalyzer } from './analyzer';
 import { 
   EnhancedClassEntry,
@@ -40,15 +40,15 @@ export class ComponentTransformer {
    * Transforms components, replacing classes with semantic or quark
    */
   public transformComponents(options: ComponentTransformationOptions = {}): TransformationResult {
-    const sourceDir = options.sourceDir || CONFIG.paths.sourceDir;
-    const targetOutputDir = options.targetOutputDir || CONFIG.paths.componentOutput;
+    const sourceDir = options.sourceDir || configManager.getPath('sourceDir');
+    const targetOutputDir = options.targetOutputDir || configManager.getPath('componentOutput');
     const transformationType = options.transformationType || 'both';
     
     const components = componentAnalyzer.scanDirectory(sourceDir);
     
     let domAnalysisData: EnhancedClassEntry[] = [];
     try {
-      const jsonContent = fs.readFileSync(CONFIG.paths.domAnalysisResults, 'utf-8');
+      const jsonContent = fs.readFileSync(configManager.getPath('domAnalysisResults'), 'utf-8');
       domAnalysisData = JSON.parse(jsonContent);
       console.log(`Loaded ${domAnalysisData.length} class entries from domAnalysis.json`);
     } catch (error) {

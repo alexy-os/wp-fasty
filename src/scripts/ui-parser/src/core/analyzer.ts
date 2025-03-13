@@ -1,14 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { adapterFactory } from '../adapters';
-import { CONFIG } from '../config';
+import { configManager } from '../config';
 import { 
   EnhancedClassEntry, 
   ComponentInfo, 
   AnalysisResult, 
   AnalysisOptions 
 } from './types';
-import { configManager } from '../config/index';
 
 /**
  * Class for component analysis
@@ -101,8 +100,8 @@ export class ComponentAnalyzer {
    * Analyzes all components in the directory
    */
   public async analyzeAllComponents(options: AnalysisOptions = {}): Promise<EnhancedClassEntry[]> {
-    const sourceDir = options.sourceDir || CONFIG.paths.sourceDir;
-    const outputPath = options.outputPath || CONFIG.paths.domAnalysisResults;
+    const sourceDir = options.sourceDir || configManager.getPath('sourceDir');
+    const outputPath = options.outputPath || configManager.getPath('domAnalysisResults');
     
         const components = this.scanDirectory(sourceDir);
     const results: EnhancedClassEntry[] = [];
@@ -143,7 +142,7 @@ export class ComponentAnalyzer {
       
       console.log(`Results saved to: ${outputFilePath}`);
 
-            CONFIG.paths.domAnalysisResults = outputFilePath;
+            configManager.setPath('domAnalysisResults', outputFilePath);
     } catch (error) {
       console.error('Error saving analysis results:', error);
       throw error;
@@ -155,7 +154,7 @@ export class ComponentAnalyzer {
   /**
    * Loads analysis results from file
    */
-  public loadAnalysisResults(filePath: string = CONFIG.paths.domAnalysisResults): EnhancedClassEntry[] {
+  public loadAnalysisResults(filePath: string = configManager.getPath('domAnalysisResults')): EnhancedClassEntry[] {
     try {
       if (fs.existsSync(filePath)) {
         const jsonContent = fs.readFileSync(filePath, 'utf-8');

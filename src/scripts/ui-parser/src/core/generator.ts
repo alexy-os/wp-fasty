@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { CONFIG } from '../config';
+import { configManager } from '../config';
 import { EnhancedClassEntry, CSSGenerationResult, GenerationOptions } from './types';
 
 /**
@@ -26,8 +26,9 @@ export class CSSGenerator {
    */
   private loadAnalysisResults(): EnhancedClassEntry[] {
     try {
-      if (fs.existsSync(CONFIG.paths.domAnalysisResults)) {
-        const jsonContent = fs.readFileSync(CONFIG.paths.domAnalysisResults, 'utf-8');
+      const domAnalysisPath = configManager.getPath('domAnalysisResults');
+      if (fs.existsSync(domAnalysisPath)) {
+        const jsonContent = fs.readFileSync(domAnalysisPath, 'utf-8');
         return JSON.parse(jsonContent);
       }
       return [];
@@ -69,12 +70,12 @@ export class CSSGenerator {
   }
   
   /**
-   * Saves the generated CSS
+   * Saves CSS to files
    */
   private saveCSS(css: CSSGenerationResult, outputDir: string): void {
-        fs.mkdirSync(outputDir, { recursive: true });
+    fs.mkdirSync(outputDir, { recursive: true });
     
-        fs.writeFileSync(
+    fs.writeFileSync(
       path.join(outputDir, 'quark.css'), 
       css.quarkCSS
     );
@@ -91,7 +92,7 @@ export class CSSGenerator {
    * Generates CSS and saves files
    */
   public generate(options: GenerationOptions = {}): CSSGenerationResult {
-    const outputDir = options.outputPath || CONFIG.paths.componentOutput;
+    const outputDir = options.outputPath || configManager.getPath('componentOutput');
     
     try {
             const entries = this.loadAnalysisResults();
@@ -110,7 +111,7 @@ export class CSSGenerator {
       
       return css;
     } catch (error) {
-      console.error('❌ CSS generation failed:', error instanceof Error ? error.message : error);
+      console.error('Failed to generate CSS:', error);
       throw error;
     }
   }

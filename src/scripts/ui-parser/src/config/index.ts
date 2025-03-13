@@ -152,6 +152,66 @@ export class ConfigManager {
   }
 
   /**
+   * Get path configuration value by key
+   */
+  public getPath(key: keyof PathsConfig): string {
+    return this.config.paths[key];
+  }
+
+  /**
+   * Get all paths configuration
+   */
+  public getPaths(): PathsConfig {
+    return { ...this.config.paths };
+  }
+
+  /**
+   * Get className prefix by type
+   */
+  public getClassNamePrefix(type: 'semantic' | 'quark'): string {
+    return type === 'semantic' 
+      ? this.config.classNames.semanticPrefix 
+      : this.config.classNames.quarkPrefix;
+  }
+
+  /**
+   * Get all classNames configuration
+   */
+  public getClassNames(): UIParserConfig['classNames'] {
+    return { ...this.config.classNames };
+  }
+
+  /**
+   * Get patterns by category
+   */
+  public getPatterns(category: keyof PatternsConfig): PatternConfig[] {
+    return [...this.config.patterns[category]];
+  }
+
+  /**
+   * Get all patterns configuration
+   */
+  public getAllPatterns(): PatternsConfig {
+    return { ...this.config.patterns };
+  }
+
+  /**
+   * Get format configuration by name
+   */
+  public getFormat(name: string): FileFormatConfig | undefined {
+    return this.config.formats[name] 
+      ? { ...this.config.formats[name] }
+      : undefined;
+  }
+
+  /**
+   * Get all formats configuration
+   */
+  public getFormats(): Record<string, FileFormatConfig> {
+    return { ...this.config.formats };
+  }
+
+  /**
    * Update configuration
    */
   public updateConfig(newConfig: Partial<UIParserConfig>): void {
@@ -185,6 +245,13 @@ export class ConfigManager {
       ...this.config.paths,
       ...paths,
     };
+  }
+
+  /**
+   * Update specific path in configuration
+   */
+  public setPath(key: keyof PathsConfig, value: string): void {
+    this.config.paths[key] = value;
   }
 
   /**
@@ -289,6 +356,18 @@ export class ConfigManager {
 }
 
 export const configManager = ConfigManager.getInstance();
-export const CONFIG = configManager.getConfig();
+
+// Export CONFIG but with a deprecation warning in the getter
+// This encourages using configManager methods directly instead
+let hasWarnedAboutConfig = false;
+export const CONFIG = new Proxy(configManager.getConfig(), {
+  get: function(target, prop) {
+    if (!hasWarnedAboutConfig) {
+      console.warn('WARNING: Direct access to CONFIG is deprecated. Please use configManager methods instead.');
+      hasWarnedAboutConfig = true;
+    }
+    return target[prop as keyof UIParserConfig];
+  }
+});
 
 export default configManager; 
