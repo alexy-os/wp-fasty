@@ -5,6 +5,8 @@ import { configManager } from '../config';
 
 /**
  * Options for the DirectReplacer
+ * @interface DirectReplacerOptions
+ * @description Configures how components are transformed by the DirectReplacer
  */
 export interface DirectReplacerOptions {
   sourceFile: string;           // Path to source component file
@@ -19,6 +21,11 @@ export interface DirectReplacerOptions {
   replacementCount: number;
 }*/
 
+/**
+ * Component transformation class
+ * @class DirectReplacer
+ * @description Responsible for transforming component files by replacing utility classes with semantic or quark equivalents
+ */
 export class DirectReplacer {
   private classEntries: EnhancedClassEntry[];
   private classMap: Map<string, { 
@@ -27,6 +34,12 @@ export class DirectReplacer {
     modifiers?: ModifierEntry[]
   }>;
 
+  /**
+   * Creates a new DirectReplacer instance
+   * @param {EnhancedClassEntry[]} classEntries - Array of class entries to use for replacements
+   * @throws {Error} If classEntries is not a valid array
+   * @description Initializes the replacer and builds a mapping of original classes to their semantic/crypto equivalents
+   */
   constructor(classEntries: EnhancedClassEntry[]) {
     // Validate input
     if (!classEntries || !Array.isArray(classEntries)) {
@@ -168,6 +181,10 @@ export class DirectReplacer {
 
   /**
    * Transform a component file
+   * @param {DirectReplacerOptions} options - Configuration options for the transformation
+   * @returns {Promise<void>} Promise that resolves when transformation is complete
+   * @throws {Error} If options are invalid or transformation fails
+   * @description Processes a source file, replaces class attributes, and outputs semantic and quark versions
    */
   public async transform(options: DirectReplacerOptions): Promise<void> {
     // Validate options
@@ -308,6 +325,12 @@ export class DirectReplacer {
     }
   }
 
+  /**
+   * Normalizes a class string for consistent matching
+   * @param {string} classString - The class string to normalize
+   * @returns {string} Normalized class string with classes sorted alphabetically
+   * @description Splits a class string, sorts individual classes, and rejoins them for reliable matching
+   */
   private normalizeClassString(classString: string): string {
     if (!classString || typeof classString !== 'string') {
       return '';
@@ -315,6 +338,12 @@ export class DirectReplacer {
     return classString.split(' ').sort().join(' ');
   }
 
+  /**
+   * Checks if a file is supported by this transformer
+   * @param {string} filePath - Path to the file to check
+   * @returns {boolean} True if the file is supported
+   * @description Uses the configuration manager to determine if the file type is supported
+   */
   public supportsFile(filePath: string): boolean {
     if (!filePath || typeof filePath !== 'string') {
       return false;

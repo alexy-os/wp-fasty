@@ -19,6 +19,8 @@ export type { PatternConfig, PatternsConfig } from './patterns-config.js';
 
 /**
  * Validation error interface
+ * @interface ValidationError
+ * @description Represents a single validation error with path and message
  */
 interface ValidationError {
   path: string;
@@ -27,6 +29,8 @@ interface ValidationError {
 
 /**
  * Validation result interface
+ * @interface ValidationResult
+ * @description Contains validation status and any errors found during validation
  */
 interface ValidationResult {
   valid: boolean;
@@ -35,6 +39,8 @@ interface ValidationResult {
 
 /**
  * UI Parser configuration
+ * @interface UIParserConfig
+ * @description Main configuration interface that defines all aspects of the UI Parser operation
  */
 export interface UIParserConfig {
   paths: PathsConfig;
@@ -49,6 +55,8 @@ export interface UIParserConfig {
 
 /**
  * Interface for the config.type.json file
+ * @interface ConfigJson
+ * @description Represents the structure of the configuration JSON file
  */
 interface ConfigJson {
   formats?: Record<string, {
@@ -72,10 +80,15 @@ interface ConfigJson {
 
 /**
  * Config validator class - lightweight Zod alternative
+ * @class ConfigValidator
+ * @description Provides validation functionality for configuration objects without external dependencies
  */
 class ConfigValidator {
   /**
    * Validate the entire configuration
+   * @param {UIParserConfig} config - The configuration object to validate
+   * @returns {ValidationResult} Validation result with errors if any were found
+   * @description Performs comprehensive validation of all configuration sections
    */
   public static validateConfig(config: UIParserConfig): ValidationResult {
     const errors: ValidationError[] = [];
@@ -301,6 +314,9 @@ class ConfigValidator {
   
   /**
    * Validate JSON config structure before converting to actual config
+   * @param {ConfigJson} jsonConfig - The JSON configuration to validate
+   * @returns {ValidationResult} Validation result with errors if any were found
+   * @description Validates the raw JSON configuration before it's converted to the internal format
    */
   public static validateJsonConfig(jsonConfig: ConfigJson): ValidationResult {
     const errors: ValidationError[] = [];
@@ -423,6 +439,9 @@ function convertJsonPatternsToRegExp(jsonFormats: ConfigJson['formats']): Record
 
 /**
  * Class for configuration management
+ * @class ConfigManager
+ * @description Singleton class responsible for managing UI Parser configuration
+ * and providing access to various configuration settings
  */
 export class ConfigManager {
   private static instance: ConfigManager;
@@ -493,6 +512,7 @@ export class ConfigManager {
 
   /**
    * Get ConfigManager instance (Singleton)
+   * @returns {ConfigManager} The singleton instance of ConfigManager
    */
   public static getInstance(): ConfigManager {
     if (!ConfigManager.instance) {
@@ -503,6 +523,7 @@ export class ConfigManager {
   
   /**
    * Check if configuration is valid
+   * @returns {boolean} True if the configuration passes all validation checks
    */
   public isValid(): boolean {
     return this.validationResult !== null && this.validationResult.valid;
@@ -510,6 +531,7 @@ export class ConfigManager {
   
   /**
    * Get validation errors
+   * @returns {ValidationError[]} Array of validation errors if any exist
    */
   public getValidationErrors(): ValidationError[] {
     return this.validationResult?.errors || [];
@@ -684,6 +706,9 @@ export class ConfigManager {
 
   /**
    * Get patterns for a specific file
+   * @param {string} filePath - Path to the file for which to get patterns
+   * @returns {Object|null} Object containing patterns for the file or null if not found
+   * @description Identifies the appropriate patterns to use for a given file based on its extension
    */
   public getPatternsForFile(filePath: string): { 
     patterns: Array<{ pattern: RegExp; name: string }>;
@@ -722,6 +747,8 @@ export class ConfigManager {
 
   /**
    * Save configuration to JSON file
+   * @returns {boolean} True if configuration was successfully saved
+   * @description Validates configuration before saving and converts RegExp patterns to string format
    */
   public saveConfigToFile(): boolean {
     try {
@@ -766,11 +793,25 @@ export class ConfigManager {
   }
 }
 
+/**
+ * Singleton instance of the ConfigManager
+ * @const configManager
+ * @type {ConfigManager}
+ * @description Main access point for configuration operations and settings
+ */
 export const configManager = ConfigManager.getInstance();
 
 // Export CONFIG but with a deprecation warning in the getter
 // This encourages using configManager methods directly instead
 let hasWarnedAboutConfig = false;
+
+/**
+ * Legacy configuration object
+ * @const CONFIG
+ * @type {UIParserConfig}
+ * @deprecated Use configManager methods instead for better type safety and validation
+ * @description Direct access to configuration, emits warning when accessed
+ */
 export const CONFIG = new Proxy(configManager.getConfig(), {
   get: function(target, prop) {
     if (!hasWarnedAboutConfig) {
