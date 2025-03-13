@@ -1,4 +1,5 @@
 import path from 'path';
+import { PatternContextType } from '../adapters/regex/types/pattern-types';
 
 /**
  * Extractor type
@@ -11,8 +12,11 @@ export type ExtractorType = 'dom' | 'regex';
 export interface FileFormatConfig {
   extensions: string[];
   patterns: {
-    className: RegExp[];
-    contextType: string;
+    className: Array<{
+      pattern: RegExp;
+      name: string;
+    }>;
+    contextType: PatternContextType;
   };
 }
 
@@ -73,55 +77,101 @@ export class ConfigManager {
         react: {
           extensions: ['.tsx', '.jsx'],
           patterns: {
-            className: [/className=["']([^"']+)["']/g],
-            contextType: 'jsx'
+            className: [
+              {
+                name: 'jsxClassName',
+                pattern: /className=["']([^"']+)["']/g
+              },
+              {
+                name: 'dynamicClassName',
+                pattern: /className=\{(?:clsx|cn)\(\s*(?:['"`]([^'"`]+)['"`](?:\s*,\s*['"`]([^'"`]+)['"`])*)\s*\)\}/g
+              },
+              {
+                name: 'templateClassName',
+                pattern: /className=\{`([^`]+)`\}/g
+              },
+              {
+                name: 'tvVariants',
+                pattern: /tv\(\s*\{([\s\S]*?)\}\s*\)/gs
+              }
+            ],
+            contextType: 'jsx' as PatternContextType
           }
         },
         javascript: {
           extensions: ['.js', '.ts'],
           patterns: {
             className: [
-              /className:\s*["']([^"']+)["']/g,
-              /\bclassName:\s*["']([^"']+)["']/g
+              {
+                name: 'constClassName',
+                pattern: /className:\s*["']([^"']+)["']/g
+              },
+              {
+                name: 'configClassName',
+                pattern: /\bclassName:\s*["']([^"']+)["']/g
+              }
             ],
-            contextType: 'const'
+            contextType: 'const' as PatternContextType
           }
         },
         php: {
           extensions: ['.php'],
           patterns: {
             className: [
-              /className=["']([^"']+)["']/g,
-              /class=["']([^"']+)["']/g
+              {
+                name: 'phpClassName',
+                pattern: /className=["']([^"']+)["']/g
+              },
+              {
+                name: 'phpClass',
+                pattern: /class=["']([^"']+)["']/g
+              }
             ],
-            contextType: 'php'
+            contextType: 'php' as PatternContextType
           }
         },
         html: {
           extensions: ['.html', '.hbs', '.handlebars'],
           patterns: {
-            className: [/class=["']([^"']+)["']/g],
-            contextType: 'html'
+            className: [
+              {
+                name: 'htmlClass',
+                pattern: /class=["']([^"']+)["']/g
+              }
+            ],
+            contextType: 'html' as PatternContextType
           }
         },
         vue: {
           extensions: ['.vue'],
           patterns: {
             className: [
-              /class=["']([^"']+)["']/g,
-              /:class=["']\{([^}]+)\}["']/g
+              {
+                name: 'vueClass',
+                pattern: /class=["']([^"']+)["']/g
+              },
+              {
+                name: 'vueDynamicClass',
+                pattern: /:class=["']\{([^}]+)\}["']/g
+              }
             ],
-            contextType: 'vue'
+            contextType: 'vue' as PatternContextType
           }
         },
         svelte: {
           extensions: ['.svelte'],
           patterns: {
             className: [
-              /class=["']([^"']+)["']/g,
-              /class:([^=]+)=["']([^"']+)["']/g
+              {
+                name: 'svelteClass',
+                pattern: /class=["']([^"']+)["']/g
+              },
+              {
+                name: 'svelteDynamicClass',
+                pattern: /class:([^=]+)=["']([^"']+)["']/g
+              }
             ],
-            contextType: 'svelte'
+            contextType: 'svelte' as PatternContextType
           }
         }
       },
@@ -234,7 +284,10 @@ export class ConfigManager {
   /**
    * Get patterns for file type
    */
-  public getPatternsForFile(filePath: string): { patterns: RegExp[], contextType: string } | null {
+  public getPatternsForFile(filePath: string): { 
+    patterns: Array<{ pattern: RegExp; name: string }>;
+    contextType: PatternContextType; 
+  } | null {
     const ext = path.extname(filePath).toLowerCase();
     const format = Object.values(this.config.formats)
       .find(f => f.extensions.includes(ext));

@@ -61,8 +61,8 @@ export class CSSGenerator {
       }
       
       // Add comment with full set of classes for debugging
-      quarkCSS += `/* Original classes: ${entry.classes} */\n\n`;
-      semanticCSS += `/* Original classes: ${entry.classes} */\n\n`;
+      // quarkCSS += `/* Original classes: ${entry.classes} */\n\n`;
+      // semanticCSS += `/* Original classes: ${entry.classes} */\n\n`;
     });
     
     return { quarkCSS, semanticCSS };

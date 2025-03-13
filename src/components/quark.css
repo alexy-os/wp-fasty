@@ -1,367 +1,141 @@
-.edaaa { @apply dark; }
-/* Original classes: dark */
-
-.ozo0y { @apply font-base bg-background text-foreground min-h-screen; }
-/* Original classes: font-base bg-background text-foreground min-h-screen */
-
-.lcllc { @apply flex flex-col min-h-screen; }
-/* Original classes: flex flex-col min-h-screen */
-
+.wdaaa { @apply dark; }
+.szo0y { @apply font-base bg-background text-foreground min-h-screen; }
+.dcllc { @apply flex flex-col min-h-screen; }
 .xoyrn { @apply sticky top-0 z-50 backdrop-blur-sm border-b border-border/50; }
-/* Original classes: sticky top-0 z-50 backdrop-blur-sm border-b border-border/50 */
-
-.ezmjn { @apply container mx-auto px-4 md:px-6 flex h-16 items-center justify-between; }
-/* Original classes: container mx-auto px-4 md:px-6 flex h-16 items-center justify-between */
-
-.wolpe { @apply flex items-center gap-2 text-lg font-medium; }
-/* Original classes: flex items-center gap-2 text-lg font-medium */
-
-.lbhad { @apply h-5 w-5; }
-/* Original classes: h-5 w-5 */
-
-.hhjm0 { @apply hidden md:flex flex-1 max-w-md mx-4; }
-/* Original classes: hidden md:flex flex-1 max-w-md mx-4 */
-
-.bwoda { @apply relative w-full; }
-/* Original classes: relative w-full */
-
-.mmayp { @apply absolute left-3 top-2.5 h-4 w-4 text-muted-foreground; }
-/* Original classes: absolute left-3 top-2.5 h-4 w-4 text-muted-foreground */
-
-.4tgiy { @apply flex border-input px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-accent/50 border-0 rounded-full pl-10 h-10 focus-visible:ring-1 focus-visible:ring-ring; }
-/* Original classes: flex border-input px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-accent/50 border-0 rounded-full pl-10 h-10 focus-visible:ring-1 focus-visible:ring-ring */
-
-.plm5c { @apply hidden md:flex gap-8; }
-/* Original classes: hidden md:flex gap-8 */
-
-.55wia { @apply font-medium text-sm; }
-.x0lfi { @apply hover:text-muted-foreground transition-colors; }
-/* Original classes: text-sm font-medium hover:text-muted-foreground transition-colors */
-
-.n55z2 { @apply flex items-center gap-4; }
-/* Original classes: flex items-center gap-4 */
-
-.wytwc { @apply inline-flex items-center justify-center; }
-.uu4ca { @apply relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
-/* Original classes: inline-flex items-center justify-center relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80 */
-
-.4x5ar { @apply h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-0 scale-100 dark:rotate-90 dark:scale-0; }
-/* Original classes: h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-0 scale-100 dark:rotate-90 dark:scale-0 */
-
-.ciosr { @apply h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-90 scale-0 dark:rotate-0 dark:scale-100; }
-/* Original classes: h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-90 scale-0 dark:rotate-0 dark:scale-100 */
-
-.2sdaa { @apply sr-only; }
-/* Original classes: sr-only */
-
-.wytwc { @apply inline-flex items-center justify-center; }
-.55wia { @apply font-medium text-sm; }
-.xefuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
-.uu4ca { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-input md:hidden rounded-full w-10 h-10 bg-accent text-accent-foreground border-0; }
-/* Original classes: inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-input hover:bg-accent hover:text-accent-foreground md:hidden rounded-full w-10 h-10 bg-accent text-accent-foreground border-0 */
-
-.infoq { @apply md:hidden border-t border-border py-2; }
-/* Original classes: md:hidden border-t border-border py-2 */
-
-.3bshj { @apply container mx-auto px-4 py-2; }
-/* Original classes: container mx-auto px-4 py-2 */
-
-.ledaa { @apply flex-1; }
-/* Original classes: flex-1 */
-
-.mq45n { @apply w-full py-24 md:py-32 lg:py-40 bg-muted relative overflow-hidden; }
-/* Original classes: w-full py-24 md:py-32 lg:py-40 bg-muted relative overflow-hidden */
-
-.3vaeg { @apply absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent; }
-/* Original classes: absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent */
-
-.pvq2n { @apply container mx-auto px-4 md:px-6 relative; }
-/* Original classes: container mx-auto px-4 md:px-6 relative */
-
+.qzmjn { @apply container mx-auto px-4 md:px-6 flex h-16 items-center justify-between; }
+.kolpe { @apply flex items-center gap-2 text-lg font-medium; }
+.xbhad { @apply h-5 w-5; }
+.zhjm0 { @apply hidden md:flex flex-1 max-w-md mx-4; }
+.lwoda { @apply relative w-full; }
+.kmayp { @apply absolute left-3 top-2.5 h-4 w-4 text-muted-foreground; }
+.otgiy { @apply flex border-input px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-accent/50 border-0 rounded-full pl-10 h-10 focus-visible:ring-1 focus-visible:ring-ring; }
+.zlm5c { @apply hidden md:flex gap-8; }
+.z5wia { @apply font-medium text-sm; }
+.l0lfi { @apply hover:text-muted-foreground transition-colors; }
+.d55z2 { @apply flex items-center gap-4; }
+.cytwc { @apply inline-flex items-center justify-center; }
+.yu4ca { @apply relative w-10 h-10 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
+.ox5ar { @apply h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-0 scale-100 dark:rotate-90 dark:scale-0; }
+.aiosr { @apply h-[1.2rem] w-[1.2rem] absolute transition-all duration-100 rotate-90 scale-0 dark:rotate-0 dark:scale-100; }
+.ksdaa { @apply sr-only; }
+.cytwc { @apply inline-flex items-center justify-center; }
+.z5wia { @apply font-medium text-sm; }
+.defuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
+.yu4ca { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-input md:hidden rounded-full w-10 h-10 bg-accent text-accent-foreground border-0; }
+.unfoq { @apply md:hidden border-t border-border py-2; }
+.bbshj { @apply container mx-auto px-4 py-2; }
+.nedaa { @apply flex-1; }
+.oq45n { @apply w-full py-24 md:py-32 lg:py-40 bg-muted relative overflow-hidden; }
+.bvaeg { @apply absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent; }
+.dvq2n { @apply container mx-auto px-4 md:px-6 relative; }
 .luu5j { @apply grid gap-12 lg:grid-cols-2 lg:gap-16 items-center; }
-/* Original classes: grid gap-12 lg:grid-cols-2 lg:gap-16 items-center */
-
-.adilk { @apply space-y-6 animate-fade-up; }
-/* Original classes: space-y-6 animate-fade-up */
-
-.kipdb { @apply text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight; }
-/* Original classes: text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight */
-
-.0tgad { @apply gradient-text font-semibold; }
-/* Original classes: gradient-text font-semibold */
-
-.j0vbk { @apply text-lg text-muted-foreground max-w-[600px]; }
-/* Original classes: text-lg text-muted-foreground max-w-[600px] */
-
-.axuos { @apply flex flex-col sm:flex-row gap-4 pt-4; }
-/* Original classes: flex flex-col sm:flex-row gap-4 pt-4 */
-
-.wytwc { @apply inline-flex items-center justify-center; }
-.55wia { @apply font-medium text-sm; }
-.x0lfi { @apply gradient-glow gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-full px-8; }
-/* Original classes: gradient-glow inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-full px-8 */
-
-.wytwc { @apply inline-flex items-center justify-center; }
-.55wia { @apply font-medium text-sm; }
-.xefuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
-.2w2r5 { @apply rounded-full border border-input; }
-.x0lfi { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-background h-11 px-8; }
-/* Original classes: inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-full px-8 */
-
+.wdilk { @apply space-y-6 animate-fade-up; }
+.mipdb { @apply text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight; }
+.gtgad { @apply gradient-text font-semibold; }
+.f0vbk { @apply text-lg text-muted-foreground max-w-[600px]; }
+.gxuos { @apply flex flex-col sm:flex-row gap-4 pt-4; }
+.cytwc { @apply inline-flex items-center justify-center; }
+.z5wia { @apply font-medium text-sm; }
+.l0lfi { @apply gradient-glow gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-full px-8; }
+.cytwc { @apply inline-flex items-center justify-center; }
+.z5wia { @apply font-medium text-sm; }
+.defuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
+.ww2r5 { @apply rounded-full border border-input; }
+.l0lfi { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-background h-11 px-8; }
 .f0rwk { @apply flex justify-center animate-fade-in; }
-/* Original classes: flex justify-center animate-fade-in */
-
-.vvwjw { @apply relative w-full max-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl gradient-border; }
-/* Original classes: relative w-full max-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl gradient-border */
-
-.qip0h { @apply absolute inset-0 bg-gradient-to-br from-background/20 to-muted/20 backdrop-blur-sm flex items-center justify-center; }
-/* Original classes: absolute inset-0 bg-gradient-to-br from-background/20 to-muted/20 backdrop-blur-sm flex items-center justify-center */
-
-.01cud { @apply grid grid-cols-2 gap-6 p-8; }
-/* Original classes: grid grid-cols-2 gap-6 p-8 */
-
-.rnubu { @apply bg-background/90 dark:bg-background/80 p-4 rounded-xl shadow-lg flex flex-col items-center backdrop-blur-sm border border-border/50; }
-/* Original classes: bg-background/90 dark:bg-background/80 p-4 rounded-xl shadow-lg flex flex-col items-center backdrop-blur-sm border border-border/50 */
-
-.nv3gs { @apply h-8 w-8 text-primary mb-3; }
-/* Original classes: h-8 w-8 text-primary mb-3 */
-
-.55wia { @apply font-medium text-sm; }
-.2b2y2 { @apply text-foreground; }
-/* Original classes: text-sm font-medium text-foreground */
-
-.m3v33 { @apply w-full py-24 md:py-32; }
-/* Original classes: w-full py-24 md:py-32 */
-
-.b0khv { @apply container mx-auto px-4 md:px-6; }
-/* Original classes: container mx-auto px-4 md:px-6 */
-
-.3alvo { @apply flex flex-col items-center justify-center space-y-4 text-center mb-16; }
-/* Original classes: flex flex-col items-center justify-center space-y-4 text-center mb-16 */
-
-.2o0tv { @apply space-y-3 max-w-3xl; }
-/* Original classes: space-y-3 max-w-3xl */
-
-.0j1yt { @apply text-3xl md:text-4xl font-medium tracking-tight; }
-/* Original classes: text-3xl md:text-4xl font-medium tracking-tight */
-
-.v25kj { @apply text-lg text-muted-foreground; }
-/* Original classes: text-lg text-muted-foreground */
-
-.yxmdj { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4; }
-/* Original classes: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4 */
-
-.dod42 { @apply flex justify-center mt-16; }
-/* Original classes: flex justify-center mt-16 */
-
-.wytwc { @apply inline-flex items-center justify-center; }
-.55wia { @apply font-medium text-sm; }
-.xefuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
-.2w2r5 { @apply rounded-full border border-input; }
-.x0lfi { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-background h-11 px-8 apple-button apple-button-secondary; }
-/* Original classes: inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-full px-8 apple-button apple-button-secondary */
-
-.5cexf { @apply w-full py-24 md:py-32 bg-muted; }
-/* Original classes: w-full py-24 md:py-32 bg-muted */
-
-.smbf0 { @apply mx-auto grid max-w-5xl items-center gap-12 py-8 lg:grid-cols-2 lg:gap-16; }
-/* Original classes: mx-auto grid max-w-5xl items-center gap-12 py-8 lg:grid-cols-2 lg:gap-16 */
-
-.pupda { @apply space-y-5; }
-/* Original classes: space-y-5 */
-
-.yneuv { @apply inline-block rounded-full bg-accent text-accent-foreground px-3 py-1 text-sm; }
-/* Original classes: inline-block rounded-full bg-accent text-accent-foreground px-3 py-1 text-sm */
-
-.fkbad { @apply text-2xl font-medium; }
-/* Original classes: text-2xl font-medium */
-
-.po33d { @apply text-muted-foreground text-lg leading-relaxed; }
-/* Original classes: text-muted-foreground text-lg leading-relaxed */
-
-.0za52 { @apply grid gap-3 text-muted-foreground text-lg; }
-/* Original classes: grid gap-3 text-muted-foreground text-lg */
-
-.mb5z2 { @apply flex items-center gap-3; }
-/* Original classes: flex items-center gap-3 */
-
-.1kc1k { @apply rounded-full bg-accent text-accent-foreground p-1; }
-/* Original classes: rounded-full bg-accent text-accent-foreground p-1 */
-
-.jdgad { @apply h-4 w-4; }
-/* Original classes: h-4 w-4 */
-
-.nrrdt { @apply border-t border-border py-12; }
-/* Original classes: border-t border-border py-12 */
-
-.qohxc { @apply flex flex-col md:flex-row items-center justify-between gap-6; }
-/* Original classes: flex flex-col md:flex-row items-center justify-between gap-6 */
-
-.ld4z2 { @apply flex items-center gap-2; }
-/* Original classes: flex items-center gap-2 */
-
-.5lbad { @apply text-lg font-medium; }
-/* Original classes: text-lg font-medium */
-
-.1rzmc { @apply text-center text-sm text-muted-foreground md:text-left; }
-/* Original classes: text-center text-sm text-muted-foreground md:text-left */
-
-.v2cda { @apply flex gap-6; }
-/* Original classes: flex gap-6 */
-
-.55wia { @apply font-medium text-sm; }
-.x0lfi { @apply text-muted-foreground hover:text-foreground transition-colors; }
-/* Original classes: text-sm font-medium text-muted-foreground hover:text-foreground transition-colors */
-
-.dnpuy { @apply fixed inset-0 z-50 bg-background/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300; }
-/* Original classes: fixed inset-0 z-50 bg-background/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 */
-
-.ywrkl { @apply fixed inset-x-0 bottom-0 z-50 mt-auto; }
-/* Original classes: fixed inset-x-0 bottom-0 z-50 mt-auto */
-
-.si24y { @apply translate-y-full transition-transform duration-300; }
-/* Original classes: translate-y-full transition-transform duration-300 */
-
-.1agfv { @apply relative h-[calc(100vh-4rem)] bg-background border-t border-border rounded-t-[1.25rem] flex flex-col; }
-/* Original classes: relative h-[calc(100vh-4rem)] bg-background border-t border-border rounded-t-[1.25rem] flex flex-col */
-
-.4gnl2 { @apply mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted; }
-/* Original classes: mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted */
-
-.oqqhd { @apply p-6 pt-8; }
-/* Original classes: p-6 pt-8 */
-
-.ymcda { @apply grid gap-6; }
-/* Original classes: grid gap-6 */
-
-.xefuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
-.x0lfi { @apply group flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium; }
-/* Original classes: group flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium hover:bg-accent hover:text-accent-foreground transition-colors */
-
-.kt0wm { @apply group rounded-xl border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden; }
-/* Original classes: group rounded-xl border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden */
-
-.zl2bt { @apply relative h-56 w-full overflow-hidden rounded-t-xl; }
-/* Original classes: relative h-56 w-full overflow-hidden rounded-t-xl */
-
-.apvlw { @apply absolute top-4 left-4 z-10; }
-/* Original classes: absolute top-4 left-4 z-10 */
-
-.jd1ym { @apply bg-background/90 dark:bg-background text-foreground px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm transition-colors; }
-/* Original classes: bg-background/90 dark:bg-background text-foreground px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm transition-colors */
-
-.qj5do { @apply h-full w-full object-cover transition-transform duration-500 group-hover:scale-105; }
-/* Original classes: h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 */
-
-.eodaa { @apply p-4; }
-/* Original classes: p-4 */
-
-.dszw1 { @apply text-xl font-medium text-foreground; }
-/* Original classes: text-xl font-medium text-foreground */
-
+.pvwjw { @apply relative w-full max-w-[500px] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl gradient-border; }
+.oip0h { @apply absolute inset-0 bg-gradient-to-br from-background/20 to-muted/20 backdrop-blur-sm flex items-center justify-center; }
+.a1cud { @apply grid grid-cols-2 gap-6 p-8; }
+.lnubu { @apply bg-background/90 dark:bg-background/80 p-4 rounded-xl shadow-lg flex flex-col items-center backdrop-blur-sm border border-border/50; }
+.jv3gs { @apply h-8 w-8 text-primary mb-3; }
+.z5wia { @apply font-medium text-sm; }
+.eb2y2 { @apply text-foreground; }
+.a3v33 { @apply w-full py-24 md:py-32; }
+.x0khv { @apply container mx-auto px-4 md:px-6; }
+.valvo { @apply flex flex-col items-center justify-center space-y-4 text-center mb-16; }
+.io0tv { @apply space-y-3 max-w-3xl; }
+.wj1yt { @apply text-3xl md:text-4xl font-medium tracking-tight; }
+.d25kj { @apply text-lg text-muted-foreground; }
+.ixmdj { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4; }
+.pod42 { @apply flex justify-center mt-16; }
+.cytwc { @apply inline-flex items-center justify-center; }
+.z5wia { @apply font-medium text-sm; }
+.defuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
+.ww2r5 { @apply rounded-full border border-input; }
+.l0lfi { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-background h-11 px-8 apple-button apple-button-secondary; }
+.zcexf { @apply w-full py-24 md:py-32 bg-muted; }
+.gmbf0 { @apply mx-auto grid max-w-5xl items-center gap-12 py-8 lg:grid-cols-2 lg:gap-16; }
+.xupda { @apply space-y-5; }
+.oneuv { @apply inline-block rounded-full bg-accent text-accent-foreground px-3 py-1 text-sm; }
+.lkbad { @apply text-2xl font-medium; }
+.lo33d { @apply text-muted-foreground text-lg leading-relaxed; }
+.kza52 { @apply grid gap-3 text-muted-foreground text-lg; }
+.eb5z2 { @apply flex items-center gap-3; }
+.rkc1k { @apply rounded-full bg-accent text-accent-foreground p-1; }
+.xdgad { @apply h-4 w-4; }
+.drrdt { @apply border-t border-border py-12; }
+.oohxc { @apply flex flex-col md:flex-row items-center justify-between gap-6; }
+.fd4z2 { @apply flex items-center gap-2; }
+.rlbad { @apply text-lg font-medium; }
+.hrzmc { @apply text-center text-sm text-muted-foreground md:text-left; }
+.z2cda { @apply flex gap-6; }
+.z5wia { @apply font-medium text-sm; }
+.l0lfi { @apply text-muted-foreground hover:text-foreground transition-colors; }
+.vnpuy { @apply fixed inset-0 z-50 bg-background/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300; }
+.awrkl { @apply fixed inset-x-0 bottom-0 z-50 mt-auto; }
+.ci24y { @apply translate-y-full transition-transform duration-300; }
+.vagfv { @apply relative h-[calc(100vh-4rem)] bg-background border-t border-border rounded-t-[1.25rem] flex flex-col; }
+.egnl2 { @apply mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted; }
+.cqqhd { @apply p-6 pt-8; }
+.kmcda { @apply grid gap-6; }
+.defuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
+.l0lfi { @apply group flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium; }
+.et0wm { @apply group rounded-xl border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden; }
+.dl2bt { @apply relative h-56 w-full overflow-hidden rounded-t-xl; }
+.spvlw { @apply absolute top-4 left-4 z-10; }
+.rd1ym { @apply bg-background/90 dark:bg-background text-foreground px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm transition-colors; }
+.mj5do { @apply h-full w-full object-cover transition-transform duration-500 group-hover:scale-105; }
+.oodaa { @apply p-4; }
+.jszw1 { @apply text-xl font-medium text-foreground; }
 .yudl2 { @apply mt-1 text-sm text-muted-foreground; }
-/* Original classes: mt-1 text-sm text-muted-foreground */
-
-.en5s5 { @apply mt-5 grid grid-cols-2 gap-4; }
-/* Original classes: mt-5 grid grid-cols-2 gap-4 */
-
-.bdvrl { @apply text-xs text-muted-foreground uppercase tracking-wide; }
-/* Original classes: text-xs text-muted-foreground uppercase tracking-wide */
-
-.d5w41 { @apply mt-1 font-medium text-foreground; }
-/* Original classes: mt-1 font-medium text-foreground */
-
-.wddtx { @apply mt-5 flex flex-wrap gap-2; }
-/* Original classes: mt-5 flex flex-wrap gap-2 */
-
-.0usoe { @apply inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-xs font-medium text-accent-foreground transition-colors hover:bg-accent/80; }
-/* Original classes: inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-xs font-medium text-accent-foreground transition-colors hover:bg-accent/80 */
-
+.gn5s5 { @apply mt-5 grid grid-cols-2 gap-4; }
+.hdvrl { @apply text-xs text-muted-foreground uppercase tracking-wide; }
+.r5w41 { @apply mt-1 font-medium text-foreground; }
+.cddtx { @apply mt-5 flex flex-wrap gap-2; }
+.qusoe { @apply inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-xs font-medium text-accent-foreground transition-colors hover:bg-accent/80; }
 .ecc03 { @apply flex items-center justify-between p-4 pt-0; }
-/* Original classes: flex items-center justify-between p-4 pt-0 */
-
-.r2cda { @apply flex gap-2; }
-/* Original classes: flex gap-2 */
-
-.wytwc { @apply inline-flex items-center justify-center; }
-.x0lfi { @apply h-9 w-9 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
-/* Original classes: inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80 */
-
-.wytwc { @apply inline-flex items-center justify-center; }
-.0fufg { @apply px-4 h-9 text-sm; }
-.xefuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
-.2w2r5 { @apply rounded-full border border-input; }
-.x0lfi { @apply font-medium; }
-/* Original classes: inline-flex items-center justify-center rounded-full border border-input px-4 h-9 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground */
-
-.zlfgq { @apply rounded-lg border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden; }
-/* Original classes: rounded-lg border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden */
-
-.ic5mm { @apply relative aspect-video w-full overflow-hidden rounded-t-2xl group; }
-/* Original classes: relative aspect-video w-full overflow-hidden rounded-t-2xl group */
-
-.kc3aa { @apply absolute inset-0 bg-foreground/5 group-hover:bg-foreground/10 transition-colors z-10; }
-/* Original classes: absolute inset-0 bg-foreground/5 group-hover:bg-foreground/10 transition-colors z-10 */
-
-.i5rnb { @apply absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-100 z-20; }
-/* Original classes: absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-100 z-20 */
-
-.wytwc { @apply inline-flex items-center justify-center; }
-.55wia { @apply font-medium text-sm; }
-.uu4ca { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground
+.v2cda { @apply flex gap-2; }
+.cytwc { @apply inline-flex items-center justify-center; }
+.l0lfi { @apply h-9 w-9 rounded-full bg-accent text-accent-foreground transition-colors hover:bg-accent/80; }
+.cytwc { @apply inline-flex items-center justify-center; }
+.ufufg { @apply px-4 h-9 text-sm; }
+.defuo { @apply transition-colors hover:bg-accent hover:text-accent-foreground; }
+.ww2r5 { @apply rounded-full border border-input; }
+.l0lfi { @apply font-medium; }
+.flfgq { @apply rounded-lg border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 overflow-hidden; }
+.qc5mm { @apply relative aspect-video w-full overflow-hidden rounded-t-2xl group; }
+.ic3aa { @apply absolute inset-0 bg-foreground/5 group-hover:bg-foreground/10 transition-colors z-10; }
+.q5rnb { @apply absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-100 z-20; }
+.cytwc { @apply inline-flex items-center justify-center; }
+.z5wia { @apply font-medium text-sm; }
+.yu4ca { @apply gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground
  dark:bg-background/95 dark:text-primary dark:hover:bg-primary dark:hover:text-primary-foreground
  backdrop-blur-sm hover:scale-105 transition-all duration-100; }
-/* Original classes: inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 w-14 h-14 rounded-full 
-                bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground
-                dark:bg-background/95 dark:text-primary dark:hover:bg-primary dark:hover:text-primary-foreground
-                backdrop-blur-sm hover:scale-105 transition-all duration-100 */
-
-.n5had { @apply h-6 w-6; }
-/* Original classes: h-6 w-6 */
-
-.xaks2 { @apply absolute bottom-3 right-3 bg-background/95 text-foreground dark:text-foreground backdrop-blur-sm text-xs font-medium px-2 py-1 rounded-md z-20; }
-/* Original classes: absolute bottom-3 right-3 bg-background/95 text-foreground dark:text-foreground backdrop-blur-sm text-xs font-medium px-2 py-1 rounded-md z-20 */
-
-.bj2hx { @apply absolute top-3 left-3 z-20; }
-/* Original classes: absolute top-3 left-3 z-20 */
-
-.cg4wx { @apply inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full
+.x5had { @apply h-6 w-6; }
+.baks2 { @apply absolute bottom-3 right-3 bg-background/95 text-foreground dark:text-foreground backdrop-blur-sm text-xs font-medium px-2 py-1 rounded-md z-20; }
+.rj2hx { @apply absolute top-3 left-3 z-20; }
+.yg4wx { @apply inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full
                 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground
                 dark:bg-primary/20 dark:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground
                 backdrop-blur-sm transition-colors duration-100; }
-/* Original classes: inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full
-                bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground
-                dark:bg-primary/20 dark:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground
-                backdrop-blur-sm transition-colors duration-100 */
-
-.hffad { @apply h-3 w-3; }
-/* Original classes: h-3 w-3 */
-
-.yoe2s { @apply absolute h-full w-full inset-0 object-cover transition-transform duration-500 group-hover:scale-105; }
-/* Original classes: absolute h-full w-full inset-0 object-cover transition-transform duration-500 group-hover:scale-105 */
-
-.fodaa { @apply p-5; }
-/* Original classes: p-5 */
-
-.fcdaa { @apply block group/title; }
-/* Original classes: block group/title */
-
+.xffad { @apply h-3 w-3; }
+.qoe2s { @apply absolute h-full w-full inset-0 object-cover transition-transform duration-500 group-hover:scale-105; }
+.podaa { @apply p-5; }
+.vcdaa { @apply block group/title; }
 .pdxj1 { @apply font-medium text-lg line-clamp-2 text-foreground group-hover/title:text-primary transition-colors; }
-/* Original classes: font-medium text-lg line-clamp-2 text-foreground group-hover/title:text-primary transition-colors */
-
-.b1rfx { @apply flex items-center justify-between mt-4; }
-/* Original classes: flex items-center justify-between mt-4 */
-
-.el1ss { @apply relative flex shrink-0 overflow-hidden rounded-full h-8 w-8 ring-1 ring-border; }
-/* Original classes: relative flex shrink-0 overflow-hidden rounded-full h-8 w-8 ring-1 ring-border */
-
-.becj5 { @apply aspect-square h-full w-full; }
-/* Original classes: aspect-square h-full w-full */
-
-.55wia { @apply font-medium text-sm; }
-.x0lfi { @apply text-muted-foreground hover:text-primary transition-colors; }
-/* Original classes: text-sm font-medium text-muted-foreground hover:text-primary transition-colors */
-
-.f1hfq { @apply flex items-center px-5 py-3 border-t border-border text-xs text-muted-foreground; }
-/* Original classes: flex items-center px-5 py-3 border-t border-border text-xs text-muted-foreground */
-
+.t1rfx { @apply flex items-center justify-between mt-4; }
+.sl1ss { @apply relative flex shrink-0 overflow-hidden rounded-full h-8 w-8 ring-1 ring-border; }
+.xecj5 { @apply aspect-square h-full w-full; }
+.z5wia { @apply font-medium text-sm; }
+.l0lfi { @apply text-muted-foreground hover:text-primary transition-colors; }
+.j1hfq { @apply flex items-center px-5 py-3 border-t border-border text-xs text-muted-foreground; }
