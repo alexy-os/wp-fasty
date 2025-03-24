@@ -3,3 +3,4 @@
 docs-data/
 node_modules/
 bun.lockb
+.cursorignore
