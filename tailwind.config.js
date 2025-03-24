@@ -4,7 +4,8 @@ module.exports = {
   darkMode: ["class"],
   
   content: [
-    './wp-fasty-oop/**/*.{php,js}'
+    './wp-fasty-storefront/**/*.{php,js,scss}',
+    './wp-fasty-storefront/fasty/**/*.php'
   ],
   
   theme: {

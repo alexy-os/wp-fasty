@@ -16,7 +16,7 @@ class AssetsHooks extends AbstractHooks {
             wp_get_theme()->get('Version')
         );
 
-        // Enqueue Tailwind styles
+        /*// Enqueue Tailwind styles
         wp_enqueue_style(
             'wp-fasty-tailwind',
             get_template_directory_uri() . '/assets/css/wp-tailwind.css',
@@ -28,7 +28,7 @@ class AssetsHooks extends AbstractHooks {
         wp_add_inline_style(
             'wp-fasty-tailwind',
             $this->getCustomStyles()
-        );
+        );*/
     }
 
     /**

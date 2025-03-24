@@ -1,0 +1,174 @@
+// Компоненты навбара с использованием @apply
+
+// Базовый контейнер навбара
+.fasty-navbar {
+  @apply bg-white fixed top-0 left-0 right-0 z-50 shadow;
+  
+  &-container {
+    @apply container mx-auto flex items-center justify-between h-16 px-4;
+  }
+  
+  // Логотип и название сайта
+  &-brand {
+    @apply flex items-center;
+    
+    .site-title {
+      @apply text-xl font-bold text-primary;
+    }
+    
+    .site-description {
+      @apply sr-only;
+    }
+    
+    .custom-logo-link {
+      @apply inline-block;
+      
+      img {
+        @apply h-10 w-auto;
+      }
+    }
+  }
+  
+  // Правая часть с навигацией и иконками
+  &-actions {
+    @apply flex items-center space-x-4;
+  }
+  
+  // Основное меню
+  &-menu {
+    @apply hidden md:flex items-center;
+    
+    ul {
+      @apply flex items-center space-x-4;
+      
+      li {
+        @apply relative;
+        
+        a {
+          @apply text-gray-700 hover:text-primary px-2 py-1 rounded-md transition duration-150;
+        }
+        
+        &.current-menu-item > a {
+          @apply text-primary font-medium;
+        }
+      }
+      
+      // Выпадающие меню
+      .sub-menu {
+        @apply absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 hidden z-10;
+        
+        li {
+          @apply block w-full;
+          
+          a {
+            @apply block w-full px-4 py-2 hover:bg-gray-100;
+          }
+        }
+      }
+      
+      li:hover > .sub-menu {
+        @apply block;
+      }
+    }
+  }
+  
+  // Иконки (корзина, поиск)
+  &-icons {
+    @apply flex items-center space-x-2;
+  }
+  
+  &-cart {
+    @apply relative;
+    
+    a {
+      @apply text-gray-700 hover:text-primary p-2 rounded-full;
+    }
+    
+    .count {
+      @apply absolute top-0 right-0 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transform -translate-y-1/2 translate-x-1/2;
+    }
+  }
+  
+  &-search {
+    .site-search {
+      @apply relative;
+      
+      input[type="search"] {
+        @apply bg-gray-100 rounded-full px-4 py-2 w-32 focus:w-48 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300;
+      }
+      
+      button {
+        @apply absolute right-0 top-0 h-full px-3 text-gray-500 hover:text-primary bg-transparent;
+      }
+    }
+  }
+  
+  // Кнопка мобильного меню
+  &-toggle {
+    @apply md:hidden p-2 rounded-md text-gray-700 hover:text-primary hover:bg-gray-100;
+    
+    &-bar {
+      @apply block w-6 h-0.5 bg-current my-1 transition-all duration-300;
+    }
+    
+    // Модификатор для открытого состояния
+    &.is-active {
+      .fasty-navbar-toggle-bar:nth-child(1) {
+        @apply transform rotate-45 translate-y-1.5;
+      }
+      
+      .fasty-navbar-toggle-bar:nth-child(2) {
+        @apply opacity-0;
+      }
+      
+      .fasty-navbar-toggle-bar:nth-child(3) {
+        @apply transform -rotate-45 -translate-y-1.5;
+      }
+    }
+  }
+}
+
+// Дополнительные стили для мобильной навигации (отображается при клике на кнопку меню)
+.fasty-mobile-menu {
+  @apply fixed inset-0 bg-white z-40 md:hidden pb-20 pt-16 px-4 overflow-y-auto;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  
+  &.is-active {
+    transform: translateX(0);
+  }
+  
+  ul {
+    @apply space-y-1;
+    
+    li {
+      @apply block w-full;
+      
+      a {
+        @apply block w-full py-2 px-4 text-gray-700 hover:bg-gray-100 hover:text-primary rounded-md;
+      }
+      
+      &.current-menu-item > a {
+        @apply bg-gray-100 text-primary;
+      }
+    }
+    
+    .sub-menu {
+      @apply pl-4 mt-1 mb-1 border-l-2 border-gray-200;
+    }
+  }
+}
+
+// Отступ для контента под фиксированным навбаром
+.site-content {
+  @apply pt-16;
+}
+
+// Дополнительная медиа-запись для адаптивности
+@media (max-width: 768px) {
+  .fasty-navbar-actions {
+    .fasty-navbar-menu {
+      @apply hidden;
+    }
+  }
+}

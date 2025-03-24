@@ -2,15 +2,35 @@
   "name": "wp-fasty",
   "version": "1.0.0",
   "scripts": {
+    "docs": "bun run src/scripts/docmd/main.ts",
+    "docs:sync": "bun run src/scripts/docmd/sync.ts",
+    "docs:full": "bun run docs:sync && bun run docs",
     "tokens": "bun run src/scripts/tokens/generate.ts",
-    "css": "tailwindcss -i ./src/styles/input.css -o ./wp-fasty-oop/theme.css",
-    "css:watch": "tailwindcss -i ./src/styles/input.css -o ./wp-fasty-oop/theme.min.css --watch --minify",
-    "css:build": "tailwindcss -i ./src/styles/input.css -o ./wp-fasty-oop/theme.min.css --minify"
+    "tokens:hex": "bun run src/scripts/tokens/generate-hex.ts",
+    "build:css": "postcss wp-fasty-storefront/assets/scss/main.scss -o wp-fasty-storefront/assets/css/theme.min.css --env production",
+    "watch:css": "postcss wp-fasty-storefront/assets/scss/main.scss -o wp-fasty-storefront/assets/css/theme.css --watch",
+    "build": "npm run tokens:hex && npm run build:css",
+    "dev": "npm run tokens:hex && npm run watch:css"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.21",
     "bun-types": "latest",
+    "color-convert": "^2.0.1",
+    "cssnano": "^7.0.6",
+    "doctrine": "^3.0.0",
+    "marked": "^15.0.7",
+    "php-parser": "^3.2.2",
     "postcss": "^8.5.3",
+    "postcss-apply": "^0.12.0",
+    "postcss-cli": "^11.0.1",
     "postcss-import": "^16.1.0",
+    "postcss-nested": "^7.0.2",
+    "postcss-preset-env": "^10.1.5",
+    "postcss-scss": "^4.0.9",
+    "sass": "^1.58.0",
     "tailwindcss": "3"
+  },
+  "dependencies": {
+    "@types/doctrine": "^0.0.9"
   }
 }
