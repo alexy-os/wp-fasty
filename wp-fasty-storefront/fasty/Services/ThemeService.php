@@ -31,7 +31,7 @@ class ThemeService {
      */
     public function setupTheme(): void {
         // Load text domain
-        load_child_theme_textdomain('wp-fasty-storefront', FASTY_CHILD_PATH . '/languages');
+        load_child_theme_textdomain(FASTY_TEXTDOMAIN, FASTY_CHILD_PATH . '/languages');
         
         // Add theme supports from config
         $supports = $this->app->config('theme.supports', []);
@@ -120,7 +120,7 @@ class ThemeService {
             register_sidebar(array_merge([
                 'id' => $id,
                 'name' => ucfirst($id),
-                'description' => sprintf(__('Widget area for %s', 'wp-fasty-storefront'), $id),
+                'description' => sprintf(__('Widget area for %s', FASTY_TEXTDOMAIN), $id),
                 'before_widget' => '<div id="%1$s" class="widget %2$s">',
                 'after_widget' => '</div>',
                 'before_title' => '<h4 class="widget-title">',

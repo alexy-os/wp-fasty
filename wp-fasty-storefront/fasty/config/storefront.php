@@ -8,7 +8,7 @@ return [
     // Основные настройки
     'page_layout' => 'right', // 'left', 'right', или 'full-width'
     'footer_widget_columns' => 4,
-    'credit_text' => __('Built with <a href="https://wordpress.org/">WordPress</a> and the FastyChild Framework', 'wp-fasty-storefront'),
+    'credit_text' => __('Built with <a href="https://wordpress.org/">WordPress</a> and the FastyChild Framework', FASTY_TEXTDOMAIN),
     
     // Управление шапкой сайта
     'override_header' => true, // Этот флаг полностью заменяет шапку на кастомную

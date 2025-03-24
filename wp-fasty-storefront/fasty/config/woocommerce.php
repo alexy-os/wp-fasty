@@ -9,7 +9,7 @@ return [
     'product_title_classes' => 'fasty-product-title',
     
     // Sale flash display
-    'sale_flash' => __('SALE {percentage}% OFF', 'wp-fasty-storefront'),
+    'sale_flash' => __('SALE {percentage}% OFF', FASTY_TEXTDOMAIN),
     
     // Related products
     'related_products' => [
@@ -22,16 +22,16 @@ return [
         'billing' => [
             'billing_company' => [
                 'priority' => 30,
-                'placeholder' => __('Company Name (Optional)', 'wp-fasty-storefront'),
+                'placeholder' => __('Company Name (Optional)', FASTY_TEXTDOMAIN),
             ],
             'billing_phone' => [
                 'priority' => 25,
                 'required' => true,
-                'placeholder' => __('Phone Number', 'wp-fasty-storefront'),
+                'placeholder' => __('Phone Number', FASTY_TEXTDOMAIN),
             ],
             'billing_email' => [
                 'priority' => 20,
-                'placeholder' => __('Email Address', 'wp-fasty-storefront'),
+                'placeholder' => __('Email Address', FASTY_TEXTDOMAIN),
             ],
         ],
         'shipping' => [
@@ -48,11 +48,11 @@ return [
         ],
         'add' => [
             'custom_tab' => [
-                'title' => __('Custom Information', 'wp-fasty-storefront'),
+                'title' => __('Custom Information', FASTY_TEXTDOMAIN),
                 'priority' => 30,
                 'callback' => function() {
-                    echo '<h2>' . __('Custom Product Information', 'wp-fasty-storefront') . '</h2>';
-                    echo '<p>' . __('This is custom product information added by the FastyChild Framework.', 'wp-fasty-storefront') . '</p>';
+                    echo '<h2>' . __('Custom Product Information', FASTY_TEXTDOMAIN) . '</h2>';
+                    echo '<p>' . __('This is custom product information added by the FastyChild Framework.', FASTY_TEXTDOMAIN) . '</p>';
                 },
             ],
         ],

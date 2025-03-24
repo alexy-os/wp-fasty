@@ -34,9 +34,9 @@ return [
     
     // Navigation menus
     'menus' => [
-        'primary' => __('Primary Menu', 'wp-fasty-storefront'),
-        'footer' => __('Footer Menu', 'wp-fasty-storefront'),
-        'social' => __('Social Media Menu', 'wp-fasty-storefront'),
+        'primary' => __('Primary Menu', FASTY_TEXTDOMAIN),
+        'footer' => __('Footer Menu', FASTY_TEXTDOMAIN),
+        'social' => __('Social Media Menu', FASTY_TEXTDOMAIN),
     ],
     
     // Custom image sizes
@@ -56,20 +56,20 @@ return [
     // Widget areas
     'widget_areas' => [
         'sidebar-1' => [
-            'name' => __('Primary Sidebar', 'wp-fasty-storefront'),
-            'description' => __('Main sidebar that appears on the left or right.', 'wp-fasty-storefront'),
+            'name' => __('Primary Sidebar', FASTY_TEXTDOMAIN),
+            'description' => __('Main sidebar that appears on the left or right.', FASTY_TEXTDOMAIN),
         ],
         'footer-1' => [
-            'name' => __('Footer Widget Area 1', 'wp-fasty-storefront'),
-            'description' => __('Appears in the footer section of the site.', 'wp-fasty-storefront'),
+            'name' => __('Footer Widget Area 1', FASTY_TEXTDOMAIN),
+            'description' => __('Appears in the footer section of the site.', FASTY_TEXTDOMAIN),
         ],
         'footer-2' => [
-            'name' => __('Footer Widget Area 2', 'wp-fasty-storefront'),
-            'description' => __('Appears in the footer section of the site.', 'wp-fasty-storefront'),
+            'name' => __('Footer Widget Area 2', FASTY_TEXTDOMAIN),
+            'description' => __('Appears in the footer section of the site.', FASTY_TEXTDOMAIN),
         ],
         'footer-3' => [
-            'name' => __('Footer Widget Area 3', 'wp-fasty-storefront'),
-            'description' => __('Appears in the footer section of the site.', 'wp-fasty-storefront'),
+            'name' => __('Footer Widget Area 3', FASTY_TEXTDOMAIN),
+            'description' => __('Appears in the footer section of the site.', FASTY_TEXTDOMAIN),
         ],
     ],
     
@@ -77,18 +77,18 @@ return [
     'customizer' => [
         'panels' => [
             'fasty_theme_options' => [
-                'title' => __('Fasty Theme Options', 'wp-fasty-storefront'),
+                'title' => __('Fasty Theme Options', FASTY_TEXTDOMAIN),
                 'priority' => 130,
             ],
         ],
         'sections' => [
             'fasty_header_options' => [
-                'title' => __('Header Options', 'wp-fasty-storefront'),
+                'title' => __('Header Options', FASTY_TEXTDOMAIN),
                 'panel' => 'fasty_theme_options',
                 'priority' => 10,
             ],
             'fasty_footer_options' => [
-                'title' => __('Footer Options', 'wp-fasty-storefront'),
+                'title' => __('Footer Options', FASTY_TEXTDOMAIN),
                 'panel' => 'fasty_theme_options',
                 'priority' => 20,
             ],
@@ -102,25 +102,25 @@ return [
                 'control' => [
                     'type' => 'select',
                     'args' => [
-                        'label' => __('Header Style', 'wp-fasty-storefront'),
+                        'label' => __('Header Style', FASTY_TEXTDOMAIN),
                         'section' => 'fasty_header_options',
                         'choices' => [
-                            'default' => __('Default', 'wp-fasty-storefront'),
-                            'centered' => __('Centered', 'wp-fasty-storefront'),
-                            'minimal' => __('Minimal', 'wp-fasty-storefront'),
+                            'default' => __('Default', FASTY_TEXTDOMAIN),
+                            'centered' => __('Centered', FASTY_TEXTDOMAIN),
+                            'minimal' => __('Minimal', FASTY_TEXTDOMAIN),
                         ],
                     ],
                 ],
             ],
             'fasty_footer_credit' => [
                 'args' => [
-                    'default' => __('Powered by FastyChild Framework', 'wp-fasty-storefront'),
+                    'default' => __('Powered by FastyChild Framework', FASTY_TEXTDOMAIN),
                     'sanitize_callback' => 'sanitize_text_field',
                 ],
                 'control' => [
                     'type' => 'text',
                     'args' => [
-                        'label' => __('Footer Credit Text', 'wp-fasty-storefront'),
+                        'label' => __('Footer Credit Text', FASTY_TEXTDOMAIN),
                         'section' => 'fasty_footer_options',
                     ],
                 ],

@@ -16,10 +16,10 @@ if (!defined('ABSPATH')) {
 // Get theme loader instance and initialize base application
 $theme = ThemeLoader::init();
 
-// Register basic service providers
-$theme->registerProvider(Core\Providers\AssetsServiceProvider::class);
-$theme->registerProvider(Core\Providers\ThemeServiceProvider::class);
-$theme->registerProvider(Core\Providers\HooksProvider::class);
+// Register basic service providers (fasty/config/providers.php)
+// $theme->registerProvider(Core\Providers\AssetsServiceProvider::class);
+// $theme->registerProvider(Core\Providers\ThemeServiceProvider::class);
+// $theme->registerProvider(Core\Providers\HooksProvider::class);
 
 // Load additional providers from configuration (if exists)
 if (file_exists(FASTY_CHILD_PATH . '/fasty/config/providers.php')) {

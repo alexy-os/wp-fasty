@@ -20,7 +20,7 @@ $footer_credit = get_theme_mod('fasty_footer_credit', $app->config('storefront.c
             <?php endif; ?>
             
             <?php if (has_nav_menu('footer')): ?>
-                <nav class="footer-navigation" aria-label="<?php esc_attr_e('Footer Navigation', 'wp-fasty-storefront'); ?>">
+                <nav class="footer-navigation" aria-label="<?php esc_attr_e('Footer Navigation', FASTY_TEXTDOMAIN); ?>">
                     <?php
                     wp_nav_menu(
                         array(
@@ -36,7 +36,7 @@ $footer_credit = get_theme_mod('fasty_footer_credit', $app->config('storefront.c
             <?php endif; ?>
             
             <?php if (has_nav_menu('social')): ?>
-                <nav class="social-navigation" aria-label="<?php esc_attr_e('Social Links', 'wp-fasty-storefront'); ?>">
+                <nav class="social-navigation" aria-label="<?php esc_attr_e('Social Links', FASTY_TEXTDOMAIN); ?>">
                     <?php
                     wp_nav_menu(
                         array(

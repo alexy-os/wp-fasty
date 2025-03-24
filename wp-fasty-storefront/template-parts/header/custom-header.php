@@ -39,13 +39,13 @@ $header_style = get_theme_mod('fasty_header_style', 'default');
                 <div class="fasty-account-link">
                     <a href="<?php echo esc_url(get_permalink(get_option('woocommerce_myaccount_page_id'))); ?>">
                         <span class="dashicons dashicons-admin-users"></span>
-                        <span class="screen-reader-text"><?php esc_html_e('My Account', 'wp-fasty-storefront'); ?></span>
+                        <span class="screen-reader-text"><?php esc_html_e('My Account', FASTY_TEXTDOMAIN); ?></span>
                     </a>
                 </div>
             <?php else: ?>
                 <div class="fasty-login-link">
                     <a href="<?php echo esc_url(get_permalink(get_option('woocommerce_myaccount_page_id'))); ?>">
-                        <?php esc_html_e('Login', 'wp-fasty-storefront'); ?>
+                        <?php esc_html_e('Login', FASTY_TEXTDOMAIN); ?>
                     </a>
                 </div>
             <?php endif; ?>
