@@ -17,19 +17,19 @@ class FastyThemeBootstrap {
         $this->registerHooks();
         $this->bootstrapFramework();
     }
-
-    public function textdomain() {
-        if (self::$textdomain === null) {
-            self::$textdomain = 'wp-fasty-child';
-        }
-        return self::$textdomain;
-    }
     
     public static function getInstance() {
         if (self::$instance === null) {
             self::$instance = new self();
         }
         return self::$instance;
+    }
+
+    public function textdomain() {
+        if (self::$textdomain === null) {
+            self::$textdomain = 'wp-fasty-child';
+        }
+        return self::$textdomain;
     }
     
     private function defineConstants() {

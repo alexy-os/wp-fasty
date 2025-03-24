@@ -95,18 +95,60 @@ class Container {
     }
     
     /**
-     * Create a new instance with dependencies resolved
+     * Make an instance of the given class with automatic dependency injection
      * 
-     * @param string $concrete Class name
-     * @param array $parameters Constructor parameters
-     * @return object
+     * @param string $concrete Class name to instantiate
+     * @param array $parameters Additional parameters to pass to constructor
+     * @return mixed
      */
-    public function make(string $concrete, array $parameters = []): object {
-        if ($this->has($concrete)) {
-            return $this->get($concrete);
+    public function make(string $concrete, array $parameters = [])
+    {
+        $reflection = new \ReflectionClass($concrete);
+        
+        // Если у класса нет конструктора, просто создаем экземпляр
+        if (!$reflection->getConstructor()) {
+            return new $concrete;
         }
         
-        // Create a new instance if not registered
-        return new $concrete(...$parameters);
+        // Получаем параметры конструктора
+        $constructorParams = $reflection->getConstructor()->getParameters();
+        $resolvedParams = [];
+        
+        foreach ($constructorParams as $param) {
+            $paramName = $param->getName();
+            $paramType = $param->getType();
+            
+            // Если параметр передан извне, используем его
+            if (isset($parameters[$paramName])) {
+                $resolvedParams[] = $parameters[$paramName];
+                continue;
+            }
+            
+            // Если параметр имеет тип Container, передаем текущий контейнер
+            if ($paramType && !$paramType->isBuiltin() && 
+                ($paramType->getName() === self::class || is_subclass_of($this, $paramType->getName()))) {
+                $resolvedParams[] = $this;
+                continue;
+            }
+            
+            // Если параметр имеет класс-тип, пытаемся создать его экземпляр
+            if ($paramType && !$paramType->isBuiltin()) {
+                $dependencyClass = $paramType->getName();
+                $resolvedParams[] = $this->get($dependencyClass) ?? $this->make($dependencyClass);
+                continue;
+            }
+            
+            // Если параметр имеет значение по умолчанию
+            if ($param->isDefaultValueAvailable()) {
+                $resolvedParams[] = $param->getDefaultValue();
+                continue;
+            }
+            
+            // Если не удалось разрешить параметр
+            throw new \RuntimeException("Cannot resolve parameter '{$paramName}' for class '{$concrete}'");
+        }
+        
+        // Создаем экземпляр с разрешенными параметрами
+        return $reflection->newInstanceArgs($resolvedParams);
     }
 } 

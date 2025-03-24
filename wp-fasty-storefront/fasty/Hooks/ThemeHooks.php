@@ -8,20 +8,14 @@ namespace FastyChild\Hooks;
 
 use FastyChild\Core\Container;
 
-class ThemeHooks {
+class ThemeHooks extends AbstractHooks {
     /**
-     * Container instance
-     * @var Container
-     */
-    private $container;
-    
-    /**
-     * Constructor
+     * Check if this hook can be registered
      * 
-     * @param Container $container
+     * @return bool
      */
-    public function __construct(Container $container) {
-        $this->container = $container;
+    public function canRegister(): bool {
+        return true; // Theme hooks всегда регистрируются
     }
     
     /**

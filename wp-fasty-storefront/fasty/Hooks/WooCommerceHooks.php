@@ -8,20 +8,15 @@ namespace FastyChild\Hooks;
 
 use FastyChild\Core\Container;
 
-class WooCommerceHooks {
+class WooCommerceHooks extends AbstractHooks {
     /**
-     * Container instance
-     * @var Container
-     */
-    private $container;
-    
-    /**
-     * Constructor
+     * Check if WooCommerce is active
      * 
-     * @param Container $container
+     * @return bool
      */
-    public function __construct(Container $container) {
-        $this->container = $container;
+    public function canRegister(): bool
+    {
+        return class_exists('WooCommerce');
     }
     
     /**

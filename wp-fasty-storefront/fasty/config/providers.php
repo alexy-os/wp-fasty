@@ -8,7 +8,9 @@ return [
     // Core providers are registered automatically
     FastyChild\Core\Providers\AssetsServiceProvider::class,
     FastyChild\Core\Providers\ThemeServiceProvider::class,
-    FastyChild\Core\Providers\HooksProvider::class,
+    
+    // Обновленный путь к провайдеру хуков
+    FastyChild\Providers\HooksServiceProvider::class,
     
     // Register your additional service providers here
     // Example:

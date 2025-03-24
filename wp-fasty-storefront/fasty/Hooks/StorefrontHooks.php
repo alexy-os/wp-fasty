@@ -8,20 +8,16 @@ namespace FastyChild\Hooks;
 
 use FastyChild\Core\Container;
 
-class StorefrontHooks {
+class StorefrontHooks extends AbstractHooks {
     /**
-     * Container instance
-     * @var Container
-     */
-    private $container;
-    
-    /**
-     * Constructor
+     * Check if Storefront theme is active
      * 
-     * @param Container $container
+     * @return bool
      */
-    public function __construct(Container $container) {
-        $this->container = $container;
+    public function canRegister(): bool
+    {
+        $theme = wp_get_theme();
+        return ('storefront' === $theme->get_template());
     }
     
     /**
