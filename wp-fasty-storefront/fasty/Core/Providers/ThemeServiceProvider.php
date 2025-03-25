@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Theme Service Provider
  * Handles theme setup, features, and customizations
@@ -6,35 +8,21 @@
 
 namespace FastyChild\Core\Providers;
 
-use FastyChild\Core\Container;
-use FastyChild\Core\ServiceProvider;
+use FastyChild\Core\AbstractServiceProvider;
 use FastyChild\Services\ThemeService;
 
-class ThemeServiceProvider implements ServiceProvider {
-    /**
-     * Container instance
-     * @var Container
-     */
-    private $container;
-    
-    /**
-     * Constructor
-     * 
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        $this->container = $container;
-    }
-    
+class ThemeServiceProvider extends AbstractServiceProvider
+{
     /**
      * Register theme service in the container
      * 
      * @return void
      */
-    public function register(): void {
+    public function register(): void
+    {
         // Register theme service in container
-        $this->container->singleton('theme', function() {
-            return new ThemeService($this->container->get('app'));
+        $this->singleton('theme', function() {
+            return new ThemeService($this->getService('app'));
         });
     }
     
@@ -43,8 +31,9 @@ class ThemeServiceProvider implements ServiceProvider {
      * 
      * @return void
      */
-    public function boot(): void {
-        $theme = $this->container->get('theme');
+    public function boot(): void
+    {
+        $theme = $this->getService('theme');
         
         // Setup theme features
         add_action('after_setup_theme', [$theme, 'setupTheme']);

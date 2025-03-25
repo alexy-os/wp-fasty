@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Hooks Service Provider
  * Manages WordPress action and filter hooks for the theme
@@ -6,47 +8,33 @@
 
 namespace FastyChild\Core\Providers;
 
-use FastyChild\Core\Container;
-use FastyChild\Core\ServiceProvider;
+use FastyChild\Core\AbstractServiceProvider;
 use FastyChild\Hooks\ThemeHooks;
 use FastyChild\Hooks\StorefrontHooks;
 use FastyChild\Hooks\WooCommerceHooks;
 
-class HooksProvider implements ServiceProvider {
-    /**
-     * Container instance
-     * @var Container
-     */
-    private $container;
-    
-    /**
-     * Constructor
-     * 
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        $this->container = $container;
-    }
-    
+class HooksProvider extends AbstractServiceProvider
+{
     /**
      * Register hook services in the container
      * 
      * @return void
      */
-    public function register(): void {
+    public function register(): void
+    {
         // Register basic theme hooks
-        $this->container->singleton('hooks.theme', function() {
+        $this->singleton('hooks.theme', function() {
             return new ThemeHooks($this->container);
         });
         
         // Register Storefront-specific hooks
-        $this->container->singleton('hooks.storefront', function() {
+        $this->singleton('hooks.storefront', function() {
             return new StorefrontHooks($this->container);
         });
         
         // Register WooCommerce hooks if WooCommerce is active
         if (class_exists('WooCommerce')) {
-            $this->container->singleton('hooks.woocommerce', function() {
+            $this->singleton('hooks.woocommerce', function() {
                 return new WooCommerceHooks($this->container);
             });
         }
@@ -57,16 +45,17 @@ class HooksProvider implements ServiceProvider {
      * 
      * @return void
      */
-    public function boot(): void {
+    public function boot(): void
+    {
         // Initialize basic theme hooks
-        $this->container->get('hooks.theme')->register();
+        $this->getService('hooks.theme')->register();
         
         // Initialize Storefront-specific hooks
-        $this->container->get('hooks.storefront')->register();
+        $this->getService('hooks.storefront')->register();
         
         // Initialize WooCommerce hooks if WooCommerce is active
-        if (class_exists('WooCommerce') && $this->container->has('hooks.woocommerce')) {
-            $this->container->get('hooks.woocommerce')->register();
+        if (class_exists('WooCommerce') && $this->hasService('hooks.woocommerce')) {
+            $this->getService('hooks.woocommerce')->register();
         }
     }
 } 

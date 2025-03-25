@@ -48,6 +48,44 @@ class FastyThemeBootstrap {
         if (!defined('FASTY_TEXTDOMAIN')) {
             define('FASTY_TEXTDOMAIN', $this->textdomain());
         }
+        if (!defined('FASTY_VERSION')) {
+            $theme = wp_get_theme();
+            define('FASTY_VERSION', $theme->get('Version'));
+        }
+        
+        // Проверка существования ключевых файлов и директорий
+        $this->checkCriticalFiles();
+    }
+    
+    /**
+     * Проверка существования ключевых файлов темы
+     */
+    private function checkCriticalFiles() {
+        // Проверяем, существует ли директория с активами
+        $assets_css_dir = FASTY_CHILD_PATH . '/assets/css';
+        $theme_css_file = $assets_css_dir . '/theme.min.css';
+        
+        if (!is_dir($assets_css_dir)) {
+            error_log("[" . FASTY_LOG_PREFIX . "ERROR] Assets CSS directory not found: {$assets_css_dir}");
+        }
+        
+        // Проверяем основной CSS файл
+        if (!file_exists($theme_css_file)) {
+            error_log("[" . FASTY_LOG_PREFIX . "ERROR] Theme CSS file not found: {$theme_css_file}");
+        }
+        
+        // Проверяем директорию скриптов
+        $assets_js_dir = FASTY_CHILD_PATH . '/assets/js';
+        $theme_js_file = $assets_js_dir . '/theme.min.js';
+        
+        if (!is_dir($assets_js_dir)) {
+            error_log("[" . FASTY_LOG_PREFIX . "ERROR] Assets JS directory not found: {$assets_js_dir}");
+        }
+        
+        // Проверяем основной JS файл
+        if (!file_exists($theme_js_file)) {
+            error_log("[" . FASTY_LOG_PREFIX . "ERROR] Theme JS file not found: {$theme_js_file}");
+        }
     }
     
     private function registerAutoloader() {
@@ -70,13 +108,38 @@ class FastyThemeBootstrap {
     }
     
     private function registerHooks() {
-        add_action('wp_enqueue_scripts', [$this, 'enqueueStyles']);
+        // Подключаем стили родительской темы
+        add_action('wp_enqueue_scripts', [$this, 'enqueueParentStyles'], 5); // Приоритет 5, чтобы выполнился раньше
+
+        // Добавляем поддержку теме
+        add_action('after_setup_theme', [$this, 'setupTheme']);
     }
     
-    public function enqueueStyles() {
+    public function setupTheme() {
+        // Поддержка переводов
+        load_child_theme_textdomain(
+            FASTY_TEXTDOMAIN, 
+            get_stylesheet_directory() . '/languages'
+        );
+    }
+    
+    public function enqueueParentStyles() {
+        // Подключаем только стили родительской темы
         $parent_style = 'storefront-style';
         $parent_theme_dir = get_template_directory_uri();
-        wp_enqueue_style($parent_style, $parent_theme_dir . '/style.css');
+        
+        wp_enqueue_style(
+            $parent_style, 
+            $parent_theme_dir . '/style.css'
+        );
+        
+        // Добавляем стили дочерней темы отдельно, чтобы быть уверенными, что они загрузятся
+        wp_enqueue_style(
+            'fasty-child-style',
+            get_stylesheet_directory_uri() . '/style.css',
+            array($parent_style),
+            wp_get_theme()->get('Version')
+        );
     }
     
     private function bootstrapFramework() {

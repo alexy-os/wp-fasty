@@ -1,32 +1,34 @@
 <?php
+declare(strict_types=1);
 
 namespace FastyChild\Hooks;
 
 use FastyChild\Core\Container;
 use FastyChild\Core\Traits\LoggerTrait;
 
+/**
+ * Manages WordPress hook implementations
+ */
 class HooksManager
 {
     use LoggerTrait;
     
     /**
-     * Container instance
-     * 
+     * Service container
      * @var Container
      */
-    private $container;
+    private Container $container;
     
     /**
-     * Registered hooks
-     * 
-     * @var array
+     * Registered hook implementations
+     * @var array<string, HookInterface>
      */
-    private $hooks = [];
+    private array $hooks = [];
     
     /**
      * Constructor
-     * 
-     * @param Container $container
+     *
+     * @param Container $container Service container
      */
     public function __construct(Container $container)
     {
@@ -35,67 +37,134 @@ class HooksManager
     
     /**
      * Add a hook implementation
-     * 
-     * @param string $name
-     * @param string|HookInterface $hook
+     *
+     * @param string $name Hook name
+     * @param string|HookInterface $hookClass Hook class name or instance
      * @return self
      */
-    public function addHook(string $name, $hook): self
+    public function addHook(string $name, $hookClass): self
     {
-        $this->hooks[$name] = $hook;
-        $this->logInfo("Hook '{$name}' added", ['class' => is_string($hook) ? $hook : get_class($hook)]);
+        // If hook is already a HookInterface instance, use it directly
+        if ($hookClass instanceof HookInterface) {
+            $this->hooks[$name] = $hookClass;
+            return $this;
+        }
+        
+        // Create instance if string class name provided
+        if (is_string($hookClass) && class_exists($hookClass)) {
+            try {
+                $hook = $this->container->make($hookClass);
+                
+                if ($hook instanceof HookInterface) {
+                    $this->hooks[$name] = $hook;
+                } else {
+                    $this->error(sprintf(
+                        'Hook class %s does not implement HookInterface',
+                        $hookClass
+                    ));
+                }
+            } catch (\Throwable $e) {
+                $this->error(sprintf(
+                    'Failed to create hook instance %s: %s',
+                    $hookClass,
+                    $e->getMessage()
+                ), ['exception' => $e]);
+            }
+        } else {
+            $this->error(sprintf('Invalid hook class: %s', $hookClass));
+        }
+        
         return $this;
     }
     
     /**
-     * Register all hooks that can be registered
-     * 
+     * Register all hooks with WordPress
+     *
      * @return void
      */
     public function registerHooks(): void
     {
-        $this->logInfo("Starting hooks registration");
-        $registeredCount = 0;
+        if (empty($this->hooks)) {
+            $this->warning('No hooks registered with HooksManager');
+            return;
+        }
         
-        foreach ($this->hooks as $name => $hook) {
+        // Sort hooks by priority
+        $sortedHooks = $this->sortHooksByPriority();
+        
+        foreach ($sortedHooks as $name => $hook) {
             try {
-                // Если это строка, создаем сервис в контейнере
-                if (is_string($hook)) {
-                    // Регистрируем хук как сервис в контейнере, если еще не зарегистрирован
-                    if (!$this->container->has('hooks.' . $name)) {
-                        $this->container->singleton('hooks.' . $name, function ($container) use ($hook) {
-                            return new $hook($container);
-                        });
-                    }
+                // Check if hook should be registered
+                if ($hook->canRegister()) {
+                    $this->debug(sprintf('Registering hook: %s (%s)', $name, get_class($hook)));
                     
-                    $hookInstance = $this->container->get('hooks.' . $name);
+                    // Allow monitoring via WordPress action
+                    do_action(Constants::HOOK_PREFIX . 'before_register_hook', $hook, $name);
+                    
+                    // Register the hook
+                    $hook->register();
+                    
+                    do_action(Constants::HOOK_PREFIX . 'after_register_hook', $hook, $name);
                 } else {
-                    $hookInstance = $hook;
-                }
-                
-                // Убедимся, что экземпляр реализует интерфейс HookInterface
-                if (!($hookInstance instanceof HookInterface)) {
-                    throw new \RuntimeException("Hook '$name' does not implement HookInterface");
-                }
-                
-                if ($hookInstance->canRegister()) {
-                    $hookInstance->register();
-                    $registeredCount++;
-                    $this->logInfo("Hook '{$name}' registered successfully");
-                } else {
-                    $this->logInfo("Hook '{$name}' skipped (canRegister returned false)");
+                    $this->debug(sprintf('Skipping hook: %s (canRegister() returned false)', $name));
                 }
             } catch (\Throwable $e) {
-                // Используем наш новый метод логирования ошибок
-                $this->logError("Error registering hook '{$name}': " . $e->getMessage());
-                
-                // В режиме разработки можно выводить ошибку
-                if (defined('WP_DEBUG') && WP_DEBUG) {
-                    throw $e;
-                }
+                $this->error(sprintf(
+                    'Error registering hook %s: %s',
+                    $name,
+                    $e->getMessage()
+                ), ['exception' => $e]);
             }
         }
         
-        $this->logInfo("Hooks registration completed", ['registered' => $registeredCount, 'total' => count($this->hooks)]);
+        $this->info(sprintf('Registered %d hooks', count($sortedHooks)));
+    }
+    
+    /**
+     * Sort hooks by priority
+     *
+     * @return array<string, HookInterface> Sorted hooks
+     */
+    private function sortHooksByPriority(): array
+    {
+        $hooks = $this->hooks;
+        
+        uasort($hooks, function (HookInterface $a, HookInterface $b) {
+            return $a->getPriority() <=> $b->getPriority();
+        });
+        
+        return $hooks;
+    }
+    
+    /**
+     * Get a specific hook by name
+     *
+     * @param string $name Hook name
+     * @return HookInterface|null Hook instance or null if not found
+     */
+    public function getHook(string $name): ?HookInterface
+    {
+        return $this->hooks[$name] ?? null;
+    }
+    
+    /**
+     * Check if a hook exists
+     *
+     * @param string $name Hook name
+     * @return bool True if hook exists
+     */
+    public function hasHook(string $name): bool
+    {
+        return isset($this->hooks[$name]);
+    }
+    
+    /**
+     * Get all registered hooks
+     *
+     * @return array<string, HookInterface> All registered hooks
+     */
+    public function getHooks(): array
+    {
+        return $this->hooks;
     }
 } 

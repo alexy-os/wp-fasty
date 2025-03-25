@@ -26,8 +26,11 @@ class StorefrontHooks extends AbstractHooks {
      * @return void
      */
     public function register(): void {
-        // Модифицируем метод register, чтобы он запускал обработку хуков на раннем этапе
+        // Гарантируем, что удаление действий произойдет до их выполнения
         add_action('init', [$this, 'processAllHooksFromConfig'], 5);
+        
+        // Явно обрабатываем шапку сайта, чтобы гарантировать переопределение
+        add_action('init', [$this, 'processHeaderOverride'], 5);
         
         // Основные фильтры Storefront
         add_filter('storefront_page_layout', [$this, 'modifyPageLayout']);
@@ -61,10 +64,22 @@ class StorefrontHooks extends AbstractHooks {
                 }
             }
         }
+    }
+    
+    /**
+     * Обрабатывает переопределение шапки, если это сконфигурировано
+     */
+    public function processHeaderOverride(): void {
+        $app = $this->container->get('app');
         
-        // Особая обработка для override_header, если флаг включен
+        // Проверяем настройку override_header
         if ($app->config('storefront.override_header', false)) {
+            error_log("[" . FASTY_LOG_PREFIX . "INFO] Overriding Storefront header");
+            
+            // Удаляем все действия для хука storefront_header
             remove_all_actions('storefront_header');
+            
+            // Добавляем свою шапку
             add_action('storefront_header', [$this, 'customHeader'], 10);
         }
     }
@@ -119,18 +134,33 @@ class StorefrontHooks extends AbstractHooks {
      * @return void
      */
     public function customHeader(): void {
+        // Проверяем наличие функций Storefront перед их использованием
+        $can_show_title_logo = function_exists('storefront_site_title_or_logo');
+        $can_show_navigation = function_exists('storefront_primary_navigation');
+        $can_show_cart = function_exists('storefront_header_cart');
+        $can_show_search = function_exists('storefront_product_search');
+        
+        if (!$can_show_title_logo) {
+            error_log("[" . FASTY_LOG_PREFIX . "ERROR] Function 'storefront_site_title_or_logo' not found");
+        }
+        
         ?>
         <header class="fasty-navbar">
             <div class="fasty-navbar-container">
                 <!-- Бренд (логотип/название) слева -->
                 <div class="fasty-navbar-brand">
-                    <?php storefront_site_title_or_logo(); ?>
+                    <?php if ($can_show_title_logo): ?>
+                        <?php storefront_site_title_or_logo(); ?>
+                    <?php else: ?>
+                        <!-- Fallback если функция недоступна -->
+                        <h1 class="site-title"><a href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a></h1>
+                    <?php endif; ?>
                 </div>
                 
                 <!-- Навигация и действия справа -->
                 <div class="fasty-navbar-actions">
                     <!-- Основная навигация -->
-                    <?php if (function_exists('storefront_primary_navigation')): ?>
+                    <?php if ($can_show_navigation): ?>
                         <nav class="fasty-navbar-menu">
                             <?php storefront_primary_navigation(); ?>
                         </nav>
@@ -138,13 +168,13 @@ class StorefrontHooks extends AbstractHooks {
                     
                     <!-- Иконки справа (корзина, поиск и др.) -->
                     <div class="fasty-navbar-icons">
-                        <?php if (function_exists('storefront_header_cart')): ?>
+                        <?php if ($can_show_cart): ?>
                             <div class="fasty-navbar-cart">
                                 <?php storefront_header_cart(); ?>
                             </div>
                         <?php endif; ?>
                         
-                        <?php if (function_exists('storefront_product_search')): ?>
+                        <?php if ($can_show_search): ?>
                             <div class="fasty-navbar-search">
                                 <?php storefront_product_search(); ?>
                             </div>
@@ -153,17 +183,17 @@ class StorefrontHooks extends AbstractHooks {
                 </div>
                 
                 <!-- Мобильная кнопка меню (видна только на маленьких экранах) -->
-                <button class="fasty-navbar-toggle" aria-label="Toggle menu">
-                    <span class="fasty-navbar-toggle-bar">1</span>
-                    <span class="fasty-navbar-toggle-bar">2</span>
-                    <span class="fasty-navbar-toggle-bar">3</span>
+                <button class="fasty-navbar-toggle" aria-label="<?php esc_attr_e('Toggle menu', FASTY_TEXTDOMAIN); ?>">
+                    <span class="fasty-navbar-toggle-bar"></span>
+                    <span class="fasty-navbar-toggle-bar"></span>
+                    <span class="fasty-navbar-toggle-bar"></span>
                 </button>
             </div>
         </header>
         
         <!-- Мобильное меню (скрыто по умолчанию) -->
         <div class="fasty-mobile-menu">
-            <?php if (function_exists('storefront_primary_navigation')): ?>
+            <?php if ($can_show_navigation): ?>
                 <?php storefront_primary_navigation(); ?>
             <?php endif; ?>
         </div>

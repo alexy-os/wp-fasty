@@ -33,20 +33,42 @@ class AssetsService {
         // Get styles from configuration
         $styles = $this->app->config('assets.styles', []);
         
+        // Check if FASTY_CHILD_URI and FASTY_CHILD_PATH are defined
+        if (!defined('FASTY_CHILD_URI') || !defined('FASTY_CHILD_PATH')) {
+            error_log("[" . FASTY_LOG_PREFIX . "ERROR] Constants FASTY_CHILD_URI or FASTY_CHILD_PATH are not defined");
+            return;
+        }
+        
         foreach ($styles as $handle => $style) {
             if (is_string($style)) {
                 // If string only - it's just a path to file
+                $filePath = FASTY_CHILD_PATH . $style;
+                if (!file_exists($filePath)) {
+                    error_log("[" . FASTY_LOG_PREFIX . "ERROR] Style file not found: " . $filePath);
+                    continue;
+                }
+                
                 wp_enqueue_style(
                     "fasty-child-{$handle}", 
                     FASTY_CHILD_URI . $style, 
                     [], 
-                    $this->getFileVersion(FASTY_CHILD_PATH . $style)
+                    $this->getFileVersion($filePath)
                 );
             } elseif (is_array($style)) {
                 // If array - it contains additional parameters
                 $src = $style['src'] ?? '';
+                if (empty($src)) {
+                    continue;
+                }
+                
+                $filePath = FASTY_CHILD_PATH . $src;
+                if (!file_exists($filePath)) {
+                    error_log("[" . FASTY_LOG_PREFIX . "ERROR] Style file not found: " . $filePath);
+                    continue;
+                }
+                
                 $deps = $style['deps'] ?? [];
-                $ver = isset($style['ver']) ? $style['ver'] : $this->getFileVersion(FASTY_CHILD_PATH . $src);
+                $ver = isset($style['ver']) ? $style['ver'] : $this->getFileVersion($filePath);
                 $media = $style['media'] ?? 'all';
                 
                 wp_enqueue_style(
@@ -69,19 +91,41 @@ class AssetsService {
         // Load scripts from configuration
         $scripts = $this->app->config('assets.scripts', []);
         
+        // Check if FASTY_CHILD_URI and FASTY_CHILD_PATH are defined
+        if (!defined('FASTY_CHILD_URI') || !defined('FASTY_CHILD_PATH')) {
+            error_log("[" . FASTY_LOG_PREFIX . "ERROR] Constants FASTY_CHILD_URI or FASTY_CHILD_PATH are not defined");
+            return;
+        }
+        
         foreach ($scripts as $handle => $script) {
             if (is_string($script)) {
+                $filePath = FASTY_CHILD_PATH . $script;
+                if (!file_exists($filePath)) {
+                    error_log("[" . FASTY_LOG_PREFIX . "ERROR] Script file not found: " . $filePath);
+                    continue;
+                }
+                
                 wp_enqueue_script(
                     "fasty-child-{$handle}", 
                     FASTY_CHILD_URI . $script, 
                     ['jquery'], 
-                    $this->getFileVersion(FASTY_CHILD_PATH . $script), 
+                    $this->getFileVersion($filePath), 
                     true
                 );
             } elseif (is_array($script)) {
                 $src = $script['src'] ?? '';
+                if (empty($src)) {
+                    continue;
+                }
+                
+                $filePath = FASTY_CHILD_PATH . $src;
+                if (!file_exists($filePath)) {
+                    error_log("[" . FASTY_LOG_PREFIX . "ERROR] Script file not found: " . $filePath);
+                    continue;
+                }
+                
                 $deps = $script['deps'] ?? ['jquery'];
-                $ver = isset($script['ver']) ? $script['ver'] : $this->getFileVersion(FASTY_CHILD_PATH . $src);
+                $ver = isset($script['ver']) ? $script['ver'] : $this->getFileVersion($filePath);
                 $in_footer = $script['in_footer'] ?? true;
                 
                 wp_enqueue_script(

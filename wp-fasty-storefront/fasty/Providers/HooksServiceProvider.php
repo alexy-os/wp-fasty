@@ -1,33 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace FastyChild\Providers;
 
-use FastyChild\Core\Container;
-use FastyChild\Core\ServiceProvider;
+use FastyChild\Core\AbstractServiceProvider;
 use FastyChild\Hooks\HooksManager;
 use FastyChild\Hooks\ThemeHooks;
 use FastyChild\Hooks\StorefrontHooks;
 use FastyChild\Hooks\WooCommerceHooks;
 
-class HooksServiceProvider implements ServiceProvider
+class HooksServiceProvider extends AbstractServiceProvider
 {
-    /**
-     * Container instance
-     * 
-     * @var Container
-     */
-    private $container;
-    
-    /**
-     * Constructor
-     * 
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-    
     /**
      * Register hooks manager and hook implementations
      * 
@@ -36,13 +19,13 @@ class HooksServiceProvider implements ServiceProvider
     public function register(): void
     {
         // Register hooks manager
-        $this->container->singleton('hooks.manager', function() {
+        $this->singleton('hooks.manager', function() {
             return new HooksManager($this->container);
         });
         
         // Register hooks from configuration if available
-        $hooksConfig = $this->container->has('config.hooks') 
-            ? $this->container->get('config.hooks') 
+        $hooksConfig = $this->hasService('config.hooks') 
+            ? $this->getService('config.hooks') 
             : [];
             
         if (!empty($hooksConfig)) {
@@ -61,7 +44,7 @@ class HooksServiceProvider implements ServiceProvider
      */
     private function registerHooksFromConfig(array $config): void
     {
-        $manager = $this->container->get('hooks.manager');
+        $manager = $this->getService('hooks.manager');
         
         foreach ($config as $name => $hookClass) {
             $manager->addHook($name, $hookClass);
@@ -75,7 +58,7 @@ class HooksServiceProvider implements ServiceProvider
      */
     private function registerDefaultHooks(): void
     {
-        $manager = $this->container->get('hooks.manager');
+        $manager = $this->getService('hooks.manager');
         
         $manager->addHook('theme', ThemeHooks::class)
                 ->addHook('storefront', StorefrontHooks::class)
@@ -89,6 +72,6 @@ class HooksServiceProvider implements ServiceProvider
      */
     public function boot(): void
     {
-        $this->container->get('hooks.manager')->registerHooks();
+        $this->getService('hooks.manager')->registerHooks();
     }
 } 
