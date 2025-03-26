@@ -1,6 +1,238 @@
-# Application
+# Класс приложения (Application)
 
-<!-- @doc-source: Application -->
+## Введение
+
+`Application` - это центральный класс фреймворка Fasty, который управляет всем жизненным циклом темы WordPress. Он реализует паттерн Singleton для обеспечения единой точки доступа к основным компонентам приложения.
+
+## Основные возможности
+
+- Управление конфигурацией
+- Доступ к контейнеру зависимостей
+- Управление сервисами
+- Кеширование конфигурации
+- Интеграция с WordPress
+
+## Начало работы
+
+### Получение экземпляра приложения
+
+```php
+use FastyChild\Core\Application;
+
+$app = Application::getInstance();
+```
+
+### Базовое использование
+
+```php
+// Получение конфигурации
+$debug = $app->config('app.debug', false);
+
+// Доступ к сервису
+$theme = $app->service('theme');
+
+// Проверка страницы админки
+if ($app->isAdminPage('edit.php')) {
+    // ...
+}
+```
+
+## Работа с конфигурацией
+
+### Структура конфигурации
+
+Конфигурации хранятся в директории `config/` и автоматически загружаются:
+
+```
+config/
+  ├── app.php
+  ├── theme.php
+  └── services.php
+```
+
+### Файл конфигурации
+
+```php
+// config/theme.php
+return [
+    'name' => 'My Theme',
+    'supports' => [
+        'post-thumbnails',
+        'custom-header'
+    ],
+    'menus' => [
+        'primary' => 'Главное меню',
+        'footer' => 'Меню подвала'
+    ]
+];
+```
+
+### Получение настроек
+
+```php
+// Простое значение
+$themeName = $app->config('theme.name');
+
+// Со значением по умолчанию
+$debug = $app->config('app.debug', false);
+
+// Вложенные настройки
+$menus = $app->config('theme.menus', []);
+```
+
+## Управление сервисами
+
+### Регистрация сервиса
+
+```php
+$app->getContainer()->singleton('theme.menu', function() {
+    return new MenuService();
+});
+```
+
+### Получение сервиса
+
+```php
+// Получение обязательного сервиса
+$menu = $app->service('theme.menu');
+
+// Получение опционального сервиса
+$cache = $app->service('theme.cache', false);
+
+// Проверка наличия сервиса
+if ($app->hasService('theme.cache')) {
+    // ...
+}
+```
+
+## Кеширование
+
+### Конфигурация кеша
+
+```php
+// Время жизни кеша (в секундах)
+define('FASTY_CONFIG_CACHE_TIME', 86400); // 24 часа
+```
+
+### Управление кешем
+
+```php
+// Сброс кеша конфигурации
+$app->invalidateConfigCache();
+```
+
+## Интеграция с WordPress
+
+### Работа с родительской темой
+
+```php
+// Получение информации о родительской теме
+$parentTheme = $app->getParentTheme();
+$version = $parentTheme->get('Version');
+```
+
+### Определение контекста
+
+```php
+// Проверка страницы админки
+if ($app->isAdminPage('edit.php')) {
+    // Мы на странице редактирования записей
+}
+```
+
+## Продвинутое использование
+
+### Отложенная загрузка сервисов
+
+```php
+$app->getContainer()->lazy('theme.heavy_service', function() {
+    return new HeavyService();
+});
+```
+
+### Условная конфигурация
+
+```php
+$config = $app->config('theme.features');
+
+if (isset($config['woocommerce'])) {
+    add_theme_support('woocommerce');
+}
+```
+
+## Безопасность
+
+### Санитизация данных
+
+```php
+// Конфигурации автоматически санитизируются
+$html = $app->config('theme.custom_html');
+```
+
+### Обработка ошибок
+
+```php
+try {
+    $service = $app->service('required.service');
+} catch (NotFoundException $e) {
+    // Логирование ошибки
+    error_log($e->getMessage());
+}
+```
+
+## Отладка
+
+### Режим разработки
+
+```php
+if (Utils::isDevelopmentEnvironment()) {
+    // Включаем дополнительное логирование
+}
+```
+
+### Логирование
+
+```php
+// В режиме отладки
+if (defined('WP_DEBUG') && WP_DEBUG) {
+    error_log("[FASTY] Loading configuration...");
+}
+```
+
+## Лучшие практики
+
+1. **Используйте типизацию**
+```php
+public function getService(string $name): ?ServiceInterface
+```
+
+2. **Группируйте конфигурации**
+```php
+// config/theme.php
+return [
+    'features' => [...],
+    'appearance' => [...],
+    'performance' => [...]
+];
+```
+
+3. **Кешируйте тяжелые операции**
+```php
+$value = get_transient('cache_key');
+if (false === $value) {
+    $value = heavy_operation();
+    set_transient('cache_key', $value, HOUR_IN_SECONDS);
+}
+```
+
+## Заключение
+
+Класс `Application` предоставляет:
+- Централизованное управление темой
+- Гибкую систему конфигурации
+- Интеграцию с WordPress
+- Управление зависимостями
+- Оптимизацию производительности
 
 
 ## Methods

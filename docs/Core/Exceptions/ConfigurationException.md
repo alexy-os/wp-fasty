@@ -1,32 +1,90 @@
-# ConfigurationException
+# Класс ConfigurationException
 
-<!-- @doc-source: ConfigurationException -->
+`ConfigurationException` - исключение, возникающее при ошибках в конфигурации темы.
 
+## Конструктор
 
-## Methods
+```php
+public function __construct(
+    string $configKey,
+    string $configValue,
+    string $message = '',
+    int $code = 0,
+    ?\Throwable $previous = null
+)
+```
 
-### __construct
-<!-- @doc-source: ConfigurationException.__construct -->
-Exception thrown when there are configuration errors
-/
+#### Параметры
+- `$configKey` (string) - Ключ конфигурации, вызвавший ошибку
+- `$configValue` (string) - Значение конфигурации
+- `$message` (string) - Дополнительное сообщение об ошибке
+- `$code` (int) - Код ошибки
+- `$previous` (?\Throwable) - Предыдущее исключение
 
-namespace FastyChild\Core\Exceptions;
+## Примеры использования
 
-class ConfigurationException extends FastyException
+### 1. Проверка значения конфигурации
+
+```php
+class ThemeConfig
 {
-/**
-Constructor
+    public function validateColor(string $key, string $value): void
+    {
+        if (!preg_match('/^#[0-9a-f]{6}$/i', $value)) {
+            throw new ConfigurationException(
+                $key,
+                $value,
+                'Неверный формат цвета. Используйте HEX формат (#RRGGBB)'
+            );
+        }
+    }
+}
+```
 
-#### Parameters
+### 2. Загрузка конфигурационного файла
 
-- ``: string $configKey Configuration key that caused the error
-- ``: string $configValue Configuration value that caused the error
-- ``: string $message Additional error message
-- ``: int $code Error code
-- ``: null \Throwable|null $previous Previous exception
-- ``: configKey string
-- ``: configValue string
-- ``: message string
-- ``: code int
-- ``: previous \Throwable
+```php
+class ConfigLoader
+{
+    public function load(string $file): array
+    {
+        if (!file_exists($file)) {
+            throw new ConfigurationException(
+                'config_file',
+                $file,
+                'Файл конфигурации не найден'
+            );
+        }
+
+        $config = require $file;
+        if (!is_array($config)) {
+            throw new ConfigurationException(
+                'config_format',
+                $file,
+                'Файл конфигурации должен возвращать массив'
+            );
+        }
+
+        return $config;
+    }
+}
+```
+
+### 3. Обработка исключения
+
+```php
+try {
+    $config->load('theme.php');
+} catch (ConfigurationException $e) {
+    error_log(sprintf(
+        'Ошибка конфигурации [%s = %s]: %s',
+        $e->getConfigKey(),
+        $e->getConfigValue(),
+        $e->getMessage()
+    ));
+    
+    // Загрузка конфигурации по умолчанию
+    $config->load('default.php');
+}
+```
 

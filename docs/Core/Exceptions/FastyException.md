@@ -1,42 +1,82 @@
-# FastyException
+# Класс FastyException
 
-<!-- @doc-source: FastyException -->
+`FastyException` - это базовый класс исключений фреймворка Fasty, от которого наследуются все остальные исключения.
 
+## Конструктор
 
-## Methods
+```php
+public function __construct(
+    string $entityType,
+    string $entityId,
+    string $message = '',
+    int $code = 0,
+    ?\Throwable $previous = null
+)
+```
 
-### __construct
-<!-- @doc-source: FastyException.__construct -->
-Base exception class for FastyChild framework
-/
+#### Параметры
+- `$entityType` (string) - Тип сущности, вызвавшей ошибку (например, 'config', 'service')
+- `$entityId` (string) - Идентификатор сущности
+- `$message` (string) - Сообщение об ошибке
+- `$code` (int) - Код ошибки
+- `$previous` (?\Throwable) - Предыдущее исключение
 
-namespace FastyChild\Core\Exceptions;
+## Методы
 
-class FastyException extends \Exception
+### getEntityType()
+
+```php
+public function getEntityType(): string
+```
+
+Возвращает тип сущности, вызвавшей ошибку.
+
+#### Пример использования
+```php
+try {
+    // Код, который может вызвать исключение
+} catch (FastyException $e) {
+    error_log("Ошибка в компоненте: " . $e->getEntityType());
+}
+```
+
+### getEntityId()
+
+```php
+public function getEntityId(): string
+```
+
+Возвращает идентификатор сущности.
+
+#### Пример использования
+```php
+try {
+    // Код, который может вызвать исключение
+} catch (FastyException $e) {
+    error_log(sprintf(
+        "Ошибка в %s (ID: %s): %s",
+        $e->getEntityType(),
+        $e->getEntityId(),
+        $e->getMessage()
+    ));
+}
+```
+
+## Пример использования
+
+```php
+class ThemeService
 {
-/**
-
-#### Parameters
-
-- ``: entityType string
-- ``: entityId string
-- ``: message string
-- ``: code int
-- ``: previous \Throwable
-
-### getEntityType
-<!-- @doc-source: FastyException.getEntityType -->
-Get entity type
-
-#### Returns
-
-
-
-### getEntityId
-<!-- @doc-source: FastyException.getEntityId -->
-Get entity identifier
-
-#### Returns
-
-
+    public function loadComponent(string $id): void
+    {
+        if (!$this->exists($id)) {
+            throw new FastyException(
+                'component',
+                $id,
+                "Компонент темы не найден"
+            );
+        }
+    }
+}
+```
 

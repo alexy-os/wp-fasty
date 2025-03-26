@@ -1,87 +1,304 @@
-# HooksManager
+# Класс HooksManager
 
-<!-- @doc-source: HooksManager -->
-Manages WordPress hook implementations
+`HooksManager` - это класс, отвечающий за управление хуками в Fasty. Он предоставляет централизованный способ регистрации, загрузки и управления хуками WordPress.
 
-## Methods
+## Основные возможности
 
-### __construct
-<!-- @doc-source: HooksManager.__construct -->
-Manages WordPress hook implementations
-/
-class HooksManager
+- Регистрация хуков через контейнер зависимостей
+- Автоматическая загрузка хуков при инициализации
+- Управление приоритетами выполнения хуков
+- Условная регистрация хуков
+- Отложенная загрузка хуков
+
+## Методы
+
+### register()
+
+```php
+public function register(string $hookClass): self
+```
+
+Регистрирует новый хук в менеджере.
+
+#### Параметры
+- `$hookClass` (string) - Имя класса хука, реализующего `HookInterface`
+
+#### Пример использования
+```php
+$manager->register(ThemeSetupHook::class);
+$manager->register(ContentHook::class);
+$manager->register(AdminHook::class);
+```
+
+### boot()
+
+```php
+public function boot(): void
+```
+
+Загружает все зарегистрированные хуки.
+
+#### Пример использования
+```php
+// В файле bootstrap.php
+$hooksManager = $container->get(HooksManager::class);
+$hooksManager->boot();
+```
+
+### getHooks()
+
+```php
+public function getHooks(): array
+```
+
+Возвращает массив всех зарегистрированных хуков.
+
+## Примеры использования
+
+### 1. Базовая регистрация хуков
+
+```php
+class ThemeBootstrap
 {
-use LoggerTrait;
+    private $hooksManager;
+    
+    public function __construct(HooksManager $hooksManager)
+    {
+        $this->hooksManager = $hooksManager;
+    }
+    
+    public function initialize(): void
+    {
+        // Регистрация основных хуков темы
+        $this->hooksManager
+            ->register(ThemeSetupHook::class)
+            ->register(AssetsHook::class)
+            ->register(MenuHook::class)
+            ->register(SidebarHook::class)
+            ->boot();
+    }
+}
+```
 
-/**
-Service container
+### 2. Условная регистрация хуков
 
-#### Parameters
+```php
+class PluginCompatibility
+{
+    private $hooksManager;
+    
+    public function __construct(HooksManager $hooksManager)
+    {
+        $this->hooksManager = $hooksManager;
+    }
+    
+    public function initialize(): void
+    {
+        // WooCommerce хуки
+        if (class_exists('WooCommerce')) {
+            $this->hooksManager->register(WooCommerceHook::class);
+        }
+        
+        // ACF хуки
+        if (class_exists('ACF')) {
+            $this->hooksManager->register(ACFHook::class);
+        }
+        
+        // Загрузка хуков
+        $this->hooksManager->boot();
+    }
+}
+```
 
-- ``: container Container
+### 3. Работа с приоритетами
 
-### addHook
-<!-- @doc-source: HooksManager.addHook -->
-Add a hook implementation
+```php
+class ContentManager
+{
+    private $hooksManager;
+    
+    public function __construct(HooksManager $hooksManager)
+    {
+        $this->hooksManager = $hooksManager;
+    }
+    
+    public function initialize(): void
+    {
+        // Регистрация хуков с разными приоритетами
+        $this->hooksManager
+            ->register(ContentSanitizerHook::class) // Приоритет 5
+            ->register(ContentFormatterHook::class) // Приоритет 10
+            ->register(ContentEnhancerHook::class)  // Приоритет 15
+            ->boot();
+    }
+}
+```
 
-#### Parameters
+### 4. Отложенная загрузка хуков
 
-- ``: string $name Hook name
-- ``: string |HookInterface $hookClass Hook class name or instance
-- ``: name string
-- ``: hookClass mixed
+```php
+class AdminManager
+{
+    private $hooksManager;
+    
+    public function __construct(HooksManager $hooksManager)
+    {
+        $this->hooksManager = $hooksManager;
+    }
+    
+    public function initialize(): void
+    {
+        if (!is_admin()) {
+            return;
+        }
+        
+        // Регистрация админ хуков
+        $this->hooksManager
+            ->register(AdminMenuHook::class)
+            ->register(AdminAssetsHook::class)
+            ->register(AdminCustomizerHook::class)
+            ->boot();
+    }
+}
+```
 
-#### Returns
+## Лучшие практики
 
+### 1. Организация хуков по модулям
 
+```php
+class ModuleManager
+{
+    private $hooksManager;
+    
+    public function __construct(HooksManager $hooksManager)
+    {
+        $this->hooksManager = $hooksManager;
+    }
+    
+    public function initialize(): void
+    {
+        // Основные хуки
+        $this->registerCoreHooks();
+        
+        // Хуки темы
+        $this->registerThemeHooks();
+        
+        // Админ хуки
+        $this->registerAdminHooks();
+        
+        // Загрузка всех хуков
+        $this->hooksManager->boot();
+    }
+    
+    private function registerCoreHooks(): void
+    {
+        $this->hooksManager
+            ->register(CoreSetupHook::class)
+            ->register(CoreAssetsHook::class);
+    }
+    
+    private function registerThemeHooks(): void
+    {
+        $this->hooksManager
+            ->register(ThemeSetupHook::class)
+            ->register(ThemeAssetsHook::class);
+    }
+    
+    private function registerAdminHooks(): void
+    {
+        if (is_admin()) {
+            $this->hooksManager
+                ->register(AdminMenuHook::class)
+                ->register(AdminAssetsHook::class);
+        }
+    }
+}
+```
 
-### registerHooks
-<!-- @doc-source: HooksManager.registerHooks -->
-Register all hooks with WordPress
+### 2. Обработка ошибок
 
-#### Returns
+```php
+class ErrorAwareHooksManager
+{
+    private $hooksManager;
+    private $logger;
+    
+    public function __construct(
+        HooksManager $hooksManager,
+        LoggerInterface $logger
+    ) {
+        $this->hooksManager = $hooksManager;
+        $this->logger = $logger;
+    }
+    
+    public function safeRegister(string $hookClass): void
+    {
+        try {
+            $this->hooksManager->register($hookClass);
+        } catch (Exception $e) {
+            $this->logger->error(
+                "Ошибка регистрации хука {$hookClass}: " . $e->getMessage()
+            );
+        }
+    }
+    
+    public function safeBoot(): void
+    {
+        try {
+            $this->hooksManager->boot();
+        } catch (Exception $e) {
+            $this->logger->error(
+                "Ошибка загрузки хуков: " . $e->getMessage()
+            );
+        }
+    }
+}
+```
 
+### 3. Тестирование хуков
 
+```php
+class HookTester
+{
+    private $hooksManager;
+    
+    public function __construct(HooksManager $hooksManager)
+    {
+        $this->hooksManager = $hooksManager;
+    }
+    
+    public function testHook(string $hookClass): bool
+    {
+        try {
+            // Регистрация хука
+            $this->hooksManager->register($hookClass);
+            
+            // Получение экземпляра хука
+            $hooks = $this->hooksManager->getHooks();
+            $hook = end($hooks);
+            
+            // Проверка методов
+            if (!method_exists($hook, 'register')) {
+                throw new Exception('Метод register не найден');
+            }
+            
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+}
+```
 
-### sortHooksByPriority
-<!-- @doc-source: HooksManager.sortHooksByPriority -->
-Sort hooks by priority
+## Заключение
 
-#### Returns
-
-
-
-### getHook
-<!-- @doc-source: HooksManager.getHook -->
-Get a specific hook by name
-
-#### Parameters
-
-- ``: string $name Hook name
-- ``: name string
-
-#### Returns
-
-
-
-### hasHook
-<!-- @doc-source: HooksManager.hasHook -->
-Check if a hook exists
-
-#### Parameters
-
-- ``: string $name Hook name
-- ``: name string
-
-#### Returns
-
-
-
-### getHooks
-<!-- @doc-source: HooksManager.getHooks -->
-Get all registered hooks
-
-#### Returns
-
+`HooksManager` предоставляет:
+- Централизованное управление хуками
+- Гибкую систему регистрации
+- Поддержку приоритетов
+- Условную загрузку
+- Интеграцию с контейнером зависимостей
+- Возможности для тестирования и отладки
 
 
