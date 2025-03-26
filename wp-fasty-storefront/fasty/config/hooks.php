@@ -2,12 +2,12 @@
 
 return [
     // Core theme hooks - always loaded
-    'theme' => \FastyChild\Hooks\ThemeHooks::class,
+    'theme' => \FastyChild\Theme\Hooks\ThemeHooks::class,
     
     // Conditional hooks - only load if conditions are met
-    'storefront' => \FastyChild\Hooks\StorefrontHooks::class,
-    'woocommerce' => \FastyChild\Hooks\WooCommerceHooks::class,
+    'storefront' => \FastyChild\Theme\Hooks\StorefrontHooks::class,
+    //'woocommerce' => \FastyChild\Theme\Hooks\WooCommerceHooks::class,
     
     // Custom hooks can be added here
-    // 'custom' => \FastyChild\Hooks\CustomHooks::class,
+    // 'custom' => \FastyChild\Theme\Hooks\CustomHooks::class,
 ]; 

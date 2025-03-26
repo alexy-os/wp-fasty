@@ -6,7 +6,7 @@ namespace FastyChild\Core\Config;
 use FastyChild\Core\Traits\LoggerTrait;
 use FastyChild\Core\Utils;
 use FastyChild\Core\Exceptions\ConfigurationException;
-use FastyChild\Hooks\Constants;
+use FastyChild\Theme\Hooks\Constants;
 
 /**
  * Configuration manager

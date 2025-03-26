@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace FastyChild\Core\Providers;
 
 use FastyChild\Core\AbstractServiceProvider;
-use FastyChild\Services\AssetsService;
+use FastyChild\Theme\Services\AssetsService;
 
 class AssetsServiceProvider extends AbstractServiceProvider
 {

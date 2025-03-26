@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Contains constants for all hooks used in the framework
  */
 
-namespace FastyChild\Hooks;
+namespace FastyChild\Theme\Hooks;
 
 /**
  * Constants for hook types

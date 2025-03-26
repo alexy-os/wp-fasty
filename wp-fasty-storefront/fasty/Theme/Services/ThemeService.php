@@ -4,7 +4,7 @@
  * Handles theme setup, features, and customizations
  */
 
-namespace FastyChild\Services;
+namespace FastyChild\Theme\Services;
 
 use FastyChild\Core\Application;
 

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace FastyChild\Core\Providers;
 
 use FastyChild\Core\AbstractServiceProvider;
-use FastyChild\Services\ThemeService;
+use FastyChild\Theme\Services\ThemeService;
 
 class ThemeServiceProvider extends AbstractServiceProvider
 {

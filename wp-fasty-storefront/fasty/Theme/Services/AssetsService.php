@@ -4,7 +4,7 @@
  * Handles theme assets loading (styles and scripts)
  */
 
-namespace FastyChild\Services;
+namespace FastyChild\Theme\Services;
 
 use FastyChild\Core\Application;
 

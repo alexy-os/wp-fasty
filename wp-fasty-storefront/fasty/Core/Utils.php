@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace FastyChild\Core;
 
-use FastyChild\Hooks\Constants;
+use FastyChild\Theme\Hooks\Constants;
 
 /**
  * Utility class with helper methods

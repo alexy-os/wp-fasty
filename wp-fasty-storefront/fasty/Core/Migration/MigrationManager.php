@@ -5,7 +5,7 @@ namespace FastyChild\Core\Migration;
 
 use FastyChild\Core\Traits\LoggerTrait;
 use FastyChild\Core\Utils;
-use FastyChild\Hooks\Constants;
+use FastyChild\Theme\Hooks\Constants;
 
 /**
  * Manages framework migrations

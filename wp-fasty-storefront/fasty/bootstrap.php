@@ -9,7 +9,7 @@ namespace FastyChild;
 use FastyChild\Core\ThemeLoader;
 use FastyChild\Core\Exceptions\FastyException;
 use FastyChild\Core\Exceptions\ContainerException;
-use FastyChild\Hooks\Constants;
+use FastyChild\Theme\Hooks\Constants;
 
 // Ensure this file is not accessed directly
 if (!defined('ABSPATH')) {

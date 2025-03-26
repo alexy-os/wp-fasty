@@ -8,7 +8,7 @@ namespace FastyChild\Core;
 
 use FastyChild\Core\Exceptions\NotFoundException;
 use FastyChild\Core\Exceptions\ContainerException;
-use FastyChild\Hooks\Constants;
+use FastyChild\Theme\Hooks\Constants;
 
 class ThemeLoader {
     /**

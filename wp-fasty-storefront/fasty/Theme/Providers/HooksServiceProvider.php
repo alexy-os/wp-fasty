@@ -1,13 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace FastyChild\Providers;
+namespace FastyChild\Theme\Providers;
 
 use FastyChild\Core\AbstractServiceProvider;
-use FastyChild\Hooks\HooksManager;
-use FastyChild\Hooks\ThemeHooks;
-use FastyChild\Hooks\StorefrontHooks;
-use FastyChild\Hooks\WooCommerceHooks;
+use FastyChild\Core\Hooks\HooksManager;
+use FastyChild\Theme\Hooks\ThemeHooks;
+use FastyChild\Theme\Hooks\StorefrontHooks;
 
 class HooksServiceProvider extends AbstractServiceProvider
 {
@@ -61,8 +60,7 @@ class HooksServiceProvider extends AbstractServiceProvider
         $manager = $this->getService('hooks.manager');
         
         $manager->addHook('theme', ThemeHooks::class)
-                ->addHook('storefront', StorefrontHooks::class)
-                ->addHook('woocommerce', WooCommerceHooks::class);
+                ->addHook('storefront', StorefrontHooks::class);
     }
     
     /**
