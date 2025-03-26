@@ -16,12 +16,12 @@ final class Constants
     /**
      * Framework version
      */
-    public const VERSION = '1.0.0';
+    public const VERSION = FASTY_VERSION;
     
     /**
      * Prefix for all hooks in the framework
      */
-    public const HOOK_PREFIX = 'fasty_';
+    public const HOOK_PREFIX = FASTY_PREFIX;
     
     /**
      * Framework core hooks

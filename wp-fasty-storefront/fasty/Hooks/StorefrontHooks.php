@@ -26,38 +26,38 @@ class StorefrontHooks extends AbstractHooks {
      * @return void
      */
     public function register(): void {
-        // Гарантируем, что удаление действий произойдет до их выполнения
+        // Ensure actions are removed before they are executed
         add_action('init', [$this, 'processAllHooksFromConfig'], 5);
         
-        // Явно обрабатываем шапку сайта, чтобы гарантировать переопределение
+        // Explicitly process the site header to ensure override
         add_action('init', [$this, 'processHeaderOverride'], 5);
         
-        // Основные фильтры Storefront
+        // Main Storefront filters
         add_filter('storefront_page_layout', [$this, 'modifyPageLayout']);
         add_filter('storefront_footer_widget_columns', [$this, 'modifyFooterWidgetColumns']);
         add_filter('storefront_credit_text', [$this, 'modifyCreditText']);
     }
     
     /**
-     * Обрабатывает все хуки из конфигурации
+     * Processes all hooks from configuration
      */
     public function processAllHooksFromConfig(): void {
         $app = $this->container->get('app');
         $hooks_config = $app->config('storefront.hooks', []);
         
-        // Перебираем все хуки из конфигурации (storefront_header, storefront_footer и т.д.)
+        // Iterate through all hooks from configuration (storefront_header, storefront_footer, etc.)
         foreach ($hooks_config as $hook_name => $config) {
-            // Удаляем хуки, указанные в секции 'remove'
+            // Remove hooks specified in the 'remove' section
             if (isset($config['remove']) && is_array($config['remove'])) {
                 foreach ($config['remove'] as $callback => $priority) {
                     remove_action($hook_name, $callback, $priority);
                 }
             }
             
-            // Добавляем хуки, указанные в секции 'add'
+            // Add hooks specified in the 'add' section
             if (isset($config['add']) && is_array($config['add'])) {
                 foreach ($config['add'] as $method => $priority) {
-                    // Проверяем, существует ли метод в этом классе
+                    // Check if the method exists in this class
                     if (method_exists($this, $method)) {
                         add_action($hook_name, [$this, $method], $priority);
                     }
@@ -67,19 +67,19 @@ class StorefrontHooks extends AbstractHooks {
     }
     
     /**
-     * Обрабатывает переопределение шапки, если это сконфигурировано
+     * Processes header override if configured
      */
     public function processHeaderOverride(): void {
         $app = $this->container->get('app');
         
-        // Проверяем настройку override_header
+        // Check the override_header setting
         if ($app->config('storefront.override_header', false)) {
-            error_log("[" . FASTY_LOG_PREFIX . "INFO] Overriding Storefront header");
+            error_log("[" . FASTY_PREFIX . "INFO] Overriding Storefront header");
             
-            // Удаляем все действия для хука storefront_header
+            // Remove all actions for the storefront_header hook
             remove_all_actions('storefront_header');
             
-            // Добавляем свою шапку
+            // Add our custom header
             add_action('storefront_header', [$this, 'customHeader'], 10);
         }
     }
@@ -134,39 +134,39 @@ class StorefrontHooks extends AbstractHooks {
      * @return void
      */
     public function customHeader(): void {
-        // Проверяем наличие функций Storefront перед их использованием
+        // Check if Storefront functions exist before using them
         $can_show_title_logo = function_exists('storefront_site_title_or_logo');
         $can_show_navigation = function_exists('storefront_primary_navigation');
         $can_show_cart = function_exists('storefront_header_cart');
         $can_show_search = function_exists('storefront_product_search');
         
         if (!$can_show_title_logo) {
-            error_log("[" . FASTY_LOG_PREFIX . "ERROR] Function 'storefront_site_title_or_logo' not found");
+            error_log("[" . FASTY_PREFIX . "ERROR] Function 'storefront_site_title_or_logo' not found");
         }
         
         ?>
         <header class="fasty-navbar">
             <div class="fasty-navbar-container">
-                <!-- Бренд (логотип/название) слева -->
+                <!-- Brand (logo/name) on the left -->
                 <div class="fasty-navbar-brand">
                     <?php if ($can_show_title_logo): ?>
                         <?php storefront_site_title_or_logo(); ?>
                     <?php else: ?>
-                        <!-- Fallback если функция недоступна -->
+                        <!-- Fallback if the function is not available -->
                         <h1 class="site-title"><a href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a></h1>
                     <?php endif; ?>
                 </div>
                 
-                <!-- Навигация и действия справа -->
+                <!-- Navigation and actions on the right -->
                 <div class="fasty-navbar-actions">
-                    <!-- Основная навигация -->
+                    <!-- Main navigation -->
                     <?php if ($can_show_navigation): ?>
                         <nav class="fasty-navbar-menu">
                             <?php storefront_primary_navigation(); ?>
                         </nav>
                     <?php endif; ?>
                     
-                    <!-- Иконки справа (корзина, поиск и др.) -->
+                    <!-- Right icons (cart, search, etc.) -->
                     <div class="fasty-navbar-icons">
                         <?php if ($can_show_cart): ?>
                             <div class="fasty-navbar-cart">
@@ -182,7 +182,7 @@ class StorefrontHooks extends AbstractHooks {
                     </div>
                 </div>
                 
-                <!-- Мобильная кнопка меню (видна только на маленьких экранах) -->
+                <!-- Mobile menu button (visible only on small screens) -->
                 <button class="fasty-navbar-toggle" aria-label="<?php esc_attr_e('Toggle menu', FASTY_TEXTDOMAIN); ?>">
                     <span class="fasty-navbar-toggle-bar"></span>
                     <span class="fasty-navbar-toggle-bar"></span>
@@ -191,7 +191,7 @@ class StorefrontHooks extends AbstractHooks {
             </div>
         </header>
         
-        <!-- Мобильное меню (скрыто по умолчанию) -->
+        <!-- Mobile menu (hidden by default) -->
         <div class="fasty-mobile-menu">
             <?php if ($can_show_navigation): ?>
                 <?php storefront_primary_navigation(); ?>

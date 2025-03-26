@@ -35,7 +35,7 @@ class AssetsService {
         
         // Check if FASTY_CHILD_URI and FASTY_CHILD_PATH are defined
         if (!defined('FASTY_CHILD_URI') || !defined('FASTY_CHILD_PATH')) {
-            error_log("[" . FASTY_LOG_PREFIX . "ERROR] Constants FASTY_CHILD_URI or FASTY_CHILD_PATH are not defined");
+            error_log("[" . FASTY_PREFIX . "ERROR] Constants FASTY_CHILD_URI or FASTY_CHILD_PATH are not defined");
             return;
         }
         
@@ -44,7 +44,7 @@ class AssetsService {
                 // If string only - it's just a path to file
                 $filePath = FASTY_CHILD_PATH . $style;
                 if (!file_exists($filePath)) {
-                    error_log("[" . FASTY_LOG_PREFIX . "ERROR] Style file not found: " . $filePath);
+                    error_log("[" . FASTY_PREFIX . "ERROR] Style file not found: " . $filePath);
                     continue;
                 }
                 
@@ -63,7 +63,7 @@ class AssetsService {
                 
                 $filePath = FASTY_CHILD_PATH . $src;
                 if (!file_exists($filePath)) {
-                    error_log("[" . FASTY_LOG_PREFIX . "ERROR] Style file not found: " . $filePath);
+                    error_log("[" . FASTY_PREFIX . "ERROR] Style file not found: " . $filePath);
                     continue;
                 }
                 
@@ -93,7 +93,7 @@ class AssetsService {
         
         // Check if FASTY_CHILD_URI and FASTY_CHILD_PATH are defined
         if (!defined('FASTY_CHILD_URI') || !defined('FASTY_CHILD_PATH')) {
-            error_log("[" . FASTY_LOG_PREFIX . "ERROR] Constants FASTY_CHILD_URI or FASTY_CHILD_PATH are not defined");
+            error_log("[" . FASTY_PREFIX . "ERROR] Constants FASTY_CHILD_URI or FASTY_CHILD_PATH are not defined");
             return;
         }
         
@@ -101,7 +101,7 @@ class AssetsService {
             if (is_string($script)) {
                 $filePath = FASTY_CHILD_PATH . $script;
                 if (!file_exists($filePath)) {
-                    error_log("[" . FASTY_LOG_PREFIX . "ERROR] Script file not found: " . $filePath);
+                    error_log("[" . FASTY_PREFIX . "ERROR] Script file not found: " . $filePath);
                     continue;
                 }
                 
@@ -120,7 +120,7 @@ class AssetsService {
                 
                 $filePath = FASTY_CHILD_PATH . $src;
                 if (!file_exists($filePath)) {
-                    error_log("[" . FASTY_LOG_PREFIX . "ERROR] Script file not found: " . $filePath);
+                    error_log("[" . FASTY_PREFIX . "ERROR] Script file not found: " . $filePath);
                     continue;
                 }
                 

@@ -38,14 +38,14 @@ class Application {
      * Configuration cache key prefix
      * @var string
      */
-    private const CONFIG_CACHE_PREFIX = 'fasty_config_';
+    private const CONFIG_CACHE_PREFIX = FASTY_PREFIX . 'config_';
     
     /**
      * Configuration cache time (in seconds)
      * 24 hours by default
      * @var int
      */
-    private $configCacheTime = Constants::CONFIG_CACHE_TIME;
+    private $configCacheTime = FASTY_CONFIG_CACHE_TIME;
     
     /**
      * Private constructor for singleton pattern
@@ -157,7 +157,7 @@ class Application {
                 $this->configs[$key] = $cached;
                 // Debug log
                 if (defined('WP_DEBUG') && WP_DEBUG) {
-                    error_log("[" . FASTY_LOG_PREFIX . "DEBUG] Loaded cached config for {$key}");
+                    error_log("[" . FASTY_PREFIX . "DEBUG] Loaded cached config for {$key}");
                 }
             }
         }
@@ -175,7 +175,7 @@ class Application {
                 serialize($config);
             } catch (\Throwable $e) {
                 $cacheable = false;
-                error_log("[" . FASTY_LOG_PREFIX . "WARNING] Cannot cache configuration '{$key}': " . $e->getMessage());
+                error_log("[" . FASTY_PREFIX . "WARNING] Cannot cache configuration '{$key}': " . $e->getMessage());
             }
             
             if ($cacheable) {

@@ -15,7 +15,7 @@ class ThemeHooks extends AbstractHooks {
      * @return bool
      */
     public function canRegister(): bool {
-        return true; // Theme hooks всегда регистрируются
+        return true; // Theme hooks are always registered
     }
     
     /**

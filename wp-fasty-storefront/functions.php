@@ -59,30 +59,29 @@ class FastyThemeBootstrap {
     }
     
     private function defineConstants() {
-        // Проверяем, существует ли класс Constants
-        if (!class_exists('FastyChild\Core\Constants')) {
-            // Если класс не найден, определяем базовые константы напрямую
-            if (!defined('FASTY_VERSION')) {
-                define('FASTY_VERSION', $this->version());
-            }
-            if (!defined('FASTY_LOG_PREFIX')) {
-                define('FASTY_LOG_PREFIX', 'fasty_');
-            }
-            if (!defined('FASTY_CHILD_PATH')) {
-                define('FASTY_CHILD_PATH', get_stylesheet_directory());
-            }
-            if (!defined('FASTY_CHILD_URI')) {
-                define('FASTY_CHILD_URI', get_stylesheet_directory_uri());
-            }
-            if (!defined('FASTY_PARENT_PATH')) {
-                define('FASTY_PARENT_PATH', get_template_directory());
-            }
-            if (!defined('FASTY_PARENT_URI')) {
-                define('FASTY_PARENT_URI', get_template_directory_uri());
-            }
-        } else {
-            // Если класс найден, используем его метод init
-            \FastyChild\Core\Constants::init();
+        
+        if (!defined('FASTY_VERSION')) {
+            define('FASTY_VERSION', $this->version());
+        }
+        if (!defined('FASTY_PREFIX')) {
+            define('FASTY_PREFIX', 'fasty_');
+        }
+        if (!defined('FASTY_CHILD_PATH')) {
+            define('FASTY_CHILD_PATH', get_stylesheet_directory());
+        }
+        if (!defined('FASTY_CHILD_URI')) {
+            define('FASTY_CHILD_URI', get_stylesheet_directory_uri());
+        }
+        if (!defined('FASTY_PARENT_PATH')) {
+            define('FASTY_PARENT_PATH', get_template_directory());
+        }
+        if (!defined('FASTY_PARENT_URI')) {
+            define('FASTY_PARENT_URI', get_template_directory_uri());
+        }
+
+        // Define configuration cache time
+        if (!defined('FASTY_CONFIG_CACHE_TIME')) {
+            define('FASTY_CONFIG_CACHE_TIME', DAY_IN_SECONDS);
         }
         
         // Define theme-specific constants

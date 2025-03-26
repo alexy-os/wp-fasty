@@ -60,7 +60,7 @@ function registerErrorHandler(): void
                 esc_html($errline)
             );
             
-            error_log("[" . FASTY_LOG_PREFIX . "ERROR] " . $message);
+            error_log("[" . FASTY_PREFIX . "ERROR] " . $message);
             
             if (defined('WP_DEBUG_DISPLAY') && WP_DEBUG_DISPLAY) {
                 printf(
@@ -144,7 +144,7 @@ function logAndNotifyError(\Throwable $e): void
     // Log error
     $message = sprintf(
         "[%sFATAL] %s in %s on line %d\nStack trace:\n%s",
-        FASTY_LOG_PREFIX,
+        FASTY_PREFIX,
         $e->getMessage(),
         $e->getFile(),
         $e->getLine(),

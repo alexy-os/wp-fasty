@@ -167,7 +167,7 @@ class ThemeLoader {
             // If any error occurs, return empty array
             error_log(sprintf(
                 "[%sFATAL] Failed to get provided services from %s: %s",
-                FASTY_LOG_PREFIX,
+                FASTY_PREFIX,
                 $providerClass,
                 $e->getMessage()
             ));

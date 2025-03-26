@@ -5,17 +5,17 @@
  */
 
 return [
-    // Основные настройки
-    'page_layout' => 'right', // 'left', 'right', или 'full-width'
+    // Main settings
+    'page_layout' => 'right', // 'left', 'right', or 'full-width'
     'footer_widget_columns' => 4,
     'credit_text' => __('Built with <a href="https://wordpress.org/">WordPress</a> and the FastyChild Framework', FASTY_TEXTDOMAIN),
     
-    // Управление шапкой сайта
-    'override_header' => true, // Этот флаг полностью заменяет шапку на кастомную
+    // Header management
+    'override_header' => true, // This flag completely replaces the header with a custom one
     
-    // Hooks to override - используются в processAllHooksFromConfig
+    // Hooks to override - used in processAllHooksFromConfig
     'hooks' => [
-        // Хуки шапки сайта - используются, только если override_header = false
+        // Site header hooks - used only if override_header = false
         'storefront_header' => [
             'remove' => [
                 'storefront_header_container' => 0,
@@ -31,7 +31,7 @@ return [
                 'customHeader' => 10,
             ],
         ],
-        // Хуки подвала сайта
+        // Site footer hooks
         'storefront_footer' => [
             'remove' => [
                 'storefront_credit' => 20,
@@ -42,13 +42,13 @@ return [
         ],
     ],
     
-    // Настройки для WooCommerce продуктов в Storefront
+    // Storefront WooCommerce products settings
     'products' => [
         'per_row' => 4,
         'per_page' => 12,
     ],
     
-    // Настройки компонентов главной страницы
+    // Main page components settings
     'homepage' => [
         'show_recent_products' => true,
         'show_featured_products' => true,
