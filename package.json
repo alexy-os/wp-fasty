@@ -1,6 +1,6 @@
 {
   "name": "wp-fasty",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "scripts": {
     "docs": "bun run src/scripts/docmd/main.ts",
     "docs:sync": "bun run src/scripts/docmd/sync.ts",
