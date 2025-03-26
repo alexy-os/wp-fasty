@@ -1,38 +1,38 @@
-// Автоматически сгенерированные токены из HSL в HEX
-// Генерируются из design.json через src/scripts/tokens/generate-hex.ts
+// Automatically generated tokens from HSL to HEX
+// Generated from design.json through src/scripts/tokens/generate-hex.ts
 
-// Цвета фона и текста
+// Background and text colors
 $background: #FFFFFF; // hsl(0 0% 100%)
 $foreground: #090909; // hsl(240 10% 3.9%)
 
-// Цвета компонентов
+// Component colors
 $card: #FFFFFF; // hsl(0 0% 100%)
 $card-foreground: #090909; // hsl(240 10% 3.9%)
 $popover: #FFFFFF; // hsl(0 0% 100%)
 $popover-foreground: #090909; // hsl(240 10% 3.9%)
 
-// Основные и вторичные цвета
+// Main and secondary colors
 $primary: #1D1D1D; // hsl(346.8 77.2% 49.8%)
 $primary-foreground: #F1F1F1; // hsl(355.7 100% 97.3%)
 $secondary: #F4F4F4; // hsl(240 4.8% 95.9%)
 $secondary-foreground: #181818; // hsl(240 5.9% 10%)
 
-// Дополнительные цвета
+// Additional colors
 $muted: #F4F4F4; // hsl(240 4.8% 95.9%)
 $muted-foreground: #717171; // hsl(240 3.8% 46.1%)
 $accent: #F4F4F4; // hsl(240 4.8% 95.9%)
 $accent-foreground: #181818; // hsl(240 5.9% 10%)
 
-// Цвета для ошибок/предупреждений
+// Error/warning colors
 $destructive: #444444; // hsl(0 84.2% 60.2%)
 $destructive-foreground: #FAFAFA; // hsl(0 0% 98%)
 
-// Служебные цвета
+// Service colors
 $border: #E4E4E4; // hsl(240 5.9% 90%)
 $input: #E4E4E4; // hsl(240 5.9% 90%)
 $ring: #1D1D1D; // hsl(346.8 77.2% 49.8%)
 
-// Также определим CSS переменные для использования в HTML
+// Also define CSS variables for use in HTML
 :root {
   --background: #{$background};
   --foreground: #{$foreground};
@@ -56,7 +56,7 @@ $ring: #1D1D1D; // hsl(346.8 77.2% 49.8%)
   --radius: 0.75rem;
 }
 
-// Темная тема
+// Dark theme
 .dark {
   --background: #090909; // hsl(20 14.3% 4.1%)
   --foreground: #F2F2F2; // hsl(0 0% 95%)

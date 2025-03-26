@@ -1,24 +1,24 @@
-// Основные настройки Storefront
+// Main Storefront settings
 @use "tokens" as tokens;
 
-// Базовые переменные темы
+// Theme base variables
 $base-font: "Source Sans Pro", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 $header-font: $base-font;
 
-// Размеры и пропорции
+// Sizes and proportions
 $ms-base: 1em, 0.875em;
 $ms-ratio: 1.618;
 $desktop: 768px;
 $handheld: 568px;
 $container-width: 1180px;
 
-// Переопределение цветов Storefront на основе токенов
+// Override Storefront colors based on tokens
 $body-background: tokens.$background;
 $color_body: tokens.$foreground;
 $color_links: tokens.$primary;
 $color_border: tokens.$border;
 
-// Семантические цвета Storefront
+// Semantic Storefront colors
 $storefront-primary: tokens.$primary;
 $storefront-secondary: tokens.$secondary;
 $storefront-highlight: tokens.$accent;
@@ -26,7 +26,7 @@ $storefront-background: tokens.$background;
 $storefront-text: tokens.$foreground;
 $storefront-border: tokens.$border;
 
-// Основные статусные цвета
+// Main status colors
 $error: tokens.$destructive;
-$success: #0f834d; // Можно добавить в токены
-$info: #3d9cd2; // Можно добавить в токены 
+$success: #0f834d; // Can be added to tokens
+$info: #3d9cd2; // Can be added to tokens 

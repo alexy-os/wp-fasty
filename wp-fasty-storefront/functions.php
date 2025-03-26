@@ -12,13 +12,13 @@ class FastyThemeBootstrap {
     private static $textdomain = null;
     
     private function __construct() {
-        // Сначала регистрируем автозагрузчик
+        // First, we register the autoloader
         $this->registerAutoloader();
         
-        // Затем определяем константы
+        // Then we define constants
         $this->defineConstants();
         
-        // После этого регистрируем хуки и бутстрапим фреймворк
+        // After that we register hooks and bootstrap the framework
         $this->registerHooks();
         $this->bootstrapFramework();
     }
@@ -89,15 +89,15 @@ class FastyThemeBootstrap {
             define('FASTY_TEXTDOMAIN', $this->textdomain());
         }
         
-        // Проверка существования ключевых файлов и директорий
+        // Check the existence of critical files and directories
         $this->checkCriticalFiles();
     }
     
     /**
-     * Проверка существования ключевых файлов темы
+     * Check the existence of critical theme files
      */
     private function checkCriticalFiles() {
-        // Проверяем, существует ли директория с активами
+        // Check if the assets directory exists
         $assets_css_dir = FASTY_CHILD_PATH . '/assets/css';
         $theme_css_file = $assets_css_dir . '/theme.min.css';
         
@@ -105,12 +105,12 @@ class FastyThemeBootstrap {
             error_log("[" . FASTY_LOG_PREFIX . "ERROR] Assets CSS directory not found: {$assets_css_dir}");
         }
         
-        // Проверяем основной CSS файл
+        // Check the main CSS file
         if (!file_exists($theme_css_file)) {
             error_log("[" . FASTY_LOG_PREFIX . "ERROR] Theme CSS file not found: {$theme_css_file}");
         }
         
-        // Проверяем директорию скриптов
+        // Check the scripts directory
         $assets_js_dir = FASTY_CHILD_PATH . '/assets/js';
         $theme_js_file = $assets_js_dir . '/theme.min.js';
         
@@ -118,7 +118,7 @@ class FastyThemeBootstrap {
             error_log("[" . FASTY_LOG_PREFIX . "ERROR] Assets JS directory not found: {$assets_js_dir}");
         }
         
-        // Проверяем основной JS файл
+        // Check the main JS file
         if (!file_exists($theme_js_file)) {
             error_log("[" . FASTY_LOG_PREFIX . "ERROR] Theme JS file not found: {$theme_js_file}");
         }
@@ -144,15 +144,15 @@ class FastyThemeBootstrap {
     }
     
     private function registerHooks() {
-        // Подключаем стили родительской темы
-        add_action('wp_enqueue_scripts', [$this, 'enqueueParentStyles'], 5); // Приоритет 5, чтобы выполнился раньше
+        // Connect parent theme styles
+        add_action('wp_enqueue_scripts', [$this, 'enqueueParentStyles'], 5); // Priority 5, to ensure it runs before
 
-        // Добавляем поддержку теме
+        // Add support for the theme
         add_action('after_setup_theme', [$this, 'setupTheme']);
     }
     
     public function setupTheme() {
-        // Поддержка переводов
+        // Support for translations
         load_child_theme_textdomain(
             FASTY_TEXTDOMAIN, 
             get_stylesheet_directory() . '/languages'
@@ -160,7 +160,7 @@ class FastyThemeBootstrap {
     }
     
     public function enqueueParentStyles() {
-        // Подключаем только стили родительской темы
+        // Connect only parent theme styles
         $parent_style = 'storefront-style';
         $parent_theme_dir = get_template_directory_uri();
         
@@ -169,7 +169,7 @@ class FastyThemeBootstrap {
             $parent_theme_dir . '/style.css'
         );
         
-        // Добавляем стили дочерней темы отдельно, чтобы быть уверенными, что они загрузятся
+        // Add child theme styles separately to ensure they load
         wp_enqueue_style(
             'fasty-child-style',
             get_stylesheet_directory_uri() . '/style.css',

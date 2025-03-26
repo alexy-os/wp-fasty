@@ -1,12 +1,12 @@
 <?php
 /**
- * Тестовый файл для прямого перехвата хука storefront_header
+ * Test file for direct interception of the storefront_header hook
  */
 
-// Удалить все существующие действия на хуке
+// Remove all existing actions on the hook
 remove_all_actions('storefront_header');
 
-// Добавить наше собственное действие
+// Add our own action
 add_action('storefront_header', function() {
     echo '<!-- FASTY DIRECT CUSTOM HEADER START -->';
     ?>

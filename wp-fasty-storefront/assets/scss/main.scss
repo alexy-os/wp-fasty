@@ -3,15 +3,15 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* Ваши базовые стили */
+/* Your base styles */
 @use "config";
 
-/* Ваши компоненты */
+/* Your components */
 @use "navbar";
 
-/* Ваши дополнительные утилиты и переопределения */
+/* Your additional utilities and overrides */
 
-/* Навбар с использованием @apply */
+/* Navbar with @apply */
 .fasty-navbar {
   @apply bg-white fixed top-0 left-0 right-0 z-50 shadow-elegant;
   
@@ -19,7 +19,7 @@
     @apply container mx-auto flex items-center justify-between h-16 px-4;
   }
   
-  /* ...остальные стили... */
+  /* ...other styles... */
 }
 
 body {

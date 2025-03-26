@@ -1,6 +1,6 @@
-// Компоненты навбара с использованием @apply
+// Navbar components using @apply
 
-// Базовый контейнер навбара
+// Base navbar container
 .fasty-navbar {
   @apply bg-white fixed top-0 left-0 right-0 z-50 shadow;
   
@@ -8,7 +8,7 @@
     @apply container mx-auto flex items-center justify-between h-16 px-4;
   }
   
-  // Логотип и название сайта
+  // Logo and site name
   &-brand {
     @apply flex items-center;
     
@@ -29,12 +29,12 @@
     }
   }
   
-  // Правая часть с навигацией и иконками
+  // Right part with navigation and icons
   &-actions {
     @apply flex items-center space-x-4;
   }
   
-  // Основное меню
+  // Main menu
   &-menu {
     @apply hidden md:flex items-center;
     
@@ -53,7 +53,7 @@
         }
       }
       
-      // Выпадающие меню
+      // Dropdown menu
       .sub-menu {
         @apply absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 hidden z-10;
         
@@ -72,7 +72,7 @@
     }
   }
   
-  // Иконки (корзина, поиск)
+  // Icons (cart, search)
   &-icons {
     @apply flex items-center space-x-2;
   }
@@ -103,7 +103,7 @@
     }
   }
   
-  // Кнопка мобильного меню
+  // Mobile menu button
   &-toggle {
     @apply md:hidden p-2 rounded-md text-gray-700 hover:text-primary hover:bg-gray-100;
     
@@ -111,7 +111,7 @@
       @apply block w-6 h-0.5 bg-current my-1 transition-all duration-300;
     }
     
-    // Модификатор для открытого состояния
+    // Modifier for active state
     &.is-active {
       .fasty-navbar-toggle-bar:nth-child(1) {
         @apply transform rotate-45 translate-y-1.5;
@@ -128,7 +128,7 @@
   }
 }
 
-// Дополнительные стили для мобильной навигации (отображается при клике на кнопку меню)
+// Additional styles for mobile navigation (displayed when clicking the menu button)
 .fasty-mobile-menu {
   @apply fixed inset-0 bg-white z-40 md:hidden pb-20 pt-16 px-4 overflow-y-auto;
   transform: translateX(-100%);
@@ -159,12 +159,12 @@
   }
 }
 
-// Отступ для контента под фиксированным навбаром
+// Padding for content under the fixed navbar
 .site-content {
   @apply pt-16;
 }
 
-// Дополнительная медиа-запись для адаптивности
+// Additional media query for responsiveness
 @media (max-width: 768px) {
   .fasty-navbar-actions {
     .fasty-navbar-menu {
