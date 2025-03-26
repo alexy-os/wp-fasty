@@ -1,23 +1,18 @@
 # StorefrontHooks
 
 <!-- @doc-source: StorefrontHooks -->
-
+Storefront theme specific hooks
 
 ## Methods
 
 ### canRegister
 <!-- @doc-source: StorefrontHooks.canRegister -->
-Storefront Hooks
-Handles Storefront theme-specific hooks and overrides
+Storefront theme specific hooks
 /
-
-namespace FastyChild\Hooks;
-
-use FastyChild\Core\Container;
-
-class StorefrontHooks extends AbstractHooks {
+class StorefrontHooks extends AbstractThemeHook
+{
 /**
-Check if Storefront theme is active
+Determine if hooks should be registered
 
 #### Returns
 
@@ -25,23 +20,23 @@ Check if Storefront theme is active
 
 ### register
 <!-- @doc-source: StorefrontHooks.register -->
-Register hook handlers
+Register Storefront hooks
 
 #### Returns
 
 
 
-### processAllHooksFromConfig
-<!-- @doc-source: StorefrontHooks.processAllHooksFromConfig -->
-Processes all hooks from configuration
+### shouldOverrideHeader
+<!-- @doc-source: StorefrontHooks.shouldOverrideHeader -->
+Check if header should be overridden
 
 #### Returns
 
 
 
-### processHeaderOverride
-<!-- @doc-source: StorefrontHooks.processHeaderOverride -->
-Processes header override if configured
+### shouldOverrideFooter
+<!-- @doc-source: StorefrontHooks.shouldOverrideFooter -->
+Check if footer should be overridden
 
 #### Returns
 
@@ -89,6 +84,14 @@ Modify credit text
 ### customHeader
 <!-- @doc-source: StorefrontHooks.customHeader -->
 Custom header implementation
+
+#### Returns
+
+
+
+### customFooter
+<!-- @doc-source: StorefrontHooks.customFooter -->
+Custom footer implementation
 
 #### Returns
 

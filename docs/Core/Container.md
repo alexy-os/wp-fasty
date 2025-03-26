@@ -1,129 +1,203 @@
-# Контейнер зависимостей (Container)
+# Container
 
-## Обзор
+<!-- @doc-source: Container -->
 
-`Container` - это ключевой компонент системы внедрения зависимостей (Dependency Injection) в мини-фреймворке Fasty, отвечающий за управление связями и разрешение зависимостей.
 
-## Основные возможности
+## Methods
 
-- 🔗 Регистрация и разрешение зависимостей
-- 🧩 Поддержка синглтонов
-- 🚀 Ленивая загрузка сервисов
-- 🛠 Гибкое управление объектами
+### bind
+<!-- @doc-source: Container.bind -->
+Dependency Injection Container
+Manages service bindings and resolutions
+/
 
-## Ключевые методы
+namespace FastyChild\Core;
 
-### `bind(string $abstract, $concrete)`
+use FastyChild\Core\Exceptions\NotFoundException;
+use FastyChild\Core\Exceptions\ContainerException;
+use FastyChild\Core\Traits\LoggerTrait;
 
-Регистрация простой привязки:
+class Container {
+use LoggerTrait;
 
-```php
-$container->bind('logger', function() {
-    return new LoggerService();
-});
-```
+/**
+Registered bindings
 
-### `singleton(string $abstract, $concrete)`
+#### Parameters
 
-Регистрация синглтона с ленивой инициализацией:
+- ``: abstract string
+- ``: concrete mixed
+- ``: shared bool
 
-```php
-$container->singleton('config', function() {
-    return new ConfigService();
-});
-```
+#### Returns
 
-### `get(string $abstract)`
 
-Получение зарегистрированного сервиса:
 
-```php
-$config = $container->get('config');
-```
+### singleton
+<!-- @doc-source: Container.singleton -->
+Register a singleton binding in the container
 
-### `make(string $concrete, array $parameters = [])`
+#### Parameters
 
-Создание нового экземпляра с разрешением зависимостей:
+- ``: string $abstract Abstract key
+- ``: mixed $concrete Concrete implementation or factory
+- ``: abstract string
+- ``: concrete mixed
 
-```php
-$service = $container->make(UserService::class, ['param1' => 'value']);
-```
+#### Returns
 
-## Принципы работы
 
-### Регистрация зависимостей
 
-```php
-// Простая регистрация
-$container->bind('database', new DatabaseConnection());
+### lazy
+<!-- @doc-source: Container.lazy -->
+Register a lazy service that will only be instantiated when needed
 
-// Регистрация с фабрикой
-$container->singleton('cache', function($container) {
-    return new CacheService($container->get('config'));
-});
-```
+#### Parameters
 
-### Разрешение зависимостей
+- ``: string $abstract Abstract key
+- ``: null \Closure $factory Factory function to create the service
+- ``: bool $singleton Whether to treat as singleton
+- ``: abstract string
+- ``: factory \Closure
+- ``: singleton bool
 
-```php
-// Получение сервиса
-$database = $container->get('database');
+#### Returns
 
-// Проверка наличия сервиса
-if ($container->has('cache')) {
-    $cache = $container->get('cache');
-}
-```
 
-## Преимущества
 
-- 🔍 Централизованное управление зависимостями
-- 🧠 Автоматическое разрешение сложных зависимостей
-- 🔒 Контроль над жизненным циклом объектов
+### instance
+<!-- @doc-source: Container.instance -->
+Register an existing instance in the container
 
-## Советы по использованию
+#### Parameters
 
-1. Используйте синглтоны для сервисов, которые должны быть единственными
-2. Применяйте ленивую загрузку для ресурсоемких сервисов
-3. Группируйте связанные зависимости
-4. Используйте интерфейсы для абстракции
+- ``: string $abstract Abstract key
+- ``: mixed $instance Concrete instance
+- ``: abstract string
+- ``: instance mixed
 
-## Пример продвинутого использования
+#### Returns
 
-```php
-class UserService {
-    private $database;
-    private $logger;
 
-    public function __construct(DatabaseConnection $database, LoggerService $logger) {
-        $this->database = $database;
-        $this->logger = $logger;
-    }
 
-    // Методы сервиса
-}
+### get
+<!-- @doc-source: Container.get -->
+Resolve a binding from the container
 
-// Регистрация зависимостей
-$container->singleton(DatabaseConnection::class, function() {
-    return new DatabaseConnection(/* параметры */);
-});
+#### Parameters
 
-$container->singleton(LoggerService::class, function() {
-    return new LoggerService(/* параметры */);
-});
+- ``: string $abstract Abstract key
+- ``: abstract string
 
-$container->singleton(UserService::class, function($container) {
-    return new UserService(
-        $container->get(DatabaseConnection::class),
-        $container->get(LoggerService::class)
-    );
-});
-```
+#### Returns
 
-## Возможные проблемы
 
-- Избегайте слишком сложных цепочек зависимостей
-- Следите за производительностью при большом количестве сервисов
-- Обрабатывайте возможные ошибки при создании объектов
-- Используйте осторожно с глобальным состоянием
+
+### resolveLazyService
+<!-- @doc-source: Container.resolveLazyService -->
+Resolve a lazy-loaded service
+
+#### Parameters
+
+- ``: string $abstract Service identifier
+- ``: abstract string
+
+#### Returns
+
+
+
+### resolve
+<!-- @doc-source: Container.resolve -->
+Alias for get()
+
+#### Parameters
+
+- ``: string $abstract Abstract key
+- ``: abstract string
+
+#### Returns
+
+
+
+### has
+<!-- @doc-source: Container.has -->
+Check if a binding exists in the container
+
+#### Parameters
+
+- ``: string $abstract Abstract key
+- ``: abstract string
+
+#### Returns
+
+
+
+### make
+<!-- @doc-source: Container.make -->
+Make an instance of the given class with automatic dependency injection
+
+#### Parameters
+
+- ``: string $concrete Class name to instantiate
+- ``: array <string, mixed> $parameters Additional parameters to pass to constructor
+- ``: concrete string
+- ``: parameters array
+
+#### Returns
+
+
+
+### call
+<!-- @doc-source: Container.call -->
+Call a method with automatic dependency injection
+
+#### Parameters
+
+- ``: object |string $instance Object instance or class name for static methods
+- ``: string $method Method name to call
+- ``: array <string, mixed> $parameters Additional parameters to pass to method
+- ``: instance mixed
+- ``: method string
+- ``: parameters array
+
+#### Returns
+
+
+
+### getBindings
+<!-- @doc-source: Container.getBindings -->
+Get all registered bindings
+
+#### Returns
+
+
+
+### getInstances
+<!-- @doc-source: Container.getInstances -->
+Get all resolved instances
+
+#### Returns
+
+
+
+### unbind
+<!-- @doc-source: Container.unbind -->
+Remove a binding from the container
+
+#### Parameters
+
+- ``: string $abstract Abstract key
+- ``: abstract string
+
+#### Returns
+
+
+
+### clear
+<!-- @doc-source: Container.clear -->
+Clear all bindings and instances
+
+#### Returns
+
+
 

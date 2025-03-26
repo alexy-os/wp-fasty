@@ -1,47 +1,60 @@
-# Документация Fasty Framework
+# Documentation Index
 
-## Фронтконтроллер
-
-- [Инициализация FastY](./bootstrap.md)
-
-## Конфигурация
-
-Основные файлы конфигурации фреймворка:
-
-- [Конфигурация ресурсов](./Configs/assets.md)
-- [Конфигурация темы](./Configs/theme.md)
-- [Кастомизация Storefront](./Configs/storefront.md)
-- [Настройки WooCommerce](./Configs/woocommerce.md)
-- [Управление провайдерами](./Configs/providers.md)
-
-## Ядро (Core)
-
-- [Приложение](./Core/Application.md)
-- [Контейнер зависимостей](./Core/Container.md)
-- [Сервис-провайдер](./Core/ServiceProvider.md)
-- [Загрузчик темы](./Core/ThemeLoader.md)
-
-### Провайдеры ядра
-
-- [Провайдер ресурсов](./Core/Providers/AssetsServiceProvider.md)
-- [Провайдер хуков](./Core/Providers/HooksProvider.md)
-- [Провайдер темы](./Core/Providers/ThemeServiceProvider.md)
-
-## Хуки (Hooks)
-
-- [Хуки Storefront](./Hooks/StorefrontHooks.md)
-- [Хуки темы](./Hooks/ThemeHooks.md)
-- [Хуки WooCommerce](./Hooks/WooCommerceHooks.md)
-
-## Сервисы (Services)
-
-- [Сервис ресурсов](./Services/AssetsService.md)
-- [Сервис темы](./Services/ThemeService.md)
-
-## Быстрые ссылки
-
-- [📦 Управление ресурсами](./Configs/assets.md)
-- [🎨 Настройка темы](./Configs/theme.md)
-- [🛍 Настройка магазина](./Configs/woocommerce.md)
-- [🏪 Кастомизация Storefront](./Configs/storefront.md)
-- [🔌 Управление провайдерами](./Configs/providers.md)
+- [bootstrap](./bootstrap.md)
+- config/
+  - [assets](./config/assets.md)
+  - [hooks](./config/hooks.md)
+  - [providers](./config/providers.md)
+  - [storefront](./config/storefront.md)
+  - [theme](./config/theme.md)
+  - [woocommerce](./config/woocommerce.md)
+- Core/
+  - [AbstractServiceProvider](./Core/AbstractServiceProvider.md)
+  - [Application](./Core/Application.md)
+  - Config/
+    - [ConfigInterface](./Core/Config/ConfigInterface.md)
+    - [ConfigManager](./Core/Config/ConfigManager.md)
+  - [Container](./Core/Container.md)
+  - Exceptions/
+    - [ConfigurationException](./Core/Exceptions/ConfigurationException.md)
+    - [ContainerException](./Core/Exceptions/ContainerException.md)
+    - [FastyException](./Core/Exceptions/FastyException.md)
+    - [NotFoundException](./Core/Exceptions/NotFoundException.md)
+  - Hooks/
+    - [AbstractHook](./Core/Hooks/AbstractHook.md)
+    - [HookInterface](./Core/Hooks/HookInterface.md)
+    - [HooksManager](./Core/Hooks/HooksManager.md)
+  - Migration/
+    - [AbstractMigration](./Core/Migration/AbstractMigration.md)
+    - [MigrationInterface](./Core/Migration/MigrationInterface.md)
+    - [MigrationManager](./Core/Migration/MigrationManager.md)
+  - Providers/
+    - [AssetsServiceProvider](./Core/Providers/AssetsServiceProvider.md)
+    - [HooksProvider](./Core/Providers/HooksProvider.md)
+    - [ThemeServiceProvider](./Core/Providers/ThemeServiceProvider.md)
+  - [ServiceProvider](./Core/ServiceProvider.md)
+  - [ThemeLoader](./Core/ThemeLoader.md)
+  - Traits/
+    - [ContainerAwareTrait](./Core/Traits/ContainerAwareTrait.md)
+    - [LoggerTrait](./Core/Traits/LoggerTrait.md)
+  - [Utils](./Core/Utils.md)
+- Hooks/
+  - [AbstractHooks](./Hooks/AbstractHooks.md)
+  - [Constants](./Hooks/Constants.md)
+  - [HookInterface](./Hooks/HookInterface.md)
+  - [HooksManager](./Hooks/HooksManager.md)
+  - [StorefrontHooks](./Hooks/StorefrontHooks.md)
+  - [ThemeHooks](./Hooks/ThemeHooks.md)
+  - [WooCommerceHooks](./Hooks/WooCommerceHooks.md)
+- Providers/
+  - [HooksServiceProvider](./Providers/HooksServiceProvider.md)
+- Services/
+  - [AssetsService](./Services/AssetsService.md)
+  - [ThemeService](./Services/ThemeService.md)
+- Theme/
+  - Hooks/
+    - [AbstractThemeHook](./Theme/Hooks/AbstractThemeHook.md)
+    - [StorefrontHooks](./Theme/Hooks/StorefrontHooks.md)
+    - [ThemeHooks](./Theme/Hooks/ThemeHooks.md)
+  - Providers/
+    - [StorefrontHooksProvider](./Theme/Providers/StorefrontHooksProvider.md)
