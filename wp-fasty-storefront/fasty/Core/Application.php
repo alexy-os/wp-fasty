@@ -45,35 +45,7 @@ class Application {
      * 24 hours by default
      * @var int
      */
-    private $configCacheTime = DAY_IN_SECONDS;
-    
-    /**
-     * Allowed HTML tags for configuration values
-     * @var array
-     */
-    private const ALLOWED_HTML_TAGS = [
-        'a' => [
-            'href' => [],
-            'title' => [],
-            'target' => [],
-            'rel' => [],
-            'class' => []
-        ],
-        'br' => [],
-        'em' => [],
-        'strong' => [],
-        'p' => ['class' => []],
-        'span' => ['class' => []],
-        'div' => ['class' => []],
-        'ul' => ['class' => []],
-        'li' => ['class' => []],
-        'h1' => ['class' => []],
-        'h2' => ['class' => []],
-        'h3' => ['class' => []],
-        'h4' => ['class' => []],
-        'h5' => ['class' => []],
-        'h6' => ['class' => []],
-    ];
+    private $configCacheTime = Constants::CONFIG_CACHE_TIME;
     
     /**
      * Private constructor for singleton pattern
@@ -225,7 +197,7 @@ class Application {
     private function sanitizeConfigArray($config) {
         if (!is_array($config)) {
             if (is_string($config)) {
-                return $this->sanitizeConfigValue($config);
+                return Utils::sanitizeHtml($config);
             }
             
             // Don't try to sanitize closures or objects that can't be serialized
@@ -246,7 +218,7 @@ class Application {
             if (is_array($value)) {
                 $result[$key] = $this->sanitizeConfigArray($value);
             } elseif (is_string($value)) {
-                $result[$key] = $this->sanitizeConfigValue($value);
+                $result[$key] = Utils::sanitizeHtml($value);
             } else {
                 $result[$key] = $value;
             }
@@ -262,13 +234,7 @@ class Application {
      * @return string Sanitized value
      */
     private function sanitizeConfigValue(string $value): string {
-        // If value contains HTML, sanitize it with wp_kses
-        if (strip_tags($value) !== $value) {
-            return wp_kses($value, self::ALLOWED_HTML_TAGS);
-        }
-        
-        // Otherwise, just sanitize as text
-        return sanitize_text_field($value);
+        return Utils::sanitizeHtml($value);
     }
     
     /**

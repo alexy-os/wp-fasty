@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace FastyChild\Core\Traits;
 
+use FastyChild\Core\Constants;
+
 /**
  * Logger Trait
  * Provides common logging functionality
@@ -19,12 +21,8 @@ trait LoggerTrait
      */
     protected function log(string $message, string $level = 'INFO', array $context = []): void
     {
-        if (!defined('FASTY_LOG_PREFIX')) {
-            define('FASTY_LOG_PREFIX', 'fasty_');
-        }
-
         $level = strtoupper($level);
-        $prefix = "[" . FASTY_LOG_PREFIX . "{$level}] ";
+        $prefix = "[" . Constants::LOG_PREFIX . "{$level}] ";
         
         // Prepare context data if any
         $contextData = '';

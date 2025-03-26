@@ -11,6 +11,34 @@ use FastyChild\Hooks\Constants;
 final class Utils
 {
     /**
+     * Default allowed HTML tags for sanitization
+     * @var array
+     */
+    public const ALLOWED_HTML_TAGS = [
+        'a' => [
+            'href' => [],
+            'title' => [],
+            'target' => [],
+            'rel' => [],
+            'class' => []
+        ],
+        'br' => [],
+        'em' => [],
+        'strong' => [],
+        'p' => ['class' => []],
+        'span' => ['class' => []],
+        'div' => ['class' => []],
+        'ul' => ['class' => []],
+        'li' => ['class' => []],
+        'h1' => ['class' => []],
+        'h2' => ['class' => []],
+        'h3' => ['class' => []],
+        'h4' => ['class' => []],
+        'h5' => ['class' => []],
+        'h6' => ['class' => []],
+    ];
+
+    /**
      * Convert a path to a URL
      *
      * @param string $path Path to convert
@@ -71,29 +99,7 @@ final class Utils
     {
         // Default allowed tags if none specified
         if (empty($allowedTags)) {
-            $allowedTags = [
-                'a' => [
-                    'href' => [],
-                    'title' => [],
-                    'target' => [],
-                    'rel' => [],
-                    'class' => []
-                ],
-                'br' => [],
-                'em' => [],
-                'strong' => [],
-                'p' => ['class' => []],
-                'span' => ['class' => []],
-                'div' => ['class' => []],
-                'ul' => ['class' => []],
-                'li' => ['class' => []],
-                'h1' => ['class' => []],
-                'h2' => ['class' => []],
-                'h3' => ['class' => []],
-                'h4' => ['class' => []],
-                'h5' => ['class' => []],
-                'h6' => ['class' => []],
-            ];
+            $allowedTags = self::ALLOWED_HTML_TAGS;
         }
         
         return wp_kses($content, $allowedTags);

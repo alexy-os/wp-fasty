@@ -9,11 +9,16 @@ if (!defined('ABSPATH')) {
 
 class FastyThemeBootstrap {
     private static $instance = null;
-    private static $textdomain = 'wp-fasty-storefront';
+    private static $textdomain = null;
     
     private function __construct() {
-        $this->defineConstants();
+        // Сначала регистрируем автозагрузчик
         $this->registerAutoloader();
+        
+        // Затем определяем константы
+        $this->defineConstants();
+        
+        // После этого регистрируем хуки и бутстрапим фреймворк
         $this->registerHooks();
         $this->bootstrapFramework();
     }
@@ -25,32 +30,64 @@ class FastyThemeBootstrap {
         return self::$instance;
     }
 
-    public function textdomain() {
+    /**
+     * Get theme textdomain
+     * 
+     * @return string Theme textdomain
+     */
+    public function textdomain(): string {
         if (self::$textdomain === null) {
-            self::$textdomain = 'wp-fasty-child';
+            $theme = wp_get_theme();
+            self::$textdomain = $theme->get('TextDomain');
+            
+            // Fallback to theme directory name if TextDomain is not set
+            if (empty(self::$textdomain)) {
+                self::$textdomain = basename(get_stylesheet_directory());
+            }
         }
         return self::$textdomain;
     }
     
+    /**
+     * Get theme version
+     * 
+     * @return string Theme version
+     */
+    public function version(): string {
+        $theme = wp_get_theme();
+        return $theme->get('Version');
+    }
+    
     private function defineConstants() {
-        if (!defined('FASTY_CHILD_PATH')) {
-            define('FASTY_CHILD_PATH', get_stylesheet_directory());
+        // Проверяем, существует ли класс Constants
+        if (!class_exists('FastyChild\Core\Constants')) {
+            // Если класс не найден, определяем базовые константы напрямую
+            if (!defined('FASTY_VERSION')) {
+                define('FASTY_VERSION', $this->version());
+            }
+            if (!defined('FASTY_LOG_PREFIX')) {
+                define('FASTY_LOG_PREFIX', 'fasty_');
+            }
+            if (!defined('FASTY_CHILD_PATH')) {
+                define('FASTY_CHILD_PATH', get_stylesheet_directory());
+            }
+            if (!defined('FASTY_CHILD_URI')) {
+                define('FASTY_CHILD_URI', get_stylesheet_directory_uri());
+            }
+            if (!defined('FASTY_PARENT_PATH')) {
+                define('FASTY_PARENT_PATH', get_template_directory());
+            }
+            if (!defined('FASTY_PARENT_URI')) {
+                define('FASTY_PARENT_URI', get_template_directory_uri());
+            }
+        } else {
+            // Если класс найден, используем его метод init
+            \FastyChild\Core\Constants::init();
         }
-        if (!defined('FASTY_CHILD_URI')) {
-            define('FASTY_CHILD_URI', get_stylesheet_directory_uri());
-        }
-        if (!defined('FASTY_PARENT_PATH')) {
-            define('FASTY_PARENT_PATH', get_template_directory());
-        }
-        if (!defined('FASTY_PARENT_URI')) {
-            define('FASTY_PARENT_URI', get_template_directory_uri());
-        }
+        
+        // Define theme-specific constants
         if (!defined('FASTY_TEXTDOMAIN')) {
             define('FASTY_TEXTDOMAIN', $this->textdomain());
-        }
-        if (!defined('FASTY_VERSION')) {
-            $theme = wp_get_theme();
-            define('FASTY_VERSION', $theme->get('Version'));
         }
         
         // Проверка существования ключевых файлов и директорий

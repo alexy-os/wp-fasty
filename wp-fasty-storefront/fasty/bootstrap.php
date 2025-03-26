@@ -16,16 +16,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Define framework constants if not already defined
-if (!defined('FASTY_LOG_PREFIX')) {
-    define('FASTY_LOG_PREFIX', 'fasty_');
-}
-
-// Define framework version
-if (!defined('FASTY_VERSION')) {
-    define('FASTY_VERSION', '1.0.0');
-}
-
 /**
  * Initialize framework core components
  * 
