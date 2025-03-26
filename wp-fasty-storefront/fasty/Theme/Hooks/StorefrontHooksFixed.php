@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace FastyChild\Theme\Hooks;
 
 /**
- * Storefront theme specific hooks
+ * Storefront theme specific hooks - corrected version
  */
-class StorefrontHooks extends AbstractThemeHook
+class StorefrontHooksFixed extends AbstractThemeHook
 {
     /**
      * Determine if hooks should be registered
@@ -15,14 +15,12 @@ class StorefrontHooks extends AbstractThemeHook
      */
     public function canRegister(): bool
     {
-        return true; // Force return true for testing header override
-        $result = true; // $this->isTheme('storefront');
+        // Always return true for testing
+        $result = true;
         
-        // Logging for debugging
-        $this->debug('StorefrontHooks::canRegister() called', [
+        $this->debug('StorefrontHooksFixed::canRegister() called', [
             'result' => $result,
-            'theme_check' => 'storefront',
-            'force_enabled' => true
+            'class' => get_class($this)
         ]);
         
         return $result;
@@ -30,40 +28,43 @@ class StorefrontHooks extends AbstractThemeHook
     
     /**
      * Register Storefront hooks
+     * Prioritized registration on early_loading hooks to ensure loading before the parent theme
      * 
      * @return void
      */
     public function register(): void
     {
-        // Logging for debugging
-        $this->debug('StorefrontHooks::register() called', [
+        $this->debug('StorefrontHooksFixed::register() called', [
             'class' => get_class($this)
         ]);
         
-        // Layout hooks
-        $this->addFilter('storefront_page_layout', 'modifyPageLayout');
-        
-        // Footer hooks
-        $this->addFilter('storefront_footer_widget_columns', 'modifyFooterWidgetColumns');
-        $this->addFilter('storefront_credit_text', 'modifyCreditText');
-        
-        // Check if header override is enabled
-        if ($this->shouldOverrideHeader()) {
-            $this->debug('Header override is enabled, removing default header actions');
-            $this->removeAllActions('storefront_header');
-            $this->addAction('storefront_header', 'customHeader');
-        } else {
-            $this->debug('Header override is disabled, keeping default header');
-        }
-        
-        // Check if footer override is enabled
-        if ($this->shouldOverrideFooter()) {
-            $this->debug('Footer override is enabled, removing default footer actions');
-            $this->removeAllActions('storefront_footer');
-            $this->addAction('storefront_footer', 'customFooter');
-        } else {
-            $this->debug('Footer override is disabled, keeping default footer');
-        }
+        // Register the header hook on init with a low priority,
+        // ensuring it loads before the Storefront theme is activated
+        add_action('init', function() {
+            $this->debug('Init action executed, registering Storefront header hooks');
+            
+            // Layout hooks
+            add_filter('storefront_page_layout', [$this, 'modifyPageLayout']);
+            
+            // Footer hooks
+            add_filter('storefront_footer_widget_columns', [$this, 'modifyFooterWidgetColumns']);
+            add_filter('storefront_credit_text', [$this, 'modifyCreditText']);
+            
+            // Header override
+            if ($this->shouldOverrideHeader()) {
+                $this->debug('Header override enabled from init hook');
+                remove_all_actions('storefront_header');
+                add_action('storefront_header', [$this, 'customHeader'], 10);
+                $this->debug('Header actions registered');
+            }
+            
+            // Footer override
+            if ($this->shouldOverrideFooter()) {
+                $this->debug('Footer override enabled from init hook');
+                remove_all_actions('storefront_footer');
+                add_action('storefront_footer', [$this, 'customFooter'], 10);
+            }
+        }, 5); // Low priority for early execution
     }
     
     /**
@@ -73,32 +74,9 @@ class StorefrontHooks extends AbstractThemeHook
      */
     protected function shouldOverrideHeader(): bool
     {
-        // Get config from Application
-        if ($this->container->has('app')) {
-            $app = $this->container->get('app');
-            $value = $app->config('storefront.override_header', false);
-            
-            // Logging for debugging
-            $this->debug('Checking override_header from config', [
-                'value' => $value,
-                'type' => gettype($value),
-                'source' => 'config'
-            ]);
-            
-            return (bool) $value;
-        }
-        
-        // Fallback to theme option if app not available
-        $value = $this->getThemeOption('override_header', false);
-        
-        // Logging for debugging
-        $this->debug('Checking override_header from theme option', [
-            'value' => $value,
-            'type' => gettype($value),
-            'source' => 'theme_option'
-        ]);
-        
-        return (bool) $value;
+        // For testing always return true
+        $this->debug('shouldOverrideHeader called, returning true for testing');
+        return true;
     }
     
     /**
@@ -177,10 +155,10 @@ class StorefrontHooks extends AbstractThemeHook
     public function customHeader(): void
     {
         // Add logging for tracing the call
-        $this->debug('StorefrontHooks::customHeader() called - Rendering custom header!');
+        $this->debug('StorefrontHooksFixed::customHeader() called - Rendering custom header!');
         
         // Add a visible HTML tag to confirm that our hook has been triggered
-        echo "<!-- FASTY CUSTOM HEADER START -->";
+        echo "<!-- FASTY FIXED CUSTOM HEADER START -->";
         
         // Check if template exists in child theme
         $templatePath = get_stylesheet_directory() . '/template-parts/header.php';
@@ -246,7 +224,7 @@ class StorefrontHooks extends AbstractThemeHook
         <?php
         
         // Closing tag
-        echo "<!-- FASTY CUSTOM HEADER END -->";
+        echo "<!-- FASTY FIXED CUSTOM HEADER END -->";
     }
     
     /**

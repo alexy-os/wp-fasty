@@ -182,6 +182,14 @@ function logAndNotifyError(\Throwable $e): void
 
 // Bootstrap the framework
 try {
+    // Add a direct test hook for verification
+    if (function_exists('add_action')) {
+        add_action('storefront_header', function() {
+            echo "<!-- DIRECT TEST HOOK: storefront_header -->";
+            error_log("[FASTY_DEBUG] Direct storefront_header hook called");
+        }, 5);
+    }
+    
     // Initialize framework core
     $theme = initializeFramework();
     if (!$theme) {

@@ -92,6 +92,17 @@ class HooksManager
         // Sort hooks by priority
         $sortedHooks = $this->sortHooksByPriority();
         
+        // Logging all hooks before registration
+        $hooksList = [];
+        foreach ($sortedHooks as $name => $hook) {
+            $hooksList[$name] = [
+                'class' => get_class($hook),
+                'priority' => $hook->getPriority(),
+                'can_register' => $hook->canRegister()
+            ];
+        }
+        $this->debug('Hooks before registration:', $hooksList);
+        
         foreach ($sortedHooks as $name => $hook) {
             try {
                 // Check if hook should be registered

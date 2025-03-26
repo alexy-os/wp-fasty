@@ -19,17 +19,38 @@ abstract class AbstractThemeHook extends AbstractHook
     protected function isTheme(string $themeSlug): bool
     {
         $theme = wp_get_theme();
+        $currentTheme = $theme->get('TextDomain');
+        $parentTheme = null;
+        
+        if ($theme->parent()) {
+            $parentTheme = $theme->parent()->get('TextDomain');
+        }
         
         // Check if this is the theme itself
-        if ($theme->get('TextDomain') === $themeSlug) {
+        if ($currentTheme === $themeSlug) {
+            $this->debug("Theme match found: current theme is '{$themeSlug}'", [
+                'current_theme' => $currentTheme,
+                'parent_theme' => $parentTheme,
+                'checked_slug' => $themeSlug
+            ]);
             return true;
         }
         
         // Check if this is a child theme
-        $parent = $theme->parent();
-        if ($parent && $parent->get('TextDomain') === $themeSlug) {
+        if ($parentTheme && $parentTheme === $themeSlug) {
+            $this->debug("Theme match found: parent theme is '{$themeSlug}'", [
+                'current_theme' => $currentTheme,
+                'parent_theme' => $parentTheme,
+                'checked_slug' => $themeSlug
+            ]);
             return true;
         }
+        
+        $this->debug("No theme match found for '{$themeSlug}'", [
+            'current_theme' => $currentTheme,
+            'parent_theme' => $parentTheme,
+            'checked_slug' => $themeSlug
+        ]);
         
         return false;
     }

@@ -6,7 +6,7 @@ namespace FastyChild\Theme\Providers;
 use FastyChild\Core\AbstractServiceProvider;
 use FastyChild\Core\Hooks\HooksManager;
 use FastyChild\Theme\Hooks\ThemeHooks;
-use FastyChild\Theme\Hooks\StorefrontHooks;
+use FastyChild\Theme\Hooks\StorefrontHooksFixed;
 
 class HooksServiceProvider extends AbstractServiceProvider
 {
@@ -17,6 +17,8 @@ class HooksServiceProvider extends AbstractServiceProvider
      */
     public function register(): void
     {
+        $this->debug('HooksServiceProvider::register() called');
+        
         // Register hooks manager
         $this->singleton('hooks.manager', function() {
             return new HooksManager($this->container);
@@ -28,8 +30,10 @@ class HooksServiceProvider extends AbstractServiceProvider
             : [];
             
         if (!empty($hooksConfig)) {
+            $this->debug('Registering hooks from config', ['config' => $hooksConfig]);
             $this->registerHooksFromConfig($hooksConfig);
         } else {
+            $this->debug('No hooks config found, registering default hooks');
             // Register default hooks
             $this->registerDefaultHooks();
         }
@@ -46,6 +50,7 @@ class HooksServiceProvider extends AbstractServiceProvider
         $manager = $this->getService('hooks.manager');
         
         foreach ($config as $name => $hookClass) {
+            $this->debug("Registering hook from config: {$name}", ['class' => $hookClass]);
             $manager->addHook($name, $hookClass);
         }
     }
@@ -59,8 +64,13 @@ class HooksServiceProvider extends AbstractServiceProvider
     {
         $manager = $this->getService('hooks.manager');
         
+        $this->debug('Registering default hooks', [
+            'theme' => ThemeHooks::class,
+            'storefront' => StorefrontHooksFixed::class
+        ]);
+        
         $manager->addHook('theme', ThemeHooks::class)
-                ->addHook('storefront', StorefrontHooks::class);
+                ->addHook('storefront', StorefrontHooksFixed::class);
     }
     
     /**
@@ -70,6 +80,12 @@ class HooksServiceProvider extends AbstractServiceProvider
      */
     public function boot(): void
     {
-        $this->getService('hooks.manager')->registerHooks();
+        $this->debug('HooksServiceProvider::boot() called');
+        $manager = $this->getService('hooks.manager');
+        $hooks = $manager->getHooks();
+        
+        $this->debug('Registered hooks before booting:', array_keys($hooks));
+        
+        $manager->registerHooks();
     }
 } 
