@@ -2,6 +2,7 @@
   "name": "wp-fasty",
   "version": "1.0.2",
   "scripts": {
+    "llms": "bun run src/scripts/docmd/llms.js",
     "docs": "bun run src/scripts/docmd/main.ts",
     "docs:sync": "bun run src/scripts/docmd/sync.ts",
     "docs:full": "bun run docs:sync && bun run docs",

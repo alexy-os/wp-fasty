@@ -1,0 +1,205 @@
+# WP-Fasty Documentation - /llms-full.txt
+
+This is the /llms-full.txt file for WP-Fasty documentation, providing a comprehensive snapshot of all documentation content in a format optimized for Large Language Models (LLMs) while maintaining human readability.
+
+**Directory Structure**
+
+The 'Directory Structure' section presents a hierarchical view of the documentation files:
+
+## Directory Structure
+
+```
+├── bootstrap.md
+├── config
+│   ├── assets.md
+│   ├── providers.md
+│   ├── storefront.md
+│   ├── theme.md
+│   └── woocommerce.md
+├── Core
+│   ├── AbstractServiceProvider.md
+│   ├── Application.md
+│   ├── Config
+│   │   ├── ConfigInterface.md
+│   │   ├── ConfigManager.md
+│   │   └── index.md
+│   ├── Container.md
+│   ├── Exceptions
+│   │   ├── ConfigurationException.md
+│   │   ├── ContainerException.md
+│   │   ├── FastyException.md
+│   │   ├── index.md
+│   │   └── NotFoundException.md
+│   ├── Hooks
+│   │   ├── AbstractHook.md
+│   │   ├── HookInterface.md
+│   │   ├── HooksManager.md
+│   │   └── index.md
+│   ├── index.md
+│   ├── Migration
+│   │   ├── AbstractMigration.md
+│   │   ├── index.md
+│   │   ├── MigrationInterface.md
+│   │   └── MigrationManager.md
+│   ├── Providers
+│   │   ├── AssetsServiceProvider.md
+│   │   ├── HooksProvider.md
+│   │   ├── index.md
+│   │   └── ThemeServiceProvider.md
+│   ├── ServiceProvider.md
+│   ├── ThemeLoader.md
+│   ├── Traits
+│   │   ├── ContainerAwareTrait.md
+│   │   ├── index.md
+│   │   └── LoggerTrait.md
+│   └── Utils.md
+├── README.md
+└── Theme
+    ├── Hooks
+    │   ├── AbstractHook.md
+    │   ├── HookInterface.md
+    │   ├── HooksManager.md
+    │   ├── index.md
+    │   ├── StorefrontHooks.md
+    │   ├── ThemeHooks.md
+    │   └── WooCommerceHooks.md
+    ├── Providers
+    │   ├── AssetsServiceProvider.md
+    │   ├── HooksProvider.md
+    │   ├── index.md
+    │   └── ThemeServiceProvider.md
+    └── Services
+        ├── AssetsService.md
+        ├── index.md
+        └── ThemeService.md
+
+```
+
+## Documentation Content
+
+- [Bootstrap Fasty](/bootstrap.md): Bootstrap - это процесс инициализации и настройки фреймворка Fasty, который происходит при загрузке темы WordPress.
+
+### config
+
+  - [Конфигурация ресурсов (assets.php)](/config\assets.md): - [AssetsService](../Services/AssetsService.md) - [AssetsServiceProvider](../Core/Providers/AssetsServiceProvider.md)
+
+  - [Конфигурация провайдеров (providers.php)](/config\providers.md): - [ServiceProvider](../Core/ServiceProvider.md) - [Container](../Core/Container.md) - [ThemeLoader](../Core/ThemeLoader.md) - [AssetsServiceProvider](../Core/Providers/AssetsServiceProvider.md) - [ThemeServiceProvider](../Core/Providers/ThemeServiceProvider.md)
+
+  - [Конфигурация Storefront (storefront.php)](/config\storefront.md): - [StorefrontHooks](../Hooks/StorefrontHooks.md) - [Конфигурация темы](./theme.md) - [Конфигурация WooCommerce](./woocommerce.md)
+
+  - [Конфигурация темы (theme.php)](/config\theme.md): - [ThemeService](../Services/ThemeService.md) - [ThemeServiceProvider](../Core/Providers/ThemeServiceProvider.md) - [ThemeHooks](../Hooks/ThemeHooks.md)
+
+  - [Конфигурация WooCommerce (woocommerce.php)](/config\woocommerce.md): - [WooCommerceHooks](../Hooks/WooCommerceHooks.md) - [Конфигурация Storefront](./storefront.md) - [Конфигурация темы](./theme.md)
+
+### Core
+
+  - [Абстрактный Сервис-провайдер (AbstractServiceProvider)](/Core\AbstractServiceProvider.md): Сервис-провайдеры - это ключевые строительные блоки Fasty. Они позволяют организовать код вашей темы в логические модули и избежать "спагетти-кода". Если вы когда-либо писали весь код в `functions.php`, вы оцените преимущества этого подхода.
+
+  - [Класс приложения (Application)](/Core\Application.md): `Application` - это центральный класс фреймворка Fasty, который управляет всем жизненным циклом темы WordPress. Он реализует паттерн Singleton для обеспечения единой точки доступа к основным компонентам приложения.
+
+  ### Config
+
+    - [Интерфейс ConfigInterface](/Core\Config\ConfigInterface.md): `ConfigInterface` определяет контракт для работы с конфигурациями в Fasty. Этот интерфейс обеспечивает единый способ доступа к настройкам темы.
+
+    - [Класс ConfigManager](/Core\Config\ConfigManager.md): `ConfigManager` - это основная реализация интерфейса `ConfigInterface`, которая обеспечивает управление конфигурациями темы.
+
+    - [Конфигурации в Fasty](/Core\Config\index.md): Система конфигураций в Fasty предоставляет гибкий и безопасный способ управления настройками темы. Она построена на принципах: - Централизованного хранения настроек - Иерархической структуры - Кэширования для производительности - Безопасной валидации данных
+
+  - [Контейнер зависимостей (Container)](/Core\Container.md): Контейнер зависимостей - это мощный инструмент для управления объектами и их зависимостями в приложении. Представьте его как "умный конструктор", который знает: - Как создавать объекты - Какие зависимости им нужны - Как эти зависимости предоставить
+
+  ### Exceptions
+
+    - [Класс ConfigurationException](/Core\Exceptions\ConfigurationException.md): `ConfigurationException` - исключение, возникающее при ошибках в конфигурации темы.
+
+    - [Класс ContainerException](/Core\Exceptions\ContainerException.md): `ContainerException` - исключение, возникающее при ошибках в контейнере зависимостей.
+
+    - [Класс FastyException](/Core\Exceptions\FastyException.md): `FastyException` - это базовый класс исключений фреймворка Fasty, от которого наследуются все остальные исключения.
+
+    - [Система исключений Fasty](/Core\Exceptions\index.md): Система исключений в Fasty построена на принципах ООП и обеспечивает: - Иерархическую структуру исключений - Типизацию ошибок - Информативные сообщения - Возможность отслеживания
+
+    - [Класс NotFoundException](/Core\Exceptions\NotFoundException.md): `NotFoundException` - исключение, возникающее когда запрашиваемая сущность не найдена.
+
+  ### Hooks
+
+    - [Класс AbstractHook](/Core\Hooks\AbstractHook.md): `AbstractHook` - это базовый класс для создания хуков в Fasty. Он реализует `HookInterface` и предоставляет основные методы для работы с хуками WordPress.
+
+    - [Интерфейс HookInterface](/Core\Hooks\HookInterface.md): `HookInterface` - это основной интерфейс для создания хуков в Fasty. Он определяет контракт, которому должны следовать все хуки в системе.
+
+    - [Класс HooksManager](/Core\Hooks\HooksManager.md): `HooksManager` - это класс, отвечающий за управление хуками в Fasty. Он предоставляет централизованный способ регистрации, загрузки и управления хуками WordPress.
+
+    - [Система хуков Fasty](/Core\Hooks\index.md): Система хуков Fasty предоставляет гибкий механизм расширения функциональности темы через события и фильтры. Она построена на следующих принципах: - Слабая связанность компонентов - Расширяемость функционала - Совместимость с WordPress - Типобезопасность и надежность
+
+  - [Ядро Fasty (Core)](/Core\index.md): Модуль `Core` является фундаментальной частью фреймворка Fasty, предоставляя базовую инфраструктуру и ключевые абстракции для работы темы. Этот модуль реализует современные паттерны проектирования и лучшие практики PHP разработки.
+
+  ### Migration
+
+    - [Класс AbstractMigration](/Core\Migration\AbstractMigration.md): `AbstractMigration` - это базовый класс для создания миграций в Fasty. Он реализует `MigrationInterface` и предоставляет основные методы для работы с миграциями.
+
+    - [Система миграций Fasty](/Core\Migration\index.md): Система миграций Fasty предоставляет надежный механизм для управления изменениями в базе данных и структуре темы. Она построена на следующих принципах: - Версионирование изменений - Атомарность операций - Обратимость изменений - Безопасное обновление
+
+    - [Интерфейс MigrationInterface](/Core\Migration\MigrationInterface.md): `MigrationInterface` - это основной интерфейс для создания миграций в Fasty. Он определяет контракт, которому должны следовать все миграции в системе.
+
+    - [Класс MigrationManager](/Core\Migration\MigrationManager.md): `MigrationManager` - это класс, отвечающий за управление миграциями в Fasty. Он предоставляет централизованный способ регистрации, выполнения и отката миграций.
+
+  ### Providers
+
+    - [AssetsServiceProvider](/Core\Providers\AssetsServiceProvider.md): `AssetsServiceProvider` - это провайдер, отвечающий за управление ассетами (CSS, JavaScript, изображения и другие медиа-файлы) в теме Fasty.
+
+    - [HooksProvider](/Core\Providers\HooksProvider.md): `HooksProvider` - это провайдер, отвечающий за регистрацию и управление хуками WordPress в Fasty. Он обеспечивает централизованный способ работы с действиями и фильтрами WordPress.
+
+    - [Провайдеры в Fasty](/Core\Providers\index.md): Провайдеры в Fasty - это классы, отвечающие за регистрацию и инициализацию различных компонентов темы. Они являются центральным местом для настройки сервисов, хуков, ассетов и других элементов темы.
+
+    - [ThemeServiceProvider](/Core\Providers\ThemeServiceProvider.md): `ThemeServiceProvider` - это основной провайдер темы Fasty, отвечающий за регистрацию и инициализацию базовых сервисов темы.
+
+  - [Интерфейс ServiceProvider](/Core\ServiceProvider.md): `ServiceProvider` - это интерфейс, определяющий контракт для всех сервис-провайдеров в фреймворке Fasty. Сервис-провайдеры являются центральным местом для конфигурации вашего приложения и регистрации различных компонентов темы.
+
+  - [Загрузчик темы (ThemeLoader)](/Core\ThemeLoader.md): `ThemeLoader` - это класс, отвечающий за инициализацию и загрузку дочерней темы WordPress. Он управляет жизненным циклом темы, регистрацией сервис-провайдеров и их загрузкой.
+
+  ### Traits
+
+    - [ContainerAwareTrait](/Core\Traits\ContainerAwareTrait.md): `ContainerAwareTrait` - это трейт, предоставляющий классам доступ к контейнеру зависимостей Fasty. Он обеспечивает единый способ внедрения и получения зависимостей во всех компонентах системы.
+
+    - [Трейты в Fasty](/Core\Traits\index.md): Трейты в Fasty - это переиспользуемые компоненты, которые добавляют общую функциональность классам. Они позволяют избежать дублирования кода и обеспечивают единообразное поведение компонентов системы.
+
+    - [LoggerTrait](/Core\Traits\LoggerTrait.md): `LoggerTrait` - это трейт, предоставляющий классам возможность логирования в Fasty. Он обеспечивает единый интерфейс для записи логов во всех компонентах системы.
+
+  - [Утилиты (Utils)](/Core\Utils.md): Класс `Utils` предоставляет набор статических методов для решения общих задач при разработке WordPress тем. Это вспомогательные функции для работы с путями, файлами, безопасностью и отладкой.
+
+- [Fasty: Современный Фреймворк для WordPress Тем](/README.md): Fasty - это продвинутый PHP-фреймворк для создания дочерних тем в WordPress, разработанный с учетом современных подходов к веб-разработке. Наш фреймворк предоставляет мощный и гибкий инструментарий для быстрого и эффективного создания настраиваемых тем.
+
+### Theme
+
+  ### Hooks
+
+    - [Класс AbstractHook](/Theme\Hooks\AbstractHook.md): `AbstractHook` - это базовый класс для создания хуков в Fasty. Он реализует `HookInterface` и предоставляет основные методы для работы с хуками WordPress.
+
+    - [Интерфейс HookInterface](/Theme\Hooks\HookInterface.md): `HookInterface` - это основной интерфейс для создания хуков в Fasty. Он определяет контракт, которому должны следовать все хуки в системе.
+
+    - [Класс HooksManager](/Theme\Hooks\HooksManager.md): `HooksManager` - это класс, отвечающий за управление хуками в Fasty. Он предоставляет централизованный способ регистрации, загрузки и управления хуками WordPress.
+
+    - [Хуки Fasty (Hooks)](/Theme\Hooks\index.md): Модуль `Hooks` предоставляет мощный и гибкий механизм для расширения и кастомизации функциональности WordPress через хуки.
+
+    - [Хуки Storefront (StorefrontHooks)](/Theme\Hooks\StorefrontHooks.md): `StorefrontHooks` управляет специфическими хуками и модификациями темы Storefront в мини-фреймворке Fasty.
+
+    - [Базовые хуки темы (ThemeHooks)](/Theme\Hooks\ThemeHooks.md): `ThemeHooks` управляет основными хуками WordPress и базовыми настройками темы в мини-фреймворке Fasty.
+
+    - [Хуки WooCommerce (WooCommerceHooks)](/Theme\Hooks\WooCommerceHooks.md): `WooCommerceHooks` управляет специфическими хуками и модификациями WooCommerce в мини-фреймворке Fasty.
+
+  ### Providers
+
+    - [Провайдер Assets (AssetsServiceProvider)](/Theme\Providers\AssetsServiceProvider.md): `AssetsServiceProvider` отвечает за регистрацию и загрузку ресурсов темы (стилей и скриптов) в мини-фреймворке Fasty.
+
+    - [Провайдер Hooks (HooksProvider)](/Theme\Providers\HooksProvider.md): `HooksProvider` управляет регистрацией и инициализацией хуков WordPress для темы в мини-фреймворке Fasty.
+
+    - [Провайдеры Fasty (Providers)](/Theme\Providers\index.md): Модуль `Providers` реализует шаблон Service Provider, обеспечивающий гибкую и расширяемую архитектуру внедрения зависимостей в WordPress темы.
+
+    - [Провайдер Theme (ThemeServiceProvider)](/Theme\Providers\ThemeServiceProvider.md): `ThemeServiceProvider` отвечает за настройку, регистрацию и инициализацию основных функций темы в мини-фреймворке Fasty.
+
+  ### Services
+
+    - [Сервис Assets (AssetsService)](/Theme\Services\AssetsService.md): `AssetsService` управляет загрузкой и подключением ресурсов (стилей и скриптов) для темы WordPress в мини-фреймворке Fasty.
+
+    - [Сервисы Fasty (Services)](/Theme\Services\index.md): Модуль `Services` предоставляет набор служебных классов для решения типовых задач в разработке WordPress тем.
+
+    - [Сервис Theme (ThemeService)](/Theme\Services\ThemeService.md): `ThemeService` управляет основной настройкой и функциональностью темы WordPress в мини-фреймворке Fasty. Этот сервис отвечает за первоначальную инициализацию темы, регистрацию поддержки различных функций WordPress и настройку пользовательских параметров.
+
