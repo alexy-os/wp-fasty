@@ -1,0 +1,171 @@
+.dropdown-container {
+  @apply flex;
+}
+
+.dropdown {
+  @apply relative inline-block w-max text-left;
+}
+
+.dropdown-menu {
+  transition-property: transform, opacity, visibility;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  @apply invisible absolute right-0 z-[49] flex w-56  origin-top-right -translate-y-2 scale-95  transform  flex-col rounded-xl bg-gray-3 p-2   opacity-0 shadow-2xl outline-none duration-150 will-change-transform;
+}
+
+.dropdown-item {
+  transition: transform 0.12s ease;
+  @apply flex w-full cursor-pointer flex-col rounded-[5px] p-2  hover:bg-gray-4 active:scale-[0.97] active:bg-gray-5;
+}
+
+.dropdown-item.dropdown-active {
+  @apply transition-none hover:bg-gray-5 active:scale-[1];
+}
+
+.dropdown-divider {
+  @apply relative my-px;
+}
+
+.dropdown-divider::before {
+  @apply absolute top-0 right-0  -left-2 h-px   bg-gray-6 content-[""];
+}
+
+.dropdown-active {
+  @apply bg-gray-5;
+}
+
+.dropdown-item-no-animation {
+  @apply transition-none active:scale-[1];
+}
+
+.dropdown-menu-bottom-center {
+  @apply invisible left-1/2 right-[100%]   origin-top -translate-x-1/2;
+}
+
+.dropdown-menu-top-center {
+  @apply invisible left-1/2 right-[100%] bottom-full    origin-bottom -translate-x-1/2;
+}
+
+.dropdown-menu-bottom-right {
+  @apply invisible left-0   origin-top-left -translate-y-2;
+}
+
+.dropdown-menu-bottom-left {
+  @apply invisible right-0   origin-top-right -translate-y-2;
+}
+
+.dropdown-menu-top-right {
+  @apply invisible left-1/2 bottom-full ml-[-50%]    origin-bottom-left -translate-y-2;
+}
+
+.dropdown-menu-top-left {
+  @apply invisible left-1/2 bottom-full right-0 ml-auto    origin-bottom-right -translate-y-2;
+}
+
+.dropdown-menu-left {
+  @apply invisible bottom-auto top-1/2 right-[100%]     origin-right -translate-y-1/2;
+}
+
+.dropdown-menu-right {
+  @apply invisible bottom-auto top-1/2 left-[100%]    origin-left -translate-y-1/2;
+}
+
+.dropdown-menu-left-bottom {
+  @apply invisible right-[100%]     origin-top-right -translate-y-10;
+}
+
+.dropdown-menu-right-bottom {
+  @apply invisible left-[100%]    origin-top-left -translate-y-10;
+}
+
+.dropdown-menu-left-top {
+  @apply invisible right-[100%] bottom-0    origin-bottom-right;
+}
+
+.dropdown-menu-right-top {
+  @apply invisible left-[100%] bottom-0    origin-bottom-left -translate-y-2;
+}
+
+/* Only Bottom Side  */
+.dropdown-hover:hover .dropdown-menu,
+.dropdown-hover:hover .dropdown-menu-bottom-right,
+.dropdown-hover:hover .dropdown-menu-bottom-left,
+.dropdown.dropdown-open .dropdown-menu,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-bottom-right,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-bottom-left,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within) .dropdown-menu,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-bottom-right,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-bottom-left {
+  @apply visible  translate-x-0 translate-y-0 scale-100 opacity-100;
+}
+
+/* Only Top Side  */
+.dropdown-hover:hover .dropdown-menu-top-right,
+.dropdown-hover:hover .dropdown-menu-top-left,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-top-right,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-top-left,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-top-right,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-top-left {
+  @apply visible translate-x-0 -translate-y-0 scale-100 opacity-100;
+}
+
+/* Only Right   */
+
+.dropdown-hover:hover .dropdown-menu-right,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-right,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-right {
+  @apply visible right-auto bottom-auto top-1/2 translate-x-0 -translate-y-1/2  scale-100 opacity-100;
+}
+
+/* Only Left   */
+
+.dropdown-hover:hover .dropdown-menu-left,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-left,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-left {
+  @apply visible left-auto bottom-auto top-1/2 translate-x-0 -translate-y-1/2  scale-100 opacity-100;
+}
+
+/* Only Left and right Bottom Side   */
+.dropdown-hover:hover .dropdown-menu-right-bottom,
+.dropdown-hover:hover .dropdown-menu-left-bottom,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-right-bottom,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-left-bottom,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-right-bottom,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-left-bottom {
+  @apply visible translate-x-0 -translate-y-10 scale-100 opacity-100;
+}
+
+/* Only Left and right Top Side  */
+.dropdown-hover:hover .dropdown-menu-right-top,
+.dropdown-hover:hover .dropdown-menu-left-top,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-right-top,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-left-top,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-right-top,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-left-top {
+  @apply visible translate-x-0 translate-y-0 scale-100 opacity-100;
+}
+
+/* Center - Bottom and top */
+
+.dropdown-hover:hover .dropdown-menu-bottom-center,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-bottom-center,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-bottom-center {
+  @apply visible -translate-x-1/2  scale-100 opacity-100;
+}
+
+.dropdown-hover:hover .dropdown-menu-top-center,
+.dropdown.dropdown-open .dropdown-menu.dropdown-menu-top-center,
+.dropdown:not(.dropdown-hover):where(:focus, :focus-within)
+  .dropdown-menu-top-center {
+  @apply visible    -translate-x-1/2  scale-100 opacity-100;
+}

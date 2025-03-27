@@ -1,0 +1,5 @@
+@import "tailwindcss/base";
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}

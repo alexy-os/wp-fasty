@@ -1,0 +1,146 @@
+/* Base Button */
+.btn {
+  transition-property: color, transform, background-color, border-color;
+  transition-timing-function: ease-in;
+  @apply inline-flex h-10 cursor-pointer select-none items-center justify-center rounded-xl bg-gray-3 px-5 text-center text-sm font-medium text-content1 duration-150 will-change-transform focus:outline-2  focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-gray-6  active:scale-[0.97];
+}
+
+.btn:where(
+    .btn-primary,
+    .btn-secondary,
+    .btn-success,
+    .btn-error,
+    .btn-warning
+  ) {
+  @apply border-none text-white;
+}
+
+/* Primary Colors */
+.btn-primary {
+  @apply bg-primary focus-visible:outline-primary;
+}
+
+.btn-secondary {
+  @apply bg-secondary focus-visible:outline-secondary;
+}
+
+.btn-success {
+  @apply bg-success  focus-visible:outline-success;
+}
+
+.btn-error {
+  @apply bg-error focus-visible:outline-error;
+}
+
+.btn-warning {
+  @apply bg-warning focus-visible:outline-warning;
+}
+
+.btn-info {
+  @apply bg-info focus-visible:outline-info text-white;
+}
+
+/* Outline colors */
+.btn-outline {
+  @apply border-2 border-gray-6 bg-transparent text-whiteInverted transition-[transform,color,background-color,border-color,text-decoration-color,fill,stroke] hover:border-gray-4 hover:bg-gray-4 focus-visible:outline-gray-7;
+}
+.btn-outline-primary {
+  @apply border-2 border-primary bg-transparent text-primary transition-[transform,color,background-color,border-color,text-decoration-color,fill,stroke] hover:bg-primary hover:text-white  focus-visible:outline-primary;
+}
+
+.btn-outline-secondary {
+  @apply border-2 border-secondary bg-transparent text-secondary transition-[transform,color,background-color,border-color,text-decoration-color,fill,stroke] hover:bg-secondary hover:text-white focus-visible:outline-secondary;
+}
+
+.btn-outline-success {
+  @apply border-2 border-success bg-transparent  text-success  transition-[transform,color,background-color,border-color,text-decoration-color,fill,stroke] hover:bg-success hover:text-white focus-visible:outline-success;
+}
+
+.btn-outline-error {
+  @apply border-2 border-error bg-transparent text-error transition-[transform,color,background-color,border-color,text-decoration-color,fill,stroke] hover:bg-error hover:text-white focus-visible:outline-error;
+}
+
+.btn-outline-warning {
+  @apply border-2 border-warning bg-transparent  text-warning  transition-[transform,color,background-color,border-color,text-decoration-color,fill,stroke] hover:bg-warning hover:text-white focus-visible:outline-warning;
+}
+
+.btn-outline-info {
+  @apply border-info text-info hover:bg-info  focus-visible:outline-info  border-2 bg-transparent transition-[transform,color,background-color,border-color,text-decoration-color,fill,stroke] hover:text-white;
+}
+
+/* Button Sizes */
+.btn-xs {
+  @apply h-[1.5rem] min-h-[1.5rem] rounded-[7px] px-2 text-xs;
+}
+
+.btn-sm {
+  @apply h-8 min-h-[2rem] rounded-lg  px-3 text-sm;
+}
+
+.btn-md {
+  @apply h-10 min-h-[2.5rem]  px-5 text-sm;
+}
+
+.btn-lg {
+  @apply h-12 min-h-[3rem]  px-6 text-lg;
+}
+
+.btn-xl {
+  @apply h-16 min-h-[4rem]  rounded-2xl px-8 text-xl;
+}
+
+.btn:disabled {
+  @apply pointer-events-none opacity-50;
+}
+
+.btn-block {
+  @apply w-full;
+}
+
+.btn-circle {
+  @apply h-10 w-10 rounded-full p-0;
+}
+
+.btn-rounded {
+  @apply rounded-full;
+}
+
+.btn-loading {
+  @apply pointer-events-none cursor-not-allowed select-none before:mr-2 before:box-border before:h-4 before:w-4 before:animate-spin before:rounded-[50%] before:border-2 before:border-gray-6 before:border-t-gray-9 before:content-[''];
+}
+
+.btn-no-animation {
+  @apply active:transform-none;
+}
+
+.btn-ghost {
+  @apply border-none bg-transparent text-whiteInverted transition-[transform,color,background-color,border-color,text-decoration-color,fill,stroke] hover:bg-gray-4;
+}
+
+.btn-active {
+  @apply bg-gray-5;
+}
+
+.btn-solid-primary {
+  @apply bg-blue-4 text-blue-11  hover:bg-blue-5 focus-visible:outline-blue-6 active:bg-blue-6;
+}
+
+.btn-solid-secondary {
+  @apply bg-purple-4 text-purple-11 hover:bg-purple-5 focus-visible:outline-purple-6 active:bg-purple-6;
+}
+
+.btn-solid-success {
+  @apply bg-green-4 text-green-11 hover:bg-green-5 focus-visible:outline-green-6 active:bg-green-6;
+}
+
+.btn-solid-error {
+  @apply bg-red-4 text-red-11 hover:bg-red-5 focus-visible:outline-red-6 active:bg-red-6;
+}
+
+.btn-solid-warning {
+  @apply bg-yellow-4 text-yellow-11 hover:bg-yellow-5 focus-visible:outline-yellow-6 active:bg-yellow-6;
+}
+
+.btn-solid-info {
+  @apply bg-cyan-4 text-cyan-11 hover:bg-cyan-5 focus-visible:outline-cyan-6 active:bg-cyan-6;
+}

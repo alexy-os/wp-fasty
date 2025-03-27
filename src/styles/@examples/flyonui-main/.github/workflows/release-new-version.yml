@@ -1,0 +1,58 @@
+name: "🎉 Release new version"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: 🚀 Publish
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    env:
+      runtime: bun
+    outputs:
+      flyonuiversion: ${{ steps.package-version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          clean: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+          registry-url: https://registry.npmjs.org
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Remove everything first
+        run: rm -rf ./base/ ./colors/ ./components/ ./dist/ ./theme/ ./utilities/ ./flyonui.css ./flyonui.js ./flyonui.d.ts ./chunks.css ./imports.js ./themes.css node_modules bun.lock
+
+      - name: Install package dependencies
+        run: ${{ env.runtime }} install
+
+      - name: Build package
+        run: ${{ env.runtime }} build:css && ${{ env.runtime }} build:js && ${{ env.runtime }} build:mjs && ${{ env.runtime }} build:generate-dts && ${{ env.runtime }} build:flyonui
+
+      - name: Read package version from package.json
+        id: package-version
+        run: |
+          version=$(grep -o '"version": *"[^"]*"' package.json | cut -d'"' -f4)
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Publish package to NPM
+        if: github.repository == 'themeselection/flyonui'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  write-release-notes:
+    name: 📝 Release notes
+    needs: publish
+    uses: ./.github/workflows/write-release-notes.yml
+    secrets: inherit
+    with:
+      flyonuiversion: ${{ needs.publish.outputs.flyonuiversion }}

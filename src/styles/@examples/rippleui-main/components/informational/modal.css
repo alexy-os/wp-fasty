@@ -1,0 +1,28 @@
+.modal {
+  @apply invisible fixed  inset-0  z-[60] flex  items-center  justify-center overscroll-none bg-black/60 px-4  text-left opacity-0 transition-all;
+}
+
+.modal-overlay {
+  @apply absolute inset-0;
+}
+
+.modal-state {
+  @apply hidden;
+}
+.modal-state:checked + .modal,
+.modal-open.modal {
+  @apply visible  translate-y-0 scale-100 opacity-100;
+}
+
+html:has(.modal-state:checked, .modal-open) {
+  @apply overflow-hidden;
+}
+
+.modal-state:checked + .modal .modal-content,
+.modal-open .modal-content {
+  @apply translate-y-0 scale-100;
+}
+
+.modal-content {
+  @apply relative h-max max-h-[calc(100%-10%)] max-w-lg scale-90  overflow-auto rounded-xl bg-gray-1 p-6 transition duration-75 ease-in-out;
+}

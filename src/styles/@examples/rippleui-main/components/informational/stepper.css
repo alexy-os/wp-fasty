@@ -1,0 +1,110 @@
+.steps {
+  @apply flex w-full gap-6;
+}
+
+.steps-vertical {
+  @apply w-fit flex-col items-center gap-2;
+}
+
+.steps-horizontal {
+  @apply w-full flex-row items-center gap-6;
+}
+
+.step {
+  @apply flex w-full flex-row items-center gap-2 whitespace-nowrap;
+}
+
+.steps-horizontal .step {
+  @apply w-full flex-row   whitespace-nowrap;
+}
+
+.steps-vertical .step {
+  @apply flex w-fit flex-col items-center gap-2;
+}
+
+.step-circle {
+  @apply flex min-h-[2rem] min-w-[2rem] items-center justify-center rounded-full border border-gray-6 bg-gray-3 text-content1;
+}
+
+.step:not(:last-child):after {
+  @apply relative  h-px min-h-0 w-full min-w-[2rem] flex-1 bg-gray-6 content-[""];
+}
+.steps-horizontal .step:not(:last-child):after {
+  @apply relative  h-px min-h-0 w-full min-w-[2rem] flex-1  content-[""];
+}
+
+.steps-vertical .step:not(:last-child):after {
+  @apply relative h-full min-h-[2rem] w-px min-w-0 flex-1 content-[""];
+}
+
+.step-primary.step-active .step-circle {
+  @apply border-primary bg-primary text-white;
+}
+
+.step-secondary.step-active .step-circle {
+  @apply border-secondary bg-secondary text-white;
+}
+
+.step-success.step-active .step-circle {
+  @apply border-success bg-success text-white;
+}
+
+.step-error.step-active .step-circle {
+  @apply border-error bg-error text-white;
+}
+
+.step-warning.step-active .step-circle {
+  @apply border-warning bg-warning text-white;
+}
+
+.step-info.step-active .step-circle {
+  @apply border-info bg-info text-white;
+}
+
+.step-done.step-primary .step-circle,
+.step-done .step-circle {
+  @apply border-blue-7 bg-blue-4 text-content1;
+}
+.step-done.step-primary::after {
+  @apply bg-blue-7;
+}
+
+.step-done.step-secondary .step-circle {
+  @apply border-purple-7 bg-purple-4 text-content1;
+}
+
+.step-done.step-secondary::after {
+  @apply bg-purple-7;
+}
+
+.step-done.step-success .step-circle {
+  @apply border-green-7 bg-green-4 text-content1;
+}
+
+.step-done.step-success::after {
+  @apply bg-green-7;
+}
+
+.step-done.step-error .step-circle {
+  @apply border-red-7 bg-red-4 text-content1;
+}
+
+.step-done.step-error::after {
+  @apply bg-red-7;
+}
+
+.step-done.step-warning .step-circle {
+  @apply border-yellow-7 bg-yellow-4 text-content1;
+}
+
+.step-done.step-warning::after {
+  @apply bg-yellow-7;
+}
+
+.step-done.step-info .step-circle {
+  @apply border-cyan-7 bg-cyan-4 text-content1;
+}
+
+.step-done.step-info::after {
+  @apply bg-cyan-7;
+}

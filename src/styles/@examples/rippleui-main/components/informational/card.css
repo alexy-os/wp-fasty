@@ -1,0 +1,32 @@
+.card {
+  @apply bg-gray-3 flex w-full max-w-sm flex-col gap-2 rounded-xl shadow-md;
+}
+
+.card.card-image-cover img:first-child {
+  @apply h-auto max-w-full rounded-t-xl;
+}
+
+.card.card-image-cover img:last-child {
+  @apply h-auto max-w-full rounded-b-xl;
+}
+
+.card-header {
+  @apply flex flex-row items-center justify-between text-xl font-semibold;
+}
+
+.card-body {
+  @apply flex flex-col gap-3 p-8;
+}
+
+.card-footer {
+  @apply flex flex-row items-center justify-between;
+}
+
+.card.card-image-cover:not(
+    :has(.card-header),
+    :has(.card-body),
+    :has(.card-footer)
+  )
+  img {
+  @apply rounded-lg;
+}
