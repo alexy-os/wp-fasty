@@ -7,7 +7,7 @@
 ## Основные компоненты
 
 ### Базовые провайдеры
-- `HooksServiceProvider`: Регистрация и управление хуками
+- `HooksProvider`: Регистрация и управление хуками
 - `AssetsServiceProvider`: Управление ресурсами (CSS, JS)
 - `ThemeServiceProvider`: Основной провайдер темы
 

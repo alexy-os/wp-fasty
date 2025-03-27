@@ -59,7 +59,6 @@ Fasty распространяется под [лицензией MIT](LICENSE.m
 - [bootstrap](./bootstrap.md)
 - config/
   - [assets](./config/assets.md)
-  - [hooks](./config/hooks.md)
   - [providers](./config/providers.md)
   - [storefront](./config/storefront.md)
   - [theme](./config/theme.md)
@@ -94,23 +93,21 @@ Fasty распространяется под [лицензией MIT](LICENSE.m
     - [ContainerAwareTrait](./Core/Traits/ContainerAwareTrait.md)
     - [LoggerTrait](./Core/Traits/LoggerTrait.md)
   - [Utils](./Core/Utils.md)
-- Hooks/
-  - [AbstractHooks](./Hooks/AbstractHooks.md)
-  - [Constants](./Hooks/Constants.md)
-  - [HookInterface](./Hooks/HookInterface.md)
-  - [HooksManager](./Hooks/HooksManager.md)
-  - [StorefrontHooks](./Hooks/StorefrontHooks.md)
-  - [ThemeHooks](./Hooks/ThemeHooks.md)
-  - [WooCommerceHooks](./Hooks/WooCommerceHooks.md)
-- Providers/
-  - [HooksServiceProvider](./Providers/HooksServiceProvider.md)
-- Services/
-  - [AssetsService](./Services/AssetsService.md)
-  - [ThemeService](./Services/ThemeService.md)
+
+
 - Theme/
   - Hooks/
+    - [AbstractHooks](./Theme/Hooks/AbstractHooks.md)
+    - [HookInterface](./Theme/Hooks/HookInterface.md)
+    - [HooksManager](./Theme/Hookss/HooksManager.md)
+    - [WooCommerceHooks](./Theme/Hooks/WooCommerceHooks.md)
     - [AbstractThemeHook](./Theme/Hooks/AbstractThemeHook.md)
     - [StorefrontHooks](./Theme/Hooks/StorefrontHooks.md)
     - [ThemeHooks](./Theme/Hooks/ThemeHooks.md)
   - Providers/
-    - [StorefrontHooksProvider](./Theme/Providers/StorefrontHooksProvider.md)
+    - [AssetsServiceProvider](./Theme/Providers/AssetsServiceProvider.md)
+    - [HooksProvider](./Theme/Providers/HooksProvider.md)
+    - [ThemeServiceProvider](./Theme/Providers/ThemeServiceProvider.md)
+  - Services/
+    - [AssetsService](./Theme/Services/AssetsService.md)
+    - [ThemeService](./Theme/Services/ThemeService.md)
