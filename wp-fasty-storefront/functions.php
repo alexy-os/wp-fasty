@@ -161,7 +161,7 @@ class FastyThemeBootstrap {
     
     public function enqueueParentStyles() {
         // Connect only parent theme styles
-        $parent_style = 'storefront-style';
+        /* $parent_style = 'storefront-style';
         $parent_theme_dir = get_template_directory_uri();
         
         wp_enqueue_style(
@@ -170,12 +170,12 @@ class FastyThemeBootstrap {
         );
         
         // Add child theme styles separately to ensure they load
-        wp_enqueue_style(
+       wp_enqueue_style(
             'fasty-child-style',
             get_stylesheet_directory_uri() . '/assets/css/theme.min.css',
             array($parent_style),
             wp_get_theme()->get('Version')
-        );
+        );*/
     }
     
     private function bootstrapFramework() {

@@ -1,0 +1,159 @@
+@import "buttons";
+
+.sf-notice-nux {
+	background: #e7f5f9;
+	display: flex;
+	align-items: center;
+
+	&::before,
+	&::after {
+		content: "";
+		display: table;
+	}
+
+	&::after {
+		clear: both;
+	}
+
+	.notice-content {
+		margin: 22px 0 23px;
+	}
+
+	.sf-icon {
+		position: relative;
+		display: block;
+		width: 70px;
+		height: 70px;
+		background: #fff;
+		border-radius: 100%;
+		margin: 20px 17px 20px 5px;
+		flex-shrink: 0;
+
+		img {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+			padding: 12px;
+			box-sizing: border-box;
+			max-width: 100%;
+		}
+	}
+
+	h2 {
+		margin: 0 0 10px;
+		font-weight: bolder;
+		color: #2e4453;
+	}
+
+	p {
+		margin: 0;
+		padding: 0;
+	}
+
+	label {
+		display: block;
+		margin-top: 0.5em;
+		text-align: left;
+
+		&:first-of-type {
+			margin-top: 0.8em;
+		}
+
+		&:last-of-type {
+			margin-bottom: 0.2em;
+		}
+	}
+
+	.sf-plugin-card {
+		display: block;
+	}
+
+	a.sf-install-now.install-woocommerce.activate-now.button-primary {
+		background: initial;
+		border: none;
+		text-shadow: none;
+		text-decoration: underline;
+		display: initial;
+		padding: 0;
+		box-shadow: initial;
+		color: #0073aa;
+		line-height: initial;
+
+		&:hover {
+			color: #00a0d2;
+		}
+	}
+
+	.sf-nux-button {
+		border: 0;
+		background: initial;
+		text-decoration: underline;
+		color: #0073aa;
+		margin: 5px 0 0;
+		padding: 0;
+		font-size: inherit;
+		cursor: pointer;
+
+		&:hover {
+			color: #00a0d2;
+		}
+
+		&:focus {
+			color: #00a0d2;
+		}
+	}
+
+	.sf-nux-dismiss-button {
+		display: none;
+	}
+}
+
+.sf-nux-button {
+
+	&.updating-message {
+
+		&::before {
+			display: inline-block;
+			content: "\f463";
+			font: 400 20px/1 dashicons;
+			margin: 3px 5px 0 -2px;
+			vertical-align: bottom;
+			-webkit-animation: rotation 2s infinite linear;
+			animation: rotation 2s infinite linear;
+		}
+	}
+}
+
+@media only screen and (max-width: 782px) {
+
+	.sf-notice-nux {
+
+		.sf-icon {
+			width: 65px;
+			height: 65px;
+			flex-shrink: 0;
+
+			img {
+				padding: 10px;
+			}
+		}
+
+		form {
+			margin-top: 5px;
+		}
+
+		label {
+
+			&:first-of-type {
+				margin-top: 1.5em;
+			}
+
+			&:last-of-type {
+				margin: 20px 0;
+			}
+		}
+	}
+}

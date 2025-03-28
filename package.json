@@ -8,9 +8,9 @@
     "docs:full": "bun run docs:sync && bun run docs",
     "tokens": "bun run src/scripts/tokens/generate.ts",
     "tokens:hex": "bun run src/scripts/tokens/generate-hex.ts",
-    "build:css": "tailwindcss -i src/styles/input.css -o wp-fasty-storefront/assets/css/theme.min.css --postcss --minify",
-    "build:css:dev": "tailwindcss -i src/styles/input.css -o wp-fasty-storefront/assets/css/theme.css --postcss",
-    "watch:css": "tailwindcss -i src/styles/input.css -o wp-fasty-storefront/assets/css/theme.css --postcss --watch",
+    "build:css": "tailwindcss -i src/styles/input.css -o wp-fasty-sf/css/theme.min.css --postcss --minify",
+    "build:css:dev": "tailwindcss -i src/styles/input.css -o wp-fasty-sf/css/theme.css --postcss",
+    "watch:css": "tailwindcss -i src/styles/input.css -o wp-fasty-sf/css/theme.css --postcss --watch",
     "build": "npm run tokens:hex && npm run build:css",
     "dev": "npm run tokens:hex && npm run watch:css"
   },
@@ -21,10 +21,11 @@
     "doctrine": "^3.0.0"
   },
   "dependencies": {
+    "@types/doctrine": "^0.0.9",
     "@types/postcss-js": "^4.0.0",
     "postcss": "^8.4.19",
     "postcss-js": "^4.0.0",
     "tailwindcss": "^3.3.1",
-    "@types/doctrine": "^0.0.9"
+    "uiparser": "^0.0.3"
   }
 }

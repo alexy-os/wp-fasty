@@ -19,7 +19,7 @@ class AssetsHooks extends AbstractHooks {
         // Enqueue Tailwind styles
         wp_enqueue_style(
             'wp-fasty-tailwind',
-            get_template_directory_uri() . '/assets/css/wp-tailwind.css',
+            get_template_directory_uri() . '/assets/css/theme.min.css',
             ['wp-fasty-style'], // Depends on main style
             wp_get_theme()->get('Version')
         );
