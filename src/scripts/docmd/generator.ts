@@ -1,12 +1,7 @@
 // doc-generator.ts
 import { parse } from 'doctrine';
-// marked пока не используется, можно убрать
-// import { marked } from 'marked';
 import fs from 'fs/promises';
 import path from 'path';
-// Импорт php-parser с правильной типизацией
-// @ts-ignore - Игнорируем проблемы с типами для Engine
-import * as PHPParser from 'php-parser';
 
 interface DocBlock {
   description?: string;

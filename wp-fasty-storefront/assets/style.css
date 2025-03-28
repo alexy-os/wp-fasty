@@ -1,0 +1,312 @@
+/* WP-Fasty Theme Styles
+ * Modern CSS with native variables and modern features
+ * Replaces tokens.scss, config.scss, navbar.scss and main.scss
+ */
+
+/* Включаем Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base Theme Settings */
+:root {
+  /* Color System */
+  --color-background: #FFFFFF;
+  --color-foreground: #090909;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #090909;
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #090909;
+  
+  /* Main Brand Colors */
+  --color-primary: #1D1D1D;
+  --color-primary-foreground: #F1F1F1;
+  --color-secondary: #F4F4F4;
+  --color-secondary-foreground: #181818;
+  
+  /* Accent Colors */
+  --color-muted: #F4F4F4;
+  --color-muted-foreground: #717171;
+  --color-accent: #F4F4F4;
+  --color-accent-foreground: #181818;
+  
+  /* Status Colors */
+  --color-destructive: #444444;
+  --color-destructive-foreground: #FAFAFA;
+  --color-success: #0f834d;
+  --color-info: #3d9cd2;
+  
+  /* Utility Colors */
+  --color-border: #E4E4E4;
+  --color-input: #E4E4E4;
+  --color-ring: #1D1D1D;
+  
+  /* Typography */
+  --font-base: "Source Sans Pro", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  
+  /* Layout */
+  --size-radius: 0.75rem;
+  --desktop-breakpoint: 768px;
+  --handheld-breakpoint: 568px;
+  --container-width: 1180px;
+}
+
+/* Dark Theme Variables */
+.dark {
+  --color-background: #090909;
+  --color-foreground: #F2F2F2;
+  --color-card: #171717;
+  --color-card-foreground: #F2F2F2;
+  --color-popover: #171717;
+  --color-popover-foreground: #F2F2F2;
+  
+  --color-primary: #1D1D1D;
+  --color-primary-foreground: #F1F1F1;
+  --color-secondary: #272727;
+  --color-secondary-foreground: #FAFAFA;
+  
+  --color-muted: #262626;
+  --color-muted-foreground: #A1A1A1;
+  --color-accent: #242424;
+  --color-accent-foreground: #FAFAFA;
+  
+  --color-destructive: #1D1D1D;
+  --color-destructive-foreground: #F2F2F2;
+  
+  --color-border: #272727;
+  --color-input: #272727;
+  --color-ring: #1D1D1D;
+}
+
+/* Base Element Styles */
+@layer base {
+  body {
+    font-family: var(--font-base);
+    color: var(--color-foreground);
+    background-color: var(--color-background);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-foreground);
+  }
+
+  a {
+    color: var(--color-primary);
+  }
+
+  a:hover {
+    color: color-mix(in srgb, var(--color-primary) 90%, black);
+  }
+
+  button,
+  input[type="button"],
+  input[type="reset"],
+  input[type="submit"],
+  .button,
+  .widget a.button {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+    border-radius: var(--size-radius);
+    border-color: var(--color-primary);
+  }
+
+  button:hover,
+  input[type="button"]:hover,
+  input[type="reset"]:hover,
+  input[type="submit"]:hover,
+  .button:hover,
+  .widget a.button:hover {
+    background-color: color-mix(in srgb, var(--color-primary) 90%, black);
+  }
+
+  .button.alt {
+    background-color: var(--color-secondary);
+    color: var(--color-secondary-foreground);
+  }
+
+  .button.alt:hover {
+    background-color: color-mix(in srgb, var(--color-secondary) 95%, black);
+  }
+}
+
+/* Woocommerce Elements */
+@layer components {
+  .woocommerce-message,
+  .woocommerce-info {
+    background-color: var(--color-muted);
+    color: var(--color-muted-foreground);
+    border-color: var(--color-border);
+  }
+
+  .onsale,
+  .woocommerce-message:before {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+
+  /* Site Navigation */
+  .main-navigation ul li a {
+    color: var(--color-foreground);
+  }
+
+  .main-navigation ul li a:hover {
+    color: var(--color-primary);
+  }
+
+  /* Footer */
+  .site-footer {
+    background-color: var(--color-muted);
+    color: var(--color-muted-foreground);
+  }
+}
+
+/* Navbar Component */
+@layer components {
+  .fasty-navbar {
+    @apply bg-background fixed top-0 left-0 right-0 z-50 shadow-elegant;
+  }
+
+  .fasty-navbar-container {
+    @apply max-w-container mx-auto flex items-center justify-between h-16 px-4;
+  }
+
+  .fasty-navbar-brand {
+    @apply flex items-center;
+  }
+
+  .fasty-navbar-brand .site-title {
+    @apply text-xl font-bold text-primary;
+  }
+
+  .fasty-navbar-brand .site-description {
+    @apply sr-only;
+  }
+
+  .fasty-navbar-brand .custom-logo-link {
+    @apply inline-block;
+  }
+
+  .fasty-navbar-brand .custom-logo-link img {
+    @apply h-10 w-auto;
+  }
+
+  .fasty-navbar-actions {
+    @apply flex items-center gap-4;
+  }
+
+  .fasty-navbar-menu {
+    @apply hidden md:flex items-center;
+  }
+
+  .fasty-navbar-menu ul {
+    @apply flex items-center gap-4;
+  }
+
+  .fasty-navbar-menu ul li {
+    @apply relative;
+  }
+
+  .fasty-navbar-menu ul li a {
+    @apply text-foreground hover:text-primary px-2 py-1 rounded-md transition duration-150;
+  }
+
+  .fasty-navbar-menu ul li.current-menu-item > a {
+    @apply text-primary font-medium;
+  }
+
+  .fasty-navbar-menu ul .sub-menu {
+    @apply absolute left-0 mt-2 w-48 bg-background shadow-lg rounded-md py-1 hidden z-10;
+  }
+
+  .fasty-navbar-menu ul .sub-menu li {
+    @apply block w-full;
+  }
+
+  .fasty-navbar-menu ul .sub-menu li a {
+    @apply block w-full px-4 py-2 hover:bg-muted;
+  }
+
+  .fasty-navbar-menu ul li:hover > .sub-menu {
+    @apply block;
+  }
+
+  .fasty-navbar-icons {
+    @apply flex items-center gap-2;
+  }
+
+  .fasty-navbar-cart {
+    @apply relative;
+  }
+
+  .fasty-navbar-cart a {
+    @apply text-foreground hover:text-primary p-2 rounded-full;
+  }
+
+  .fasty-navbar-cart .count {
+    @apply absolute top-0 right-0 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center transform -translate-y-1/2 translate-x-1/2;
+  }
+
+  .fasty-navbar-search .site-search {
+    @apply relative;
+  }
+
+  .fasty-navbar-search .site-search input[type="search"] {
+    @apply bg-muted rounded-full px-4 py-2 w-32 focus:w-48 outline-none focus:ring-2 focus:ring-primary transition-all duration-300;
+  }
+
+  .fasty-navbar-search .site-search button {
+    @apply absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-primary bg-transparent;
+  }
+
+  .fasty-navbar-toggle {
+    @apply md:hidden p-2 rounded-md text-foreground hover:text-primary hover:bg-muted;
+  }
+
+  .fasty-navbar-toggle-bar {
+    @apply block w-6 h-0.5 bg-current my-1 transition-all duration-300;
+  }
+
+  .fasty-navbar-toggle.is-active .fasty-navbar-toggle-bar:nth-child(1) {
+    @apply transform rotate-45 translate-y-1.5;
+  }
+
+  .fasty-navbar-toggle.is-active .fasty-navbar-toggle-bar:nth-child(2) {
+    @apply opacity-0;
+  }
+
+  .fasty-navbar-toggle.is-active .fasty-navbar-toggle-bar:nth-child(3) {
+    @apply transform -rotate-45 -translate-y-1.5;
+  }
+
+  .fasty-mobile-menu {
+    @apply fixed inset-0 bg-background z-40 md:hidden pb-20 pt-16 px-4 overflow-y-auto transform -translate-x-full transition-transform duration-300 ease-in-out;
+  }
+
+  .fasty-mobile-menu.is-active {
+    @apply translate-x-0;
+  }
+
+  .fasty-mobile-menu ul {
+    @apply flex flex-col gap-1;
+  }
+
+  .fasty-mobile-menu ul li {
+    @apply block w-full;
+  }
+
+  .fasty-mobile-menu ul li a {
+    @apply block w-full py-2 px-4 text-foreground hover:bg-muted hover:text-primary rounded-md;
+  }
+
+  .fasty-mobile-menu ul li.current-menu-item > a {
+    @apply bg-muted text-primary;
+  }
+
+  .fasty-mobile-menu ul .sub-menu {
+    @apply pl-4 mt-1 mb-1 border-l-2 border-border;
+  }
+
+  .site-content {
+    @apply pt-16;
+  }
+} 
