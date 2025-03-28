@@ -170,12 +170,12 @@ class FastyThemeBootstrap {
         );
         
         // Add child theme styles separately to ensure they load
-        /*wp_enqueue_style(
+        wp_enqueue_style(
             'fasty-child-style',
-            get_stylesheet_directory_uri() . '/style.css',
+            get_stylesheet_directory_uri() . '/assets/css/theme.min.css',
             array($parent_style),
             wp_get_theme()->get('Version')
-        );*/
+        );
     }
     
     private function bootstrapFramework() {

@@ -4,54 +4,58 @@ module.exports = {
   darkMode: ["class"],
   
   content: [
-    './wp-fasty-storefront/**/*.{php,js}',
-    './wp-fasty-storefront/fasty/**/*.php',
-    './wp-fasty-storefront/template-parts/**/*.php',
-    './wp-fasty-storefront/templates/**/*.php',
-    './wp-fasty-storefront/*.php'
+    './wp-fasty-storefront/**/*.{php,js}'
   ],
   
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       colors: {
-        // Извлекаем цвета из наших CSS переменных
-        background: "var(--color-background)",
-        foreground: "var(--color-foreground)",
-        card: "var(--color-card)",
-        "card-foreground": "var(--color-card-foreground)",
-        primary: "var(--color-primary)",
-        "primary-foreground": "var(--color-primary-foreground)",
-        secondary: "var(--color-secondary)",
-        "secondary-foreground": "var(--color-secondary-foreground)",
-        muted: "var(--color-muted)",
-        "muted-foreground": "var(--color-muted-foreground)",
-        accent: "var(--color-accent)",
-        "accent-foreground": "var(--color-accent-foreground)",
-        destructive: "var(--color-destructive)",
-        "destructive-foreground": "var(--color-destructive-foreground)",
-        border: "var(--color-border)",
-        input: "var(--color-input)",
-        ring: "var(--color-ring)",
-        success: "var(--color-success)",
-        info: "var(--color-info)"
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
       },
       borderRadius: {
-        DEFAULT: "var(--size-radius)",
+        lg: `var(--radius)`,
+        md: `calc(var(--radius) - 2px)`,
+        sm: "calc(var(--radius) - 4px)",
       },
-      fontFamily: {
-        sans: "var(--font-base)",
-      },
-      boxShadow: {
-        "elegant": "0 2px 10px rgba(0, 0, 0, 0.05)",
-      },
-      maxWidth: {
-        "container": "var(--container-width)",
-      },
-      screens: {
-        "desktop": "768px",
-        "handheld": "568px",
-      }
     },
   },
-  plugins: [],
-}; 
+}

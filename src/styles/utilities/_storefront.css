@@ -1,0 +1,149 @@
+/* Navbar Component */
+
+  .fasty-navbar {
+    @apply bg-background fixed top-0 left-0 right-0 z-50 shadow-elegant;
+  }
+
+  .fasty-navbar-container {
+    @apply max-w-container mx-auto flex items-center justify-between h-16 px-4;
+  }
+
+  .fasty-navbar-brand {
+    @apply flex items-center;
+  }
+
+  .fasty-navbar-brand .site-title {
+    @apply text-xl font-bold text-primary;
+  }
+
+  .fasty-navbar-brand .site-description {
+    @apply sr-only;
+  }
+
+  .fasty-navbar-brand .custom-logo-link {
+    @apply inline-block;
+  }
+
+  .fasty-navbar-brand .custom-logo-link img {
+    @apply h-10 w-auto;
+  }
+
+  .fasty-navbar-actions {
+    @apply flex items-center gap-4;
+  }
+
+  .fasty-navbar-menu {
+    @apply hidden md:flex items-center;
+  }
+
+  .fasty-navbar-menu ul {
+    @apply flex items-center gap-4;
+  }
+
+  .fasty-navbar-menu ul li {
+    @apply relative;
+  }
+
+  .fasty-navbar-menu ul li a {
+    @apply text-foreground hover:text-primary px-2 py-1 rounded-md transition duration-150;
+  }
+
+  .fasty-navbar-menu ul li.current-menu-item > a {
+    @apply text-primary font-medium;
+  }
+
+  .fasty-navbar-menu ul .sub-menu {
+    @apply absolute left-0 mt-2 w-48 bg-background shadow-lg rounded-md py-1 hidden z-10;
+  }
+
+  .fasty-navbar-menu ul .sub-menu li {
+    @apply block w-full;
+  }
+
+  .fasty-navbar-menu ul .sub-menu li a {
+    @apply block w-full px-4 py-2 hover:bg-muted;
+  }
+
+  .fasty-navbar-menu ul li:hover > .sub-menu {
+    @apply block;
+  }
+
+  .fasty-navbar-icons {
+    @apply flex items-center gap-2;
+  }
+
+  .fasty-navbar-cart {
+    @apply relative;
+  }
+
+  .fasty-navbar-cart a {
+    @apply text-foreground hover:text-primary p-2 rounded-full;
+  }
+
+  .fasty-navbar-cart .count {
+    @apply absolute top-0 right-0 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center transform -translate-y-1/2 translate-x-1/2;
+  }
+
+  .fasty-navbar-search .site-search {
+    @apply relative;
+  }
+
+  .fasty-navbar-search .site-search input[type="search"] {
+    @apply bg-muted rounded-full px-4 py-2 w-32 focus:w-48 outline-none focus:ring-2 focus:ring-primary transition-all duration-300;
+  }
+
+  .fasty-navbar-search .site-search button {
+    @apply absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-primary bg-transparent;
+  }
+
+  .fasty-navbar-toggle {
+    @apply md:hidden p-2 rounded-md text-foreground hover:text-primary hover:bg-muted;
+  }
+
+  .fasty-navbar-toggle-bar {
+    @apply block w-6 h-0.5 bg-current my-1 transition-all duration-300;
+  }
+
+  .fasty-navbar-toggle.is-active .fasty-navbar-toggle-bar:nth-child(1) {
+    @apply transform rotate-45 translate-y-1.5;
+  }
+
+  .fasty-navbar-toggle.is-active .fasty-navbar-toggle-bar:nth-child(2) {
+    @apply opacity-0;
+  }
+
+  .fasty-navbar-toggle.is-active .fasty-navbar-toggle-bar:nth-child(3) {
+    @apply transform -rotate-45 -translate-y-1.5;
+  }
+
+  .fasty-mobile-menu {
+    @apply fixed inset-0 bg-background z-40 md:hidden pb-20 pt-16 px-4 overflow-y-auto transform -translate-x-full transition-transform duration-300 ease-in-out;
+  }
+
+  .fasty-mobile-menu.is-active {
+    @apply translate-x-0;
+  }
+
+  .fasty-mobile-menu ul {
+    @apply flex flex-col gap-1;
+  }
+
+  .fasty-mobile-menu ul li {
+    @apply block w-full;
+  }
+
+  .fasty-mobile-menu ul li a {
+    @apply block w-full py-2 px-4 text-foreground hover:bg-muted hover:text-primary rounded-md;
+  }
+
+  .fasty-mobile-menu ul li.current-menu-item > a {
+    @apply bg-muted text-primary;
+  }
+
+  .fasty-mobile-menu ul .sub-menu {
+    @apply pl-4 mt-1 mb-1 border-l-2 border-border;
+  }
+
+  .site-content {
+    @apply pt-16;
+  }

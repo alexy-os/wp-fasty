@@ -1,10 +1,14 @@
 @import "tailwindcss/base";
   @import "./shadcn.css";
+  /*@import "./base/_storefront.css";*/
+  @import "./storefront.css";
 
 @import "tailwindcss/components";
-  /*@import "./components/_wordpress.css";
+  /*@import "./components/_storefront.css";
+  @import "./components/_woocommerce.css";
+  @import "./components/_wordpress.css";
   @import "./components/_theme.css";*/
 
 @import "tailwindcss/utilities";
   /*@import "./utilities/_gradients.css";*/
-  /*@import "./utilities/_animations.css";*/
+  /*@import "./utilities/_animations.css";*/ 

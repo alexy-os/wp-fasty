@@ -1,0 +1,118 @@
+/* Base Theme Settings */
+
+:root {
+  /* Color System */
+  --color-background: #FFFFFF;
+  --color-foreground: #090909;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #090909;
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #090909;
+  
+  /* Main Brand Colors */
+  --color-primary: #1D1D1D;
+  --color-primary-foreground: #F1F1F1;
+  --color-secondary: #F4F4F4;
+  --color-secondary-foreground: #181818;
+  
+  /* Accent Colors */
+  --color-muted: #F4F4F4;
+  --color-muted-foreground: #717171;
+  --color-accent: #F4F4F4;
+  --color-accent-foreground: #181818;
+  
+  /* Status Colors */
+  --color-destructive: #444444;
+  --color-destructive-foreground: #FAFAFA;
+  --color-success: #0f834d;
+  --color-info: #3d9cd2;
+  
+  /* Utility Colors */
+  --color-border: #E4E4E4;
+  --color-input: #E4E4E4;
+  --color-ring: #1D1D1D;
+  
+  /* Typography */
+  --font-base: "Source Sans Pro", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  
+  /* Layout */
+  --size-radius: 0.75rem;
+  --desktop-breakpoint: 768px;
+  --handheld-breakpoint: 568px;
+  --container-width: 1180px;
+}
+
+/* Dark Theme Variables */
+.dark {
+  --color-background: #090909;
+  --color-foreground: #F2F2F2;
+  --color-card: #171717;
+  --color-card-foreground: #F2F2F2;
+  --color-popover: #171717;
+  --color-popover-foreground: #F2F2F2;
+  
+  --color-primary: #1D1D1D;
+  --color-primary-foreground: #F1F1F1;
+  --color-secondary: #272727;
+  --color-secondary-foreground: #FAFAFA;
+  
+  --color-muted: #262626;
+  --color-muted-foreground: #A1A1A1;
+  --color-accent: #242424;
+  --color-accent-foreground: #FAFAFA;
+  
+  --color-destructive: #1D1D1D;
+  --color-destructive-foreground: #F2F2F2;
+  
+  --color-border: #272727;
+  --color-input: #272727;
+  --color-ring: #1D1D1D;
+}
+
+  body {
+    font-family: var(--font-base);
+    color: var(--color-foreground);
+    background-color: var(--color-background);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-foreground);
+  }
+
+  a {
+    color: var(--color-primary);
+  }
+
+  a:hover {
+    color: color-mix(in srgb, var(--color-primary) 90%, black);
+  }
+
+  button,
+  input[type="button"],
+  input[type="reset"],
+  input[type="submit"],
+  .button,
+  .widget a.button {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+    border-radius: var(--size-radius);
+    border-color: var(--color-primary);
+  }
+
+  button:hover,
+  input[type="button"]:hover,
+  input[type="reset"]:hover,
+  input[type="submit"]:hover,
+  .button:hover,
+  .widget a.button:hover {
+    background-color: color-mix(in srgb, var(--color-primary) 90%, black);
+  }
+
+  .button.alt {
+    background-color: var(--color-secondary);
+    color: var(--color-secondary-foreground);
+  }
+
+  .button.alt:hover {
+    background-color: color-mix(in srgb, var(--color-secondary) 95%, black);
+  }
