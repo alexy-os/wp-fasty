@@ -1,8 +1,9 @@
 @import "tailwindcss/base";
   /*@import "./components/_theme.css";*/
   @import "./shadcn.css";
-  @import "./base/_storefront.css";
-
+  @import "./base/_storefrontparent.css";
+  @import "./base/_storefrontchild.css";
+  /*@import "./base/_storefront.css";*/
 @import "tailwindcss/components";
   @import "./components/_buttons.css";
   /*@import "./components/_wordpress.css";

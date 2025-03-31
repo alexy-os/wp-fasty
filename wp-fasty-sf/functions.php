@@ -6,9 +6,9 @@
 // Отключаем стили родительской темы и подключаем свои
 function wp_fasty_sf_enqueue_styles() {
     // Отключаем стили родительской темы
-    wp_dequeue_style('storefront-style');
-    wp_dequeue_style('storefront-woocommerce-style');
-    wp_dequeue_style('storefront-gutenberg-blocks');
+    //wp_dequeue_style('storefront-style');
+    //wp_dequeue_style('storefront-woocommerce-style');
+    //wp_dequeue_style('storefront-gutenberg-blocks');
     
     // Подключаем свои стили
     wp_enqueue_style(
@@ -18,9 +18,9 @@ function wp_fasty_sf_enqueue_styles() {
         wp_get_theme()->get('Version')
     );
 }
-add_action('wp_enqueue_scripts', 'wp_fasty_sf_enqueue_styles', 20);
+//add_action('wp_enqueue_scripts', 'wp_fasty_sf_enqueue_styles', 20);
 
-// Отключаем инлайн-стили Storefront
+/*// Отключаем инлайн-стили Storefront
 function wp_fasty_sf_remove_inline_styles() {
     remove_action('wp_enqueue_scripts', 'storefront_add_customizer_css', 130);
 }
@@ -36,7 +36,7 @@ add_action('wp_enqueue_scripts', 'wp_fasty_sf_remove_gutenberg_inline_styles', 2
 function wp_fasty_sf_dequeue_scripts() {
     wp_dequeue_script('storefront-header-cart');
 }
-add_action('wp_enqueue_scripts', 'wp_fasty_sf_dequeue_scripts', 20);
+add_action('wp_enqueue_scripts', 'wp_fasty_sf_dequeue_scripts', 20);*/
 
 // Добавляем базовые классы для body
 function wp_fasty_sf_body_classes($classes) {
@@ -46,4 +46,4 @@ function wp_fasty_sf_body_classes($classes) {
     $classes[] = 'antialiased';
     return $classes;
 }
-add_filter('body_class', 'wp_fasty_sf_body_classes'); 
+//add_filter('body_class', 'wp_fasty_sf_body_classes'); 

@@ -1,0 +1,119 @@
+
+    body,
+    button,
+    input,
+    textarea {
+        @apply rounded;
+    }
+
+    input:focus,
+    textarea:focus {
+        @apply bg-gray-200 dark:bg-gray-900;
+    }
+
+    .content-area {
+        @apply prose dark:prose-invert max-w-none;
+    }
+
+    body,
+    .site-header,
+    .site-footer {
+        @apply dark:!bg-gray-900 border-b-gray-800;
+    }
+
+    button,
+    input,
+    optgroup,
+    select,
+    textarea,
+    .woocommerce-pagination .page-numbers li .page-numbers.current {
+        @apply dark:bg-gray-800;
+    }
+
+    .main-navigation ul.menu ul.sub-menu,
+    .main-navigation ul.nav-menu ul.children {
+        @apply dark:bg-gray-800;
+    }
+
+    a,
+    .widget-area .widget a,
+    ul.menu li.current-menu-item>a,
+    .prose :where(a):not(:where([class~="not-prose"],
+    [class~="not-prose"] *)),
+    .site-footer a:not(.button):not(.components-button) {
+        @apply dark:!text-primary-400;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    li,
+    nav,
+    span,
+    blockquote,
+    input,
+    a.button,
+    .widget_nav_menu ul li::before,
+    .main-navigation ul li a,
+    .site-branding .site-title a,
+    .site-header-cart .cart-contents::after {
+        @apply dark:!text-gray-300;
+    }
+
+    button, input[type="button"], input[type="reset"], input[type="submit"], .button, .widget a.button,
+    a.button.product_type_simple.add_to_cart_button.ajax_add_to_cart,
+    .single_add_to_cart_button.button.alt,
+    button.wp-block-search__button.wp-element-button,
+    a.wp-block-button__link.add_to_cart_button.ajax_add_to_cart {
+        @apply bg-primary-500 text-gray-100 dark:bg-primary-900 !rounded;
+    }
+
+    button:hover, .button:hover, input[type="submit"]:hover,
+    a.wp-block-button__link.add_to_cart_button.ajax_add_to_cart:hover {
+        @apply bg-primary-700 !text-gray-100;
+    }
+
+    input[type="submit"] {
+        @apply mt-8;
+    }
+
+    .widget ul ul {
+        @apply ms-0;
+    }
+
+    .widget {
+        @apply prose prose-sm;
+    }
+
+
+button.wp-block-search__button.wp-element-button {
+    padding: 8px;
+    margin-left: 4px;
+}
+
+.wp-block-search__inside-wrapper {
+    display: flex;
+    flex: auto;
+    flex-wrap: nowrap;
+    max-width: 100%;
+}
+
+[type='search'] {
+    -webkit-appearance: textfield;
+    outline-offset: -2px;
+}
+.wp-block-search__input {
+    -webkit-appearance: initial;
+    appearance: none;
+    border: 1px solid #949494;
+    flex-grow: 1;
+    margin-left: 0;
+    margin-right: 0;
+    min-width: 3rem;
+    padding: 8px;
+    text-decoration: unset !important;
+}
