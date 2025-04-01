@@ -11,7 +11,6 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
-// Отключаем через фильтр
 add_filter('wp_img_tag_add_auto_sizes', '__return_false');
 
 // Retain the autoloader for proper class loading

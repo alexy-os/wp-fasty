@@ -1,15 +1,14 @@
+/* Base layer */
 @import "tailwindcss/base";
-  /*@import "./components/_theme.css";*/
-  @import "./base/_storefrontparent.css";
-  @import "./shadcn.css";
-  @import "./base/_storefrontchild.css";
-  /*@import "./base/_storefront.css";*/
-@import "tailwindcss/components";
-  @import "./components/_buttons.css";
-  /*@import "./components/_wordpress.css";
-  @import "./components/_navbar.css";
-  @import "./components/_button.css";*/
+@import "./shadcn.css";
+@import "./base/_storefrontparent.css" layer(base);
 
+/* Components layer */
+@import "tailwindcss/components";
+@import "./components/_buttons.css";
+@import "./base/_storefrontchild.css" layer(components);
+
+/* Utilities layer */
 @import "tailwindcss/utilities";
   /*@import "./utilities/_gradients.css";*/
   /*@import "./utilities/_animations.css";*/ 
