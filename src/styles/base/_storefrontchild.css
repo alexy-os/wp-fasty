@@ -1,14 +1,13 @@
-
     body,
     button,
     input,
     textarea {
-        @apply rounded;
+        @apply rounded-[var(--radius)];
     }
 
     input:focus,
     textarea:focus {
-        @apply bg-gray-200 dark:bg-gray-900;
+        @apply bg-[hsl(var(--muted))] dark:bg-[hsl(var(--muted))];
     }
 
     .content-area {
@@ -18,7 +17,7 @@
     body,
     .site-header,
     .site-footer {
-        @apply dark:!bg-gray-900 border-b-gray-800;
+        @apply dark:!bg-[hsl(var(--background))] border-b-[hsl(var(--border))];
     }
 
     button,
@@ -27,12 +26,12 @@
     select,
     textarea,
     .woocommerce-pagination .page-numbers li .page-numbers.current {
-        @apply dark:bg-gray-800;
+        @apply dark:bg-[hsl(var(--secondary))];
     }
 
     .main-navigation ul.menu ul.sub-menu,
     .main-navigation ul.nav-menu ul.children {
-        @apply dark:bg-gray-800;
+        @apply dark:bg-[hsl(var(--secondary))];
     }
 
     a,
@@ -41,7 +40,7 @@
     .prose :where(a):not(:where([class~="not-prose"],
     [class~="not-prose"] *)),
     .site-footer a:not(.button):not(.components-button) {
-        @apply dark:!text-primary-400;
+        @apply dark:!text-[hsl(var(--primary))];
     }
 
     h1,
@@ -61,7 +60,7 @@
     .main-navigation ul li a,
     .site-branding .site-title a,
     .site-header-cart .cart-contents::after {
-        @apply dark:!text-gray-300;
+        @apply dark:!text-[hsl(var(--foreground))];
     }
 
     button, input[type="button"], input[type="reset"], input[type="submit"], .button, .widget a.button,
@@ -69,12 +68,12 @@
     .single_add_to_cart_button.button.alt,
     button.wp-block-search__button.wp-element-button,
     a.wp-block-button__link.add_to_cart_button.ajax_add_to_cart {
-        @apply bg-primary-500 text-gray-100 dark:bg-primary-900 !rounded;
+        @apply bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] dark:bg-[hsl(var(--primary))] !rounded-[var(--radius)];
     }
 
     button:hover, .button:hover, input[type="submit"]:hover,
     a.wp-block-button__link.add_to_cart_button.ajax_add_to_cart:hover {
-        @apply bg-primary-700 !text-gray-100;
+        @apply bg-[hsl(var(--accent))] !text-[hsl(var(--accent-foreground))];
     }
 
     input[type="submit"] {
@@ -89,31 +88,32 @@
         @apply prose prose-sm;
     }
 
+    button.wp-block-search__button.wp-element-button {
+        padding: 8px;
+        margin-left: 4px;
+    }
 
-button.wp-block-search__button.wp-element-button {
-    padding: 8px;
-    margin-left: 4px;
-}
+    .wp-block-search__inside-wrapper {
+        display: flex;
+        flex: auto;
+        flex-wrap: nowrap;
+        max-width: 100%;
+    }
 
-.wp-block-search__inside-wrapper {
-    display: flex;
-    flex: auto;
-    flex-wrap: nowrap;
-    max-width: 100%;
-}
-
-[type='search'] {
-    -webkit-appearance: textfield;
-    outline-offset: -2px;
-}
-.wp-block-search__input {
-    -webkit-appearance: initial;
-    appearance: none;
-    border: 1px solid #949494;
-    flex-grow: 1;
-    margin-left: 0;
-    margin-right: 0;
-    min-width: 3rem;
-    padding: 8px;
-    text-decoration: unset !important;
-}
+    [type='search'] {
+        -webkit-appearance: textfield;
+        outline-offset: -2px;
+    }
+    
+    .wp-block-search__input {
+        -webkit-appearance: initial;
+        appearance: none;
+        border: 1px solid hsl(var(--border));
+        flex-grow: 1;
+        margin-left: 0;
+        margin-right: 0;
+        min-width: 3rem;
+        padding: 8px;
+        text-decoration: unset !important;
+        border-radius: var(--radius);
+    }

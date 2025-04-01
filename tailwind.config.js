@@ -56,6 +56,46 @@ module.exports = {
         md: `calc(var(--radius) - 2px)`,
         sm: "calc(var(--radius) - 4px)",
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            a: {
+              color: 'hsl(var(--primary))',
+              '&:hover': {
+                color: 'hsl(var(--primary))',
+              },
+            },
+            h1: {
+              color: 'hsl(var(--foreground))',
+            },
+            h2: {
+              color: 'hsl(var(--foreground))',
+            },
+            h3: {
+              color: 'hsl(var(--foreground))',
+            },
+            h4: {
+              color: 'hsl(var(--foreground))',
+            },
+            p: {
+              color: 'hsl(var(--foreground))',
+            },
+            li: {
+              color: 'hsl(var(--foreground))',
+            },
+            blockquote: {
+              color: 'hsl(var(--muted-foreground))',
+              borderLeftColor: 'hsl(var(--border))',
+            },
+            code: {
+              color: 'hsl(var(--foreground))',
+              backgroundColor: 'hsl(var(--muted))',
+              borderRadius: 'var(--radius)',
+            },
+          },
+        },
+      },
     },
   },
+  plugins: [require('@tailwindcss/typography')],
 }
