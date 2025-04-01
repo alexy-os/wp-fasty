@@ -46,4 +46,80 @@ function wp_fasty_sf_body_classes($classes) {
     $classes[] = 'antialiased';
     return $classes;
 }
-add_filter('body_class', 'wp_fasty_sf_body_classes'); 
+add_filter('body_class', 'wp_fasty_sf_body_classes');
+
+// Add dark mode toggle to header
+function wp_fasty_sf_add_header_element() {
+    echo '<div class="custom-header-element"><button id="dark-mode-toggle" class="dark-mode-toggle-btn" title="Toggle dark mode">🌓</button></div>';
+}
+add_action('storefront_header', 'wp_fasty_sf_add_header_element', 39);
+
+// Add dark mode toggle script to footer
+function wp_fasty_sf_add_dark_mode_script() {
+    ?>
+    <script>
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        
+        // Check for saved theme preference or use the system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        
+        // Add click listener to toggle
+        darkModeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            
+            // Save preference
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'wp_fasty_sf_add_dark_mode_script');
+
+// Add inline CSS for header elements and dark mode toggle
+function wp_fasty_sf_header_inline_css() {
+    ?>
+    <style>
+        .site-header .col-full {
+            display: flex;
+            align-items: center;
+        }
+        .site-search {
+            margin-bottom: 0 !important;
+        }
+        .custom-header-element {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 1rem;
+        }
+        .dark-mode-toggle-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.25rem;
+            border-radius: 9999px;
+            transition: transform 0.2s ease;
+        }
+        .dark-mode-toggle-btn:hover {
+            transform: scale(1.1);
+            background-color: hsl(var(--secondary));
+        }
+        @media (max-width: 768px) {
+            .site-search, .custom-header-element {
+                margin: 0;
+                padding: 0;
+                flex: 1;
+            }
+        }
+    </style>
+    <?php
+}
+add_action('wp_head', 'wp_fasty_sf_header_inline_css'); 
