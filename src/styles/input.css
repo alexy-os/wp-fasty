@@ -1,12 +1,13 @@
 /* Base layer */
 @import "tailwindcss/base";
 @import "./shadcn.css";
-@import "./base/_storefrontparent.css" layer(base);
+/*@import "./base/_storefrontparent.css" layer(base);*/
+  /*@import "./base/_storefrontchild.css" layer(base);*/
+  @import "./base/_nevechild.css";
 
 /* Components layer */
 @import "tailwindcss/components";
-@import "./components/_buttons.css";
-@import "./base/_storefrontchild.css" layer(components);
+ /* @import "./components/_buttons.css";*/
 
 /* Utilities layer */
 @import "tailwindcss/utilities";

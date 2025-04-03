@@ -8,8 +8,8 @@
     "docs:full": "bun run docs:sync && bun run docs",
     "tokens": "bun run src/scripts/tokens/generate.ts",
     "tokens:hex": "bun run src/scripts/tokens/generate-hex.ts",
-    "build:css": "tailwindcss -i src/styles/input.css -o wp-fasty-sf/css/theme.min.css --postcss --minify",
-    "build:css:dev": "tailwindcss -i src/styles/input.css -o wp-fasty-sf/css/theme.css --postcss",
+    "build:css": "tailwindcss -i src/styles/input.css -o wp-fasty-neve/theme-min.css --postcss --minify",
+    "build:css:dev": "tailwindcss -i src/styles/input.css -o wp-fasty-neve/theme-min.css --postcss",
     "watch:css": "tailwindcss -i src/styles/input.css -o wp-fasty-sf/css/theme.css --postcss --watch",
     "build": "npm run tokens:hex && npm run build:css",
     "dev": "npm run tokens:hex && npm run watch:css"

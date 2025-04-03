@@ -4,7 +4,7 @@ module.exports = {
   darkMode: ["class"],
   
   content: [
-    './src/source/**/*.{php,js}'
+    './wp-fasty-neve/**/*.{php,js}'
   ],
   
   theme: {
