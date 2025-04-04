@@ -10,12 +10,12 @@ function wp_fasty_neve_enqueue_styles() {
     // wp_dequeue_style('neve-style');
     
     // Подключаем наши стили
-    wp_enqueue_style(
+    /*wp_enqueue_style(
         'wp-fasty-neve-style',
         get_stylesheet_directory_uri() . '/style.css',
         array('neve-style'),
         wp_get_theme()->get('Version')
-    );
+    );*/
     
     // Подключаем минифицированные стили
     wp_enqueue_style(
@@ -26,14 +26,14 @@ function wp_fasty_neve_enqueue_styles() {
     );
     
     // Отладка
-    echo '<!-- WP Fasty Neve styles loaded: ' . get_stylesheet_directory_uri() . '/theme-min.css -->';
+    //echo '<!-- WP Fasty Neve styles loaded: ' . get_stylesheet_directory_uri() . '/theme-min.css -->';
 }
 add_action('wp_enqueue_scripts', 'wp_fasty_neve_enqueue_styles', 20);
 
 // Простой способ проверить, что функция загружается
-add_action('wp_head', function() {
+/*add_action('wp_head', function() {
     echo '<!-- WP Fasty Neve functions.php loaded successfully -->';
-}, 1);
+}, 1);*/
 
 // Add base classes for the body
 function wp_fasty_neve_body_classes($classes) {
