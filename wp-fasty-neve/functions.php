@@ -4,38 +4,58 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Упростим функцию по образцу работающей
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+
+add_filter('wp_img_tag_add_auto_sizes', '__return_false');
+
+// Retain the autoloader for proper class loading
+$cached_paths = [];
+
+spl_autoload_register(function ($class) use (&$cached_paths) {
+    if (isset($cached_paths[$class])) {
+        require $cached_paths[$class];
+        return;
+    }
+    
+    $prefix = 'WPFasty\\';
+    $base_dir = get_stylesheet_directory() . '/';
+    
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        return;
+    }
+    
+    $relative_class = substr($class, $len);
+    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+    
+    if (file_exists($file)) {
+        $cached_paths[$class] = $file;
+        require $file;
+    }
+});
+
+// Bootstrap the application
+WPFasty\Core\Application::getInstance();
+
+// Загрузка текстового домена
+add_action('init', function() {
+    load_theme_textdomain('wp-fasty', get_stylesheet_directory() . '/languages');
+});
+
+// Подключение стилей темы
 function wp_fasty_neve_enqueue_styles() {
-    // Отключаем стили родительской темы (опционально)
-    // wp_dequeue_style('neve-style');
-    
-    // Подключаем наши стили
-    /*wp_enqueue_style(
-        'wp-fasty-neve-style',
-        get_stylesheet_directory_uri() . '/style.css',
-        array('neve-style'),
-        wp_get_theme()->get('Version')
-    );*/
-    
-    // Подключаем минифицированные стили
     wp_enqueue_style(
         'wp-fasty-neve-theme',
         get_stylesheet_directory_uri() . '/theme-min.css',
         array('neve-style'),
         wp_get_theme()->get('Version')
     );
-    
-    // Отладка
-    //echo '<!-- WP Fasty Neve styles loaded: ' . get_stylesheet_directory_uri() . '/theme-min.css -->';
 }
 add_action('wp_enqueue_scripts', 'wp_fasty_neve_enqueue_styles', 20);
 
-// Простой способ проверить, что функция загружается
-/*add_action('wp_head', function() {
-    echo '<!-- WP Fasty Neve functions.php loaded successfully -->';
-}, 1);*/
-
-// Add base classes for the body
+// Добавление базовых классов для тела
 function wp_fasty_neve_body_classes($classes) {
     $classes[] = 'font-sans';
     $classes[] = 'bg-background';
@@ -45,16 +65,15 @@ function wp_fasty_neve_body_classes($classes) {
 }
 add_filter('body_class', 'wp_fasty_neve_body_classes');
 
-// Добавляем переключатель темного режима в хедер Neve
+// Добавляем переключатель темного режима
 function wp_fasty_neve_add_dark_mode_toggle() {
     echo '<div class="dark-mode-toggle-wrapper">
             <button id="dark-mode-toggle" class="dark-mode-toggle-btn" title="Toggle dark mode">🌓</button>
           </div>';
 }
-// Используем хук Neve для добавления в хедер (может потребоваться корректировка)
 add_action('neve_after_header_wrapper_hook', 'wp_fasty_neve_add_dark_mode_toggle', 10);
 
-// Добавляем стили для кнопки переключения тёмного режима
+// Стили для кнопки переключения тёмного режима
 function wp_fasty_neve_dark_mode_toggle_styles() {
     ?>
     <style>
@@ -96,7 +115,6 @@ function wp_fasty_neve_dark_mode_toggle_styles() {
             background: hsl(var(--secondary) / 80%);
         }
         
-        /* Для мобильных устройств */
         @media (max-width: 768px) {
             .dark-mode-toggle-wrapper {
                 bottom: 10px;
@@ -114,7 +132,7 @@ function wp_fasty_neve_dark_mode_toggle_styles() {
 }
 add_action('wp_head', 'wp_fasty_neve_dark_mode_toggle_styles');
 
-// Добавляем скрипт для переключения темного режима в футер
+// Скрипт для переключения темного режима
 function wp_fasty_neve_dark_mode_script() {
     ?>
     <script>
@@ -138,10 +156,10 @@ function wp_fasty_neve_dark_mode_script() {
                 // Сохраняем предпочтения
                 if (document.documentElement.classList.contains('dark')) {
                     localStorage.theme = 'dark';
-                    darkModeToggle.innerHTML = '🌞'; // солнце для переключения на светлый режим
+                    darkModeToggle.innerHTML = '🌞';
                 } else {
                     localStorage.theme = 'light';
-                    darkModeToggle.innerHTML = '🌙'; // луна для переключения на темный режим
+                    darkModeToggle.innerHTML = '🌙';
                 }
             });
             
@@ -155,4 +173,77 @@ function wp_fasty_neve_dark_mode_script() {
     </script>
     <?php
 }
-add_action('wp_footer', 'wp_fasty_neve_dark_mode_script'); 
+add_action('wp_footer', 'wp_fasty_neve_dark_mode_script');
+
+/**
+ * Отключение автоматического добавления тегов <p> и <br> в редакторе
+ */
+
+// Полное отключение wpautop для шаблона полной страницы
+function wp_fasty_disable_wpautop_for_full_page() {
+    if (is_page_template('full-page-template.php')) {
+        remove_filter('the_content', 'wpautop');
+        remove_filter('the_excerpt', 'wpautop');
+    }
+}
+add_action('wp', 'wp_fasty_disable_wpautop_for_full_page');
+
+// Отключение wpautop для всех страниц
+remove_filter('the_content', 'wpautop');
+remove_filter('the_excerpt', 'wpautop');
+
+// Отключение преобразования \n в <br>
+remove_filter('the_content', 'nl2br', 10);
+
+// Отключение wptexturize, который заменяет кавычки и другие символы
+remove_filter('the_content', 'wptexturize');
+
+// Отключение автоформатирования для виджетов
+remove_filter('widget_text_content', 'wpautop');
+
+// Отключение форматирования для шорткодов
+add_filter('the_content', function($content) {
+    $raw_content = $content;
+    // Восстановим HTML комментарии
+    $raw_content = str_replace('&lt;!--', '<!--', $raw_content);
+    $raw_content = str_replace('--&gt;', '-->', $raw_content);
+    // Восстановим CDATA
+    $raw_content = str_replace('&lt;![CDATA[', '<![CDATA[', $raw_content);
+    $raw_content = str_replace(']]&gt;', ']]>', $raw_content);
+    return $raw_content;
+}, 0);
+
+// Отключение автоформатирования при сохранении записи
+function wp_fasty_disable_autop_on_save($content) {
+    // Сохраняем HTML-код как есть
+    remove_filter('content_save_pre', 'wpautop');
+    return $content;
+}
+add_filter('content_save_pre', 'wp_fasty_disable_autop_on_save', 0);
+
+// Добавляем поддержку для режима "Текст" в классическом редакторе
+function wp_fasty_allow_full_html_in_editor() {
+    // Разрешаем HTML теги в классическом редакторе
+    global $allowedposttags;
+    $allowedposttags['html'] = array(
+        'lang' => true,
+        'class' => true
+    );
+    $allowedposttags['head'] = array(
+        'profile' => true
+    );
+    $allowedposttags['style'] = array(
+        'type' => true
+    );
+    $allowedposttags['script'] = array(
+        'type' => true,
+        'src' => true
+    );
+    $allowedposttags['meta'] = array(
+        'charset' => true,
+        'name' => true,
+        'content' => true,
+        'http-equiv' => true
+    );
+}
+add_action('init', 'wp_fasty_allow_full_html_in_editor'); 
