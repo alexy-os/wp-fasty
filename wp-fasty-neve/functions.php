@@ -247,3 +247,4 @@ function wp_fasty_allow_full_html_in_editor() {
     );
 }
 add_action('init', 'wp_fasty_allow_full_html_in_editor'); 
+
