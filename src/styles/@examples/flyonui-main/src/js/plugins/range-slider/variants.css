@@ -1,9 +1,0 @@
-@custom-variant range-slider-disabled {
-  &.disabled {
-    @slot;
-  }
-
-  .disabled & {
-    @slot;
-  }
-}

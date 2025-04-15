@@ -1,9 +1,0 @@
-@custom-variant file-upload-complete {
-  &.complete {
-    @slot;
-  }
-
-  .complete & {
-    @slot;
-  }
-}

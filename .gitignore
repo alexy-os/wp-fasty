@@ -1,7 +1,9 @@
 .manual/
 .obsidian/
+docs/
 docs-data/
 node_modules/
 bun.lockb
+bun.lock
 .cursorignore
 simple-mpa/

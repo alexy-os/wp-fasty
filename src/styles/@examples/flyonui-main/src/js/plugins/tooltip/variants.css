@@ -1,9 +1,0 @@
-@custom-variant tooltip-shown {
-  &.tooltip-content.show {
-    @slot;
-  }
-
-  .tooltip.show & {
-    @slot;
-  }
-}

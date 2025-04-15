@@ -1,9 +1,0 @@
-@custom-variant active-tab {
-  &[data-tab].active {
-    @slot;
-  }
-
-  [data-tab].active & {
-    @slot;
-  }
-}

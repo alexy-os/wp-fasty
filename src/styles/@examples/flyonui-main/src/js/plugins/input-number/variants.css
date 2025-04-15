@@ -1,9 +1,0 @@
-@custom-variant input-number-disabled {
-  &.disabled {
-    @slot;
-  }
-
-  .disabled & {
-    @slot;
-  }
-}

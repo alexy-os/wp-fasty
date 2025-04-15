@@ -1,33 +1,24 @@
 {
   "name": "wp-fasty",
-  "version": "1.0.2",
+  "description": "Root package for the wp-fasty Wordpress theme monorepo",
+  "version": "1.0.3",
+  "private": true,
+  "license": "MIT",
+  "author": "AlexY-OS",
+  "homepage": "https://github.com/alexy-os/wp-fasty",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexy-os/wp-fasty.git"
+  },
+  "workspaces": [
+    ".workspaces/*"
+  ],
   "scripts": {
-    "llms": "bun run src/scripts/docmd/llms.js",
-    "docs": "bun run src/scripts/docmd/main.ts",
-    "docs:sync": "bun run src/scripts/docmd/sync.ts",
-    "docs:full": "bun run docs:sync && bun run docs",
-    "tokens": "bun run src/scripts/tokens/generate.ts",
-    "tokens:hex": "bun run src/scripts/tokens/generate-hex.ts",
-    "build:css": "tailwindcss -i src/styles/input.css -o wp-fasty-neve/theme-min.css --postcss --minify",
-    "build:css:dev": "tailwindcss -i src/styles/input.css -o wp-fasty-neve/theme-min.css --postcss",
-    "watch:css": "tailwindcss -i src/styles/input.css -o wp-fasty-sf/css/theme.css --postcss --watch",
-    "build": "npm run tokens:hex && npm run build:css",
-    "dev": "npm run tokens:hex && npm run watch:css"
-  },
-  "devDependencies": {
-    "@tailwindcss/typography": "^0.5.16",
-    "autoprefixer": "^10.4.21",
-    "bun-types": "latest",
-    "doctrine": "^3.0.0",
-    "postcss-import": "^16.1.0"
-  },
-  "dependencies": {
-    "@types/doctrine": "^0.0.9",
-    "@types/postcss-js": "^4.0.0",
-    "cssnano": "^7.0.6",
-    "postcss": "^8.4.19",
-    "postcss-js": "^4.0.0",
-    "tailwindcss": "^3.3.1",
-    "uiparser": "^0.0.3"
+    "frontend:install": "bun install --cwd .workspaces/frontend",
+    "frontend:dev": "bun run --cwd .workspaces/frontend dev",
+    "frontend:build": "bun run --cwd .workspaces/frontend build",
+    "frontend:css": "bun run --cwd .workspaces/frontend css",
+    "frontend:watch": "bun run --cwd .workspaces/frontend watch",
+    "frontend:tailwind": "bun run --cwd .workspaces/frontend tailwind"
   }
 }
