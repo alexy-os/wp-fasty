@@ -21,7 +21,7 @@ class FullPageTemplate {
 
     public function loadTemplate($template) {
         if (is_page_template('full-page-template.php')) {
-            $template = get_stylesheet_directory() . '/Templates/full-page-template.php';
+            $template = get_stylesheet_directory() . '/page-templates/full-page-template.php';
         }
         return $template;
     }

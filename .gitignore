@@ -1,5 +1,6 @@
 .manual/
 .obsidian/
+.vscode/
 docs/
 docs-data/
 node_modules/

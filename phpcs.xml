@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<ruleset name="WPFasty">
+    <description>Coding standards for WP FastY YM theme with Latte templates and Symfony-style OOP</description>
+
+    <!-- Scan theme directory specifically -->
+    <file>wp-fasty-ym</file>
+
+    <!-- Exclude directories with adjusted paths -->
+    <exclude-pattern>wp-fasty-ym/vendor/*</exclude-pattern>
+    <exclude-pattern>wp-fasty-ym/node_modules/*</exclude-pattern>
+    <exclude-pattern>wp-fasty-ym/assets/*/js/vendor/*</exclude-pattern>
+    <exclude-pattern>wp-fasty-ym/views/cache/*</exclude-pattern>
+
+    <!-- Use PSR2 as base -->
+    <rule ref="PSR2">
+        <!-- Allow short array syntax -->
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
+    </rule>
+
+    <!-- Include PSR4 for autoloading -->
+    <rule ref="PSR4" />
+
+    <!-- Include relevant WordPress rules -->
+    <rule ref="WordPress">
+        <!-- Exclude rules that conflict with PSR-2 -->
+        <exclude name="WordPress.Arrays.ArrayDeclaration" />
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+        <exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid" />
+        <exclude name="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase" />
+        <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
+        <exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase" />
+        <exclude name="WordPress.PHP.YodaConditions.NotYoda" />
+        <exclude name="WordPress.WhiteSpace.ControlStructureSpacing" />
+        <exclude name="WordPress.WhiteSpace.OperatorSpacing" />
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed" />
+        <exclude name="PEAR.Functions.FunctionCallSignature" />
+    </rule>
+
+    <!-- Add Symfony style guide elements -->
+    <rule ref="Symfony">
+        <!-- Exclude rules that conflict with PSR-2 -->
+        <exclude name="Symfony.Commenting.ClassComment.Missing" />
+        <exclude name="Symfony.Commenting.FunctionComment.Missing" />
+    </rule>
+
+    <!-- Keep some important WordPress checks -->
+    <rule ref="WordPress.WP.I18n" />
+    <rule ref="WordPress.Security.EscapeOutput" />
+    <rule ref="WordPress.Security.NonceVerification" />
+    <rule ref="WordPress.WP.EnqueuedResources" />
+
+    <!-- Configure text domains for internationalization -->
+    <config name="text_domain" value="wp-fasty-ym"/>
+
+    <!-- Enable parallel processing -->
+    <arg name="parallel" value="8" />
+    
+    <!-- Show colors in console -->
+    <arg name="colors" />
+    
+    <!-- Show progress -->
+    <arg value="p" />
+
+    <!-- Add specific rules for Latte templates -->
+    <rule ref="Internal.NoCodeFound">
+        <!-- Don't report errors in .latte files -->
+        <exclude-pattern>*.latte</exclude-pattern>
+    </rule>
+
+    <!-- Use PSR-11 for dependency injection - adjust paths to theme's vendor directory -->
+    <rule ref="wp-fasty-ym/vendor/slevomat/coding-standard/SlevomatCodingStandard/Sniffs/Classes/RequireConstructorPropertyPromotionSniff.php" />
+    <rule ref="wp-fasty-ym/vendor/slevomat/coding-standard/SlevomatCodingStandard/Sniffs/TypeHints/ParameterTypeHintSniff.php" />
+    <rule ref="wp-fasty-ym/vendor/slevomat/coding-standard/SlevomatCodingStandard/Sniffs/TypeHints/PropertyTypeHintSniff.php" />
+    <rule ref="wp-fasty-ym/vendor/slevomat/coding-standard/SlevomatCodingStandard/Sniffs/TypeHints/ReturnTypeHintSniff.php" />
+
+    <!-- Additional PHP 8 features -->
+    <config name="php_version" value="80000" />
+</ruleset>

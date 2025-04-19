@@ -20,7 +20,7 @@ spl_autoload_register(function ($class) use (&$cached_paths) {
     }
     
     $prefix = 'WPFasty\\';
-    $base_dir = get_stylesheet_directory() . '/src/';
+    $base_dir = get_stylesheet_directory() . '/classes/';
     
     $len = strlen($prefix);
     if (strncmp($prefix, $class, $len) !== 0) {
