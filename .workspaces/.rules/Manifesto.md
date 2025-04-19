@@ -1,127 +1,79 @@
-# Y Modules Manifesto
+# Web Application Architecture Development Manifesto
 
 ## Core Principles
 
-We, the developers and contributors of the Y Modules ecosystem, embrace and commit to the following principles:
+### 1. Separation of Presentation from Business Logic
+- Templates must be free from direct dependencies on specific frameworks or CMSs
+- Universal extension syntax in templates for seamless reusability
+- Only constructs that are either universal or easily transformable are permitted
 
-### 1. The Three Whales Doctrine
+### 2. Semantic Markup and Accessibility
+- HTML5 semantic tags always take priority over generic containers
+- Minimized element nesting to improve readability and performance
+- Adherence to W3C standards and WCAG accessibility guidelines
 
-Every line of code, every function, and every module must adhere to:
+### 3. Unified CSS Naming and Organization
+- Use of intuitively understandable class naming systems
+- Compilation of styles into static files with separation between common and specific
+- Utility-first approach with composition capabilities through compiler directives
 
-- **Zero Redundancy**: No superfluous code, libraries, or dependencies
-- **Minimal Requests**: Only essential interactions with databases, servers, APIs, and browsers
-- **Maximal Performance**: Optimisation for speed in both perception and reality
+### 4. Front Controller Pattern for Entry Points
+- Each page type represented by a single entry point
+- Controllers providing platform agnosticism
+- Minimized code duplication in controllers through inheritance and composition
 
-### 2. Minimalist Architecture
+### 5. Unified Data Context
+- All data passed to templates through a single consistent context object
+- Control and filtering of data to minimize the volume of transmitted information
+- Declarative definition of template dependencies on data
 
-- A module shall do one thing exceptionally well
-- A module shall not reinvent what already exists within the ecosystem
-- A module shall be removable without catastrophic system failure
+## Architectural Organization
 
-### 3. Strict Standards Compliance
+### Directory Structure
+```
+views/
+  ├── [template-name]/
+  │   ├── context/    # Data sources and filters
+  │   ├── cache/      # Compiled templates
+  │   ├── parts/      # Template components
+  │   ├── css/        # Styles (source and compiled)
+  │   ├── config/     # Template configuration and metadata
+  │   └── ...
+  └── ...
+```
 
-- All code must adhere to established coding standards
-- All interfaces must be clearly defined and strictly typed
-- All modules must pass automated validation before implementation
+### Controller-View-Model
+- Controllers initialize the application and prepare the context
+- Models are responsible for obtaining and transforming data
+- Views are solely responsible for displaying the provided data
 
-## Module Development Guidelines
+## Quality Principles
 
-### Design Principles
+### Code Economy
+- No redundant dependencies or lines of code
+- Use only those resources that are genuinely needed
+- Elimination of dead code at all levels (HTML, CSS, JS, server code)
 
-1. **Purpose-driven**: Each module must solve a specific problem without scope creep
-2. **Self-contained**: Minimise dependencies between modules
-3. **Stateless when possible**: Prefer pure functions and immutable data
-4. **Testable**: Every module must include comprehensive tests
-5. **Documented**: Clear documentation is not optional
+### Performance and Security
+- Optimization for PageSpeed and Core Web Vitals
+- Preference for compilation over interpretation
+- Use of modern approaches to isolation and optimization (WebComponents, WASM)
 
-### Technical Requirements
+### SOLID and DRY Support
+- Single Responsibility Principle for all components
+- Dependency Inversion through the use of abstractions and interfaces
+- Code reuse through composition and inheritance
 
-1. **Strict Typing**: Use the strongest type system available in your language
-2. **Error Handling**: Graceful degradation and informative errors
-3. **Security-first**: Consider all possible attack vectors
-4. **Forward-compatible**: Design for future extensibility
+### Extensibility and Adaptability
+- Ability to add new functions without modifying existing code
+- Flexibility in configuring all system components
+- Documented extension points for all modules
 
-### Performance Standards
+## Technological Independence
 
-Every module must:
+This manifesto is not tied to specific technologies but defines an architectural approach applicable to any stack:
+- WordPress, Laravel, Symphony, Express, Flask, Django
+- React, Vue, Angular, Svelte
+- Golang, Node.js, PHP, Python, Ruby
 
-1. Add zero or negligible performance overhead to the system
-2. Respond within 100ms for user interactions
-3. Optimise for the critical rendering path
-4. Implement proper caching strategies where applicable
-
-## Interface Compliance
-
-### API Design
-
-1. **RESTful**: Follow REST principles for all HTTP interfaces
-2. **Versioned**: All public APIs must be versioned
-3. **Backward-compatible**: API changes must not break existing implementations
-4. **Well-documented**: OpenAPI/Swagger specifications for all endpoints
-
-### Front-End Integration
-
-1. **No DOM manipulation** outside Web Components
-2. **CSS isolation** using Shadow DOM or equivalent
-3. **Accessible** according to WCAG AA standards minimum
-
-## WebAssembly Guidelines
-
-WebAssembly modules must:
-
-1. **Offload complexity**: Move heavy computations away from the main thread
-2. **Integrate seamlessly**: Provide JavaScript bindings that feel native
-3. **Optimise size**: Keep .wasm modules as small as possible
-4. **Be defensive**: Handle all edge cases and memory management properly
-
-## Module Development Life Cycle
-
-1. **Conceptualisation**: Define the problem and proposed solution
-2. **Specification**: Create detailed specifications and acceptance criteria
-3. **Development**: Build according to the guidelines
-4. **Testing**: Unit, integration, and performance testing
-5. **Peer Review**: Critical assessment by senior developers
-6. **Validation**: Automated compliance checking
-7. **Release**: Versioned and documented deployment
-8. **Maintenance**: Ongoing support and updates
-
-## Adaptation Guidelines
-
-### WordPress Adaptation
-
-1. Must not hook into Core unless absolutely necessary
-2. Must follow WordPress coding standards where not in conflict with Y Modules standards
-3. Must be compatible with major WordPress versions (current and previous)
-4. Must work in standard WordPress environments without modification
-
-### Other Platform Adaptations
-
-1. Respect the host platform's architecture and philosophy
-2. Minimise platform-specific code
-3. Implement clean abstraction layers
-4. Provide clear migration paths
-
-## The Code as Craft Commitment
-
-We regard code as craft, not commodity. Each line written should reflect:
-
-- **Elegance**: The most elegant solution is often the simplest
-- **Efficiency**: Resources are precious and should not be wasted
-- **Effectiveness**: The solution must solve the real problem, not just address symptoms
-- **Endurance**: Code should be written to last, not as temporary scaffolding
-
-## The Community Pledge
-
-As contributors to the Y Modules ecosystem, we pledge to:
-
-1. **Share knowledge** freely and constructively
-2. **Mentor newcomers** with patience and clarity
-3. **Accept criticism** gracefully and apply it diligently
-4. **Attribute work** properly and recognise contributions
-5. **Evolve continuously** as technology and best practices advance
-
----
-
-This manifesto serves as both compass and anchor for all who contribute to the Y Modules ecosystem. By following these principles, we create not just code, but a lasting foundation for web development that prioritises performance, security, and maintainability above all else.
-
-**The right way is often the harder way. Excellence is our standard.** 
+Following this manifesto ensures the creation of scalable, maintainable, and high-performance applications regardless of the technologies used.

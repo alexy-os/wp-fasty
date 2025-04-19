@@ -3,7 +3,9 @@
 docs/
 docs-data/
 node_modules/
+vendor/
 bun.lockb
 bun.lock
+composer.lock
 .cursorignore
 simple-mpa/

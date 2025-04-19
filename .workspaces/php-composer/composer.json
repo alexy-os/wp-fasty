@@ -1,0 +1,15 @@
+{
+    "name": "alexy-os/latte-tpl",
+    "description": "Templates",
+    "type": "library",
+    "require": {
+        "latte/latte": "^3.0.20"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "AlexY OS"
+        }
+    ],
+    "minimum-stability": "alpha"
+}
