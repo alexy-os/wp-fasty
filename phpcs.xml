@@ -5,13 +5,19 @@
     <!-- Scan theme directory specifically -->
     <file>wp-fasty-ym</file>
 
-    <!-- Exclude directories with adjusted paths -->
+    <!-- Exclude directories and files -->
     <exclude-pattern>wp-fasty-ym/vendor/*</exclude-pattern>
     <exclude-pattern>wp-fasty-ym/node_modules/*</exclude-pattern>
     <exclude-pattern>wp-fasty-ym/assets/*/js/vendor/*</exclude-pattern>
     <exclude-pattern>wp-fasty-ym/views/cache/*</exclude-pattern>
+    
+    <!-- Exclude all CSS files -->
+    <exclude-pattern>*.css</exclude-pattern>
+    <exclude-pattern>**/*.css</exclude-pattern>
+    <!-- exclude-pattern>wp-fasty-ym/style.css</exclude-pattern>
+    <exclude-pattern>wp-fasty-ym/theme.min.css</exclude-pattern -->
 
-    <!-- Use PSR2 as base -->
+    <!-- Choose one style: PSR2 -->
     <rule ref="PSR2">
         <!-- Allow short array syntax -->
         <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
@@ -21,7 +27,7 @@
     <rule ref="PSR1.Classes.ClassDeclaration"/>
     <rule ref="Squiz.Classes.ValidClassName"/>
 
-    <!-- Установка директории для проверки PSR-4 -->
+    <!-- Setting the directory for PSR-4 checking -->
     <arg name="basepath" value="."/>
     <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
         <properties>
@@ -31,28 +37,11 @@
         </properties>
     </rule>
 
-    <!-- Include relevant WordPress rules -->
-    <rule ref="WordPress">
-        <!-- Exclude rules that conflict with PSR-2 -->
-        <exclude name="WordPress.Arrays.ArrayDeclaration" />
-        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
-        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
-        <exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid" />
-        <exclude name="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase" />
-        <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
-        <exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase" />
-        <exclude name="WordPress.PHP.YodaConditions.NotYoda" />
-        <exclude name="WordPress.WhiteSpace.ControlStructureSpacing" />
-        <exclude name="WordPress.WhiteSpace.OperatorSpacing" />
-        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed" />
-        <exclude name="PEAR.Functions.FunctionCallSignature" />
-    </rule>
-
-    <!-- Add Symfony style guide elements -->
-    <rule ref="Symfony">
-        <!-- Exclude rules that conflict with PSR-2 -->
-        <exclude name="Symfony.Commenting.ClassComment.Missing" />
-        <exclude name="Symfony.Commenting.FunctionComment.Missing" />
+    <!-- Use LF line endings instead of CRLF -->
+    <rule ref="Generic.Files.LineEndings">
+        <properties>
+            <property name="eolChar" value="\n"/>
+        </properties>
     </rule>
 
     <!-- Keep some important WordPress checks -->
@@ -79,12 +68,19 @@
         <exclude-pattern>*.latte</exclude-pattern>
     </rule>
 
-    <!-- Use PSR-11 for dependency injection - adjust paths to theme's vendor directory -->
-    <rule ref="wp-fasty-ym/vendor/slevomat/coding-standard/SlevomatCodingStandard/Sniffs/Classes/RequireConstructorPropertyPromotionSniff.php" />
-    <rule ref="wp-fasty-ym/vendor/slevomat/coding-standard/SlevomatCodingStandard/Sniffs/TypeHints/ParameterTypeHintSniff.php" />
-    <rule ref="wp-fasty-ym/vendor/slevomat/coding-standard/SlevomatCodingStandard/Sniffs/TypeHints/PropertyTypeHintSniff.php" />
-    <rule ref="wp-fasty-ym/vendor/slevomat/coding-standard/SlevomatCodingStandard/Sniffs/TypeHints/ReturnTypeHintSniff.php" />
+    <!-- Use PSR-11 for dependency injection -->
+    <rule ref="SlevomatCodingStandard.Classes.RequireConstructorPropertyPromotion" />
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint" />
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint" />
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
+        <properties>
+            <property name="enableObjectTypeHint" value="false"/>
+            <property name="enableStaticTypeHint" value="false"/>
+            <property name="enableMixedTypeHint" value="false"/>
+            <property name="enableUnionTypeHint" value="false"/>
+        </properties>
+    </rule>
 
     <!-- Additional PHP 8 features -->
-    <config name="php_version" value="80000" />
+    <config name="php_version" value="80200" />
 </ruleset>

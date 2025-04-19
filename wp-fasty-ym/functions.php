@@ -16,8 +16,6 @@ if (defined('WP_DEBUG') && WP_DEBUG) {
     ini_set('display_startup_errors', 1);
 }
 
-add_filter('wp_img_tag_add_auto_sizes', '__return_false');
-
 // Load Composer autoloader if it exists
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
@@ -48,8 +46,8 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     });
     
     // Include helper functions
-    if (file_exists(__DIR__ . '/includes/helpers.php')) {
-        require_once __DIR__ . '/includes/helpers.php';
+    if (file_exists(__DIR__ . '/includes/wp-helpers.php')) {
+        require_once __DIR__ . '/includes/wp-helpers.php';
     }
 }
 
@@ -62,4 +60,3 @@ if (class_exists('WPFasty\\Core\\Application')) {
 add_action('init', function() {
     load_theme_textdomain('wp-fasty-ym', get_stylesheet_directory() . '/languages');
 });
-

@@ -1,13 +1,25 @@
 <?php
+
+declare(strict_types=1);
+
+/**
+ * Assets hooks
+ *
+ * @package WPFasty\Hooks
+ */
+
 namespace WPFasty\Hooks;
 
-class AssetsHooks extends AbstractHooks {
-    public function register(): void {
+class AssetsHooks extends AbstractHooks
+{
+    public function register(): void
+    {
         $this->addAction('wp_enqueue_scripts', 'enqueueStyles');
         // $this->addAction('wp_enqueue_scripts', 'enqueueScripts');
     }
 
-    public function enqueueStyles(): void {
+    public function enqueueStyles(): void
+    {
         // Enqueue main theme style
         wp_enqueue_style(
             'wp-fasty-style',
@@ -30,13 +42,9 @@ class AssetsHooks extends AbstractHooks {
             $this->getCustomStyles()
         );*/
     }
-
-    /**
-     * Get custom styles based on theme customization
-     * 
-     * @return string Custom CSS
-     */
-    private function getCustomStyles(): string {
+    
+    private function getCustomStyles(): string
+    {
         $custom_css = '';
         
         // Add any dynamic styles here
@@ -56,7 +64,7 @@ class AssetsHooks extends AbstractHooks {
             error_log('Navigation script not found at: ' . $script_path);
             return;
         }
-        
+
         wp_enqueue_script(
             'wp-fasty-navigation',
             get_template_directory_uri() . '/assets/js/navigation.js',
@@ -65,4 +73,4 @@ class AssetsHooks extends AbstractHooks {
             true
         );
     }*/
-} 
+}

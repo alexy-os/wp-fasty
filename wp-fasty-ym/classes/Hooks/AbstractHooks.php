@@ -1,21 +1,32 @@
 <?php
+
+declare(strict_types=1);
+
+/**
+ * Abstract class for hooks
+ *
+ * @package WPFasty\Hooks
+ */
+
 namespace WPFasty\Hooks;
 
-abstract class AbstractHooks {
-    protected $container;
+use WPFasty\Core\ContainerInterface;
 
-    public function __construct($container) {
-        $this->container = $container;
+abstract class AbstractHooks
+{
+    public function __construct(protected ContainerInterface $container)
+    {
     }
 
     abstract public function register(): void;
 
-    protected function addAction(string $hook, string $method, int $priority = 10, int $args = 1): void {
+    protected function addAction(string $hook, string $method, int $priority = 10, int $args = 1): void
+    {
         add_action($hook, [$this, $method], $priority, $args);
     }
 
-    protected function addFilter(string $hook, string $method, int $priority = 10, int $args = 1): void {
+    protected function addFilter(string $hook, string $method, int $priority = 10, int $args = 1): void
+    {
         add_filter($hook, [$this, $method], $priority, $args);
     }
-} 
-
+}
