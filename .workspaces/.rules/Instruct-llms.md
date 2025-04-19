@@ -1,14 +1,55 @@
+Я обновлю файл Instruct-llms.md, добавив раздел о соблюдении стандартов кодирования WordPress, Symfony и PSR:
+
 # WP/Flight Architecture with Latte - LLM Agent Instructions
 
 ## Core Architecture Concepts
 
 1. **Template Engine**: Latte templates with framework-agnostic constructs and built-in caching
-2. **Hooks System**: Universal syntax `{do_action('hook_name')}` across all templates
+2. **Hooks System**: Universal syntax `{do_action 'hook_name'}` across all templates
 3. **HTML5 Semantic Markup**: Prioritize semantic tags, minimize nesting
 4. **CSS Naming**: Semantic class naming with modifiers (`button button-primary button-rounded`)
 5. **Front Controller Pattern**: Single entry point for each page type
 6. **Unified Data Context**: All template data passed through a consistent context object
 7. **Critical CSS Inline**: Essential styles embedded directly in `<head>`
+
+## Coding Standards
+
+### Hybrid Standards Approach
+
+Follow a hybrid approach that balances WordPress, Symfony, and PSR standards:
+
+1. **PSR-2**: Base code style with minor exceptions
+   - Follow indentation, line length, and basic formatting rules
+   - Use short array syntax `[]` instead of `array()`
+   - Maintain proper namespacing and class structure
+
+2. **PSR-4**: Class autoloading standard
+   - Place classes in `classes/` directory
+   - Map namespace `WPFasty\` to `classes/` directory
+   - Respect proper namespace/directory structure
+
+3. **PSR-11**: Container Interface for dependency injection
+   - Use strict type hinting for parameters
+   - Implement constructor property promotion when appropriate
+   - Follow dependency injection principles
+
+4. **WordPress Codex**: Security and API integration
+   - Follow security practices (nonce verification, data sanitization)
+   - Use proper escaping functions for output
+   - Implement internationalization with text domain
+
+5. **Symfony Style**: OOP approach
+   - Follow service-oriented architecture
+   - Implement interfaces and abstract classes appropriately
+   - Use type declarations and return types
+
+### Code Style Priorities
+
+When standards conflict, follow this priority order:
+1. Security-related guidelines (always highest priority)
+2. PSR standards for new OOP code
+3. WordPress standards for direct WP API integrations
+4. Symfony style for architectural patterns
 
 ## Directory Structure
 
@@ -16,12 +57,12 @@
 themes/wp-fasty/
 ├── functions.php       # Bootstrap file
 ├── index.php, page.php # Entry points
-├── src/                # PSR-4 classes
+├── classes/            # PSR-4 classes
 │   ├── Core/           # Core application
 │   ├── Model/          # Data models (framework-agnostic)
 │   ├── Adapter/        # Data source adapters
 │   └── View/           # Presentation layer
-├── templates/          # Special page templates
+├── page-templates/     # Special page templates
 └── views/              # Latte templates and resources
     ├── layout/         # Base layouts
     │   ├── context/    # Layout context
@@ -180,4 +221,4 @@ When moving between WordPress and Flight PHP, maintain the same template structu
 4. Don't use generic div containers when semantic tags are appropriate
 5. Don't load unused CSS/JS
 6. Don't generate CSS at runtime
-7. Don't bypass the context object when passing data to templates 
+7. Don't bypass the context object when passing data to templates

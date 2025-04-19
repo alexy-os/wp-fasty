@@ -18,7 +18,18 @@
     </rule>
 
     <!-- Include PSR4 for autoloading -->
-    <rule ref="PSR4" />
+    <rule ref="PSR1.Classes.ClassDeclaration"/>
+    <rule ref="Squiz.Classes.ValidClassName"/>
+
+    <!-- Установка директории для проверки PSR-4 -->
+    <arg name="basepath" value="."/>
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+        <properties>
+            <property name="rootNamespaces" type="array">
+                <element key="wp-fasty-ym/classes" value="WPFasty"/>
+            </property>
+        </properties>
+    </rule>
 
     <!-- Include relevant WordPress rules -->
     <rule ref="WordPress">

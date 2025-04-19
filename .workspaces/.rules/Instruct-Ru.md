@@ -1,27 +1,128 @@
 # Технические инструкции по архитектуре WP/Flight с Latte
 
+## Настройка окружения разработки
+
+### Стандарты кодирования (PHPCS)
+
+Для обеспечения высокого качества кода и соблюдения стандартов используется PHP_CodeSniffer (PHPCS) с кастомной конфигурацией.
+
+#### Файл конфигурации PHPCS (`phpcs.xml` в корне проекта)
+
+```xml
+<?xml version="1.0"?>
+<ruleset name="WPFasty">
+    <description>Coding standards for WP FastY YM theme with Latte templates and Symfony-style OOP</description>
+
+    <!-- Scan theme directory specifically -->
+    <file>wp-content/themes/wp-fasty/wp-fasty-ym</file>
+
+    <!-- Exclude directories -->
+    <exclude-pattern>wp-content/themes/wp-fasty/wp-fasty-ym/vendor/*</exclude-pattern>
+    <exclude-pattern>wp-content/themes/wp-fasty/wp-fasty-ym/node_modules/*</exclude-pattern>
+    <exclude-pattern>wp-content/themes/wp-fasty/wp-fasty-ym/assets/*/js/vendor/*</exclude-pattern>
+    <exclude-pattern>wp-content/themes/wp-fasty/wp-fasty-ym/views/cache/*</exclude-pattern>
+
+    <!-- Базовый стандарт PSR2 -->
+    <rule ref="PSR2">
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
+    </rule>
+
+    <!-- Включение PSR4 для автозагрузки -->
+    <rule ref="PSR4" />
+
+    <!-- Включение правил WordPress с исключениями -->
+    <rule ref="WordPress">
+        <!-- Исключаем правила, конфликтующие с PSR-2 -->
+        <exclude name="WordPress.Arrays.ArrayDeclaration" />
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+        <exclude name="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid" />
+        <exclude name="WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase" />
+        <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
+        <exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase" />
+        <exclude name="WordPress.PHP.YodaConditions.NotYoda" />
+        <exclude name="WordPress.WhiteSpace.ControlStructureSpacing" />
+        <exclude name="WordPress.WhiteSpace.OperatorSpacing" />
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed" />
+        <exclude name="PEAR.Functions.FunctionCallSignature" />
+    </rule>
+
+    <!-- Включение элементов стиля Symfony -->
+    <rule ref="Symfony">
+        <exclude name="Symfony.Commenting.ClassComment.Missing" />
+        <exclude name="Symfony.Commenting.FunctionComment.Missing" />
+    </rule>
+
+    <!-- Важные проверки WordPress -->
+    <rule ref="WordPress.WP.I18n" />
+    <rule ref="WordPress.Security.EscapeOutput" />
+    <rule ref="WordPress.Security.NonceVerification" />
+    <rule ref="WordPress.WP.EnqueuedResources" />
+
+    <!-- Конфигурация домена для интернационализации -->
+    <config name="text_domain" value="wp-fasty-ym"/>
+
+    <!-- Особые правила для Latte шаблонов -->
+    <rule ref="Internal.NoCodeFound">
+        <exclude-pattern>*.latte</exclude-pattern>
+    </rule>
+
+    <!-- Настройка для PHP 8 -->
+    <config name="php_version" value="80000" />
+</ruleset>
+```
+
+#### Настройка VS Code для работы с PHPCS
+
+Файл `.vscode/settings.json` в корне проекта:
+
+```json
+{
+  "phpcs.enable": true,
+  "phpcs.standard": "${workspaceFolder}/phpcs.xml",
+  "phpcs.executablePath": "${workspaceFolder}/wp-fasty-ym/vendor/bin/phpcs",
+  "phpcs.showSources": true,
+  "editor.formatOnSave": true,
+  "phpcbf.enable": true,
+  "phpcbf.executablePath": "${workspaceFolder}/wp-fasty-ym/vendor/bin/phpcbf",
+  "phpcbf.standard": "${workspaceFolder}/phpcs.xml",
+  "phpcbf.onsave": true,
+  "phpcs.composerJsonPath": "${workspaceFolder}/wp-fasty-ym/composer.json"
+}
+```
+
+### Правила кодирования
+
+1. **Комментарии** - всегда на английском языке
+2. **Имена переменных и функций**:
+   - `camelCase` для методов и свойств классов (PSR стиль)
+   - `snake_case` для переменных в шаблонах Latte
+   - Функции хуков WordPress в соответствии со стандартами WP (`wp_fasty_hook_name`)
+3. **HTML5 семантика** - использовать правильные семантические теги вместо div
+4. **CSS классы** - использовать семантические префиксы с модификаторами
+5. **Автозагрузка классов** - PSR-4 с базовым пространством имен `WPFasty`
+6. **DRY** - не дублировать логику, выносить общий код в базовые классы или traits
+7. **Единственная ответственность** - каждый класс/шаблон отвечает только за одну функцию
+
 ## Структура приложения
 
 ### Корневая структура темы WordPress
 ```
-wp-content/themes/wp-fasty/
-├── functions.php       # Основной bootstrap файл
-├── index.php           # Точка входа для всех типов страниц
-├── page.php            # Точка входа для страниц
-├── single.php          # Точка входа для записей
-├── src/                # PHP классы (PSR-4)
-│   ├── Core/           # Ядро приложения
-│   ├── Model/          # Модели данных
-│   ├── Adapter/        # Адаптеры для источников данных
-│   └── View/           # Слой представления
-├── templates/          # Специальные шаблоны страниц
-│   ├── full-page.php
-│   └── landing.php
-├── .workspaces/        # Рабочие пространства для инструментов
-│   ├── frontend/       # Фронтенд инструментарий
-│   ├── php-composer/   # PHP зависимости
-│   └── tools/          # Вспомогательные скрипты
-└── views/              # Шаблоны и связанные ресурсы
+wp-content/themes/wp-fasty/wp-fasty-ym/
+├── vendor/
+├── composer.json
+├── functions.php
+├── page-templates/
+├── template-parts/
+├── views/
+├── languages/
+├── includes/
+├── assets/
+├── classes/        # Все PHP классы будут храниться здесь
+├── header.php
+├── index.php
+├── screenshot.png
+└── style.css
 ```
 
 ### Структура папки `views/`
@@ -498,3 +599,13 @@ return [
 4. Core функциональность переписывается под новую платформу
 
 При правильной реализации, смена фреймворка или CMS потребует только изменения адаптеров данных и контроллеров, в то время как представление (views) останется неизменным.
+
+## Команды для работы со стандартами кода
+
+```bash
+# Проверка соответствия стандартам
+composer phpcs
+
+# Автоматическое исправление ошибок, где возможно
+composer phpcbf
+```
