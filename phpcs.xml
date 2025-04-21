@@ -44,6 +44,50 @@
         </properties>
     </rule>
 
+    <!-- Configure DocBlock styles according to Symfony standards -->
+    <rule ref="Squiz.Commenting.DocCommentAlignment"/>
+    
+    <!-- Configure trailing space handling -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false"/>
+        </properties>
+    </rule>
+    
+    <!-- Function documentation rules - Symfony style -->
+    <rule ref="Squiz.Commenting.FunctionComment">
+        <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
+        <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamName"/>
+        <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingReturn"/>
+        <exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
+        <exclude name="Squiz.Commenting.FunctionComment.ParamCommentNotCapital"/>
+        <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
+    </rule>
+    
+    <!-- Exclude redundant class comment rules -->
+    <rule ref="Squiz.Commenting.ClassComment">
+        <exclude name="Squiz.Commenting.ClassComment.TagNotAllowed"/>
+        <exclude name="Squiz.Commenting.ClassComment.Missing"/>
+    </rule>
+    
+    <!-- Allow void returns to be documented or not -->
+    <rule ref="Squiz.Commenting.FunctionComment.MissingReturn">
+        <exclude-pattern>*\/void\s*\{</exclude-pattern>
+    </rule>
+    
+    <!-- Fix for method trailing spaces -->
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacing" value="1"/>
+            <property name="spacingBeforeFirst" value="0"/>
+            <property name="spacingAfterLast" value="0"/>
+        </properties>
+    </rule>
+
     <!-- Keep some important WordPress checks -->
     <rule ref="WordPress.WP.I18n" />
     <rule ref="WordPress.Security.EscapeOutput" />
