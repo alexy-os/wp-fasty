@@ -1,7 +1,7 @@
 {
   "name": "wp-fasty",
   "description": "Root package for the wp-fasty Wordpress theme monorepo",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "license": "MIT",
   "author": "AlexY-OS",
