@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<ruleset name="WPFasty">
+    <description>Coding standards for WP FastY YM theme with Latte templates and Symfony-style OOP</description>
+
+    <!-- Scan theme directory specifically -->
+    <file>wp-fasty-ym</file>
+
+    <!-- Exclude directories and files -->
+    <exclude-pattern>wp-fasty-ym/vendor/*</exclude-pattern>
+    <exclude-pattern>wp-fasty-ym/node_modules/*</exclude-pattern>
+    <exclude-pattern>wp-fasty-ym/assets/*/js/vendor/*</exclude-pattern>
+    <exclude-pattern>wp-fasty-ym/views/cache/*</exclude-pattern>
+    
+    <!-- Exclude all CSS files -->
+    <exclude-pattern>*.css</exclude-pattern>
+    <exclude-pattern>**/*.css</exclude-pattern>
+    <!-- exclude-pattern>wp-fasty-ym/style.css</exclude-pattern>
+    <exclude-pattern>wp-fasty-ym/theme.min.css</exclude-pattern -->
+
+    <!-- Choose one style: PSR2 -->
+    <rule ref="PSR2">
+        <!-- Allow short array syntax -->
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
+    </rule>
+
+    <!-- Include PSR4 for autoloading -->
+    <rule ref="PSR1.Classes.ClassDeclaration"/>
+    <rule ref="Squiz.Classes.ValidClassName"/>
+
+    <!-- Setting the directory for PSR-4 checking -->
+    <arg name="basepath" value="."/>
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+        <properties>
+            <property name="rootNamespaces" type="array">
+                <element key="wp-fasty-ym/classes" value="WPFasty"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Use LF line endings instead of CRLF -->
+    <rule ref="Generic.Files.LineEndings">
+        <properties>
+            <property name="eolChar" value="\n"/>
+        </properties>
+    </rule>
+
+    <!-- Keep some important WordPress checks -->
+    <rule ref="WordPress.WP.I18n" />
+    <rule ref="WordPress.Security.EscapeOutput" />
+    <rule ref="WordPress.Security.NonceVerification" />
+    <rule ref="WordPress.WP.EnqueuedResources" />
+
+    <!-- Configure text domains for internationalization -->
+    <config name="text_domain" value="wp-fasty-ym"/>
+
+    <!-- Enable parallel processing -->
+    <arg name="parallel" value="8" />
+    
+    <!-- Show colors in console -->
+    <arg name="colors" />
+    
+    <!-- Show progress -->
+    <arg value="p" />
+
+    <!-- Add specific rules for Latte templates -->
+    <rule ref="Internal.NoCodeFound">
+        <!-- Don't report errors in .latte files -->
+        <exclude-pattern>*.latte</exclude-pattern>
+    </rule>
+
+    <!-- Use PSR-11 for dependency injection -->
+    <rule ref="SlevomatCodingStandard.Classes.RequireConstructorPropertyPromotion" />
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint" />
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint" />
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
+        <properties>
+            <property name="enableObjectTypeHint" value="false"/>
+            <property name="enableStaticTypeHint" value="false"/>
+            <property name="enableMixedTypeHint" value="false"/>
+            <property name="enableUnionTypeHint" value="false"/>
+        </properties>
+    </rule>
+
+    <!-- Additional PHP 8 features -->
+    <config name="php_version" value="80200" />
+</ruleset>
