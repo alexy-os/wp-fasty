@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
-  <meta charset="UTF-8">
+  <meta charset="{{ if .Site.charset }}{{ .Site.charset }}{{ else }}UTF-8{{ end }}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ if .Site.title }}{{ .Site.title }}{{ else }}Flight CMS{{ end }}</title>
+  <title>{{ if .Page.title }}{{ .Page.title }}{{ else }}{{ if .Site.title }}{{ .Site.title }}{{ end }}{{ end }}</title>
   <link rel="stylesheet" href="css/tailwind.css">
   <style>
     .mobile-menu-hidden {
@@ -18,9 +18,9 @@
     <header class="absolute inset-x-0 top-0 z-50">
       <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div class="flex lg:flex-1">
-          <a href="#" class="-m-1.5 p-1.5">
+          <a href="{{ .Site.url }}" class="-m-1.5 p-1.5">
             <span class="sr-only">{{ if .Site.title }}{{ .Site.title }}{{ else }}Flight CMS{{ end }}</span>
-            <img class="h-8 w-auto" src="img/mark.svg?color=indigo&shade=600" alt="Flight CMS Logo">
+            <img class="h-8 w-auto" src="img/mark.svg?color=indigo&shade=600" alt="{{ .Site.title }} Logo">
           </a>
         </div>
         <div class="flex lg:hidden">

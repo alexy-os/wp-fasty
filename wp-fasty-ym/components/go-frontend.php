@@ -109,6 +109,9 @@ class WPFasty_Go_Frontend
             ]
         ];
 
+        // Записываем контекст в лог для отладки
+        error_log('WP Fasty Go Frontend - Отправляемый контекст: ' . print_r($context, true));
+
         // Данные страницы, если это пост или страница
         if (is_singular() && $post) {
             $context['page'] = [
@@ -120,6 +123,9 @@ class WPFasty_Go_Frontend
                 'modified' => get_the_modified_date('c', $post)
             ];
 
+            // Записываем данные страницы в лог для отладки
+            error_log('WP Fasty Go Frontend - Данные страницы: ' . print_r($context['page'], true));
+
             // Миниатюра, если есть
             if (has_post_thumbnail($post)) {
                 $context['page']['thumbnail'] = [
@@ -127,6 +133,14 @@ class WPFasty_Go_Frontend
                     'alt' => get_post_meta(get_post_thumbnail_id($post), '_wp_attachment_image_alt', true)
                 ];
             }
+        } else {
+            // Если это не пост или страница, все равно создаем пустой контекст страницы
+            // чтобы заголовок из него не был пустым
+            $context['page'] = [
+                'title' => get_bloginfo('name') // Используем название сайта как заголовок по умолчанию
+            ];
+
+            error_log('WP Fasty Go Frontend - Создан дефолтный контекст страницы');
         }
 
         // Данные меню
