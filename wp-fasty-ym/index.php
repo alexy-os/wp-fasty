@@ -7,7 +7,7 @@
 
 // Prevent direct access
 if (!defined('ABSPATH')) {
-  exit;
+    exit;
 }
 
 // Enable query tracking
@@ -16,7 +16,7 @@ $wpdb->queries = []; // Reset queries
 
 // Define SAVEQUERIES only if not already defined
 if (!defined('SAVEQUERIES')) {
-  define('SAVEQUERIES', true);
+    define('SAVEQUERIES', true);
 }
 
 // Start HTML output
@@ -106,7 +106,7 @@ if (!defined('SAVEQUERIES')) {
     global $wpdb;
     $query_count = count($wpdb->queries);
     $query_time = 0;
-    
+
     foreach ($wpdb->queries as $query) {
         $query_time += $query[1];
     }
@@ -123,6 +123,24 @@ if (!defined('SAVEQUERIES')) {
         <pre><?php echo esc_html(prettyPrintArray(getPageContext())); ?></pre>
     </div>
 
+    <?php if (shortcode_exists('go_frontend')) : ?>
+    <h2>Go Frontend</h2>
+    <div class="stats-box">
+        <h3>Go Frontend Integration</h3>
+        <p>Go фронтенд интегрирован. Используйте шорткод <code>[go_frontend]</code> для вывода.</p>
+        <p>Вы также можете создать страницу и выбрать шаблон "Go Frontend".</p>
+        
+        <div class="go-frontend-test">
+            <button onclick="document.getElementById('go-frontend-preview').style.display = 'block';" class="px-4 py-2 bg-indigo-600 text-white rounded">
+                Показать превью Go Frontend
+            </button>
+            <div id="go-frontend-preview" style="display: none; margin-top: 1rem; padding: 1rem; border: 1px solid #ddd; height: 300px; overflow: auto;">
+                <iframe width="100%" height="100%" style="border: none;" src="<?php echo esc_url(home_url('?go_preview=1')); ?>"></iframe>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <h2>Database Queries</h2>
     
     <?php
@@ -132,13 +150,13 @@ if (!defined('SAVEQUERIES')) {
         $sql = $query[0];
         $time = $query[1];
         $stack = $query[2];
-        
+
         // Extract the caller function from the stack
         $caller = "Unknown";
         if (preg_match('/\s+(\w+(?:->)?\w+)\s+/', $stack, $matches)) {
             $caller = $matches[1];
         }
-        
+
         if (!isset($query_groups[$caller])) {
             $query_groups[$caller] = [
                 'count' => 0,
@@ -146,7 +164,7 @@ if (!defined('SAVEQUERIES')) {
                 'queries' => []
             ];
         }
-        
+
         $query_groups[$caller]['count']++;
         $query_groups[$caller]['time'] += $time;
         $query_groups[$caller]['queries'][] = [
@@ -154,9 +172,9 @@ if (!defined('SAVEQUERIES')) {
             'time' => $time
         ];
     }
-    
+
     // Sort query groups by count (desc)
-    uasort($query_groups, function($a, $b) {
+    uasort($query_groups, function ($a, $b) {
         return $b['count'] - $a['count'];
     });
     ?>
@@ -170,7 +188,7 @@ if (!defined('SAVEQUERIES')) {
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($query_groups as $caller => $group): ?>
+            <?php foreach ($query_groups as $caller => $group) : ?>
             <tr>
                 <td><?php echo esc_html($caller); ?></td>
                 <td><?php echo esc_html($group['count']); ?></td>
@@ -180,12 +198,12 @@ if (!defined('SAVEQUERIES')) {
         </tbody>
     </table>
     
-    <?php foreach ($query_groups as $caller => $group): ?>
+    <?php foreach ($query_groups as $caller => $group) : ?>
     <div class="query-group">
         <h3><?php echo esc_html($caller); ?> (<?php echo esc_html($group['count']); ?> queries)</h3>
         
         <div class="query-wrapper">
-            <?php foreach ($group['queries'] as $query): ?>
+            <?php foreach ($group['queries'] as $query) : ?>
             <div class="query">
                 <p class="query-time"><?php echo esc_html(round($query['time'] * 1000, 2)); ?> ms</p>
                 <pre><?php echo esc_html($query['sql']); ?></pre>
@@ -200,8 +218,8 @@ if (!defined('SAVEQUERIES')) {
         <?php
         // Get optimization recommendations
         $recommendations = getOptimizationRecommendations($wpdb->queries);
-        foreach ($recommendations as $recommendation):
-        ?>
+        foreach ($recommendations as $recommendation) :
+            ?>
         <li><?php echo esc_html($recommendation); ?></li>
         <?php endforeach; ?>
     </ul>
@@ -222,7 +240,8 @@ if (!defined('SAVEQUERIES')) {
  *
  * @return array Context data
  */
-function getPageContext() {
+function getPageContext(): array
+{
     global $post;
 
     // Site context
@@ -253,7 +272,7 @@ function getPageContext() {
                 'url' => get_author_posts_url($post->post_author)
             ],
             'meta' => getPostMeta($post->ID),
-            'thumbnail' => has_post_thumbnail($post) ? 
+            'thumbnail' => has_post_thumbnail($post) ?
                 get_the_post_thumbnail_url($post, 'full') : null,
             'type' => $post->post_type,
             'format' => get_post_format($post) ?: 'standard',
@@ -276,13 +295,13 @@ function getPageContext() {
     // Menu context
     $menus = [];
     $locations = get_nav_menu_locations();
-    
+
     foreach ($locations as $location => $menu_id) {
         $menu = wp_get_nav_menu_object($menu_id);
         if ($menu) {
             $menu_items = wp_get_nav_menu_items($menu->term_id);
             $menu_items_array = [];
-            
+
             if ($menu_items) {
                 foreach ($menu_items as $item) {
                     $menu_items_array[] = [
@@ -297,7 +316,7 @@ function getPageContext() {
                     ];
                 }
             }
-            
+
             $menus[$location] = $menu_items_array;
         }
     }
@@ -356,7 +375,7 @@ function getPageContext() {
                     'excerpt' => get_the_excerpt(),
                     'url' => get_permalink(),
                     'date' => get_the_date('c'),
-                    'thumbnail' => has_post_thumbnail() ? 
+                    'thumbnail' => has_post_thumbnail() ?
                         get_the_post_thumbnail_url(null, 'thumbnail') : null,
                     'author' => [
                         'id' => get_the_author_meta('ID'),
@@ -376,22 +395,23 @@ function getPageContext() {
 /**
  * Get post meta as formatted array
  *
- * @param int $post_id The post ID
+ * @param integer $post_id The post ID
  * @return array Meta data
  */
-function getPostMeta($post_id) {
+function getPostMeta(int $post_id): array
+{
     $meta = get_post_meta($post_id);
     $formatted = [];
-    
+
     foreach ($meta as $key => $values) {
         // Skip internal WordPress meta
         if (strpos($key, '_') === 0 && $key !== '_wp_page_template') {
             continue;
         }
-        
+
         // Format the value
         $value = $values[0] ?? null;
-        
+
         // Try to unserialize if it looks like serialized data
         if (is_string($value) && strpos($value, 'a:') === 0 || strpos($value, 'O:') === 0) {
             $unserialized = @unserialize($value);
@@ -399,10 +419,10 @@ function getPostMeta($post_id) {
                 $value = $unserialized;
             }
         }
-        
+
         $formatted[$key] = $value;
     }
-    
+
     return $formatted;
 }
 
@@ -410,10 +430,11 @@ function getPostMeta($post_id) {
  * Pretty print an array with indentation
  *
  * @param array $array The array to print
- * @param int $level The current indent level
+ * @param integer $level The current indent level
  * @return string The formatted array
  */
-function prettyPrintArray($array, $level = 0) {
+function prettyPrintArray(array $array, int $level = 0): string
+{
     if (!is_array($array)) {
         if (is_bool($array)) {
             return $array ? 'true' : 'false';
@@ -429,32 +450,32 @@ function prettyPrintArray($array, $level = 0) {
             return var_export($array, true);
         }
     }
-    
+
     // Initialize the output string
     $output = "[\n";
-    
+
     // Calculate indentation
     $indent = str_repeat("    ", $level + 1);
-    
+
     // Process each element
     foreach ($array as $key => $value) {
         $output .= $indent;
-        
+
         // Add the key
         if (is_string($key)) {
             $output .= "'" . addslashes($key) . "' => ";
         } else {
             $output .= $key . " => ";
         }
-        
+
         // Add the value
         $output .= prettyPrintArray($value, $level + 1);
         $output .= ",\n";
     }
-    
+
     // Close the array and return
     $output .= str_repeat("    ", $level) . "]";
-    
+
     return $output;
 }
 
@@ -464,48 +485,49 @@ function prettyPrintArray($array, $level = 0) {
  * @param array $queries List of queries from $wpdb->queries
  * @return array List of recommendations
  */
-function getOptimizationRecommendations($queries) {
+function getOptimizationRecommendations(array $queries): array
+{
     $recommendations = [];
     $callers = [];
-    
+
     // Count queries by caller
     foreach ($queries as $query) {
         $stack = $query[2];
-        
+
         // Extract the caller function
         $caller = "Unknown";
         if (preg_match('/\s+(\w+(?:->)?\w+)\s+/', $stack, $matches)) {
             $caller = $matches[1];
         }
-        
+
         if (!isset($callers[$caller])) {
             $callers[$caller] = 0;
         }
-        
+
         $callers[$caller]++;
     }
-    
+
     // Check for multiple get_option calls
     if (isset($callers['get_option']) && $callers['get_option'] > 5) {
         $recommendations[] = "Reduce get_option calls ({$callers['get_option']} calls) by using wp_load_alloptions() for multiple options.";
     }
-    
+
     // Check for multiple update_meta_cache calls
     if (isset($callers['update_meta_cache']) && $callers['update_meta_cache'] > 1) {
         $recommendations[] = "Consolidate update_meta_cache calls ({$callers['update_meta_cache']} calls) to reduce queries.";
     }
-    
+
     // Check for WP_Query usage
     if (isset($callers['WP_Query->get_posts'])) {
         $recommendations[] = "Consider using 'fields' => 'ids' in WP_Query when only IDs are needed.";
         $recommendations[] = "Use 'no_found_rows' => true in WP_Query when pagination is not needed.";
     }
-    
+
     // General recommendations
     $recommendations[] = "Enable object caching with a persistent cache like Redis or Memcached.";
     $recommendations[] = "Consider using the _prime_post_caches() function to preload posts in a single query.";
     $recommendations[] = "Implement an optimization class in the theme to reduce common WordPress query patterns.";
-    
+
     return $recommendations;
 }
 
@@ -513,23 +535,24 @@ function getOptimizationRecommendations($queries) {
  * Function to optimize common WordPress queries
  * Add this to your theme's functions.php
  */
-function wpfasty_optimize_queries() {
+function wpfasty_optimize_queries(): void
+{
     // Reduce calls to get_option
     if (!is_admin()) {
         // Preload options in a single query
         wp_load_alloptions();
     }
-    
+
     // Disable emoji support if not needed
     remove_action('wp_head', 'print_emoji_detection_script', 7);
     remove_action('wp_print_styles', 'print_emoji_styles');
-    
+
     // Disable wp-embed if not needed
     remove_action('wp_head', 'wp_oembed_add_discovery_links');
     remove_action('wp_head', 'wp_oembed_add_host_js');
-    
+
     // Disable self pingbacks
-    add_action('pre_ping', function(&$links) {
+    add_action('pre_ping', function (&$links): void {
         $home = get_option('home');
         foreach ($links as $l => $link) {
             if (strpos($link, $home) === 0) {
