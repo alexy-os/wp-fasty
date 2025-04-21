@@ -1,22 +1,15 @@
 <?php
 /**
- * Main template file with database query optimization and tracking
+ * Main template file
+ *
+ * This is a debug version that shows the current page context in formatted array.
  *
  * @package WPFasty
  */
 
 // Prevent direct access
 if (!defined('ABSPATH')) {
-  exit;
-}
-
-// Enable query tracking
-global $wpdb;
-$wpdb->queries = []; // Reset queries
-
-// Define SAVEQUERIES only if not already defined
-if (!defined('SAVEQUERIES')) {
-  define('SAVEQUERIES', true);
+    exit;
 }
 
 // Start HTML output
@@ -36,11 +29,10 @@ if (!defined('SAVEQUERIES')) {
             margin: 0 auto;
             padding: 2rem;
         }
-        h1, h2, h3 {
+        h1 {
             border-bottom: 1px solid #eee;
             padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-            margin-top: 2rem;
+            margin-bottom: 2rem;
         }
         pre {
             background: #f5f5f5;
@@ -50,32 +42,8 @@ if (!defined('SAVEQUERIES')) {
             max-height: 70vh;
             border: 1px solid #ddd;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
-        th, td {
-            text-align: left;
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-        }
-        th {
-            background-color: #f5f5f5;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .stats-box {
-            background: #f0f8ff;
-            border: 1px solid #ccc;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 4px;
-        }
-        .stats-box h3 {
-            margin-top: 0;
-            border-bottom: none;
+        .context-dump {
+            margin-bottom: 2rem;
         }
         .footer {
             margin-top: 2rem;
@@ -84,130 +52,21 @@ if (!defined('SAVEQUERIES')) {
             font-size: 0.875rem;
             color: #666;
         }
-        .query-wrapper {
-            margin: 1rem 0;
-        }
-        .query-time {
-            font-weight: bold;
-            color: #d44;
-        }
-        .query-group {
-            margin-bottom: 2rem;
-        }
     </style>
 </head>
 <body <?php body_class(); ?>>
     <?php wp_body_open(); ?>
 
-    <h1>WP FastY Theme Debug Console</h1>
+    <h1>WP FastY Theme Context Debug</h1>
     
-    <?php
-    // Show database query stats box
-    global $wpdb;
-    $query_count = count($wpdb->queries);
-    $query_time = 0;
-    
-    foreach ($wpdb->queries as $query) {
-        $query_time += $query[1];
-    }
-    ?>
-    <div class="stats-box">
-        <h3>Database Performance</h3>
-        <p><strong>Total Queries:</strong> <?php echo $query_count; ?></p>
-        <p><strong>Total Query Time:</strong> <?php echo round($query_time * 1000, 2); ?> ms</p>
-        <p><strong>Average Query Time:</strong> <?php echo $query_count ? round(($query_time / $query_count) * 1000, 2) : 0; ?> ms per query</p>
-    </div>
-
     <div class="context-dump">
         <h2>Page Context</h2>
         <pre><?php echo esc_html(prettyPrintArray(getPageContext())); ?></pre>
     </div>
 
-    <h2>Database Queries</h2>
-    
-    <?php
-    // Group queries by caller
-    $query_groups = [];
-    foreach ($wpdb->queries as $query) {
-        $sql = $query[0];
-        $time = $query[1];
-        $stack = $query[2];
-        
-        // Extract the caller function from the stack
-        $caller = "Unknown";
-        if (preg_match('/\s+(\w+(?:->)?\w+)\s+/', $stack, $matches)) {
-            $caller = $matches[1];
-        }
-        
-        if (!isset($query_groups[$caller])) {
-            $query_groups[$caller] = [
-                'count' => 0,
-                'time' => 0,
-                'queries' => []
-            ];
-        }
-        
-        $query_groups[$caller]['count']++;
-        $query_groups[$caller]['time'] += $time;
-        $query_groups[$caller]['queries'][] = [
-            'sql' => $sql,
-            'time' => $time
-        ];
-    }
-    
-    // Sort query groups by count (desc)
-    uasort($query_groups, function($a, $b) {
-        return $b['count'] - $a['count'];
-    });
-    ?>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Caller Function</th>
-                <th>Query Count</th>
-                <th>Total Time (ms)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($query_groups as $caller => $group): ?>
-            <tr>
-                <td><?php echo esc_html($caller); ?></td>
-                <td><?php echo esc_html($group['count']); ?></td>
-                <td><?php echo esc_html(round($group['time'] * 1000, 2)); ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    
-    <?php foreach ($query_groups as $caller => $group): ?>
-    <div class="query-group">
-        <h3><?php echo esc_html($caller); ?> (<?php echo esc_html($group['count']); ?> queries)</h3>
-        
-        <div class="query-wrapper">
-            <?php foreach ($group['queries'] as $query): ?>
-            <div class="query">
-                <p class="query-time"><?php echo esc_html(round($query['time'] * 1000, 2)); ?> ms</p>
-                <pre><?php echo esc_html($query['sql']); ?></pre>
-            </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-    <?php endforeach; ?>
-
-    <h2>Optimization Recommendations</h2>
-    <ul>
-        <?php
-        // Get optimization recommendations
-        $recommendations = getOptimizationRecommendations($wpdb->queries);
-        foreach ($recommendations as $recommendation):
-        ?>
-        <li><?php echo esc_html($recommendation); ?></li>
-        <?php endforeach; ?>
-    </ul>
-
     <div class="footer">
-        <p>WP FastY Theme Debug Console - PHP version: <?php echo PHP_VERSION; ?></p>
+        <p>This is a debug view of the WP FastY Theme context data. This structured data is available to all templates.</p>
+        <p>Current PHP version: <?php echo PHP_VERSION; ?></p>
     </div>
 
     <?php wp_footer(); ?>
@@ -457,87 +316,3 @@ function prettyPrintArray($array, $level = 0) {
     
     return $output;
 }
-
-/**
- * Get optimization recommendations based on queries
- *
- * @param array $queries List of queries from $wpdb->queries
- * @return array List of recommendations
- */
-function getOptimizationRecommendations($queries) {
-    $recommendations = [];
-    $callers = [];
-    
-    // Count queries by caller
-    foreach ($queries as $query) {
-        $stack = $query[2];
-        
-        // Extract the caller function
-        $caller = "Unknown";
-        if (preg_match('/\s+(\w+(?:->)?\w+)\s+/', $stack, $matches)) {
-            $caller = $matches[1];
-        }
-        
-        if (!isset($callers[$caller])) {
-            $callers[$caller] = 0;
-        }
-        
-        $callers[$caller]++;
-    }
-    
-    // Check for multiple get_option calls
-    if (isset($callers['get_option']) && $callers['get_option'] > 5) {
-        $recommendations[] = "Reduce get_option calls ({$callers['get_option']} calls) by using wp_load_alloptions() for multiple options.";
-    }
-    
-    // Check for multiple update_meta_cache calls
-    if (isset($callers['update_meta_cache']) && $callers['update_meta_cache'] > 1) {
-        $recommendations[] = "Consolidate update_meta_cache calls ({$callers['update_meta_cache']} calls) to reduce queries.";
-    }
-    
-    // Check for WP_Query usage
-    if (isset($callers['WP_Query->get_posts'])) {
-        $recommendations[] = "Consider using 'fields' => 'ids' in WP_Query when only IDs are needed.";
-        $recommendations[] = "Use 'no_found_rows' => true in WP_Query when pagination is not needed.";
-    }
-    
-    // General recommendations
-    $recommendations[] = "Enable object caching with a persistent cache like Redis or Memcached.";
-    $recommendations[] = "Consider using the _prime_post_caches() function to preload posts in a single query.";
-    $recommendations[] = "Implement an optimization class in the theme to reduce common WordPress query patterns.";
-    
-    return $recommendations;
-}
-
-/**
- * Function to optimize common WordPress queries
- * Add this to your theme's functions.php
- */
-function wpfasty_optimize_queries() {
-    // Reduce calls to get_option
-    if (!is_admin()) {
-        // Preload options in a single query
-        wp_load_alloptions();
-    }
-    
-    // Disable emoji support if not needed
-    remove_action('wp_head', 'print_emoji_detection_script', 7);
-    remove_action('wp_print_styles', 'print_emoji_styles');
-    
-    // Disable wp-embed if not needed
-    remove_action('wp_head', 'wp_oembed_add_discovery_links');
-    remove_action('wp_head', 'wp_oembed_add_host_js');
-    
-    // Disable self pingbacks
-    add_action('pre_ping', function(&$links) {
-        $home = get_option('home');
-        foreach ($links as $l => $link) {
-            if (strpos($link, $home) === 0) {
-                unset($links[$l]);
-            }
-        }
-    });
-}
-
-// Uncomment this to activate optimizations
-add_action('init', 'wpfasty_optimize_queries');

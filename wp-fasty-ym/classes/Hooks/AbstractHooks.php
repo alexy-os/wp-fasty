@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace WPFasty\Hooks;
 
+use WPFasty\Core\ContainerInterface;
+
 abstract class AbstractHooks
 {
     /**

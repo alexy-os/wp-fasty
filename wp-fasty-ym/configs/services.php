@@ -14,6 +14,10 @@ use WPFasty\Templates\FullPageTemplate;
 use WPFasty\Hooks\PageTemplateHooks;
 use WPFasty\Hooks\AssetsHooks;
 use WPFasty\Tools\HtmlToEditor;
+use WPFasty\Data\ContextFactory;
+use WPFasty\Theme\ThemeService;
+use WPFasty\Template\TemplateEngineInterface;
+use WPFasty\Template\LatteEngine;
 
 return function (Container $container): void {
     // Register templates
@@ -37,6 +41,27 @@ return function (Container $container): void {
         return new HtmlToEditor($container);
     }, HtmlToEditor::class);
     $container->addTag('tools.html_editor', ContainerInterface::TAG_BOOTABLE);
+    
+    // Register template engine
+    $container->singleton('template.engine', function ($container) {
+        return new LatteEngine(
+            get_template_directory() . '/templates',
+            get_template_directory() . '/views/cache'
+        );
+    }, LatteEngine::class);
+    
+    // Register context factory
+    $container->singleton('data.context_factory', function ($container) {
+        return new ContextFactory($container);
+    }, ContextFactory::class);
+    
+    // Register theme service
+    $container->singleton('theme', function ($container) {
+        return new ThemeService(
+            $container->get('template.engine'),
+            $container->get('data.context_factory')
+        );
+    }, ThemeService::class);
     
     // You can add more services here
     
