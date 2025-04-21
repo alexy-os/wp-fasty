@@ -1,50 +1,105 @@
 <?php
+
+declare(strict_types=1);
+
 namespace WPFasty\Core;
 
-class Application {
+/**
+ * Main application class
+ * 
+ * This class is the entry point of the application.
+ * It initializes the container and boots the services.
+ */
+class Application
+{
+    /**
+     * Singleton instance
+     * 
+     * @var self|null
+     */
     private static $instance = null;
+    
+    /**
+     * Service container
+     * 
+     * @var ContainerInterface
+     */
     private $container;
-
-    private function __construct() {
+    
+    /**
+     * Private constructor to prevent direct creation
+     */
+    private function __construct()
+    {
+        // Initialize container
         $this->container = new Container();
-        $this->registerServices();
+        
+        // Load service configuration
+        $this->loadServices();
+        
+        // Boot services
         $this->bootServices();
     }
-
-    public static function getInstance(): self {
+    
+    /**
+     * Get the singleton instance
+     * 
+     * @return self Application instance
+     */
+    public static function getInstance(): self
+    {
         if (self::$instance === null) {
             self::$instance = new self();
         }
         return self::$instance;
     }
-
-    private function registerServices(): void {
-
-        $this->container->bind('templates.fullpage', function($container) {
-            return new \WPFasty\Templates\FullPageTemplate();
-        });
-
-        $this->container->singleton('hooks.page_template', function($container) {
-            return new \WPFasty\Hooks\PageTemplateHooks($container);
-        });
+    
+    /**
+     * Load services from configuration
+     */
+    private function loadServices(): void
+    {
+        $servicesFile = dirname(dirname(__DIR__)) . '/configs/services.php';
         
-        $this->container->singleton('hooks.assets', function($container) {
-            return new \WPFasty\Hooks\AssetsHooks($container);
-        });
+        if (!file_exists($servicesFile)) {
+            throw new \RuntimeException('Services configuration file not found');
+        }
         
-        $this->container->singleton('tools.html_editor', function($container) {
-            return new \WPFasty\Tools\HtmlToEditor($container);
-        });
+        $serviceConfigurator = require $servicesFile;
+        
+        if (!is_callable($serviceConfigurator)) {
+            throw new \RuntimeException('Services configuration must return a callable');
+        }
+        
+        $serviceConfigurator($this->container);
     }
-
-    private function bootServices(): void {
-        $this->container->get('templates.fullpage');
-        $this->container->get('hooks.page_template')->register();
-        $this->container->get('hooks.assets')->register();
-        $this->container->get('tools.html_editor')->register();
+    
+    /**
+     * Boot all registered services
+     */
+    private function bootServices(): void
+    {
+        $this->container->bootServices();
     }
-
-    public function getContainer(): Container {
+    
+    /**
+     * Get the service container
+     * 
+     * @return ContainerInterface The service container
+     */
+    public function getContainer(): ContainerInterface
+    {
         return $this->container;
+    }
+    
+    /**
+     * Get a service from the container
+     * 
+     * @param string $serviceId Service ID
+     * @return mixed The service instance
+     */
+    public function getService(string $serviceId)
+    {
+        return $this->container->get($serviceId);
     }
 }
