@@ -44,16 +44,16 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
             require $file;
         }
     });
-
-    // Include helper functions
-    if (file_exists(__DIR__ . '/includes/wp-helpers.php')) {
-        require_once __DIR__ . '/includes/wp-helpers.php';
-    }
 }
 
 // Bootstrap the application
 if (class_exists('WPFasty\\Core\\Application')) {
     WPFasty\Core\Application::getInstance();
+}
+
+// Include helper functions
+if (file_exists(__DIR__ . '/includes/wp-helpers.php')) {
+    require_once __DIR__ . '/includes/wp-helpers.php';
 }
 
 // Loading the text domain
