@@ -23,35 +23,35 @@ if (function_exists('add_filter')) {
 add_filter('wp_img_tag_add_auto_sizes', '__return_false');
 
 /**
- * Добавляет кастомный SVG фавикон
+ * Adds a custom SVG favicon
  *
  */
 function wpfasty_custom_favicon(): void
 {
-    // Отключаем стандартную иконку сайта WordPress
+    // Disable the default WordPress site icon
     remove_action('wp_head', 'wp_site_icon', 99);
 
-    // Добавляем свой SVG фавикон
+    // Add our SVG favicon
     echo '<link rel="icon" type="image/svg+xml" href="/wp-content/themes/wp-fasty-ym/assets/images/favicon.svg" />' . "\n";
 }
 
 add_action('wp_head', 'wpfasty_custom_favicon', 2);
 
 /**
- * Заменяет стандартные теги иконок на кастомный SVG фавикон
+ * Replaces the default icon tags with our custom SVG favicon
  *
- * @param array<string> $meta_tags Стандартные теги мета-иконок WordPress
- * @return string Замененный тег иконки
+ * @param array<string> $meta_tags Standard WordPress icon meta tags
+ * @return string Replaced icon tag
  */
 function wpfasty_replace_site_icon(array $meta_tags): string
 {
-    // Заменяем все стандартные теги иконок на наш SVG фавикон
+    // Replace all default icon tags with our custom SVG favicon
     return '<link rel="icon" type="image/svg+xml" href="/wp-content/themes/wp-fasty-ym/assets/images/favicon.svg" />';
 }
 
 add_filter('site_icon_meta_tags', 'wpfasty_replace_site_icon');
 
-// Отключаем стандартную поддержку site-icon, чтобы в админке не предлагалось загружать иконку
+// Disable the default site-icon support, so it doesn't suggest uploading an icon in the admin
 function wpfasty_theme_setup(): void
 {
     remove_theme_support('site-icon');
@@ -60,10 +60,10 @@ function wpfasty_theme_setup(): void
 add_action('after_setup_theme', 'wpfasty_theme_setup');
 
 /**
- * Оптимизация производительности WordPress
+ * WordPress performance optimization
  */
 
-// Кэширование опций из wp_options
+// Caching options from wp_options
 function wpfasty_get_option($option_name, $default = false)
 {
     static $options_cache = array();
@@ -78,7 +78,7 @@ function wpfasty_get_option($option_name, $default = false)
     return $value;
 }
 
-// Оптимизация запросов к данным пользователя
+// WordPress user data optimization
 function wpfasty_get_user_data($user_id, $fields = 'all')
 {
     static $users_cache = array();
@@ -94,7 +94,7 @@ function wpfasty_get_user_data($user_id, $fields = 'all')
     return $user_data;
 }
 
-// Оптимизация запросов дочерних страниц
+// WordPress child pages optimization
 function wpfasty_get_child_pages($parent_id, $args = array())
 {
     static $children_cache = array();
@@ -120,9 +120,9 @@ function wpfasty_get_child_pages($parent_id, $args = array())
     return $children;
 }
 
-// Уменьшение количества запросов
+// Reduce the number of requests
 add_action('init', function (): void {
-    // Отключаем эмодзи
+    // Disable emojis
     remove_action('wp_head', 'print_emoji_detection_script', 7);
     remove_action('admin_print_scripts', 'print_emoji_detection_script');
     remove_action('wp_print_styles', 'print_emoji_styles');
@@ -131,15 +131,15 @@ add_action('init', function (): void {
     remove_filter('comment_text_rss', 'wp_staticize_emoji');
     remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
 
-    // Отключаем генерацию oEmbed
+    // Disable oEmbed generation
     remove_action('wp_head', 'wp_oembed_add_discovery_links');
     remove_action('wp_head', 'wp_oembed_add_host_js');
 
-    // Отключаем REST API, если не используется в теме
+    // Disable REST API, if not used in the theme
     remove_action('wp_head', 'rest_output_link_wp_head', 10);
     remove_action('template_redirect', 'rest_output_link_header', 11);
 
-    // Отключаем генерацию лишних тегов и версий
+    // Disable generating extra tags and versions
     remove_action('wp_head', 'wp_generator');
     remove_action('wp_head', 'wlwmanifest_link');
     remove_action('wp_head', 'rsd_link');
@@ -147,15 +147,15 @@ add_action('init', function (): void {
     remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
 }, 1);
 
-// Оптимизация загрузки скриптов и стилей
+// WordPress scripts and styles optimization
 add_action('wp_enqueue_scripts', function (): void {
-    // Перемещаем jQuery в footer для ускорения загрузки страницы
+    // Move jQuery to the footer to speed up page loading
     if (!is_admin()) {
         wp_deregister_script('jquery');
         wp_register_script('jquery', includes_url('/js/jquery/jquery.min.js'), false, null, true);
         wp_enqueue_script('jquery');
     }
 
-    // Отключаем wp-embed.min.js
+    // Disable wp-embed.min.js
     wp_deregister_script('wp-embed');
 }, 100);

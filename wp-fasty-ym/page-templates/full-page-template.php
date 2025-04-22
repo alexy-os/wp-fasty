@@ -1,13 +1,13 @@
 <?php
 /* Template Name: Full Page Template */
 
-// Отключаем фильтры форматирования перед выводом контента
+// Disable formatting filters before outputting the content
 remove_filter('the_content', 'wpautop');
 remove_filter('the_content', 'wptexturize');
 remove_filter('the_content', 'convert_chars');
 
-// Отключаем теги shortcode_unautop
+// Disable shortcode_unautop tags
 remove_filter('the_content', 'shortcode_unautop');
 
-// Выводим необработанный контент
+// Output the raw content
 echo get_post_field('post_content', get_the_ID(), 'raw');

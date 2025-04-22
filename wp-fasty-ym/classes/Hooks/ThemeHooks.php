@@ -3,6 +3,6 @@ namespace WPFasty\Hooks;
 
 class ThemeHooks extends AbstractHooks {
     public function register(): void {
-        // Пустой метод, так как функции переехали в functions.php
+        // Empty method, since functions moved to functions.php
     }
 } 

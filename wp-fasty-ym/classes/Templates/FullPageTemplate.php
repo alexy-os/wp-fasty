@@ -10,7 +10,7 @@ class FullPageTemplate {
         add_filter('theme_page_templates', [$this, 'addNewTemplate']);
         add_filter('template_include', [$this, 'loadTemplate']);
         
-        // Отключаем wpautop для шаблона полной страницы
+        // Disable wpautop for the full page template
         add_filter('the_content', [$this, 'disableWpautopForTemplate'], 5);
     }
 
@@ -27,14 +27,14 @@ class FullPageTemplate {
     }
     
     /**
-     * Отключаем wpautop для шаблона полной страницы
+     * Disable wpautop for the full page template
      */
     public function disableWpautopForTemplate($content) {
         if (is_page_template('full-page-template.php')) {
-            // Удаляем все применения wpautop к контенту
+            // Remove all applications of wpautop to the content
             remove_filter('the_content', 'wpautop');
             
-            // Возвращаем контент без изменений
+            // Return the content without changes
             return $content;
         }
         return $content;
