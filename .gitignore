@@ -4,6 +4,7 @@
 .cursor/
 node_modules/
 vendor/
+cache/
 bun.lockb
 bun.lock
 composer.lock

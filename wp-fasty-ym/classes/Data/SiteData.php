@@ -43,6 +43,7 @@ final readonly class PageData extends DataObject
         public string $content,
         public string $slug,
         public ?int $id = null,
+        public ?string $url = null,
         public ?string $excerpt = null,
         public ?string $featuredImage = null,
         public ?array $meta = null
@@ -58,6 +59,7 @@ final readonly class PageData extends DataObject
             title: get_the_title($post),
             content: apply_filters('the_content', $post->post_content),
             slug: $post->post_name,
+            url: get_the_permalink($post),
             id: $post->ID,
             excerpt: has_excerpt($post) ? get_the_excerpt($post) : null,
             featuredImage: has_post_thumbnail($post) ? 

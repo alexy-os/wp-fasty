@@ -22,63 +22,57 @@
     <div class="archive-content">
         <div class="container">
             {if !empty($posts)}
-                <div class="posts-grid">
-                    {foreach $posts as $post}
-                        <article class="post-card">
-                            <a href="{$post['url']}" class="post-card-link">
-                                {if isset($post['thumbnail']) && $post['thumbnail']}
-                                    <figure class="post-card-thumbnail">
-                                        <img src="{$post['thumbnail']['url']}" alt="{$post['thumbnail']['alt']}" class="post-card-image">
-                                    </figure>
-                                {/if}
-                            </a>
+            <div class="posts-grid">
+                {foreach $posts as $post}
+                    <article class="card card-posts">
+                        <a href="{$post['url']}" class="card-link">
+                            {if isset($post['thumbnail'])}
+                                <figure class="card-thumbnail">
+                                    <img src="{$post['thumbnail']['url']}" alt="{$post['thumbnail']['alt']}" class="card-image">
+                                </figure>
+                            {/if}
+                        </a>
+                        
+                        <header class="card-header">
+                            {if isset($post['categories'])}
+                                <div class="card-categories">
+                                    {foreach $post['categories'] as $category}
+                                        <a href="{$category['url']}" class="card-category">{$category['name']}</a>
+                                    {/foreach}
+                                </div>
+                            {/if}
                             
-                            <div class="post-card-content">
-                                <header class="post-card-header">
-                                    {if isset($post['categories']) && $post['categories']}
-                                        <div class="post-card-categories">
-                                            {foreach $post['categories'] as $category}
-                                                <a href="{$category['url']}" class="post-card-category">{$category['name']}</a>
-                                            {/foreach}
-                                        </div>
-                                    {/if}
-                                    
-                                    <h2 class="post-card-title">
-                                        <a href="{$post['url']}">{$post['title']}</a>
-                                    </h2>
-                                </header>
-                                
-                                {if isset($post['excerpt']) && $post['excerpt']}
-                                    <div class="post-card-excerpt">
-                                        {$post['excerpt']|noescape}
-                                    </div>
+                            <h3 class="card-title">
+                                <a href="{$post['url']}">{$post['title']}</a>
+                            </h3>
+                        </header>
+                        
+                        <div class="card-content">
+                            {if isset($post['excerpt'])}
+                                <div class="card-excerpt">
+                                    {$post['excerpt']|noescape}
+                                </div>
+                            {/if}
+                        </div>
+                        
+                        <footer class="card-footer">
+                            <div class="card-meta">
+                                {if isset($post['date'])}
+                                    <time datetime="{$post['date']['formatted']}" class="card-date">
+                                        {$post['date']['display']}
+                                    </time>
                                 {/if}
-                                
-                                <footer class="post-card-footer">
-                                    <div class="post-card-meta">
-                                        {if isset($post['date']) && $post['date']}
-                                            <time datetime="{$post['date']['formatted']}" class="post-card-date">
-                                                {$post['date']['display']}
-                                            </time>
-                                        {/if}
-                                        
-                                        {if isset($post['author']) && $post['author']}
-                                            <span class="post-card-author">
-                                                By <a href="{$post['author']['url']}">{$post['author']['name']}</a>
-                                            </span>
-                                        {/if}
-                                    </div>
-                                    
-                                    <a href="{$post['url']}" class="post-card-read-more">
-                                        Read More <span class="read-more-icon">→</span>
-                                    </a>
-                                </footer>
                             </div>
-                        </article>
-                    {/foreach}
-                </div>
+                            
+                            <a href="{$post['url']}" class="card-read-more">
+                                Read More <span class="read-more-icon">→</span>
+                            </a>
+                        </footer>
+                    </article>
+                {/foreach}
+            </div>
                 
-                {if isset($pagination)}
+                {if isset($pagination) && is_array($pagination)}
                     <nav class="pagination">
                         {if isset($pagination['prev_url']) && $pagination['prev_url']}
                             <a href="{$pagination['prev_url']}" class="pagination-link pagination-prev">
@@ -86,15 +80,17 @@
                             </a>
                         {/if}
                         
-                        <div class="pagination-numbers">
-                            {foreach $pagination['pages'] as $page}
-                                {if $page['is_current']}
-                                    <span class="pagination-number pagination-current">{$page['number']}</span>
-                                {else}
-                                    <a href="{$page['url']}" class="pagination-number">{$page['number']}</a>
-                                {/if}
-                            {/foreach}
-                        </div>
+                        {if isset($pagination['pages']) && is_array($pagination['pages'])}
+                            <div class="pagination-numbers">
+                                {foreach $pagination['pages'] as $page}
+                                    {if isset($page['is_current']) && $page['is_current']}
+                                        <span class="pagination-number pagination-current">{$page['number']}</span>
+                                    {elseif isset($page['url']) && isset($page['number'])}
+                                        <a href="{$page['url']}" class="pagination-number">{$page['number']}</a>
+                                    {/if}
+                                {/foreach}
+                            </div>
+                        {/if}
                         
                         {if isset($pagination['next_url']) && $pagination['next_url']}
                             <a href="{$pagination['next_url']}" class="pagination-link pagination-next">
