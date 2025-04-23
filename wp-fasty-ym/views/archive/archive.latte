@@ -2,18 +2,18 @@
  * Archive template
  *
  * Required context:
- * - archive: Archive data
- * - posts: Array of posts
+ * - archive: Archive data (array)
+ * - posts: Array of posts (array)
  *}
 
 <section class="archive">
     <header class="archive-header">
         <div class="container">
-            <h1 class="archive-title">{$archive->title}</h1>
+            <h1 class="archive-title">{$archive['title']}</h1>
             
-            {if $archive->description}
+            {if isset($archive['description']) && $archive['description']}
                 <div class="archive-description">
-                    {$archive->description|noescape}
+                    {$archive['description']|noescape}
                 </div>
             {/if}
         </div>
@@ -25,51 +25,51 @@
                 <div class="posts-grid">
                     {foreach $posts as $post}
                         <article class="post-card">
-                            <a href="{$post->url}" class="post-card-link">
-                                {if $post->thumbnail}
+                            <a href="{$post['url']}" class="post-card-link">
+                                {if isset($post['thumbnail']) && $post['thumbnail']}
                                     <figure class="post-card-thumbnail">
-                                        <img src="{$post->thumbnail->url}" alt="{$post->thumbnail->alt}" class="post-card-image">
+                                        <img src="{$post['thumbnail']['url']}" alt="{$post['thumbnail']['alt']}" class="post-card-image">
                                     </figure>
                                 {/if}
                             </a>
                             
                             <div class="post-card-content">
                                 <header class="post-card-header">
-                                    {if $post->categories}
+                                    {if isset($post['categories']) && $post['categories']}
                                         <div class="post-card-categories">
-                                            {foreach $post->categories as $category}
-                                                <a href="{$category->url}" class="post-card-category">{$category->name}</a>
+                                            {foreach $post['categories'] as $category}
+                                                <a href="{$category['url']}" class="post-card-category">{$category['name']}</a>
                                             {/foreach}
                                         </div>
                                     {/if}
                                     
                                     <h2 class="post-card-title">
-                                        <a href="{$post->url}">{$post->title}</a>
+                                        <a href="{$post['url']}">{$post['title']}</a>
                                     </h2>
                                 </header>
                                 
-                                {if $post->excerpt}
+                                {if isset($post['excerpt']) && $post['excerpt']}
                                     <div class="post-card-excerpt">
-                                        {$post->excerpt|noescape}
+                                        {$post['excerpt']|noescape}
                                     </div>
                                 {/if}
                                 
                                 <footer class="post-card-footer">
                                     <div class="post-card-meta">
-                                        {if $post->date}
-                                            <time datetime="{$post->date->format('c')}" class="post-card-date">
-                                                {$post->date->format('F j, Y')}
+                                        {if isset($post['date']) && $post['date']}
+                                            <time datetime="{$post['date']['formatted']}" class="post-card-date">
+                                                {$post['date']['display']}
                                             </time>
                                         {/if}
                                         
-                                        {if $post->author}
+                                        {if isset($post['author']) && $post['author']}
                                             <span class="post-card-author">
-                                                By <a href="{$post->author->url}">{$post->author->name}</a>
+                                                By <a href="{$post['author']['url']}">{$post['author']['name']}</a>
                                             </span>
                                         {/if}
                                     </div>
                                     
-                                    <a href="{$post->url}" class="post-card-read-more">
+                                    <a href="{$post['url']}" class="post-card-read-more">
                                         Read More <span class="read-more-icon">→</span>
                                     </a>
                                 </footer>
@@ -80,24 +80,24 @@
                 
                 {if isset($pagination)}
                     <nav class="pagination">
-                        {if $pagination->prev_url}
-                            <a href="{$pagination->prev_url}" class="pagination-link pagination-prev">
+                        {if isset($pagination['prev_url']) && $pagination['prev_url']}
+                            <a href="{$pagination['prev_url']}" class="pagination-link pagination-prev">
                                 <span class="pagination-arrow">←</span> Previous
                             </a>
                         {/if}
                         
                         <div class="pagination-numbers">
-                            {foreach $pagination->pages as $page}
-                                {if $page->is_current}
-                                    <span class="pagination-number pagination-current">{$page->number}</span>
+                            {foreach $pagination['pages'] as $page}
+                                {if $page['is_current']}
+                                    <span class="pagination-number pagination-current">{$page['number']}</span>
                                 {else}
-                                    <a href="{$page->url}" class="pagination-number">{$page->number}</a>
+                                    <a href="{$page['url']}" class="pagination-number">{$page['number']}</a>
                                 {/if}
                             {/foreach}
                         </div>
                         
-                        {if $pagination->next_url}
-                            <a href="{$pagination->next_url}" class="pagination-link pagination-next">
+                        {if isset($pagination['next_url']) && $pagination['next_url']}
+                            <a href="{$pagination['next_url']}" class="pagination-link pagination-next">
                                 Next <span class="pagination-arrow">→</span>
                             </a>
                         {/if}

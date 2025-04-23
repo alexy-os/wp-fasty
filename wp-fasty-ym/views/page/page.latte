@@ -2,17 +2,17 @@
  * Default page template
  *
  * Required context:
- * - page: Current page data
+ * - page: Current page data (array)
  *}
 
 <article class="page">
     <header class="page-header">
         <div class="container">
-            <h1 class="page-title">{$page->title}</h1>
+            <h1 class="page-title">{$page['title']}</h1>
             
-            {if $page->excerpt}
+            {if isset($page['excerpt']) && $page['excerpt']}
                 <div class="page-excerpt">
-                    {$page->excerpt|noescape}
+                    {$page['excerpt']|noescape}
                 </div>
             {/if}
         </div>
@@ -21,10 +21,10 @@
     <div class="page-content">
         <div class="container">
             <div class="content-wrapper">
-                {$page->content|noescape}
+                {$page['content']|noescape}
             </div>
             
-            {if $page->has_sidebar}
+            {if isset($page['has_sidebar']) && $page['has_sidebar']}
                 <aside class="page-sidebar">
                     {do_action 'page_sidebar'}
                 </aside>
@@ -34,10 +34,10 @@
 
     <footer class="page-footer">
         <div class="container">
-            {if $page->modified_date}
+            {if isset($page['modified_date']) && $page['modified_date']}
                 <div class="page-meta">
-                    <time datetime="{$page->modified_date->format('c')}" class="updated">
-                        Last updated: {$page->modified_date->format('F j, Y')}
+                    <time datetime="{$page['modified_date']['formatted']}" class="updated">
+                        Last updated: {$page['modified_date']['display']}
                     </time>
                 </div>
             {/if}

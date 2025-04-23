@@ -14,15 +14,17 @@ $themeService = $app->getContainer()->get(ThemeService::class);
 // Get context for the current page
 $context = $themeService->context();
 
-// Render the header
-echo $themeService->render('header', $context);
-
-// Render the content
-echo $themeService->render('single/single', $context);
-
-// Render the footer
-echo $themeService->render('footer', $context); 
-
-echo '<pre>';
-print_r($context);
-echo '</pre>';
+// Add content to context
+try {
+  $content = $themeService->render('single/single', $context);
+  
+  $context['content'] = $content;
+  // Render the layout with content
+  $output = $themeService->render('layout/default', $context);
+  
+  echo $output;
+} catch (\Throwable $e) {
+  error_log('Error in single.php: ' . $e->getMessage());
+  error_log($e->getTraceAsString());
+  throw $e;
+}

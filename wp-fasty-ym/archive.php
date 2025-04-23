@@ -14,11 +14,16 @@ $themeService = $app->getContainer()->get(ThemeService::class);
 // Get context for the current page
 $context = $themeService->context();
 
-// Render the header
-echo $themeService->render('header', $context);
+try {
+    $content = $themeService->render('archive/archive', $context);
+    
+    $context['content'] = $content;
+    // Render the layout with content
+    $output = $themeService->render('layout/default', $context);
 
-// Render the content
-echo $themeService->render('archive/archive', $context);
-
-// Render the footer
-echo $themeService->render('footer', $context); 
+    echo $output;
+} catch (\Throwable $e) {
+    error_log('Error in archive.php: ' . $e->getMessage());
+    error_log($e->getTraceAsString());
+    throw $e;
+}
