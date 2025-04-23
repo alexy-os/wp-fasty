@@ -58,5 +58,5 @@ add_action('init', function (): void {
 
 // Include helper functions
 if (file_exists(__DIR__ . '/includes/wp-helpers.php')) {
-    //require_once __DIR__ . '/includes/wp-helpers.php';
+    require_once __DIR__ . '/includes/wp-helpers.php';
 }

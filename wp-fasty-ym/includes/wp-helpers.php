@@ -1,11 +1,6 @@
 <?php
 declare(strict_types=1);
 
-function wpfasty_test()
-{
-    echo 12345;
-}
-
 /**
  * Helper functions for WP FastY theme
  * 
@@ -14,16 +9,40 @@ function wpfasty_test()
 
 // Run only in WordPress context
 if (function_exists('add_filter')) {
-    // Adding basic classes for the body
-    function wp_fasty_neve_body_classes(array $classes) {
+    // Adding basic classes for the body and removing incorrect theme class
+    function wp_fasty_body_classes(array $classes) {
+        // Adding necessary classes
         $classes[] = 'font-sans';
         $classes[] = 'bg-background';
         $classes[] = 'text-foreground';
         $classes[] = 'antialiased';
+        
+        // Adding correct theme class
+        $classes[] = 'wp-fasty';
+        
         return $classes;
     }
-    add_filter('body_class', 'wp_fasty_neve_body_classes');
+    add_filter('body_class', 'wp_fasty_body_classes');
 }
+
+/**
+ * Function to clean body classes from incorrect theme classes
+ * Runs after all other filters to remove duplicate classes
+ */
+function wpfasty_cleanup_body_classes(array $classes): array {
+    // Find and remove all classes containing the theme path wp-theme-wp-fasty
+    $classes = array_filter($classes, function($class) {
+        // Remove classes with incorrect theme path
+        return strpos($class, 'wp-theme-wp-fasty') === false;
+    });
+    
+    // Remove any duplicates that may have appeared from other filters
+    $classes = array_unique($classes);
+    
+    return $classes;
+}
+// Add a high priority filter to ensure it runs after all other filters
+add_filter('body_class', 'wpfasty_cleanup_body_classes', 999);
 
 add_filter('wp_img_tag_add_auto_sizes', '__return_false');
 
@@ -31,7 +50,7 @@ add_filter('wp_img_tag_add_auto_sizes', '__return_false');
  * Adds a custom SVG favicon
  *
  */
-function wpfasty_custom_favicon(): void
+/*function wpfasty_custom_favicon(): void
 {
     // Disable the default WordPress site icon
     remove_action('wp_head', 'wp_site_icon', 99);
@@ -40,7 +59,7 @@ function wpfasty_custom_favicon(): void
     echo '<link rel="icon" type="image/svg+xml" href="/wp-content/themes/wp-fasty-ym/assets/images/favicon.svg" />' . "\n";
 }
 
-add_action('wp_head', 'wpfasty_custom_favicon', 2);
+add_action('wp_head', 'wpfasty_custom_favicon', 2);*/
 
 /**
  * Replaces the default icon tags with our custom SVG favicon
@@ -48,21 +67,23 @@ add_action('wp_head', 'wpfasty_custom_favicon', 2);
  * @param array<string> $meta_tags Standard WordPress icon meta tags
  * @return array<string> Modified array of icon tags
  */
-function wpfasty_replace_site_icon(array $meta_tags): array
+/*function wpfasty_replace_site_icon(array $meta_tags): array
 {
     // Replace all default icon tags with our custom SVG favicon
     return ['<link rel="icon" type="image/svg+xml" href="/wp-content/themes/wp-fasty-ym/assets/images/favicon.svg" />'];
 }
 
-add_filter('site_icon_meta_tags', 'wpfasty_replace_site_icon');
+add_filter('site_icon_meta_tags', 'wpfasty_replace_site_icon');*/
 
 // Disable the default site-icon support, so it doesn't suggest uploading an icon in the admin
-function wpfasty_theme_setup(): void
+/*function wpfasty_theme_setup(): void
 {
     remove_theme_support('site-icon');
 }
 
-add_action('after_setup_theme', 'wpfasty_theme_setup');
+add_action('after_setup_theme', 'wpfasty_theme_setup');*/
+
+add_filter( 'get_site_icon_url', '__return_false' );
 
 /**
  * WordPress performance optimization
@@ -415,3 +436,101 @@ add_action('wp_enqueue_scripts', function (): void {
     // Disable wp-embed.min.js
     wp_deregister_script('wp-embed');
 }, 100);
+
+/**
+ * Disable speculationrules script and prefetch in the footer
+ * 
+ * This tag is added by WordPress or a plugin and provides link prefetching functionality
+ * but is not always needed and can clutter the HTML output.
+ */
+function wpfasty_disable_speculation_rules(): void
+{
+    // Remove any speculation rules scripts using output buffering
+    add_action('wp_footer', function (): void {
+        ob_start(function ($buffer) {
+            // Remove speculationrules script tags
+            $buffer = preg_replace('/<script type="speculationrules">.*?<\/script>/s', '', $buffer);
+            return $buffer;
+        }, 0, PHP_OUTPUT_HANDLER_REMOVABLE);
+    }, 0);
+    
+    // Flush the buffer at the end of wp_footer
+    add_action('wp_footer', function (): void {
+        ob_end_flush();
+    }, PHP_INT_MAX);
+}
+
+/**
+ * Removes WordPress robots meta tag
+ * 
+ * WordPress adds the robots meta tag automatically, 
+ * this function disables it for cleaner HTML
+ */
+function wpfasty_disable_robots_meta(): void
+{
+    remove_filter('wp_robots', 'wp_robots_max_image_preview_large');
+    
+    // Completely disables the robots meta tag if needed
+    add_filter('wp_robots', '__return_empty_array');
+}
+
+/**
+ * Completely disable jQuery if not needed
+ * 
+ * This will completely remove jQuery from the site
+ * Only use this if you're sure no frontend functionality requires jQuery
+ */
+function wpfasty_disable_jquery_completely(): void
+{
+    if (!is_admin()) {
+        // Completely disable jQuery registration
+        add_action('wp_enqueue_scripts', function (): void {
+            wp_deregister_script('jquery');
+            wp_deregister_script('jquery-core');
+            wp_deregister_script('jquery-migrate');
+        }, 1);
+        
+        // Filter script tags before outputting to the page
+        add_filter('script_loader_tag', function ($tag, $handle, $src) {
+            // Remove jquery scripts
+            if (strpos($src, 'jquery.min.js') !== false || 
+                strpos($handle, 'jquery') !== false) {
+                return '';
+            }
+            return $tag;
+        }, 10, 3);
+        
+        // Additionally remove any remaining jquery script tags
+        add_action('wp_footer', function (): void {
+            ob_start(function ($buffer) {
+                // Remove all jquery script tags
+                $buffer = preg_replace('/<script(.*)jquery\.min\.js(.*)<\/script>/i', '', $buffer);
+                return $buffer;
+            }, 0, PHP_OUTPUT_HANDLER_REMOVABLE);
+        }, 1);
+        
+        // Flush the buffer
+        add_action('wp_footer', function (): void {
+            if (ob_get_level()) {
+                ob_end_flush();
+            }
+        }, PHP_INT_MAX);
+    }
+}
+
+/**
+ * Initialize frontend optimizations for clean output
+ */
+function wpfasty_clean_frontend(): void {
+    // Disable speculation rules
+    wpfasty_disable_speculation_rules();
+    
+    // Disable robots meta tag
+    wpfasty_disable_robots_meta();
+    
+    // Completely disable jQuery
+    wpfasty_disable_jquery_completely();
+}
+
+// Initialize frontend optimizations
+add_action('init', 'wpfasty_clean_frontend');
