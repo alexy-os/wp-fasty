@@ -1,8 +1,7 @@
 .manual/
 .obsidian/
 .vscode/
-docs/
-docs-data/
+.cursor/
 node_modules/
 vendor/
 bun.lockb
