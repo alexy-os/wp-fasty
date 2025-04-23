@@ -57,10 +57,10 @@ class AssetsHooks extends AbstractHooks {
      * @return string Modified URL
      */
     public function modifyStyleUrl(string $src, string $handle): string {
-        if ($handle === 'wp-fasty-style') {
+        /*if ($handle === 'wp-fasty-style') {
             return home_url('/style.css');
-        }
-        if ($handle === 'wp-fasty-ym-tailwind') {
+        }*/
+        if ($handle === 'fasty-theme') {
             return home_url('/theme.min.css');
         }
         return $src;
@@ -75,9 +75,9 @@ class AssetsHooks extends AbstractHooks {
         $root_dir = ABSPATH;
 
         // Copy main style
-        $style_source = get_template_directory() . '/style.css';
+        /*$style_source = get_template_directory() . '/style.css';
         $style_dest = $root_dir . 'style.css';
-        $this->copyStyleFile($style_source, $style_dest);
+        $this->copyStyleFile($style_source, $style_dest);*/
 
         // Copy Tailwind style
         $tailwind_source = get_template_directory() . '/theme.min.css';
@@ -108,18 +108,18 @@ class AssetsHooks extends AbstractHooks {
 
     public function enqueueStyles(): void {
         // Enqueue main theme style
-        wp_enqueue_style(
+        /*wp_enqueue_style(
             'wp-fasty-style',
             get_stylesheet_uri(),
             [],
             wp_get_theme()->get('Version')
-        );
+        );*/
 
         // Enqueue Tailwind styles
         wp_enqueue_style(
-            'wp-fasty-ym-tailwind',
+            'fasty-theme',
             get_template_directory_uri() . '/theme.min.css',
-            ['wp-fasty-style'], // Depends on main style
+            [], // Depends on main style 'wp-fasty-style'
             wp_get_theme()->get('Version')
         );
 
@@ -171,7 +171,7 @@ class AssetsHooks extends AbstractHooks {
     public function cleanupRootStyles(): void {
         $root_dir = ABSPATH;
         $files_to_remove = [
-            $root_dir . 'style.css',
+            //$root_dir . 'style.css',
             $root_dir . 'theme.min.css'
         ];
 
