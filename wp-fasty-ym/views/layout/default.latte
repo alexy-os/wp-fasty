@@ -1,0 +1,42 @@
+{** 
+ * Default layout template
+ *
+ * Required context:
+ * - site: Site-wide data (array)
+ * - content: Main content HTML
+ *}
+<!DOCTYPE html>
+<html lang="{$site['lang']}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{$site['title']}</title>
+    
+    {* Inline critical CSS *}
+    <style>
+      {include "../page/css/dist/critical.css"|noescape}
+    </style>
+    <link rel="stylesheet" href="http://alexy-os.local/theme.min.css">
+    
+    {* Framework-agnostic hook *}
+    {do_action 'head'}
+</head>
+<body class="theme-light">
+    <header class="site-header">
+        {include 'parts/header.latte'}
+    </header>
+
+    <main class="site-content">
+        {do_action 'before_content'}
+        {$content|noescape}
+        {do_action 'after_content'}
+    </main>
+
+    <footer class="site-footer">
+        {include 'parts/footer.latte'}
+    </footer>
+    
+    {* Framework-agnostic hook for footer scripts *}
+    {do_action 'footer'}
+</body>
+</html> 

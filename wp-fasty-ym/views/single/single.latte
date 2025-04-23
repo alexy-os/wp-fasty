@@ -1,0 +1,103 @@
+{**
+ * Single post template
+ *
+ * Required context:
+ * - page: Current post data
+ *}
+
+<article class="post">
+    <header class="post-header">
+        <div class="container">
+            {if $page->thumbnail}
+                <figure class="post-thumbnail">
+                    <img src="{$page->thumbnail->url}" alt="{$page->thumbnail->alt}" class="post-thumbnail-image">
+                </figure>
+            {/if}
+            
+            <h1 class="post-title">{$page->title}</h1>
+            
+            <div class="post-meta">
+                {if $page->author}
+                    <div class="post-author">
+                        <span class="author-avatar">
+                            {if $page->author->avatar}
+                                <img src="{$page->author->avatar}" alt="{$page->author->name}" class="author-avatar-image">
+                            {/if}
+                        </span>
+                        <span class="author-name">
+                            By <a href="{$page->author->url}" class="author-link">{$page->author->name}</a>
+                        </span>
+                    </div>
+                {/if}
+                
+                {if $page->date}
+                    <time datetime="{$page->date->format('c')}" class="post-date">
+                        {$page->date->format('F j, Y')}
+                    </time>
+                {/if}
+                
+                {if $page->categories}
+                    <div class="post-categories">
+                        <span class="label">Categories:</span>
+                        <ul class="category-list">
+                            {foreach $page->categories as $category}
+                                <li class="category-item">
+                                    <a href="{$category->url}" class="category-link">{$category->name}</a>
+                                </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                {/if}
+            </div>
+        </div>
+    </header>
+
+    <div class="post-content">
+        <div class="container">
+            <div class="content-wrapper">
+                {$page->content|noescape}
+                
+                {if $page->tags}
+                    <div class="post-tags">
+                        <span class="label">Tags:</span>
+                        <ul class="tag-list">
+                            {foreach $page->tags as $tag}
+                                <li class="tag-item">
+                                    <a href="{$tag->url}" class="tag-link">{$tag->name}</a>
+                                </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                {/if}
+            </div>
+            
+            {if $page->has_sidebar}
+                <aside class="post-sidebar">
+                    {do_action 'post_sidebar'}
+                </aside>
+            {/if}
+        </div>
+    </div>
+
+    <footer class="post-footer">
+        <div class="container">
+            <nav class="post-navigation">
+                {if $page->prev_post}
+                    <a href="{$page->prev_post->url}" class="post-nav-link post-nav-prev">
+                        <span class="post-nav-label">Previous</span>
+                        <span class="post-nav-title">{$page->prev_post->title}</span>
+                    </a>
+                {/if}
+                
+                {if $page->next_post}
+                    <a href="{$page->next_post->url}" class="post-nav-link post-nav-next">
+                        <span class="post-nav-label">Next</span>
+                        <span class="post-nav-title">{$page->next_post->title}</span>
+                    </a>
+                {/if}
+            </nav>
+            
+            {do_action 'post_footer'}
+        </div>
+    </footer>
+</article> 

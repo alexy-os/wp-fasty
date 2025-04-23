@@ -1,0 +1,31 @@
+{**
+ * Header partial template
+ *
+ * Required context:
+ * - site: Site data (array)
+ * - menu: Menu data (array)
+ *}
+
+<header class="site-header">
+    <div class="container">
+        <div class="header-content">
+            <a href="{$site['url']}" class="site-logo">
+                {$site['title']}
+            </a>
+            
+            {if isset($menu['primary'])}
+                <nav class="site-nav">
+                    <ul class="nav-menu">
+                        {foreach $menu['primary']['items'] as $item}
+                            <li class="nav-item {if $item['current']}is-active{/if}">
+                                <a href="{$item['url']}" class="nav-link">
+                                    {$item['title']}
+                                </a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </nav>
+            {/if}
+        </div>
+    </div>
+</header> 

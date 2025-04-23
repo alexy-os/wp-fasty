@@ -1,5 +1,3 @@
-Я обновлю файл Instruct-llms.md, добавив раздел о соблюдении стандартов кодирования WordPress, Symfony и PSR:
-
 # WP/Flight Architecture with Latte - LLM Agent Instructions
 
 ## Core Architecture Concepts

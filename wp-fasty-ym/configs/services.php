@@ -44,11 +44,18 @@ return function (Container $container): void {
     
     // Register template engine
     $container->singleton('template.engine', function ($container) {
-        return new LatteEngine(
-            get_template_directory() . '/templates',
-            get_template_directory() . '/views/cache'
-        );
-    }, LatteEngine::class);
+        $themeDir = get_template_directory();
+        $viewsDir = $themeDir . '/views';
+        $cacheDir = $viewsDir . '/cache';
+        
+        error_log('Theme directory: ' . $themeDir);
+        error_log('Views directory: ' . $viewsDir);
+        error_log('Cache directory: ' . $cacheDir);
+        error_log('Views directory exists: ' . (is_dir($viewsDir) ? 'yes' : 'no'));
+        error_log('Cache directory exists: ' . (is_dir($cacheDir) ? 'yes' : 'no'));
+        
+        return new LatteEngine($viewsDir, $cacheDir);
+    }, TemplateEngineInterface::class);
     
     // Register context factory
     $container->singleton('data.context_factory', function ($container) {
@@ -62,6 +69,9 @@ return function (Container $container): void {
             $container->get('data.context_factory')
         );
     }, ThemeService::class);
+    $container->bind(ThemeService::class, function ($container) {
+        return $container->get('theme');
+    });
     
     // You can add more services here
     

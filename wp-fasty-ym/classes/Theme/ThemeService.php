@@ -14,6 +14,7 @@ class ThemeService
         private readonly TemplateEngineInterface $templateEngine,
         private readonly ContextFactory $contextFactory
     ) {
+        error_log('ThemeService initialized');
     }
     
     /**
@@ -23,6 +24,8 @@ class ThemeService
      */
     public function context(): array
     {
+        error_log('Getting context for page type: ' . $this->getPageType());
+        
         if (is_singular()) {
             $contextCollection = $this->contextFactory->createPageContext();
         } elseif (is_archive() || is_home()) {
@@ -32,7 +35,10 @@ class ThemeService
             $contextCollection = $this->contextFactory->createPageContext();
         }
         
-        return $contextCollection->toArray();
+        $context = $contextCollection->toArray();
+        error_log('Context created: ' . json_encode($context));
+        
+        return $context;
     }
     
     /**
@@ -44,6 +50,35 @@ class ThemeService
      */
     public function render(string $template, array $context = []): string
     {
-        return $this->templateEngine->render($template, $context);
+        error_log('ThemeService rendering template: ' . $template);
+        try {
+            $result = $this->templateEngine->render($template, $context);
+            error_log('ThemeService render completed');
+            return $result;
+        } catch (\Throwable $e) {
+            error_log('ThemeService render error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+    
+    /**
+     * Get current page type for logging
+     */
+    private function getPageType(): string
+    {
+        switch (true) {
+            case is_front_page():
+                return 'front_page';
+            case is_home():
+                return 'home';
+            case is_single():
+                return 'single';
+            case is_page():
+                return 'page';
+            case is_archive():
+                return 'archive';
+            default:
+                return 'unknown';
+        }
     }
 }

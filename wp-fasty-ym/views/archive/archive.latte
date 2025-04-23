@@ -1,0 +1,113 @@
+{**
+ * Archive template
+ *
+ * Required context:
+ * - archive: Archive data
+ * - posts: Array of posts
+ *}
+
+<section class="archive">
+    <header class="archive-header">
+        <div class="container">
+            <h1 class="archive-title">{$archive->title}</h1>
+            
+            {if $archive->description}
+                <div class="archive-description">
+                    {$archive->description|noescape}
+                </div>
+            {/if}
+        </div>
+    </header>
+
+    <div class="archive-content">
+        <div class="container">
+            {if !empty($posts)}
+                <div class="posts-grid">
+                    {foreach $posts as $post}
+                        <article class="post-card">
+                            <a href="{$post->url}" class="post-card-link">
+                                {if $post->thumbnail}
+                                    <figure class="post-card-thumbnail">
+                                        <img src="{$post->thumbnail->url}" alt="{$post->thumbnail->alt}" class="post-card-image">
+                                    </figure>
+                                {/if}
+                            </a>
+                            
+                            <div class="post-card-content">
+                                <header class="post-card-header">
+                                    {if $post->categories}
+                                        <div class="post-card-categories">
+                                            {foreach $post->categories as $category}
+                                                <a href="{$category->url}" class="post-card-category">{$category->name}</a>
+                                            {/foreach}
+                                        </div>
+                                    {/if}
+                                    
+                                    <h2 class="post-card-title">
+                                        <a href="{$post->url}">{$post->title}</a>
+                                    </h2>
+                                </header>
+                                
+                                {if $post->excerpt}
+                                    <div class="post-card-excerpt">
+                                        {$post->excerpt|noescape}
+                                    </div>
+                                {/if}
+                                
+                                <footer class="post-card-footer">
+                                    <div class="post-card-meta">
+                                        {if $post->date}
+                                            <time datetime="{$post->date->format('c')}" class="post-card-date">
+                                                {$post->date->format('F j, Y')}
+                                            </time>
+                                        {/if}
+                                        
+                                        {if $post->author}
+                                            <span class="post-card-author">
+                                                By <a href="{$post->author->url}">{$post->author->name}</a>
+                                            </span>
+                                        {/if}
+                                    </div>
+                                    
+                                    <a href="{$post->url}" class="post-card-read-more">
+                                        Read More <span class="read-more-icon">→</span>
+                                    </a>
+                                </footer>
+                            </div>
+                        </article>
+                    {/foreach}
+                </div>
+                
+                {if isset($pagination)}
+                    <nav class="pagination">
+                        {if $pagination->prev_url}
+                            <a href="{$pagination->prev_url}" class="pagination-link pagination-prev">
+                                <span class="pagination-arrow">←</span> Previous
+                            </a>
+                        {/if}
+                        
+                        <div class="pagination-numbers">
+                            {foreach $pagination->pages as $page}
+                                {if $page->is_current}
+                                    <span class="pagination-number pagination-current">{$page->number}</span>
+                                {else}
+                                    <a href="{$page->url}" class="pagination-number">{$page->number}</a>
+                                {/if}
+                            {/foreach}
+                        </div>
+                        
+                        {if $pagination->next_url}
+                            <a href="{$pagination->next_url}" class="pagination-link pagination-next">
+                                Next <span class="pagination-arrow">→</span>
+                            </a>
+                        {/if}
+                    </nav>
+                {/if}
+            {else}
+                <div class="no-posts">
+                    <p>No posts found.</p>
+                </div>
+            {/if}
+        </div>
+    </div>
+</section> 

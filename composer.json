@@ -1,0 +1,14 @@
+{
+  "name": "wp-fasty/theme",
+  "description": "WP Fasty Theme with Latte templating",
+  "type": "wordpress-theme",
+  "require": {
+    "php": ">=8.0",
+    "latte/latte": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "WPFasty\\": "wp-fasty-ym/classes/"
+    }
+  }
+}

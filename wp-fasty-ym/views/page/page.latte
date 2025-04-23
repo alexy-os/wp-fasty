@@ -1,0 +1,48 @@
+{**
+ * Default page template
+ *
+ * Required context:
+ * - page: Current page data
+ *}
+
+<article class="page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">{$page->title}</h1>
+            
+            {if $page->excerpt}
+                <div class="page-excerpt">
+                    {$page->excerpt|noescape}
+                </div>
+            {/if}
+        </div>
+    </header>
+
+    <div class="page-content">
+        <div class="container">
+            <div class="content-wrapper">
+                {$page->content|noescape}
+            </div>
+            
+            {if $page->has_sidebar}
+                <aside class="page-sidebar">
+                    {do_action 'page_sidebar'}
+                </aside>
+            {/if}
+        </div>
+    </div>
+
+    <footer class="page-footer">
+        <div class="container">
+            {if $page->modified_date}
+                <div class="page-meta">
+                    <time datetime="{$page->modified_date->format('c')}" class="updated">
+                        Last updated: {$page->modified_date->format('F j, Y')}
+                    </time>
+                </div>
+            {/if}
+            
+            {do_action 'page_footer'}
+        </div>
+    </footer>
+</article> 
