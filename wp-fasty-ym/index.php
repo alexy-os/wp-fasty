@@ -55,6 +55,7 @@ $context = $contextFactory->createPageContext();
         }
         pre {
             background: #f5f5f5;
+            font-size: 13px;
             padding: 1rem;
             border-radius: 4px;
             overflow: auto;
@@ -105,6 +106,30 @@ $context = $contextFactory->createPageContext();
         .query-group {
             margin-bottom: 2rem;
         }
+        .stack-trace {
+            font-size: 0.85rem;
+            background: #f8f8f8;
+            border: 1px solid #eee;
+            max-height: 300px;
+            overflow: auto;
+        }
+        details {
+            margin-top: 0.5rem;
+            border: 1px solid #eee;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        summary {
+            cursor: pointer;
+            color: #444;
+            font-weight: bold;
+        }
+        .post-parent-highlight {
+            background-color: #fff8dc;
+            border-left: 3px solid #ffa500;
+            padding-left: 8px;
+            margin-bottom: 25px;
+        }
     </style>
 </head>
 <body <?php body_class(); ?>>
@@ -137,24 +162,6 @@ $context = $contextFactory->createPageContext();
         ?></pre>
     </div>
 
-    <?php if ($container->has('WPFasty\Tools\GoFrontend') || shortcode_exists('go_frontend')) : ?>
-    <h2>Go Frontend</h2>
-    <div class="stats-box">
-        <h3>Go Frontend Integration</h3>
-        <p>Go фронтенд интегрирован. Используйте шорткод <code>[go_frontend]</code> для вывода.</p>
-        <p>Вы также можете создать страницу и выбрать шаблон "Go Frontend".</p>
-        
-        <div class="go-frontend-test">
-            <button onclick="document.getElementById('go-frontend-preview').style.display = 'block';" class="px-4 py-2 bg-indigo-600 text-white rounded">
-                Показать превью Go Frontend
-            </button>
-            <div id="go-frontend-preview" style="display: none; margin-top: 1rem; padding: 1rem; border: 1px solid #ddd; height: 300px; overflow: auto;">
-                <iframe width="100%" height="100%" style="border: none;" src="<?php echo esc_url(home_url('?go_preview=1')); ?>"></iframe>
-            </div>
-        </div>
-    </div>
-    <?php endif; ?>
-
     <h2>Database Queries</h2>
     
     <?php
@@ -183,7 +190,8 @@ $context = $contextFactory->createPageContext();
         $query_groups[$caller]['time'] += $time;
         $query_groups[$caller]['queries'][] = [
             'sql' => $sql,
-            'time' => $time
+            'time' => $time,
+            'stack' => $stack
         ];
     }
 
@@ -218,9 +226,13 @@ $context = $contextFactory->createPageContext();
         
         <div class="query-wrapper">
             <?php foreach ($group['queries'] as $query) : ?>
-            <div class="query">
+            <div class="query post-parent-highlight">
                 <p class="query-time"><?php echo esc_html(round($query['time'] * 1000, 2)); ?> ms</p>
                 <pre><?php echo esc_html($query['sql']); ?></pre>
+                <details>
+                    <summary>Stack Trace</summary>
+                    <pre class="stack-trace"><?php echo isset($query['stack']) ? esc_html($query['stack']) : 'Stack trace not available'; ?></pre>
+                </details>
             </div>
             <?php endforeach; ?>
         </div>
@@ -239,7 +251,6 @@ $context = $contextFactory->createPageContext();
     </div>
 
     <div class="footer">
-        <p><?php echo (function_exists('wpfasty_test')) ? 'true' : 'false'; ?></p>
         <p>WP FastY Theme Debug Console</p>
     </div>
 
@@ -309,4 +320,3 @@ function prettyPrintValue($value, int $level = 0): string
         return var_export($value, true);
     }
 }
-

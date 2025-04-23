@@ -51,12 +51,12 @@ if (class_exists('WPFasty\\Core\\Application')) {
     WPFasty\Core\Application::getInstance();
 }
 
-// Include helper functions
-if (file_exists(__DIR__ . '/includes/wp-helpers.php')) {
-    require_once __DIR__ . '/includes/wp-helpers.php';
-}
-
 // Loading the text domain
 add_action('init', function (): void {
     load_theme_textdomain('wp-fasty-ym', get_stylesheet_directory() . '/languages');
 });
+
+// Include helper functions
+if (file_exists(__DIR__ . '/includes/wp-helpers.php')) {
+    //require_once __DIR__ . '/includes/wp-helpers.php';
+}
