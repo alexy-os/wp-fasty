@@ -49,9 +49,6 @@ class LatteEngine implements TemplateEngineInterface
         // Add WordPress extension
         $this->latte->addExtension(new WordPressExtension());
         
-        error_log('LatteEngine initialized with template dir: ' . $templateDir);
-        error_log('LatteEngine initialized with temp dir: ' . $tempDir);
-        
         // List available templates
         $this->listTemplates($templateDir);
     }
@@ -72,25 +69,14 @@ class LatteEngine implements TemplateEngineInterface
             $templatePath = $this->templateDir . '/' . $template;
         }
         
-        error_log('Attempting to render template: ' . $templatePath);
-        error_log('Template exists: ' . (file_exists($templatePath) ? 'yes' : 'no'));
-        error_log('Context: ' . json_encode($context));
-        
         if (!file_exists($templatePath)) {
-            error_log("Template not found: {$templatePath}");
-            error_log("Available templates in directory:");
             $this->listTemplates(dirname($templatePath));
             return '';
         }
         
         try {
-            // Check template file permissions
-            error_log('Template permissions: ' . substr(sprintf('%o', fileperms($templatePath)), -4));
-            error_log('Template readable: ' . (is_readable($templatePath) ? 'yes' : 'no'));
-            
             // Render template
             $result = $this->latte->renderToString($templatePath, $context);
-            error_log('Template rendered successfully');
             return $result;
         } catch (\Throwable $e) {
             error_log('Error rendering template: ' . $e->getMessage());
@@ -109,7 +95,6 @@ class LatteEngine implements TemplateEngineInterface
             return;
         }
         
-        error_log("Listing templates in: {$dir}");
         $files = glob($dir . '/*.latte');
         foreach ($files as $file) {
             error_log("- " . basename($file));

@@ -24,8 +24,6 @@ class ThemeService
      */
     public function context(): array
     {
-        error_log('Getting context for page type: ' . $this->getPageType());
-        
         if (is_singular()) {
             $contextCollection = $this->contextFactory->createPageContext();
         } elseif (is_archive() || is_home()) {
@@ -36,7 +34,6 @@ class ThemeService
         }
         
         $context = $contextCollection->toArray();
-        error_log('Context created: ' . json_encode($context));
         
         return $context;
     }
@@ -50,10 +47,8 @@ class ThemeService
      */
     public function render(string $template, array $context = []): string
     {
-        error_log('ThemeService rendering template: ' . $template);
         try {
             $result = $this->templateEngine->render($template, $context);
-            error_log('ThemeService render completed');
             return $result;
         } catch (\Throwable $e) {
             error_log('ThemeService render error: ' . $e->getMessage());
