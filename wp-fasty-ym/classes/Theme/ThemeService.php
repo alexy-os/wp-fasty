@@ -8,6 +8,9 @@ use WPFasty\Core\ContainerInterface;
 use WPFasty\Data\ContextFactory;
 use WPFasty\Template\TemplateEngineInterface;
 
+/**
+ * Theme service for rendering templates
+ */
 class ThemeService
 {
     public function __construct(
@@ -25,15 +28,13 @@ class ThemeService
     public function context(): array
     {
         if (is_singular()) {
-            $contextCollection = $this->contextFactory->createPageContext();
+            $context = $this->contextFactory->createPageContext();
         } elseif (is_archive() || is_home()) {
-            $contextCollection = $this->contextFactory->createArchiveContext();
+            $context = $this->contextFactory->createArchiveContext();
         } else {
             // Default context
-            $contextCollection = $this->contextFactory->createPageContext();
+            $context = $this->contextFactory->createPageContext();
         }
-        
-        $context = $contextCollection->toArray();
         
         return $context;
     }

@@ -18,6 +18,7 @@ use WPFasty\Data\ContextFactory;
 use WPFasty\Theme\ThemeService;
 use WPFasty\Template\TemplateEngineInterface;
 use WPFasty\Template\LatteEngine;
+use WPFasty\Hooks\ThemeHooks;
 
 return function (Container $container): void {
     // Register templates
@@ -30,6 +31,12 @@ return function (Container $container): void {
         return new PageTemplateHooks($container);
     }, PageTemplateHooks::class);
     $container->addTag('hooks.page_template', ContainerInterface::TAG_BOOTABLE);
+
+    // Register theme hooks
+    $container->singleton('hooks.theme', function ($container) {
+        return new ThemeHooks($container);
+    }, ThemeHooks::class);
+    $container->addTag('hooks.theme', ContainerInterface::TAG_BOOTABLE);
     
     $container->singleton('hooks.assets', function ($container) {
         return new AssetsHooks($container);

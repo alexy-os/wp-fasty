@@ -19,7 +19,11 @@ final class ContextCollection implements \ArrayAccess, \IteratorAggregate, \Json
      */
     public function add(string $key, DataObject|array $value): self
     {
-        $this->data[$key] = $value;
+        if ($value instanceof DataObject) {
+            $this->data[$key] = $value->toArray();
+        } else {
+            $this->data[$key] = $value;
+        }
         return $this;
     }
     
@@ -36,19 +40,7 @@ final class ContextCollection implements \ArrayAccess, \IteratorAggregate, \Json
      */
     public function toArray(): array
     {
-        $result = [];
-        
-        foreach ($this->data as $key => $value) {
-            if ($value instanceof DataObject) {
-                $result[$key] = $value->toArray();
-            } elseif (is_array($value)) {
-                $result[$key] = $this->convertArrayDataObjects($value);
-            } else {
-                $result[$key] = $value;
-            }
-        }
-        
-        return $result;
+        return $this->data;
     }
     
     /**
@@ -93,7 +85,11 @@ final class ContextCollection implements \ArrayAccess, \IteratorAggregate, \Json
         if ($offset === null) {
             $this->data[] = $value;
         } else {
-            $this->data[$offset] = $value;
+            if ($value instanceof DataObject) {
+                $this->data[$offset] = $value->toArray();
+            } else {
+                $this->data[$offset] = $value;
+            }
         }
     }
     

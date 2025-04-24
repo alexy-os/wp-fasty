@@ -8,13 +8,23 @@
 
 <header class="site-header">
     <div class="container">
-        <div class="header-content">
+        <div class="header-content flex items-center justify-between">
             <a href="{$site['url']}" class="site-logo">
                 {$site['title']}
             </a>
             
+            {* Mobile menu trigger *}
+            <button type="button" class="nav-mobile-trigger" aria-label="Toggle menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" x2="20" y1="12" y2="12"/>
+                    <line x1="4" x2="20" y1="6" y2="6"/>
+                    <line x1="4" x2="20" y1="18" y2="18"/>
+                </svg>
+            </button>
+            
             {if isset($menu['primary'])}
-                <nav class="site-nav">
+                {* Desktop navigation *}
+                <nav class="site-nav hidden lg:block">
                     <ul class="nav-menu">
                         {foreach $menu['primary']['items'] as $item}
                             <li class="nav-item {if $item['current']}is-active{/if}">
@@ -25,6 +35,25 @@
                         {/foreach}
                     </ul>
                 </nav>
+                
+                {* Mobile navigation *}
+                <div class="nav-mobile-menu hidden">
+                    <div class="nav-mobile-content hidden">
+                        <button type="button" class="nav-mobile-close" aria-label="Close menu">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 6 6 18"/>
+                                <path d="m6 6 12 12"/>
+                            </svg>
+                        </button>
+                        <nav class="nav-mobile-nav">
+                            {foreach $menu['primary']['items'] as $item}
+                                <a href="{$item['url']}" class="nav-mobile-link {if $item['current']}is-active{/if}">
+                                    {$item['title']}
+                                </a>
+                            {/foreach}
+                        </nav>
+                    </div>
+                </div>
             {/if}
         </div>
     </div>

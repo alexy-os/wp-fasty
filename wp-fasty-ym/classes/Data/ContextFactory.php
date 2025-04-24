@@ -19,17 +19,17 @@ class ContextFactory
     /**
      * Create context for page template
      */
-    public function createPageContext(\WP_Post $post = null): ContextCollection
+    public function createPageContext(\WP_Post $post = null): array
     {
         $post = $post ?? get_post();
-        $context = new ContextCollection();
+        $context = [];
         
         // Add site data
-        $context->add('site', SiteData::fromWordPress());
+        $context['site'] = SiteData::fromWordPress();
         
         // Add page data
         if ($post) {
-            $context->add('page', PageData::fromPost($post));
+            $context['page'] = PageData::fromPost($post);
         }
         
         // Add menus
@@ -40,7 +40,7 @@ class ContextFactory
             $menus[$location] = MenuData::fromLocation($location);
         }
         
-        $context->add('menu', $menus);
+        $context['menu'] = $menus;
         
         // Allow plugins to modify context
         $context = apply_filters('wpfasty_context', $context, $post);
@@ -51,18 +51,18 @@ class ContextFactory
     /**
      * Create context for archive template
      */
-    public function createArchiveContext(): ContextCollection
+    public function createArchiveContext(): array
     {
-        $context = new ContextCollection();
+        $context = [];
         
         // Add site data
-        $context->add('site', SiteData::fromWordPress());
+        $context['site'] = SiteData::fromWordPress();
         
         // Add archive data
-        $context->add('archive', [
+        $context['archive'] = [
             'title' => get_the_archive_title(),
             'description' => get_the_archive_description(),
-        ]);
+        ];
         
         // Add posts
         $posts = [];
@@ -72,7 +72,7 @@ class ContextFactory
         }
         wp_reset_postdata();
         
-        $context->add('posts', $posts);
+        $context['posts'] = $posts;
         
         // Add menus
         $menus = [];
@@ -82,7 +82,7 @@ class ContextFactory
             $menus[$location] = MenuData::fromLocation($location);
         }
         
-        $context->add('menu', $menus);
+        $context['menu'] = $menus;
         
         // Allow plugins to modify context
         $context = apply_filters('wpfasty_context', $context, null);
