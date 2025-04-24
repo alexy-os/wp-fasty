@@ -13,6 +13,7 @@ final readonly class SiteData extends DataObject
         public string $title,
         public string $url,
         public string $lang,
+        public string $theme_url,
         public ?string $description = null,
         public ?string $charset = null
     ) {
@@ -26,6 +27,7 @@ final readonly class SiteData extends DataObject
         return new self(
             title: get_bloginfo('name'),
             url: home_url(),
+            theme_url: get_template_directory_uri(),
             lang: get_bloginfo('language'),
             description: get_bloginfo('description'),
             charset: get_bloginfo('charset')

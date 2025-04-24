@@ -15,11 +15,10 @@
     {* Inline critical CSS *}
     <!-- style>
       {* include "./critical.css"|noescape *}
-    </style -->
-    <link rel="stylesheet" href="http://alexy-os.local/theme.min.css">
+    </style>
+    <link rel="stylesheet" href="{$site['theme_url']}/theme.min.css" -->
+    <link rel="stylesheet" href="{$site['url']}/theme.min.css">
     
-    {* Framework-agnostic hook *}
-    {do_action 'head'}
 </head>
 <body class="theme-light">
     <header class="site-header">
