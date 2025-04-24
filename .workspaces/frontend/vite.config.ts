@@ -10,7 +10,7 @@ export default defineConfig({
     exclude: ['@tailwindcss/vite']
   },
   build: {
-    outDir: '../../wp-fasty-ym',
+    outDir: '../../wp-fasty-ym/assets/css',
     emptyOutDir: false,
     rollupOptions: {
       input: path.resolve(__dirname, 'src/import.css'),
@@ -18,7 +18,7 @@ export default defineConfig({
         assetFileNames: 'theme.min.css'
       }
     },
-    minify: false
+    minify: true
   },
   resolve: {
     alias: {
