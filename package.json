@@ -22,6 +22,7 @@
     "frontend:tailwind": "bun run --cwd .workspaces/frontend tailwind",
     "ch": "rm -rf wp-fasty-ym/~cache",
     "fc": "bun run --cwd .workspaces/frontend css",
-    "extract-css": "bun run --cwd .workspaces/frontend extract-css"
+    "extract-css": "bun run --cwd .workspaces/frontend extract-css",
+    "semantic": "bun run --cwd .workspaces/frontend semantic"
   }
 }

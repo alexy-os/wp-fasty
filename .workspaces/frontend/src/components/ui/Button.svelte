@@ -1,7 +1,7 @@
 <script>
   import { tv } from "tailwind-variants";
 
-  export let variant = "default";
+  export let variant = "primary";
   export let size = "default";
   export let disabled = false;
   export let type = "button";
@@ -10,7 +10,7 @@
     base: "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
@@ -27,12 +27,12 @@
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       size: "default",
     },
   });
 
-  $: classes = button({ variant, size });
+  $: classes = `button button-${variant} ${size !== "default" ? `button-${size}` : ""}`;
 </script>
 
 <button class={classes} {disabled} {type}>
@@ -49,5 +49,33 @@
   .button-primary {
     @apply bg-primary text-primary-foreground hover:bg-primary/90;
     @apply dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/80;
+  }
+
+  .button-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+
+  .button-destructive {
+    @apply bg-destructive text-destructive-foreground hover:bg-destructive/90;
+  }
+
+  .button-outline {
+    @apply border border-input hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .button-ghost {
+    @apply hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .button-link {
+    @apply underline-offset-4 hover:underline text-primary;
+  }
+
+  .button-sm {
+    @apply h-9 px-3 rounded-md;
+  }
+
+  .button-lg {
+    @apply h-11 px-8 rounded-md;
   }
 </style>
