@@ -10,7 +10,8 @@
     "watch": "vite build --config vite.config.ts --watch",
     "tailwind": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ../../wp-fasty-ym/assets/css/theme.min.css --minify",
     "semantic": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/semantic.css",
-    "extract-css": "node scripts/svelte-extract-css.js"
+    "extract-css": "node scripts/svelte-extract-css.js",
+    "to-latte": "node scripts/svelte-to-latte.js"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.4",

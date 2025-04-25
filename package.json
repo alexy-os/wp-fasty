@@ -23,6 +23,7 @@
     "ch": "rm -rf wp-fasty-ym/~cache",
     "fc": "bun run --cwd .workspaces/frontend css",
     "extract-css": "bun run --cwd .workspaces/frontend extract-css",
-    "semantic": "bun run --cwd .workspaces/frontend semantic"
+    "semantic": "bun run --cwd .workspaces/frontend semantic",
+    "latte": "bun run --cwd .workspaces/frontend to-latte"
   }
 }
