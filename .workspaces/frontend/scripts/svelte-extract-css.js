@@ -2,56 +2,75 @@ import fs from 'fs';
 import path from 'path';
 import { parse } from 'svelte/compiler';
 
-// Функция для извлечения стилей из Svelte-компонента
+// Function to extract styles from a Svelte component
 function extractCSSFromSvelte(filePath) {
-  const source = fs.readFileSync(filePath, 'utf-8');
+  try {
+    const source = fs.readFileSync(filePath, 'utf-8');
+    const parsed = parse(source);
 
-  // Парсим Svelte-компонент
-  const parsed = parse(source);
+    if (!parsed.css) {
+      return '';
+    }
 
-  // Извлекаем содержимое блока style
-  let cssContent = '';
+    // Use the verified method for extracting CSS
+    if (parsed.css.content && parsed.css.content.styles) {
+      return parsed.css.content.styles.trim();
+    }
 
-  if (parsed.css && parsed.css.content) {
-    cssContent = parsed.css.content.trim();
+    return '';
+  } catch (error) {
+    console.error(`Error processing ${filePath}:`, error.message);
+    return '';
   }
-
-  return cssContent;
 }
 
-// Функция для сохранения CSS в отдельный файл
+// Function to save CSS to a separate file
 function saveCSSToFile(componentPath, outputDir) {
   const componentName = path.basename(componentPath, '.svelte');
   const css = extractCSSFromSvelte(componentPath);
 
   if (!css) {
     console.log(`No CSS found in ${componentName}`);
-    return;
+    return null;
   }
 
-  // Создаем директорию, если не существует
+  // Create directory if it doesn't exist
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  // Путь для вывода CSS
+  // Output path for CSS
   const outputPath = path.join(outputDir, `${componentName.toLowerCase()}.css`);
 
-  // Записываем CSS в файл
+  // Write CSS to file
   fs.writeFileSync(outputPath, css);
 
   console.log(`CSS extracted from ${componentName} to ${outputPath}`);
   return outputPath;
 }
 
-// Обработка всех компонентов в директории
+// Process all components in the directory
 function processAllComponents(srcDir, outputDir) {
+  if (!fs.existsSync(srcDir)) {
+    console.error(`Source directory ${srcDir} does not exist`);
+    return;
+  }
+
   const files = fs.readdirSync(srcDir);
   const cssFiles = [];
 
   for (const file of files) {
-    if (file.endsWith('.svelte')) {
-      const filePath = path.join(srcDir, file);
+    const filePath = path.join(srcDir, file);
+    const stats = fs.statSync(filePath);
+
+    if (stats.isDirectory()) {
+      // Recursively process subdirectories
+      const subDirOutput = path.join(outputDir, file);
+      const subFiles = processAllComponents(filePath, subDirOutput);
+      if (subFiles && subFiles.length) {
+        cssFiles.push(...subFiles);
+      }
+    } else if (file.endsWith('.svelte')) {
       const cssPath = saveCSSToFile(filePath, outputDir);
       if (cssPath) {
         cssFiles.push(cssPath);
@@ -59,16 +78,27 @@ function processAllComponents(srcDir, outputDir) {
     }
   }
 
-  // Опционально: создаем индексный файл для импорта всех стилей
-  const indexPath = path.join(outputDir, 'index.css');
-  const imports = cssFiles.map(file => `@import "${path.relative(outputDir, file)}";`).join('\n');
-  fs.writeFileSync(indexPath, imports);
+  // Create index file for importing all styles
+  if (cssFiles.length > 0) {
+    const indexPath = path.join(outputDir, 'index.css');
+    const imports = cssFiles.map(file =>
+      `@import "${path.relative(outputDir, file).replace(/\\/g, '/')}";`
+    ).join('\n');
+    fs.writeFileSync(indexPath, imports);
+    console.log(`Created index file at ${indexPath}`);
+  }
 
-  console.log(`Created index file at ${indexPath}`);
+  return cssFiles;
 }
 
-// Запускаем извлечение CSS
+// Run CSS extraction
 const srcDir = './src/components/ui';
 const cssOutputDir = './src/assets/css/components';
 
-processAllComponents(srcDir, cssOutputDir);
+try {
+  processAllComponents(srcDir, cssOutputDir);
+  console.log('CSS extraction completed successfully!');
+} catch (error) {
+  console.error('Error during CSS extraction:', error);
+  process.exit(1);
+}

@@ -8,7 +8,8 @@
     "build": "vite build",
     "css": "vite build --config vite.config.ts",
     "watch": "vite build --config vite.config.ts --watch",
-    "tailwind": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ../../wp-fasty-ym/assets/css/theme.min.css --minify"
+    "tailwind": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ../../wp-fasty-ym/assets/css/theme.min.css --minify",
+    "extract-css": "node scripts/svelte-extract-css.js"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.4",

@@ -21,6 +21,7 @@
     "frontend:watch": "bun run --cwd .workspaces/frontend watch",
     "frontend:tailwind": "bun run --cwd .workspaces/frontend tailwind",
     "ch": "rm -rf wp-fasty-ym/~cache",
-    "fc": "bun run --cwd .workspaces/frontend css"
+    "fc": "bun run --cwd .workspaces/frontend css",
+    "extract-css": "bun run --cwd .workspaces/frontend extract-css"
   }
 }
