@@ -1,5 +1,5 @@
-import { buttonVariants } from '../Button.types';
-import type { ButtonProps } from '../Button.types';
+import { buttonVariants } from '../interface';
+import type { ButtonProps } from '../interface';
 
 export function generatePHPTemplate(props: ButtonProps): string {
   const classes = buttonVariants({ variant: props.variant, size: props.size });
