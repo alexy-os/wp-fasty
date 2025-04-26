@@ -3,56 +3,16 @@ import path from 'node:path';
 import { parse } from '@babel/parser';
 import traverse from '@babel/traverse';
 import { Expression, ObjectProperty, ObjectExpression, StringLiteral } from '@babel/types';
-
-// Configuration interface
-interface VariantsParserConfig {
-  componentName: string;
-  inputPath: string;
-  outputPath: string;
-  variantsIdentifier: string;
-  defaultSize: string;
-  variantsObject: string;
-  variantsKey: string;
-  defaultVariantsKey: string;
-}
-
-// Default configuration
-const defaultConfig: VariantsParserConfig = {
-  componentName: 'button',
-  inputPath: './src/components/ui/button/interface.ts',
-  outputPath: './src/components/ui/button/Button.css',
-  variantsIdentifier: 'buttonVariants',
-  defaultSize: 'default',
-  variantsObject: 'cva',
-  variantsKey: 'variants',
-  defaultVariantsKey: 'defaultVariants',
-};
-
-// Variant data types
-type VariantStyles = Record<string, string>;
-type VariantCategories = Record<string, VariantStyles>;
-
-// Type guards for Babel AST
-function isObjectProperty(node: any): node is ObjectProperty {
-  return node && node.type === 'ObjectProperty';
-}
-
-function isObjectExpression(node: any): node is ObjectExpression {
-  return node && node.type === 'ObjectExpression';
-}
-
-function isStringLiteral(node: any): node is StringLiteral {
-  return node && node.type === 'StringLiteral';
-}
+import { VariantsConfig, VariantsParserConfig } from '../interface';
 
 class VariantsParser {
   private config: VariantsParserConfig;
   private baseStyles: string = '';
-  private variantData: VariantCategories = {};
+  private variantData: Record<string, Record<string, string>> = {};
   private defaultSize: string;
 
   constructor(config: Partial<VariantsParserConfig> = {}) {
-    this.config = { ...defaultConfig, ...config };
+    this.config = { ...VariantsConfig, ...config };
     this.defaultSize = this.config.defaultSize;
   }
 
@@ -229,6 +189,19 @@ class VariantsParser {
       throw error;
     }
   }
+}
+
+// Type guards for Babel AST
+function isObjectProperty(node: any): node is ObjectProperty {
+  return node && node.type === 'ObjectProperty';
+}
+
+function isObjectExpression(node: any): node is ObjectExpression {
+  return node && node.type === 'ObjectExpression';
+}
+
+function isStringLiteral(node: any): node is StringLiteral {
+  return node && node.type === 'StringLiteral';
 }
 
 // Create and run parser instance
