@@ -23,6 +23,7 @@
     "@sveltejs/adapter-auto": "^6.0.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@types/node": "^22.14.0",
+    "class-variance-authority": "^0.7.1",
     "tailwind-variants": "^1.0.0"
   }
 }
