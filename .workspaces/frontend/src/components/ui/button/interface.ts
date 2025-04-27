@@ -2,7 +2,7 @@ import { cva } from 'class-variance-authority';
 
 export type ButtonProps = {
   variant?: "outline" | "ghost" | "link" | "primary" | "destructive" | "secondary";
-  size?: "sm" | "md" | "lg" | "icon";
+  size?: "sm" | "default" | "lg" | "icon";
   disabled?: boolean;
   label: string;
 };

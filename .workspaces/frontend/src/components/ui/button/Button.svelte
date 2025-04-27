@@ -1,7 +1,7 @@
 <script lang="ts">
   import { type ButtonProps } from "./interface";
 
-  export let variant: ButtonProps["variant"] = "default";
+  export let variant: ButtonProps["variant"] = "primary";
   export let size: ButtonProps["size"] = "default";
   export let disabled = false;
   export let type: "button" | "submit" | "reset" = "button";
