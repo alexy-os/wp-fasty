@@ -86,4 +86,4 @@ const generator = new LatteGenerator({
   componentsGlob: '**/core/*.svelte'
 });
 
-generator.generate();
+generator.generate(); 

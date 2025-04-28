@@ -11,7 +11,8 @@
     "tailwind": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ../../wp-fasty-ym/assets/css/theme.min.css --minify",
     "semantic": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/semantic.css",
     "extract-css": "bun scripts/svelte-extract-css.js",
-    "to-latte": "bun scripts/svelte-to-latte.ts"
+    "to-latte": "bun scripts/svelte-to-latte.ts",
+    "variants-css": "bun scripts/variants-parser.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

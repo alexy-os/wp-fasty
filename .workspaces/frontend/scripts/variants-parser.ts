@@ -1,9 +1,35 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { glob } from 'glob';
 import { parse } from '@babel/parser';
 import traverse from '@babel/traverse';
 import { Expression, ObjectProperty, ObjectExpression, StringLiteral } from '@babel/types';
-import { VariantsConfig, VariantsParserConfig } from '../src/components/ui/button';
+
+// Configuration interface
+interface VariantsParserConfig {
+  componentName: string;
+  inputPath: string;
+  outputPath: string;
+  variantsIdentifier: string;
+  defaultSize: string;
+  variantsObject: string;
+  variantsKey: string;
+  defaultVariantsKey: string;
+  interfacesGlob: string;
+}
+
+// Default configuration
+const defaultConfig: VariantsParserConfig = {
+  componentName: 'button',
+  interfacesGlob: '**/interface.ts',
+  inputPath: './src/components/ui',
+  outputPath: './src/components/css',
+  variantsIdentifier: 'buttonVariants',
+  defaultSize: 'default',
+  variantsObject: 'cva',
+  variantsKey: 'variants',
+  defaultVariantsKey: 'defaultVariants',
+};
 
 class VariantsParser {
   private config: VariantsParserConfig;
@@ -12,7 +38,7 @@ class VariantsParser {
   private defaultSize: string;
 
   constructor(config: Partial<VariantsParserConfig> = {}) {
-    this.config = { ...VariantsConfig, ...config };
+    this.config = { ...defaultConfig, ...config };
     this.defaultSize = this.config.defaultSize;
   }
 
@@ -205,5 +231,9 @@ function isStringLiteral(node: any): node is StringLiteral {
 }
 
 // Create and run parser instance
-const parser = new VariantsParser();
+const parser = new VariantsParser({
+  inputPath: './src/components/ui',
+  outputPath: './src/components/css',
+  interfacesGlob: '**/interface.ts'
+});
 parser.generate();
