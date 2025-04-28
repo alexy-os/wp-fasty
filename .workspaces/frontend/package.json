@@ -10,23 +10,24 @@
     "watch": "vite build --config vite.config.ts --watch",
     "tailwind": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ../../wp-fasty-ym/assets/css/theme.min.css --minify",
     "semantic": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/semantic.css",
-    "extract-css": "node scripts/svelte-extract-css.js",
-    "to-latte": "node scripts/svelte-to-latte.js"
+    "extract-css": "bun scripts/svelte-extract-css.js",
+    "to-latte": "bun scripts/svelte-to-latte.ts"
   },
   "dependencies": {
-    "@babel/parser": "^7.27.0",
-    "@babel/traverse": "^7.27.0",
-    "@tailwindcss/cli": "^4.1.4",
-    "@tailwindcss/vite": "^4.1.3",
-    "@types/babel__traverse": "^7.20.7",
-    "svelte": "^5.28.2",
-    "tailwindcss": "^4.1.4"
+    "class-variance-authority": "^0.7.1",
+    "svelte": "^5.28.2"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.4",
     "@sveltejs/adapter-auto": "^6.0.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@types/node": "^22.15.2",
-    "class-variance-authority": "^0.7.1",
-    "tailwind-variants": "^1.0.0"
+    "glob": "^11.0.2",
+    "tailwind-variants": "^1.0.0",
+    "@babel/parser": "^7.27.0",
+    "@babel/traverse": "^7.27.0",
+    "@tailwindcss/cli": "^4.1.4",
+    "@types/babel__traverse": "^7.20.7",
+    "tailwindcss": "^4.1.4"
   }
 }
