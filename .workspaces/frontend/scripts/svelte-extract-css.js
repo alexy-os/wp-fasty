@@ -93,7 +93,7 @@ function processAllComponents(srcDir, outputDir) {
 
 // Run CSS extraction
 const srcDir = './src/components/ui';
-const cssOutputDir = './src/assets/css/components';
+const cssOutputDir = './src/components/ui/button';
 
 try {
   processAllComponents(srcDir, cssOutputDir);

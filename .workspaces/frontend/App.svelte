@@ -1,7 +1,5 @@
 <script>
-  import Button from "./src/components/ui/Button.svelte";
-  // Обратите внимание, что мы используем компонент Button,
-  // но рендериться он будет с семантическими классами
+  import { Button } from "./src/components/ui/button";
 </script>
 
 <main class="container">
