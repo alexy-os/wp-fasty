@@ -3,237 +3,165 @@ import path from 'node:path';
 import { glob } from 'glob';
 import { parse } from '@babel/parser';
 import traverse from '@babel/traverse';
-import { Expression, ObjectProperty, ObjectExpression, StringLiteral } from '@babel/types';
-
-// Configuration interface
-interface VariantsParserConfig {
-  componentName: string;
-  inputPath: string;
-  outputPath: string;
-  variantsIdentifier: string;
-  defaultSize: string;
-  variantsObject: string;
-  variantsKey: string;
-  defaultVariantsKey: string;
-  interfacesGlob: string;
-}
-
-// Default configuration
-const defaultConfig: VariantsParserConfig = {
-  componentName: 'button',
-  interfacesGlob: '**/interface.ts',
-  inputPath: './src/components/ui',
-  outputPath: './src/components/css',
-  variantsIdentifier: 'buttonVariants',
-  defaultSize: 'default',
-  variantsObject: 'cva',
-  variantsKey: 'variants',
-  defaultVariantsKey: 'defaultVariants',
-};
+import { ObjectProperty, ObjectExpression, StringLiteral } from '@babel/types';
+import { defaultConfig } from './config';
+import type { VariantsParserConfig } from './types';
 
 class VariantsParser {
   private config: VariantsParserConfig;
-  private baseStyles: string = '';
-  private variantData: Record<string, Record<string, string>> = {};
-  private defaultSize: string;
+  private cssFiles: string[] = [];
 
   constructor(config: Partial<VariantsParserConfig> = {}) {
     this.config = { ...defaultConfig, ...config };
-    this.defaultSize = this.config.defaultSize;
   }
 
-  /**
-   * Main execution method
-   */
-  public generate(): void {
-    this.parseInterfaceFile();
-    const cssContent = this.generateCSS();
-    this.writeOutputFile(cssContent);
-  }
+  public async generateAll(): Promise<void> {
+    const pattern = `${this.config.inputDir.replace(/\\/g, '/')}/${this.config.interfacesGlob}`;
+    console.log('Glob pattern:', pattern);
 
-  /**
-   * Parse the interface file and extract styles
-   */
-  private parseInterfaceFile(): void {
-    try {
-      // Read and parse file
-      const interfacePath = path.resolve(this.config.inputPath);
-      const interfaceContent = fs.readFileSync(interfacePath, 'utf-8');
-      const ast = parse(interfaceContent, {
-        sourceType: 'module',
-        plugins: ['typescript']
-      });
+    const interfaceFiles = await glob(pattern);
+    console.log('Found interface files:', interfaceFiles);
 
-      // Extract data from AST
-      traverse(ast, {
-        VariableDeclaration: (path) => {
-          const declaration = path.node.declarations.find(
-            d => d.id && 'name' in d.id && d.id.name === this.config.variantsIdentifier
-          );
-
-          if (!declaration || !declaration.init) return;
-
-          const init = declaration.init;
-          if (!('callee' in init) || !('name' in init.callee) ||
-            init.callee.name !== this.config.variantsObject) return;
-
-          this.extractBaseStyles(init);
-          this.extractVariants(init);
-          this.extractDefaultVariants(init);
-        }
-      });
-    } catch (error) {
-      console.error('Error parsing interface file:', error);
-      throw error;
+    for (const file of interfaceFiles) {
+      await this.processInterface(file);
     }
+    this.generateIndexCss();
   }
 
-  /**
-   * Extract base styles from cva arguments
-   */
-  private extractBaseStyles(init: Expression): void {
-    if (!('arguments' in init) || !init.arguments[0]) return;
+  private async processInterface(interfacePath: string): Promise<void> {
+    const component = this.getComponentName(interfacePath);
+    const variantsIdentifier = `${component}Variants`;
+    console.log(`Processing component: ${component}, looking for: ${variantsIdentifier}`);
 
-    const baseStyleArg = init.arguments[0];
-    if (isStringLiteral(baseStyleArg)) {
-      this.baseStyles = baseStyleArg.value;
-    }
-  }
-
-  /**
-   * Extract variants from cva arguments
-   */
-  private extractVariants(init: Expression): void {
-    if (!('arguments' in init) || init.arguments.length < 2) return;
-
-    const optionsArg = init.arguments[1];
-    if (!isObjectExpression(optionsArg)) return;
-
-    const variantsProperty = optionsArg.properties.find(
-      prop => isObjectProperty(prop) &&
-        prop.key.type === 'Identifier' &&
-        prop.key.name === this.config.variantsKey
-    ) as ObjectProperty | undefined;
-
-    if (!variantsProperty) return;
-
-    const variantsValue = variantsProperty.value;
-    if (!isObjectExpression(variantsValue)) return;
-
-    variantsValue.properties.forEach(categoryProp => {
-      if (!isObjectProperty(categoryProp) ||
-        categoryProp.key.type !== 'Identifier') return;
-
-      const category = categoryProp.key.name;
-      this.variantData[category] = {};
-
-      const categoryValue = categoryProp.value;
-      if (!isObjectExpression(categoryValue)) return;
-
-      categoryValue.properties.forEach(variantProp => {
-        if (!isObjectProperty(variantProp) ||
-          variantProp.key.type !== 'Identifier') return;
-
-        const variantName = variantProp.key.name;
-        const variantValue = variantProp.value;
-
-        if (isStringLiteral(variantValue)) {
-          this.variantData[category][variantName] = variantValue.value;
-        }
-      });
+    const interfaceContent = fs.readFileSync(interfacePath, 'utf-8');
+    const ast = parse(interfaceContent, {
+      sourceType: 'module',
+      plugins: ['typescript']
     });
-  }
 
-  /**
-   * Extract default variants from cva arguments
-   */
-  private extractDefaultVariants(init: Expression): void {
-    if (!('arguments' in init) || init.arguments.length < 2) return;
+    let baseStyles = '';
+    let variantData: Record<string, Record<string, string>> = {};
+    let defaultSize = 'default';
 
-    const optionsArg = init.arguments[1];
-    if (!isObjectExpression(optionsArg)) return;
+    traverse(ast, {
+      VariableDeclaration: (path) => {
+        const declaration = path.node.declarations.find(
+          d => d.id && 'name' in d.id && d.id.name === variantsIdentifier
+        );
+        if (!declaration || !declaration.init) return;
+        const init = declaration.init;
+        if (!('callee' in init) || !('name' in init.callee) ||
+          init.callee.name !== this.config.variantsObject) return;
 
-    const defaultVariantsProperty = optionsArg.properties.find(
-      prop => isObjectProperty(prop) &&
-        prop.key.type === 'Identifier' &&
-        prop.key.name === this.config.defaultVariantsKey
-    ) as ObjectProperty | undefined;
+        // base styles
+        if ('arguments' in init && init.arguments[0] && isStringLiteral(init.arguments[0])) {
+          baseStyles = init.arguments[0].value;
+        }
 
-    if (!defaultVariantsProperty) return;
+        // variants
+        if ('arguments' in init && init.arguments[1] && isObjectExpression(init.arguments[1])) {
+          const optionsArg = init.arguments[1];
+          const variantsProperty = optionsArg.properties.find(
+            prop => isObjectProperty(prop) &&
+              prop.key.type === 'Identifier' &&
+              prop.key.name === this.config.variantsKey
+          ) as ObjectProperty | undefined;
 
-    const defaultVariantsValue = defaultVariantsProperty.value;
-    if (!isObjectExpression(defaultVariantsValue)) return;
+          if (variantsProperty && isObjectExpression(variantsProperty.value)) {
+            variantsProperty.value.properties.forEach(categoryProp => {
+              if (!isObjectProperty(categoryProp) || categoryProp.key.type !== 'Identifier') return;
+              const category = categoryProp.key.name;
+              variantData[category] = {};
+              if (!isObjectExpression(categoryProp.value)) return;
+              categoryProp.value.properties.forEach(variantProp => {
+                if (!isObjectProperty(variantProp) || variantProp.key.type !== 'Identifier') return;
+                const variantName = variantProp.key.name;
+                const variantValue = variantProp.value;
+                if (isStringLiteral(variantValue)) {
+                  variantData[category][variantName] = variantValue.value;
+                }
+              });
+            });
+          }
 
-    const sizeProperty = defaultVariantsValue.properties.find(
-      prop => isObjectProperty(prop) &&
-        prop.key.type === 'Identifier' &&
-        prop.key.name === 'size'
-    ) as ObjectProperty | undefined;
+          // defaultVariants
+          const defaultVariantsProperty = optionsArg.properties.find(
+            prop => isObjectProperty(prop) &&
+              prop.key.type === 'Identifier' &&
+              prop.key.name === this.config.defaultVariantsKey
+          ) as ObjectProperty | undefined;
 
-    if (sizeProperty && isStringLiteral(sizeProperty.value)) {
-      this.defaultSize = sizeProperty.value.value;
+          if (defaultVariantsProperty && isObjectExpression(defaultVariantsProperty.value)) {
+            const sizeProperty = defaultVariantsProperty.value.properties.find(
+              prop => isObjectProperty(prop) &&
+                prop.key.type === 'Identifier' &&
+                prop.key.name === 'size'
+            ) as ObjectProperty | undefined;
+            if (sizeProperty && isStringLiteral(sizeProperty.value)) {
+              defaultSize = sizeProperty.value.value;
+            }
+          }
+        }
+      }
+    });
+
+    // После парсинга
+    console.log('baseStyles:', baseStyles);
+    console.log('variantData:', variantData);
+
+    // Generate CSS
+    let baseStylesContent = baseStyles;
+    const sizeVariants = variantData['size'];
+    if (sizeVariants && sizeVariants[defaultSize]) {
+      baseStylesContent += ' ' + sizeVariants[defaultSize];
     }
-  }
-
-  /**
-   * Generate CSS content with semantic naming
-   */
-  private generateCSS(): string {
-    // Combine base styles with default size
-    let baseStylesContent = this.baseStyles;
-    const sizeVariants = this.variantData['size'];
-
-    if (sizeVariants && sizeVariants[this.defaultSize]) {
-      baseStylesContent += ' ' + sizeVariants[this.defaultSize];
-    }
-
-    // Generate base class
-    let cssContent = `.${this.config.componentName} {\n  @apply ${baseStylesContent};\n}\n\n`;
-
-    // Add variant classes
-    Object.entries(this.variantData).forEach(([category, variants]) => {
+    let cssContent = `.${component} {\n  @apply ${baseStylesContent};\n}\n\n`;
+    Object.entries(variantData).forEach(([category, variants]) => {
       Object.entries(variants).forEach(([variantName, styles]) => {
-        // Skip default size as it's already in the base class
-        if (category === 'size' && variantName === this.defaultSize) return;
-        cssContent += `.${this.config.componentName}-${variantName} {\n  @apply ${styles};\n}\n\n`;
+        if (category === 'size' && variantName === defaultSize) return;
+        cssContent += `.${component}-${variantName} {\n  @apply ${styles};\n}\n\n`;
       });
     });
 
-    return cssContent.trim();
+    // Save CSS
+    const outputFile = path.join(this.config.outputDir, `${component}.css`);
+    fs.mkdirSync(this.config.outputDir, { recursive: true });
+    fs.writeFileSync(outputFile, cssContent.trim());
+    this.cssFiles.push(outputFile);
+    console.log(`Generated: ${outputFile}`);
   }
 
-  /**
-   * Write CSS to output file
-   */
-  private writeOutputFile(cssContent: string): void {
-    try {
-      const outputPath = path.resolve(this.config.outputPath);
-      fs.writeFileSync(outputPath, cssContent);
-      console.log(`CSS file generated at ${outputPath}`);
-    } catch (error) {
-      console.error('Error writing output file:', error);
-      throw error;
+  private generateIndexCss(): void {
+    const indexPath = path.join(this.config.outputDir, 'index.css');
+    const imports = this.cssFiles.map(file =>
+      `@import "./${path.basename(file)}";`
+    ).join('\n');
+    fs.writeFileSync(indexPath, imports);
+    console.log(`Generated: ${indexPath}`);
+  }
+
+  private getComponentName(interfacePath: string): string {
+    // ./src/components/ui/card/interface.ts => card
+    const parts = interfacePath.split(path.sep);
+    const uiIndex = parts.indexOf('ui');
+    if (uiIndex !== -1 && parts.length > uiIndex + 1) {
+      return parts[uiIndex + 1];
     }
+    throw new Error(`Cannot determine component name from path: ${interfacePath}`);
   }
 }
 
-// Type guards for Babel AST
+// Type guards
 function isObjectProperty(node: any): node is ObjectProperty {
   return node && node.type === 'ObjectProperty';
 }
-
 function isObjectExpression(node: any): node is ObjectExpression {
   return node && node.type === 'ObjectExpression';
 }
-
 function isStringLiteral(node: any): node is StringLiteral {
   return node && node.type === 'StringLiteral';
 }
 
-// Create and run parser instance
-const parser = new VariantsParser({
-  inputPath: './src/components/ui',
-  outputPath: './src/components/css',
-  interfacesGlob: '**/interface.ts'
-});
-parser.generate();
+// Run
+const parser = new VariantsParser();
+parser.generateAll();

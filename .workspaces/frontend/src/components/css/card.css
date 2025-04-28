@@ -1,0 +1,23 @@
+.card {
+  @apply bg-card text-card-foreground rounded-xl border shadow p-6;
+}
+
+.card-default {
+  @apply ;
+}
+
+.card-outline {
+  @apply bg-transparent border-2;
+}
+
+.card-destructive {
+  @apply bg-destructive text-destructive-foreground;
+}
+
+.card-sm {
+  @apply p-4;
+}
+
+.card-lg {
+  @apply p-8;
+}
