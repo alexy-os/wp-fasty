@@ -1,27 +1,26 @@
 import { cva } from 'class-variance-authority';
 
 export type CardProps = {
-  variant?: "default" | "outline" | "primary" | "secondary";
-  size?: "default" | "sm" | "lg";
+  variant?: "default" | "outline" | "destructive";
+  size?: "sm" | "default" | "lg";
   title?: string;
   description?: string;
   badges?: { text: string; variant?: string }[];
 };
 
 export const cardVariants = cva(
-  "card",
+  "bg-card text-card-foreground rounded-xl border shadow",
   {
     variants: {
       variant: {
         default: "",
-        outline: "",
-        primary: "",
-        secondary: "",
+        outline: "bg-transparent border-2",
+        destructive: "bg-destructive text-destructive-foreground",
       },
       size: {
-        default: "",
-        sm: "",
-        lg: "",
+        sm: "p-4",
+        default: "p-6",
+        lg: "p-8",
       },
     },
     defaultVariants: {

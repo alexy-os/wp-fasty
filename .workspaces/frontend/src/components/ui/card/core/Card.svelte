@@ -1,18 +1,31 @@
 <script lang="ts">
-  import { type CardProps, cardVariants } from "../interface";
-  import Badge from "../../badge/core/Badge.svelte";
+  import type { HTMLAttributes } from "svelte/elements";
+  import { cn } from "$lib/utils.js";
+  import { type CardProps, cardVariants } from "./interface";
 
+  type $$Props = HTMLAttributes<HTMLDivElement> & CardProps;
+
+  let className: $$Props["class"] = undefined;
+  export { className as class };
   export let variant: CardProps["variant"] = "default";
   export let size: CardProps["size"] = "default";
-  export let title: string = "";
-  export let description: string = "";
-  export let badges: { text: string; variant?: string }[] = [];
 
-  // Generate semantic classes
-  $: classes = `card card-${variant}${size !== "default" ? ` card-${size}` : ""}`;
+  // Generate semantic classes based on props
+  $: variantClasses = `card card-${variant}${size !== "default" ? ` card-${size}` : ""}`;
+
+  // Combine semantic classes with any additional custom classes
+  $: combinedClasses = cn(variantClasses, className);
 </script>
 
-<div class={classes}>
+<div
+  class={combinedClasses}
+  {...$$restProps}
+  on:click
+  on:focusin
+  on:focusout
+  on:mouseenter
+  on:mouseleave
+>
   {#if title}
     <div class="card-header">
       <h3 class="card-title">{title}</h3>
