@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { type ButtonProps } from "./interface";
+  import { type ButtonProps } from "../interface";
 
   export let variant: ButtonProps["variant"] = "primary";
   export let size: ButtonProps["size"] = "default";
@@ -12,7 +12,3 @@
 <button class={classes} {disabled} {type}>
   <slot></slot>
 </button>
-
-<style>
-  @import "./Button.css";
-</style>

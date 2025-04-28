@@ -1,2 +1,2 @@
-export { default as Button } from './Button.svelte';
-export * from './Button.types';
+export * from './interface';
+export { default as Button } from './core/Button.svelte';

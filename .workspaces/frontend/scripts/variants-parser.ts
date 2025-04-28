@@ -3,7 +3,7 @@ import path from 'node:path';
 import { parse } from '@babel/parser';
 import traverse from '@babel/traverse';
 import { Expression, ObjectProperty, ObjectExpression, StringLiteral } from '@babel/types';
-import { VariantsConfig, VariantsParserConfig } from '../interface';
+import { VariantsConfig, VariantsParserConfig } from '../src/components/ui/button';
 
 class VariantsParser {
   private config: VariantsParserConfig;
