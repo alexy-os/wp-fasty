@@ -7,11 +7,150 @@
   <title>Топ 100 Инфобизнесменов России</title>
   <meta name="description"
     content="Рейтинг самых успешных и влиятельных предпринимателей в сфере информационного бизнеса">
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NyA0MCIgZmlsbD0iIzBlYTVlOSI+DQogICAgPHBhdGggZD0iTTIzLjUgNi41QzE3LjUgNi41IDEzLjc1IDkuNSAxMi4yNSAxNS41QzE0LjUgMTIuNSAxNy4xMjUgMTEuMzc1IDIwLjEyNSAxMi4xMjVDMjEuODM2NyAxMi41NTI5IDIzLjA2MDEgMTMuNzk0NyAyNC40MTQyIDE1LjE2OTJDMjYuNjIwMiAxNy40MDg0IDI5LjE3MzQgMjAgMzQuNzUgMjBDNDAuNzUgMjAgNDQuNSAxNyA0NiAxMUM0My43NSAxNCA0MS4xMjUgMTUuMTI1IDM4LjEyNSAxNC4zNzVDMzYuNDEzMyAxMy45NDcxIDM1LjE4OTkgMTIuNzA1MyAzMy44MzU3IDExLjMzMDhDMzEuNjI5NyA5LjA5MTU4IDI5LjA3NjYgNi41IDIzLjUgNi41Wk0xMi4yNSAyMEM2LjI1IDIwIDIuNSAyMyAxIDI5QzMuMjUgMjYgNS44NzUgMjQuODc1IDguODc1IDI1LjYyNUMxMC41ODY3IDI2LjA1MjkgMTEuODEwMSAyNy4yOTQ3IDEzLjE2NDIgMjguNjY5M0MxNS4zNzAyIDMwLjkwODQgMTcuOTIzNCAzMy41IDIzLjUgMzMuNUMyOS41IDMzLjUgMzMuMjUgMzAuNSAzNC43NSAyNC41QzMyLjUgMjcuNSAyOS44NzUgMjguNjI1IDI2Ljg3NSAyNy44NzVDMjUuMTYzMyAyNy40NDcxIDIzLjkzOTkgMjYuMjA1MyAyMi41ODU4IDI0LjgzMDdDMjAuMzc5OCAyMi41OTE2IDE3LjgyNjYgMjAgMTIuMjUgMjBaIj48L3BhdGg+DQo8L3N2Zz4=" />
+
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>if (localStorage.getItem('darkMode') === 'true' ||
       (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); document.documentElement.style.colorScheme = 'dark'; } else { document.documentElement.classList.remove('dark'); document.documentElement.style.colorScheme = 'light'; }
     function toggleDarkMode() { const isDark = document.documentElement.classList.toggle('dark'); localStorage.setItem('darkMode', isDark); document.documentElement.style.colorScheme = isDark ? 'dark' : 'light'; }</script>
-  <link rel='stylesheet' id='wp-fasty-ym-tailwind-css' href='http://alexy-os.local/wp-content/themes/wp-fasty/wp-fasty-ym/theme.min.css' media='all'>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style type="text/tailwindcss">
+    @custom-variant dark (&:is(.dark *));
+
+    :root {
+      --background: oklch(0.95 0.01 230);
+      --foreground: oklch(0.25 0.05 240);
+      --primary: oklch(0.62 0.15 242.99);
+      --primary-foreground: oklch(0.95 0.01 0);
+      --card: oklch(0.90 0.02 230);
+      --card-foreground: oklch(0.25 0.05 240);
+      --popover: oklch(0.95 0.01 230);
+      --popover-foreground: oklch(0.25 0.05 240);
+      --secondary: oklch(0.80 0.03 235);
+      --secondary-foreground: oklch(0.20 0.05 240);
+      --muted: oklch(0.86 0.03 248.22);
+      --muted-foreground: oklch(0.3 0.01 0);
+      --accent: oklch(0.27 0.06 243.1);
+      --accent-foreground: oklch(0.7 0.03 235.48);
+      --destructive: oklch(0.57 0.18 25.25);
+      --destructive-foreground: oklch(0.57 0.18 25.25);
+      --border: oklch(0.75 0.03 235);
+      --input: oklch(0.75 0.03 235);
+      --ring: oklch(0.50 0.15 240);
+      --chart-1: oklch(0.55 0.15 240);
+      --chart-2: oklch(0.60 0.10 240);
+      --chart-3: oklch(0.65 0.08 240);
+      --chart-4: oklch(0.70 0.06 240);
+      --chart-5: oklch(0.75 0.04 240);
+      --sidebar: oklch(0.90 0.02 230);
+      --sidebar-foreground: oklch(0.25 0.05 240);
+      --sidebar-primary: oklch(0.50 0.15 240);
+      --sidebar-primary-foreground: oklch(0.95 0.01 230);
+      --sidebar-accent: oklch(0.60 0.10 240);
+      --sidebar-accent-foreground: oklch(0.95 0.01 230);
+      --sidebar-border: oklch(0.75 0.03 235);
+      --sidebar-ring: oklch(0.50 0.15 240);
+      --radius: 0.75rem;
+    }
+
+    .dark {
+      --background: oklch(0.20 0.06 240);
+      --foreground: oklch(0.90 0.02 225);
+
+      --primary: oklch(0.50 0.15 243.11);
+      --primary-foreground: oklch(0.98 0.01 0);
+
+      --card: oklch(0.25 0.07 240);
+      --card-foreground: oklch(0.90 0.02 225);
+
+      --popover: oklch(0.25 0.07 240);
+      --popover-foreground: oklch(0.90 0.02 225);
+
+      --secondary: oklch(0.35 0.08 240);
+      --secondary-foreground: oklch(0.90 0.02 225);
+
+      --muted: oklch(0.30 0.05 240);
+      --muted-foreground: oklch(0.70 0.03 230);
+
+      --accent: oklch(0.45 0.10 240);
+      --accent-foreground: oklch(0.95 0.02 225);
+
+      --destructive: oklch(0.65 0.25 25);
+      --destructive-foreground: oklch(0.95 0.01 225);
+
+      --border: oklch(0.40 0.05 240);
+
+      --input: oklch(0.40 0.05 240);
+
+      --ring: oklch(0.50 0.18 240);
+
+      --chart-1: oklch(0.50 0.18 240);
+      --chart-2: oklch(0.55 0.14 240);
+      --chart-3: oklch(0.60 0.12 240);
+      --chart-4: oklch(0.65 0.10 240);
+      --chart-5: oklch(0.70 0.08 240);
+
+      --sidebar: oklch(0.25 0.07 240);
+      --sidebar-foreground: oklch(0.90 0.02 225);
+      --sidebar-primary: oklch(0.50 0.18 240);
+      --sidebar-primary-foreground: oklch(0.95 0.02 225);
+      --sidebar-accent: oklch(0.45 0.10 240);
+      --sidebar-accent-foreground: oklch(0.90 0.02 225);
+      --sidebar-border: oklch(0.40 0.05 240);
+      --sidebar-ring: oklch(0.50 0.18 240);
+    }
+
+    @theme inline {
+      --color-background: var(--background);
+      --color-foreground: var(--foreground);
+      --color-card: var(--card);
+      --color-card-foreground: var(--card-foreground);
+      --color-popover: var(--popover);
+      --color-popover-foreground: var(--popover-foreground);
+      --color-primary: var(--primary);
+      --color-primary-foreground: var(--primary-foreground);
+      --color-secondary: var(--secondary);
+      --color-secondary-foreground: var(--secondary-foreground);
+      --color-muted: var(--muted);
+      --color-muted-foreground: var(--muted-foreground);
+      --color-accent: var(--accent);
+      --color-accent-foreground: var(--accent-foreground);
+      --color-destructive: var(--destructive);
+      --color-destructive-foreground: var(--destructive-foreground);
+      --color-border: var(--border);
+      --color-input: var(--input);
+      --color-ring: var(--ring);
+      --color-chart-1: var(--chart-1);
+      --color-chart-2: var(--chart-2);
+      --color-chart-3: var(--chart-3);
+      --color-chart-4: var(--chart-4);
+      --color-chart-5: var(--chart-5);
+      --radius-sm: calc(var(--radius) - 4px);
+      --radius-md: calc(var(--radius) - 2px);
+      --radius-lg: var(--radius);
+      --radius-xl: calc(var(--radius) + 4px);
+      --color-sidebar: var(--sidebar);
+      --color-sidebar-foreground: var(--sidebar-foreground);
+      --color-sidebar-primary: var(--sidebar-primary);
+      --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+      --color-sidebar-accent: var(--sidebar-accent);
+      --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+      --color-sidebar-border: var(--sidebar-border);
+      --color-sidebar-ring: var(--sidebar-ring);
+    }
+
+    @layer base {
+
+      * {
+        @apply border-border outline-ring/50;
+      }
+
+      body {
+        @apply bg-background text-foreground;
+      }
+    }
+  </style>
 </head>
 
 <body class="font-base bg-background text-foreground min-h-screen">
@@ -75,11 +214,13 @@
                     <div
                       class="bg-background/90 dark:bg-background/80 p-4 rounded-xl shadow-lg flex flex-col items-center backdrop-blur-sm border border-border/50">
                       <i data-lucide="users" class="h-8 w-8 text-primary mb-3"></i> <span
-                        class="text-sm font-medium text-foreground">100+ Профессионалов</span> </div>
+                        class="text-sm font-medium text-foreground">100+ Профессионалов</span>
+                    </div>
                     <div
                       class="bg-background/90 dark:bg-background/80 p-4 rounded-xl shadow-lg flex flex-col items-center backdrop-blur-sm border border-border/50">
                       <i data-lucide="trending-up" class="h-8 w-8 text-primary mb-3"></i> <span
-                        class="text-sm font-medium text-foreground">Актуальный рейтинг</span> </div>
+                        class="text-sm font-medium text-foreground">Актуальный рейтинг</span>
+                    </div>
                   </div>
                 </div>
               </div>
