@@ -3,11 +3,11 @@
 }
 
 .text-default {
-  @apply ;
+  @apply text-foreground;
 }
 
 .text-title {
-  @apply font-heading;
+  @apply text-2xl font-bold;
 }
 
 .text-subtitle {

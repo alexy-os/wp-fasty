@@ -10,13 +10,14 @@ export type HeroProps = {
 };
 
 export const heroVariants = cva(
-  "relative overflow-hidden",
+  "relative overflow-hidden mb-16",
   {
     variants: {
       variant: {
         default: "bg-background",
         centered: "bg-background text-center",
         "full-width": "bg-background w-full",
+        content: "bg-background text-foreground",
       },
       size: {
         sm: "py-8",

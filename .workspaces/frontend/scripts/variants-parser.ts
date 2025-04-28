@@ -8,11 +8,16 @@ import { defaultConfig } from './config';
 import type { VariantsParserConfig } from './types';
 
 class VariantsParser {
-  private config: VariantsParserConfig;
+  public config: VariantsParserConfig;
   private cssFiles: string[] = [];
+  public isWatching = false;
 
   constructor(config: Partial<VariantsParserConfig> = {}) {
     this.config = { ...defaultConfig, ...config };
+
+    // Check for --watch flag
+    const args = process.argv.slice(2);
+    this.isWatching = args.includes('--watch');
   }
 
   public async generateAll(): Promise<void> {
@@ -160,4 +165,31 @@ function isStringLiteral(node: any): node is StringLiteral {
 
 // Run
 const parser = new VariantsParser();
-parser.generateAll();
+
+async function run() {
+  await parser.generateAll();
+
+  // Start watching if flag is present
+  if (parser.isWatching) {
+    console.log('Watching for changes in interface files...');
+
+    const watchDir = path.resolve(parser.config.inputDir);
+    fs.watch(watchDir, { recursive: true }, async (eventType, filename) => {
+      if (!filename) return;
+      if (!filename.includes('interface.ts')) return;
+
+      console.log(`File changed: ${filename}`);
+      // Небольшая задержка для стабилизации файловой системы
+      setTimeout(async () => {
+        try {
+          await parser.generateAll();
+          console.log('Regenerated all CSS files');
+        } catch (err) {
+          console.error('Error regenerating CSS:', err);
+        }
+      }, 100);
+    });
+  }
+}
+
+run().catch(console.error);

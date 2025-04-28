@@ -16,6 +16,8 @@
   "scripts": {
     "frontend:install": "bun install --cwd .workspaces/frontend",
     "dev": "bun run --cwd .workspaces/frontend dev",
+    "watch:semantic": "bun run --cwd .workspaces/frontend watch:semantic",
+    "watch:all": "bun run --cwd .workspaces/frontend watch:all",
     "frontend:build": "bun run --cwd .workspaces/frontend build",
     "frontend:css": "bun run --cwd .workspaces/frontend css",
     "frontend:watch": "bun run --cwd .workspaces/frontend watch",

@@ -1,5 +1,5 @@
 .hero {
-  @apply relative overflow-hidden py-16;
+  @apply relative overflow-hidden mb-16 py-16;
 }
 
 .hero-default {
@@ -8,6 +8,10 @@
 
 .hero-centered {
   @apply bg-background text-center;
+}
+
+.hero-content {
+  @apply bg-background text-foreground;
 }
 
 .hero-sm {

@@ -11,8 +11,8 @@ export const textVariants = cva(
   {
     variants: {
       variant: {
-        default: "",
-        title: "font-heading",
+        default: "text-foreground",
+        title: "text-2xl font-bold",
         subtitle: "text-muted-foreground",
         muted: "text-muted-foreground",
         error: "text-destructive",

@@ -13,7 +13,7 @@ export const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: "",
+        default: "bg-card text-card-foreground rounded-xl border shadow",
         outline: "bg-transparent border-2",
         destructive: "bg-destructive text-destructive-foreground",
       },
