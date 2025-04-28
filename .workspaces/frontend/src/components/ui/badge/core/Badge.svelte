@@ -5,7 +5,6 @@
   export let className: string = "";
   export let tag: "span" | "div" = "span";
 
-  // Генерируем семантические классы на основе вариантов
   $: classes = `badge badge-${variant} ${className}`;
 </script>
 

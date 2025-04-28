@@ -17,10 +17,10 @@ class VariantsParser {
 
   public async generateAll(): Promise<void> {
     const pattern = `${this.config.inputDir.replace(/\\/g, '/')}/${this.config.interfacesGlob}`;
-    console.log('Glob pattern:', pattern);
+    // console.log('Glob pattern:', pattern);
 
     const interfaceFiles = await glob(pattern);
-    console.log('Found interface files:', interfaceFiles);
+    // console.log('Found interface files:', interfaceFiles);
 
     for (const file of interfaceFiles) {
       await this.processInterface(file);
@@ -31,7 +31,7 @@ class VariantsParser {
   private async processInterface(interfacePath: string): Promise<void> {
     const component = this.getComponentName(interfacePath);
     const variantsIdentifier = `${component}Variants`;
-    console.log(`Processing component: ${component}, looking for: ${variantsIdentifier}`);
+    // console.log(`Processing component: ${component}, looking for: ${variantsIdentifier}`);
 
     const interfaceContent = fs.readFileSync(interfacePath, 'utf-8');
     const ast = parse(interfaceContent, {
@@ -104,10 +104,6 @@ class VariantsParser {
         }
       }
     });
-
-    // После парсинга
-    console.log('baseStyles:', baseStyles);
-    console.log('variantData:', variantData);
 
     // Generate CSS
     let baseStylesContent = baseStyles;

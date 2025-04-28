@@ -29,9 +29,3 @@ export const cardVariants = cva(
     },
   }
 );
-
-export const CardVariantsConfig = {
-  componentName: 'card',
-  inputPath: './src/components/ui/card/interface.ts',
-  outputPath: './src/components/ui/card/Card.css',
-};

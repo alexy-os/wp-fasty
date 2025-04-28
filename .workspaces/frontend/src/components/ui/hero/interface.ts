@@ -30,14 +30,3 @@ export const heroVariants = cva(
     },
   }
 );
-
-export const HeroVariantsConfig = {
-  componentName: 'hero',
-  inputPath: './src/components/ui/hero/interface.ts',
-  outputPath: './src/components/ui/hero/Hero.css',
-  variantsIdentifier: 'heroVariants',
-  defaultSize: 'default',
-  variantsObject: 'cva',
-  variantsKey: 'variants',
-  defaultVariantsKey: 'defaultVariants',
-};

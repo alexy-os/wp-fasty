@@ -7,7 +7,7 @@ export type TextProps = {
 };
 
 export const textVariants = cva(
-  "text-foreground", // базовые стили
+  "text-foreground",
   {
     variants: {
       variant: {
@@ -37,9 +37,3 @@ export const textVariants = cva(
     },
   }
 );
-
-export const TextVariantsConfig = {
-  componentName: 'text',
-  // ... остальная конфигурация
-};
-
