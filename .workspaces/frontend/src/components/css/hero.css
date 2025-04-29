@@ -1,0 +1,23 @@
+.hero {
+  @apply relative overflow-hidden mb-16 py-16;
+}
+
+.hero-default {
+  @apply bg-background;
+}
+
+.hero-centered {
+  @apply bg-background text-center;
+}
+
+.hero-content {
+  @apply bg-background text-foreground;
+}
+
+.hero-sm {
+  @apply py-8;
+}
+
+.hero-lg {
+  @apply py-24;
+}

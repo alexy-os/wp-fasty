@@ -39,29 +39,3 @@
     </div>
   </div>
 </section>
-
-<style>
-  .hero {
-    @apply py-20 bg-background;
-  }
-
-  .hero-content {
-    @apply flex flex-col items-center justify-center text-center max-w-3xl mx-auto;
-  }
-
-  .hero-title {
-    @apply text-4xl font-bold tracking-tight mb-4;
-  }
-
-  .hero-description {
-    @apply text-xl text-foreground/80 mb-8;
-  }
-
-  .hero-actions {
-    @apply flex flex-wrap gap-4 justify-center;
-  }
-
-  .rounded {
-    @apply rounded-full;
-  }
-</style>

@@ -1,8 +1,11 @@
 <script>
   import { Button } from "./src/components/ui/button";
+  import { Hero } from "./src/components/ui/hero";
 </script>
 
 <main class="container">
+  <Hero />
+
   <div class="buttons-showcase">
     <h1>Button Variants</h1>
 
