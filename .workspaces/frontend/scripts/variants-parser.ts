@@ -179,7 +179,7 @@ async function run() {
       if (!filename.includes('interface.ts')) return;
 
       console.log(`File changed: ${filename}`);
-      // Небольшая задержка для стабилизации файловой системы
+      // A small delay for file system stabilization
       setTimeout(async () => {
         try {
           await parser.generateAll();
