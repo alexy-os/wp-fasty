@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Badge as HeadlessBadge, type BadgeProps as HeadlessBadgeProps } from "@ui-factory/ui-headless/badge"
+import { Badge as HeadlessBadge, type BadgeProps as HeadlessBadgeProps } from "@uikits/headless/badge"
 import { twMerge } from "tailwind-merge"
 import { tv } from "tailwind-variants"
 
@@ -45,7 +45,7 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     const combinedClassNames = className ? twMerge(variantClasses, className) : variantClasses
 
     return (
-      <HeadlessBadge
+      <Badge
         ref={ref}
         className={combinedClassNames}
         asChild={asChild}
@@ -53,7 +53,7 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
         {...badgeProps}
       >
         {children}
-      </HeadlessBadge>
+      </Badge>
     )
   }
 )

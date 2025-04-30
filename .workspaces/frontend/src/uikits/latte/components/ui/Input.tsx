@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Input as HeadlessInput, type InputProps as HeadlessInputProps } from "@ui-factory/ui-headless/form";
+import { Input as HeadlessInput, type InputProps as HeadlessInputProps } from "@uikits/headless/form";
 import { tv } from "tailwind-variants";
 import { twMerge } from "tailwind-merge";
 
@@ -17,12 +17,12 @@ const inputStyles = tv({
   },
 });
 
-interface InputProps extends HeadlessInputProps {}
+interface InputProps extends HeadlessInputProps { }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ size, className, ...props }, ref) => {
     return (
-      <HeadlessInput
+      <Input
         ref={ref}
         className={twMerge(inputStyles({ size }), className)}
         {...props}

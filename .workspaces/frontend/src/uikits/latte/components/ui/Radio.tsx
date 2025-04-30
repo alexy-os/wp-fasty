@@ -4,7 +4,7 @@ import {
   Radio as HeadlessRadio,
   type RadioGroupProps,
   type RadioProps,
-} from "@ui-factory/ui-headless/form";
+} from "@uikits/headless/form";
 import { tv } from "tailwind-variants";
 import { twMerge } from "tailwind-merge";
 
@@ -64,9 +64,9 @@ interface RadioItemProps extends RadioProps {
 const Radio = React.forwardRef<HTMLDivElement, RadioGroupExtendedProps>(
   ({ size = "md", className, children, ...props }, ref) => (
     <RadioContext.Provider value={{ size }}>
-      <RadioGroup 
-        ref={ref} 
-        className={twMerge(groupStyles(), className)} 
+      <RadioGroup
+        ref={ref}
+        className={twMerge(groupStyles(), className)}
         {...props}
       >
         {children}
@@ -78,10 +78,10 @@ const Radio = React.forwardRef<HTMLDivElement, RadioGroupExtendedProps>(
 const RadioItem = React.forwardRef<HTMLInputElement, RadioItemProps>(
   ({ className, label, ...props }, ref) => {
     const { size } = React.useContext(RadioContext);
-    
+
     return (
       <div className={wrapperStyles()}>
-        <HeadlessRadio
+        <Radio
           ref={ref}
           className={twMerge(radioStyles({ size }), className)}
           {...props}

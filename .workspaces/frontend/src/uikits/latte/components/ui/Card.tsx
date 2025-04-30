@@ -8,7 +8,7 @@ import {
   CardDescription,
   CardAction,
   type CardRootProps,
-} from "@ui-factory/ui-headless/card";
+} from "@uikits/headless/card";
 import { tv } from "tailwind-variants";
 import { twMerge } from "tailwind-merge";
 
@@ -116,7 +116,7 @@ const CardHead = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
   ({ className, ...props }, ref) => {
     const { size } = React.useContext(CardContext);
     const hasBorder = className?.includes("border-b");
-    
+
     return (
       <CardHeader
         ref={ref}
@@ -175,7 +175,7 @@ const CardFoot = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
   ({ className, ...props }, ref) => {
     const { size } = React.useContext(CardContext);
     const hasBorder = className?.includes("border-t");
-    
+
     return (
       <CardFooter
         ref={ref}

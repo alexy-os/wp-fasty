@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   Checkbox as HeadlessCheckbox,
   type CheckboxProps as HeadlessCheckboxProps,
-} from "@ui-factory/ui-headless/form";
+} from "@uikits/headless/form";
 import { tv } from "tailwind-variants";
 import { twMerge } from "tailwind-merge";
 
@@ -43,7 +43,7 @@ const labelStyles = tv({
 });
 
 // Extend the base props, excluding size from the headless component
-type CheckboxProps = Omit<HeadlessCheckboxProps, 'size'> & {
+type CheckboxProps = Omit<CheckboxProps, 'size'> & {
   label?: string;
   size?: "sm" | "md" | "lg";
 };
@@ -51,7 +51,7 @@ type CheckboxProps = Omit<HeadlessCheckboxProps, 'size'> & {
 const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   ({ className, label, size = "md", ...props }, ref) => (
     <div className={wrapperStyles()}>
-      <HeadlessCheckbox
+      <Checkbox
         ref={ref}
         className={twMerge(checkboxStyles({ size }), className)}
         {...props}

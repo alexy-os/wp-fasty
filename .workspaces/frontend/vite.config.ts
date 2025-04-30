@@ -24,7 +24,8 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@root': path.resolve(__dirname, '../../'),
-      '@wp-fasty-ym': path.resolve(__dirname, '../../wp-fasty-ym')
+      '@wptheme': path.resolve(__dirname, '../../wp-fasty-ym'),
+      '@uikits': path.resolve(__dirname, './src/uikits')
     },
   },
 });

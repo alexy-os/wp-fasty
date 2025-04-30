@@ -8,7 +8,7 @@ import {
   type SelectTriggerProps,
   type SelectContentProps,
   type SelectItemProps,
-} from "@ui-factory/ui-headless/form";
+} from "@uikits/headless/form";
 import { tv } from "tailwind-variants";
 import { twMerge } from "tailwind-merge";
 

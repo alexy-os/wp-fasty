@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Slot } from "@ui-factory/ui-headless/slot";
+import { Slot } from "@uikits/headless/slot";
 
 // Context for passing state between card components
 type CardContextValue = {
@@ -26,7 +26,7 @@ const CardRoot = React.forwardRef<HTMLDivElement, CardRootProps>(
   ({ asChild = false, isCollapsible, defaultCollapsed = false, ...props }, ref) => {
     const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
     const Comp = asChild ? Slot : "div";
-    
+
     const contextValue = React.useMemo(
       () => ({
         isCollapsible,
@@ -68,15 +68,15 @@ const CardAction = React.forwardRef<HTMLDivElement, CardSectionProps>(
     const Comp = asChild ? Slot : "div";
 
     return (
-      <Comp 
-        ref={ref} 
+      <Comp
+        ref={ref}
         onClick={(e) => {
           if (isCollapsible) {
             e.stopPropagation();
             onCollapseToggle?.();
           }
         }}
-        {...props} 
+        {...props}
       />
     );
   }

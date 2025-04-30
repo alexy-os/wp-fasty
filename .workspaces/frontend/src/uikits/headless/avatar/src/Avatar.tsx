@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Slot } from "@ui-factory/ui-headless/slot";
+import { Slot } from "@uikits/headless/slot";
 
 export interface AvatarRootProps extends React.HTMLAttributes<HTMLDivElement> {
   asChild?: boolean;
@@ -25,7 +25,7 @@ const AvatarRoot = React.forwardRef<HTMLDivElement, AvatarRootProps>(
 const AvatarImage = React.forwardRef<HTMLImageElement, AvatarImageProps>(
   ({ asChild = false, onLoadingStatusChange, ...props }, ref) => {
     const Comp = asChild ? Slot : "img";
-    
+
     React.useEffect(() => {
       onLoadingStatusChange?.('loading');
     }, []);
@@ -44,14 +44,14 @@ const AvatarImage = React.forwardRef<HTMLImageElement, AvatarImageProps>(
 const AvatarFallback = React.forwardRef<HTMLDivElement, AvatarFallbackProps>(
   ({ asChild = false, delayMs = 600, ...props }, ref) => {
     const [isShown, setIsShown] = React.useState(false);
-    
+
     React.useEffect(() => {
       const timeout = setTimeout(() => setIsShown(true), delayMs);
       return () => clearTimeout(timeout);
     }, [delayMs]);
 
     if (!isShown) return null;
-    
+
     const Comp = asChild ? Slot : "div";
     return <Comp ref={ref} {...props} />;
   }

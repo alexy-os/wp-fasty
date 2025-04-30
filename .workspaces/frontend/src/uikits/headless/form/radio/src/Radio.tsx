@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Slot } from "@ui-factory/ui-headless/slot";
+import { Slot } from "@uikits/headless/slot";
 
 // Context for RadioGroup
 type RadioGroupContextValue = {

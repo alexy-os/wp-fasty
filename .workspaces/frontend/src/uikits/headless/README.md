@@ -28,7 +28,7 @@ The Slot component is the cornerstone of our headless UI system, enabling compon
 ### Usage Example
 
 ```tsx
-import { Slot } from '@ui-factory/ui-headless/slot';
+import { Slot } from '@uikits/headless/slot';
 
 // Basic usage
 <Slot>
@@ -136,7 +136,7 @@ const StyledButton = React.forwardRef<HTMLButtonElement, StyledButtonProps>(
   ({ variant, size, className, ...props }, ref) => {
     const variantClasses = buttonStyles({ variant, size });
     return (
-      <HeadlessButton
+      <Button
         ref={ref}
         className={twMerge(variantClasses, className)}
         {...props}

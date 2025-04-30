@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Slot } from "@ui-factory/ui-headless/slot";
+import { Slot } from "@uikits/headless/slot";
 
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   asChild?: boolean;
@@ -9,7 +9,7 @@ export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputE
 const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   ({ asChild, indeterminate, ...props }, ref) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
-    
+
     React.useEffect(() => {
       if (inputRef.current) {
         inputRef.current.indeterminate = indeterminate ?? false;
@@ -17,7 +17,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     }, [indeterminate]);
 
     const Comp = asChild ? Slot : "input";
-    
+
     return (
       <Comp
         ref={(node: HTMLInputElement | null) => {
@@ -31,6 +31,6 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       />
     );
   }
-); 
+);
 
 export { Checkbox };

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Slot } from "@ui-factory/ui-headless/slot";
+import { Slot } from "@uikits/headless/slot";
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   asChild?: boolean;
@@ -10,7 +10,7 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ asChild, size, invalid, ...props }, ref) => {
     const Comp = asChild ? Slot : "input";
-    
+
     return (
       <Comp
         ref={ref}
@@ -20,7 +20,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       />
     );
   }
-); 
+);
 
 //Input.displayName = "Input";
 

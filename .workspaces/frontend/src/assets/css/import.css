@@ -1,8 +1,8 @@
 /*@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&display=swap");*/
 @import "tailwindcss";
 @import "./theme.css";
-@import "../../components/css/index.css";
-@source "../../../wp-fasty-ym";
+@import "./hinddy/index.css";
+@source "../../App.tsx";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -11,7 +11,7 @@
 }
 
 :root {
-    --radius: 0rem;
+    --radius: 0.75rem;
     --background: oklch(1 0 0);
     --foreground: oklch(0.141 0.005 285.823);
     --card: oklch(1 0 0);

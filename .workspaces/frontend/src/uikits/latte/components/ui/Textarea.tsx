@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   Textarea as HeadlessTextarea,
   type TextareaProps as HeadlessTextareaProps,
-} from "@ui-factory/ui-headless/form";
+} from "@uikits/headless/form";
 import { tv } from "tailwind-variants";
 import { twMerge } from "tailwind-merge";
 
@@ -29,7 +29,7 @@ const textareaStyles = tv({
 });
 
 // Extend the base props, excluding size from the headless component
-type TextareaProps = Omit<HeadlessTextareaProps, 'size'> & {
+type TextareaProps = Omit<TextareaProps, 'size'> & {
   size?: "sm" | "md" | "lg";
   resize?: "none" | "vertical" | "horizontal" | "both";
 };
@@ -40,7 +40,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     const finalResize = autoResize ? "none" : resize;
 
     return (
-      <HeadlessTextarea
+      <Textarea
         ref={ref}
         className={twMerge(textareaStyles({ size, resize: finalResize }), className)}
         autoResize={autoResize}

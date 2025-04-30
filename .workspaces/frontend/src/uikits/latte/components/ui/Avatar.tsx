@@ -6,7 +6,7 @@ import {
   type AvatarRootProps,
   type AvatarImageProps,
   type AvatarFallbackProps,
-} from "@ui-factory/ui-headless/avatar";
+} from "@uikits/headless/avatar";
 import { tv } from "tailwind-variants";
 import { twMerge } from "tailwind-merge";
 
@@ -90,7 +90,7 @@ const AvatarImg = React.forwardRef<HTMLImageElement, AvatarImageProps>(
 const AvatarPlaceholder = React.forwardRef<HTMLDivElement, AvatarFallbackProps>(
   ({ className, ...props }, ref) => {
     const { size } = React.useContext(AvatarContext);
-    
+
     return (
       <AvatarFallback
         ref={ref}

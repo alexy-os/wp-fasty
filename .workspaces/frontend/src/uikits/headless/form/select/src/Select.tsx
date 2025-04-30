@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Slot } from "@ui-factory/ui-headless/slot";
+import { Slot } from "@uikits/headless/slot";
 
 // Context for Select
 type SelectContextValue = {
@@ -41,13 +41,13 @@ const SelectRoot = React.forwardRef<HTMLDivElement, SelectRootProps>(
     const Comp = asChild ? Slot : "div";
 
     return (
-      <SelectContext.Provider 
-        value={{ 
-          value, 
-          onChange, 
-          open, 
+      <SelectContext.Provider
+        value={{
+          value,
+          onChange,
+          open,
           onOpenChange: setOpen,
-          disabled 
+          disabled
         }}
       >
         <Comp ref={ref} {...props} />
