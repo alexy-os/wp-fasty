@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infobiz UI Kit</title>
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NyA0MCIgZmlsbD0iIzBlYTVlOSI+DQogICAgPHBhdGggZD0iTTIzLjUgNi41QzE3LjUgNi41IDEzLjc1IDkuNSAxMi4yNSAxNS41QzE0LjUgMTIuNSAxNy4xMjUgMTEuMzc1IDIwLjEyNSAxMi4xMjVDMjEuODM2NyAxMi41NTI5IDIzLjA2MDEgMTMuNzk0NyAyNC40MTQyIDE1LjE2OTJDMjYuNjIwMiAxNy40MDg0IDI5LjE3MzQgMjAgMzQuNzUgMjBDNDAuNzUgMjAgNDQuNSAxNyA0NiAxMUM0My43NSAxNCA0MS4xMjUgMTUuMTI1IDM4LjEyNSAxNC4zNzVDMzYuNDEzMyAxMy45NDcxIDM1LjE4OTkgMTIuNzA1MyAzMy44MzU3IDExLjMzMDhDMzEuNjI5NyA5LjA5MTU4IDI5LjA3NjYgNi41IDIzLjUgNi41Wk0xMi4yNSAyMEM2LjI1IDIwIDIuNSAyMyAxIDI5QzMuMjUgMjYgNS44NzUgMjQuODc1IDguODc1IDI1LjYyNUMxMC41ODY3IDI2LjA1MjkgMTEuODEwMSAyNy4yOTQ3IDEzLjE2NDIgMjguNjY5M0MxNS4zNzAyIDMwLjkwODQgMTcuOTIzNCAzMy41IDIzLjUgMzMuNUMyOS41IDMzLjUgMzMuMjUgMzAuNSAzNC43NSAyNC41QzMyLjUgMjcuNSAyOS44NzUgMjguNjI1IDI2Ljg3NSAyNy44NzVDMjUuMTYzMyAyNy40NDcxIDIzLjkzOTkgMjYuMjA1MyAyMi41ODU4IDI0LjgzMDdDMjAuMzc5OCAyMi41OTE2IDE3LjgyNjYgMjAgMTIuMjUgMjBaIj48L3BhdGg+DQo8L3N2Zz4=">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-background text-foreground">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Infobiz UI Kit Demo</h1>
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">UI Components (Atoms)</h2>
+      <div class="mb-8">
+        <h3 class="text-xl mb-3">Buttons</h3>
+        <div class="flex flex-wrap gap-4"><button class="button button-primary  " type="button">Default</button><button
+            class="button button-primary  " type="button">Primary</button><button class="button button-secondary  "
+            type="button">Secondary</button><button class="button button-outline  "
+            type="button">Outline</button><button class="button button-ghost  " type="button">Ghost</button><button
+            class="button button-primary button-sm " type="button">Small</button><button
+            class="button button-primary button-lg " type="button">Large</button></div>
+      </div>
+      <div class="mb-8">
+        <h3 class="text-xl mb-3">Badges</h3>
+        <div class="flex flex-wrap gap-4"><span class="badge badge-default  ">Default</span><span
+            class="badge badge-primary  ">Primary</span><span class="badge badge-secondary  ">Secondary</span><span
+            class="badge badge-outline  ">Outline</span><span class="badge badge-default badge-sm ">Small</span><span
+            class="badge badge-default badge-lg ">Large</span></div>
+      </div>
+    </section>
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Components (Molecules)</h2>
+      <div class="mb-8">
+        <h3 class="text-xl mb-3">Cards</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="p-4">
+            <div class="card card-default   ">
+              <div class="card-content">
+                <h3 class="text-lg font-semibold mb-2">Basic Card</h3>
+                <p>This is a simple card component with content inside.</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="card card-hover   ">
+              <div class="card-content">
+                <h3 class="text-lg font-semibold mb-2">Hover Card</h3>
+                <p>This card has a hover effect. Try hovering over it!</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="card card-outline   ">
+              <div class="card-content">
+                <h3 class="text-lg font-semibold mb-2">Outline Card</h3>
+                <p>This is a card with an outline style.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mb-8">
+        <h3 class="text-xl mb-3">Businessman Cards</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="businessman-card businessman-card-default ">
+            <div class="relative h-56 w-full overflow-hidden businessman-card-image"><img alt="John Doe"
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                src="image.svg?=150"></div>
+            <div class="businessman-card-content p-4">
+              <h3 class="text-xl font-medium text-foreground">John Doe</h3>
+              <p class="mt-1 text-sm text-muted-foreground">Business Strategy</p>
+              <div class="mt-5 grid grid-cols-2 gap-4">
+                <div>
+                  <p class="text-xs text-muted-foreground uppercase tracking-wide">Годовой доход</p>
+                  <p class="mt-1 font-medium text-foreground">$1.2M</p>
+                </div>
+                <div>
+                  <p class="text-xs text-muted-foreground uppercase tracking-wide">Аудитория</p>
+                  <p class="mt-1 font-medium text-foreground">15K</p>
+                </div>
+              </div>
+              <div class="mt-5 flex flex-wrap gap-2"><span class="badge badge-tag  ">Marketing</span><span
+                  class="badge badge-tag  ">Leadership</span></div>
+            </div>
+            <div class="businessman-card-footer flex items-center justify-between p-4 pt-0">
+              <div class="flex gap-2"></div><a href="#john-doe"
+                class="inline-flex items-center justify-center rounded-full border border-input px-4 h-9 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">Подробнее</a>
+            </div>
+          </div>
+          <div class="businessman-card businessman-card-featured ">
+            <div class="relative h-56 w-full overflow-hidden businessman-card-image"><img alt="Jane Smith"
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                src="image.svg?=150"></div>
+            <div class="businessman-card-content p-4">
+              <h3 class="text-xl font-medium text-foreground">Jane Smith</h3>
+              <p class="mt-1 text-sm text-muted-foreground">Digital Marketing</p>
+              <div class="mt-5 grid grid-cols-2 gap-4">
+                <div>
+                  <p class="text-xs text-muted-foreground uppercase tracking-wide">Годовой доход</p>
+                  <p class="mt-1 font-medium text-foreground">$950K</p>
+                </div>
+                <div>
+                  <p class="text-xs text-muted-foreground uppercase tracking-wide">Аудитория</p>
+                  <p class="mt-1 font-medium text-foreground">12K</p>
+                </div>
+              </div>
+              <div class="mt-5 flex flex-wrap gap-2"><span class="badge badge-tag  ">SEO</span><span
+                  class="badge badge-tag  ">Content</span></div>
+            </div>
+            <div class="businessman-card-footer flex items-center justify-between p-4 pt-0">
+              <div class="flex gap-2"></div><a href="#jane-smith"
+                class="inline-flex items-center justify-center rounded-full border border-input px-4 h-9 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">Подробнее</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mb-8">
+        <h3 class="text-xl mb-3">Video Cards</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="video-card video-card-default ">
+            <div class="video-card-image relative aspect-video w-full overflow-hidden rounded-t-2xl group">
+              <div class="absolute inset-0 bg-foreground/5 group-hover:bg-foreground/10 transition-colors z-10"></div>
+              <div
+                class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-100 z-20">
+                <button
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 w-14 h-14 rounded-full bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground backdrop-blur-sm hover:scale-105 transition-all duration-100"><i
+                    data-lucide="play" class="h-6 w-6"></i><span class="sr-only">Смотреть видео</span></button>
+              </div>
+              <div
+                class="absolute bottom-3 right-3 bg-background/95 text-foreground backdrop-blur-sm text-xs font-medium px-2 py-1 rounded-md z-20">
+                45:20</div>
+              <div class="absolute top-3 left-3 z-20">
+                <div
+                  class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground backdrop-blur-sm transition-colors duration-100">
+                  <i data-lucide="youtube" class="h-3 w-3"></i><span>YouTube</span>
+                </div>
+              </div><img alt="Introduction to Business" loading="lazy" decoding="async"
+                class="absolute h-full w-full inset-0 object-cover transition-transform duration-500 group-hover:scale-105"
+                src="image.svg?=300x200">
+            </div>
+            <div class="video-card-content p-5"><a class="block group/title"
+                href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <h3
+                  class="font-medium text-lg line-clamp-2 text-foreground group-hover/title:text-primary transition-colors">
+                  Introduction to Business</h3>
+              </a>
+              <p class="mt-2 text-sm text-muted-foreground line-clamp-2">Learn the fundamentals of business
+                management.</p>
+              <div class="flex items-center justify-between mt-4">
+                <div class="flex items-center gap-2"><span
+                    class="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8 ring-1 ring-border"><img
+                      class="aspect-square h-full w-full" alt="Business Academy" src="image.svg?=50"></span><a
+                    class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                    href="#business-academy">Business Academy</a></div>
+              </div>
+            </div>
+            <div
+              class="video-card-footer flex items-center px-5 py-3 border-t border-border text-xs text-muted-foreground">
+              <div class="flex items-center gap-2"><span>15K просмотров</span><span>•</span><span>2023-06-15</span>
+              </div>
+            </div>
+          </div>
+          <div class="video-card video-card-featured ">
+            <div class="video-card-image relative aspect-video w-full overflow-hidden rounded-t-2xl group">
+              <div class="absolute inset-0 bg-foreground/5 group-hover:bg-foreground/10 transition-colors z-10"></div>
+              <div
+                class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-100 z-20">
+                <button
+                  class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 w-14 h-14 rounded-full bg-background/95 text-primary hover:bg-primary hover:text-primary-foreground backdrop-blur-sm hover:scale-105 transition-all duration-100"><i
+                    data-lucide="play" class="h-6 w-6"></i><span class="sr-only">Смотреть видео</span></button>
+              </div>
+              <div
+                class="absolute bottom-3 right-3 bg-background/95 text-foreground backdrop-blur-sm text-xs font-medium px-2 py-1 rounded-md z-20">
+                32:45</div>
+              <div class="absolute top-3 left-3 z-20">
+                <div
+                  class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground backdrop-blur-sm transition-colors duration-100">
+                  <i data-lucide="youtube" class="h-3 w-3"></i><span>YouTube</span>
+                </div>
+              </div><img alt="Marketing Strategies" loading="lazy" decoding="async"
+                class="absolute h-full w-full inset-0 object-cover transition-transform duration-500 group-hover:scale-105"
+                src="image.svg?=300x200">
+            </div>
+            <div class="video-card-content p-5"><a class="block group/title"
+                href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <h3
+                  class="font-medium text-lg line-clamp-2 text-foreground group-hover/title:text-primary transition-colors">
+                  Marketing Strategies</h3>
+              </a>
+              <p class="mt-2 text-sm text-muted-foreground line-clamp-2">Discover effective marketing approaches for
+                your business.</p>
+              <div class="flex items-center justify-between mt-4">
+                <div class="flex items-center gap-2"><span
+                    class="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8 ring-1 ring-border"><img
+                      class="aspect-square h-full w-full" alt="Marketing Pro" src="image.svg?=50"></span><a
+                    class="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                    href="#marketing-pro">Marketing Pro</a></div>
+              </div>
+            </div>
+            <div
+              class="video-card-footer flex items-center px-5 py-3 border-t border-border text-xs text-muted-foreground">
+              <div class="flex items-center gap-2"><span>8.5K просмотров</span><span>•</span><span>2023-08-22</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4">Blocks (Organisms)</h2>
+      <div class="mb-8">
+        <h3 class="text-xl mb-3">Hero Section</h3>
+        <section class="hero hero-default  " style="background-image: url(&quot;image.svg?=1200x600&quot;);">
+          <div class="hero-container container mx-auto px-4 md:px-6 relative">
+            <div class="grid gap-12  lg:gap-16 items-center">
+              <div class="space-y-6  ">
+                <div class="inline-block rounded-full bg-accent text-accent-foreground px-3 py-1 text-sm hero-subtitle">
+                  Proven strategies for success</div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight hero-title ">Transform Your
+                  Business</h1>
+                <p class="text-lg text-muted-foreground max-w-[600px] hero-description ">Join thousands of
+                  entrepreneurs who have taken their business to the next level with our proven strategies and tools.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="mb-8">
+        <h3 class="text-xl mb-3">Features Section</h3>
+        <section class="features features-default ">
+          <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-col items-center justify-center space-y-4 text-center mb-16 ">
+              <div class="space-y-3 max-w-3xl">
+                <h2 class="text-3xl md:text-4xl font-medium tracking-tight ">Our Key Features</h2>
+                <p class="text-lg text-muted-foreground ">Discover why businesses choose our platform for their growth
+                  and success.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+</body>
+
+</html>
