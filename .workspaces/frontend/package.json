@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "@uikits/shadcn",
+    "@uikits/hinddy"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
