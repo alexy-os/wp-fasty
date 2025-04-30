@@ -10,8 +10,20 @@
   @apply bg-background text-center;
 }
 
+.hero-full-width {
+  @apply bg-background w-full;
+}
+
 .hero-content {
-  @apply bg-background text-foreground;
+  @apply bg-card text-card-foreground;
+}
+
+.hero-gradient {
+  @apply bg-gradient-to-r from-primary/10 to-primary/5;
+}
+
+.hero-dark {
+  @apply bg-slate-900 text-white;
 }
 
 .hero-sm {
@@ -20,4 +32,8 @@
 
 .hero-lg {
   @apply py-24;
+}
+
+.hero-xl {
+  @apply py-32;
 }

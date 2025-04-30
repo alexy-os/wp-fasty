@@ -1,9 +1,9 @@
 .card {
-  @apply bg-card text-card-foreground rounded-xl border shadow p-6;
+  @apply bg-card text-card-foreground rounded-xl border shadow-sm p-6;
 }
 
 .card-default {
-  @apply bg-card text-card-foreground rounded-xl border shadow;
+  @apply bg-card text-card-foreground border shadow-sm;
 }
 
 .card-outline {
@@ -14,10 +14,66 @@
   @apply bg-destructive text-destructive-foreground;
 }
 
+.card-primary {
+  @apply bg-primary text-primary-foreground;
+}
+
+.card-secondary {
+  @apply bg-secondary text-secondary-foreground;
+}
+
+.card-ghost {
+  @apply bg-transparent border-0 shadow-none;
+}
+
+.card-gradient {
+  @apply bg-gradient-to-br from-primary to-primary/70 text-primary-foreground border-none;
+}
+
 .card-sm {
   @apply p-4;
 }
 
 .card-lg {
   @apply p-8;
+}
+
+.card-xl {
+  @apply p-10;
+}
+
+.card-flat {
+  @apply shadow-none;
+}
+
+.card-elevation-sm {
+  @apply shadow-sm;
+}
+
+.card-elevation-md {
+  @apply shadow-md;
+}
+
+.card-elevation-lg {
+  @apply shadow-lg;
+}
+
+.card-radius-none {
+  @apply rounded-none;
+}
+
+.card-radius-sm {
+  @apply rounded-sm;
+}
+
+.card-radius-default {
+  @apply rounded-xl;
+}
+
+.card-radius-lg {
+  @apply rounded-2xl;
+}
+
+.card-radius-full {
+  @apply rounded-3xl;
 }

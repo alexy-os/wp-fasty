@@ -27,6 +27,9 @@
       ],
       "@uikits/*": [
         "src/uikits/*"
+      ],
+      "@hinddy/*": [
+        "src/uikits/hinddy/core/*"
       ]
     },
     "types": [

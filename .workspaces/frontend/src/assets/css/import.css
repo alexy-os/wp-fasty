@@ -2,7 +2,8 @@
 @import "tailwindcss";
 @import "./theme.css";
 @import "./hinddy/index.css";
-@source "../../App.tsx";
+
+@source "src/**/*.{js,jsx,ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
 

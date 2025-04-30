@@ -1,8 +1,8 @@
 import { cva } from 'class-variance-authority';
 
 export type HeroProps = {
-  variant?: "default" | "centered" | "full-width";
-  size?: "sm" | "default" | "lg";
+  variant?: "default" | "centered" | "full-width" | "content" | "gradient" | "dark";
+  size?: "sm" | "default" | "lg" | "xl";
   title?: string;
   description?: string;
   titleDataPath?: string;
@@ -17,12 +17,15 @@ export const heroVariants = cva(
         default: "bg-background",
         centered: "bg-background text-center",
         "full-width": "bg-background w-full",
-        content: "bg-background text-foreground",
+        content: "bg-card text-card-foreground",
+        gradient: "bg-gradient-to-r from-primary/10 to-primary/5",
+        dark: "bg-slate-900 text-white",
       },
       size: {
         sm: "py-8",
         default: "py-16",
         lg: "py-24",
+        xl: "py-32",
       },
     },
     defaultVariants: {

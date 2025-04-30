@@ -25,7 +25,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       '@root': path.resolve(__dirname, '../../'),
       '@wptheme': path.resolve(__dirname, '../../wp-fasty-ym'),
-      '@uikits': path.resolve(__dirname, './src/uikits')
+      '@uikits': path.resolve(__dirname, './src/uikits'),
+      '@hinddy': path.resolve(__dirname, './src/uikits/hinddy/core')
     },
   },
 });
