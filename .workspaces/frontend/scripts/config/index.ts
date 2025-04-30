@@ -2,8 +2,8 @@
 import type { VariantsParserConfig } from '../types';
 
 export const defaultConfig: VariantsParserConfig = {
-  inputDir: './src/components/ui',
-  outputDir: './src/components/css',
+  inputDir: './src/uikits/infobiz/core',
+  outputDir: './src/uikits/infobiz/css',
   interfacesGlob: '**/interface.ts',
   variantsObject: 'cva',
   variantsKey: 'variants',

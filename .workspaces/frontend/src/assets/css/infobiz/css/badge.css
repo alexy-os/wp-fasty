@@ -1,0 +1,31 @@
+.badge {
+  @apply inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors h-6;
+}
+
+.badge-default {
+  @apply bg-accent text-accent-foreground hover:bg-accent/80;
+}
+
+.badge-primary {
+  @apply bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground;
+}
+
+.badge-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+}
+
+.badge-outline {
+  @apply border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground;
+}
+
+.badge-tag {
+  @apply bg-accent px-2.5 py-0.5 text-xs font-medium text-accent-foreground transition-colors hover:bg-accent/80;
+}
+
+.badge-sm {
+  @apply h-5 text-[10px];
+}
+
+.badge-lg {
+  @apply h-7 px-3 text-sm;
+}

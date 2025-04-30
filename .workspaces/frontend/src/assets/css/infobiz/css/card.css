@@ -1,0 +1,63 @@
+.card {
+  @apply relative border border-border bg-background text-foreground;
+}
+
+.card-default {
+  @apply border border-border bg-background text-foreground shadow-sm;
+}
+
+.card-hover {
+  @apply border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1;
+}
+
+.card-interactive {
+  @apply border border-border bg-background text-foreground shadow-sm hover:shadow-xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 cursor-pointer;
+}
+
+.card-gradient {
+  @apply border-transparent bg-gradient-to-br from-primary/10 via-transparent to-transparent;
+}
+
+.card-outline {
+  @apply border-2 border-border bg-transparent;
+}
+
+.card-flat {
+  @apply shadow-none;
+}
+
+.card-sm {
+  @apply shadow-sm;
+}
+
+.card-md {
+  @apply shadow-md;
+}
+
+.card-lg {
+  @apply shadow-lg;
+}
+
+.card-xl {
+  @apply shadow-xl;
+}
+
+.card-none {
+  @apply rounded-none;
+}
+
+.card-sm {
+  @apply rounded-md;
+}
+
+.card-default {
+  @apply rounded-lg;
+}
+
+.card-lg {
+  @apply rounded-xl;
+}
+
+.card-xl {
+  @apply rounded-2xl;
+}

@@ -1,0 +1,31 @@
+.hero {
+  @apply w-full relative overflow-hidden py-24;
+}
+
+.hero-default {
+  @apply w-full bg-background relative overflow-hidden;
+}
+
+.hero-centered {
+  @apply w-full bg-background text-center relative overflow-hidden;
+}
+
+.hero-gradient {
+  @apply w-full bg-muted relative overflow-hidden;
+}
+
+.hero-muted {
+  @apply w-full py-24 md:py-32 lg:py-40 bg-muted relative overflow-hidden;
+}
+
+.hero-sm {
+  @apply py-16;
+}
+
+.hero-lg {
+  @apply py-24 md:py-32;
+}
+
+.hero-xl {
+  @apply py-24 md:py-32 lg:py-40;
+}

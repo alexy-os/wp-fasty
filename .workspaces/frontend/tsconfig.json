@@ -30,6 +30,9 @@
       ],
       "@hinddy/*": [
         "src/uikits/hinddy/core/*"
+      ],
+      "@infobiz/*": [
+        "src/uikits/infobiz/core/*"
       ]
     },
     "types": [

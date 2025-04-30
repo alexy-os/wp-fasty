@@ -1,169 +1,184 @@
-import { Button } from "@hinddy/ui/button";
-import { Text } from "@hinddy/ui/text";
-import { Badge } from "@hinddy/ui/badge";
-import { Card } from "@hinddy/components/card";
-import { Hero } from "@hinddy/blocks/hero";
+import { Button } from "@infobiz/ui/button";
+import { Badge } from "@infobiz/ui/badge";
+import { Card } from "@infobiz/components/card";
+import { BusinessmanCard } from "@infobiz/components/businessman-card";
+import { VideoCard } from "@infobiz/components/video-card";
+import { Hero } from "@infobiz/blocks/hero";
+import { Features } from "@infobiz/blocks/features";
 
 function App() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Hero section */}
-      <Hero
-        variant="gradient"
-        size="lg"
-        title="Добро пожаловать в WP Fasty"
-        description="Современный WordPress фреймворк с компонентным подходом и мощными инструментами для разработки"
-        buttons={
-          <div>
-            <Button variant="primary" size="lg" className="mr-4">Начать работу</Button>
-            <Button variant="outline" size="lg">Документация</Button>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8">Infobiz UI Kit Demo</h1>
+
+      {/* UI components section */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-semibold mb-4">UI Components (Atoms)</h2>
+
+        <div className="mb-8">
+          <h3 className="text-xl mb-3">Buttons</h3>
+          <div className="flex flex-wrap gap-4">
+            <Button>Default</Button>
+            <Button variant="primary">Primary</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button size="sm">Small</Button>
+            <Button size="lg">Large</Button>
           </div>
-        }
-      />
+        </div>
 
-      {/* Features section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <Text variant="title" size="xl" as="h2" className="text-center mb-12">
-            Особенности фреймворка
-          </Text>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card
-              variant="default"
-              title="Компонентный подход"
-              description="Модульная архитектура с переиспользуемыми UI компонентами"
-              badges={[{ text: "UI", variant: "default" }]}
-              elevation="md"
-              radius="lg"
-            >
-              <Text className="mt-4">
-                Разработка с использованием современных компонентов и блоков ускоряет
-                создание сайтов и упрощает поддержку проектов.
-              </Text>
-            </Card>
-
-            <Card
-              variant="primary"
-              title="Интеграция с Tailwind"
-              description="Мощные стили на основе utility-first подхода"
-              badges={[{ text: "CSS", variant: "secondary" }]}
-              elevation="md"
-              radius="lg"
-            >
-              <Text className="mt-4 text-primary-foreground">
-                Tailwind CSS позволяет быстро создавать красивые интерфейсы
-                без написания кастомных стилей.
-              </Text>
-            </Card>
-
-            <Card
-              variant="outline"
-              title="Шаблонизатор Latte"
-              description="Высокопроизводительные и легко поддерживаемые шаблоны"
-              badges={[{ text: "Templates", variant: "destructive" }]}
-              elevation="md"
-              radius="lg"
-            >
-              <Text className="mt-4">
-                Latte предоставляет чистый синтаксис для шаблонов и встроенную
-                систему кэширования для максимальной производительности.
-              </Text>
-            </Card>
+        <div className="mb-8">
+          <h3 className="text-xl mb-3">Badges</h3>
+          <div className="flex flex-wrap gap-4">
+            <Badge>Default</Badge>
+            <Badge variant="primary">Primary</Badge>
+            <Badge variant="secondary">Secondary</Badge>
+            <Badge variant="outline">Outline</Badge>
+            <Badge size="sm">Small</Badge>
+            <Badge size="lg">Large</Badge>
           </div>
         </div>
       </section>
 
-      {/* Testimonials section */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <Text variant="title" size="xl" as="h2" className="text-center mb-12">
-            Отзывы разработчиков
-          </Text>
+      {/* Components section */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-semibold mb-4">Components (Molecules)</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card
-              variant="ghost"
-              size="lg"
-              elevation="sm"
-            >
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
-                  <Text weight="bold">АК</Text>
-                </div>
-                <div>
-                  <Text weight="bold">Алексей Киреев</Text>
-                  <Text variant="muted" size="sm" className="mb-4">Ведущий разработчик</Text>
-                  <Text>
-                    "WP Fasty кардинально изменил мой подход к разработке WordPress сайтов.
-                    Компонентная структура и интеграция с современными инструментами сделали процесс
-                    более организованным и эффективным."
-                  </Text>
-                </div>
-              </div>
-            </Card>
+        <div className="mb-8">
+          <h3 className="text-xl mb-3">Cards</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="p-4">
+              <Card variant="default">
+                <h3 className="text-lg font-semibold mb-2">Basic Card</h3>
+                <p>This is a simple card component with content inside.</p>
+              </Card>
+            </div>
 
-            <Card
-              variant="ghost"
-              size="lg"
-              elevation="sm"
-            >
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground">
-                  <Text weight="bold">МС</Text>
-                </div>
-                <div>
-                  <Text weight="bold">Мария Смирнова</Text>
-                  <Text variant="muted" size="sm" className="mb-4">Front-end разработчик</Text>
-                  <Text>
-                    "Наконец-то WordPress фреймворк, в котором приятно работать. Семантические
-                    компоненты, интеграция с Tailwind и всё это отлично работает с WordPress.
-                    Сокращает время разработки на 40%."
-                  </Text>
-                </div>
-              </div>
-            </Card>
+            <div className="p-4">
+              <Card variant="hover">
+                <h3 className="text-lg font-semibold mb-2">Hover Card</h3>
+                <p>This card has a hover effect. Try hovering over it!</p>
+              </Card>
+            </div>
+
+            <div className="p-4">
+              <Card variant="outline">
+                <h3 className="text-lg font-semibold mb-2">Outline Card</h3>
+                <p>This is a card with an outline style.</p>
+              </Card>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-8">
+          <h3 className="text-xl mb-3">Businessman Cards</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <BusinessmanCard
+              name="John Doe"
+              category="Business Strategy"
+              revenue="$1.2M"
+              subscribers="15K"
+              tags={["Marketing", "Leadership"]}
+              image="https://via.placeholder.com/150"
+              profileUrl="#john-doe"
+            />
+
+            <BusinessmanCard
+              name="Jane Smith"
+              category="Digital Marketing"
+              revenue="$950K"
+              subscribers="12K"
+              tags={["SEO", "Content"]}
+              image="https://via.placeholder.com/150"
+              profileUrl="#jane-smith"
+              variant="featured"
+            />
+          </div>
+        </div>
+
+        <div className="mb-8">
+          <h3 className="text-xl mb-3">Video Cards</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <VideoCard
+              title="Introduction to Business"
+              description="Learn the fundamentals of business management."
+              author="Business Academy"
+              authorImage="https://via.placeholder.com/50"
+              authorUrl="#business-academy"
+              image="https://via.placeholder.com/300x200"
+              duration="45:20"
+              platform="YouTube"
+              views="15K"
+              publishedAt="2023-06-15"
+              url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            />
+
+            <VideoCard
+              title="Marketing Strategies"
+              description="Discover effective marketing approaches for your business."
+              author="Marketing Pro"
+              authorImage="https://via.placeholder.com/50"
+              authorUrl="#marketing-pro"
+              image="https://via.placeholder.com/300x200"
+              duration="32:45"
+              platform="YouTube"
+              views="8.5K"
+              publishedAt="2023-08-22"
+              url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              variant="featured"
+            />
           </div>
         </div>
       </section>
 
-      {/* CTA section */}
-      <Hero
-        variant="dark"
-        size="sm"
-        title="Готовы начать?"
-        description="Присоединяйтесь к сообществу разработчиков и создавайте современные WordPress сайты"
-        buttons={
-          <Button variant="primary" size="lg">Скачать фреймворк</Button>
-        }
-      />
+      {/* Blocks section */}
+      <section className="mb-12">
+        <h2 className="text-2xl font-semibold mb-4">Blocks (Organisms)</h2>
 
-      {/* Footer */}
-      <footer className="bg-card py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-6 md:mb-0">
-              <Text size="lg" weight="bold">WP Fasty</Text>
-              <Text variant="muted" size="sm">Современный WordPress фреймворк</Text>
-            </div>
-
-            <div className="flex space-x-4">
-              <Badge variant="secondary">v1.0.0</Badge>
-              <Badge variant="outline">WordPress</Badge>
-              <Badge variant="default">React</Badge>
-              <Badge variant="default">Tailwind</Badge>
-            </div>
-          </div>
-
-          <div className="border-t border-border mt-8 pt-8 text-center">
-            <Text variant="muted" size="sm">
-              © 2023 WP Fasty. Все права защищены.
-            </Text>
-          </div>
+        <div className="mb-8">
+          <h3 className="text-xl mb-3">Hero Section</h3>
+          <Hero
+            title="Transform Your Business"
+            subtitle="Proven strategies for success"
+            description="Join thousands of entrepreneurs who have taken their business to the next level with our proven strategies and tools."
+            backgroundImage="https://via.placeholder.com/1200x600"
+            accentColor="primary"
+          />
         </div>
-      </footer>
+
+        <div className="mb-8">
+          <h3 className="text-xl mb-3">Features Section</h3>
+          <Features
+            title="Our Key Features"
+            description="Discover why businesses choose our platform for their growth and success."
+            features={[
+              {
+                title: "Expert Guidance",
+                description: "Get personalized advice from industry experts.",
+                icon: "🧠"
+              },
+              {
+                title: "Proven Strategies",
+                description: "Access battle-tested methods that deliver results.",
+                icon: "📈"
+              },
+              {
+                title: "Community Support",
+                description: "Join a network of like-minded entrepreneurs.",
+                icon: "👥"
+              },
+              {
+                title: "Comprehensive Resources",
+                description: "Utilize our extensive library of tools and templates.",
+                icon: "🛠️"
+              }
+            ]}
+          />
+        </div>
+      </section>
     </div>
-  )
+  );
 }
 
 export default App;

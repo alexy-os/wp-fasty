@@ -144,31 +144,10 @@ class VariantsParser {
   private getComponentName(interfacePath: string): string {
     // ./src/components/ui/card/interface.ts => card
     const parts = interfacePath.split(path.sep);
-
-    // Поиск для компонентов в "ui" директории
     const uiIndex = parts.indexOf('ui');
     if (uiIndex !== -1 && parts.length > uiIndex + 1) {
       return parts[uiIndex + 1];
     }
-
-    // Поиск для компонентов в "components" директории
-    const componentsIndex = parts.indexOf('components');
-    if (componentsIndex !== -1 && parts.length > componentsIndex + 1) {
-      return parts[componentsIndex + 1];
-    }
-
-    // Поиск для компонентов в "blocks" директории
-    const blocksIndex = parts.indexOf('blocks');
-    if (blocksIndex !== -1 && parts.length > blocksIndex + 1) {
-      return parts[blocksIndex + 1];
-    }
-
-    // Если не найдено, попробуем взять последнюю часть пути перед "/interface.ts"
-    const lastFolderBeforeInterface = parts[parts.length - 2];
-    if (lastFolderBeforeInterface) {
-      return lastFolderBeforeInterface;
-    }
-
     throw new Error(`Cannot determine component name from path: ${interfacePath}`);
   }
 }
