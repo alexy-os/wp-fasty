@@ -1,5 +1,5 @@
 // cd .workspaces/frontend && bun src/html.tsx
-import { renderToStaticMarkup, renderToString } from 'react-dom/server';
+import { renderToStaticMarkup } from 'react-dom/server';
 import App from "@/App"
 
 /*
