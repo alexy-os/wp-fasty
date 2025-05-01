@@ -89,4 +89,4 @@ Components accept common props for customization:
 
 ## Example
 
-See the [ChatExample](.examples/chat-example.tsx) for a full implementation of a chat interface using the UI8px design system. 
+See the [Landing Page](./examples/landing-page-example.tsx) for a full implementation of a full page interface using the UI8px design system.
