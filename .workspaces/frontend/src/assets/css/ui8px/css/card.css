@@ -1,0 +1,43 @@
+.card {
+  @apply rounded-lg border border-border overflow-hidden;
+}
+
+.card-default {
+  @apply bg-card text-card-foreground;
+}
+
+.card-outline {
+  @apply bg-background text-foreground border-2;
+}
+
+.card-primary {
+  @apply bg-primary text-primary-foreground;
+}
+
+.card-secondary {
+  @apply bg-secondary text-secondary-foreground;
+}
+
+.card-accent {
+  @apply bg-accent text-accent-foreground;
+}
+
+.card-user {
+  @apply bg-accent/10 text-foreground;
+}
+
+.card-ai {
+  @apply bg-white border-gray-200 dark:bg-neutral-900 dark:border-neutral-700;
+}
+
+.card-flat {
+  @apply bg-card text-card-foreground;
+}
+
+.card-default {
+  @apply shadow-sm;
+}
+
+.card-raised {
+  @apply shadow-md;
+}

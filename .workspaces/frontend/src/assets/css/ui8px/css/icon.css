@@ -1,0 +1,39 @@
+.icon {
+  @apply  w-4 h-4;
+}
+
+.icon-default {
+  @apply text-foreground;
+}
+
+.icon-primary {
+  @apply text-primary;
+}
+
+.icon-secondary {
+  @apply text-secondary;
+}
+
+.icon-muted {
+  @apply text-muted-foreground;
+}
+
+.icon-accent {
+  @apply text-accent-foreground;
+}
+
+.icon-destructive {
+  @apply text-destructive;
+}
+
+.icon-sm {
+  @apply w-3.5 h-3.5;
+}
+
+.icon-lg {
+  @apply w-5 h-5;
+}
+
+.icon-xl {
+  @apply w-6 h-6;
+}

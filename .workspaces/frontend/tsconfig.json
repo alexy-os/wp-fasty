@@ -33,6 +33,9 @@
       ],
       "@infobiz/*": [
         "src/uikits/infobiz/core/*"
+      ],
+      "@ui8px/*": [
+        "src/uikits/ui8px/core/*"
       ]
     },
     "types": [

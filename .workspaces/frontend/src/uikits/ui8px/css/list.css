@@ -1,0 +1,31 @@
+.list {
+  @apply text-foreground;
+}
+
+.list-default {
+  @apply ;
+}
+
+.list-disc {
+  @apply list-disc list-outside;
+}
+
+.list-decimal {
+  @apply list-decimal list-outside;
+}
+
+.list-none {
+  @apply list-none;
+}
+
+.list-compact {
+  @apply space-y-1;
+}
+
+.list-default {
+  @apply space-y-1.5;
+}
+
+.list-relaxed {
+  @apply space-y-2;
+}

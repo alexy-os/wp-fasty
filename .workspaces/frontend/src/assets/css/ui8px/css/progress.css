@@ -1,0 +1,35 @@
+.progress {
+  @apply flex w-full rounded-full overflow-hidden h-1.5;
+}
+
+.progress-default {
+  @apply bg-secondary;
+}
+
+.progress-primary {
+  @apply bg-primary/20;
+}
+
+.progress-secondary {
+  @apply bg-secondary/30;
+}
+
+.progress-success {
+  @apply bg-green-100 dark:bg-green-900/30;
+}
+
+.progress-warning {
+  @apply bg-orange-100 dark:bg-orange-900/30;
+}
+
+.progress-destructive {
+  @apply bg-destructive/20;
+}
+
+.progress-sm {
+  @apply h-1;
+}
+
+.progress-lg {
+  @apply h-2;
+}

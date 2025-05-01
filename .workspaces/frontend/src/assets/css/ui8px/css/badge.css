@@ -1,0 +1,39 @@
+.badge {
+  @apply inline-flex items-center justify-center rounded-full font-medium text-xs px-2.5 py-0.5;
+}
+
+.badge-default {
+  @apply bg-muted text-muted-foreground;
+}
+
+.badge-primary {
+  @apply bg-primary text-primary-foreground;
+}
+
+.badge-secondary {
+  @apply bg-secondary text-secondary-foreground;
+}
+
+.badge-outline {
+  @apply border border-input bg-background text-foreground;
+}
+
+.badge-success {
+  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+}
+
+.badge-warning {
+  @apply bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200;
+}
+
+.badge-destructive {
+  @apply bg-destructive text-destructive-foreground;
+}
+
+.badge-sm {
+  @apply text-xs px-2 py-0.5;
+}
+
+.badge-lg {
+  @apply text-sm px-3 py-1;
+}

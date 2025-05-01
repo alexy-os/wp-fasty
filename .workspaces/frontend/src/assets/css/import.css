@@ -2,9 +2,10 @@
 @import "tailwindcss";
 @import "./theme.css";
 /*@import "./hinddy/index.css";*/
-@import "./infobiz/css/index.css";
+/*@import "./infobiz/css/index.css";*/
+@import "./ui8px/css/index.css";
 
-@source "src/**/*.{js,jsx,ts,tsx}";
+@source "src/ui8px/**/*.{js,jsx,ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
 
