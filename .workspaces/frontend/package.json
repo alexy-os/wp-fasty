@@ -17,7 +17,9 @@
     "semantic:watch": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css --watch",
     "variants:css": "bun scripts/variants-parser.ts",
     "variants:watch": "bun scripts/variants-parser.ts --watch",
-    "build:css": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css --minify --watch"
+    "build:css": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css --minify --watch",
+    "build:twig": "bun scripts/build-templates.js twig site",
+    "build:latte": "bun scripts/build-templates.js latte site"
   },
   "dependencies": {
     "lucide-react": "^0.503.0",

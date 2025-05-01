@@ -8,6 +8,7 @@
 ## Шаг 1: Настройка Symfony UX React
 
 ```bash
+cd .workspaces/ux-react
 composer require symfony/ux-react
 npm install -D @babel/preset-react --force
 npm run watch

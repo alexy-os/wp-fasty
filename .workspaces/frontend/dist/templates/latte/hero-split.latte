@@ -1,0 +1,14 @@
+{# Generated from React component HeroSplit #}
+<div {{ react_component(HeroSplit, []) }}>
+  <section class="hero"><div class="container"><div class="hero-content"><h1 class="hero-title">{$site.title}</h1><p class="hero-description">{$site.description}</p><div class="hero-actions">{if isset(site.button)}
+    <a href={button.href} className={`button button-${button.variant} ${button.className}`}>
+                    {button.text}
+                  </a>
+  {/if}buttons?.map(button => <Button key={button.id} variant={button.variant} size={button.size} className={button.className} href={button.href}>
+                  {button.text}
+                </Button>)</div></div><div class="{$site.images.grid.className}">{foreach site.images.grid.items as image}
+    <div key={image.id} className={image.className}>
+                  <img src={image.src} alt="" />
+                </div>
+  {/foreach}</div></div></section>
+</div>
