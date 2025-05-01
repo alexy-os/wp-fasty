@@ -19,6 +19,7 @@
     "ch": "rm -rf wp-fasty-ym/~cache",
     "semantic": "bun run --cwd .workspaces/frontend semantic:css",
     "vcss": "bun run --cwd .workspaces/frontend variants:css",
-    "watch:all": "bun run --cwd .workspaces/frontend watch:all"
+    "watch:all": "bun run --cwd .workspaces/frontend watch:all",
+    "generate:latte": "bun run --cwd .workspaces/frontend generate:latte"
   }
 }
