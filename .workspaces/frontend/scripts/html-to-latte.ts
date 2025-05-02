@@ -201,19 +201,78 @@ function processNestedLoops(element: any, parentIterator: string): void {
       if (!loopValue) return;
 
       // Проверяем, является ли это дочерним элементом родительского итератора
-      if (loopValue.startsWith('post.') && parentIterator === 'post') {
-        // Заменяем post.categories на $post['categories']
-        const nestedProperty = loopValue.split('.')[1];
+      if (loopValue.includes('.') && loopValue.startsWith(`${parentIterator}.`)) {
+        // Например: post.categories
+        const nestedProperty = loopValue.split('.')[1]; // categories
+
+        // Определяем корректное имя для итератора вложенного цикла
+        let itemName: string;
+        if (nestedProperty.endsWith('s')) {
+          // Для множественного числа убираем s на конце (categories -> category)
+          itemName = nestedProperty.slice(0, -1);
+        } else if (nestedProperty.endsWith('ies')) {
+          // Для особых случаев множественного числа (entities -> entity)
+          itemName = nestedProperty.slice(0, -3) + 'y';
+        } else {
+          // Для других случаев просто добавляем Item
+          itemName = nestedProperty + 'Item';
+        }
 
         // Удаляем текущий атрибут
         nested.removeAttribute('data-loop');
 
         // Устанавливаем новый атрибут с полным путем к переменной
         nested.setAttribute('data-loop', `${parentIterator}['${nestedProperty}']`);
+
+        // Сохраняем имя итератора для правильной обработки
+        nested.setAttribute('data-iterator', itemName);
+
+        // Обработка элементов внутри вложенного цикла
+        // Заменяем ссылки на переменные, чтобы они использовали правильный итератор
+        updateNestedLoopReferences(nested, itemName);
       }
     });
   } catch (error) {
     console.error('Ошибка при обработке вложенных циклов:', error);
+  }
+}
+
+/**
+ * Обновляет ссылки на переменные внутри вложенного цикла
+ */
+function updateNestedLoopReferences(nestedLoopElement: any, iteratorName: string): void {
+  try {
+    // Обрабатываем атрибуты href для ссылок в категориях
+    nestedLoopElement.querySelectorAll('a').forEach((link: any) => {
+      // Если это ссылка категории
+      if (link.classList.contains('card-category')) {
+        // Устанавливаем правильную переменную в href
+        link.setAttribute('href', `{$${iteratorName}['url']}`);
+      }
+    });
+
+    // Обрабатываем текстовое содержимое для категорий
+    const walker = nestedLoopElement.ownerDocument.createTreeWalker(
+      nestedLoopElement,
+      NodeFilter.SHOW_TEXT,
+      null
+    );
+
+    let node;
+    while (node = walker.nextNode()) {
+      if (node.textContent && node.textContent.trim()) {
+        // Здесь можно обновить текстовые узлы, если в них есть неправильные переменные
+        // Например, заменить {$category['name']} на {$iteratorName['name']}
+        if (node.textContent.includes('{$category')) {
+          node.textContent = node.textContent.replace(
+            /\{\$category\['([^']+)'\]\}/g,
+            `{$${iteratorName}['$1']}`
+          );
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Ошибка при обновлении ссылок во вложенном цикле:', error);
   }
 }
 
@@ -339,14 +398,22 @@ function specialLatteTransformations(document: Document): void {
         return value.startsWith('/') ? `{$site['url']}${value}` : value;
       }
 
-      const iterator = getIteratorName(element);
-      if (!iterator) return value;
-
       // Проверяем, не является ли это ссылкой категории
       const isCategoryLink = element.classList.contains('card-category');
       if (isCategoryLink) {
-        return `{$category['url']}`;
+        // Находим родительский элемент с data-iterator для категории
+        const categoryParent = element.closest('[data-iterator]');
+        if (categoryParent) {
+          const iteratorName = categoryParent.getAttribute('data-iterator');
+          if (iteratorName) {
+            return `{$${iteratorName}['url']}`;
+          }
+        }
       }
+
+      // Для обычных ссылок внутри цикла поста
+      const iterator = getIteratorName(element);
+      if (!iterator) return value;
 
       return `{$${iterator}['url']}`;
     });
@@ -424,13 +491,17 @@ function specialLatteTransformations(document: Document): void {
       const inLoop = !!element.closest('[data-contains-loop]');
       if (!inLoop) return;
 
-      const iterator = getIteratorName(element);
-      if (!iterator) return;
+      const postParent = element.closest('[data-contains-loop]');
+      if (!postParent) return;
+
+      const postIterator = postParent.getAttribute('data-iterator');
+      if (!postIterator) return;
 
       const parent = element.parentNode;
       if (!parent || parent.nodeType !== Node.ELEMENT_NODE) return;
 
-      const startIf = document.createComment(`if isset($${iterator}['categories']) && !empty($${iterator}['categories'])`);
+      // Используем правильное имя переменной в условии
+      const startIf = document.createComment(`if isset($${postIterator}['categories']) && !empty($${postIterator}['categories'])`);
       const endIf = document.createComment('/if');
 
       parent.insertBefore(startIf, element);
