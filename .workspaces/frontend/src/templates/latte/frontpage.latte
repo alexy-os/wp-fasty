@@ -38,9 +38,9 @@
           </figure>{/if}
         </a>
         <header class="card-header">
-          {if isset($categorie['categories']) && !empty($categorie['categories'])}<div class="card-categories">
-            {foreach $post['categories'] as $categorie}<a href="{$categorie['url']}"
-              class="card-category">Туториалы</a>{/foreach}
+          {if isset($category['categories']) && !empty($category['categories'])}<div class="card-categories">
+            {foreach $post['categories'] as $category}<a href="{$categorie['url']}"
+              class="card-category">{$category['name']}</a>{/foreach}
           </div>{/if}
           <h3 class="card-title">
             <a href="{$post['url']}">Начало работы с WP Fasty</a>

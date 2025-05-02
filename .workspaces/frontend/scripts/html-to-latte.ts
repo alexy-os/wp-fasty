@@ -121,8 +121,6 @@ function processLoopElements(document: Document): void {
       templateElement.removeAttribute('data-loop');
 
       // Определяем корректные имена переменных
-      // Для верхнего уровня: posts -> post
-      // Для вложенных: post.categories -> category
       let itemName: string;
 
       if (arrayName.includes('.')) {
@@ -131,8 +129,10 @@ function processLoopElements(document: Document): void {
         const parentVar = parts[0]; // например, post
         const childCollection = parts[1]; // например, categories
 
-        // Определяем корректное имя для итератора
-        if (childCollection.endsWith('s')) {
+        // Для категорий всегда используем 'category'
+        if (childCollection === 'categories') {
+          itemName = 'category';
+        } else if (childCollection.endsWith('s')) {
           // Для множественного числа убираем s на конце
           itemName = childCollection.slice(0, -1); // categories -> category
         } else if (childCollection.endsWith('ies')) {
@@ -246,8 +246,13 @@ function updateNestedLoopReferences(nestedLoopElement: any, iteratorName: string
     nestedLoopElement.querySelectorAll('a').forEach((link: any) => {
       // Если это ссылка категории
       if (link.classList.contains('card-category')) {
-        // Устанавливаем правильную переменную в href
-        link.setAttribute('href', `{$${iteratorName}['url']}`);
+        // Используем правильное имя итератора - всегда 'category' для категорий
+        link.setAttribute('href', `{$category['url']}`);
+
+        // Обновляем также текстовое содержимое
+        if (link.textContent && link.textContent.trim()) {
+          link.textContent = `{$category['name']}`;
+        }
       }
     });
 
@@ -500,12 +505,20 @@ function specialLatteTransformations(document: Document): void {
       const parent = element.parentNode;
       if (!parent || parent.nodeType !== Node.ELEMENT_NODE) return;
 
-      // Используем правильное имя переменной в условии
+      // Исправляем условие для проверки категорий
       const startIf = document.createComment(`if isset($${postIterator}['categories']) && !empty($${postIterator}['categories'])`);
       const endIf = document.createComment('/if');
 
       parent.insertBefore(startIf, element);
       parent.insertBefore(endIf, element.nextSibling);
+
+      // Исправляем названия переменных для циклов по категориям
+      const categoryLinks = element.querySelectorAll('.card-category');
+      categoryLinks.forEach(link => {
+        if (link.textContent && link.textContent.trim()) {
+          link.textContent = `{$category['name']}`;
+        }
+      });
     });
   } catch (error) {
     console.error('Ошибка при специальных преобразованиях:', error);
