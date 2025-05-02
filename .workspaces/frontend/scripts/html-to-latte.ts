@@ -505,12 +505,18 @@ function specialLatteTransformations(document: Document): void {
       const parent = element.parentNode;
       if (!parent || parent.nodeType !== Node.ELEMENT_NODE) return;
 
-      // Исправляем условие для проверки категорий
+      // Исправляем условие - проверяем только переменную $post['categories']
       const startIf = document.createComment(`if isset($${postIterator}['categories']) && !empty($${postIterator}['categories'])`);
       const endIf = document.createComment('/if');
 
       parent.insertBefore(startIf, element);
       parent.insertBefore(endIf, element.nextSibling);
+
+      // Находим data-loop атрибут и устанавливаем его значение
+      const loopElement = element.querySelector('[data-loop]');
+      if (loopElement) {
+        loopElement.setAttribute('data-loop', `${postIterator}.categories`);
+      }
 
       // Исправляем названия переменных для циклов по категориям
       const categoryLinks = element.querySelectorAll('.card-category');
@@ -518,11 +524,34 @@ function specialLatteTransformations(document: Document): void {
         if (link.textContent && link.textContent.trim()) {
           link.textContent = `{$category['name']}`;
         }
+        link.setAttribute('href', `{$category['url']}`);
       });
     });
   } catch (error) {
     console.error('Ошибка при специальных преобразованиях:', error);
   }
+}
+
+/**
+ * Добавим дополнительную функцию для обработки HTML после всех трансформаций
+ */
+function postProcessHtml(html: string): string {
+  let result = html;
+
+  // Исправляем ошибку с неправильной переменной $categorie в href
+  result = result.replace(/\{\$categorie\['([^']+)'\]\}/g, '{$category[\'$1\']}');
+
+  // Исправляем все условия с $category['categories']
+  result = result.replace(/if isset\(\$category\['categories'\]\) && !empty\(\$category\['categories'\]\)/g,
+    'if isset($post[\'categories\']) && !empty($post[\'categories\'])');
+
+  result = result.replace(/if isset\(\$post\['categories'\]\) && !empty\(\$category\['categories'\]\)/g,
+    'if isset($post[\'categories\']) && !empty($post[\'categories\'])');
+
+  // Для простого условия
+  result = result.replace(/if isset\(\$category\['categories'\]\)/g, 'if isset($post[\'categories\'])');
+
+  return result;
 }
 
 /**
@@ -556,8 +585,24 @@ function cleanupAttributes(html: string): string {
     result = result.replace(/\s*data-var="[^"]*"/g, '');
     result = result.replace(/\s*data-loop="[^"]*"/g, '');
 
+    // Исправляем ссылки на категории
+    result = result.replace(/\{\$categorie\['([^']+)'\]\}/g, '{$category[\'$1\']}');
+
+    // Исправляем проверки условий для категорий - удаляем упоминание $category['categories']
+    result = result.replace(/if isset\(\$category\['categories'\]\) && !empty\(\$category\['categories'\]\)/g,
+      'if isset($post[\'categories\']) && !empty($post[\'categories\'])');
+
+    result = result.replace(/if isset\(\$post\['categories'\]\) && !empty\(\$category\['categories'\]\)/g,
+      'if isset($post[\'categories\']) && !empty($post[\'categories\'])');
+
+    // Для простого условия
+    result = result.replace(/if isset\(\$category\['categories'\]\)/g, 'if isset($post[\'categories\'])');
+
     // Форматирование вывода, добавляем отступы и переносы строк
     result = formatLatteOutput(result);
+
+    // Применяем постобработку
+    result = postProcessHtml(result);
 
     return result;
   } catch (error) {
