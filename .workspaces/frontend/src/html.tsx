@@ -1,6 +1,6 @@
 // cd .workspaces/frontend && bun src/html.tsx
 import { renderToStaticMarkup } from 'react-dom/server';
-import App from "@/App"
+import App from "@/uikits/infobiz/App"
 
 /*
 * with data-reactid attributes for React hydration

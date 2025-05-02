@@ -18,8 +18,7 @@
     "variants:css": "bun scripts/variants-parser.ts",
     "variants:watch": "bun scripts/variants-parser.ts --watch",
     "build:css": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css --minify --watch",
-    "build:twig": "bun scripts/build-templates.js twig site",
-    "build:latte": "bun scripts/build-templates.js latte site"
+    "build:latte": "bun scripts/react-to-latte.js"
   },
   "dependencies": {
     "lucide-react": "^0.503.0",
@@ -27,6 +26,10 @@
   },
   "devDependencies": {
     "@babel/parser": "^7.27.0",
+    "@babel/preset-env": "^7.27.1",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@babel/register": "^7.27.1",
     "@babel/traverse": "^7.27.0",
     "@tailwindcss/cli": "^4.1.4",
     "@tailwindcss/vite": "^4.1.5",
@@ -39,6 +42,7 @@
     "clsx": "^2.1.1",
     "concurrently": "^9.1.2",
     "glob": "^11.0.2",
+    "jsdom": "^26.1.0",
     "prettier": "^3.5.3",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.2.0",
