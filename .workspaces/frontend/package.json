@@ -21,16 +21,19 @@
     "build:latte": "bun scripts/react-to-latte.js"
   },
   "dependencies": {
+    "@babel/generator": "^7.27.1",
+    "@babel/types": "^7.27.1",
     "lucide-react": "^0.503.0",
-    "react": "^19.1.0"
+    "react": "^19.1.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "@babel/parser": "^7.27.0",
+    "@babel/parser": "^7.27.1",
     "@babel/preset-env": "^7.27.1",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
     "@babel/register": "^7.27.1",
-    "@babel/traverse": "^7.27.0",
+    "@babel/traverse": "^7.27.1",
     "@tailwindcss/cli": "^4.1.4",
     "@tailwindcss/vite": "^4.1.5",
     "@types/babel__traverse": "^7.20.7",
