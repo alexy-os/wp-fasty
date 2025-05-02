@@ -1,4 +1,3 @@
-// cd .workspaces/frontend && bun scripts/html-to-latte.ts FrontPageTemplate
 import { renderToStaticMarkup } from 'react-dom/server';
 import { JSDOM } from 'jsdom';
 import * as fs from 'fs';
