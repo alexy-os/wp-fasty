@@ -40,6 +40,8 @@ interface FrontPageProps {
   site: Site;
 }
 
+const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiM2NjY2NjYiLz48L3N2Zz4=";
+
 // Пример данных для контекста
 export const Content = {
   site: {
@@ -56,7 +58,7 @@ export const Content = {
       title: "Начало работы с WP Fasty",
       excerpt: "<p>Узнайте, как быстро создать современный сайт с помощью нашей темы...</p>",
       thumbnail: {
-        url: "/images/post-1.jpg",
+        url: placeholderImage,
         alt: "Thumbnail for post 1"
       },
       categories: [
@@ -73,7 +75,7 @@ export const Content = {
       title: "Продвинутые техники в React",
       excerpt: "<p>Рассмотрим ключевые техники оптимизации React-приложений...</p>",
       thumbnail: {
-        url: "/images/post-2.jpg",
+        url: placeholderImage,
         alt: "Thumbnail for post 2"
       },
       categories: [
@@ -84,6 +86,19 @@ export const Content = {
         formatted: "2023-04-15",
         display: "15 Апреля, 2023"
       }
+    },
+    {
+      url: "/post-3",
+      title: "React и Latte: совместная работа",
+      excerpt: "<p>Узнайте, как использовать React и Latte вместе для создания мощных веб-приложений...</p>",
+      thumbnail: {
+        url: placeholderImage,
+        alt: "Thumbnail for post 3"
+      },
+      categories: [
+        { url: "/category/development", name: "Разработка" },
+        { url: "/category/react", name: "React" }
+      ],
     }
   ]
 };

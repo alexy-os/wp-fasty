@@ -1,8 +1,9 @@
-import { LandingPageExample } from "@uikits/ui8px/examples/landing-page-example";
+//import { LandingPageExample } from "@uikits/ui8px/examples/landing-page-example";
+import FrontPage from "@uikits/latte/components/FrontPage";
 
 function App() {
   return (
-    <LandingPageExample />
+    <FrontPage />
   )
 }
 
