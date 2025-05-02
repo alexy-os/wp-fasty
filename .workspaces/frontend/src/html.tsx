@@ -1,6 +1,6 @@
 // cd .workspaces/frontend && bun src/html.tsx
 import { renderToStaticMarkup } from 'react-dom/server';
-import App from "@/uikits/infobiz/App"
+import FrontPage from "@/uikits/latte/components/FrontPage"
 
 /*
 * with data-reactid attributes for React hydration
@@ -12,6 +12,6 @@ import App from "@/uikits/infobiz/App"
 * Creates "clean" static HTML without React attributes
 * Saves bytes (smaller size)
 */
-const html = renderToStaticMarkup(<App />);
+const html = renderToStaticMarkup(<FrontPage />);
 
 console.log(html);
