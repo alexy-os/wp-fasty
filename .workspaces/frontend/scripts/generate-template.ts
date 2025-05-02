@@ -103,7 +103,123 @@ function generateTemplate(componentName: string): void {
   const templatePath = path.join(COMPONENTS_DIR, `${componentName}Template.tsx`);
   fs.writeFileSync(templatePath, code);
 
-  console.log(`Шаблон успешно создан: ${templatePath}`);
+  console.log(`Базовый шаблон создан: ${templatePath}`);
+
+  // Этап 2: Обертывание элементов с data-var в условия
+  wrapElementsWithConditions(templatePath);
+}
+
+/**
+ * Оборачивает элементы с data-var в условные выражения
+ * @param filePath Путь к файлу шаблона
+ */
+function wrapElementsWithConditions(filePath: string): void {
+  const code = fs.readFileSync(filePath, 'utf-8');
+
+  // Используем регулярное выражение для поиска и замены JSX элементов с data-var
+  // Это более надежный способ, чем работа с AST для такой специфической задачи
+
+  // Регулярное выражение для поиска элементов с data-var
+  const dataVarRegex = /<([a-zA-Z][a-zA-Z0-9]*)([^>]*?)data-var="([^"]+)"([^>]*?)>(.*?)<\/\1>/gs;
+
+  // Заменяем на условное выражение
+  const processedCode = code.replace(dataVarRegex, (match, tag, attrsBeforeVar, varName, attrsAfterVar, content) => {
+    // Убираем data-var атрибут из результата
+    const attrs = attrsBeforeVar + attrsAfterVar;
+
+    // Создаем условное выражение
+    return `{${varName} && (<${tag}${attrs}>${content}</${tag}>)}`;
+  });
+
+  // Если нашли и заменили хотя бы одно совпадение
+  if (processedCode !== code) {
+    fs.writeFileSync(filePath, processedCode);
+    console.log(`Шаблон обработан с условными выражениями: ${filePath}`);
+  } else {
+    // Пробуем альтернативный подход для самозакрывающихся тегов
+    const selfClosingDataVarRegex = /<([a-zA-Z][a-zA-Z0-9]*)([^>]*?)data-var="([^"]+)"([^>]*?)\/>/gs;
+
+    const processedCodeSelfClosing = code.replace(selfClosingDataVarRegex, (match, tag, attrsBeforeVar, varName, attrsAfterVar) => {
+      // Убираем data-var атрибут из результата
+      const attrs = attrsBeforeVar + attrsAfterVar;
+
+      // Создаем условное выражение для самозакрывающегося тега
+      return `{${varName} && (<${tag}${attrs}/>)}`;
+    });
+
+    if (processedCodeSelfClosing !== code) {
+      fs.writeFileSync(filePath, processedCodeSelfClosing);
+      console.log(`Шаблон обработан с условными выражениями (самозакрывающиеся теги): ${filePath}`);
+    } else {
+      console.log(`Условные выражения не добавлены (не найдено подходящих элементов)`);
+
+      // Еще один подход - пробуем обрабатывать JSX элементы с data-var внутри других JSX элементов
+      const jsxCode = fs.readFileSync(filePath, 'utf-8');
+
+      // Выполняем более сложное преобразование для обработки вложенных структур
+      try {
+        const ast = parse(jsxCode, {
+          sourceType: 'module',
+          plugins: ['jsx', 'typescript']
+        });
+
+        // Флаг для отслеживания изменений
+        let modified = false;
+
+        traverse(ast, {
+          JSXOpeningElement(path) {
+            const attrs = path.node.attributes;
+            const dataVarAttr = attrs.find(attr =>
+              attr.type === 'JSXAttribute' &&
+              attr.name.name === 'data-var'
+            );
+
+            if (dataVarAttr && dataVarAttr.value && dataVarAttr.value.type === 'StringLiteral') {
+              const varName = dataVarAttr.value.value;
+              const elementPath = path.parentPath;
+
+              // Проверяем, что элемент не находится внутри условного выражения
+              const isInsideCondition = elementPath.findParent(p =>
+                p.isLogicalExpression() ||
+                p.isConditionalExpression()
+              );
+
+              if (!isInsideCondition && elementPath.isJSXElement()) {
+                // Создаем новое выражение: varName && (<element>...</element>)
+                const jsxElement = elementPath.node;
+
+                // Создаем условие
+                const condition = t.identifier(varName);
+                const wrappedElement = t.logicalExpression(
+                  '&&',
+                  condition,
+                  jsxElement
+                );
+
+                // Заменяем JSX элемент условным выражением
+                elementPath.replaceWith(
+                  t.jsxExpressionContainer(wrappedElement)
+                );
+
+                modified = true;
+              }
+            }
+          }
+        });
+
+        // Если были сделаны изменения, сохраняем файл
+        if (modified) {
+          const { code: updatedCode } = generate(ast, {
+            retainLines: true
+          });
+          fs.writeFileSync(filePath, updatedCode);
+          console.log(`Шаблон обработан с условными выражениями (сложная структура): ${filePath}`);
+        }
+      } catch (error) {
+        console.error('Ошибка при обработке JSX с помощью AST:', error);
+      }
+    }
+  }
 }
 
 // Запуск скрипта
