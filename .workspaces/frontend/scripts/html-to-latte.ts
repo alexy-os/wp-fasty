@@ -449,11 +449,18 @@ function cleanupAttributes(html: string): string {
     let result = html;
 
     // Заменяем комментарии-маркеры на Latte теги
-    result = result.replace(/<!--\s*foreach \$([^\s]+) as \$([^\s]+)\s*-->/g, '{foreach $1 as $2}');
+    // Используем функцию обратного вызова для правильной замены
+    result = result.replace(/<!--\s*foreach \$([^\s]+) as \$([^\s]+)\s*-->/g, (match, p1, p2) => {
+      return `{foreach $${p1} as $${p2}}`;
+    });
+
     result = result.replace(/<!--\s*\/foreach\s*-->/g, '{/foreach}');
 
     // Заменяем условные комментарии на условные теги Latte
-    result = result.replace(/<!--\s*if ([^>]*)\s*-->/g, '{if $1}');
+    result = result.replace(/<!--\s*if ([^>]*)\s*-->/g, (match, condition) => {
+      return `{if ${condition}}`;
+    });
+
     result = result.replace(/<!--\s*\/if\s*-->/g, '{/if}');
 
     // Правильно форматируем переменные внутри Latte шаблона
