@@ -1,6 +1,6 @@
 // cd .workspaces/frontend && bun src/html.tsx
 import { renderToStaticMarkup } from 'react-dom/server';
-import FrontPage from "@/uikits/latte/components/FrontPage"
+import FrontPage from "@/uikits/latte/components/FrontPageTemplate"
 
 /*
 * with data-reactid attributes for React hydration
