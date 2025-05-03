@@ -19,6 +19,7 @@ use WPFasty\Data\ContextSchemaGenerator;
 use WPFasty\Theme\ThemeService;
 use WPFasty\Template\TemplateEngineInterface;
 use WPFasty\Template\LatteEngine;
+use WPFasty\Template\ContextTypeHelper;
 use WPFasty\Hooks\ThemeHooks;
 use WPFasty\Hooks\ActivationHooks;
 use WPFasty\Tools\ContextSchemaCommand;
@@ -79,6 +80,11 @@ return function (Container $container): void {
         
         return new LatteEngine($viewsDir, $cacheDir);
     }, TemplateEngineInterface::class);
+    
+    // Register context type helper
+    $container->singleton('template.context_type_helper', function ($container) {
+        return new ContextTypeHelper();
+    }, ContextTypeHelper::class);
     
     // Register context factory
     $container->singleton('data.context_factory', function ($container) {

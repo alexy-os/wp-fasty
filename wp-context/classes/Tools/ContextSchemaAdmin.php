@@ -79,7 +79,7 @@ class ContextSchemaAdmin implements BootableServiceInterface
      */
     public function renderAdminPage(): void
     {
-        $schemaPath = get_template_directory() . '/context.json';
+        $schemaPath = get_template_directory() . '/context.schema.json';
         $schemaExists = file_exists($schemaPath);
         $schemaData = [];
         
@@ -100,7 +100,7 @@ class ContextSchemaAdmin implements BootableServiceInterface
             
             <div class="card">
                 <h2><?php _e('Update Schema', 'wp-fasty'); ?></h2>
-                <p><?php _e('This will generate or update the context.json file that defines the structure of data available in templates.', 'wp-fasty'); ?></p>
+                <p><?php _e('This will generate or update the context.schema.json file that defines the structure of data available in templates.', 'wp-fasty'); ?></p>
                 
                 <form method="post">
                     <?php wp_nonce_field('wpfasty_update_schema_nonce'); ?>

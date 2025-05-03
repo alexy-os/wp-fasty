@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WPFasty\Template;
 
 use Latte\Engine;
+use WPFasty\Template\ContextTypeHelper;
 
 /**
  * Latte template engine implementation
@@ -13,6 +14,7 @@ class LatteEngine implements TemplateEngineInterface
 {
     private Engine $latte;
     private string $templateDir;
+    private ?ContextTypeHelper $typeHelper;
     
     /**
      * Constructor
@@ -23,6 +25,9 @@ class LatteEngine implements TemplateEngineInterface
     public function __construct(string $templateDir, string $tempDir)
     {
         $this->templateDir = $templateDir;
+        
+        // Initialize the type helper
+        $this->typeHelper = new ContextTypeHelper();
         
         // Ensure template directory exists
         if (!is_dir($templateDir)) {
@@ -49,8 +54,26 @@ class LatteEngine implements TemplateEngineInterface
         // Add WordPress extension
         $this->latte->addExtension(new WordPressExtension());
         
-        // List available templates
-        $this->listTemplates($templateDir);
+        // Register types
+        $this->registerTypes();
+    }
+    
+    /**
+     * Register context types with Latte
+     */
+    private function registerTypes(): void
+    {
+        // Check if types file exists
+        if ($this->typeHelper && $this->typeHelper->hasTypesFile()) {
+            // Include types file to make the types available to IDE
+            include_once $this->typeHelper->getTypesPath();
+            
+            // Add a filter to add type information
+            $this->latte->addFilter('withTypes', function ($value, $type) {
+                // This doesn't modify the value, just helps IDE with type checking
+                return $value;
+            });
+        }
     }
     
     /**
@@ -75,6 +98,12 @@ class LatteEngine implements TemplateEngineInterface
         }
         
         try {
+            // Add context type information if available
+            if ($this->typeHelper) {
+                $contextType = $this->typeHelper->detectContextType($template);
+                $context['_contextType'] = $contextType;
+            }
+            
             // Render template
             $result = $this->latte->renderToString($templatePath, $context);
             return $result;
