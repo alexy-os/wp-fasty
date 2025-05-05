@@ -1,8 +1,9 @@
 import React from 'react';
 import { WPFastyContextSchema } from './types/WPFastY-YM-ContextTypes';
 
-// Тип для постов, расширяющий базовый тип с индексной сигнатурой
-type PostType = WPFastyContextSchema['archive']['posts'][number] & { [k: string]: unknown };
+// Define specific types to match the schema exactly
+type PostType = WPFastyContextSchema['archive']['posts'];
+// type CategoryType = WPFastyContextSchema['archive']['posts']['categories'][number];
 
 // Обновленная типизация
 type FrontPageProps = {
@@ -263,7 +264,7 @@ const FrontPage: React.FC<FrontPageProps> = ({ site, page, posts }) => {
             </header>
 
             <div className="featured-grid">
-              {postsData.map((post, index) =>
+              {postsData.map((post: WPFastyContextSchema['archive']['posts'], index) =>
                 <article key={index} className="card card-featured" data-loop="posts">
                   <a href={post.url} className="card-link">
                     {post.thumbnail &&
@@ -281,7 +282,6 @@ const FrontPage: React.FC<FrontPageProps> = ({ site, page, posts }) => {
                             key={categoryIndex}
                             href={category.url}
                             className="card-category" data-loop="post.categories">
-
                             {category.name}
                           </a>
                         )}
@@ -298,7 +298,6 @@ const FrontPage: React.FC<FrontPageProps> = ({ site, page, posts }) => {
                       <div
                         className="card-excerpt"
                         dangerouslySetInnerHTML={{ __html: post.excerpt }} />
-
                     }
                   </div>
 
