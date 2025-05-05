@@ -19,6 +19,9 @@ use WPFasty\Theme\ThemeService;
 use WPFasty\Template\TemplateEngineInterface;
 use WPFasty\Template\LatteEngine;
 use WPFasty\Hooks\ThemeHooks;
+use WPFasty\Hooks\ActivationHooks;
+use WPFasty\Tools\ContextSchemaAdmin;
+use WPFasty\Data\ContextSchemaGenerator;
 
 return function (Container $container): void {
     // Register templates
@@ -38,6 +41,12 @@ return function (Container $container): void {
     }, ThemeHooks::class);
     $container->addTag('hooks.theme', ContainerInterface::TAG_BOOTABLE);
     
+    // Register activation hooks
+    $container->singleton('hooks.activation', function ($container) {
+        return new ActivationHooks($container);
+    }, ActivationHooks::class);
+    $container->addTag('hooks.activation', ContainerInterface::TAG_BOOTABLE);
+    
     $container->singleton('hooks.assets', function ($container) {
         return new AssetsHooks($container);
     }, AssetsHooks::class);
@@ -48,6 +57,12 @@ return function (Container $container): void {
         return new HtmlToEditor($container);
     }, HtmlToEditor::class);
     $container->addTag('tools.html_editor', ContainerInterface::TAG_BOOTABLE);
+
+    // Register admin interfaces
+    $container->singleton('tools.context_schema_admin', function ($container) {
+        return new ContextSchemaAdmin($container);
+    }, ContextSchemaAdmin::class);
+    $container->addTag('tools.context_schema_admin', ContainerInterface::TAG_BOOTABLE);
     
     // Register template engine
     $container->singleton('template.engine', function ($container) {
@@ -62,6 +77,12 @@ return function (Container $container): void {
     $container->singleton('data.context_factory', function ($container) {
         return new ContextFactory($container);
     }, ContextFactory::class);
+    
+    // Register context schema generator
+    $container->singleton('data.context_schema_generator', function ($container) {
+        return new ContextSchemaGenerator($container);
+    }, ContextSchemaGenerator::class);
+    $container->addTag('data.context_schema_generator', ContainerInterface::TAG_BOOTABLE);
     
     // Register theme service
     $container->singleton('theme', function ($container) {

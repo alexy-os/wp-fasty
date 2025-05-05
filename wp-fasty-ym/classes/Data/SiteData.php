@@ -48,7 +48,10 @@ final readonly class PageData extends DataObject
         public ?string $url = null,
         public ?string $excerpt = null,
         public ?string $featuredImage = null,
-        public ?array $meta = null
+        public ?array $meta = null,
+        public ?array $categories = null,
+        public ?array $thumbnail = null,
+        public ?array $date = null
     ) {
     }
     
@@ -66,7 +69,10 @@ final readonly class PageData extends DataObject
             'excerpt' => has_excerpt($post) ? get_the_excerpt($post) : null,
             'featuredImage' => has_post_thumbnail($post) ? 
                 get_the_post_thumbnail_url($post, 'full') : null,
-            'meta' => self::getPostMeta($post->ID)
+            'thumbnail' => self::getPostThumbnail($post),
+            'meta' => self::getPostMeta($post->ID),
+            'categories' => self::getPostCategories($post->ID),
+            'date' => self::getPostDate($post)
         ];
     }
     
@@ -79,6 +85,85 @@ final readonly class PageData extends DataObject
         return array_map(function($value) {
             return count($value) === 1 ? $value[0] : $value;
         }, $meta);
+    }
+    
+    /**
+     * Get post categories as array
+     * 
+     * @param int $postId The post ID
+     * @return array|null Array of categories or null if no categories
+     */
+    private static function getPostCategories(int $postId): ?array
+    {
+        $categories = get_the_category($postId);
+        
+        if (empty($categories)) {
+            return null;
+        }
+        
+        $result = [];
+        
+        foreach ($categories as $category) {
+            $result[] = [
+                'name' => $category->name,
+                'url' => get_category_link($category->term_id),
+                'id' => $category->term_id,
+                'slug' => $category->slug,
+                'description' => $category->description,
+                'count' => $category->count
+            ];
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Get thumbnail data as array
+     * 
+     * @param \WP_Post $post The post object
+     * @return array|null Array with image data or null if no thumbnail
+     */
+    private static function getPostThumbnail(\WP_Post $post): ?array
+    {
+        if (!has_post_thumbnail($post)) {
+            return null;
+        }
+        
+        $thumbnailId = get_post_thumbnail_id($post);
+        $thumbnailSrc = wp_get_attachment_image_src($thumbnailId, 'full');
+        $thumbnailAlt = get_post_meta($thumbnailId, '_wp_attachment_image_alt', true);
+        
+        if (!$thumbnailSrc) {
+            return null;
+        }
+        
+        return [
+            'url' => $thumbnailSrc[0],
+            'width' => $thumbnailSrc[1],
+            'height' => $thumbnailSrc[2],
+            'alt' => $thumbnailAlt ?: get_the_title($post),
+            'id' => $thumbnailId
+        ];
+    }
+    
+    /**
+     * Get post date data
+     * 
+     * @param \WP_Post $post The post object
+     * @return array Date information
+     */
+    private static function getPostDate(\WP_Post $post): array
+    {
+        return [
+            'formatted' => get_the_date('c', $post),  // ISO 8601 format for datetime attribute
+            'display' => get_the_date('', $post),     // Formatted based on WordPress settings
+            'modified' => get_the_modified_date('c', $post),
+            'modified_display' => get_the_modified_date('', $post),
+            'timestamp' => get_post_time('U', false, $post),
+            'year' => get_the_date('Y', $post),
+            'month' => get_the_date('m', $post),
+            'day' => get_the_date('d', $post)
+        ];
     }
 }
 
