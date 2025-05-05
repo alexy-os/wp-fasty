@@ -1,119 +1,242 @@
 import React from 'react';
+import { WPFastyContextSchema } from './types/WPFastY-YM-ContextTypes';
 
-interface Category {
-  url: string;
-  name: string;
-}
+// Тип для постов, расширяющий базовый тип с индексной сигнатурой
+type PostType = WPFastyContextSchema['archive']['posts'][number] & { [k: string]: unknown };
 
-interface Thumbnail {
-  url: string;
-  alt: string;
-}
-
-interface PostDate {
-  formatted: string;
-  display: string;
-}
-
-interface Post {
-  url: string;
-  title: string;
-  excerpt?: string;
-  thumbnail?: Thumbnail;
-  categories?: Category[];
-  date?: PostDate;
-}
-
-interface Page {
-  content: string;
-}
-
-interface Site {
-  title: string;
-  description: string;
-  url: string;
-}
-
-interface FrontPageProps {
-  page?: Page;
-  posts?: Post[];
-  site: Site;
-}
+// Обновленная типизация
+type FrontPageProps = {
+  site: WPFastyContextSchema['site'];
+  page?: WPFastyContextSchema['page'];
+  posts?: PostType[];
+};
 
 const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiM2NjY2NjYiLz48L3N2Zz4=";
 
-// Пример данных для контекста
-export const Content = {
+// Обновленные данные для контекста с полным соответствием схеме
+export const Content: FrontPageProps = {
   site: {
     title: "WP Fasty",
     description: "Современная WordPress тема с React и Latte",
-    url: "https://example.com"
+    url: "https://example.com",
+    theme_url: "/wp-content/themes/wp-fasty",
+    lang: "ru",
+    charset: "UTF-8"
   },
   page: {
-    content: "<h2>О нас</h2><p>Мы создаем современные веб-решения, объединяя мощь WordPress с гибкостью React и Latte.</p>"
+    page: {
+      title: "Главная страница",
+      content: "<h2>О нас</h2><p>Описание компании</p>",
+      slug: "home",
+      url: "/",
+      id: 1,
+      excerpt: "",
+      featuredImage: {
+        url: "",
+        width: 0,
+        height: 0,
+        alt: ""
+      },
+      thumbnail: {
+        url: "",
+        width: 0,
+        height: 0,
+        alt: ""
+      },
+      meta: {
+        _edit_last: "",
+        _edit_lock: ""
+      },
+      categories: [],
+      date: {
+        formatted: "",
+        display: "",
+        modified: "",
+        modified_display: "",
+        timestamp: 0,
+        year: "",
+        month: "",
+        day: ""
+      }
+    }
   },
   posts: [
     {
-      url: "/post-1",
       title: "Начало работы с WP Fasty",
+      content: "",
+      slug: "post-1",
+      url: "/post-1",
+      id: 1,
       excerpt: "<p>Узнайте, как быстро создать современный сайт с помощью нашей темы...</p>",
+      featuredImage: {
+        url: placeholderImage,
+        width: 800,
+        height: 600,
+        alt: "Featured image for post 1"
+      },
       thumbnail: {
         url: placeholderImage,
+        width: 300,
+        height: 200,
         alt: "Thumbnail for post 1"
       },
+      meta: {
+        _edit_last: "1",
+        _edit_lock: "1628772640:1"
+      },
       categories: [
-        { url: "/category/tutorials", name: "Туториалы" },
-        { url: "/category/wordpress", name: "WordPress" }],
-
+        {
+          name: "Туториалы",
+          url: "/category/tutorials",
+          id: 1,
+          slug: "tutorials",
+          description: "Обучающие материалы",
+          count: 5
+        },
+        {
+          name: "WordPress",
+          url: "/category/wordpress",
+          id: 2,
+          slug: "wordpress",
+          description: "Статьи о WordPress",
+          count: 10
+        }
+      ],
       date: {
         formatted: "2023-04-10",
-        display: "10 Апреля, 2023"
+        display: "10 Апреля, 2023",
+        modified: "2023-04-11",
+        modified_display: "11 Апреля, 2023",
+        timestamp: 1681084800,
+        year: "2023",
+        month: "04",
+        day: "10"
       }
     },
     {
-      url: "/post-2",
       title: "Продвинутые техники в React",
+      content: "",
+      slug: "post-2",
+      url: "/post-2",
+      id: 2,
       excerpt: "<p>Рассмотрим ключевые техники оптимизации React-приложений...</p>",
+      featuredImage: {
+        url: placeholderImage,
+        width: 800,
+        height: 600,
+        alt: "Featured image for post 2"
+      },
       thumbnail: {
         url: placeholderImage,
+        width: 300,
+        height: 200,
         alt: "Thumbnail for post 2"
       },
+      meta: {
+        _edit_last: "1",
+        _edit_lock: "1628772641:1"
+      },
       categories: [
-        { url: "/category/development", name: "Разработка" },
-        { url: "/category/react", name: "React" }],
-
+        {
+          name: "Разработка",
+          url: "/category/development",
+          id: 3,
+          slug: "development",
+          description: "Материалы для разработчиков",
+          count: 7
+        },
+        {
+          name: "React",
+          url: "/category/react",
+          id: 4,
+          slug: "react",
+          description: "Статьи о React",
+          count: 12
+        }
+      ],
       date: {
         formatted: "2023-04-15",
-        display: "15 Апреля, 2023"
+        display: "15 Апреля, 2023",
+        modified: "2023-04-16",
+        modified_display: "16 Апреля, 2023",
+        timestamp: 1681516800,
+        year: "2023",
+        month: "04",
+        day: "15"
       }
     },
     {
-      url: "/post-3",
       title: "React и Latte: совместная работа",
+      content: "",
+      slug: "post-3",
+      url: "/post-3",
+      id: 3,
       excerpt: "<p>Узнайте, как использовать React и Latte вместе для создания мощных веб-приложений...</p>",
+      featuredImage: {
+        url: placeholderImage,
+        width: 800,
+        height: 600,
+        alt: "Featured image for post 3"
+      },
       thumbnail: {
         url: placeholderImage,
+        width: 300,
+        height: 200,
         alt: "Thumbnail for post 3"
       },
+      meta: {
+        _edit_last: "1",
+        _edit_lock: "1628772642:1"
+      },
       categories: [
-        { url: "/category/development", name: "Разработка" },
-        { url: "/category/react", name: "React" }]
-
-    }]
-
+        {
+          name: "Разработка",
+          url: "/category/development",
+          id: 3,
+          slug: "development",
+          description: "Материалы для разработчиков",
+          count: 7
+        },
+        {
+          name: "React",
+          url: "/category/react",
+          id: 4,
+          slug: "react",
+          description: "Статьи о React",
+          count: 12
+        }
+      ],
+      date: {
+        formatted: "2023-04-20",
+        display: "20 Апреля, 2023",
+        modified: "2023-04-21",
+        modified_display: "21 Апреля, 2023",
+        timestamp: 1681948800,
+        year: "2023",
+        month: "04",
+        day: "20"
+      }
+    }
+  ]
 };
 
-// Компонент без пропсов, который использует Content напрямую
-const FrontPage: React.FC = () => {
-  const { site, page, posts } = Content;
+// Компонент с демо-данными
+const FrontPage: React.FC<FrontPageProps> = ({ site, page, posts }) => {
+  // Для демонстрации используем локальные данные
+  const demoData = Content;
+
+  // В реальном использовании берем данные из props
+  const siteData = site || demoData.site;
+  const pageData = page || demoData.page;
+  const postsData = posts || demoData.posts;
 
   return (
     <>
       <section className="hero">
         <div className="container">
           <div className="hero-content">
-            {site.title && (<h1 className="hero-title" >{site.title}</h1>)}
-            {site.description && (<p className="hero-description" >{site.description}</p>)}
+            {siteData.title && (<h1 className="hero-title" >{siteData.title}</h1>)}
+            {siteData.description && (<p className="hero-description" >{siteData.description}</p>)}
 
             <div className="hero-actions">
               <a href="#featured" className="button button-primary button-rounded">Explore</a>
@@ -123,15 +246,15 @@ const FrontPage: React.FC = () => {
         </div>
       </section>
 
-      {page && page.content &&
+      {pageData && pageData.page && pageData.page.content &&
         <section id="about" className="about-section">
           <div className="container">
-            <div className="about-content" dangerouslySetInnerHTML={{ __html: page.content }} />
+            <div className="about-content" dangerouslySetInnerHTML={{ __html: pageData.page.content }} />
           </div>
         </section>
       }
 
-      {posts && posts.length > 0 &&
+      {Array.isArray(postsData) && postsData.length > 0 &&
         <section id="featured" className="featured-posts">
           <div className="container">
             <header className="section-header">
@@ -140,7 +263,7 @@ const FrontPage: React.FC = () => {
             </header>
 
             <div className="featured-grid">
-              {posts.map((post, index) =>
+              {postsData.map((post, index) =>
                 <article key={index} className="card card-featured" data-loop="posts">
                   <a href={post.url} className="card-link">
                     {post.thumbnail &&
@@ -197,13 +320,12 @@ const FrontPage: React.FC = () => {
             </div>
 
             <div className="featured-action">
-              <a href={`${site.url}/blog`} className="button button-primary button-rounded">View All Posts</a>
+              <a href={`${siteData.url}/blog`} className="button button-primary button-rounded">View All Posts</a>
             </div>
           </div>
         </section>
       }
     </>);
-
 };
 
 export default FrontPage;
