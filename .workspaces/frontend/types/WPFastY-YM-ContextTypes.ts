@@ -75,8 +75,7 @@ export interface WPFastyContextSchema {
           | string
           | {
               [k: string]: unknown;
-            }
-          | unknown[];
+            };
         /**
          * Classes
          */
@@ -123,23 +122,47 @@ export interface WPFastyContextSchema {
       /**
        * FeaturedImage
        */
-      featuredImage:
-        | null
-        | string
-        | {
-            [k: string]: unknown;
-          }
-        | unknown[];
+      featuredImage: {
+        /**
+         * Url
+         */
+        url: string;
+        /**
+         * Width
+         */
+        width: number;
+        /**
+         * Height
+         */
+        height: number;
+        /**
+         * Alt
+         */
+        alt: string;
+        [k: string]: unknown;
+      };
       /**
        * Thumbnail
        */
-      thumbnail:
-        | null
-        | string
-        | {
-            [k: string]: unknown;
-          }
-        | unknown[];
+      thumbnail: {
+        /**
+         * Url
+         */
+        url: string;
+        /**
+         * Width
+         */
+        width: number;
+        /**
+         * Height
+         */
+        height: number;
+        /**
+         * Alt
+         */
+        alt: string;
+        [k: string]: unknown;
+      };
       /**
        * Meta
        */
@@ -272,47 +295,171 @@ export interface WPFastyContextSchema {
       /**
        * FeaturedImage
        */
-      featuredImage:
-        | null
-        | string
-        | {
-            [k: string]: unknown;
-          }
-        | unknown[];
+      featuredImage: {
+        /**
+         * Url
+         */
+        url: string;
+        /**
+         * Width
+         */
+        width: number;
+        /**
+         * Height
+         */
+        height: number;
+        /**
+         * Alt
+         */
+        alt: string;
+        [k: string]: unknown;
+      };
       /**
        * Thumbnail
        */
-      thumbnail:
-        | null
-        | string
-        | {
-            [k: string]: unknown;
-          }
-        | unknown[];
+      thumbnail: {
+        /**
+         * Url
+         */
+        url: string;
+        /**
+         * Width
+         */
+        width: number;
+        /**
+         * Height
+         */
+        height: number;
+        /**
+         * Alt
+         */
+        alt: string;
+        [k: string]: unknown;
+      };
       /**
        * Meta
        */
-      meta: string[];
+      meta: {
+        /**
+         * _edit_last
+         */
+        _edit_last: string;
+        /**
+         * _edit_lock
+         */
+        _edit_lock: string;
+        [k: string]: unknown;
+      };
       /**
        * Categories
        */
-      categories: string[];
+      categories: {
+        /**
+         * Name
+         */
+        name: string;
+        /**
+         * Url
+         */
+        url: string;
+        /**
+         * Id
+         */
+        id: number;
+        /**
+         * Slug
+         */
+        slug: string;
+        /**
+         * Description
+         */
+        description: string;
+        /**
+         * Count
+         */
+        count: number;
+        [k: string]: unknown;
+      }[];
       /**
        * Date
        */
-      date: string[];
+      date: {
+        /**
+         * Formatted
+         */
+        formatted: string;
+        /**
+         * Display
+         */
+        display: string;
+        /**
+         * Modified
+         */
+        modified: string;
+        /**
+         * Modified_display
+         */
+        modified_display: string;
+        /**
+         * Timestamp
+         */
+        timestamp: number;
+        /**
+         * Year
+         */
+        year: string;
+        /**
+         * Month
+         */
+        month: string;
+        /**
+         * Day
+         */
+        day: string;
+        [k: string]: unknown;
+      };
       [k: string]: unknown;
-    }[];
+    };
     /**
      * Pagination
      */
-    pagination:
-      | null
-      | string
-      | {
-          [k: string]: unknown;
-        }
-      | unknown[];
+    pagination: {
+      /**
+       * Prev_url
+       */
+      prev_url: string;
+      /**
+       * Next_url
+       */
+      next_url: string;
+      /**
+       * Pages
+       */
+      pages: {
+        /**
+         * Number
+         */
+        number: number;
+        /**
+         * Url
+         */
+        url: string;
+        /**
+         * Is_current
+         */
+        is_current: boolean;
+        [k: string]: unknown;
+      }[];
+      /**
+       * Current
+       */
+      current: number;
+      /**
+       * Total
+       */
+      total: number;
+      [k: string]: unknown;
+    };
     [k: string]: unknown;
   };
   [k: string]: unknown;

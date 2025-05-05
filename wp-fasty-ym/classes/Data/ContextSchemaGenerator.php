@@ -49,11 +49,67 @@ class ContextSchemaGenerator implements BootableServiceInterface
             'url' => '',
             'id' => 0,
             'excerpt' => '',
-            'featuredImage' => null,
-            'thumbnail' => null,
-            'meta' => [],
-            'categories' => [],
-            'date' => []
+            'featuredImage' => [
+                'url' => '',
+                'width' => 0,
+                'height' => 0,
+                'alt' => ''
+            ],
+            'thumbnail' => [
+                'url' => '',
+                'width' => 0,
+                'height' => 0,
+                'alt' => ''
+            ],
+            'meta' => [
+                '_edit_last' => '',
+                '_edit_lock' => ''
+            ],
+            'categories' => [
+                [
+                    'name' => '',
+                    'url' => '',
+                    'id' => 0,
+                    'slug' => '',
+                    'description' => '',
+                    'count' => 0
+                ]
+            ],
+            'date' => [
+                'formatted' => '',
+                'display' => '',
+                'modified' => '',
+                'modified_display' => '',
+                'timestamp' => 0,
+                'year' => '',
+                'month' => '',
+                'day' => ''
+            ]
+        ],
+        'pagination' => [
+            'prev_url' => '',
+            'next_url' => '',
+            'pages' => [
+                [
+                    'number' => 0,
+                    'url' => '',
+                    'is_current' => false
+                ]
+            ],
+            'current' => 0,
+            'total' => 0
+        ],
+        'featuredImage' => [
+            'url' => '',
+            'width' => 0,
+            'height' => 0,
+            'alt' => ''
+        ],
+        'thumbnail' => [
+            'url' => '',
+            'width' => 0,
+            'height' => 0,
+            'alt' => ''
         ]
     ];
     
@@ -120,6 +176,15 @@ class ContextSchemaGenerator implements BootableServiceInterface
         foreach ($data as $key => $value) {
             $structure['required'][] = $key;
             
+            // Check if we have a known structure for this key
+            if (isset($this->knownStructures[$key]) && (is_null($value) || empty($value) || (is_array($value) && empty($value)))) {
+                // Use known structure if value is empty/null
+                $knownStructure = $this->extractStructure($this->knownStructures[$key]);
+                $structure['properties'][$key] = $knownStructure;
+                $structure['properties'][$key]['description'] = ucfirst($key);
+                continue;
+            }
+            
             if (is_array($value)) {
                 if ($this->isIndexedArray($value)) {
                     // Handle indexed arrays
@@ -133,7 +198,7 @@ class ContextSchemaGenerator implements BootableServiceInterface
                         ];
                     } else {
                         // For empty arrays or arrays of primitives
-                        // Use known structure if available
+                        // Check for known structures first
                         if (isset($this->knownStructures[$key])) {
                             $itemSchema = $this->extractStructure($this->knownStructures[$key]);
                             $structure['properties'][$key] = [
@@ -166,17 +231,53 @@ class ContextSchemaGenerator implements BootableServiceInterface
                     'description' => ucfirst($key)
                 ];
                 
-                // For nullable types, use type array with multiple options
+                // For nullable types, provide more specific type info when possible
                 if ($type === 'null') {
-                    $structure['properties'][$key] = [
-                        'type' => ['null', 'string', 'object', 'array'],
-                        'description' => ucfirst($key)
-                    ];
+                    if (isset($this->knownStructures[$key])) {
+                        // Use known structure for this field
+                        $structure['properties'][$key] = $this->extractStructure($this->knownStructures[$key]);
+                        $structure['properties'][$key]['description'] = ucfirst($key);
+                    } else {
+                        // Default to multiple possible types
+                        $structure['properties'][$key] = [
+                            'type' => ['null', 'string', 'object'],
+                            'description' => ucfirst($key)
+                        ];
+                    }
                 }
             }
         }
         
+        // Special handling for specific fields in context
+        $this->applySpecialFieldHandling($structure);
+        
         return $structure;
+    }
+    
+    /**
+     * Apply special handling for specific fields
+     *
+     * @param array<string, mixed> &$structure The structure to modify
+     */
+    private function applySpecialFieldHandling(array &$structure): void
+    {
+        // Check if this is an archive context with pagination
+        if (isset($structure['properties']['posts']) && !isset($structure['properties']['pagination'])) {
+            // Add pagination structure if posts exist but pagination doesn't
+            $structure['properties']['pagination'] = $this->extractStructure($this->knownStructures['pagination']);
+            $structure['properties']['pagination']['description'] = 'Pagination';
+            $structure['required'][] = 'pagination';
+        }
+        
+        // Ensure featured image and thumbnail have proper structure
+        foreach (['featuredImage', 'thumbnail'] as $imgField) {
+            if (isset($structure['properties'][$imgField]) && 
+                (isset($structure['properties'][$imgField]['type']) && 
+                 $structure['properties'][$imgField]['type'] === 'null')) {
+                $structure['properties'][$imgField] = $this->extractStructure($this->knownStructures[$imgField]);
+                $structure['properties'][$imgField]['description'] = ucfirst($imgField);
+            }
+        }
     }
     
     /**
