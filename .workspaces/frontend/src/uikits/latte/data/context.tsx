@@ -9,44 +9,79 @@ export const site: WPFastyContext['site'] = {
   charset: 'UTF-8',
 };
 
+export const menu: WPFastyContext['menu'] = {
+  primary: {
+    items: [
+      {
+        title: 'Home',
+        url: '/',
+        id: 1,
+        order: 1,
+        parent: null,
+        classes: [],
+        current: true,
+      },
+      {
+        title: 'Blog',
+        url: '/blog',
+        id: 2,
+        order: 2,
+        parent: null,
+        classes: [],
+        current: false,
+      },
+      {
+        title: 'About',
+        url: '/about',
+        id: 3,
+        order: 3,
+        parent: null,
+        classes: [],
+        current: false,
+      },
+    ]
+  }
+};
+
 export const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiM2NjY2NjYiLz48L3N2Zz4=";
 
-export const page: WPFastyContext['page'] = {
-  page: {
-    title: 'Welcome to My Site',
-    content: 'My Page Content',
-    slug: 'my-page',
-    url: 'https://my-site.com/my-page',
-    id: 1,
-    excerpt: 'My Page Excerpt',
-    featuredImage: {
-      url: placeholderImage,
-      width: 1000,
-      height: 1000,
-      alt: 'My Page Featured Image',
-    },
-    thumbnail: {
-      url: placeholderImage,
-      width: 1000,
-      height: 1000,
-      alt: 'My Page Thumbnail',
-    },
-    meta: {
-      _edit_last: '1',
-      _edit_lock: '1',
-    },
-    categories: [],
-    date: {
-      formatted: '2025-05-01',
-      display: '1 мая 2025',
-      modified: '2025-05-02',
-      modified_display: '2 мая 2025',
-      timestamp: 1690548000,
-      year: '2025',
-      month: '05',
-      day: '01'
-    }
+type PostPage = WPFastyContext['page']['page'];
+
+export const page: PostPage =
+{
+  title: 'Welcome to My Site',
+  content: 'My Page Content',
+  slug: 'my-page',
+  url: 'https://my-site.com/my-page',
+  id: 1,
+  excerpt: 'My Page Excerpt',
+  featuredImage: {
+    url: placeholderImage,
+    width: 1000,
+    height: 1000,
+    alt: 'My Page Featured Image',
   },
+  thumbnail: {
+    url: placeholderImage,
+    width: 1000,
+    height: 1000,
+    alt: 'My Page Thumbnail',
+  },
+  meta: {
+    _edit_last: '1',
+    _edit_lock: '1',
+  },
+  categories: [],
+  date: {
+    formatted: '2025-05-01',
+    display: '1 мая 2025',
+    modified: '2025-05-02',
+    modified_display: '2 мая 2025',
+    timestamp: 1690548000,
+    year: '2025',
+    month: '05',
+    day: '01'
+  }
 };
 
 export const posts: WPFastyContext['archive']['posts'][] = [
@@ -184,8 +219,9 @@ export const posts: WPFastyContext['archive']['posts'][] = [
   }
 ];
 
-export const defaultContext = {
+export const pageContext = {
   site,
   page,
-  posts
+  posts,
+  menu
 };

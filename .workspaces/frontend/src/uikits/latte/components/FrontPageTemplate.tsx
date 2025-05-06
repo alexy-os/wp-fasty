@@ -1,12 +1,15 @@
-const FrontPage = ({ site, page, posts }) => {
+import { Navbar } from "./NavbarTemplate";
+
+const FrontPageTemplate = ({ site, page, posts, menu }) => {
 
   return (
     <>
+      <Navbar site={site} menu={menu} />
       <section className="hero">
         <div className="container">
           <div className="hero-content">
-            {page.page.title && (<h1 className="hero-title" >{page.page.title}</h1>)}
-            {page.page.description && (<p className="hero-description" >{page.page.description}</p>)}
+            {page.title && <h1 className="hero-title">{page.title}</h1>}
+            {page.description && <p className="hero-description">{page.description}</p>}
 
             <div className="hero-actions">
               <a href="#featured" className="button button-primary button-rounded">Explore</a>
@@ -16,15 +19,15 @@ const FrontPage = ({ site, page, posts }) => {
         </div>
       </section>
 
-      {page && page.page && page.page.content &&
+      {page &&
         <section id="about" className="about-section">
           <div className="container">
-            <div className="about-content">{page.page.content}</div>
+            <div className="about-content">{page.content}</div>
           </div>
         </section>
       }
 
-      {Array.isArray(posts) && posts.length > 0 &&
+      {posts &&
         <section id="featured" className="featured-posts">
           <div className="container">
             <header className="section-header">
@@ -33,8 +36,8 @@ const FrontPage = ({ site, page, posts }) => {
             </header>
 
             <div className="featured-grid">
-              {posts.map((post, index) =>
-                <article key={index} className="card card-featured" data-loop="posts">
+              {posts.map((post: any, index: number) =>
+                <article key={index} className="card card-featured">
                   <a href={post.url} className="card-link">
                     {post.thumbnail &&
                       <figure className="card-thumbnail">
@@ -44,13 +47,13 @@ const FrontPage = ({ site, page, posts }) => {
                   </a>
 
                   <header className="card-header">
-                    {post.categories && post.categories.length > 0 &&
+                    {post.categories &&
                       <div className="card-categories">
-                        {post.categories.map((category: { name: string, url: string }, index: number) =>
+                        {post.categories.map((category: any, index: number) =>
                           <a
                             key={index}
                             href={category.url}
-                            className="card-category" data-loop="post.categories">
+                            className="card-category">
                             {category.name}
                           </a>
                         )}
@@ -86,7 +89,7 @@ const FrontPage = ({ site, page, posts }) => {
             </div>
 
             <div className="featured-action">
-              <a href={`${site.url}/blog`} className="button button-primary button-rounded">View All Posts</a>
+              <a href="/blog" className="button button-primary button-rounded">View All Posts</a>
             </div>
           </div>
         </section>
@@ -94,4 +97,4 @@ const FrontPage = ({ site, page, posts }) => {
     </>);
 };
 
-export default FrontPage;
+export const FrontPage = FrontPageTemplate;
