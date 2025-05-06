@@ -13,7 +13,7 @@ export const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJ
 
 export const page: WPFastyContext['page'] = {
   page: {
-    title: 'My Page',
+    title: 'Welcome to My Site',
     content: 'My Page Content',
     slug: 'my-page',
     url: 'https://my-site.com/my-page',
@@ -51,12 +51,12 @@ export const page: WPFastyContext['page'] = {
 
 export const posts: WPFastyContext['archive']['posts'][] = [
   {
-    title: 'My Post',
-    content: 'My Post Content',
-    slug: 'my-post',
-    url: 'https://my-site.com/my-post',
+    title: 'My Post 1',
+    content: 'My Post 1 Content',
+    slug: 'my-post-1',
+    url: 'https://my-site.com/my-post-1',
     id: 1,
-    excerpt: 'My Post Excerpt',
+    excerpt: 'My Post 1 Excerpt',
     featuredImage: {
       url: placeholderImage,
       width: 1000,
