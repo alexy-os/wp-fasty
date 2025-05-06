@@ -18,7 +18,7 @@
     "variants:css": "bun scripts/variants-parser.ts",
     "variants:watch": "bun scripts/variants-parser.ts --watch",
     "build:css": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css --minify --watch",
-    "build:latte": "bun scripts/react-to-latte.js"
+    "build:latte": "bun scripts/build-to-latte.ts"
   },
   "dependencies": {
     "@babel/generator": "^7.27.1",

@@ -1,99 +1,116 @@
 {**
- * Front page template
+ * Generated Latte template
+ * Date: 2025-05-06
  *
- * Required context:
- * - page: Current page data (array, if is_page)
- * - posts: Array of posts (array, if is_home)
- * - site: Site data (array)
+ * @param site - Required parameter
+ * @param page - Required parameter
+ * @param posts - Required parameter
+ * @param menu - Required parameter
  *}
 
-<section class="hero">
-    <div class="container">
-        <div class="hero-content">
-            <h1 class="hero-title">{$site['title']}</h1>
-            <p class="hero-description">{$site['description']}</p>
-            
-            <div class="hero-actions">
-                <a href="#featured" class="button button-primary button-rounded">Explore</a>
-                <a href="#about" class="button button-secondary button-rounded">Learn More</a>
-            </div>
-        </div>
+{* Начало компонента Navbar *}
+{include 'navbar.latte', site: $site, menu: $menu}
+{* Конец компонента Navbar *}
+<section className="hero">
+  <div className="container">
+    <div className="hero-content">
+      {if $page.title}
+        <h1 className="hero-title">
+          {$page.title}
+        </h1>
+      {/if}
+      {if $page.description}
+        <p className="hero-description">
+          {$page.description}
+        </p>
+      {/if}
+      <div className="hero-actions">
+        <a href="#featured" className="button button-primary button-rounded">
+          Explore
+        </a>
+        <a href="#about" className="button button-secondary button-rounded">
+          Learn More
+        </a>
+      </div>
     </div>
+  </div>
 </section>
-
-{if isset($page) && !empty($page['content'])}
-    <section id="about" class="about-section">
-        <div class="container">
-            <div class="about-content">
-                {$page['content']|noescape}
-            </div>
-        </div>
-    </section>
+{if $page}
+  <section id="about" className="about-section">
+    <div className="container">
+      <div className="about-content">
+        {$page.content}
+      </div>
+    </div>
+  </section>
 {/if}
-
-{if isset($posts) && !empty($posts)}
-    <section id="featured" class="featured-posts">
-        <div class="container">
-            <header class="section-header">
-                <h2 class="section-title">Featured Posts</h2>
-                <p class="section-description">Discover our latest articles and updates</p>
+{if $posts}
+  <section id="featured" className="featured-posts">
+    <div className="container">
+      <header className="section-header">
+        <h2 className="section-title">
+          Featured
+        </h2>
+        <p className="section-description">
+          Discover our latest articles and updates
+        </p>
+      </header>
+      <div className="featured-grid">
+        {foreach $posts as $post}
+          <article key="{$index}" className="card card-featured">
+            <a href="{$post.url}" className="card-link">
+              {if $post.thumbnail}
+                <figure className="card-thumbnail">
+                  <img src="{$post.thumbnail.url}" alt="{$post.thumbnail.alt}" className="card-image"></img>
+                </figure>
+              {/if}
+            </a>
+            <header className="card-header">
+              {if $post.categories}
+                <div className="card-categories">
+                  {foreach $post.categories as $category}
+                    <a key="{$index}" href="{$category.url}" className="card-category">
+                      {$category.name}
+                    </a>
+                  {/foreach}
+                </div>
+              {/if}
+              <h3 className="card-title">
+                <a href="{$post.url}">
+                  {$post.title}
+                </a>
+              </h3>
             </header>
-            
-            <div class="featured-grid">
-                {foreach $posts as $post}
-                    <article class="card card-featured">
-                        <a href="{$post['url']}" class="card-link">
-                            {if isset($post['thumbnail'])}
-                                <figure class="card-thumbnail">
-                                    <img src="{$post['thumbnail']['url']}" alt="{$post['thumbnail']['alt']}" class="card-image">
-                                </figure>
-                            {/if}
-                        </a>
-                        
-                        <header class="card-header">
-                            {if isset($post['categories'])}
-                                <div class="card-categories">
-                                    {foreach $post['categories'] as $category}
-                                        <a href="{$category['url']}" class="card-category">{$category['name']}</a>
-                                    {/foreach}
-                                </div>
-                            {/if}
-                            
-                            <h3 class="card-title">
-                                <a href="{$post['url']}">{$post['title']}</a>
-                            </h3>
-                        </header>
-                        
-                        <div class="card-content">
-                            {if isset($post['excerpt'])}
-                                <div class="card-excerpt">
-                                    {$post['excerpt']|noescape}
-                                </div>
-                            {/if}
-                        </div>
-                        
-                        <footer class="card-footer">
-                            <div class="card-meta">
-                                {if isset($post['date'])}
-                                    <time datetime="{$post['date']['formatted']}" class="card-date">
-                                        {$post['date']['display']}
-                                    </time>
-                                {/if}
-                            </div>
-                            
-                            <a href="{$post['url']}" class="card-read-more">
-                                Read More <span class="read-more-icon">→</span>
-                            </a>
-                        </footer>
-                    </article>
-                {/foreach}
+            <div className="card-content">
+              {if $post.excerpt}
+                <div className="card-excerpt">
+                  {$post.excerpt}
+                </div>
+              {/if}
             </div>
-            
-            <div class="featured-action">
-                <a href="{$site['url']}/blog" class="button button-primary button-rounded">View All Posts</a>
-            </div>
-        </div>
-    </section>
+            <footer className="card-footer">
+              <div className="card-meta">
+                {if $post.date}
+                  <time dateTime="{$post.date.formatted}" className="card-date">
+                    {$post.date.display}
+                  </time>
+                {/if}
+              </div>
+              <a href="{$post.url}" className="card-read-more">
+                Read More
+                <span className="read-more-icon">
+                  →
+                </span>
+              </a>
+            </footer>
+          </article>
+        {/foreach}
+      </div>
+      <div className="featured-action">
+        <a href="/blog" className="button button-primary button-rounded">
+          View All Posts
+        </a>
+      </div>
+    </div>
+  </section>
 {/if}
-
-{do_action 'front_page_sections'} 
