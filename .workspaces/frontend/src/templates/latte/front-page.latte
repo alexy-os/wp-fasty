@@ -57,7 +57,7 @@
       </header>
       <div className="featured-grid">
         {foreach $posts as $post}
-          <article key="{$index}" className="card card-featured">
+          <article key="{$post.id}" className="card card-featured">
             <a href="{$post.url}" className="card-link">
               {if $post.thumbnail}
                 <figure className="card-thumbnail">
@@ -69,7 +69,7 @@
               {if $post.categories}
                 <div className="card-categories">
                   {foreach $post.categories as $category}
-                    <a key="{$index}" href="{$category.url}" className="card-category">
+                    <a key="{$category.id}" href="{$category.url}" className="card-category">
                       {$category.name}
                     </a>
                   {/foreach}

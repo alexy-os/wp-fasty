@@ -1,0 +1,30 @@
+{**
+ * Generated Latte template
+ * Date: 2025-05-06
+ *
+ * @param site - Required parameter
+ * @param menu - Required parameter
+ *}
+
+<header className="site-header">
+  <div className="container">
+    <div className="header-content flex items-center justify-between">
+      <a href="{$site.url}" className="site-logo">
+        {$site.title}
+      </a>
+      {if $menu}
+        <nav className="site-nav">
+          <ul className="nav-menu">
+            {foreach $menu.primary.items as $item}
+              <li key="{$item.id}" className="nav-item">
+                <a href="{$item.url}" className="nav-link">
+                  {$item.title}
+                </a>
+              </li>
+            {/foreach}
+          </ul>
+        </nav>
+      {/if}
+    </div>
+  </div>
+</header>

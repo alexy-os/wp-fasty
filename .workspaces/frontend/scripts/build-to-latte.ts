@@ -2,6 +2,8 @@ import { convertReactToLatte } from './react-to-latte';
 import path from 'path';
 
 async function main() {
+  //const frontPagePath = path.resolve(__dirname, '../src/uikits/latte/components/NavbarTemplate.tsx');
+  //const outputPath = path.resolve(__dirname, '../src/templates/latte/navbar.latte');
   const frontPagePath = path.resolve(__dirname, '../src/uikits/latte/components/FrontPageTemplate.tsx');
   const outputPath = path.resolve(__dirname, '../src/templates/latte/front-page.latte');
 

@@ -7,12 +7,12 @@ const NavbarTemplate = ({ site, menu }) => {
             {site.title}
           </a>
 
-          {menu && menu.primary && (
+          {menu && (
             <>
               <nav className="site-nav">
                 <ul className="nav-menu">
-                  {menu.primary.items.map((item: any, index: number) => (
-                    <li key={index} className="nav-item">
+                  {menu.primary.items.map((item: any) => (
+                    <li key={item.id} className="nav-item">
                       <a href={item.url} className="nav-link">
                         {item.title}
                       </a>

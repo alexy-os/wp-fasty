@@ -36,8 +36,8 @@ const FrontPageTemplate = ({ site, page, posts, menu }) => {
             </header>
 
             <div className="featured-grid">
-              {posts.map((post: any, index: number) =>
-                <article key={index} className="card card-featured">
+              {posts.map((post: any) =>
+                <article key={post.id} className="card card-featured">
                   <a href={post.url} className="card-link">
                     {post.thumbnail &&
                       <figure className="card-thumbnail">
@@ -49,9 +49,9 @@ const FrontPageTemplate = ({ site, page, posts, menu }) => {
                   <header className="card-header">
                     {post.categories &&
                       <div className="card-categories">
-                        {post.categories.map((category: any, index: number) =>
+                        {post.categories.map((category: any) =>
                           <a
-                            key={index}
+                            key={category.id}
                             href={category.url}
                             className="card-category">
                             {category.name}
