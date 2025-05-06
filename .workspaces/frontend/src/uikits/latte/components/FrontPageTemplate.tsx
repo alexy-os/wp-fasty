@@ -1,14 +1,14 @@
 import React from 'react';
-import { WPFastyContextSchema } from './types/WPFastY-YM-ContextTypes';
+import { WPFastyContext } from '../types/wpfasty-context';
 
 // Define specific types to match the schema exactly
-type PostType = WPFastyContextSchema['archive']['posts'];
+type PostType = WPFastyContext['archive']['posts'];
 // type CategoryType = WPFastyContextSchema['archive']['posts']['categories'][number];
 
 // Обновленная типизация
 type FrontPageProps = {
-  site: WPFastyContextSchema['site'];
-  page?: WPFastyContextSchema['page'];
+  site: WPFastyContext['site'];
+  page?: WPFastyContext['page'];
   posts?: PostType[];
 };
 
@@ -264,7 +264,7 @@ const FrontPage: React.FC<FrontPageProps> = ({ site, page, posts }) => {
             </header>
 
             <div className="featured-grid">
-              {postsData.map((post: WPFastyContextSchema['archive']['posts'], index) =>
+              {postsData.map((post: WPFastyContext['archive']['posts'], index) =>
                 <article key={index} className="card card-featured" data-loop="posts">
                   <a href={post.url} className="card-link">
                     {post.thumbnail &&

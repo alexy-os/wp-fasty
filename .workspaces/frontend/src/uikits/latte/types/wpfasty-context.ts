@@ -8,7 +8,7 @@
 /**
  * Schema for WordPress template contexts
  */
-export interface WPFastyContextSchema {
+export interface WPFastyContext {
   /**
    * Site
    */
@@ -71,11 +71,11 @@ export interface WPFastyContextSchema {
          * Parent
          */
         parent:
-          | null
-          | string
-          | {
-              [k: string]: unknown;
-            };
+        | null
+        | string
+        | {
+          [k: string]: unknown;
+        };
         /**
          * Classes
          */

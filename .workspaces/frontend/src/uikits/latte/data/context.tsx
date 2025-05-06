@@ -1,0 +1,191 @@
+import { WPFastyContext } from '../types/wpfasty-context';
+
+export const site: WPFastyContext['site'] = {
+  title: 'My Site',
+  description: 'My Site Description',
+  url: 'https://my-site.com',
+  theme_url: 'https://my-site.com/theme',
+  lang: 'en',
+  charset: 'UTF-8',
+};
+
+export const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiM2NjY2NjYiLz48L3N2Zz4=";
+
+export const page: WPFastyContext['page'] = {
+  page: {
+    title: 'My Page',
+    content: 'My Page Content',
+    slug: 'my-page',
+    url: 'https://my-site.com/my-page',
+    id: 1,
+    excerpt: 'My Page Excerpt',
+    featuredImage: {
+      url: placeholderImage,
+      width: 1000,
+      height: 1000,
+      alt: 'My Page Featured Image',
+    },
+    thumbnail: {
+      url: placeholderImage,
+      width: 1000,
+      height: 1000,
+      alt: 'My Page Thumbnail',
+    },
+    meta: {
+      _edit_last: '1',
+      _edit_lock: '1',
+    },
+    categories: [],
+    date: {
+      formatted: '2025-05-01',
+      display: '1 мая 2025',
+      modified: '2025-05-02',
+      modified_display: '2 мая 2025',
+      timestamp: 1690548000,
+      year: '2025',
+      month: '05',
+      day: '01'
+    }
+  },
+};
+
+export const posts: WPFastyContext['archive']['posts'][] = [
+  {
+    title: 'My Post',
+    content: 'My Post Content',
+    slug: 'my-post',
+    url: 'https://my-site.com/my-post',
+    id: 1,
+    excerpt: 'My Post Excerpt',
+    featuredImage: {
+      url: placeholderImage,
+      width: 1000,
+      height: 1000,
+      alt: 'My Post Featured Image',
+    },
+    thumbnail: {
+      url: placeholderImage,
+      width: 1000,
+      height: 1000,
+      alt: 'My Post Thumbnail',
+    },
+    meta: {
+      _edit_last: '1',
+      _edit_lock: '1',
+    },
+    categories: [
+      {
+        name: 'My Category',
+        url: 'https://my-site.com/my-category',
+        id: 1,
+        slug: 'my-category',
+        description: 'My Category Description',
+        count: 10,
+      },
+    ],
+    date: {
+      formatted: '2025-05-01',
+      display: '1 мая 2025',
+      modified: '2025-05-02',
+      modified_display: '2 мая 2025',
+      timestamp: 1690548000,
+      year: '2025',
+      month: '05',
+      day: '01'
+    }
+  },
+  {
+    title: 'My Post 2',
+    content: 'My Post 2 Content',
+    slug: 'my-post-2',
+    url: 'https://my-site.com/my-post-2',
+    id: 2,
+    excerpt: 'My Post 2 Excerpt',
+    featuredImage: {
+      url: placeholderImage,
+      width: 1000,
+      height: 1000,
+      alt: 'My Post 2 Featured Image',
+    },
+    thumbnail: {
+      url: placeholderImage,
+      width: 1000,
+      height: 1000,
+      alt: 'My Post 2 Thumbnail',
+    },
+    meta: {
+      _edit_last: '1',
+      _edit_lock: '1',
+    },
+    categories: [
+      {
+        name: 'My Category 2',
+        url: 'https://my-site.com/my-category-2',
+        id: 2,
+        slug: 'my-category-2',
+        description: 'My Category 2 Description',
+        count: 20,
+      },
+    ],
+    date: {
+      formatted: '2025-05-02',
+      display: '2 мая 2025',
+      modified: '2025-05-03',
+      modified_display: '3 мая 2025',
+      timestamp: 1690548000,
+      year: '2025',
+      month: '05',
+      day: '02'
+    }
+  },
+  {
+    title: 'My Post 3',
+    content: 'My Post 3 Content',
+    slug: 'my-post-3',
+    url: 'https://my-site.com/my-post-3',
+    id: 3,
+    excerpt: 'My Post 3 Excerpt',
+    featuredImage: {
+      url: placeholderImage,
+      width: 1000,
+      height: 1000,
+      alt: 'My Post 3 Featured Image',
+    },
+    thumbnail: {
+      url: placeholderImage,
+      width: 1000,
+      height: 1000,
+      alt: 'My Post 3 Thumbnail',
+    },
+    meta: {
+      _edit_last: '1',
+      _edit_lock: '1',
+    },
+    categories: [
+      {
+        name: 'My Category 3',
+        url: 'https://my-site.com/my-category-3',
+        id: 3,
+        slug: 'my-category-3',
+        description: 'My Category 3 Description',
+        count: 30,
+      },
+    ],
+    date: {
+      formatted: '2025-05-03',
+      display: '3 мая 2025',
+      modified: '2025-05-04',
+      modified_display: '4 мая 2025',
+      timestamp: 1690548000,
+      year: '2025',
+      month: '05',
+      day: '03'
+    }
+  }
+];
+
+export const defaultContext = {
+  site,
+  page,
+  posts
+};
