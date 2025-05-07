@@ -75,7 +75,7 @@ export const reactValidationRules: ValidationRule[] = [
 
             if (!keyAttr) return false;
 
-            // Проверяем, что это JSXAttribute а не JSXSpreadAttribute
+            // Check that keyAttr is a JSXAttribute and not a JSXSpreadAttribute
             if (!t.isJSXAttribute(keyAttr)) return false;
 
             // Check that key has format {item.id}
