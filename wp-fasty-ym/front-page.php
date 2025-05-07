@@ -19,6 +19,7 @@ try {
     $content = $themeService->render('front-page/front-page', $context);
     
     $context['content'] = $content;
+    // $context['posts'] = $context['archive']['posts'];
     // Render the layout with content
     $output = $themeService->render('layout/default', $context);
     

@@ -9,22 +9,8 @@
  *}
 
 {* Start of component Navbar *}
-{* include 'navbar.latte', site: $site, menu: $menu *}
+{include 'navbar.latte', site: $site, menu: $menu}
 {* End of component Navbar *}
-<section class="hero">
-    <div class="container">
-        <div class="hero-content">
-            <h1 class="hero-title">{$site['title']}</h1>
-            <p class="hero-description">{$site['description']}</p>
-            
-            <div class="hero-actions">
-                <a href="#featured" class="button button-primary button-rounded">Explore</a>
-                <a href="#about" class="button button-secondary button-rounded">Learn More</a>
-            </div>
-        </div>
-    </div>
-</section>
-
 <section className="hero">
   <div className="container">
     <div className="hero-content">
@@ -32,6 +18,11 @@
         <h1 className="hero-title">
           {$page['title']}
         </h1>
+      {/if}
+      {if $site['description']}
+        <p className="hero-description">
+          {$site['description']}
+        </p>
       {/if}
       <div className="hero-actions">
         <a href="#featured" className="button button-primary button-rounded">
@@ -53,7 +44,7 @@
     </div>
   </section>
 {/if}
-{if isset($posts)}
+{if $posts}
   <section id="featured" className="featured-posts">
     <div className="container">
       <header className="section-header">
