@@ -1,7 +1,19 @@
 import * as t from '@babel/types';
 
 /**
- * Обрабатывает циклы в JSX (map)
+ * Helper function from jsx-to-latte.ts to prevent code duplication
+ */
+function memberExpressionToLatteVar(node: any): string {
+  if (t.isIdentifier(node.object)) {
+    return `${(node.object as any).name}.${(node.property as any).name}`;
+  } else if (t.isMemberExpression(node.object)) {
+    return `${memberExpressionToLatteVar(node.object)}.${(node.property as any).name}`;
+  }
+  return '';
+}
+
+/**
+ * Processes loops in JSX (map)
  */
 export function processLoop(
   node: any,
@@ -12,18 +24,18 @@ export function processLoop(
   const indentation = ' '.repeat(indent);
   const expression = node.expression;
 
-  // Получаем коллекцию для перебора
+  // Get the collection to iterate over
   let collection = '';
   if (t.isMemberExpression(expression.callee.object)) {
     collection = memberExpressionToLatteVar(expression.callee.object);
   } else if (t.isIdentifier(expression.callee.object)) {
-    collection = expression.callee.object.name;
+    collection = (expression.callee.object as any).name;
   }
 
-  // Получаем имя итератора
-  const iteratorParam = expression.arguments[0].params[0].name;
+  // Get the iterator name
+  const iteratorParam = (expression.arguments[0].params[0] as any).name;
 
-  // Получаем содержимое блока
+  // Get the content of the block
   const body = expression.arguments[0].body;
   let content = '';
 
@@ -37,16 +49,4 @@ export function processLoop(
   }
 
   return `${indentation}{foreach $${collection} as $${iteratorParam}}\n${content}\n${indentation}{/foreach}`;
-}
-
-/**
- * Преобразует MemberExpression в строку переменной Latte
- */
-function memberExpressionToLatteVar(node: any): string {
-  if (t.isIdentifier(node.object)) {
-    return `${node.object.name}.${node.property.name}`;
-  } else if (t.isMemberExpression(node.object)) {
-    return `${memberExpressionToLatteVar(node.object)}.${node.property.name}`;
-  }
-  return '';
 }

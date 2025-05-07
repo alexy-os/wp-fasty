@@ -1,51 +1,51 @@
 /**
- * Проверяет синтаксис React-компонента на соответствие стандартам
+ * Checks the syntax of a React component for compliance with standards
  */
 export function validateReactSyntax(code: string): string[] {
   const errors: string[] = [];
 
-  // Проверка корректности .map()
+  // Check the correctness of .map()
   const mapRegex = /\.map\(\(([^,\)]+)(?::\s*([^,\)]+))?(?:,\s*([^)]+))?\)\s*=>/g;
   let match;
 
   while ((match = mapRegex.exec(code)) !== null) {
     const [fullMatch, paramType, paramName, indexParam] = match;
 
-    // Проверка формата параметра: должен быть один из допустимых с типом any
+    // Check the format of the parameter: must be one of the allowed with the type "any"
 
     if (!paramType.includes(': any')) {
       //if (!paramType || paramType !== 'any') {
-      errors.push(`Параметр map должен иметь тип ": any" в: ${fullMatch.slice(0, 30)}...`);
+      errors.push(`The map parameter must have the type ": any" in: ${fullMatch.slice(0, 30)}...`);
     }
 
-    // Допустимые имена параметров (post, category, item и т.д.)
+    // Allowed parameter names (post, category, item, etc.)
     /*const validParamNames = ['post', 'category', 'item', 'menu', 'product', 'page'];
     if (!validParamNames.includes(paramName)) {
-      errors.push(`Имя параметра map должно быть одним из (${validParamNames.join(', ')}) в: ${fullMatch.slice(0, 30)}...`);
+      errors.push(`The map parameter name must be one of (${validParamNames.join(', ')}) in: ${fullMatch.slice(0, 30)}...`);
     }*/
 
-    // Предупреждение о наличии индекса
+    // Warning about the presence of an index
     if (indexParam) {
-      errors.push(`Не рекомендуется использовать индекс в map, используйте key={${paramName}.id}: ${fullMatch.slice(0, 30)}...`);
+      errors.push(`It is not recommended to use an index in map, use key={${paramName}.id}: ${fullMatch.slice(0, 30)}...`);
     }
   }
 
-  // Проверка наличия key={*.id} в map
+  // Check the presence of key={*.id} in map
   /*const mapWithoutKeyRegex = /\.map\(\(([^,\)]+)[^\)]*\)\s*=>\s*<[^>]*(?!key=\{\1\.id\})[^>]*>/g;
   while ((match = mapWithoutKeyRegex.exec(code)) !== null) {
     const [fullMatch, paramName] = match;
-    errors.push(`Отсутствует key={${paramName}.id} в map: ${fullMatch.slice(0, 30)}...`);
+    errors.push(`Missing key={${paramName}.id} in map: ${fullMatch.slice(0, 30)}...`);
   }*/
 
-  // Проверка на избыточные проверки
+  // Check for redundant checks
   const redundantChecksRegex = /(\w+)\s+&&\s+\1\./g;
   while ((match = redundantChecksRegex.exec(code)) !== null) {
-    errors.push(`Избыточная проверка: используйте просто проверку на существование переменной: ${match[0]}`);
+    errors.push(`Redundant check: use a simple variable check: ${match[0]}`);
   }
 
-  // Проверка простой структуры props
+  // Check for a simple props structure
   if (!code.match(/const \w+\s*=\s*\(\{\s*[^{}]*\}\)\s*=>/)) {
-    errors.push('Компонент должен использовать деструктуризацию props: const Component = ({ prop1, prop2 }) => {...}');
+    errors.push('The component must use destructuring of props: const Component = ({ prop1, prop2 }) => {...}');
   }
 
   return errors;

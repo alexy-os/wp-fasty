@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { parse } from '@babel/parser';
+//import { parse } from '@babel/parser';
 import traverse from '@babel/traverse';
 import * as t from '@babel/types';
 
 /**
- * Находит и резолвит импорты компонентов
+ * Finds and resolves component imports
  */
 export function resolveImports(ast: any, basePath: string): Record<string, any> {
   const imports: Record<string, any> = {};
@@ -14,14 +14,15 @@ export function resolveImports(ast: any, basePath: string): Record<string, any> 
     ImportDeclaration(path) {
       const source = path.node.source.value;
 
-      // Обрабатываем только локальные импорты (не из node_modules)
+      // Process only local imports (not from node_modules)
       if (source.startsWith('./') || source.startsWith('../')) {
-        path.node.specifiers.forEach((specifier) => {
+        path.node.specifiers.forEach((specifier: any) => {
           if (t.isImportSpecifier(specifier)) {
-            const importName = specifier.imported.name;
-            const localName = specifier.local.name;
+            // Simply use any type casting for now
+            const importName = (specifier.imported as any).name;
+            const localName = (specifier.local as any).name;
 
-            // Пытаемся найти компонент
+            // Try to find the component
             const componentPath = resolveComponentPath(source, basePath);
             if (componentPath) {
               imports[localName] = {
@@ -39,10 +40,10 @@ export function resolveImports(ast: any, basePath: string): Record<string, any> 
 }
 
 /**
- * Резолвит путь к компоненту
+ * Resolves the path to the component
  */
 function resolveComponentPath(importPath: string, basePath: string): string | null {
-  // Добавляем расширение если нужно
+  // Add the extension if needed
   if (!importPath.endsWith('.tsx') && !importPath.endsWith('.jsx')) {
     importPath = `${importPath}.tsx`;
   }

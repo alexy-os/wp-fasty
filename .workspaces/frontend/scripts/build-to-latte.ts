@@ -1,3 +1,4 @@
+// cd .workspaces/frontend && bun run scripts/build-to-latte.ts
 import { convertReactToLatte } from './react-to-latte';
 import path from 'path';
 

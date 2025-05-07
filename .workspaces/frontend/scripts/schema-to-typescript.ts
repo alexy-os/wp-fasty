@@ -1,6 +1,6 @@
 // cd .workspaces/frontend && bun run scripts/schema-to-typescript.ts
 import { compile } from 'json-schema-to-typescript';
-import fs from 'node:fs';
+import * as fs from 'node:fs';
 
 // Load schema
 const schema = JSON.parse(fs.readFileSync('./source/context.schema.json', 'utf8'));

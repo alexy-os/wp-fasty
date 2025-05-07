@@ -1,6 +1,8 @@
+// cd .workspaces/frontend && bun run scripts/react-to-latte.ts
+// bun run scripts/react-to-latte.ts <input-file.tsx> <output-file.latte>
 import { parse } from '@babel/parser';
-import traverse from '@babel/traverse';
-import * as t from '@babel/types';
+//import traverse from '@babel/traverse';
+//import * as t from '@babel/types';
 import * as fs from 'fs';
 import * as path from 'path';
 import { transformReactToLatte } from './transforms/react-to-latte-transform';
@@ -8,14 +10,14 @@ import { validateReactSyntax } from './validators/react-syntax-validator';
 import { resolveImports } from './utils/import-resolver';
 
 /**
- * Преобразует React компонент в Latte шаблон
+ * Converts a React component to a Latte template
  */
-async function convertReactToLatte(inputFile: string, outputFile: string, options = {}) {
+async function convertReactToLatte(inputFile: string, outputFile: string) {
   try {
-    // Чтение файла React компонента
+    // Read the React component file
     const source = fs.readFileSync(inputFile, 'utf-8');
 
-    // Валидация синтаксиса (проверка map синтаксиса и других паттернов)
+    // Syntax validation (check map syntax and other patterns)
     const validationErrors = validateReactSyntax(source);
     if (validationErrors.length > 0) {
       console.error('Syntax validation errors:');
@@ -23,33 +25,33 @@ async function convertReactToLatte(inputFile: string, outputFile: string, option
       return false;
     }
 
-    // Парсинг кода в AST
+    // Parsing code into AST
     const ast = parse(source, {
       sourceType: 'module',
       plugins: ['jsx', 'typescript'],
     });
 
-    // Находим и резолвим импорты компонентов
+    // Find and resolve component imports
     const imports = resolveImports(ast, path.dirname(inputFile));
 
-    // Преобразование AST в Latte-синтаксис
+    // Convert AST to Latte syntax
     const latteTemplate = await transformReactToLatte(ast, imports);
 
-    // Запись результата в файл
+    // Write the result to a file
     fs.writeFileSync(outputFile, latteTemplate, 'utf-8');
-    console.log(`Успешно сконвертировано в ${outputFile}`);
+    console.log(`Successfully converted to ${outputFile}`);
     return true;
   } catch (error) {
-    console.error('Ошибка конвертации:', error);
+    console.error('Conversion error:', error);
     return false;
   }
 }
 
-// CLI интерфейс
+// CLI interface
 if (require.main === module) {
   const args = process.argv.slice(2);
   if (args.length < 2) {
-    console.log('Использование: node react-to-latte.js <входной-файл.tsx> <выходной-файл.latte>');
+    console.log('Usage: bun run scripts/react-to-latte.ts <input-file.tsx> <output-file.latte>');
     process.exit(1);
   }
 

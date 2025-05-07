@@ -145,25 +145,25 @@ class VariantsParser {
     // ./src/components/ui/card/interface.ts => card
     const parts = interfacePath.split(path.sep);
 
-    // Поиск для компонентов в "ui" директории
+    // Search for components in the "ui" directory
     const uiIndex = parts.indexOf('ui');
     if (uiIndex !== -1 && parts.length > uiIndex + 1) {
       return parts[uiIndex + 1];
     }
 
-    // Поиск для компонентов в "components" директории
+    // Search for components in the "components" directory
     const componentsIndex = parts.indexOf('components');
     if (componentsIndex !== -1 && parts.length > componentsIndex + 1) {
       return parts[componentsIndex + 1];
     }
 
-    // Поиск для компонентов в "blocks" директории
+    // Search for components in the "blocks" directory
     const blocksIndex = parts.indexOf('blocks');
     if (blocksIndex !== -1 && parts.length > blocksIndex + 1) {
       return parts[blocksIndex + 1];
     }
 
-    // Если не найдено, попробуем взять последнюю часть пути перед "/interface.ts"
+    // If not found, try to take the last part of the path before "/interface.ts"
     const lastFolderBeforeInterface = parts[parts.length - 2];
     if (lastFolderBeforeInterface) {
       return lastFolderBeforeInterface;
@@ -195,7 +195,7 @@ async function run() {
     console.log('Watching for changes in interface files...');
 
     const watchDir = path.resolve(parser.config.inputDir);
-    fs.watch(watchDir, { recursive: true }, async (eventType, filename) => {
+    fs.watch(watchDir, { recursive: true }, async (filename) => {
       if (!filename) return;
       if (!filename.includes('interface.ts')) return;
 

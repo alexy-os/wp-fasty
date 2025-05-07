@@ -3,31 +3,52 @@ import * as t from '@babel/types';
 import { transformJSXToLatte } from './jsx-to-latte';
 
 /**
- * Преобразует AST React-компонента в Latte шаблон
+ * Generates Latte template header with documentation
+ */
+function generateLatteHeader(params: string[]): string {
+  let header = '{**\n';
+  header += ' * Component Template\n';
+  header += ' *\n';
+  header += ' * Required context:\n';
+
+  if (params.length > 0) {
+    params.forEach(param => {
+      header += ` * - ${param}: Component parameter\n`;
+    });
+  } else {
+    header += ' * - No parameters required\n';
+  }
+
+  header += ' *}\n\n';
+  return header;
+}
+
+/**
+ * Converts the AST of a React component to a Latte template
  */
 export async function transformReactToLatte(ast: any, imports: Record<string, any>) {
   let latteTemplate = '';
   let componentParams: string[] = [];
 
-  // Извлекаем параметры компонента
+  // Extract the component parameters
   traverse(ast, {
     ArrowFunctionExpression(path) {
-      // Находим главный компонент (первая стрелочная функция верхнего уровня)
+      // Find the main component (the first top-level arrow function)
       if (t.isVariableDeclarator(path.parent) &&
         t.isObjectPattern(path.node.params[0])) {
 
         const props = path.node.params[0].properties;
         componentParams = props.map((prop: any) =>
-          t.isObjectProperty(prop) ? prop.key.name : prop.argument.name
+          t.isObjectProperty(prop) ? (prop.key as any).name : (prop.argument as any).name
         );
       }
     }
   });
 
-  // Формируем заголовок шаблона с документацией
+  // Generate the template header with documentation
   latteTemplate += generateLatteHeader(componentParams);
 
-  // Находим тело компонента (его JSX)
+  // Find the component body (its JSX)
   let rootJSX: any = null;
   traverse(ast, {
     ReturnStatement(path) {
@@ -40,28 +61,12 @@ export async function transformReactToLatte(ast: any, imports: Record<string, an
   });
 
   if (!rootJSX) {
-    throw new Error('Не найден корневой JSX элемент');
+    throw new Error('Root JSX element not found');
   }
 
-  // Преобразуем JSX в Latte
+  // Convert JSX to Latte
   const jsxToLatteResult = transformJSXToLatte(rootJSX, imports);
   latteTemplate += jsxToLatteResult;
 
   return latteTemplate;
-}
-
-/**
- * Генерирует заголовок Latte-шаблона
- */
-function generateLatteHeader(params: string[]): string {
-  const today = new Date().toISOString().split('T')[0];
-
-  return `{**
- * Generated Latte template
- * Date: ${today}
- *
- * @param ${params.join(' - Required parameter\n * @param ')} - Required parameter
- *}
-
-`;
 }
