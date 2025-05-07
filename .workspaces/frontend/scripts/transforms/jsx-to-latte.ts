@@ -38,7 +38,7 @@ export function transformJSXToLatte(jsxNode: any, imports: Record<string, any>, 
     const componentName = (jsxNode.openingElement.name as any).name;
     if (imports[componentName]) {
       // Recursively process the imported component
-      return processImportedComponent(componentName, jsxNode, imports, indent);
+      return processImportedComponent(componentName, jsxNode, indent);
     }
   }
 
@@ -136,7 +136,7 @@ function memberExpressionToLatteVar(node: any): string {
 /**
  * Processes the imported component
  */
-function processImportedComponent(componentName: string, jsxNode: any, imports: Record<string, any>, indent: number): string {
+function processImportedComponent(componentName: string, jsxNode: any, indent: number): string {
   // Get the parameters passed to the component
   const props: Record<string, string> = {};
   jsxNode.openingElement.attributes.forEach((attr: any) => {
