@@ -4,8 +4,7 @@ import { glob } from 'glob';
 import { parse } from '@babel/parser';
 import traverse from '@babel/traverse';
 import { ObjectProperty, ObjectExpression, StringLiteral } from '@babel/types';
-import { defaultConfig } from './config';
-import type { VariantsParserConfig } from './types';
+import { UI8KitConfig, type VariantsParserConfig } from './config/VariantsParserConfig';
 
 class VariantsParser {
   public config: VariantsParserConfig;
@@ -13,7 +12,7 @@ class VariantsParser {
   public isWatching = false;
 
   constructor(config: Partial<VariantsParserConfig> = {}) {
-    this.config = { ...defaultConfig, ...config };
+    this.config = { ...UI8KitConfig, ...config }; // UI8KitConfig
 
     // Check for --watch flag
     const args = process.argv.slice(2);
