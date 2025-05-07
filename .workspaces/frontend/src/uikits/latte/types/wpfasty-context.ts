@@ -192,8 +192,8 @@ export interface WPFastyContext {
         /**
          * Id
          */
-        id: number;
         /**
+        id: number;
          * Slug
          */
         slug: string;

@@ -12,7 +12,6 @@ async function main() {
 
   try {
     await convertReactToLatte(frontPagePath, outputPath);
-    console.log('Conversion completed successfully!');
   } catch (error) {
     console.error('Conversion failed:', error);
     process.exit(1);

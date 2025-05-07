@@ -1,6 +1,6 @@
 import { Navbar } from "./NavbarTemplate";
 
-const FrontPageTemplate = ({ site, page, posts, menu }) => {
+const FrontPageTemplate = ({ site, page, posts, menu }: any) => {
 
   return (
     <>

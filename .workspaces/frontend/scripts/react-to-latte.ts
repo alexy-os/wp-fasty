@@ -6,7 +6,7 @@ import { parse } from '@babel/parser';
 import * as fs from 'fs';
 import * as path from 'path';
 import { transformReactToLatte } from './transforms/react-to-latte-transform';
-import { validateReactSyntax } from './validators/react-syntax-validator';
+import { validateReactSyntaxOrThrow } from './validators/react-syntax-validator';
 import { resolveImports } from './utils/import-resolver';
 
 /**
@@ -17,14 +17,10 @@ async function convertReactToLatte(inputFile: string, outputFile: string) {
     // Read the React component file
     const source = fs.readFileSync(inputFile, 'utf-8');
 
-    // Syntax validation (check map syntax and other patterns)
-    const validationErrors = validateReactSyntax(source);
-    if (validationErrors.length > 0) {
-      console.error('Syntax validation errors:');
-      validationErrors.forEach(err => console.error(`- ${err}`));
-      return false;
-    }
+    // Strict syntax validation - will throw error if validation fails
+    validateReactSyntaxOrThrow(source);
 
+    // If we got here, validation passed
     // Parsing code into AST
     const ast = parse(source, {
       sourceType: 'module',
@@ -41,8 +37,8 @@ async function convertReactToLatte(inputFile: string, outputFile: string) {
     fs.writeFileSync(outputFile, latteTemplate, 'utf-8');
     console.log(`Successfully converted to ${outputFile}`);
     return true;
-  } catch (error) {
-    console.error('Conversion error:', error);
+  } catch (error: any) {
+    console.error('Conversion error:', error.message);
     return false;
   }
 }
