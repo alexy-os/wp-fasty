@@ -24,6 +24,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@root': path.resolve(__dirname, '../../'),
+      '@scripts': path.resolve(__dirname, './scripts'),
       '@wptheme': path.resolve(__dirname, '../../wp-fasty-ym'),
       '@uikits': path.resolve(__dirname, './src/uikits'),
       '@hinddy': path.resolve(__dirname, './src/uikits/hinddy/core'),

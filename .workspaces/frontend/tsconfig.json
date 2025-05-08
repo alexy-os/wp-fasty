@@ -27,6 +27,9 @@
       "@/*": [
         "src/*"
       ],
+      "@scripts/*": [
+        "scripts/*"
+      ],
       "@uikits/*": [
         "src/uikits/*"
       ],
