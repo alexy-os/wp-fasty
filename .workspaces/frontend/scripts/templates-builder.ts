@@ -1,15 +1,22 @@
 // cd .workspaces/frontend && bun run scripts/templates-builder.ts
-import { convertReactToLatte } from './react-to-latte';
-import { convertDotToArrayNotation } from './transforms/dot-to-array-notation';
+import * as transformModules from './transforms';
 import path from 'node:path';
 import { glob } from 'glob';
 import fs from 'fs/promises';
 import { TemplatesBuildConfig } from './config/TemplatesBuildConfig';
 
 async function main() {
-  const { uikitDir, templatesDir, engine, dotToArr } = TemplatesBuildConfig;
+  const { uikitDir, templatesDir, engine } = TemplatesBuildConfig;
   const inputDir = path.resolve(uikitDir, engine, 'components');
   const outputDir = path.resolve(templatesDir, engine);
+
+  // Get the conversion function depending on the selected engine
+  const converterFunctionName = `convertReactTo${engine.charAt(0).toUpperCase() + engine.slice(1)}`;
+  const converterFunction = transformModules[converterFunctionName as keyof typeof transformModules];
+
+  if (!converterFunction) {
+    throw new Error(`Converter function "${converterFunctionName}" not found in transforms module`);
+  }
 
   // Create output directory if it doesn't exist
   await fs.mkdir(outputDir, { recursive: true });
@@ -55,16 +62,8 @@ async function main() {
 
       console.log(`Converting ${templateFile} to ${outputFilePath}`);
 
-      // Convert React to Latte
-      await convertReactToLatte(templateFile, outputFilePath);
-
-      // Apply dot to array notation if needed
-      if (dotToArr) {
-        console.log(`Converting dot notation to array notation for ${outputFilePath}`);
-        const content = await fs.readFile(outputFilePath, 'utf8');
-        const convertedContent = convertDotToArrayNotation(content);
-        await fs.writeFile(outputFilePath, convertedContent);
-      }
+      // Convert React to Engine
+      await converterFunction(templateFile, outputFilePath);
     }
 
     console.log('Conversion complete!');

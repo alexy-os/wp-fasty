@@ -5,14 +5,17 @@ import { parse } from '@babel/parser';
 //import * as t from '@babel/types';
 import * as fs from 'fs';
 import * as path from 'path';
-import { transformReactToLatte } from './transforms/react-to-latte-transform';
-import { validateReactSyntaxOrThrow } from './validators/react-syntax-validator';
-import { resolveImports } from './utils/import-resolver';
+import { transformReactToLatte } from './react-to-latte-transform';
+import { convertDotToArrayNotation } from '../../utils/dot-to-array-notation';
+import { validateReactSyntaxOrThrow } from '../../validators/react-syntax-validator';
+import { resolveImports } from '../../utils/import-resolver';
+import { TemplatesBuildConfig } from '../../config/TemplatesBuildConfig';
 
 /**
  * Converts a React component to a Latte template
  */
 async function convertReactToLatte(inputFile: string, outputFile: string) {
+  const { dotToArr } = TemplatesBuildConfig;
   try {
     // Read the React component file
     const source = fs.readFileSync(inputFile, 'utf-8');
@@ -36,6 +39,15 @@ async function convertReactToLatte(inputFile: string, outputFile: string) {
     // Write the result to a file
     fs.writeFileSync(outputFile, latteTemplate, 'utf-8');
     console.log(`Successfully converted to ${outputFile}`);
+
+    // Apply dot to array notation if needed
+    if (dotToArr) {
+      console.log(`Converting dot notation to array notation for ${outputFile}`);
+      const content = fs.readFileSync(outputFile, 'utf8');
+      const convertedContent = convertDotToArrayNotation(content);
+      fs.writeFileSync(outputFile, convertedContent, 'utf-8');
+    }
+
     return true;
   } catch (error: any) {
     console.error('Conversion error:', error.message);
