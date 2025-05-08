@@ -40,5 +40,5 @@ export function processConditional(
     content = transformFunc(expression.right, imports, indent + 2);
   }
 
-  return `${indentation}{if ${condition}}\n${content}\n${indentation}{/if}`;
+  return `${indentation}{if isset(${condition})}\n${content}\n${indentation}{/if}`;
 }

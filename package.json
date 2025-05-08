@@ -17,9 +17,9 @@
     "frontend:install": "bun install --cwd .workspaces/frontend",
     "dev": "bun run --cwd .workspaces/frontend dev",
     "ch": "rm -rf wp-fasty-ym/~cache",
-    "semantic": "bun run --cwd .workspaces/frontend semantic:css",
     "vcss": "bun run --cwd .workspaces/frontend variants:css",
+    "semantic": "bun run --cwd .workspaces/frontend semantic:css",
     "watch:all": "bun run --cwd .workspaces/frontend watch:all",
-    "build:latte": "bun run --cwd .workspaces/frontend build:latte"
+    "build:tpl": "bun run --cwd .workspaces/frontend build:tpl"
   }
 }

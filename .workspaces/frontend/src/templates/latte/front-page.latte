@@ -14,14 +14,14 @@
 <section className="hero">
   <div className="container">
     <div className="hero-content">
-      {if $page['title']}
+      {if isset($page['title'])}
         <h1 className="hero-title">
           {$page['title']}
         </h1>
       {/if}
-      {if $site['description']}
+      {if isset($page['description'])}
         <p className="hero-description">
-          {$site['description']}
+          {$page['description']}
         </p>
       {/if}
       <div className="hero-actions">
@@ -35,7 +35,7 @@
     </div>
   </div>
 </section>
-{if $page}
+{if isset($page)}
   <section id="about" className="about-section">
     <div className="container">
       <div className="about-content">
@@ -44,7 +44,7 @@
     </div>
   </section>
 {/if}
-{if $posts}
+{if isset($posts)}
   <section id="featured" className="featured-posts">
     <div className="container">
       <header className="section-header">
@@ -59,14 +59,14 @@
         {foreach $posts as $post}
           <article key="{$post['id']}" className="card card-featured">
             <a href="{$post['url']}" className="card-link">
-              {if $post['thumbnail']}
+              {if isset($post['thumbnail'])}
                 <figure className="card-thumbnail">
                   <img src="{$post['thumbnail']['url']}" alt="{$post['thumbnail']['alt']}" className="card-image"></img>
                 </figure>
               {/if}
             </a>
             <header className="card-header">
-              {if $post['categories']}
+              {if isset($post['categories'])}
                 <div className="card-categories">
                   {foreach $post['categories'] as $category}
                     <a key="{$category['id']}" href="{$category['url']}" className="card-category">
@@ -82,7 +82,7 @@
               </h3>
             </header>
             <div className="card-content">
-              {if $post['excerpt']}
+              {if isset($post['excerpt'])}
                 <div className="card-excerpt">
                   {$post['excerpt']}
                 </div>
@@ -90,7 +90,7 @@
             </div>
             <footer className="card-footer">
               <div className="card-meta">
-                {if $post['date']}
+                {if isset($post['date'])}
                   <time dateTime="{$post['date']['formatted']}" className="card-date">
                     {$post['date']['display']}
                   </time>
