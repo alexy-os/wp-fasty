@@ -1,9 +1,5 @@
 .input {
-  @apply flex rounded-md border border-input text-foreground bg-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 h-9 px-4 py-2 text-sm;
-}
-
-.input-default {
-  @apply bg-card text-card-foreground;
+  @apply flex rounded-md border border-input text-foreground bg-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50; @apply h-9 px-4 py-2 text-sm;
 }
 
 .input-filled {
@@ -24,10 +20,6 @@
 
 .input-lg {
   @apply h-10 px-4 py-2 text-base;
-}
-
-.input-default {
-  @apply bg-card text-card-foreground border-border;
 }
 
 .input-error {

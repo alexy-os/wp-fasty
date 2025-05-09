@@ -1,5 +1,6 @@
 import React from 'react';
-import { HeadingProps, TextProps } from './interface';
+import { HeadingProps } from '../heading/interface';
+import { TextProps } from '../text/interface';
 
 /**
  * Heading component with semantic class names

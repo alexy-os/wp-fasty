@@ -1,0 +1,59 @@
+.text {
+   @apply text-base;
+}
+
+.text-xs {
+  @apply text-xs;
+}
+
+.text-sm {
+  @apply text-sm;
+}
+
+.text-lg {
+  @apply text-lg;
+}
+
+.text-xl {
+  @apply text-xl;
+}
+
+.text-light {
+  @apply font-light;
+}
+
+.text-default {
+  @apply font-normal;
+}
+
+.text-medium {
+  @apply font-medium;
+}
+
+.text-semibold {
+  @apply font-semibold;
+}
+
+.text-bold {
+  @apply font-bold;
+}
+
+.text-default {
+  @apply text-foreground;
+}
+
+.text-muted {
+  @apply text-muted-foreground;
+}
+
+.text-primary {
+  @apply text-primary;
+}
+
+.text-secondary {
+  @apply text-secondary;
+}
+
+.text-destructive {
+  @apply text-destructive;
+}

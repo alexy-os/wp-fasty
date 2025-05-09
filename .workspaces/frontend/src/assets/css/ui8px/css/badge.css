@@ -1,5 +1,5 @@
 .badge {
-  @apply inline-flex items-center justify-center rounded-full font-medium text-xs px-2.5 py-0.5;
+  @apply inline-flex items-center justify-center rounded-full font-medium; @apply text-xs px-2.5 py-0.5;
 }
 
 .badge-default {

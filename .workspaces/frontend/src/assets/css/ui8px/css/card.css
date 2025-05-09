@@ -30,10 +30,6 @@
   @apply bg-white border-gray-200 dark:bg-neutral-900 dark:border-neutral-700;
 }
 
-.card-flat {
-  @apply bg-card text-card-foreground;
-}
-
 .card-default {
   @apply shadow-sm;
 }

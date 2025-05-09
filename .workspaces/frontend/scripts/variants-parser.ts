@@ -20,11 +20,14 @@ class VariantsParser {
   }
 
   public async generateAll(): Promise<void> {
-    const pattern = `${this.config.inputDir.replace(/\\/g, '/')}/${this.config.interfacesGlob}`;
+    // Используем рекурсивный поиск всех interface.ts файлов
+    const pattern = `${this.config.inputDir.replace(/\\/g, '/')}/**/${this.config.interfacesGlob}`;
     // console.log('Glob pattern:', pattern);
 
     const interfaceFiles = await glob(pattern);
     // console.log('Found interface files:', interfaceFiles);
+
+    this.cssFiles = []; // Reset CSS files list before generation
 
     for (const file of interfaceFiles) {
       await this.processInterface(file);
@@ -110,25 +113,31 @@ class VariantsParser {
     });
 
     // Generate CSS
-    let baseStylesContent = baseStyles;
+    let baseStylesContent = baseStyles ? `@apply ${baseStyles};` : '';
     const sizeVariants = variantData['size'];
     if (sizeVariants && sizeVariants[defaultSize]) {
-      baseStylesContent += ' ' + sizeVariants[defaultSize];
+      baseStylesContent += sizeVariants[defaultSize] ? ` @apply ${sizeVariants[defaultSize]};` : '';
     }
-    let cssContent = `.${component} {\n  @apply ${baseStylesContent};\n}\n\n`;
+    let cssContent = baseStylesContent ? `.${component} {\n  ${baseStylesContent}\n}\n\n` : '';
+
     Object.entries(variantData).forEach(([category, variants]) => {
       Object.entries(variants).forEach(([variantName, styles]) => {
         if (category === 'size' && variantName === defaultSize) return;
+        if (!styles.trim()) return; // Skip empty styles
         cssContent += `.${component}-${variantName} {\n  @apply ${styles};\n}\n\n`;
       });
     });
 
     // Save CSS
-    const outputFile = path.join(this.config.outputDir, `${component}.css`);
-    fs.mkdirSync(this.config.outputDir, { recursive: true });
-    fs.writeFileSync(outputFile, cssContent.trim());
-    this.cssFiles.push(outputFile);
-    console.log(`Generated: ${outputFile}`);
+    if (cssContent.trim()) {
+      const outputFile = path.join(this.config.outputDir, `${component}.css`);
+      fs.mkdirSync(this.config.outputDir, { recursive: true });
+      fs.writeFileSync(outputFile, cssContent.trim());
+      this.cssFiles.push(outputFile);
+      console.log(`Generated: ${outputFile}`);
+    } else {
+      console.log(`Skipped empty CSS for: ${component}`);
+    }
   }
 
   private generateIndexCss(): void {

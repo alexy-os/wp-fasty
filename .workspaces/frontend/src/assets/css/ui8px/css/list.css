@@ -2,10 +2,6 @@
   @apply text-foreground;
 }
 
-.list-default {
-  @apply bg-card text-card-foreground;
-}
-
 .list-disc {
   @apply list-disc list-outside;
 }
