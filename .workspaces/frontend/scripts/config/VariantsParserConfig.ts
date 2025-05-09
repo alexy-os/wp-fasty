@@ -9,7 +9,7 @@ export interface VariantsParserConfig {
 }
 
 export const UI8KitConfig: VariantsParserConfig = {
-  inputDir: './src/uikits/ui8px/core',
+  inputDir: './src/uikits/ui8px/core/variants',
   outputDir: './src/assets/css/ui8px/css',
   interfacesGlob: '**/interface.ts',
   variantsObject: 'cva',
