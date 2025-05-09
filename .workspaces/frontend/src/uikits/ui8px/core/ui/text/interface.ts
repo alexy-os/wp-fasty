@@ -1,10 +1,10 @@
 import { cva } from 'class-variance-authority';
-import { TypographyBaseProps } from '../typography/types';
+import { BaseProps } from '../../types';
 
 /**
  * Text component props interface
  */
-export type TextProps = TypographyBaseProps & {
+export type TextProps = BaseProps & {
   /**
    * Text size variant
    * @default "default"

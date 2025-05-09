@@ -1,7 +1,7 @@
 /**
- * Typography base props interface
+ * Base props interface
  */
-export type TypographyBaseProps = {
+export type BaseProps = {
   /**
    * Content to display
    */

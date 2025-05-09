@@ -1,10 +1,10 @@
 import { cva } from 'class-variance-authority';
-import { TypographyBaseProps } from '../typography/types';
+import { BaseProps } from '../../types';
 
 /**
  * Heading component props interface
  */
-export type HeadingProps = TypographyBaseProps & {
+export type HeadingProps = BaseProps & {
   /**
    * Heading level
    * @default "h2"
