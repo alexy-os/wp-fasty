@@ -23,16 +23,6 @@ export type CardProps = {
   children?: React.ReactNode;
 
   /**
-   * Card header content
-   */
-  header?: React.ReactNode;
-
-  /**
-   * Card footer content
-   */
-  footer?: React.ReactNode;
-
-  /**
    * Additional CSS classes
    */
   className?: string;
@@ -55,10 +45,19 @@ export const cardVariants = cva(
         user: "bg-accent/10 text-foreground",
         ai: "bg-white border-gray-200 dark:bg-neutral-900 dark:border-neutral-700"
       },
+      partial: {
+        header: "flex flex-col space-y-1.5 p-4",
+        content: "p-4 pt-0",
+        footer: "flex items-center p-4 pt-0"
+      },
       elevation: {
         flat: "",
         default: "shadow-sm",
         raised: "shadow-md"
+      },
+      typography: {
+        description: "text-sm text-muted-foreground",
+        title: "text-base font-medium"
       }
     },
     defaultVariants: {
@@ -67,72 +66,3 @@ export const cardVariants = cva(
     }
   }
 );
-
-/**
- * Card header variants
- */
-export const cardHeaderVariants = cva(
-  "flex flex-col space-y-1.5 p-4",
-  {
-    variants: {
-      variant: {
-        default: "",
-        outline: "",
-        primary: "",
-        secondary: "",
-        accent: "",
-        user: "",
-        ai: ""
-      }
-    },
-    defaultVariants: {
-      variant: "default"
-    }
-  }
-);
-
-/**
- * Card content variants
- */
-export const cardContentVariants = cva(
-  "p-4 pt-0",
-  {
-    variants: {
-      variant: {
-        default: "",
-        outline: "",
-        primary: "",
-        secondary: "",
-        accent: "",
-        user: "",
-        ai: ""
-      }
-    },
-    defaultVariants: {
-      variant: "default"
-    }
-  }
-);
-
-/**
- * Card footer variants
- */
-export const cardFooterVariants = cva(
-  "flex items-center p-4 pt-0",
-  {
-    variants: {
-      variant: {
-        default: "",
-        outline: "",
-        primary: "",
-        secondary: "",
-        accent: "",
-        user: "",
-        ai: ""
-      }
-    },
-    defaultVariants: {
-      variant: "default"
-    }
-  }
-); 
