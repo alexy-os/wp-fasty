@@ -1,7 +1,8 @@
 /*@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&display=swap");*/
 @import "tailwindcss";
 /*@import "./theme.css";*/
-@import "./ui8px/css/index.css";
+/*@import "./ui8px/css/index.css";*/
+@import "./ui8px/components/index.css";
 
 @source "src/ui8px/**/*.{js,jsx,ts,tsx}";
 
