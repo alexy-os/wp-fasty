@@ -20,6 +20,7 @@
     "vcss": "bun run --cwd .workspaces/frontend variants:css",
     "semantic": "bun run --cwd .workspaces/frontend semantic:css",
     "watch:all": "bun run --cwd .workspaces/frontend watch:all",
-    "build:tpl": "bun run --cwd .workspaces/frontend build:tpl"
+    "build:tpl": "bun run --cwd .workspaces/frontend build:tpl",
+    "slot": "bun run --cwd .workspaces/frontend slot:parse"
   }
 }

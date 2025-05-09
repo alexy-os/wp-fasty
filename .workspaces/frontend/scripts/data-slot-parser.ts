@@ -17,8 +17,8 @@ interface DataSlotParserConfig {
 const DEFAULT_CONFIG: DataSlotParserConfig = {
   inputDir: './src/uikits/ui8px/core/source',
   componentsGlob: '**/*.tsx',
-  stylesOutputDir: './src/uikits/ui8px/core/styles',
-  componentsOutputDir: './src/uikits/ui8px/core/components'
+  stylesOutputDir: './src/assets/css/ui8px',
+  componentsOutputDir: './src/uikits/ui8px/core/semantic'
 };
 
 class DataSlotParser {

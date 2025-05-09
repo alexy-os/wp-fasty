@@ -18,7 +18,8 @@
     "variants:css": "bun scripts/variants-parser.ts",
     "variants:watch": "bun scripts/variants-parser.ts --watch",
     "build:css": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css --minify --watch",
-    "build:tpl": "bun scripts/templates-builder.ts"
+    "build:tpl": "bun scripts/templates-builder.ts",
+    "slot:parse": "bun scripts/data-slot-parser.ts"
   },
   "dependencies": {
     "@babel/generator": "^7.27.1",
