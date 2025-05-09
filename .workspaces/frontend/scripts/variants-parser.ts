@@ -20,7 +20,7 @@ class VariantsParser {
   }
 
   public async generateAll(): Promise<void> {
-    // Используем рекурсивный поиск всех interface.ts файлов
+    // Use recursive search for all interface.ts files
     const pattern = `${this.config.inputDir.replace(/\\/g, '/')}/**/${this.config.interfacesGlob}`;
     // console.log('Glob pattern:', pattern);
 

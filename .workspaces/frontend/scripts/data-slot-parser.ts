@@ -8,13 +8,9 @@ import generate from '@babel/generator';
 import * as t from '@babel/types';
 
 interface DataSlotParserConfig {
-  // Директория, в которой ищем компоненты
   inputDir: string;
-  // Глобальный паттерн для поиска компонентов
   componentsGlob: string;
-  // Директория для стилей
   stylesOutputDir: string;
-  // Директория для компонентов с семантическими классами
   componentsOutputDir: string;
 }
 
@@ -33,20 +29,20 @@ class DataSlotParser {
   constructor(config: Partial<DataSlotParserConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
 
-    // Проверяем флаг --watch
+    // Check the --watch flag
     const args = process.argv.slice(2);
     this.isWatching = args.includes('--watch');
   }
 
   public async generateAll(): Promise<void> {
-    // Используем рекурсивный поиск всех .tsx файлов в указанной директории
+    // Use recursive search for all .tsx files in the specified directory
     const pattern = `${this.config.inputDir.replace(/\\/g, '/')}/${this.config.componentsGlob}`;
     console.log('Glob pattern:', pattern);
 
     const componentFiles = await glob(pattern);
     console.log(`Found component files: ${componentFiles.length}`);
 
-    this.cssFiles = []; // Сбрасываем список CSS-файлов перед генерацией
+    this.cssFiles = []; // Reset the list of CSS files before generation
 
     for (const file of componentFiles) {
       await this.processComponent(file);
@@ -60,46 +56,50 @@ class DataSlotParser {
       console.log(`Processing component: ${componentPath}`);
       const componentName = this.getComponentName(componentPath);
 
-      // Читаем содержимое файла компонента
+      // Read the component file content
       const componentContent = fs.readFileSync(componentPath, 'utf-8');
 
-      // Парсим с помощью Babel
+      // Parse with Babel
       const ast = parse(componentContent, {
         sourceType: 'module',
         plugins: ['jsx', 'typescript']
       });
 
-      // Структура для хранения извлеченных стилей
+      // Structure to store extracted styles
       const stylesMap: Record<string, string> = {};
 
-      // Обходим AST и ищем атрибуты data-slot и функцию cn()
+      // Traverse the AST and find data-slot attributes and cn() function
       traverse(ast, {
         JSXAttribute(path) {
-          // Ищем атрибут data-slot
+          // Find data-slot attribute
           if (path.node.name.name === 'data-slot' && t.isStringLiteral(path.node.value)) {
             const slotName = path.node.value.value;
 
-            // Ищем родительский JSX элемент
-            const jsxElement = path.findParent(p => p.isJSXOpeningElement());
-            if (!jsxElement) return;
+            // Find the parent JSX element
+            const jsxElementPath = path.findParent(p => p.isJSXOpeningElement());
+            if (!jsxElementPath || !t.isJSXOpeningElement(jsxElementPath.node)) return;
 
-            // Ищем атрибут className в этом элементе
-            const classNameAttr = jsxElement.node.attributes.find(
-              attr => t.isJSXAttribute(attr) &&
+            // Now we have a correctly typed JSXOpeningElement
+            const jsxElement = jsxElementPath.node;
+
+            // Find className attribute in this element
+            const classNameAttr = jsxElement.attributes.find(
+              (attr): attr is t.JSXAttribute =>
+                t.isJSXAttribute(attr) &&
+                t.isJSXIdentifier(attr.name) &&
                 attr.name.name === 'className'
             );
 
-            if (classNameAttr && t.isJSXAttribute(classNameAttr) &&
-              t.isJSXExpressionContainer(classNameAttr.value)) {
-              // Проверяем, что это вызов функции cn()
+            if (classNameAttr && t.isJSXExpressionContainer(classNameAttr.value)) {
+              // Check if this is a call to the cn() function
               const expr = classNameAttr.value.expression;
               if (t.isCallExpression(expr) &&
                 (t.isIdentifier(expr.callee) && expr.callee.name === 'cn')) {
 
-                // Получаем первый аргумент cn() - это наши стили
+                // Get the first argument of cn() - these are our styles
                 const firstArg = expr.arguments[0];
                 if (t.isStringLiteral(firstArg)) {
-                  // Сохраняем стили для этого слота
+                  // Save styles for this slot
                   stylesMap[slotName] = firstArg.value;
                 }
               }
@@ -108,7 +108,7 @@ class DataSlotParser {
         }
       });
 
-      // Если нашли стили, генерируем CSS и копию компонента
+      // If we found styles, generate CSS and copy the component
       if (Object.keys(stylesMap).length > 0) {
         this.generateCssFile(componentName, stylesMap);
         this.generateSemanticComponent(componentPath, stylesMap);
@@ -121,21 +121,21 @@ class DataSlotParser {
   private generateCssFile(componentName: string, stylesMap: Record<string, string>): void {
     let cssContent = '';
 
-    // Генерируем CSS для каждого data-slot
+    // Generate CSS for each data-slot
     Object.entries(stylesMap).forEach(([slotName, styles]) => {
-      if (!styles.trim()) return; // Пропускаем пустые стили
+      if (!styles.trim()) return; // Skip empty styles
       cssContent += `.${slotName} {\n  @apply ${styles};\n}\n\n`;
     });
 
     if (cssContent.trim()) {
-      // Создаем директорию для стилей, сохраняя структуру исходной директории
+      // Create a directory for styles, preserving the original directory structure
       const stylesDirPath = path.join(this.config.stylesOutputDir, 'components');
       fs.mkdirSync(stylesDirPath, { recursive: true });
 
-      // Путь к CSS файлу
+      // Path to the CSS file
       const outputFile = path.join(stylesDirPath, `${componentName}.css`);
 
-      // Сохраняем CSS файл
+      // Save the CSS file
       fs.writeFileSync(outputFile, cssContent.trim());
       this.cssFiles.push(outputFile);
       console.log(`Generated CSS: ${outputFile}`);
@@ -146,40 +146,45 @@ class DataSlotParser {
 
   private generateSemanticComponent(componentPath: string, stylesMap: Record<string, string>): void {
     try {
-      // Читаем оригинальный компонент
+      // Read the original component
       const componentContent = fs.readFileSync(componentPath, 'utf-8');
 
-      // Парсим с помощью Babel
+      // Parse with Babel
       const ast = parse(componentContent, {
         sourceType: 'module',
         plugins: ['jsx', 'typescript']
       });
 
-      // Модифицируем AST, заменяя утилитарные классы на семантические
+      // Modify the AST, replacing utility classes with semantic classes
       traverse(ast, {
         JSXAttribute(path) {
           if (path.node.name.name === 'data-slot' && t.isStringLiteral(path.node.value)) {
             const slotName = path.node.value.value;
 
-            // Если у нас есть стили для этого слота
+            // If we have styles for this slot
             if (stylesMap[slotName]) {
-              // Ищем родительский JSX элемент
-              const jsxElement = path.findParent(p => p.isJSXOpeningElement());
-              if (!jsxElement) return;
+              // Find the parent JSX element
+              const jsxElementPath = path.findParent(p => p.isJSXOpeningElement());
+              if (!jsxElementPath || !t.isJSXOpeningElement(jsxElementPath.node)) return;
 
-              // Ищем атрибут className
-              const classNameAttr = jsxElement.node.attributes.find(
-                attr => t.isJSXAttribute(attr) && attr.name.name === 'className'
+              // Now we have a correctly typed JSXOpeningElement
+              const jsxElement = jsxElementPath.node;
+
+              // Find className attribute
+              const classNameAttr = jsxElement.attributes.find(
+                (attr): attr is t.JSXAttribute =>
+                  t.isJSXAttribute(attr) &&
+                  t.isJSXIdentifier(attr.name) &&
+                  attr.name.name === 'className'
               );
 
-              if (classNameAttr && t.isJSXAttribute(classNameAttr) &&
-                t.isJSXExpressionContainer(classNameAttr.value)) {
-                // Проверяем, что это вызов функции cn()
+              if (classNameAttr && t.isJSXExpressionContainer(classNameAttr.value)) {
+                // Check if this is a call to the cn() function
                 const expr = classNameAttr.value.expression;
                 if (t.isCallExpression(expr) &&
                   (t.isIdentifier(expr.callee) && expr.callee.name === 'cn')) {
 
-                  // Заменяем первый аргумент cn() на семантический класс
+                  // Replace the first argument of cn() with the semantic class
                   expr.arguments[0] = t.stringLiteral(slotName);
                 }
               }
@@ -188,15 +193,15 @@ class DataSlotParser {
         }
       });
 
-      // Генерируем код из модифицированного AST
+      // Generate code from the modified AST
       const output = generate(ast, { retainLines: true });
 
-      // Создаем директорию для семантических компонентов
+      // Create a directory for semantic components
       const relativePath = path.relative(this.config.inputDir, path.dirname(componentPath));
       const outputDir = path.join(this.config.componentsOutputDir, relativePath);
       fs.mkdirSync(outputDir, { recursive: true });
 
-      // Сохраняем модифицированный компонент
+      // Save the modified component
       const fileName = path.basename(componentPath);
       const outputFile = path.join(outputDir, fileName);
       fs.writeFileSync(outputFile, output.code);
@@ -224,10 +229,10 @@ class DataSlotParser {
   }
 
   private getComponentName(componentPath: string): string {
-    // Получаем имя компонента из пути к файлу
+    // Get the component name from the file path
     const basename = path.basename(componentPath, path.extname(componentPath));
 
-    // Преобразуем CamelCase или PascalCase в kebab-case для CSS-файлов
+    // Convert CamelCase or PascalCase to kebab-case for CSS files
     return basename.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
   }
 
@@ -243,10 +248,10 @@ class DataSlotParser {
         const fullPath = path.join(watchDir, filename);
         console.log(`File changed: ${fullPath}`);
 
-        // Небольшая задержка для стабилизации файловой системы
+        // Small delay for file system stabilization
         setTimeout(async () => {
           try {
-            // Обрабатываем только измененный файл
+            // Process only the changed file
             await this.processComponent(fullPath);
             this.generateIndexCss();
             console.log('Regenerated files for the changed component');
@@ -259,14 +264,14 @@ class DataSlotParser {
   }
 }
 
-// Запуск скрипта
+// Run the script
 const parser = new DataSlotParser();
 
 async function run() {
   try {
     await parser.generateAll();
 
-    // Запускаем режим наблюдения, если указан флаг --watch
+    // Start watching mode if the --watch flag is specified
     if (parser.isWatching) {
       parser.startWatching();
     }
