@@ -1,0 +1,11 @@
+.pagination {
+  @apply mx-auto flex w-full justify-center;
+}
+
+.pagination-content {
+  @apply flex flex-row items-center gap-1;
+}
+
+.pagination-ellipsis {
+  @apply flex size-9 items-center justify-center;
+}

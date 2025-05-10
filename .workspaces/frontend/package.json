@@ -19,12 +19,13 @@
     "variants:watch": "bun scripts/variants-parser.ts --watch",
     "build:css": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css --minify --watch",
     "build:tpl": "bun scripts/templates-builder.ts",
-    "slot:parse": "bun scripts/data-slot-parser.ts"
+    "slot:parse": "bun scripts/data-slot-parser.ts",
+    "ui:cva": "bun scripts/ui-cva-parser.ts"
   },
   "dependencies": {
     "@babel/generator": "^7.27.1",
     "@babel/types": "^7.27.1",
-    "lucide-react": "^0.503.0",
+    "lucide-react": "^0.509.0",
     "react": "^19.1.0",
     "ts-node": "^10.9.2"
   },
@@ -35,6 +36,7 @@
     "@babel/preset-typescript": "^7.27.1",
     "@babel/register": "^7.27.1",
     "@babel/traverse": "^7.27.1",
+    "@radix-ui/react-slot": "^1.2.2",
     "@tailwindcss/cli": "^4.1.4",
     "@tailwindcss/vite": "^4.1.5",
     "@types/babel__traverse": "^7.20.7",

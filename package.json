@@ -21,6 +21,7 @@
     "semantic": "bun run --cwd .workspaces/frontend semantic:css",
     "watch:all": "bun run --cwd .workspaces/frontend watch:all",
     "build:tpl": "bun run --cwd .workspaces/frontend build:tpl",
-    "slot": "bun run --cwd .workspaces/frontend slot:parse"
+    "slot": "bun run --cwd .workspaces/frontend slot:parse",
+    "ui:cva": "bun run --cwd .workspaces/frontend ui:cva"
   }
 }
