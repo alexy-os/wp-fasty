@@ -45,7 +45,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
       data-slot="table-footer"
       className={cn("table-footer",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -58,7 +58,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
       data-slot="table-row"
       className={cn("table-row",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -71,7 +71,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
       data-slot="table-head"
       className={cn("table-head",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -84,7 +84,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
       data-slot="table-cell"
       className={cn("table-cell",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -112,5 +112,4 @@ export {
   TableHead,
   TableRow,
   TableCell,
-  TableCaption
-};
+  TableCaption };

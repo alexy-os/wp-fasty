@@ -7,7 +7,7 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="card"
       className={cn("card",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -20,7 +20,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="card-header"
       className={cn("card-header",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -53,7 +53,7 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="card-action"
       className={cn("card-action",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -87,5 +87,4 @@ export {
   CardTitle,
   CardAction,
   CardDescription,
-  CardContent
-};
+  CardContent };

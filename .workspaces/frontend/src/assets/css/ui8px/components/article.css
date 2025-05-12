@@ -1,0 +1,59 @@
+.article {
+  @apply bg-card text-card-foreground flex flex-col gap-4 rounded-xl border shadow-sm;
+}
+
+.article-header {
+  @apply flex flex-col gap-2 px-6 pt-6;
+}
+
+.article-title {
+  @apply text-2xl font-semibold tracking-tight;
+}
+
+.article-meta {
+  @apply flex flex-wrap items-center gap-3 text-sm text-muted-foreground;
+}
+
+.article-time {
+  @apply text-sm text-muted-foreground;
+}
+
+.article-author {
+  @apply text-sm not-italic;
+}
+
+.article-figure {
+  @apply overflow-hidden;
+}
+
+.article-image {
+  @apply aspect-video w-full object-cover;
+}
+
+.article-figcaption {
+  @apply mt-2 text-center text-sm text-muted-foreground;
+}
+
+.article-content {
+  @apply prose dark:prose-invert max-w-none px-6 py-4;
+}
+
+.article-blockquote {
+  @apply border-l-4 border-muted pl-4 italic;
+}
+
+.article-footer {
+  @apply flex items-center justify-between border-t px-6 py-4;
+}
+
+.article-tags {
+  @apply flex flex-wrap gap-2;
+}
+
+.article-tag {
+  @apply inline-flex items-center rounded-full border bg-muted px-2.5 py-0.5 text-xs font-semibold;
+}
+
+.article-actions {
+  @apply flex items-center gap-2;
+}

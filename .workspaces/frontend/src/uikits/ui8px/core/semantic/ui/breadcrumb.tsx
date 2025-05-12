@@ -14,7 +14,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
       data-slot="breadcrumb-list"
       className={cn("breadcrumb-list",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -37,7 +37,7 @@ function BreadcrumbLink({
   ...props
 
 
-}: React.ComponentProps<"a"> & { asChild?: boolean; }) {
+}: React.ComponentProps<"a"> & {asChild?: boolean;}) {
   const Comp = asChild ? Slot : "a";
 
   return (
@@ -105,5 +105,4 @@ export {
   BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  BreadcrumbEllipsis
-};
+  BreadcrumbEllipsis };

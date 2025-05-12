@@ -18,7 +18,7 @@ function Avatar({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) 
         data-slot="avatar"
         className={cn("avatar",
 
-          className
+        className
         )}
         {...props} />
 
@@ -26,7 +26,7 @@ function Avatar({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) 
 
 }
 
-interface AvatarImageProps extends React.ImgHTMLAttributes<HTMLImageElement> { }
+interface AvatarImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
 
 function AvatarImage({ className, src, ...props }: AvatarImageProps) {
   const ctx = React.useContext(AvatarContext);
@@ -90,7 +90,7 @@ function AvatarFallback({ className, delayMs, ...props }: AvatarFallbackProps) {
       data-slot="avatar-fallback"
       className={cn("avatar-fallback",
 
-        className
+      className
       )}
       {...props} />);
 

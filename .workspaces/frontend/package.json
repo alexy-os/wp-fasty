@@ -19,7 +19,7 @@
     "variants:watch": "bun scripts/variants-parser.ts --watch",
     "build:css": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css --minify --watch",
     "build:tpl": "bun scripts/templates-builder.ts",
-    "slot:parse": "bun scripts/data-slot-parser.ts",
+    "ui:clsx": "bun scripts/data-slot-parser.ts",
     "ui:cva": "bun scripts/ui-cva-parser.ts"
   },
   "dependencies": {

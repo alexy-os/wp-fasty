@@ -8,7 +8,7 @@ function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
       data-slot="textarea"
       className={cn("textarea",
 
-        className
+      className
       )}
       {...props} />);
 
