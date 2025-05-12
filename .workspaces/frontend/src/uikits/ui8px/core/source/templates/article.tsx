@@ -5,7 +5,7 @@ import {
   ArticleMeta,
   ArticleTime,
   ArticleContent
-} from "@uikits/ui8px/core/source/clsx/components/article";
+} from "@uikits/ui8px/core/semantic/components/article";
 
 const posts = [
   {

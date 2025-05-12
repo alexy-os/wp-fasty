@@ -1,0 +1,45 @@
+{
+  "Article": {
+    "tagName": "article",
+    "attributes": {
+      "data-slot": "article",
+      "className": "bg-card text-card-foreground flex flex-col gap-4 rounded-xl border shadow-sm"
+    }
+  },
+  "ArticleHeader": {
+    "tagName": "header",
+    "attributes": {
+      "data-slot": "article-header",
+      "className": "flex flex-col gap-2 px-6 pt-6"
+    }
+  },
+  "ArticleTitle": {
+    "tagName": "h2",
+    "attributes": {
+      "data-slot": "article-title",
+      "className": "text-2xl font-semibold tracking-tight"
+    }
+  },
+  "ArticleMeta": {
+    "tagName": "div",
+    "attributes": {
+      "data-slot": "article-meta",
+      "className": "flex flex-wrap items-center gap-3 text-sm text-muted-foreground"
+    }
+  },
+  "ArticleTime": {
+    "tagName": "time",
+    "attributes": {
+      "data-slot": "article-time",
+      "className": "text-sm text-muted-foreground",
+      "datetime": ""
+    }
+  },
+  "ArticleContent": {
+    "tagName": "div",
+    "attributes": {
+      "data-slot": "article-content",
+      "className": "prose dark:prose-invert max-w-none px-6 py-4"
+    }
+  }
+}

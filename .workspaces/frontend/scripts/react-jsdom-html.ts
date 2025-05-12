@@ -4,23 +4,28 @@ import ReactDOMServer from 'react-dom/server';
 import fs from 'node:fs';
 import path from 'node:path';
 import { JSDOM } from 'jsdom';
-import {
-  Article,
-  ArticleHeader,
-  ArticleTitle,
-  ArticleMeta,
-  ArticleTime,
-  ArticleContent
-} from "../src/uikits/ui8px/core/semantic/components/article";
-import * as babel from '@babel/core';
-import * as t from '@babel/types';
 
-const config = {
-  inputDir: './src/uikits/ui8px/core/source/templates',
-  outputDir: './src/uikits/ui8px/core/templates'
-};
+// Read the source file
+const sourceFile = './src/uikits/ui8px/core/source/templates/article.tsx';
+const targetFile = './src/uikits/ui8px/core/templates/semantic-article.tsx';
+const sourceCode = fs.readFileSync(sourceFile, 'utf-8');
 
-// Функция для получения HTML-шаблона компонента
+// Extract imports
+const importMatch = sourceCode.match(/import\s*{([^}]+)}\s*from\s*["']([^"']+)["']/);
+if (!importMatch) {
+  throw new Error('No imports found in source file');
+}
+
+const componentNames = importMatch[1]
+  .split(',')
+  .map(name => name.trim())
+  .filter(Boolean);
+const importPath = importMatch[2];
+
+// Load components
+const components = require(path.resolve(__dirname, '../src', importPath.replace('@uikits', 'uikits')));
+
+// Function to get the HTML template of a component
 function getComponentTemplate(Component: React.ComponentType<any>, props = {}) {
   const html = ReactDOMServer.renderToStaticMarkup(React.createElement(Component, props));
   const dom = new JSDOM(html);
@@ -31,101 +36,69 @@ function getComponentTemplate(Component: React.ComponentType<any>, props = {}) {
   return {
     tagName: element.tagName.toLowerCase(),
     attributes: Array.from(element.attributes).reduce((acc, attr) => {
-      // Заменяем class на className для React
-      const attrName = attr.name === 'class' ? 'className' : attr.name;
-      acc[attrName] = attr.value;
+      acc[attr.name] = attr.value;
       return acc;
     }, {} as Record<string, string>)
   };
 }
 
-// Получаем шаблоны компонентов
-const componentTemplates = {
-  Article: getComponentTemplate(Article),
-  ArticleHeader: getComponentTemplate(ArticleHeader),
-  ArticleTitle: getComponentTemplate(ArticleTitle),
-  ArticleMeta: getComponentTemplate(ArticleMeta),
-  ArticleTime: getComponentTemplate(ArticleTime, { dateTime: '' }),
-  ArticleContent: getComponentTemplate(ArticleContent)
-};
-
-// Babel плагин для трансформации компонентов
-const transformComponentsPlugin = () => {
-  return {
-    visitor: {
-      JSXElement(path: any) {
-        const element = path.node;
-        const openingElement = element.openingElement;
-        const closingElement = element.closingElement;
-
-        // Проверяем, является ли элемент пользовательским компонентом
-        if (t.isJSXIdentifier(openingElement.name)) {
-          const componentName = openingElement.name.name;
-          const template = componentTemplates[componentName as keyof typeof componentTemplates];
-
-          if (template) {
-            // Создаем новый JSX идентификатор для HTML-тега
-            const htmlTag = t.jsxIdentifier(template.tagName);
-
-            // Копируем все существующие атрибуты
-            const attributes = [...openingElement.attributes];
-
-            // Добавляем атрибуты из шаблона
-            Object.entries(template.attributes).forEach(([name, value]) => {
-              // Проверяем, есть ли уже такой атрибут
-              const existingAttr = attributes.find(
-                attr => t.isJSXAttribute(attr) && attr.name.name === name
-              );
-
-              if (!existingAttr) {
-                attributes.push(
-                  t.jsxAttribute(
-                    t.jsxIdentifier(name),
-                    t.stringLiteral(value)
-                  )
-                );
-              }
-            });
-
-            // Заменяем имя открывающего элемента
-            openingElement.name = htmlTag;
-            openingElement.attributes = attributes;
-
-            // Заменяем имя закрывающего элемента, если он есть
-            if (closingElement) {
-              closingElement.name = htmlTag;
-            }
-          }
-        }
-      },
-      // Дополнительно заменяем все атрибуты class на className
-      JSXAttribute(path: any) {
-        if (t.isJSXIdentifier(path.node.name) && path.node.name.name === 'class') {
-          path.node.name.name = 'className';
-        }
-      }
+// Create templates for components
+const templates = componentNames.reduce((acc, name) => {
+  const Component = components[name];
+  if (typeof Component === 'function') {
+    const props = name === 'ArticleTime' ? { dateTime: '' } : {};
+    const template = getComponentTemplate(Component, props);
+    if (template) {
+      acc[name] = template;
+      console.log(`Created template for ${name}: ${template.tagName}`);
     }
-  };
-};
-
-// Исходный JSX код
-const sourceCode = fs.readFileSync(path.join(config.inputDir, 'article.tsx'), 'utf8');
-
-// Трансформируем код с помощью Babel
-const result = babel.transformSync(sourceCode, {
-  plugins: [transformComponentsPlugin],
-  parserOpts: {
-    plugins: ['jsx', 'typescript']
   }
-});
+  return acc;
+}, {} as Record<string, any>);
 
-// Записываем результат в файл
-if (result && result.code) {
-  fs.writeFileSync(
-    path.join(config.outputDir, 'transformed-article.tsx'),
-    result.code
-  );
-  console.log('Transformation complete!');
-} else {
-  console.error('Transformation failed!');
+// Function to replace components with consideration of spaces and word boundaries
+function transformJSX(code: string, templates: Record<string, any>) {
+  let result = code;
+
+  // Sort components by name length (from longest to shortest)
+  // to avoid partial replacements
+  const sortedComponents = Object.keys(templates)
+    .sort((a, b) => b.length - a.length);
+
+  for (const name of sortedComponents) {
+    const template = templates[name];
+    if (template) {
+      // Transform attributes, replacing class with className
+      const attributes = Object.entries(template.attributes)
+        .map(([key, value]) => {
+          // Replace class with className for React
+          const reactKey = key === 'class' ? 'className' : key;
+          return `${reactKey}="${value}"`;
+        })
+        .join(' ');
+
+      // Replace opening tags with consideration of spaces and boundaries
+      const openRegex = new RegExp(`<${name}(\\s|>|/)`, 'g');
+      result = result.replace(openRegex, `<${template.tagName} ${attributes}$1`);
+
+      // Replace closing tags
+      const closeRegex = new RegExp(`</${name}>`, 'g');
+      result = result.replace(closeRegex, `</${template.tagName}>`);
+    }
+  }
+
+  // Additional replacement of all remaining class attributes with className
+  result = result.replace(/\sclass="/g, ' className="');
+
+  return result;
 }
+
+// Transform the code
+const transformedCode = transformJSX(sourceCode, templates);
+
+// Create the directory if it doesn't exist
+fs.mkdirSync(path.dirname(targetFile), { recursive: true });
+
+// Save the transformed code
+fs.writeFileSync(targetFile, transformedCode);
+console.log(`Transformed code saved to ${targetFile}`);
