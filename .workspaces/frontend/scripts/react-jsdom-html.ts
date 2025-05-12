@@ -1,9 +1,9 @@
 // cd .workspaces/frontend && bun scripts/react-jsdom-html.ts
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { JSDOM } from 'jsdom';
 import fs from 'node:fs';
 import path from 'node:path';
+import { JSDOM } from 'jsdom';
 import {
   Article,
   ArticleHeader,
@@ -12,41 +12,28 @@ import {
   ArticleTime,
   ArticleContent
 } from "../src/uikits/ui8px/core/semantic/components/article";
+import * as babel from '@babel/core';
+import * as t from '@babel/types';
 
-// Функция для получения шаблона компонента
-function getComponentTemplate(
-  Component: React.ComponentType<any>,
-  props: Record<string, any> = {}
-): string {
-  // Рендерим компонент в HTML
+// Функция для получения HTML-шаблона компонента
+function getComponentTemplate(Component: React.ComponentType<any>, props = {}) {
   const html = ReactDOMServer.renderToStaticMarkup(React.createElement(Component, props));
-
-  // Создаем DOM из HTML
   const dom = new JSDOM(html);
-  const element = dom.window.document.body.firstChild;
+  const element = dom.window.document.body.firstElementChild;
 
-  if (!element) {
-    return '';
-  }
+  if (!element) return null;
 
-  // Получаем открывающий тег с атрибутами
-  const tagName = element.nodeName.toLowerCase();
-  const attributes: string[] = [];
-
-  // Собираем атрибуты
-  for (let i = 0; i < element.attributes.length; i++) {
-    const attr = element.attributes[i];
-    attributes.push(`${attr.name}="${attr.value}"`);
-  }
-
-  // Формируем открывающий тег
-  return `<${tagName} ${attributes.join(' ')}>`;
+  return {
+    tagName: element.tagName.toLowerCase(),
+    attributes: Array.from(element.attributes).reduce((acc, attr) => {
+      acc[attr.name] = attr.value;
+      return acc;
+    }, {} as Record<string, string>)
+  };
 }
 
 // Получаем шаблоны компонентов
-console.log('Generating component templates...');
-
-const templates: Record<string, string> = {
+const componentTemplates = {
   Article: getComponentTemplate(Article),
   ArticleHeader: getComponentTemplate(ArticleHeader),
   ArticleTitle: getComponentTemplate(ArticleTitle),
@@ -55,35 +42,95 @@ const templates: Record<string, string> = {
   ArticleContent: getComponentTemplate(ArticleContent)
 };
 
-console.log('Templates generated:');
-console.log(templates);
+// Babel плагин для трансформации компонентов
+const transformComponentsPlugin = () => {
+  return {
+    visitor: {
+      JSXElement(path) {
+        const element = path.node;
+        const openingElement = element.openingElement;
+        const closingElement = element.closingElement;
 
-// Пример трансформированного JSX
-const transformedJSX = `
-{posts.map((post: any) =>
-  ${templates.Article.replace('>', '')} key={post.id}>
-    ${templates.ArticleHeader}
-      ${templates.ArticleTitle}{post.title}</h2>
-      ${templates.ArticleMeta}
-        {post.date &&
-          ${templates.ArticleTime.replace('datetime=""', 'dateTime={post.date.formatted}')}>
-            {post.date.display}
-          </time>
+        // Проверяем, является ли элемент пользовательским компонентом
+        if (t.isJSXIdentifier(openingElement.name)) {
+          const componentName = openingElement.name.name;
+          const template = componentTemplates[componentName];
+
+          if (template) {
+            // Создаем новый JSX идентификатор для HTML-тега
+            const htmlTag = t.jsxIdentifier(template.tagName);
+
+            // Копируем все существующие атрибуты
+            const attributes = [...openingElement.attributes];
+
+            // Добавляем атрибуты из шаблона
+            Object.entries(template.attributes).forEach(([name, value]) => {
+              // Проверяем, есть ли уже такой атрибут
+              const existingAttr = attributes.find(
+                attr => t.isJSXAttribute(attr) && attr.name.name === name
+              );
+
+              if (!existingAttr) {
+                attributes.push(
+                  t.jsxAttribute(
+                    t.jsxIdentifier(name),
+                    t.stringLiteral(value)
+                  )
+                );
+              }
+            });
+
+            // Заменяем имя открывающего элемента
+            openingElement.name = htmlTag;
+            openingElement.attributes = attributes;
+
+            // Заменяем имя закрывающего элемента, если он есть
+            if (closingElement) {
+              closingElement.name = htmlTag;
+            }
+          }
         }
-      </div>
-    </header>
-    ${templates.ArticleContent}
+      }
+    }
+  };
+};
+
+// Исходный JSX код
+const sourceCode = `
+{posts.map((post: any) =>
+  <Article key={post.id}>
+    <ArticleHeader>
+      <ArticleTitle>{post.title}</ArticleTitle>
+      <ArticleMeta>
+        {post.date &&
+          <ArticleTime dateTime={post.date.formatted}>{post.date.display}</ArticleTime>
+        }
+      </ArticleMeta>
+    </ArticleHeader>
+    <ArticleContent>
       {post.excerpt &&
         <p>{post.excerpt}</p>
       }
-    </div>
-  </article>
-)}`;
+    </ArticleContent>
+  </Article>
+)}
+`;
 
-console.log('\nTransformed JSX:');
-console.log(transformedJSX);
+// Трансформируем код с помощью Babel
+const result = babel.transformSync(sourceCode, {
+  plugins: [transformComponentsPlugin],
+  parserOpts: {
+    plugins: ['jsx', 'typescript']
+  }
+});
 
 // Записываем результат в файл
-const outputPath = path.join(process.cwd(), 'transformed-example.jsx');
-fs.writeFileSync(outputPath, transformedJSX);
-console.log(`\nResult saved to ${outputPath}`);
+if (result && result.code) {
+  fs.writeFileSync(
+    path.join(__dirname, '../transformed-example.tsx'),
+    result.code
+  );
+  console.log('Transformation complete!');
+} else {
+  console.error('Transformation failed!');
+}
