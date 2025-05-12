@@ -1,0 +1,11 @@
+.avatar {
+  @apply relative flex size-8 shrink-0 overflow-hidden rounded-full;
+}
+
+.avatar-image {
+  @apply aspect-square size-full;
+}
+
+.avatar-fallback {
+  @apply bg-muted flex size-full items-center justify-center rounded-full;
+}
