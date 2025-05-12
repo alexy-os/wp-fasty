@@ -4,26 +4,11 @@ import ReactDOMServer from 'react-dom/server';
 import fs from 'node:fs';
 import path from 'node:path';
 import { JSDOM } from 'jsdom';
+import { glob } from 'glob';
 
-// Read the source file
-const sourceFile = './src/uikits/ui8px/core/source/templates/article.tsx';
-const targetFile = './src/uikits/ui8px/core/templates/semantic-article.tsx';
-const sourceCode = fs.readFileSync(sourceFile, 'utf-8');
-
-// Extract imports
-const importMatch = sourceCode.match(/import\s*{([^}]+)}\s*from\s*["']([^"']+)["']/);
-if (!importMatch) {
-  throw new Error('No imports found in source file');
-}
-
-const componentNames = importMatch[1]
-  .split(',')
-  .map(name => name.trim())
-  .filter(Boolean);
-const importPath = importMatch[2];
-
-// Load components
-const components = require(path.resolve(__dirname, '../src', importPath.replace('@uikits', 'uikits')));
+// Configuration
+const sourceDir = './src/uikits/ui8px/core/source/templates';
+const targetDir = './src/uikits/ui8px/core/templates';
 
 // Function to get the HTML template of a component
 function getComponentTemplate(Component: React.ComponentType<any>, props = {}) {
@@ -41,20 +26,6 @@ function getComponentTemplate(Component: React.ComponentType<any>, props = {}) {
     }, {} as Record<string, string>)
   };
 }
-
-// Create templates for components
-const templates = componentNames.reduce((acc, name) => {
-  const Component = components[name];
-  if (typeof Component === 'function') {
-    const props = {};
-    const template = getComponentTemplate(Component, props);
-    if (template) {
-      acc[name] = template;
-      console.log(`Created template for ${name}: ${template.tagName}`);
-    }
-  }
-  return acc;
-}, {} as Record<string, any>);
 
 // Function to replace components with consideration of spaces and word boundaries
 function transformJSX(code: string, templates: Record<string, any>) {
@@ -93,12 +64,78 @@ function transformJSX(code: string, templates: Record<string, any>) {
   return result;
 }
 
-// Transform the code
-const transformedCode = transformJSX(sourceCode, templates);
+// Process a single file
+async function processFile(sourceFile: string) {
+  const relativePath = path.relative(sourceDir, sourceFile);
+  const targetFile = path.join(targetDir, relativePath);
 
-// Create the directory if it doesn't exist
-fs.mkdirSync(path.dirname(targetFile), { recursive: true });
+  console.log(`Processing ${sourceFile}...`);
 
-// Save the transformed code
-fs.writeFileSync(targetFile, transformedCode);
-console.log(`Transformed code saved to ${targetFile}`);
+  try {
+    const sourceCode = fs.readFileSync(sourceFile, 'utf-8');
+
+    // Extract imports
+    const importMatch = sourceCode.match(/import\s*{([^}]+)}\s*from\s*["']([^"']+)["']/);
+    if (!importMatch) {
+      console.warn(`No imports found in ${sourceFile}, skipping...`);
+      return;
+    }
+
+    const componentNames = importMatch[1]
+      .split(',')
+      .map(name => name.trim())
+      .filter(Boolean);
+    const importPath = importMatch[2];
+
+    // Load components
+    const components = require(path.resolve(__dirname, '../src', importPath.replace('@uikits', 'uikits')));
+
+    // Create templates for components
+    const templates = componentNames.reduce((acc, name) => {
+      const Component = components[name];
+      if (typeof Component === 'function') {
+        const props = {};
+        const template = getComponentTemplate(Component, props);
+        if (template) {
+          acc[name] = template;
+          console.log(`Created template for ${name}: ${template.tagName}`);
+        }
+      }
+      return acc;
+    }, {} as Record<string, any>);
+
+    // Transform the code
+    const transformedCode = transformJSX(sourceCode, templates);
+
+    // Create the directory if it doesn't exist
+    fs.mkdirSync(path.dirname(targetFile), { recursive: true });
+
+    // Save the transformed code
+    fs.writeFileSync(targetFile, transformedCode);
+    console.log(`Transformed ${sourceFile} -> ${targetFile}`);
+  } catch (error) {
+    console.error(`Error processing file ${sourceFile}:`, error);
+  }
+}
+
+// Main function to process all files
+async function main() {
+  try {
+    // Find all .tsx files in the source directory
+    const files = await glob(`${sourceDir}/**/*.tsx`);
+    console.log(`Found ${files.length} .tsx files to process`);
+
+    // Process each file
+    for (const file of files) {
+      await processFile(file);
+    }
+
+    console.log('All files processed successfully');
+  } catch (error) {
+    console.error('Error processing files:', error);
+    process.exit(1);
+  }
+}
+
+// Run the main function
+main();
