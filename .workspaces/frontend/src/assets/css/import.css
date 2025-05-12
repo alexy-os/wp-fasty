@@ -4,7 +4,7 @@
 @import "./ui8px/ui/index.css";
 @import "./ui8px/components/index.css";
 
-@source "src/ui8px/**/*.{js,jsx,ts,tsx}";
+@source "src/**/*.{js,jsx,ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
 

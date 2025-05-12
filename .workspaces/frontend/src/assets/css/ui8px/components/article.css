@@ -35,7 +35,7 @@
 }
 
 .article-content {
-  @apply prose dark:prose-invert max-w-none px-6 py-4;
+  @apply max-w-none px-6 py-4;
 }
 
 .article-blockquote {

@@ -192,7 +192,7 @@ function ArticleContent({
     <div
       data-slot="article-content"
       className={cn(
-        "prose dark:prose-invert max-w-none px-6 py-4",
+        "max-w-none px-6 py-4",
         className
       )}
       {...props}
@@ -279,6 +279,8 @@ function ArticleActions({
     />
   );
 }
+
+Article.displayName = "Article"
 
 export {
   Article,

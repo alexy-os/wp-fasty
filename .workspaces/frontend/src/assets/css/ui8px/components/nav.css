@@ -1,0 +1,39 @@
+.nav {
+  @apply flex items-center gap-4;
+}
+
+.nav-list {
+  @apply flex items-center gap-4;
+}
+
+.nav-item {
+  @apply flex items-center gap-4;
+}
+
+.nav-link {
+  @apply flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium;
+}
+
+.nav-link-icon {
+  @apply mr-2 h-4 w-4;
+}
+
+.nav-trigger {
+  @apply lg:hidden inline-flex items-center justify-center p-2 rounded-md;
+}
+
+.nav-mobile {
+  @apply fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden;
+}
+
+.nav-mobile-link {
+  @apply flex w-full items-center gap-2 rounded-md px-3 py-2;
+}
+
+.nav-bar {
+  @apply border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60;
+}
+
+.nav-group {
+  @apply py-4;
+}

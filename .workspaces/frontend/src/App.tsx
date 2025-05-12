@@ -25,11 +25,13 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, 
 import { Button } from "@uikits/ui8px/core/tailwind/cva/ui/button";
 import { Badge } from "@uikits/ui8px/core/tailwind/cva/ui/badge";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@uikits/ui8px/core/tailwind/clsx/ui/table";
-
+import { NavigationExample } from "@/nav-example";
 
 function App() {
   return (
     <>
+      <NavigationExample />
+
       {/* Standard article */}
       <Article>
         <ArticleHeader>

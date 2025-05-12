@@ -280,6 +280,8 @@ function ArticleActions({
 
 }
 
+Article.displayName = "Article";
+
 export {
   Article,
   ArticleHeader,
