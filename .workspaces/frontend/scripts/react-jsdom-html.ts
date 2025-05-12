@@ -7,8 +7,8 @@ import { JSDOM } from 'jsdom';
 import { glob } from 'glob';
 
 // Configuration
-const sourceDir = './src/uikits/ui8px/core/source/templates';
-const targetDir = './src/uikits/ui8px/core/templates';
+const sourceDir = './src/templates/react/source';
+const targetDir = './src/templates/react/distribution';
 
 // Function to get the HTML template of a component
 function getComponentTemplate(Component: React.ComponentType<any>, props = {}) {
@@ -21,14 +21,17 @@ function getComponentTemplate(Component: React.ComponentType<any>, props = {}) {
   return {
     tagName: element.tagName.toLowerCase(),
     attributes: Array.from(element.attributes).reduce((acc, attr) => {
-      acc[attr.name] = attr.value;
+      // Skip data-slot attribute as we'll remove it later
+      if (attr.name !== 'data-slot') {
+        acc[attr.name] = attr.value;
+      }
       return acc;
     }, {} as Record<string, string>)
   };
 }
 
 // Function to replace components with consideration of spaces and word boundaries
-function transformJSX(code: string, templates: Record<string, any>) {
+function transformJSX(code: string, templates: Record<string, any>, importMatch: RegExpMatchArray) {
   let result = code;
 
   // Sort components by name length (from longest to shortest)
@@ -60,6 +63,20 @@ function transformJSX(code: string, templates: Record<string, any>) {
 
   // Additional replacement of all remaining class attributes with className
   result = result.replace(/\sclass="/g, ' className="');
+
+  // Remove all data-slot attributes
+  result = result.replace(/\sdata-slot="[^"]*"/g, '');
+
+  // Remove the import statement
+  if (importMatch) {
+    const fullImport = importMatch[0];
+    result = result.replace(fullImport, '');
+  }
+
+  // Remove any leading semicolons left after removing imports
+  result = result.replace(/^\s*;/, '');
+
+  result = result.replace(/\n\s*\n/g, '\n');
 
   return result;
 }
@@ -105,7 +122,7 @@ async function processFile(sourceFile: string) {
     }, {} as Record<string, any>);
 
     // Transform the code
-    const transformedCode = transformJSX(sourceCode, templates);
+    const transformedCode = transformJSX(sourceCode, templates, importMatch);
 
     // Create the directory if it doesn't exist
     fs.mkdirSync(path.dirname(targetFile), { recursive: true });

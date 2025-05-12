@@ -50,6 +50,7 @@
     "concurrently": "^9.1.2",
     "glob": "^11.0.2",
     "jsdom": "^26.1.0",
+    "json-schema-to-typescript": "^15.0.4",
     "prettier": "^3.5.3",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.2.0",

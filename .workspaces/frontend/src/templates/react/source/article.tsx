@@ -7,17 +7,10 @@ import {
   ArticleContent
 } from "@uikits/ui8px/core/semantic/components/article";
 
-const posts = [
-  {
-    id: 1,
-    title: 'Post 1',
-    date: { formatted: '2021-01-01', display: 'January 1, 2021' },
-    excerpt: 'This is the excerpt for Post 1'
-  }
-];
+import { posts } from "@/context/data";
 
-{
-  posts.map((post: any) =>
+<>
+  {posts.map((post: any) =>
     <Article key={post.id}>
       <ArticleHeader>
         <ArticleTitle>{post.title}</ArticleTitle>
@@ -34,4 +27,5 @@ const posts = [
       </ArticleContent>
     </Article>
   )
-}
+  }
+</>

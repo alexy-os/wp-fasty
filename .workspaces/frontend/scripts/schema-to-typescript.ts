@@ -3,9 +3,9 @@ import { compile } from 'json-schema-to-typescript';
 import * as fs from 'node:fs';
 
 // Load schema
-const schema = JSON.parse(fs.readFileSync('./source/context.schema.json', 'utf8'));
+const schema = JSON.parse(fs.readFileSync('../src/context/context.schema.json', 'utf8'));
 
 compile(schema, 'Context').then(ts => {
-  fs.writeFileSync('./types/WPFastY-YM-ContextTypes.ts', ts);
+  fs.writeFileSync('./src/context/types/wpfasty.ts', ts);
   console.log('TypeScript types successfully generated');
 });

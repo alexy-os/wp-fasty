@@ -1,4 +1,4 @@
-import { WPFastyContext } from '../types/wpfasty-context';
+import { WPFastyContext } from './types/wpfasty';
 
 export const site: WPFastyContext['site'] = {
   title: 'My Site',
