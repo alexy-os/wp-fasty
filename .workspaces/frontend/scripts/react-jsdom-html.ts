@@ -26,7 +26,9 @@ function getComponentTemplate(Component: React.ComponentType<any>, props = {}) {
   return {
     tagName: element.tagName.toLowerCase(),
     attributes: Array.from(element.attributes).reduce((acc, attr) => {
-      acc[attr.name] = attr.value;
+      // Заменяем class на className для React
+      const attrName = attr.name === 'class' ? 'className' : attr.name;
+      acc[attrName] = attr.value;
       return acc;
     }, {} as Record<string, string>)
   };
@@ -46,7 +48,7 @@ const componentTemplates = {
 const transformComponentsPlugin = () => {
   return {
     visitor: {
-      JSXElement(path) {
+      JSXElement(path: any) {
         const element = path.node;
         const openingElement = element.openingElement;
         const closingElement = element.closingElement;
@@ -54,7 +56,7 @@ const transformComponentsPlugin = () => {
         // Проверяем, является ли элемент пользовательским компонентом
         if (t.isJSXIdentifier(openingElement.name)) {
           const componentName = openingElement.name.name;
-          const template = componentTemplates[componentName];
+          const template = componentTemplates[componentName as keyof typeof componentTemplates];
 
           if (template) {
             // Создаем новый JSX идентификатор для HTML-тега
@@ -90,6 +92,12 @@ const transformComponentsPlugin = () => {
             }
           }
         }
+      },
+      // Дополнительно заменяем все атрибуты class на className
+      JSXAttribute(path: any) {
+        if (t.isJSXIdentifier(path.node.name) && path.node.name.name === 'class') {
+          path.node.name.name = 'className';
+        }
       }
     }
   };
@@ -97,23 +105,34 @@ const transformComponentsPlugin = () => {
 
 // Исходный JSX код
 const sourceCode = `
-{posts.map((post: any) =>
-  <Article key={post.id}>
-    <ArticleHeader>
-      <ArticleTitle>{post.title}</ArticleTitle>
-      <ArticleMeta>
-        {post.date &&
-          <ArticleTime dateTime={post.date.formatted}>{post.date.display}</ArticleTime>
+const posts = [
+  {
+    id: 1,
+    title: 'Post 1',
+    date: { formatted: '2021-01-01', display: 'January 1, 2021' },
+    excerpt: 'This is the excerpt for Post 1'
+  }
+];
+
+{
+  posts.map((post: any) =>
+    <Article key={post.id}>
+      <ArticleHeader>
+        <ArticleTitle>{post.title}</ArticleTitle>
+        <ArticleMeta>
+          {post.date &&
+            <ArticleTime dateTime={post.date.formatted}>{post.date.display}</ArticleTime>
+          }
+        </ArticleMeta>
+      </ArticleHeader>
+      <ArticleContent>
+        {post.excerpt &&
+          <p>{post.excerpt}</p>
         }
-      </ArticleMeta>
-    </ArticleHeader>
-    <ArticleContent>
-      {post.excerpt &&
-        <p>{post.excerpt}</p>
-      }
-    </ArticleContent>
-  </Article>
-)}
+      </ArticleContent>
+    </Article>
+  )
+}
 `;
 
 // Трансформируем код с помощью Babel
