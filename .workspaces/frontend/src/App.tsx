@@ -1,6 +1,4 @@
 // cd .workspaces/frontend && bun run dev
-// import { FrontPage } from "@uikits/latte/components/FrontPageTemplate";
-// import { pageContext } from "@uikits/latte/data/context";
 import {
   Article,
   ArticleHeader,
@@ -23,10 +21,10 @@ import { Button } from "@uikits/ui8px/core/semantic/ui/button";
 import { Badge } from "@uikits/ui8px/core/semantic/ui/badge";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@uikits/ui8px/core/semantic/ui/table";
 */
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction } from "@uikits/ui8px/core/source/clsx/ui/card";
-import { Button } from "@uikits/ui8px/core/source/cva/ui/button";
-import { Badge } from "@uikits/ui8px/core/source/cva/ui/badge";
-import { Table, TableHeader, TableBody, TableRow, TableCell } from "@uikits/ui8px/core/source/clsx/ui/table";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction } from "@uikits/ui8px/core/tailwind/clsx/ui/card";
+import { Button } from "@uikits/ui8px/core/tailwind/cva/ui/button";
+import { Badge } from "@uikits/ui8px/core/tailwind/cva/ui/badge";
+import { Table, TableHeader, TableBody, TableRow, TableCell } from "@uikits/ui8px/core/tailwind/clsx/ui/table";
 
 
 function App() {

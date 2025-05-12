@@ -7,7 +7,7 @@ export interface TemplatesBuildTypes {
 }
 
 export const TemplatesBuildConfig: TemplatesBuildTypes = {
-  uikitDir: './src/uikits',
+  uikitDir: './src/templates',
   templatesDir: './src/templates',
   engine: 'latte',
   dotToArr: true

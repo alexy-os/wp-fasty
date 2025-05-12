@@ -7,7 +7,7 @@ import { TemplatesBuildConfig } from './config/TemplatesBuildConfig';
 
 async function main() {
   const { uikitDir, templatesDir, engine } = TemplatesBuildConfig;
-  const inputDir = path.resolve(uikitDir, engine, 'components');
+  const inputDir = path.resolve(uikitDir, 'react', 'distribution');
   const outputDir = path.resolve(templatesDir, engine);
 
   // Get the conversion function depending on the selected engine
