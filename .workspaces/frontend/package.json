@@ -25,6 +25,7 @@
   "dependencies": {
     "@babel/generator": "^7.27.1",
     "@babel/types": "^7.27.1",
+    "@types/jsdom": "^21.1.7",
     "lucide-react": "^0.509.0",
     "react": "^19.1.0",
     "ts-node": "^10.9.2"

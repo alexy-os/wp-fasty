@@ -18,16 +18,16 @@ import {
   ArticleTag,
   ArticleActions
 } from "@uikits/ui8px/core/semantic/components/article";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction } from "@uikits/ui8px/core/semantic/ui/card";
+/*import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction } from "@uikits/ui8px/core/semantic/ui/card";
 import { Button } from "@uikits/ui8px/core/semantic/ui/button";
 import { Badge } from "@uikits/ui8px/core/semantic/ui/badge";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@uikits/ui8px/core/semantic/ui/table";
-/*
+*/
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction } from "@uikits/ui8px/core/source/clsx/ui/card";
 import { Button } from "@uikits/ui8px/core/source/cva/ui/button";
 import { Badge } from "@uikits/ui8px/core/source/cva/ui/badge";
 import { Table, TableHeader, TableBody, TableRow, TableCell } from "@uikits/ui8px/core/source/clsx/ui/table";
-*/
+
 
 function App() {
   return (
