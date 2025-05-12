@@ -15,11 +15,6 @@ import {
 import * as babel from '@babel/core';
 import * as t from '@babel/types';
 
-const config = {
-  inputDir: './src/uikits/ui8px/core/source/templates',
-  outputDir: './src/uikits/ui8px/core/templates'
-};
-
 // Функция для получения HTML-шаблона компонента
 function getComponentTemplate(Component: React.ComponentType<any>, props = {}) {
   const html = ReactDOMServer.renderToStaticMarkup(React.createElement(Component, props));
@@ -109,7 +104,36 @@ const transformComponentsPlugin = () => {
 };
 
 // Исходный JSX код
-const sourceCode = fs.readFileSync(path.join(config.inputDir, 'article.tsx'), 'utf8');
+const sourceCode = `
+const posts = [
+  {
+    id: 1,
+    title: 'Post 1',
+    date: { formatted: '2021-01-01', display: 'January 1, 2021' },
+    excerpt: 'This is the excerpt for Post 1'
+  }
+];
+
+{
+  posts.map((post: any) =>
+    <Article key={post.id}>
+      <ArticleHeader>
+        <ArticleTitle>{post.title}</ArticleTitle>
+        <ArticleMeta>
+          {post.date &&
+            <ArticleTime dateTime={post.date.formatted}>{post.date.display}</ArticleTime>
+          }
+        </ArticleMeta>
+      </ArticleHeader>
+      <ArticleContent>
+        {post.excerpt &&
+          <p>{post.excerpt}</p>
+        }
+      </ArticleContent>
+    </Article>
+  )
+}
+`;
 
 // Трансформируем код с помощью Babel
 const result = babel.transformSync(sourceCode, {
@@ -122,7 +146,7 @@ const result = babel.transformSync(sourceCode, {
 // Записываем результат в файл
 if (result && result.code) {
   fs.writeFileSync(
-    path.join(config.outputDir, 'transformed-article.tsx'),
+    path.join(__dirname, '../transformed-example.tsx'),
     result.code
   );
   console.log('Transformation complete!');

@@ -1,3 +1,4 @@
+import { Article, ArticleHeader, ArticleTitle, ArticleMeta, ArticleTime, ArticleContent } from "@uikits/ui8px/core/source/clsx/components/article";
 const posts = [{
   id: 1,
   title: 'Post 1',
