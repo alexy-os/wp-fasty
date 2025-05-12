@@ -17,11 +17,11 @@
     "frontend:install": "bun install --cwd .workspaces/frontend",
     "dev": "bun run --cwd .workspaces/frontend dev",
     "ch": "rm -rf wp-fasty-ym/~cache",
-    "vcss": "bun run --cwd .workspaces/frontend variants:css",
     "semantic": "bun run --cwd .workspaces/frontend semantic:css",
-    "watch:all": "bun run --cwd .workspaces/frontend watch:all",
     "build:tpl": "bun run --cwd .workspaces/frontend build:tpl",
+    "schema:ts": "bun run --cwd .workspaces/frontend schema:ts",
     "ui:cn": "bun run --cwd .workspaces/frontend ui:clsx",
-    "ui:cva": "bun run --cwd .workspaces/frontend ui:cva"
+    "ui:cva": "bun run --cwd .workspaces/frontend ui:cva",
+    "ui:jsdom": "bun run --cwd .workspaces/frontend ui:jsdom"
   }
 }

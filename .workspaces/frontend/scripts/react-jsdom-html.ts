@@ -46,7 +46,7 @@ function getComponentTemplate(Component: React.ComponentType<any>, props = {}) {
 const templates = componentNames.reduce((acc, name) => {
   const Component = components[name];
   if (typeof Component === 'function') {
-    const props = name === 'ArticleTime' ? { dateTime: '' } : {};
+    const props = {};
     const template = getComponentTemplate(Component, props);
     if (template) {
       acc[name] = template;

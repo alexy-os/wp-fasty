@@ -10,17 +10,15 @@
     "dev": "vite",
     "build": "vite build",
     "css": "vite build --config vite.config.ts",
-    "watch": "vite build --config vite.config.ts --watch",
-    "watch:all": "concurrently \"bun run semantic:watch\" \"bun run variants:watch\" \"vite\"",
     "tailwind": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ../../wp-fasty-ym/assets/css/theme.min.css --minify",
     "semantic:css": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css",
     "semantic:watch": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css --watch",
-    "variants:css": "bun scripts/variants-parser.ts",
-    "variants:watch": "bun scripts/variants-parser.ts --watch",
     "build:css": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css --minify --watch",
     "build:tpl": "bun scripts/templates-builder.ts",
+    "schema:ts": "bun scripts/schema-to-typescript.ts",
     "ui:clsx": "bun scripts/data-slot-parser.ts",
-    "ui:cva": "bun scripts/ui-cva-parser.ts"
+    "ui:cva": "bun scripts/ui-cva-parser.ts",
+    "ui:jsdom": "bun scripts/react-jsdom-html.ts"
   },
   "dependencies": {
     "@babel/generator": "^7.27.1",
