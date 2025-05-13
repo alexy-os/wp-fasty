@@ -16,7 +16,7 @@ import { CircleIcon, HomeIcon, SettingsIcon, UsersIcon } from "lucide-react"
 export function NavigationExample() {
   return (
     <NavBar>
-      {/* Логотип */}
+      {/* Logo */}
       <div className="mr-4 flex">
         <a href="/" className="flex items-center space-x-2">
           <CircleIcon className="h-6 w-6" />
@@ -24,7 +24,7 @@ export function NavigationExample() {
         </a>
       </div>
 
-      {/* Десктопная навигация */}
+      {/* Desktop navigation */}
       <Nav className="hidden lg:flex ml-auto">
         <NavList>
           <NavItem>
@@ -54,12 +54,12 @@ export function NavigationExample() {
         </NavList>
       </Nav>
 
-      {/* Кнопка мобильного меню */}
+      {/* Mobile menu button */}
       <label htmlFor="nav-toggle" className="ml-auto lg:hidden">
         <NavTrigger />
       </label>
 
-      {/* Мобильное меню */}
+      {/* Mobile menu */}
       <NavMobile>
         <div className="grid gap-6">
           <NavGroup title="Menu">

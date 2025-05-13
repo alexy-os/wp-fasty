@@ -217,7 +217,7 @@ function NavBar({
         {children}
       </div>
 
-      {/* Скрытый чекбокс для переключения состояния меню без JS */}
+      {/* Hidden checkbox for toggling menu state without JS */}
       <input
         type="checkbox"
         id="nav-toggle"

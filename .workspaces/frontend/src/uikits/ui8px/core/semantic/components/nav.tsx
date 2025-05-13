@@ -8,7 +8,7 @@ function Nav({
   ...props
 
 
-}: React.ComponentProps<"nav"> & {children?: React.ReactNode;}) {
+}: React.ComponentProps<"nav"> & { children?: React.ReactNode; }) {
   return (
     <nav
       data-slot="nav"
@@ -26,7 +26,7 @@ function NavList({
   ...props
 
 
-}: React.ComponentProps<"ul"> & {children?: React.ReactNode;}) {
+}: React.ComponentProps<"ul"> & { children?: React.ReactNode; }) {
   return (
     <ul
       data-slot="nav-list"
@@ -44,7 +44,7 @@ function NavItem({
   ...props
 
 
-}: React.ComponentProps<"li"> & {children?: React.ReactNode;}) {
+}: React.ComponentProps<"li"> & { children?: React.ReactNode; }) {
   return (
     <li
       data-slot="nav-item"
@@ -64,17 +64,17 @@ function NavLink({
 
 
 
-}: React.ComponentProps<"a"> & {children?: React.ReactNode;active?: boolean;}) {
+}: React.ComponentProps<"a"> & { children?: React.ReactNode; active?: boolean; }) {
   return (
     <a
       data-slot="nav-link"
       data-active={active ? "true" : undefined}
       className={cn("nav-link",
 
-      "transition-colors duration-200",
-      "hover:bg-accent hover:text-accent-foreground",
-      "data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground",
-      className
+        "transition-colors duration-200",
+        "hover:bg-accent hover:text-accent-foreground",
+        "data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground",
+        className
       )}
       {...props}>
 
@@ -89,7 +89,7 @@ function NavLinkIcon({
   ...props
 
 
-}: React.ComponentProps<"span"> & {children?: React.ReactNode;}) {
+}: React.ComponentProps<"span"> & { children?: React.ReactNode; }) {
   return (
     <span
       data-slot="nav-link-icon"
@@ -111,9 +111,9 @@ function NavTrigger({
       data-slot="nav-trigger"
       className={cn("nav-trigger",
 
-      "text-foreground hover:bg-accent hover:text-accent-foreground",
-      "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring/50",
-      className
+        "text-foreground hover:bg-accent hover:text-accent-foreground",
+        "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring/50",
+        className
       )}
       aria-label="Toggle navigation menu"
       {...props}>
@@ -129,16 +129,16 @@ function NavMobile({
   ...props
 
 
-}: React.ComponentProps<"div"> & {children?: React.ReactNode;}) {
+}: React.ComponentProps<"div"> & { children?: React.ReactNode; }) {
   return (
     <div
       data-slot="nav-mobile"
       className={cn("nav-mobile",
 
-      "opacity-0 pointer-events-none",
-      "peer-checked:opacity-100 peer-checked:pointer-events-auto",
-      "transition-opacity duration-300",
-      className
+        "opacity-0 pointer-events-none",
+        "peer-checked:opacity-100 peer-checked:pointer-events-auto",
+        "transition-opacity duration-300",
+        className
       )}
       aria-hidden="true"
       {...props}>
@@ -177,17 +177,17 @@ function NavMobileLink({
 
 
 
-}: React.ComponentProps<"a"> & {children?: React.ReactNode;active?: boolean;}) {
+}: React.ComponentProps<"a"> & { children?: React.ReactNode; active?: boolean; }) {
   return (
     <a
       data-slot="nav-mobile-link"
       data-active={active ? "true" : undefined}
       className={cn("nav-mobile-link",
 
-      "text-base font-medium transition-colors",
-      "hover:bg-accent hover:text-accent-foreground",
-      "data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground",
-      className
+        "text-base font-medium transition-colors",
+        "hover:bg-accent hover:text-accent-foreground",
+        "data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground",
+        className
       )}
       {...props}>
 
@@ -202,14 +202,14 @@ function NavBar({
   ...props
 
 
-}: React.ComponentProps<"div"> & {children?: React.ReactNode;}) {
+}: React.ComponentProps<"div"> & { children?: React.ReactNode; }) {
   return (
     <div
       data-slot="nav-bar"
       className={cn("nav-bar",
 
-      "sticky top-0 z-40 w-full",
-      className
+        "sticky top-0 z-40 w-full",
+        className
       )}
       {...props}>
 
@@ -217,7 +217,7 @@ function NavBar({
         {children}
       </div>
 
-      {/* Скрытый чекбокс для переключения состояния меню без JS */}
+      {/* Hidden checkbox for toggling menu state without JS */}
       <input
         type="checkbox"
         id="nav-toggle"
@@ -236,7 +236,7 @@ function NavGroup({
 
 
 
-}: React.ComponentProps<"div"> & {children?: React.ReactNode;title?: string;}) {
+}: React.ComponentProps<"div"> & { children?: React.ReactNode; title?: string; }) {
   return (
     <div
       data-slot="nav-group"
@@ -244,7 +244,7 @@ function NavGroup({
       {...props}>
 
       {title &&
-      <h4 className="mb-2 px-3 text-sm font-semibold tracking-tight text-foreground">
+        <h4 className="mb-2 px-3 text-sm font-semibold tracking-tight text-foreground">
           {title}
         </h4>
       }
@@ -276,4 +276,5 @@ export {
   NavMobile,
   NavMobileLink,
   NavBar,
-  NavGroup };
+  NavGroup
+};
