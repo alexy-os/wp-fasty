@@ -3,12 +3,15 @@ import fs from 'fs';
 import path from 'path';
 import * as babel from '@babel/parser';
 import traverse from '@babel/traverse';
+import { FunctionDeclaration, VariableDeclarator } from '@babel/types';
 
 const UI_KIT_PATH = './src/uikits/ui8px/core/tailwind';
 
 interface ComponentExport {
   name: string;
   filePath: string;
+  slot?: string;
+  validParents?: string[];
 }
 
 function buildComponentTree(directoryPath: string): void {
@@ -23,7 +26,7 @@ function buildComponentTree(directoryPath: string): void {
       if (entry.isDirectory()) {
         scanDirectory(fullPath);
       } else if (entry.isFile() && entry.name.endsWith('.tsx')) {
-        const exports = extractExports(fullPath);
+        const { exports, slots, parents } = extractComponentInfo(fullPath);
         if (exports.length > 0) {
           const relativePath = path.relative(UI_KIT_PATH, fullPath);
           console.log(`${relativePath}:`);
@@ -32,10 +35,22 @@ function buildComponentTree(directoryPath: string): void {
           console.log('');
 
           exports.forEach(exportName => {
-            components.push({
+            const component: ComponentExport = {
               name: exportName,
               filePath: relativePath
-            });
+            };
+
+            // Add slot information if available
+            if (slots[exportName]) {
+              component.slot = slots[exportName];
+            }
+
+            // Add valid parents if available
+            if (parents[exportName] && parents[exportName].length > 0) {
+              component.validParents = parents[exportName];
+            }
+
+            components.push(component);
           });
         }
       }
@@ -51,8 +66,14 @@ function buildComponentTree(directoryPath: string): void {
   );
 }
 
-function extractExports(filePath: string): string[] {
+function extractComponentInfo(filePath: string): {
+  exports: string[];
+  slots: Record<string, string>;
+  parents: Record<string, string[]>;
+} {
   const exports: string[] = [];
+  const slots: Record<string, string> = {};
+  const parents: Record<string, string[]> = {};
   const code = fs.readFileSync(filePath, 'utf-8');
 
   try {
@@ -61,6 +82,7 @@ function extractExports(filePath: string): string[] {
       plugins: ['typescript', 'jsx']
     });
 
+    // Extract component names
     traverse(ast, {
       ExportNamedDeclaration(path) {
         if (path.node.declaration) {
@@ -95,10 +117,73 @@ function extractExports(filePath: string): string[] {
       }
     });
 
-    return exports;
+    // Extract slot information and parent components
+    traverse(ast, {
+      JSXAttribute(path) {
+        // Look for data-slot attributes
+        if (path.node.name.name === 'data-slot' &&
+          path.node.value &&
+          path.node.value.type === 'StringLiteral') {
+
+          const slotValue = path.node.value.value;
+
+          // Find the component function that contains this JSX
+          let functionPath = path.findParent(p =>
+            p.isFunctionDeclaration() ||
+            p.isArrowFunctionExpression() ||
+            p.isFunctionExpression()
+          );
+
+          if (functionPath) {
+            // For function declarations, the name is directly available
+            if (functionPath.isFunctionDeclaration() &&
+              functionPath.node.type === 'FunctionDeclaration') {
+              const funcNode = functionPath.node as FunctionDeclaration;
+              if (funcNode.id && funcNode.id.type === 'Identifier') {
+                const componentName = funcNode.id.name;
+                slots[componentName] = slotValue;
+
+                // Infer parent components from slot name
+                // Example: "article-header" suggests Article as parent
+                const parentMatch = slotValue.match(/^([a-z]+)-/);
+                if (parentMatch && parentMatch[1]) {
+                  const possibleParent = parentMatch[1].charAt(0).toUpperCase() + parentMatch[1].slice(1);
+                  if (!parents[componentName]) {
+                    parents[componentName] = [];
+                  }
+                  parents[componentName].push(possibleParent);
+                }
+              }
+            }
+            // For variable declarations with function expressions
+            else {
+              const variableDeclarator = functionPath.findParent(p => p.isVariableDeclarator());
+              if (variableDeclarator) {
+                const varNode = variableDeclarator.node as VariableDeclarator;
+                if (varNode.id && varNode.id.type === 'Identifier') {
+                  const componentName = varNode.id.name;
+                  slots[componentName] = slotValue;
+
+                  const parentMatch = slotValue.match(/^([a-z]+)-/);
+                  if (parentMatch && parentMatch[1]) {
+                    const possibleParent = parentMatch[1].charAt(0).toUpperCase() + parentMatch[1].slice(1);
+                    if (!parents[componentName]) {
+                      parents[componentName] = [];
+                    }
+                    parents[componentName].push(possibleParent);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    return { exports, slots, parents };
   } catch (error) {
     console.error(`Error parsing ${filePath}:`, error);
-    return [];
+    return { exports: [], slots: {}, parents: {} };
   }
 }
 
