@@ -5,7 +5,8 @@ import {
   ArticleMeta,
   ArticleTime,
   ArticleContent
-} from "@uikits/ui8px/core/semantic/components/article";
+} from "@uikits/ui8px/core/tailwind/clsx/components/article";
+// "@uikits/ui8px/core/semantic/components/article";
 
 import { posts } from "@/context/data";
 
