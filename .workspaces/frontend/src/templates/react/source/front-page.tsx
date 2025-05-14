@@ -4,40 +4,45 @@ import {
   SectionHeader,
   SectionTitle,
   SectionDescription,
-  SectionContent,
-  SectionFooter
+  SectionContent
 } from "@uikits/ui8px/core/tailwind/clsx/components/section";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter
-} from "@uikits/ui8px/core/tailwind/clsx/ui/card";
+import { H1, H2, P, Time } from "@uikits/ui8px/core/tailwind/clsx/components/markup";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@uikits/ui8px/core/tailwind/clsx/ui/card";
 import { Img } from "@uikits/ui8px/core/tailwind/clsx/components/media";
-import { A, Time } from "@uikits/ui8px/core/tailwind/clsx/components/markup";
+import { Button } from "@uikits/ui8px/core/tailwind/cva/ui/button";
 import { posts, page } from "@/context/data";
 
 <>
-  <Section id="hero">
+  {/* Hero Section */}
+  <Section>
     <Container>
       <SectionHeader>
         {page.title && <SectionTitle>{page.title}</SectionTitle>}
         {page.excerpt && <SectionDescription>{page.excerpt}</SectionDescription>}
       </SectionHeader>
       <SectionContent>
-        <A href="#featured">Explore</A>
-        <A href="#about">Learn More</A>
+        <Button asChild variant="default">
+          <a href="#featured">Explore</a>
+        </Button>
+        <Button asChild variant="secondary">
+          <a href="#about">Learn More</a>
+        </Button>
       </SectionContent>
     </Container>
   </Section>
-  {page && (
+
+  {/* About Section */}
+  {page.content && (
     <Section id="about">
       <Container>
-        <SectionContent>{page.content}</SectionContent>
+        <SectionContent>
+          <P>{page.content}</P>
+        </SectionContent>
       </Container>
     </Section>
   )}
+
+  {/* Featured Posts Section */}
   {posts && (
     <Section id="featured">
       <Container>
@@ -48,36 +53,40 @@ import { posts, page } from "@/context/data";
         <SectionContent>
           {posts.map(post => (
             <Card key={post.id}>
-              <A href={post.url}>
-                {post.thumbnail && (
-                  <Img src={post.thumbnail.url} alt={post.thumbnail.alt} />
-                )}
-              </A>
               <CardHeader>
-                {post.categories.map(category => (
-                  <A key={category.id} href={category.url}>{category.name}</A>
-                ))}
+                {post.categories && (
+                  <>
+                    {post.categories.map(category => (
+                      <P key={category.id}>{category.name}</P>
+                    ))}
+                  </>
+                )}
                 <CardTitle>
-                  <A href={post.url}>{post.title}</A>
+                  <a href={post.url}>{post.title}</a>
                 </CardTitle>
               </CardHeader>
-              {post.excerpt && (
-                <CardContent>
-                  {post.excerpt}
-                </CardContent>
+              {post.thumbnail && (
+                <Img src={post.thumbnail.url} alt={post.thumbnail.alt} />
               )}
+              <CardContent>
+                {post.excerpt && <P>{post.excerpt}</P>}
+              </CardContent>
               <CardFooter>
                 {post.date && (
                   <Time dateTime={post.date.formatted}>{post.date.display}</Time>
                 )}
-                <A href={post.url}>Read More</A>
+                <Button asChild variant="link">
+                  <a href={post.url}>Read More</a>
+                </Button>
               </CardFooter>
             </Card>
           ))}
         </SectionContent>
-        <SectionFooter>
-          <A href="/blog">View All Posts</A>
-        </SectionFooter>
+        <SectionContent>
+          <Button asChild variant="default">
+            <a href="/blog">View All Posts</a>
+          </Button>
+        </SectionContent>
       </Container>
     </Section>
   )}

@@ -5,6 +5,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { JSDOM } from 'jsdom';
 import { glob } from 'glob';
+import * as babelParser from '@babel/parser';
+import traverse from '@babel/traverse';
+import generate from '@babel/generator';
+import * as t from '@babel/types';
 
 // Configuration
 const sourceDir = './src/templates/react/source';
@@ -30,55 +34,56 @@ function getComponentTemplate(Component: React.ComponentType<any>, props = {}) {
   };
 }
 
-// Function to replace components with consideration of spaces and word boundaries
-function transformJSX(code: string, templates: Record<string, any>, importMatch: RegExpMatchArray) {
-  let result = code;
+// Transform JSX using Babel AST
+function transformJSXWithAST(code: string, templates: Record<string, any>, importMatch: RegExpMatchArray) {
+  // Parse code to AST
+  const ast = babelParser.parse(code, {
+    sourceType: 'module',
+    plugins: ['jsx', 'typescript'],
+  });
 
-  // Sort components by name length (from longest to shortest)
-  // to avoid partial replacements
-  const sortedComponents = Object.keys(templates)
-    .sort((a, b) => b.length - a.length);
-
-  for (const name of sortedComponents) {
-    const template = templates[name];
-    if (template) {
-      // Transform attributes, replacing class with className
-      const attributes = Object.entries(template.attributes)
-        .map(([key, value]) => {
-          // Replace class with className for React
+  // Traverse AST and replace JSX elements
+  traverse(ast, {
+    JSXElement(path) {
+      const opening = path.node.openingElement;
+      // Only process simple identifiers (not member expressions)
+      if (!t.isJSXIdentifier(opening.name)) return;
+      const name = (opening.name as t.JSXIdentifier).name;
+      const template = templates[name];
+      if (template) {
+        // Replace tag name
+        opening.name.name = template.tagName;
+        if (path.node.closingElement && t.isJSXIdentifier(path.node.closingElement.name)) {
+          path.node.closingElement.name.name = template.tagName;
+        }
+        // Remove data-slot, class, className attributes
+        opening.attributes = opening.attributes.filter(attr => {
+          if (!t.isJSXAttribute(attr)) return true;
+          const attrName = attr.name.name;
+          return attrName !== 'data-slot' && attrName !== 'class' && attrName !== 'className';
+        });
+        // Add attributes from template
+        Object.entries(template.attributes as Record<string, string>).forEach(([key, value]) => {
           const reactKey = key === 'class' ? 'className' : key;
-          return `${reactKey}="${value}"`;
-        })
-        .join(' ');
-
-      // Replace opening tags with consideration of spaces and boundaries
-      const openRegex = new RegExp(`<${name}(\\s|>|/)`, 'g');
-      result = result.replace(openRegex, `<${template.tagName} ${attributes}$1`);
-
-      // Replace closing tags
-      const closeRegex = new RegExp(`</${name}>`, 'g');
-      result = result.replace(closeRegex, `</${template.tagName}>`);
+          opening.attributes.push(t.jsxAttribute(
+            t.jsxIdentifier(reactKey),
+            t.stringLiteral(value)
+          ));
+        });
+      }
     }
-  }
+  });
 
-  // Additional replacement of all remaining class attributes with className
-  result = result.replace(/\sclass="/g, ' className="');
-
-  // Remove all data-slot attributes
-  result = result.replace(/\sdata-slot="[^"]*"/g, '');
-
-  // Remove the import statement
+  // Remove import statement
   if (importMatch) {
-    const fullImport = importMatch[0];
-    result = result.replace(fullImport, '');
+    const [fullImport] = importMatch;
+    code = code.replace(fullImport, '');
   }
 
-  // Remove any leading semicolons left after removing imports
-  result = result.replace(/^\s*;/, '');
-
-  result = result.replace(/\n\s*\n/g, '\n');
-
-  return result;
+  // Generate code from AST
+  const output = generate(ast, {}, code).code;
+  // Remove leading semicolons and extra empty lines
+  return output.replace(/^\s*;/, '').replace(/\n\s*\n/g, '\n');
 }
 
 // Process a single file
@@ -121,8 +126,8 @@ async function processFile(sourceFile: string) {
       return acc;
     }, {} as Record<string, any>);
 
-    // Transform the code
-    const transformedCode = transformJSX(sourceCode, templates, importMatch);
+    // Transform the code using AST
+    const transformedCode = transformJSXWithAST(sourceCode, templates, importMatch);
 
     // Create the directory if it doesn't exist
     fs.mkdirSync(path.dirname(targetFile), { recursive: true });
