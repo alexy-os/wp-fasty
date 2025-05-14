@@ -27,7 +27,7 @@
 }
 
 .article-image {
-  @apply aspect-video w-full object-cover;
+  @apply aspect-video w-full object-cover rounded-t-xl;
 }
 
 .article-figcaption {

@@ -4,7 +4,8 @@ import {
   SectionHeader,
   SectionTitle,
   SectionDescription,
-  SectionContent
+  SectionContent,
+  SectionFooter
 } from "@uikits/ui8px/core/tailwind/clsx/components/section";
 import {
   Article,
@@ -18,80 +19,87 @@ import {
   ArticleTags,
   ArticleTag
 } from "@uikits/ui8px/core/tailwind/clsx/components/article";
-import { LinkButton } from "@uikits/ui8px/core/tailwind/cva/ui/link";
+import { LinkButton, A, Link } from "@uikits/ui8px/core/tailwind/cva/ui/link";
+import { Grid } from "@uikits/ui8px/core/tailwind/clsx/components/section";
 
-const FrontPage = ({ posts, page }: any) => (
-  <>
-    {/* Hero Section */}
-    <Section id="hero">
-      <Container>
-        <SectionHeader>
-          <SectionTitle>{page.title}</SectionTitle>
-          {page.excerpt && (
-            <SectionDescription>{page.excerpt}</SectionDescription>
-          )}
-        </SectionHeader>
-        <SectionContent>
-          <LinkButton href="#featured">Explore</LinkButton>
-          <LinkButton href="#about">Learn More</LinkButton>
-        </SectionContent>
-      </Container>
-    </Section>
-    {/* About Section */}
-    <Section id="about">
-      <Container>
-        <SectionContent>
-          {page.content}
-        </SectionContent>
-      </Container>
-    </Section>
-    {/* Featured Posts Section */}
-    {posts && (
-      <Section id="featured">
+const FrontPage = ({ posts, page }: any) => {
+  return (
+    <>
+      {/* Hero Section */}
+      <Section id="hero">
         <Container>
           <SectionHeader>
-            <SectionTitle>Featured</SectionTitle>
-            <SectionDescription>Discover our latest articles and updates</SectionDescription>
+            <SectionTitle>{page.title}</SectionTitle>
+            {page.excerpt && (
+              <SectionDescription>{page.excerpt}</SectionDescription>
+            )}
           </SectionHeader>
           <SectionContent>
-            {posts.map((post: any) => (
-              <Article key={post.id}>
-                {post.thumbnail && (
-                  <LinkButton href={post.url}>
-                    <ArticleImage src={post.thumbnail.url} alt={post.thumbnail.alt} />
-                  </LinkButton>
-                )}
-                <ArticleHeader>
-                  {post.categories && (
-                    <ArticleTags>
-                      {post.categories.map((category: any) => (
-                        <ArticleTag key={category.id}>{category.name}</ArticleTag>
-                      ))}
-                    </ArticleTags>
-                  )}
-                  <ArticleTitle>{post.title}</ArticleTitle>
-                </ArticleHeader>
-                {post.excerpt && (
-                  <ArticleContent>{post.excerpt}</ArticleContent>
-                )}
-                <ArticleFooter>
-                  {post.date && (
-                    <ArticleMeta>
-                      <ArticleTime dateTime={post.date.formatted}>{post.date.display}</ArticleTime>
-                    </ArticleMeta>
-                  )}
-                  <LinkButton href={post.url}>
-                    Read More <span>→</span>
-                  </LinkButton>
-                </ArticleFooter>
-              </Article>
-            ))}
-            <LinkButton href="/blog">View All Posts</LinkButton>
+            <LinkButton href="#featured">Explore</LinkButton>
+            <Link href="#about">Learn More</Link>
           </SectionContent>
         </Container>
       </Section>
-    )}
-  </>
-);
+      {/* About Section */}
+      <section id="about">
+        <Container>
+          <SectionContent>
+            {page.content}
+          </SectionContent>
+        </Container>
+      </section>
+      {/* Featured Posts Section */}
+      {posts && (
+        <Section id="featured">
+          <Container>
+            <SectionHeader>
+              <SectionTitle>Featured</SectionTitle>
+              <SectionDescription>Discover our latest articles and updates</SectionDescription>
+            </SectionHeader>
+            <SectionContent>
+              <Grid>
+                {posts.map((post: any) => (
+                  <Article key={post.id}>
+                    {post.thumbnail && (
+                      <A href={post.url}>
+                        <ArticleImage src={post.thumbnail.url} alt={post.thumbnail.alt} />
+                      </A>
+                    )}
+                    <ArticleHeader>
+                      {post.categories && (
+                        <ArticleTags>
+                          {post.categories.map((category: any) => (
+                            <ArticleTag key={category.id}>{category.name}</ArticleTag>
+                          ))}
+                        </ArticleTags>
+                      )}
+                      <ArticleTitle>{post.title}</ArticleTitle>
+                    </ArticleHeader>
+                    {post.excerpt && (
+                      <ArticleContent>{post.excerpt}</ArticleContent>
+                    )}
+                    <ArticleFooter>
+                      {post.date && (
+                        <ArticleMeta>
+                          <ArticleTime dateTime={post.date.formatted}>{post.date.display}</ArticleTime>
+                        </ArticleMeta>
+                      )}
+                      <Link href={post.url}>
+                        Read More <span>→</span>
+                      </Link>
+                    </ArticleFooter>
+                  </Article>
+                ))}
+              </Grid>
+            </SectionContent>
+            <SectionFooter>
+              <LinkButton href="/blog">View All Posts</LinkButton>
+            </SectionFooter>
+          </Container>
+        </Section>
+      )}
+    </>
+  );
+};
 
 export default FrontPage; 

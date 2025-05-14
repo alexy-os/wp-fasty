@@ -41,7 +41,7 @@ function SectionHeader({ className, ...props }: React.ComponentProps<"header">) 
   return (
     <header
       data-slot="section-header"
-      className={cn(className)}
+      className={cn("py-8", className)}
       {...props}
     />
   )
@@ -53,7 +53,7 @@ function SectionTitle({ className, ...props }: React.ComponentProps<"h2">) {
   return (
     <h2
       data-slot="section-title"
-      className={cn(className)}
+      className={cn("text-2xl font-bold mb-4", className)}
       {...props}
     />
   )
@@ -61,11 +61,11 @@ function SectionTitle({ className, ...props }: React.ComponentProps<"h2">) {
 
 SectionTitle.displayName = "SectionTitle"
 
-function SectionDescription({ className, ...props }: React.ComponentProps<"p">) {
+function SectionDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <p
+    <div
       data-slot="section-description"
-      className={cn(className)}
+      className={cn("text-secondary-foreground mb-4", className)}
       {...props}
     />
   )
@@ -77,7 +77,7 @@ function SectionFooter({ className, ...props }: React.ComponentProps<"footer">) 
   return (
     <footer
       data-slot="section-footer"
-      className={cn(className)}
+      className={cn("py-8", className)}
       {...props}
     />
   )

@@ -24,57 +24,62 @@ import {
   PaginationLink,
   PaginationItem
 } from "@uikits/ui8px/core/tailwind/clsx/ui/pagination";*/
-import { LinkButton } from "@uikits/ui8px/core/tailwind/cva/ui/link";
+import { LinkButton, Link, A } from "@uikits/ui8px/core/tailwind/cva/ui/link";
+import { Grid } from "@uikits/ui8px/core/tailwind/clsx/components/section";
 
-const ArchivePage = ({ posts, archive }: any) => (
-  <Section id="archive">
-    <SectionHeader>
-      <Container>
-        <SectionTitle>{archive.title}</SectionTitle>
-        {archive.description && (
-          <SectionDescription>{archive.description}</SectionDescription>
-        )}
-      </Container>
-    </SectionHeader>
-    <SectionContent>
-      <Container>
-        {posts && (
-          <>
-            {posts.map((post: any) => (
-              <Article key={post.id}>
-                {post.thumbnail && (
-                  <LinkButton href={post.url}>
-                    <ArticleImage src={post.thumbnail.url} alt={post.thumbnail.alt} />
-                  </LinkButton>
-                )}
-                <ArticleHeader>
-                  {post.categories && (
-                    <ArticleTags>
-                      {post.categories.map((category: any) => (
-                        <ArticleTag key={category.id}>{category.name}</ArticleTag>
-                      ))}
-                    </ArticleTags>
-                  )}
-                  <ArticleTitle>{post.title}</ArticleTitle>
-                </ArticleHeader>
-                {post.excerpt && (
-                  <ArticleContent>{post.excerpt}</ArticleContent>
-                )}
-                <ArticleFooter>
-                  {post.date && (
-                    <ArticleMeta>
-                      <ArticleTime dateTime={post.date.formatted}>{post.date.display}</ArticleTime>
-                    </ArticleMeta>
-                  )}
-                  <LinkButton href={post.url}>
-                    Read More <span>→</span>
-                  </LinkButton>
-                </ArticleFooter>
-              </Article>
-            ))}
-            {/* Pagination block: pass pagination as prop or context if available */}
-            {/*
-            {pagination && (
+const ArchivePage = ({ posts, archive }: any) => {
+  return (
+    <Section id="archive">
+      <SectionHeader>
+        <Container>
+          <SectionTitle>{archive.title}</SectionTitle>
+          {archive.description && (
+            <SectionDescription>{archive.description}</SectionDescription>
+          )}
+          <LinkButton href="/">
+            View All Posts
+          </LinkButton>
+        </Container>
+      </SectionHeader>
+      <SectionContent>
+        <Container>
+          {posts && (
+            <>
+              <Grid>
+                {posts.map((post: any) => (
+                  <Article key={post.id}>
+                    {post.thumbnail && (
+                      <A href={post.url}>
+                        <ArticleImage src={post.thumbnail.url} alt={post.thumbnail.alt} />
+                      </A>
+                    )}
+                    <ArticleHeader>
+                      {post.categories && (
+                        <ArticleTags>
+                          {post.categories.map((category: any) => (
+                            <ArticleTag key={category.id}>{category.name}</ArticleTag>
+                          ))}
+                        </ArticleTags>
+                      )}
+                      <ArticleTitle>{post.title}</ArticleTitle>
+                    </ArticleHeader>
+                    {post.excerpt && (
+                      <ArticleContent>{post.excerpt}</ArticleContent>
+                    )}
+                    <ArticleFooter>
+                      {post.date && (
+                        <ArticleMeta>
+                          <ArticleTime dateTime={post.date.formatted}>{post.date.display}</ArticleTime>
+                        </ArticleMeta>
+                      )}
+                      <Link href={post.url}>
+                        Read More <span>→</span>
+                      </Link>
+                    </ArticleFooter>
+                  </Article>
+                ))}
+              </Grid>
+              {/* {pagination && (
               <Pagination>
                 <PaginationContent>
                   {pagination.prev_url && (
@@ -98,13 +103,12 @@ const ArchivePage = ({ posts, archive }: any) => (
                   )}
                 </PaginationContent>
               </Pagination>
-            )}
-            */}
-          </>
-        )}
-      </Container>
-    </SectionContent>
-  </Section>
-);
+            )} */} </>
+          )}
+        </Container>
+      </SectionContent>
+    </Section>
+  );
+};
 
 export default ArchivePage; 

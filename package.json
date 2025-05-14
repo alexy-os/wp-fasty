@@ -18,11 +18,13 @@
     "dev": "bun run --cwd .workspaces/frontend dev",
     "ch": "rm -rf wp-fasty-ym/~cache",
     "semantic": "bun run --cwd .workspaces/frontend semantic:css",
+    "semantic:watch": "bun run --cwd .workspaces/frontend semantic:watch",
     "schema:ts": "bun run --cwd .workspaces/frontend schema:ts",
     "ui:cn": "bun run --cwd .workspaces/frontend ui:clsx",
     "ui:cva": "bun run --cwd .workspaces/frontend ui:cva",
     "latte": "bun run --cwd .workspaces/frontend ui:tpl",
     "react": "bun run --cwd .workspaces/frontend ui:jsdom",
-    "tree": "bun run --cwd .workspaces/frontend ui:tree"
+    "tree": "bun run --cwd .workspaces/frontend ui:tree",
+    "ui": "bun run react && bun run latte"
   }
 }

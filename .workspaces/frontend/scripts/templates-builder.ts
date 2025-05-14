@@ -25,7 +25,7 @@ async function main() {
 
   try {
     // Find all template files
-    const templateFiles = await glob(`${inputDir}/**/*Template.tsx`);
+    const templateFiles = await glob(`${inputDir}/**/*.tsx`);
 
     if (templateFiles.length === 0) {
       console.log('No template files found');

@@ -79,14 +79,12 @@ function LinkButton({
 LinkButton.displayName = "LinkButton"
 
 function A({
-  className,
   href,
   ...props
 }: React.ComponentProps<"a">) {
   return (
     <a
       data-slot="a"
-      className={cn("link", className)}
       href={href}
       {...props}
     />

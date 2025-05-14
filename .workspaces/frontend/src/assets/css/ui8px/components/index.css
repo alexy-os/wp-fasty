@@ -1,3 +1,6 @@
+@import "./section.css";
+@import "./nav.css";
+@import "./article.css";
 @import "./textarea.css";
 @import "./table.css";
 @import "./skeleton.css";
@@ -6,6 +9,3 @@
 @import "./card.css";
 @import "./breadcrumb.css";
 @import "./avatar.css";
-@import "./section.css";
-@import "./nav.css";
-@import "./article.css";

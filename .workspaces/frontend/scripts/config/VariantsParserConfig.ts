@@ -1,8 +1,8 @@
 // config/VariantsParserConfig.ts
 export interface VariantsParserConfig {
-  inputDir: string;           // './src/components/ui'
-  outputDir: string;          // './src/components/css'
-  interfacesGlob: string;     // '**/interface.ts'
+  inputDir: string;           // './src/uikits/ui8px/core/tailwind/cva/ui'
+  outputDir: string;          // './/src/assets/css'
+  interfacesGlob: string;     // '**/*.tsx'
   variantsObject: string;     // 'cva' or 'tv'
   variantsKey: string;        // 'variants'
   defaultVariantsKey: string; // 'defaultVariants'

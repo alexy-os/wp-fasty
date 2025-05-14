@@ -152,17 +152,15 @@ function ArticleFigure({
 
 function ArticleImage({
   className,
-  alt = "",
   ...props
 }: React.ComponentProps<"img">) {
   return (
     <img
       data-slot="article-image"
       className={cn(
-        "aspect-video w-full object-cover",
+        "aspect-video w-full object-cover rounded-t-xl",
         className
       )}
-      alt={alt}
       {...props}
     />
   );

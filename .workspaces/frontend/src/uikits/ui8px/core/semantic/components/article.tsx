@@ -152,7 +152,6 @@ function ArticleFigure({
 
 function ArticleImage({
   className,
-  alt = "",
   ...props
 }: React.ComponentProps<"img">) {
   return (
@@ -162,7 +161,6 @@ function ArticleImage({
 
       className
       )}
-      alt={alt}
       {...props} />);
 
 
