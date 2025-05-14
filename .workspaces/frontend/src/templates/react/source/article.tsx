@@ -6,7 +6,6 @@ import {
   ArticleTime,
   ArticleContent
 } from "@uikits/ui8px/core/tailwind/clsx/components/article";
-// "@uikits/ui8px/core/semantic/components/article";
 
 import { posts } from "@/context/data";
 
@@ -15,17 +14,17 @@ import { posts } from "@/context/data";
     <Article key={post.id}>
       <ArticleHeader>
         <ArticleTitle>{post.title}</ArticleTitle>
-        <ArticleMeta>
-          {post.date &&
+        {post.date &&
+          <ArticleMeta>
             <ArticleTime dateTime={post.date.formatted}>{post.date.display}</ArticleTime>
-          }
-        </ArticleMeta>
-      </ArticleHeader>
-      <ArticleContent>
-        {post.excerpt &&
-          <p>{post.excerpt}</p>
+          </ArticleMeta>
         }
-      </ArticleContent>
+      </ArticleHeader>
+      {post.excerpt &&
+        <ArticleContent>
+          <p>{post.excerpt}</p>
+        </ArticleContent>
+      }
     </Article>
   )
   }

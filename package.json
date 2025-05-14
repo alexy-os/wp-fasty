@@ -22,6 +22,7 @@
     "schema:ts": "bun run --cwd .workspaces/frontend schema:ts",
     "ui:cn": "bun run --cwd .workspaces/frontend ui:clsx",
     "ui:cva": "bun run --cwd .workspaces/frontend ui:cva",
-    "ui:jsdom": "bun run --cwd .workspaces/frontend ui:jsdom"
+    "ui:jsdom": "bun run --cwd .workspaces/frontend ui:jsdom",
+    "ui:tree": "bun run --cwd .workspaces/frontend ui:tree"
   }
 }

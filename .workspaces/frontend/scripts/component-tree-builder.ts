@@ -6,10 +6,12 @@ import traverse from '@babel/traverse';
 import { FunctionDeclaration, VariableDeclarator } from '@babel/types';
 
 const UI_KIT_PATH = './src/uikits/ui8px/core/tailwind';
+const IMPORT_BASE_PATH = '@uikits/ui8px/core/tailwind';
 
 interface ComponentExport {
   name: string;
   filePath: string;
+  importPath: string;
   slot?: string;
   validParents?: string[];
 }
@@ -29,23 +31,28 @@ function buildComponentTree(directoryPath: string): void {
         const { exports, slots, parents } = extractComponentInfo(fullPath);
         if (exports.length > 0) {
           const relativePath = path.relative(UI_KIT_PATH, fullPath);
-          console.log(`${relativePath}:`);
+          const normalizedFilePath = relativePath.replace(/\\/g, '/');
+          const importPathWithoutExt = normalizedFilePath.replace(/\.tsx$/, '');
+          const fullImportPath = `${IMPORT_BASE_PATH}/${importPathWithoutExt}`;
+
+          console.log(`${normalizedFilePath}:`);
           console.log('exports:');
           exports.forEach(exp => console.log(`  ${exp}`));
+          console.log('import path:');
+          console.log(`  ${fullImportPath}`);
           console.log('');
 
           exports.forEach(exportName => {
             const component: ComponentExport = {
               name: exportName,
-              filePath: relativePath
+              filePath: normalizedFilePath,
+              importPath: fullImportPath
             };
 
-            // Add slot information if available
             if (slots[exportName]) {
               component.slot = slots[exportName];
             }
 
-            // Add valid parents if available
             if (parents[exportName] && parents[exportName].length > 0) {
               component.validParents = parents[exportName];
             }
@@ -59,7 +66,6 @@ function buildComponentTree(directoryPath: string): void {
 
   scanDirectory(directoryPath);
 
-  // Save the component tree to a JSON file
   fs.writeFileSync(
     path.join(UI_KIT_PATH, 'component-tree.json'),
     JSON.stringify(components, null, 2)
@@ -82,7 +88,6 @@ function extractComponentInfo(filePath: string): {
       plugins: ['typescript', 'jsx']
     });
 
-    // Extract component names
     traverse(ast, {
       ExportNamedDeclaration(path) {
         if (path.node.declaration) {
@@ -103,7 +108,6 @@ function extractComponentInfo(filePath: string): {
           }
         }
 
-        // Handle named exports like: export { Button, Card }
         if (path.node.specifiers) {
           path.node.specifiers.forEach(specifier => {
             if (specifier.type === 'ExportSpecifier' && specifier.exported.type === 'Identifier') {
@@ -117,17 +121,14 @@ function extractComponentInfo(filePath: string): {
       }
     });
 
-    // Extract slot information and parent components
     traverse(ast, {
       JSXAttribute(path) {
-        // Look for data-slot attributes
         if (path.node.name.name === 'data-slot' &&
           path.node.value &&
           path.node.value.type === 'StringLiteral') {
 
           const slotValue = path.node.value.value;
 
-          // Find the component function that contains this JSX
           let functionPath = path.findParent(p =>
             p.isFunctionDeclaration() ||
             p.isArrowFunctionExpression() ||
@@ -135,7 +136,6 @@ function extractComponentInfo(filePath: string): {
           );
 
           if (functionPath) {
-            // For function declarations, the name is directly available
             if (functionPath.isFunctionDeclaration() &&
               functionPath.node.type === 'FunctionDeclaration') {
               const funcNode = functionPath.node as FunctionDeclaration;
@@ -143,8 +143,6 @@ function extractComponentInfo(filePath: string): {
                 const componentName = funcNode.id.name;
                 slots[componentName] = slotValue;
 
-                // Infer parent components from slot name
-                // Example: "article-header" suggests Article as parent
                 const parentMatch = slotValue.match(/^([a-z]+)-/);
                 if (parentMatch && parentMatch[1]) {
                   const possibleParent = parentMatch[1].charAt(0).toUpperCase() + parentMatch[1].slice(1);
@@ -155,7 +153,6 @@ function extractComponentInfo(filePath: string): {
                 }
               }
             }
-            // For variable declarations with function expressions
             else {
               const variableDeclarator = functionPath.findParent(p => p.isVariableDeclarator());
               if (variableDeclarator) {
@@ -187,5 +184,4 @@ function extractComponentInfo(filePath: string): {
   }
 }
 
-// Run the script
 buildComponentTree(UI_KIT_PATH); 

@@ -1,76 +1,86 @@
-import React from "react";
 import {
   Section,
   Container,
-  Grid,
-  Header as SectionHeader,
-  Title as SectionTitle,
-  Description as SectionDescription,
-  Content as SectionContent
+  SectionHeader,
+  SectionTitle,
+  SectionDescription,
+  SectionContent,
+  SectionFooter
 } from "@uikits/ui8px/core/tailwind/clsx/components/section";
 
 import {
   Card,
   CardHeader,
+  CardTitle,
   CardContent,
-  CardFooter,
-  CardTitle
+  CardFooter
 } from "@uikits/ui8px/core/tailwind/clsx/ui/card";
 
 import {
   H1,
   P,
   A,
+  Time,
   Figure,
-  Time
 } from "@uikits/ui8px/core/tailwind/clsx/components/markup";
 
-import { Img } from "@uikits/ui8px/core/tailwind/clsx/components/media";
+import {
+  Img
+} from "@uikits/ui8px/core/tailwind/clsx/components/media";
 
-import { Button } from "@uikits/ui8px/core/tailwind/cva/ui/button";
+import {
+  Button
+} from "@uikits/ui8px/core/tailwind/cva/ui/button";
 
-import { page, posts } from "@/context/data";
+import { pageContext } from "@/context/data";
 
-const FrontPage: React.FC = () => {
-  return (
-    <>
-      <Section id="hero">
-        <Container>
-          <SectionContent>
-            {page.title && (
-              <H1>{page.title}</H1>
-            )}
-            {page.excerpt && (
-              <P>{page.excerpt}</P>
-            )}
-            <div>
-              <A href="#featured">
-                <Button>Explore</Button>
-              </A>
-              <A href="#about">
-                <Button variant="secondary">Learn More</Button>
-              </A>
-            </div>
-          </SectionContent>
-        </Container>
-      </Section>
+const { page, posts } = pageContext;
 
+const FrontPage = () => (
+  <>
+    <Section>
+      <Container>
+        <SectionContent>
+          {page.title && (
+            <H1>{page.title}</H1>
+          )}
+          {page.excerpt && (
+            <P>{page.excerpt}</P>
+          )}
+          <div>
+            <A href="#featured">
+              <Button>Explore</Button>
+            </A>
+            <A href="#about">
+              <Button>Learn More</Button>
+            </A>
+          </div>
+        </SectionContent>
+      </Container>
+    </Section>
+
+    {page && (
       <Section id="about">
         <Container>
           <SectionContent>
-            <div dangerouslySetInnerHTML={{ __html: page.content }} />
+            {page.content}
           </SectionContent>
         </Container>
       </Section>
+    )}
 
+    {posts && (
       <Section id="featured">
         <Container>
           <SectionHeader>
             <SectionTitle>Featured</SectionTitle>
-            <SectionDescription>Discover our latest articles and updates</SectionDescription>
+            <SectionDescription>
+              Discover our latest articles and updates
+            </SectionDescription>
           </SectionHeader>
-          <Grid>
-            {posts.map((post) => (
+
+          <SectionContent>
+            {posts.map(post => (
               <Card key={post.id}>
                 <A href={post.url}>
                   {post.thumbnail && (
@@ -80,9 +90,9 @@ const FrontPage: React.FC = () => {
                   )}
                 </A>
                 <CardHeader>
-                  {post.categories && post.categories.length > 0 && (
+                  {post.categories && (
                     <div>
-                      {post.categories.map((category) => (
+                      {post.categories.map(category => (
                         <A key={category.id} href={category.url}>
                           {category.name}
                         </A>
@@ -109,22 +119,22 @@ const FrontPage: React.FC = () => {
                     )}
                   </div>
                   <A href={post.url}>
-                    Read More
-                    <span>→</span>
+                    Read More →
                   </A>
                 </CardFooter>
               </Card>
             ))}
-          </Grid>
-          <div>
+          </SectionContent>
+
+          <SectionFooter>
             <A href="/blog">
               <Button>View All Posts</Button>
             </A>
-          </div>
+          </SectionFooter>
         </Container>
       </Section>
-    </>
-  );
-};
+    )}
+  </>
+);
 
 export default FrontPage; 

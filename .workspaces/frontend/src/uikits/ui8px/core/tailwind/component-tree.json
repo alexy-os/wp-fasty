@@ -1,136 +1,13 @@
 [
   {
-    "name": "Menubar",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar"
-  },
-  {
-    "name": "MenubarPortal",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-portal",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarMenu",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-menu",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarTrigger",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-trigger",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarContent",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-content",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarGroup",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-group",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarSeparator",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-separator",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarLabel",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-label",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarItem",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-item",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarShortcut",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-shortcut",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarCheckboxItem",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-checkbox-item",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarRadioGroup",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-radio-group",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarRadioItem",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-radio-item",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarSub",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-sub",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarSubTrigger",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-sub-trigger",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
-    "name": "MenubarSubContent",
-    "filePath": ".example\\menubar.tsx",
-    "slot": "menubar-sub-content",
-    "validParents": [
-      "Menubar"
-    ]
-  },
-  {
     "name": "Article",
-    "filePath": "clsx\\components\\article.tsx"
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article"
   },
   {
     "name": "ArticleHeader",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-header",
     "validParents": [
       "Article"
@@ -138,7 +15,8 @@
   },
   {
     "name": "ArticleTitle",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-title",
     "validParents": [
       "Article"
@@ -146,7 +24,8 @@
   },
   {
     "name": "ArticleMeta",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-meta",
     "validParents": [
       "Article"
@@ -154,7 +33,8 @@
   },
   {
     "name": "ArticleTime",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-time",
     "validParents": [
       "Article"
@@ -162,7 +42,8 @@
   },
   {
     "name": "ArticleAuthor",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-author",
     "validParents": [
       "Article"
@@ -170,7 +51,8 @@
   },
   {
     "name": "ArticleFigure",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-figure",
     "validParents": [
       "Article"
@@ -178,7 +60,8 @@
   },
   {
     "name": "ArticleImage",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-image",
     "validParents": [
       "Article"
@@ -186,7 +69,8 @@
   },
   {
     "name": "ArticleFigcaption",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-figcaption",
     "validParents": [
       "Article"
@@ -194,7 +78,8 @@
   },
   {
     "name": "ArticleContent",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-content",
     "validParents": [
       "Article"
@@ -202,7 +87,8 @@
   },
   {
     "name": "ArticleBlockquote",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-blockquote",
     "validParents": [
       "Article"
@@ -210,7 +96,8 @@
   },
   {
     "name": "ArticleFooter",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-footer",
     "validParents": [
       "Article"
@@ -218,7 +105,8 @@
   },
   {
     "name": "ArticleTags",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-tags",
     "validParents": [
       "Article"
@@ -226,7 +114,8 @@
   },
   {
     "name": "ArticleTag",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-tag",
     "validParents": [
       "Article"
@@ -234,7 +123,8 @@
   },
   {
     "name": "ArticleActions",
-    "filePath": "clsx\\components\\article.tsx",
+    "filePath": "clsx/components/article.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/article",
     "slot": "article-actions",
     "validParents": [
       "Article"
@@ -242,167 +132,200 @@
   },
   {
     "name": "Aside",
-    "filePath": "clsx\\components\\aside.tsx",
+    "filePath": "clsx/components/aside.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/aside",
     "slot": "aside"
   },
   {
     "name": "Footer",
-    "filePath": "clsx\\components\\footer.tsx",
+    "filePath": "clsx/components/footer.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/footer",
     "slot": "footer"
   },
   {
     "name": "Header",
-    "filePath": "clsx\\components\\header.tsx",
+    "filePath": "clsx/components/header.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/header",
     "slot": "header"
   },
   {
     "name": "Main",
-    "filePath": "clsx\\components\\main.tsx",
+    "filePath": "clsx/components/main.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/main",
     "slot": "main"
   },
   {
     "name": "H1",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "h1"
   },
   {
     "name": "H2",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "h2"
   },
   {
     "name": "H3",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "h3"
   },
   {
     "name": "H4",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "h4"
   },
   {
     "name": "H5",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "h5"
   },
   {
     "name": "H6",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "h6"
   },
   {
     "name": "P",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "p"
   },
   {
     "name": "Figure",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "figure"
   },
   {
     "name": "Figcaption",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "figcaption"
   },
   {
     "name": "Blockquote",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "blockquote"
   },
   {
     "name": "Time",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "time"
   },
   {
     "name": "Address",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "address"
   },
   {
     "name": "Ul",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "ul"
   },
   {
     "name": "Ol",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "ol"
   },
   {
     "name": "Li",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "li"
   },
   {
     "name": "A",
-    "filePath": "clsx\\components\\markup.tsx",
+    "filePath": "clsx/components/markup.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
     "slot": "a"
   },
   {
     "name": "Img",
-    "filePath": "clsx\\components\\media.tsx",
+    "filePath": "clsx/components/media.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
     "slot": "img"
   },
   {
     "name": "Video",
-    "filePath": "clsx\\components\\media.tsx",
+    "filePath": "clsx/components/media.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
     "slot": "video"
   },
   {
     "name": "Audio",
-    "filePath": "clsx\\components\\media.tsx",
+    "filePath": "clsx/components/media.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
     "slot": "audio"
   },
   {
     "name": "Picture",
-    "filePath": "clsx\\components\\media.tsx",
+    "filePath": "clsx/components/media.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
     "slot": "picture"
   },
   {
     "name": "Source",
-    "filePath": "clsx\\components\\media.tsx",
+    "filePath": "clsx/components/media.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
     "slot": "source"
   },
   {
     "name": "Iframe",
-    "filePath": "clsx\\components\\media.tsx",
+    "filePath": "clsx/components/media.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
     "slot": "iframe"
   },
   {
     "name": "Map",
-    "filePath": "clsx\\components\\media.tsx",
+    "filePath": "clsx/components/media.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
     "slot": "map"
   },
   {
     "name": "Area",
-    "filePath": "clsx\\components\\media.tsx",
+    "filePath": "clsx/components/media.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
     "slot": "area"
   },
   {
     "name": "Object",
-    "filePath": "clsx\\components\\media.tsx",
+    "filePath": "clsx/components/media.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
     "slot": "object"
   },
   {
     "name": "Svg",
-    "filePath": "clsx\\components\\media.tsx",
+    "filePath": "clsx/components/media.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
     "slot": "svg"
   },
   {
     "name": "Canvas",
-    "filePath": "clsx\\components\\media.tsx",
+    "filePath": "clsx/components/media.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
     "slot": "canvas"
   },
   {
     "name": "Nav",
-    "filePath": "clsx\\components\\nav.tsx",
+    "filePath": "clsx/components/nav.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/nav",
     "slot": "nav"
   },
   {
     "name": "NavList",
-    "filePath": "clsx\\components\\nav.tsx",
+    "filePath": "clsx/components/nav.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/nav",
     "slot": "nav-list",
     "validParents": [
       "Nav"
@@ -410,7 +333,8 @@
   },
   {
     "name": "NavItem",
-    "filePath": "clsx\\components\\nav.tsx",
+    "filePath": "clsx/components/nav.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/nav",
     "slot": "nav-item",
     "validParents": [
       "Nav"
@@ -418,7 +342,8 @@
   },
   {
     "name": "NavLink",
-    "filePath": "clsx\\components\\nav.tsx",
+    "filePath": "clsx/components/nav.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/nav",
     "slot": "nav-link",
     "validParents": [
       "Nav"
@@ -426,7 +351,8 @@
   },
   {
     "name": "NavLinkIcon",
-    "filePath": "clsx\\components\\nav.tsx",
+    "filePath": "clsx/components/nav.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/nav",
     "slot": "nav-link-icon",
     "validParents": [
       "Nav"
@@ -434,7 +360,8 @@
   },
   {
     "name": "NavTrigger",
-    "filePath": "clsx\\components\\nav.tsx",
+    "filePath": "clsx/components/nav.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/nav",
     "slot": "nav-trigger",
     "validParents": [
       "Nav"
@@ -442,7 +369,8 @@
   },
   {
     "name": "NavMobile",
-    "filePath": "clsx\\components\\nav.tsx",
+    "filePath": "clsx/components/nav.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/nav",
     "slot": "nav-mobile",
     "validParents": [
       "Nav"
@@ -450,7 +378,8 @@
   },
   {
     "name": "NavMobileLink",
-    "filePath": "clsx\\components\\nav.tsx",
+    "filePath": "clsx/components/nav.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/nav",
     "slot": "nav-mobile-link",
     "validParents": [
       "Nav"
@@ -458,7 +387,8 @@
   },
   {
     "name": "NavBar",
-    "filePath": "clsx\\components\\nav.tsx",
+    "filePath": "clsx/components/nav.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/nav",
     "slot": "nav-bar",
     "validParents": [
       "Nav"
@@ -466,7 +396,8 @@
   },
   {
     "name": "NavGroup",
-    "filePath": "clsx\\components\\nav.tsx",
+    "filePath": "clsx/components/nav.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/nav",
     "slot": "nav-group",
     "validParents": [
       "Nav"
@@ -474,17 +405,20 @@
   },
   {
     "name": "Section",
-    "filePath": "clsx\\components\\section.tsx",
+    "filePath": "clsx/components/section.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
     "slot": "section"
   },
   {
     "name": "Container",
-    "filePath": "clsx\\components\\section.tsx",
+    "filePath": "clsx/components/section.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
     "slot": "container"
   },
   {
     "name": "FullWidth",
-    "filePath": "clsx\\components\\section.tsx",
+    "filePath": "clsx/components/section.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
     "slot": "full-width",
     "validParents": [
       "Full"
@@ -492,67 +426,71 @@
   },
   {
     "name": "Row",
-    "filePath": "clsx\\components\\section.tsx",
+    "filePath": "clsx/components/section.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
     "slot": "row"
   },
   {
     "name": "Col",
-    "filePath": "clsx\\components\\section.tsx",
+    "filePath": "clsx/components/section.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
     "slot": "col"
   },
   {
-    "name": "Content",
-    "filePath": "clsx\\components\\section.tsx",
+    "name": "SectionContent",
+    "filePath": "clsx/components/section.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
     "slot": "section-content",
     "validParents": [
       "Section"
     ]
   },
   {
-    "name": "Header",
-    "filePath": "clsx\\components\\section.tsx",
+    "name": "SectionHeader",
+    "filePath": "clsx/components/section.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
     "slot": "section-header",
     "validParents": [
       "Section"
     ]
   },
   {
-    "name": "Title",
-    "filePath": "clsx\\components\\section.tsx",
+    "name": "SectionTitle",
+    "filePath": "clsx/components/section.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
     "slot": "section-title",
     "validParents": [
       "Section"
     ]
   },
   {
-    "name": "Description",
-    "filePath": "clsx\\components\\section.tsx",
+    "name": "SectionDescription",
+    "filePath": "clsx/components/section.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
     "slot": "section-description",
     "validParents": [
       "Section"
     ]
   },
   {
-    "name": "Footer",
-    "filePath": "clsx\\components\\section.tsx",
+    "name": "SectionFooter",
+    "filePath": "clsx/components/section.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
     "slot": "section-footer",
     "validParents": [
       "Section"
     ]
   },
   {
-    "name": "Grid",
-    "filePath": "clsx\\components\\section.tsx",
-    "slot": "grid"
-  },
-  {
     "name": "Avatar",
-    "filePath": "clsx\\ui\\avatar.tsx",
+    "filePath": "clsx/ui/avatar.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/avatar",
     "slot": "avatar"
   },
   {
     "name": "AvatarImage",
-    "filePath": "clsx\\ui\\avatar.tsx",
+    "filePath": "clsx/ui/avatar.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/avatar",
     "slot": "avatar-image",
     "validParents": [
       "Avatar"
@@ -560,7 +498,8 @@
   },
   {
     "name": "AvatarFallback",
-    "filePath": "clsx\\ui\\avatar.tsx",
+    "filePath": "clsx/ui/avatar.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/avatar",
     "slot": "avatar-fallback",
     "validParents": [
       "Avatar"
@@ -568,12 +507,14 @@
   },
   {
     "name": "Breadcrumb",
-    "filePath": "clsx\\ui\\breadcrumb.tsx",
+    "filePath": "clsx/ui/breadcrumb.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/breadcrumb",
     "slot": "breadcrumb"
   },
   {
     "name": "BreadcrumbList",
-    "filePath": "clsx\\ui\\breadcrumb.tsx",
+    "filePath": "clsx/ui/breadcrumb.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/breadcrumb",
     "slot": "breadcrumb-list",
     "validParents": [
       "Breadcrumb"
@@ -581,7 +522,8 @@
   },
   {
     "name": "BreadcrumbItem",
-    "filePath": "clsx\\ui\\breadcrumb.tsx",
+    "filePath": "clsx/ui/breadcrumb.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/breadcrumb",
     "slot": "breadcrumb-item",
     "validParents": [
       "Breadcrumb"
@@ -589,7 +531,8 @@
   },
   {
     "name": "BreadcrumbLink",
-    "filePath": "clsx\\ui\\breadcrumb.tsx",
+    "filePath": "clsx/ui/breadcrumb.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/breadcrumb",
     "slot": "breadcrumb-link",
     "validParents": [
       "Breadcrumb"
@@ -597,7 +540,8 @@
   },
   {
     "name": "BreadcrumbPage",
-    "filePath": "clsx\\ui\\breadcrumb.tsx",
+    "filePath": "clsx/ui/breadcrumb.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/breadcrumb",
     "slot": "breadcrumb-page",
     "validParents": [
       "Breadcrumb"
@@ -605,7 +549,8 @@
   },
   {
     "name": "BreadcrumbSeparator",
-    "filePath": "clsx\\ui\\breadcrumb.tsx",
+    "filePath": "clsx/ui/breadcrumb.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/breadcrumb",
     "slot": "breadcrumb-separator",
     "validParents": [
       "Breadcrumb"
@@ -613,7 +558,8 @@
   },
   {
     "name": "BreadcrumbEllipsis",
-    "filePath": "clsx\\ui\\breadcrumb.tsx",
+    "filePath": "clsx/ui/breadcrumb.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/breadcrumb",
     "slot": "breadcrumb-ellipsis",
     "validParents": [
       "Breadcrumb"
@@ -621,12 +567,14 @@
   },
   {
     "name": "Card",
-    "filePath": "clsx\\ui\\card.tsx",
+    "filePath": "clsx/ui/card.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/card",
     "slot": "card"
   },
   {
     "name": "CardHeader",
-    "filePath": "clsx\\ui\\card.tsx",
+    "filePath": "clsx/ui/card.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/card",
     "slot": "card-header",
     "validParents": [
       "Card"
@@ -634,7 +582,8 @@
   },
   {
     "name": "CardFooter",
-    "filePath": "clsx\\ui\\card.tsx",
+    "filePath": "clsx/ui/card.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/card",
     "slot": "card-footer",
     "validParents": [
       "Card"
@@ -642,7 +591,8 @@
   },
   {
     "name": "CardTitle",
-    "filePath": "clsx\\ui\\card.tsx",
+    "filePath": "clsx/ui/card.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/card",
     "slot": "card-title",
     "validParents": [
       "Card"
@@ -650,7 +600,8 @@
   },
   {
     "name": "CardAction",
-    "filePath": "clsx\\ui\\card.tsx",
+    "filePath": "clsx/ui/card.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/card",
     "slot": "card-action",
     "validParents": [
       "Card"
@@ -658,7 +609,8 @@
   },
   {
     "name": "CardDescription",
-    "filePath": "clsx\\ui\\card.tsx",
+    "filePath": "clsx/ui/card.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/card",
     "slot": "card-description",
     "validParents": [
       "Card"
@@ -666,7 +618,8 @@
   },
   {
     "name": "CardContent",
-    "filePath": "clsx\\ui\\card.tsx",
+    "filePath": "clsx/ui/card.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/card",
     "slot": "card-content",
     "validParents": [
       "Card"
@@ -674,17 +627,20 @@
   },
   {
     "name": "Input",
-    "filePath": "clsx\\ui\\input.tsx",
+    "filePath": "clsx/ui/input.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/input",
     "slot": "input"
   },
   {
     "name": "Pagination",
-    "filePath": "clsx\\ui\\pagination.tsx",
+    "filePath": "clsx/ui/pagination.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/pagination",
     "slot": "pagination"
   },
   {
     "name": "PaginationContent",
-    "filePath": "clsx\\ui\\pagination.tsx",
+    "filePath": "clsx/ui/pagination.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/pagination",
     "slot": "pagination-content",
     "validParents": [
       "Pagination"
@@ -692,7 +648,8 @@
   },
   {
     "name": "PaginationLink",
-    "filePath": "clsx\\ui\\pagination.tsx",
+    "filePath": "clsx/ui/pagination.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/pagination",
     "slot": "pagination-link",
     "validParents": [
       "Pagination"
@@ -700,7 +657,8 @@
   },
   {
     "name": "PaginationItem",
-    "filePath": "clsx\\ui\\pagination.tsx",
+    "filePath": "clsx/ui/pagination.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/pagination",
     "slot": "pagination-item",
     "validParents": [
       "Pagination"
@@ -708,15 +666,18 @@
   },
   {
     "name": "PaginationPrevious",
-    "filePath": "clsx\\ui\\pagination.tsx"
+    "filePath": "clsx/ui/pagination.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/pagination"
   },
   {
     "name": "PaginationNext",
-    "filePath": "clsx\\ui\\pagination.tsx"
+    "filePath": "clsx/ui/pagination.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/pagination"
   },
   {
     "name": "PaginationEllipsis",
-    "filePath": "clsx\\ui\\pagination.tsx",
+    "filePath": "clsx/ui/pagination.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/pagination",
     "slot": "pagination-ellipsis",
     "validParents": [
       "Pagination"
@@ -724,12 +685,14 @@
   },
   {
     "name": "Skeleton",
-    "filePath": "clsx\\ui\\skeleton.tsx",
+    "filePath": "clsx/ui/skeleton.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/skeleton",
     "slot": "skeleton"
   },
   {
     "name": "Table",
-    "filePath": "clsx\\ui\\table.tsx",
+    "filePath": "clsx/ui/table.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/table",
     "slot": "table",
     "validParents": [
       "Table"
@@ -737,7 +700,8 @@
   },
   {
     "name": "TableHeader",
-    "filePath": "clsx\\ui\\table.tsx",
+    "filePath": "clsx/ui/table.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/table",
     "slot": "table-header",
     "validParents": [
       "Table"
@@ -745,7 +709,8 @@
   },
   {
     "name": "TableBody",
-    "filePath": "clsx\\ui\\table.tsx",
+    "filePath": "clsx/ui/table.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/table",
     "slot": "table-body",
     "validParents": [
       "Table"
@@ -753,7 +718,8 @@
   },
   {
     "name": "TableFooter",
-    "filePath": "clsx\\ui\\table.tsx",
+    "filePath": "clsx/ui/table.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/table",
     "slot": "table-footer",
     "validParents": [
       "Table"
@@ -761,7 +727,8 @@
   },
   {
     "name": "TableHead",
-    "filePath": "clsx\\ui\\table.tsx",
+    "filePath": "clsx/ui/table.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/table",
     "slot": "table-head",
     "validParents": [
       "Table"
@@ -769,7 +736,8 @@
   },
   {
     "name": "TableRow",
-    "filePath": "clsx\\ui\\table.tsx",
+    "filePath": "clsx/ui/table.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/table",
     "slot": "table-row",
     "validParents": [
       "Table"
@@ -777,7 +745,8 @@
   },
   {
     "name": "TableCell",
-    "filePath": "clsx\\ui\\table.tsx",
+    "filePath": "clsx/ui/table.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/table",
     "slot": "table-cell",
     "validParents": [
       "Table"
@@ -785,7 +754,8 @@
   },
   {
     "name": "TableCaption",
-    "filePath": "clsx\\ui\\table.tsx",
+    "filePath": "clsx/ui/table.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/table",
     "slot": "table-caption",
     "validParents": [
       "Table"
@@ -793,17 +763,20 @@
   },
   {
     "name": "Textarea",
-    "filePath": "clsx\\ui\\textarea.tsx",
+    "filePath": "clsx/ui/textarea.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/ui/textarea",
     "slot": "textarea"
   },
   {
     "name": "Alert",
-    "filePath": "cva\\ui\\alert.tsx",
+    "filePath": "cva/ui/alert.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/cva/ui/alert",
     "slot": "alert"
   },
   {
     "name": "AlertTitle",
-    "filePath": "cva\\ui\\alert.tsx",
+    "filePath": "cva/ui/alert.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/cva/ui/alert",
     "slot": "alert-title",
     "validParents": [
       "Alert"
@@ -811,7 +784,8 @@
   },
   {
     "name": "AlertDescription",
-    "filePath": "cva\\ui\\alert.tsx",
+    "filePath": "cva/ui/alert.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/cva/ui/alert",
     "slot": "alert-description",
     "validParents": [
       "Alert"
@@ -819,20 +793,24 @@
   },
   {
     "name": "Badge",
-    "filePath": "cva\\ui\\badge.tsx",
+    "filePath": "cva/ui/badge.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/cva/ui/badge",
     "slot": "badge"
   },
   {
     "name": "badgeVariants",
-    "filePath": "cva\\ui\\badge.tsx"
+    "filePath": "cva/ui/badge.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/cva/ui/badge"
   },
   {
     "name": "Button",
-    "filePath": "cva\\ui\\button.tsx",
+    "filePath": "cva/ui/button.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/cva/ui/button",
     "slot": "button"
   },
   {
     "name": "buttonVariants",
-    "filePath": "cva\\ui\\button.tsx"
+    "filePath": "cva/ui/button.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/cva/ui/button"
   }
 ]

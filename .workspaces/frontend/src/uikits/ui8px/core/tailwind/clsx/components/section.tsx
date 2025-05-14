@@ -37,7 +37,7 @@ function FullWidth({ className, ...props }: React.ComponentProps<"div">) {
 
 FullWidth.displayName = "FullWidth"
 
-function Header({ className, ...props }: React.ComponentProps<"header">) {
+function SectionHeader({ className, ...props }: React.ComponentProps<"header">) {
   return (
     <header
       data-slot="section-header"
@@ -47,9 +47,9 @@ function Header({ className, ...props }: React.ComponentProps<"header">) {
   )
 }
 
-Header.displayName = "Header"
+SectionHeader.displayName = "SectionHeader"
 
-function Title({ className, ...props }: React.ComponentProps<"h2">) {
+function SectionTitle({ className, ...props }: React.ComponentProps<"h2">) {
   return (
     <h2
       data-slot="section-title"
@@ -59,9 +59,9 @@ function Title({ className, ...props }: React.ComponentProps<"h2">) {
   )
 }
 
-Title.displayName = "Title"
+SectionTitle.displayName = "SectionTitle"
 
-function Description({ className, ...props }: React.ComponentProps<"p">) {
+function SectionDescription({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="section-description"
@@ -71,9 +71,9 @@ function Description({ className, ...props }: React.ComponentProps<"p">) {
   )
 }
 
-Description.displayName = "Description"
+SectionDescription.displayName = "SectionDescription"
 
-function Footer({ className, ...props }: React.ComponentProps<"footer">) {
+function SectionFooter({ className, ...props }: React.ComponentProps<"footer">) {
   return (
     <footer
       data-slot="section-footer"
@@ -83,9 +83,9 @@ function Footer({ className, ...props }: React.ComponentProps<"footer">) {
   )
 }
 
-Footer.displayName = "Footer"
+SectionFooter.displayName = "SectionFooter"
 
-function Content({ className, ...props }: React.ComponentProps<"div">) {
+function SectionContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="section-content"
@@ -95,7 +95,7 @@ function Content({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-Content.displayName = "Content"
+SectionContent.displayName = "SectionContent"
 
 function Row({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -133,4 +133,4 @@ function Grid({ className, ...props }: React.ComponentProps<"div">) {
 
 Grid.displayName = "Grid"
 
-export { Section, Container, FullWidth, Row, Col, Content, Header, Title, Description, Footer, Grid }
+export { Section, Container, FullWidth, Row, Col, Grid, SectionContent, SectionHeader, SectionTitle, SectionDescription, SectionFooter }

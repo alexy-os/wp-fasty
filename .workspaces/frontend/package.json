@@ -18,7 +18,8 @@
     "schema:ts": "bun scripts/schema-to-typescript.ts",
     "ui:clsx": "bun scripts/data-slot-parser.ts",
     "ui:cva": "bun scripts/ui-cva-parser.ts",
-    "ui:jsdom": "bun scripts/react-jsdom-html.ts"
+    "ui:jsdom": "bun scripts/react-jsdom-html.ts",
+    "ui:tree": "bun scripts/component-tree-builder.ts"
   },
   "dependencies": {
     "@babel/generator": "^7.27.1",
