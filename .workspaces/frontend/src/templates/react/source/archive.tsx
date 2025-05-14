@@ -18,12 +18,6 @@ import {
   ArticleTags,
   ArticleTag
 } from "@uikits/ui8px/core/tailwind/clsx/components/article";
-/*import {
-  Pagination,
-  PaginationContent,
-  PaginationLink,
-  PaginationItem
-} from "@uikits/ui8px/core/tailwind/clsx/ui/pagination";*/
 import { LinkButton, Link, A } from "@uikits/ui8px/core/tailwind/cva/ui/link";
 import { Grid } from "@uikits/ui8px/core/tailwind/clsx/components/section";
 

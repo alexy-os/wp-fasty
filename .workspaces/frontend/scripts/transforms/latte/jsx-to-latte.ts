@@ -96,7 +96,9 @@ export function transformJSXToLatte(jsxNode: any, imports: Record<string, any>, 
 function processAttributes(attributes: any[]): string[] {
   return attributes.map(attr => {
     if (t.isJSXAttribute(attr)) {
-      const name = (attr.name as any).name;
+      // Replace className with class
+      let name = (attr.name as any).name;
+      if (name === 'className') name = 'class';
 
       // If the attribute value is a string
       if (t.isStringLiteral(attr.value)) {

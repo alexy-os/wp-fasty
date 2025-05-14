@@ -34,7 +34,7 @@ const FrontPage = ({
             <div className="w-full">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {posts.map((post: any) => <article key={post.id} className="bg-card text-card-foreground flex flex-col gap-4 rounded-xl border shadow-sm">
-                    {post.thumbnail && <a href={post.url} className="link">
+                    {post.thumbnail && <a href={post.url}>
                         <img src={post.thumbnail.url} alt={post.thumbnail.alt} className="aspect-video w-full object-cover rounded-t-xl" />
                       </a>}
                     <header className="flex flex-col gap-2 px-6 pt-6">
