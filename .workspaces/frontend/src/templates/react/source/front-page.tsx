@@ -21,10 +21,10 @@ import { posts, page } from "@/context/data";
         {page.excerpt && <SectionDescription>{page.excerpt}</SectionDescription>}
       </SectionHeader>
       <SectionContent>
-        <Button asChild variant="default">
+        <Button>
           <a href="#featured">Explore</a>
         </Button>
-        <Button asChild variant="secondary">
+        <Button>
           <a href="#about">Learn More</a>
         </Button>
       </SectionContent>
@@ -75,7 +75,7 @@ import { posts, page } from "@/context/data";
                 {post.date && (
                   <Time dateTime={post.date.formatted}>{post.date.display}</Time>
                 )}
-                <Button asChild variant="link">
+                <Button>
                   <a href={post.url}>Read More</a>
                 </Button>
               </CardFooter>
@@ -83,7 +83,7 @@ import { posts, page } from "@/context/data";
           ))}
         </SectionContent>
         <SectionContent>
-          <Button asChild variant="default">
+          <Button>
             <a href="/blog">View All Posts</a>
           </Button>
         </SectionContent>

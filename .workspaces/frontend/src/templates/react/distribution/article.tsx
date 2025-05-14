@@ -1,4 +1,3 @@
-import { Article, ArticleHeader, ArticleTitle, ArticleMeta, ArticleTime, ArticleContent } from "@uikits/ui8px/core/tailwind/clsx/components/article";
 import { posts } from "@/context/data";
 <>
   {posts.map((post: any) => <article key={post.id} className="bg-card text-card-foreground flex flex-col gap-4 rounded-xl border shadow-sm">
