@@ -84,6 +84,11 @@ export const page: PostPage =
   }
 };
 
+export const archive: WPFastyContext['archive']['archive'] = {
+  title: 'My Archive',
+  description: 'My Archive Description',
+};
+
 export const posts: WPFastyContext['archive']['posts'][] = [
   {
     title: 'My Post 1',

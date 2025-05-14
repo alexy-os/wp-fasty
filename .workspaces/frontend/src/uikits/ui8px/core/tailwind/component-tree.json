@@ -245,12 +245,6 @@
     "slot": "li"
   },
   {
-    "name": "A",
-    "filePath": "clsx/components/markup.tsx",
-    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/markup",
-    "slot": "a"
-  },
-  {
     "name": "Img",
     "filePath": "clsx/components/media.tsx",
     "importPath": "@uikits/ui8px/core/tailwind/clsx/components/media",
@@ -435,6 +429,12 @@
     "filePath": "clsx/components/section.tsx",
     "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
     "slot": "col"
+  },
+  {
+    "name": "Grid",
+    "filePath": "clsx/components/section.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/clsx/components/section",
+    "slot": "grid"
   },
   {
     "name": "SectionContent",
@@ -812,5 +812,31 @@
     "name": "buttonVariants",
     "filePath": "cva/ui/button.tsx",
     "importPath": "@uikits/ui8px/core/tailwind/cva/ui/button"
+  },
+  {
+    "name": "Link",
+    "filePath": "cva/ui/link.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/cva/ui/link",
+    "slot": "link-button",
+    "validParents": [
+      "Link"
+    ]
+  },
+  {
+    "name": "LinkButton",
+    "filePath": "cva/ui/link.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/cva/ui/link",
+    "slot": "button"
+  },
+  {
+    "name": "A",
+    "filePath": "cva/ui/link.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/cva/ui/link",
+    "slot": "a"
+  },
+  {
+    "name": "linkVariants",
+    "filePath": "cva/ui/link.tsx",
+    "importPath": "@uikits/ui8px/core/tailwind/cva/ui/link"
   }
 ]

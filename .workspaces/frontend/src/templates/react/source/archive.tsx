@@ -18,42 +18,28 @@ import {
   ArticleTags,
   ArticleTag
 } from "@uikits/ui8px/core/tailwind/clsx/components/article";
+/*import {
+  Pagination,
+  PaginationContent,
+  PaginationLink,
+  PaginationItem
+} from "@uikits/ui8px/core/tailwind/clsx/ui/pagination";*/
 import { LinkButton } from "@uikits/ui8px/core/tailwind/cva/ui/link";
 
-const FrontPage = ({ posts, page }: any) => (
-  <>
-    {/* Hero Section */}
-    <Section id="hero">
+const ArchivePage = ({ posts, archive }: any) => (
+  <Section id="archive">
+    <SectionHeader>
       <Container>
-        <SectionHeader>
-          <SectionTitle>{page.title}</SectionTitle>
-          {page.excerpt && (
-            <SectionDescription>{page.excerpt}</SectionDescription>
-          )}
-        </SectionHeader>
-        <SectionContent>
-          <LinkButton href="#featured">Explore</LinkButton>
-          <LinkButton href="#about">Learn More</LinkButton>
-        </SectionContent>
+        <SectionTitle>{archive.title}</SectionTitle>
+        {archive.description && (
+          <SectionDescription>{archive.description}</SectionDescription>
+        )}
       </Container>
-    </Section>
-    {/* About Section */}
-    <Section id="about">
+    </SectionHeader>
+    <SectionContent>
       <Container>
-        <SectionContent>
-          {page.content}
-        </SectionContent>
-      </Container>
-    </Section>
-    {/* Featured Posts Section */}
-    {posts && (
-      <Section id="featured">
-        <Container>
-          <SectionHeader>
-            <SectionTitle>Featured</SectionTitle>
-            <SectionDescription>Discover our latest articles and updates</SectionDescription>
-          </SectionHeader>
-          <SectionContent>
+        {posts && (
+          <>
             {posts.map((post: any) => (
               <Article key={post.id}>
                 {post.thumbnail && (
@@ -86,12 +72,39 @@ const FrontPage = ({ posts, page }: any) => (
                 </ArticleFooter>
               </Article>
             ))}
-            <LinkButton href="/blog">View All Posts</LinkButton>
-          </SectionContent>
-        </Container>
-      </Section>
-    )}
-  </>
+            {/* Pagination block: pass pagination as prop or context if available */}
+            {/*
+            {pagination && (
+              <Pagination>
+                <PaginationContent>
+                  {pagination.prev_url && (
+                    <PaginationItem>
+                      <PaginationLink href={pagination.prev_url} size="default">← Previous</PaginationLink>
+                    </PaginationItem>
+                  )}
+                  {pagination.pages && pagination.pages.map((page: any) => (
+                    <PaginationItem key={page.number}>
+                      {page.is_current ? (
+                        <span>{page.number}</span>
+                      ) : (
+                        <PaginationLink href={page.url} size="default">{page.number}</PaginationLink>
+                      )}
+                    </PaginationItem>
+                  ))}
+                  {pagination.next_url && (
+                    <PaginationItem>
+                      <PaginationLink href={pagination.next_url} size="default">Next →</PaginationLink>
+                    </PaginationItem>
+                  )}
+                </PaginationContent>
+              </Pagination>
+            )}
+            */}
+          </>
+        )}
+      </Container>
+    </SectionContent>
+  </Section>
 );
 
-export default FrontPage; 
+export default ArchivePage; 

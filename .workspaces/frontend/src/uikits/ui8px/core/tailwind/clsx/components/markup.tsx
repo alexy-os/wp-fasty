@@ -181,16 +181,4 @@ function Li({ className, ...props }: React.ComponentProps<"li">) {
 
 Li.displayName = "Li"
 
-function A({ className, ...props }: React.ComponentProps<"a">) {
-  return (
-    <a
-      data-slot="a"
-      className={cn(className)}
-      {...props}
-    />
-  )
-}
-
-A.displayName = "A"
-
-export { H1, H2, H3, H4, H5, H6, P, Figure, Figcaption, Blockquote, Time, Address, Ul, Ol, Li, A }
+export { H1, H2, H3, H4, H5, H6, P, Figure, Figcaption, Blockquote, Time, Address, Ul, Ol, Li }

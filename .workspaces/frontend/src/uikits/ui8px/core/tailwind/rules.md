@@ -135,3 +135,68 @@ Before finalizing any template, verify:
 - [ ] Data binding follows minimal syntax patterns
 - [ ] All interactive elements are properly nested
 - [ ] No defensive coding or runtime checks
+
+# Minimal Template Builder Rules
+
+## 1. Use only components from `component-tree.json`
+- Import strictly by `importPath` from the map.
+- Never use div, h1, p, or other HTML tags if a specialized component exists.
+
+## 2. Follow the source structure exactly
+- Do not shorten, rearrange, or change the hierarchy of sections, blocks, or elements.
+- If something exists in the source, it must exist in the template.
+- All conditions, loops, and nesting must match the source.
+
+## 3. Minimal React syntax
+- Use only `{data}` for output, no typeof, !!, ternary, or type checks.
+- Use only `{array.map(...)}` for loops, no length or empty checks.
+- Use only `{data && <Component>{data}</Component>}` for conditions.
+
+## 4. Do not add or remove props
+- Use only props listed in the component map.
+- Do not add styles, classes, variant, rounded, etc., unless in the map.
+
+## 5. No logic or defensive checks
+- No typeof, null-checks, empty checks, or data formatting.
+- Output data as-is.
+
+## 6. Use Link/LinkButton for links and buttons
+- Never use <a> or <button> if a specialized component exists.
+
+## 7. If a component is missing, create a draft, do not use HTML tags
+
+---
+
+**Example:**
+```jsx
+<Article>
+  <ArticleHeader>
+    {post.categories && (
+      <ArticleTags>
+        {post.categories.map(category => (
+          <ArticleTag key={category.id}>{category.name}</ArticleTag>
+        ))}
+      </ArticleTags>
+    )}
+    <ArticleTitle>{post.title}</ArticleTitle>
+  </ArticleHeader>
+  {post.thumbnail && (
+    <LinkButton href={post.url}>
+      <ArticleImage src={post.thumbnail.url} alt={post.thumbnail.alt} />
+    </LinkButton>
+  )}
+  {post.excerpt && (
+    <ArticleContent>{post.excerpt}</ArticleContent>
+  )}
+  <ArticleFooter>
+    {post.date && (
+      <ArticleMeta>
+        <ArticleTime dateTime={post.date.formatted}>{post.date.display}</ArticleTime>
+      </ArticleMeta>
+    )}
+    <LinkButton href={post.url}>
+      Read More <span>→</span>
+    </LinkButton>
+  </ArticleFooter>
+</Article>
+```

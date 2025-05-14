@@ -2,109 +2,98 @@
  * Component Template
  *
  * Required context:
- * - site: Component parameter
  * - page: Component parameter
  * - posts: Component parameter
- * - menu: Component parameter
  *}
- 
-<section className="hero">
-  <div className="container">
-    <div className="hero-content">
-      {if isset($page['title'])}
-        <h1 className="hero-title">
-          {$page['title']}
-        </h1>
-      {/if}
-      {if isset($page['description'])}
-        <p className="hero-description">
-          {$page['description']}
+
+
+<section id="hero" className="w-full py-12 md:py-24 lg:py-32">
+  <div className="container mx-auto px-4 md:px-6 lg:px-8">
+    <header className="">
+      <h2 className="">
+        {$page['title']}
+      </h2>
+      {if isset($page['excerpt'])}
+        <p className="">
+          {$page['excerpt']}
         </p>
       {/if}
-      <div className="hero-actions">
-        <a href="#featured" className="button button-primary button-rounded">
-          Explore
-        </a>
-        <a href="#about" className="button button-secondary button-rounded">
-          Learn More
-        </a>
-      </div>
+    </header>
+    <div className="w-full">
+      <a href="#featured" className="button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3" type="button">
+        Explore
+      </a>
+      <a href="#about" className="button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3" type="button">
+        Learn More
+      </a>
     </div>
   </div>
 </section>
-{if isset($page)}
-  <section id="about" className="about-section">
-    <div className="container">
-      <div className="about-content">
-        {$page['content']}
-      </div>
+
+<section id="about" className="w-full py-12 md:py-24 lg:py-32">
+  <div className="container mx-auto px-4 md:px-6 lg:px-8">
+    <div className="w-full">
+      {$page['content']}
     </div>
-  </section>
-{/if}
+  </div>
+</section>
+
 {if isset($posts)}
-  <section id="featured" className="featured-posts">
-    <div className="container">
-      <header className="section-header">
-        <h2 className="section-title">
+  <section id="featured" className="w-full py-12 md:py-24 lg:py-32">
+    <div className="container mx-auto px-4 md:px-6 lg:px-8">
+      <header className="">
+        <h2 className="">
           Featured
         </h2>
-        <p className="section-description">
+        <p className="">
           Discover our latest articles and updates
         </p>
       </header>
-      <div className="featured-grid">
+      <div className="w-full">
         {foreach $posts as $post}
-          <article key="{$post['id']}" className="card card-featured">
-            <a href="{$post['url']}" className="card-link">
-              {if isset($post['thumbnail'])}
-                <figure className="card-thumbnail">
-                  <img src="{$post['thumbnail']['url']}" alt="{$post['thumbnail']['alt']}" className="card-image"></img>
-                </figure>
-              {/if}
-            </a>
-            <header className="card-header">
+          <article key="{$post['id']}" className="bg-card text-card-foreground flex flex-col gap-4 rounded-xl border shadow-sm">
+            {if isset($post['thumbnail'])}
+              <a href="{$post['url']}" className="button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3" type="button">
+                <img src="{$post['thumbnail']['url']}" alt="{$post['thumbnail']['alt']}" className="aspect-video w-full object-cover"></img>
+              </a>
+            {/if}
+            <header className="flex flex-col gap-2 px-6 pt-6">
               {if isset($post['categories'])}
-                <div className="card-categories">
+                <ul className="flex flex-wrap gap-2">
                   {foreach $post['categories'] as $category}
-                    <a key="{$category['id']}" href="{$category['url']}" className="card-category">
+                    <li key="{$category['id']}" className="inline-flex items-center rounded-full border bg-muted px-2.5 py-0.5 text-xs font-semibold">
                       {$category['name']}
-                    </a>
+                    </li>
                   {/foreach}
-                </div>
+                </ul>
               {/if}
-              <h3 className="card-title">
-                <a href="{$post['url']}">
-                  {$post['title']}
-                </a>
-              </h3>
+              <h2 className="text-2xl font-semibold tracking-tight">
+                {$post['title']}
+              </h2>
             </header>
-            <div className="card-content">
-              {if isset($post['excerpt'])}
-                <div className="card-excerpt">
-                  {$post['excerpt']}
-                </div>
-              {/if}
-            </div>
-            <footer className="card-footer">
-              <div className="card-meta">
-                {if isset($post['date'])}
-                  <time dateTime="{$post['date']['formatted']}" className="card-date">
+            {if isset($post['excerpt'])}
+              <div className="max-w-none px-6 py-4">
+                {$post['excerpt']}
+              </div>
+            {/if}
+            <footer className="flex items-center justify-between border-t px-6 py-4">
+              {if isset($post['date'])}
+                <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                  <time dateTime="{$post['date']['formatted']}" className="text-sm text-muted-foreground">
                     {$post['date']['display']}
                   </time>
-                {/if}
-              </div>
-              <a href="{$post['url']}" className="card-read-more">
+                </div>
+              {/if}
+              <a href="{$post['url']}" className="button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3" type="button">
                 Read More
-                <span className="read-more-icon">
+                <span>
                   →
                 </span>
               </a>
             </footer>
           </article>
         {/foreach}
-      </div>
-      <div className="featured-action">
-        <a href="/blog" className="button button-primary button-rounded">
+        <a href="/blog" className="button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3" type="button">
           View All Posts
         </a>
       </div>
