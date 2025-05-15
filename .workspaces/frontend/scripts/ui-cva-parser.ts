@@ -133,7 +133,7 @@ class UICVAParser {
   }
 
   private generateIndexCss(): void {
-    const indexPath = path.join(this.config.outputDir, 'index.css');
+    const indexPath = path.join(this.config.outputDir, this.config.outputIndex);
     const imports = this.cssFiles.map(file =>
       `@import "./${path.basename(file)}";`
     ).join('\n');

@@ -6,13 +6,15 @@ export interface VariantsParserConfig {
   variantsObject: string;     // 'cva' or 'tv'
   variantsKey: string;        // 'variants'
   defaultVariantsKey: string; // 'defaultVariants'
+  outputIndex: string;        // 'index.css'
 }
 
 export const UI8KitConfig: VariantsParserConfig = {
-  inputDir: './src/uikits/ui8px/core/tailwind/cva/ui',
+  inputDir: './src/uikits/ui8px/core/tailwind/clsx/ui',
   outputDir: './src/assets/css/ui8px/ui',
   interfacesGlob: '**/*.tsx',
   variantsObject: 'cva',
   variantsKey: 'variants',
   defaultVariantsKey: 'defaultVariants',
+  outputIndex: 'variants.css',
 };
