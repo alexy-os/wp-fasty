@@ -20,6 +20,18 @@ function Nav({
 
 }
 
+function Navbar({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="navbar"
+      className={cn("navbar", className)}
+      {...props} />);
+
+
+}
+
+Navbar.displayName = "Navbar";
+
 function NavList({
   className,
   children,
@@ -268,6 +280,7 @@ NavGroup.displayName = "NavGroup";
 
 export {
   Nav,
+  Navbar,
   NavList,
   NavItem,
   NavLink,

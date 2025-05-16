@@ -1,5 +1,6 @@
 import { Container, SectionHeader, SectionFooter } from '@semantic/components/section'
-import { Nav, NavList, NavItem, NavLink } from '@semantic/components/nav'
+import { Nav, Navbar, NavList, NavItem, NavLink } from '@semantic/components/nav'
+import { Button } from '@semantic/ui/button'
 import { Main } from '@semantic/components/main'
 
 import { site, menu } from '@/context/data'
@@ -28,7 +29,7 @@ export function SemanticLayout({ title, description, children }: SemanticLayoutP
         <body className="bg-background text-foreground">
           <SectionHeader>
             <Container>
-              <div className="flex justify-between items-center">
+              <Navbar>
                 <Nav>
                   <NavList>
                     {menu.primary.items.map((item) => (
@@ -40,14 +41,15 @@ export function SemanticLayout({ title, description, children }: SemanticLayoutP
                 </Nav>
 
                 {/* Simple theme toggle button */}
-                <button
+                <Button
                   id="theme-toggle"
-                  className="px-4 py-2 bg-primary text-white rounded-full text-sm"
+                  size="sm"
+                  className="bg-sky-500 text-white !rounded-full shadow-sm"
                   data-current-theme="semantic"
                 >
                   Switch to UI8Kit
-                </button>
-              </div>
+                </Button>
+              </Navbar>
             </Container>
           </SectionHeader>
           <Main>

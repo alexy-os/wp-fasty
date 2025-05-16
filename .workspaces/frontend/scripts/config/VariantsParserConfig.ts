@@ -10,7 +10,7 @@ export interface VariantsParserConfig {
 }
 
 export const UI8KitConfig: VariantsParserConfig = {
-  inputDir: './src/uikits/ui8px/core/tailwind/clsx/ui',
+  inputDir: './src/uikits/n4shadcn/src/ui',
   outputDir: './src/assets/css/ui8px/ui',
   interfacesGlob: '**/*.tsx',
   variantsObject: 'cva',

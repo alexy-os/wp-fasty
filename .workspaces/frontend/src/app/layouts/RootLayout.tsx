@@ -1,6 +1,7 @@
 import { Container, SectionHeader, SectionFooter } from '@ui8kit/components/section'
-import { Nav, NavList, NavItem, NavLink } from '@ui8kit/components/nav'
+import { Nav, Navbar, NavList, NavItem, NavLink } from '@ui8kit/components/nav'
 import { Main } from '@ui8kit/components/main'
+import { Button } from '@n4shadcn/ui/button'
 
 import { site, menu } from '@/context/data'
 
@@ -30,7 +31,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
         <body className="bg-background text-foreground">
           <SectionHeader>
             <Container>
-              <div className="flex justify-between items-center">
+              <Navbar>
                 <Nav>
                   <NavList>
                     {menu.primary.items.map((item) => (
@@ -42,14 +43,15 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
                 </Nav>
 
                 {/* Simple theme toggle button */}
-                <button
+                <Button
                   id="theme-toggle"
-                  className="px-4 py-2 bg-sky-500 text-white rounded-full text-sm"
+                  size="sm"
+                  className="bg-teal-500 text-white !rounded-full"
                   data-current-theme="ui8kit"
                 >
                   Switch to Semantic
-                </button>
-              </div>
+                </Button>
+              </Navbar>
             </Container>
           </SectionHeader>
           <Main>
