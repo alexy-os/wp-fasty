@@ -5,7 +5,7 @@ import {
   SectionTitle,
   SectionDescription,
   SectionContent
-} from "@uikits/ui8px/core/tailwind/clsx/components/section";
+} from "@ui8kit/components/section";
 import {
   Article,
   ArticleHeader,
@@ -17,9 +17,9 @@ import {
   ArticleImage,
   ArticleTags,
   ArticleTag
-} from "@uikits/ui8px/core/tailwind/clsx/components/article";
-import { LinkButton, Link, A } from "@uikits/ui8px/core/tailwind/cva/ui/link";
-import { Grid } from "@uikits/ui8px/core/tailwind/clsx/components/section";
+} from "@ui8kit/components/article";
+import { LinkButton, Link, A } from "@ui8kit/ui/link";
+import { Grid } from "@ui8kit/components/section";
 
 const ArchivePage = ({ posts, archive }: any) => {
   return (

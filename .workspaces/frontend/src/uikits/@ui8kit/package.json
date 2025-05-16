@@ -1,0 +1,23 @@
+{
+  "name": "@uikits/ui8kit",
+  "description": "A set of UI blocks and components in an 8px grid-based design system",
+  "git": "https://github.com/alexy-os/wp-fasty.git",
+  "repository": "https://github.com/alexy-os/wp-fasty.git",
+  "author": "alexy-os",
+  "license": "MIT",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "default": "./index.ts"
+    }
+  },
+  "files": [
+    "*.ts",
+    "*.tsx"
+  ]
+}

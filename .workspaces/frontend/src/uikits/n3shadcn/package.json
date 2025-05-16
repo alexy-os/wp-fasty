@@ -1,0 +1,24 @@
+{
+  "name": "@uikits/n3shadcn",
+  "description": "A set of selected UI components of the New York Shadcn theme based on the Tailwind 3.0 version. Attention - this set uses Shadcn v4 API",
+  "version": "0.0.1",
+  "git": "https://github.com/shadcn-ui/ui.git",
+  "repository": "https://github.com/shadcn-ui/ui/tree/main/apps/www/registry/new-york/ui",
+  "api-shadcn": "https://github.com/shadcn-ui/ui/tree/main/apps/v4/registry/new-york-v4/ui",
+  "author": "shadcn-ui",
+  "license": "MIT",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "default": "./index.ts"
+    }
+  },
+  "files": [
+    "*.ts",
+    "*.tsx"
+  ]
+}

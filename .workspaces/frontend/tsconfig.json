@@ -33,14 +33,14 @@
       "@uikits/*": [
         "src/uikits/*"
       ],
-      "@hinddy/*": [
-        "src/uikits/hinddy/core/*"
+      "@ui8kit/*": [
+        "src/uikits/@ui8kit/src/*"
       ],
-      "@infobiz/*": [
-        "src/uikits/infobiz/core/*"
+      "@semantic/*": [
+        "src/uikits/@semantic/src/*"
       ],
-      "@ui8px/*": [
-        "src/uikits/ui8px/core/*"
+      "@n4shadcn/*": [
+        "src/uikits/n4shadcn/src/*"
       ]
     },
     "types": [

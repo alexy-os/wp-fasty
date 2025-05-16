@@ -6,7 +6,7 @@ import {
   SectionDescription,
   SectionContent,
   SectionFooter
-} from "@uikits/ui8px/core/tailwind/clsx/components/section";
+} from "@ui8kit/components/section";
 import {
   Article,
   ArticleHeader,
@@ -18,9 +18,9 @@ import {
   ArticleImage,
   ArticleTags,
   ArticleTag
-} from "@uikits/ui8px/core/tailwind/clsx/components/article";
-import { LinkButton, A, Link } from "@uikits/ui8px/core/tailwind/cva/ui/link";
-import { Grid } from "@uikits/ui8px/core/tailwind/clsx/components/section";
+} from "@ui8kit/components/article";
+import { LinkButton, A, Link } from "@ui8kit/ui/link";
+import { Grid } from "@ui8kit/components/section";
 
 const FrontPage = ({ posts, page }: any) => {
   return (
