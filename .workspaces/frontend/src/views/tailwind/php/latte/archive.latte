@@ -30,7 +30,7 @@
             <article key="{$post['id']}" class="bg-card text-card-foreground flex flex-col gap-4 rounded-xl border shadow-sm">
               {if isset($post['thumbnail'])}
                 <a href="{$post['url']}">
-                  <img src="{$post['thumbnail']['url']}" alt="{$post['thumbnail']['alt']}" class="aspect-video w-full object-cover rounded-t-xl"></img>
+                  <img src="{$post['thumbnail']['url']}" alt="{$post['thumbnail']['alt']}" class="aspect-video w-full object-cover rounded-t-xl">
                 </a>
               {/if}
               <header class="flex flex-col gap-2 px-6 pt-6">

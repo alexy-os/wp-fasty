@@ -1,0 +1,23 @@
+{
+  "name": "@views/tailwind",
+  "description": "A set of automatically generated UI components from ui8kit and n4shadcn to use tailwind utility class names and HTML5 markup",
+  "git": "https://github.com/alexy-os/wp-fasty.git",
+  "repository": "https://github.com/alexy-os/wp-fasty.git",
+  "author": "alexy-os",
+  "license": "MIT",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "default": "./index.ts"
+    }
+  },
+  "files": [
+    "*.ts",
+    "*.tsx"
+  ]
+}
