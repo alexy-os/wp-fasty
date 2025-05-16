@@ -27,9 +27,13 @@ export default defineConfig({
       '@scripts': path.resolve(__dirname, './scripts'),
       '@wptheme': path.resolve(__dirname, '../../wp-fasty-ym'),
       '@uikits': path.resolve(__dirname, './src/uikits'),
-      '@ui8kit': path.resolve(__dirname, './src/uikits/@ui8kit/core'),
-      '@semantic': path.resolve(__dirname, './src/uikits/@semantic/core'),
-      '@n4shadcn': path.resolve(__dirname, './src/uikits/n4shadcn/core')
+      '@ui8kit': path.resolve(__dirname, './src/uikits/@ui8kit/src'),
+      '@semantic': path.resolve(__dirname, './src/uikits/@semantic/src'),
+      '@n4shadcn': path.resolve(__dirname, './src/uikits/n4shadcn/src'),
+      '@templates': path.resolve(__dirname, './src/templates'),
+      '@context': path.resolve(__dirname, './src/context'),
+      '@views': path.resolve(__dirname, './src/views'),
+      '@react/tailwind': path.resolve(__dirname, './src/views/tailwind/node/react'),
     },
   },
 });

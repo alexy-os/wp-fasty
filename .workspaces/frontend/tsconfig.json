@@ -33,6 +33,18 @@
       "@uikits/*": [
         "src/uikits/*"
       ],
+      "@templates/*": [
+        "src/templates/*"
+      ],
+      "@context/*": [
+        "src/context/*"
+      ],
+      "@views/*": [
+        "src/views/*"
+      ],
+      "@react/tailwind/*": [
+        "src/views/tailwind/node/react/*"
+      ],
       "@ui8kit/*": [
         "src/uikits/@ui8kit/src/*"
       ],
