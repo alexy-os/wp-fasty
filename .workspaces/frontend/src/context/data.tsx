@@ -49,7 +49,7 @@ type PostPage = WPFastyContext['page']['page'];
 
 export const page: PostPage =
 {
-  title: 'Welcome to My Site',
+  title: 'Welcome to React Static Site',
   content: 'My Page Content',
   slug: 'my-page',
   url: 'https://my-site.com/my-page',
