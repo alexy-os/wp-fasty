@@ -4,8 +4,10 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { HomePage } from './app/pages/HomePage'
 import { ArchivePage } from './app/pages/ArchivePage'
 import { PostPage } from './app/pages/PostPage'
-import { RootLayout } from './app/layouts/RootLayout'
 import { AboutPage } from './app/pages/AboutPage'
+import { LayoutProvider } from './app/layouts/LayoutProvider'
+//import { RootLayout } from './app/layouts/RootLayout'
+//import { SemanticLayout } from './app/layouts/SemanticLayout'
 // import { dirname } from 'path'
 // import { fileURLToPath } from 'url'
 
@@ -16,30 +18,49 @@ import { AboutPage } from './app/pages/AboutPage'
 const app = new Elysia()
   .use(html())
 
+  // Set default layout based on query param
+  .derive(({ request }) => {
+    const url = new URL(request.url);
+    const theme = url.searchParams.get('theme');
+    if (theme) {
+      process.env.DEFAULT_LAYOUT = theme;
+    }
+    return {};
+  })
+
   // Home Page
   .get('/', ({ html }) => {
-    // Return HTML without additional processing
-    return html(`<!DOCTYPE html>${renderToStaticMarkup(<HomePage />)}`)
+    return html(`<!DOCTYPE html>${renderToStaticMarkup(
+      <HomePage />
+    )}`)
   })
 
   // Archive
   .get('/archive', ({ html }) => {
-    return html(`<!DOCTYPE html>${renderToStaticMarkup(<ArchivePage />)}`)
+    return html(`<!DOCTYPE html>${renderToStaticMarkup(
+      <ArchivePage />
+    )}`)
   })
 
   // Blog (alias for archive)
   .get('/blog', ({ html }) => {
-    return html(`<!DOCTYPE html>${renderToStaticMarkup(<ArchivePage />)}`)
+    return html(`<!DOCTYPE html>${renderToStaticMarkup(
+      <ArchivePage />
+    )}`)
   })
 
   // About
   .get('/about', ({ html }) => {
-    return html(`<!DOCTYPE html>${renderToStaticMarkup(<AboutPage />)}`)
+    return html(`<!DOCTYPE html>${renderToStaticMarkup(
+      <AboutPage />
+    )}`)
   })
 
   // Single post
   .get('/post/:slug', ({ params, html }) => {
-    return html(`<!DOCTYPE html>${renderToStaticMarkup(<PostPage slug={params.slug} />)}`)
+    return html(`<!DOCTYPE html>${renderToStaticMarkup(
+      <PostPage slug={params.slug} />
+    )}`)
   })
 
   // Static files
@@ -49,14 +70,15 @@ const app = new Elysia()
 
   // 404 for all other routes
   .get('*', ({ html, request }) => {
+    // Use LayoutProvider for 404 page
     return html(`<!DOCTYPE html>${renderToStaticMarkup(
-      <RootLayout title="404 - Page Not Found">
+      <LayoutProvider title="404 - Page Not Found">
         <div className="max-w-4xl mx-auto text-center py-12">
           <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
           <p className="text-lg mb-8">Page {request.url} not found.</p>
           <a href="/" className="text-primary hover:underline">Back to Home</a>
         </div>
-      </RootLayout>
+      </LayoutProvider>
     )}`)
   })
 

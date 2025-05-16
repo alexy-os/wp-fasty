@@ -1,16 +1,16 @@
-import * as React from "react"
+import * as React from "react";
 import { cn } from "@/lib/utils";
 
 function Main({ className, ...props }: React.ComponentProps<"main">) {
   return (
     <main
       data-slot="main"
-      className={cn("flex-1", className)}
-      {...props}
-    />
-  )
+      className={cn("main", className)}
+      {...props} />);
+
+
 }
 
-Main.displayName = "Main"
+Main.displayName = "Main";
 
-export { Main }
+export { Main };

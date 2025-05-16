@@ -13,7 +13,7 @@ function ArticleBase({
       data-slot="article"
       className={cn("article",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -63,7 +63,7 @@ function ArticleHeader({
       data-slot="article-header"
       className={cn("article-header",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -79,7 +79,7 @@ function ArticleTitle({
       data-slot="article-title"
       className={cn("article-title",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -95,7 +95,7 @@ function ArticleMeta({
       data-slot="article-meta"
       className={cn("article-meta",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -111,7 +111,7 @@ function ArticleTime({
       data-slot="article-time"
       className={cn("article-time",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -127,7 +127,7 @@ function ArticleAuthor({
       data-slot="article-author"
       className={cn("article-author",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -143,7 +143,7 @@ function ArticleFigure({
       data-slot="article-figure"
       className={cn("article-figure",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -159,7 +159,7 @@ function ArticleImage({
       data-slot="article-image"
       className={cn("article-image",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -175,7 +175,7 @@ function ArticleFigcaption({
       data-slot="article-figcaption"
       className={cn("article-figcaption",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -191,7 +191,7 @@ function ArticleContent({
       data-slot="article-content"
       className={cn("article-content",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -207,7 +207,7 @@ function ArticleBlockquote({
       data-slot="article-blockquote"
       className={cn("article-blockquote",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -223,7 +223,7 @@ function ArticleFooter({
       data-slot="article-footer"
       className={cn("article-footer",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -239,7 +239,7 @@ function ArticleTags({
       data-slot="article-tags"
       className={cn("article-tags",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -255,7 +255,7 @@ function ArticleTag({
       data-slot="article-tag"
       className={cn("article-tag",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -271,7 +271,7 @@ function ArticleActions({
       data-slot="article-actions"
       className={cn("article-actions",
 
-        className
+      className
       )}
       {...props} />);
 
@@ -295,5 +295,4 @@ export {
   ArticleFooter,
   ArticleTags,
   ArticleTag,
-  ArticleActions
-};
+  ArticleActions };

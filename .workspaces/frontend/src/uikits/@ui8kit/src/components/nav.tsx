@@ -12,7 +12,7 @@ function Nav({
   return (
     <nav
       data-slot="nav"
-      className={cn("flex items-center gap-4", className)}
+      className={cn("relative flex max-w-max flex-1 items-center justify-center", className)}
       {...props}
     >
       {children}
@@ -48,7 +48,7 @@ function NavItem({
   return (
     <li
       data-slot="nav-item"
-      className={cn("flex items-center gap-4", className)}
+      className={cn("", className)}
       {...props}
     >
       {children}
