@@ -1,95 +1,82 @@
-import { ReactNode } from 'react';
+import React from 'react';
 import { site, menu } from '@/context/data';
-import { getTheme } from '../../theme-store';
+import { useComponents } from '@/store/theme/hooks';
 
 interface MainLayoutProps {
-  children: ReactNode;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
 }
 
-// The function for creating components is moved outside the component
-function createComponents(theme: string) {
-  console.log('Creating components for theme:', theme);
+export function MainLayout({ title, description, children }: MainLayoutProps) {
+  const { components, currentTheme, loading } = useComponents();
 
-  // Import components based on the theme
-  const { Container, SectionHeader, SectionFooter } = require(`@${theme}/components/section`);
-  const { Nav, Navbar, NavList, NavItem, NavLink } = require(`@${theme}/components/nav`);
-  const { Main } = require(`@${theme}/components/main`);
-  const { Button } = require('@n4shadcn/ui/button');
+  if (!components || loading) {
+    return <div>Loading theme components...</div>;
+  }
 
-  return {
-    components: {
-      Section: {
-        Header: SectionHeader,
-        Footer: SectionFooter,
-        Container: Container
-      },
-      Nav: {
-        Root: Nav,
-        Navbar: Navbar,
-        List: NavList,
-        Item: NavItem,
-        Link: NavLink
-      },
-      Main: Main,
-      Button: Button
-    }
-  };
-}
+  const {
+    Container,
+    Nav,
+    NavList,
+    NavItem,
+    NavLink,
+    Main
+  } = components;
 
-export function MainLayout({ children }: MainLayoutProps) {
-  // Get the current theme from the global store
-  const currentTheme = getTheme();
-  console.log('Current theme in MainLayout:', currentTheme);
-
-  // Get the components for the current theme
-  const { components: ui } = createComponents(currentTheme);
-
-  // Destructure the components
-  const { Section, Nav, Main, Button } = ui;
-
-  // Configure UI for the theme toggle button
-  const colorBtn = currentTheme === 'semantic' ? 'bg-sky-500 text-white' : 'bg-teal-500 text-white';
+  // Theme toggle button settings
   const targetTheme = currentTheme === 'semantic' ? 'ui8kit' : 'semantic';
-  const buttonText = `Switch to ${targetTheme === 'semantic' ? 'Semantic' : 'UI8Kit'}`;
+  const buttonText = `Switch to ${targetTheme}`;
 
   return (
-    <>
-      <Section.Header>
-        <Section.Container>
-          <Nav.Navbar>
-            <Nav.Root>
-              <Nav.List>
-                {menu.primary.items.map((item) => (
-                  <Nav.Item key={item.id}>
-                    <Nav.Link href={item.url}>{item.title}</Nav.Link>
-                  </Nav.Item>
-                ))}
-              </Nav.List>
-            </Nav.Root>
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{title}</title>
+        {description && <meta name="description" content={description} />}
+        <link rel="stylesheet" href="/src/assets/css/global.css" />
+      </head>
+      <body className="bg-background text-foreground">
+        <header className="bg-slate-800 text-white p-4">
+          <Container>
+            <Nav>
+              <div className="flex justify-between items-center">
+                <h1 className="text-xl font-bold">{site.title}</h1>
+                <NavList>
+                  {menu.primary.items.map((item) => (
+                    <NavItem key={item.id}>
+                      <NavLink href={item.url}>{item.title}</NavLink>
+                    </NavItem>
+                  ))}
+                </NavList>
+                <button
+                  id="theme-toggle"
+                  type="button"
+                  className="theme-toggle-btn"
+                  data-theme={currentTheme}
+                >
+                  {buttonText}
+                </button>
+              </div>
+            </Nav>
+          </Container>
+        </header>
 
-            {/* Improved theme toggle button */}
-            <Button
-              id="theme-toggle"
-              size="sm"
-              className={`${colorBtn} !rounded-full`}
-              data-current-theme={currentTheme}
-              title={`Current Theme: ${currentTheme}`}
-            >
-              {buttonText}
-            </Button>
-          </Nav.Navbar>
-        </Section.Container>
-      </Section.Header>
-      <Main>
-        <Section.Container>
-          {children}
-        </Section.Container>
-      </Main>
-      <Section.Footer>
-        <Section.Container>
-          <p className="px-4 py-6 text-center">© {new Date().getFullYear()} {site.title}</p>
-        </Section.Container>
-      </Section.Footer>
-    </>
+        <Main>
+          <Container>
+            {children}
+          </Container>
+        </Main>
+
+        <footer className="bg-slate-800 text-white p-4 mt-8">
+          <Container>
+            <p className="text-center">&copy; {new Date().getFullYear()} {site.title}</p>
+          </Container>
+        </footer>
+
+        <script src="/src/assets/js/theme-init.js"></script>
+      </body>
+    </html>
   );
 }
