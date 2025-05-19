@@ -49,6 +49,7 @@ class DataSlotParser {
     }
 
     this.generateIndexCss();
+    this.generateComponentIndexFiles();
   }
 
   private async processComponent(componentPath: string): Promise<void> {
@@ -206,6 +207,9 @@ class DataSlotParser {
       const outputFile = path.join(outputDir, fileName);
       fs.writeFileSync(outputFile, output.code);
       console.log(`Generated semantic component: ${outputFile}`);
+
+      // Call the index file generation for the folder after creating the component
+      this.generateIndexFileForDirectory(outputDir);
     } catch (err) {
       console.error(`Error generating semantic component for ${componentPath}:`, err);
     }
@@ -260,6 +264,59 @@ class DataSlotParser {
           }
         }, 100);
       });
+    }
+  }
+
+  // Add a new method for creating component index files
+  private generateComponentIndexFiles(): void {
+    console.log('Generating component index files...');
+
+    // For tracking folders where components were created
+    const componentDirs = new Set<string>();
+
+    // Collect all directories where semantic components were created
+    const pattern = `${this.config.componentsOutputDir.replace(/\\/g, '/')}/**/*.tsx`;
+    const componentFiles = glob.sync(pattern);
+
+    componentFiles.forEach(file => {
+      const dir = path.dirname(file);
+      componentDirs.add(dir);
+    });
+
+    // For each directory, create an index.ts file
+    componentDirs.forEach(dir => {
+      this.generateIndexFileForDirectory(dir);
+    });
+  }
+
+  private generateIndexFileForDirectory(directory: string): void {
+    try {
+      // Get all .tsx files in the directory
+      const files = fs.readdirSync(directory)
+        .filter(file => file.endsWith('.tsx') && file !== 'index.tsx');
+
+      if (files.length === 0) {
+        console.log(`No component files found in ${directory}, skipping index generation`);
+        return;
+      }
+
+      // Generate the content of the index file
+      let indexContent = '// Auto-generated index file\n\n';
+
+      files.forEach(file => {
+        const componentName = path.basename(file, '.tsx');
+        // Use re-export syntax
+        indexContent += `export * from './${componentName}';\n`;
+      });
+
+      // Path to the index file
+      const indexPath = path.join(directory, 'index.ts');
+
+      // Write the content to the file
+      fs.writeFileSync(indexPath, indexContent);
+      console.log(`Generated index file at: ${indexPath}`);
+    } catch (err) {
+      console.error(`Error generating index file for directory ${directory}:`, err);
     }
   }
 }

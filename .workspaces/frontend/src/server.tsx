@@ -11,7 +11,7 @@ import { AboutPage } from './app/pages/AboutPage'
 const app = new Elysia()
   .use(html())
 
-  // Обрабатываем параметр theme
+  // Process the theme parameter
   .derive(({ request }) => {
     const url = new URL(request.url);
     const theme = url.searchParams.get('theme');

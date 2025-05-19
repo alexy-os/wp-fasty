@@ -6,13 +6,21 @@ export function getArticleComponents() {
   const theme = getTheme();
   console.log(`Loading article components for theme: ${theme}`);
 
-  // Dynamically import components based on the theme
-  const components = require(`@${theme}/components/article`);
+  try {
+    // Dynamically import components based on the theme
+    const components = require(`@${theme}/components/article`);
 
-  return {
-    components,
-    currentTheme: theme
-  };
+    return {
+      components,
+      currentTheme: theme
+    };
+  } catch (error) {
+    console.error(`Error loading article components for theme: ${theme}`, error);
+    return {
+      components: null,
+      currentTheme: theme
+    };
+  }
 }
 
 export type PostPageProps = {
