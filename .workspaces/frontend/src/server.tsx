@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia'
 import { html } from '@elysiajs/html'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { setTheme, getTheme } from './theme-store'
+import { setTheme, getTheme } from './store/get-theme'
 import { RootLayout } from './app/layouts/RootLayout'
 import { HomePage } from './app/pages/HomePage'
 import { ArchivePage } from './app/pages/ArchivePage'
@@ -17,11 +17,9 @@ const app = new Elysia()
   .derive(({ request }) => {
     const url = new URL(request.url);
     const theme = url.searchParams.get('theme');
-    console.log(`URL theme parameter: ${theme || 'not set'}`);
 
-    if (theme) {
-      setTheme(theme);
-      console.log(`Current global theme: ${getTheme()}`);
+    if (theme && Object.values(THEME_TYPES).includes(theme as ThemeType)) {
+      setTheme(theme as ThemeType);
     }
 
     return {};
@@ -43,12 +41,9 @@ const app = new Elysia()
 
   // Home Page
   .get('/', ({ html, wrapWithTheme }) => {
-    console.log(`Rendering homepage with theme: ${getTheme()}`);
     return html(`<!DOCTYPE html>${renderToStaticMarkup(
       wrapWithTheme(<HomePage />)
-    )}
-    <script src="/src/assets/js/theme-init.js"></script>
-    `)
+    )}`)
   })
 
   // Archive
@@ -56,7 +51,7 @@ const app = new Elysia()
     return html(`<!DOCTYPE html>${renderToStaticMarkup(
       wrapWithTheme(<ArchivePage />)
     )}
-    <script src="/src/assets/js/theme-init.js"></script>
+
     `)
   })
 
@@ -65,7 +60,7 @@ const app = new Elysia()
     return html(`<!DOCTYPE html>${renderToStaticMarkup(
       wrapWithTheme(<ArchivePage />)
     )}
-    <script src="/src/assets/js/theme-init.js"></script>
+
     `)
   })
 
@@ -73,18 +68,14 @@ const app = new Elysia()
   .get('/about', ({ html, wrapWithTheme }) => {
     return html(`<!DOCTYPE html>${renderToStaticMarkup(
       wrapWithTheme(<AboutPage />)
-    )}
-    <script src="/src/assets/js/theme-init.js"></script>
-    `)
+    )}`)
   })
 
   // Single post
   .get('/post/:slug', ({ params, html, wrapWithTheme }) => {
     return html(`<!DOCTYPE html>${renderToStaticMarkup(
       wrapWithTheme(<PostPage slug={params.slug} />)
-    )}
-    <script src="/src/assets/js/theme-init.js"></script>
-    `)
+    )}`)
   })
 
   // Static files
@@ -111,9 +102,7 @@ const app = new Elysia()
           </div>
         </RootLayout>
       )
-    )}
-    <script src="/src/assets/js/theme-init.js"></script>
-    `)
+    )}`)
   })
 
 app.listen(3000)
