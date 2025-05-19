@@ -1,9 +1,9 @@
 import { posts, archive } from '@/context/data'
-import { LayoutProvider } from '../layouts/LayoutProvider'
+import { RootLayout } from '../layouts/RootLayout'
 
 export function ArchivePage() {
   return (
-    <LayoutProvider title={archive.title}>
+    <RootLayout title={archive.title}>
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-8">{archive.title}</h1>
         <p className="text-lg mb-12">{archive.description}</p>
@@ -39,6 +39,6 @@ export function ArchivePage() {
           ))}
         </div>
       </div>
-    </LayoutProvider>
+    </RootLayout>
   )
 } 

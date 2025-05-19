@@ -1,9 +1,52 @@
-import { Container, SectionHeader, SectionFooter } from '@ui8kit/components/section'
-import { Nav, Navbar, NavList, NavItem, NavLink } from '@ui8kit/components/nav'
-import { Main } from '@ui8kit/components/main'
+import React from 'react'
+import { site, menu } from '@/context/data'
+
+// Use Button from shadcn regardless of UI kit
 import { Button } from '@n4shadcn/ui/button'
 
-import { site, menu } from '@/context/data'
+// Import components dynamically based on DEFAULT_LAYOUT
+const getComponents = () => {
+  // Check for environment variable or use default
+  const kitName = process.env.DEFAULT_LAYOUT || 'ui8kit';
+
+  if (kitName === 'semantic') {
+    // Import from semantic UI
+    const { Container, SectionHeader, SectionFooter } = require('@semantic/components/section');
+    const { Nav, Navbar, NavList, NavItem, NavLink } = require('@semantic/components/nav');
+    const { Main } = require('@semantic/components/main');
+
+    return {
+      Container,
+      SectionHeader,
+      SectionFooter,
+      Nav,
+      Navbar,
+      NavList,
+      NavItem,
+      NavLink,
+      Main,
+      currentTheme: 'semantic'
+    };
+  } else {
+    // Import from UI8Kit (default)
+    const { Container, SectionHeader, SectionFooter } = require('@ui8kit/components/section');
+    const { Nav, Navbar, NavList, NavItem, NavLink } = require('@ui8kit/components/nav');
+    const { Main } = require('@ui8kit/components/main');
+
+    return {
+      Container,
+      SectionHeader,
+      SectionFooter,
+      Nav,
+      Navbar,
+      NavList,
+      NavItem,
+      NavLink,
+      Main,
+      currentTheme: 'ui8kit'
+    };
+  }
+};
 
 export type RootLayoutProps = {
   title: string
@@ -12,6 +55,20 @@ export type RootLayoutProps = {
 }
 
 export function RootLayout({ title, description, children }: RootLayoutProps) {
+  // Get components based on current theme
+  const {
+    Container,
+    SectionHeader,
+    SectionFooter,
+    Nav,
+    Navbar,
+    NavList,
+    NavItem,
+    NavLink,
+    Main,
+    currentTheme
+  } = getComponents();
+
   return (
     <>
       <html lang={site.lang}>
@@ -47,9 +104,9 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
                   id="theme-toggle"
                   size="sm"
                   className="bg-teal-500 text-white !rounded-full"
-                  data-current-theme="ui8kit"
+                  data-current-theme={currentTheme}
                 >
-                  Switch to Semantic
+                  Switch to {currentTheme === 'semantic' ? 'UI8Kit' : 'Semantic'}
                 </Button>
               </Navbar>
             </Container>

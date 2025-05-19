@@ -1,5 +1,5 @@
 import { posts } from '@/context/data'
-import { LayoutProvider } from '../layouts/LayoutProvider'
+import { RootLayout } from '../layouts/RootLayout'
 
 export type PostPageProps = {
   slug: string
@@ -10,18 +10,18 @@ export function PostPage({ slug }: PostPageProps) {
 
   if (!post) {
     return (
-      <LayoutProvider title="Post Not Found">
+      <RootLayout title="Post Not Found">
         <div className="max-w-4xl mx-auto text-center py-12">
           <h1 className="text-4xl font-bold mb-4">404 - Post Not Found</h1>
           <p className="text-lg mb-8">The post you're looking for doesn't exist.</p>
           <a href="/" className="text-primary hover:underline">Return to homepage</a>
         </div>
-      </LayoutProvider>
+      </RootLayout>
     )
   }
 
   return (
-    <LayoutProvider title={post.title}>
+    <RootLayout title={post.title}>
       <article className="prose lg:prose-xl mx-auto">
         <h1 className="text-4xl font-bold mb-6">{post.title}</h1>
         <div className="text-sm text-muted-foreground mb-8">
@@ -55,6 +55,6 @@ export function PostPage({ slug }: PostPageProps) {
           </div>
         )}
       </article>
-    </LayoutProvider>
+    </RootLayout>
   )
 } 

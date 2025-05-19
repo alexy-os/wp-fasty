@@ -5,8 +5,7 @@ import { HomePage } from './app/pages/HomePage'
 import { ArchivePage } from './app/pages/ArchivePage'
 import { PostPage } from './app/pages/PostPage'
 import { AboutPage } from './app/pages/AboutPage'
-import { LayoutProvider } from './app/layouts/LayoutProvider'
-//import { RootLayout } from './app/layouts/RootLayout'
+import { RootLayout } from './app/layouts/RootLayout'
 //import { SemanticLayout } from './app/layouts/SemanticLayout'
 // import { dirname } from 'path'
 // import { fileURLToPath } from 'url'
@@ -70,15 +69,14 @@ const app = new Elysia()
 
   // 404 for all other routes
   .get('*', ({ html, request }) => {
-    // Use LayoutProvider for 404 page
     return html(`<!DOCTYPE html>${renderToStaticMarkup(
-      <LayoutProvider title="404 - Page Not Found">
+      <RootLayout title="404 - Page Not Found">
         <div className="max-w-4xl mx-auto text-center py-12">
           <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
           <p className="text-lg mb-8">Page {request.url} not found.</p>
           <a href="/" className="text-primary hover:underline">Back to Home</a>
         </div>
-      </LayoutProvider>
+      </RootLayout>
     )}`)
   })
 

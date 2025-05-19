@@ -1,8 +1,8 @@
-import { LayoutProvider } from '../layouts/LayoutProvider'
+import { RootLayout } from '../layouts/RootLayout'
 
 export function AboutPage() {
   return (
-    <LayoutProvider title="About Our Approach">
+    <RootLayout title="About Our Approach">
       <div className="prose lg:prose-xl mx-auto">
         <h1 className="text-4xl font-bold mb-6">Our Modern Web Architecture</h1>
         {/* {page.featuredImage && (
@@ -30,6 +30,6 @@ export function AboutPage() {
           <p>This balanced architecture delivers exceptional user experiences today while establishing a foundation that can evolve with both web standards and business requirements.</p>
         </div>
       </div>
-    </LayoutProvider>
+    </RootLayout>
   )
 } 
