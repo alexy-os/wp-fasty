@@ -7,85 +7,58 @@ interface MainLayoutProps {
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
-  const { current: currentTheme } = useTheme();
+  const { current: theme } = useTheme();
 
   // Configure UI for the theme toggle button
-  const colorBtn = currentTheme === 'semantic' ? 'bg-sky-500 text-white' : 'bg-teal-500 text-white';
-  const targetTheme = currentTheme === 'semantic' ? 'ui8kit' : 'semantic';
+  const colorBtn = theme === 'semantic' ? 'bg-sky-500 text-white' : 'bg-teal-500 text-white';
+  const targetTheme = theme === 'semantic' ? 'ui8kit' : 'semantic';
   const buttonText = `Switch to ${targetTheme === 'semantic' ? 'Semantic' : 'UI8Kit'}`;
 
-  // Import components safely
-  let components;
-  try {
-    // Define components based on the theme
-    if (currentTheme === 'semantic') {
-      components = require('@/uikits/@semantic/src/components');
-    } else {
-      components = require('@/uikits/@ui8kit/src/components');
-    }
-  } catch (error) {
-    console.error('Failed to load theme components:', error);
-    return <div>Error loading theme components. Please try another theme.</div>;
-  }
-
-  const Button = components.Button || ((props: React.HTMLAttributes<HTMLButtonElement>) => <button {...props} />);
-
-  // Structure components
-  const Section = {
-    Header: components.SectionHeader || ((props: React.HTMLAttributes<HTMLElement>) => <header {...props} />),
-    Footer: components.SectionFooter || ((props: React.HTMLAttributes<HTMLElement>) => <footer {...props} />),
-    Container: components.Container || ((props: React.HTMLAttributes<HTMLDivElement>) => <div className="container mx-auto px-4" {...props} />)
-  };
-
-  const Nav = {
-    Root: components.Nav || ((props: React.HTMLAttributes<HTMLElement>) => <nav {...props} />),
-    List: components.NavList || ((props: React.HTMLAttributes<HTMLUListElement>) => <ul className="flex space-x-4" {...props} />),
-    Item: components.NavItem || ((props: React.HTMLAttributes<HTMLElement>) => <li {...props} />),
-    Link: components.NavLink || ((props: React.HTMLAttributes<HTMLAnchorElement>) => <a className="hover:underline" {...props} />)
-  };
-
-  const Main = components.Main || ((props: React.HTMLAttributes<HTMLElement>) => <main className="py-8" {...props} />);
+  // Get all necessary components directly
+  const { Container, SectionHeader, SectionFooter } = require(`@${theme}/components/section`);
+  const { Nav, NavList, NavItem, NavLink } = require(`@${theme}/components/nav`);
+  const { Main } = require(`@${theme}/components/main`);
+  const { Button } = require('@n4shadcn/ui/button');
 
   return (
     <>
-      <Section.Header>
-        <Section.Container>
+      <SectionHeader>
+        <Container>
           <div className="flex justify-between items-center py-4">
             <h1 className="text-xl font-bold">{site.title}</h1>
-            <Nav.Root>
-              <Nav.List>
+            <Nav>
+              <NavList>
                 {menu.primary.items.map((item) => (
-                  <Nav.Item key={item.id}>
-                    <Nav.Link href={item.url}>{item.title}</Nav.Link>
-                  </Nav.Item>
+                  <NavItem key={item.id}>
+                    <NavLink href={item.url}>{item.title}</NavLink>
+                  </NavItem>
                 ))}
-              </Nav.List>
-            </Nav.Root>
+              </NavList>
+            </Nav>
 
-            {/* Improved theme toggle button */}
             <Button
               id="theme-toggle"
               className={`${colorBtn} text-sm px-4 py-2 !rounded-full`}
-              data-current-theme={currentTheme}
-              title={`Current Theme: ${currentTheme}`}
+              data-current-theme={theme}
+              title={`Current Theme: ${theme}`}
             >
               {buttonText}
             </Button>
           </div>
-        </Section.Container>
-      </Section.Header>
+        </Container>
+      </SectionHeader>
 
       <Main>
-        <Section.Container>
+        <Container>
           {children}
-        </Section.Container>
+        </Container>
       </Main>
 
-      <Section.Footer>
-        <Section.Container>
+      <SectionFooter>
+        <Container>
           <p className="text-center py-4">&copy; {new Date().getFullYear()} {site.title}</p>
-        </Section.Container>
-      </Section.Footer>
+        </Container>
+      </SectionFooter>
     </>
   );
 }
