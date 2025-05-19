@@ -1,18 +1,11 @@
 import { Elysia } from 'elysia'
 import { html } from '@elysiajs/html'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { RootLayout } from './app/layouts/RootLayout'
 import { HomePage } from './app/pages/HomePage'
 import { ArchivePage } from './app/pages/ArchivePage'
 import { PostPage } from './app/pages/PostPage'
 import { AboutPage } from './app/pages/AboutPage'
-import { RootLayout } from './app/layouts/RootLayout'
-//import { SemanticLayout } from './app/layouts/SemanticLayout'
-// import { dirname } from 'path'
-// import { fileURLToPath } from 'url'
-
-// Get the absolute path to the current directory
-// const __filename = fileURLToPath(import.meta.url)
-// const __dirname = dirname(__filename)
 
 const app = new Elysia()
   .use(html())
