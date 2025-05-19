@@ -1,6 +1,7 @@
 import { Elysia } from 'elysia'
 import { html } from '@elysiajs/html'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { setTheme, getTheme } from './theme-store'
 import { RootLayout } from './app/layouts/RootLayout'
 import { HomePage } from './app/pages/HomePage'
 import { ArchivePage } from './app/pages/ArchivePage'
@@ -10,18 +11,23 @@ import { AboutPage } from './app/pages/AboutPage'
 const app = new Elysia()
   .use(html())
 
-  // Set default layout based on query param
+  // Обрабатываем параметр theme
   .derive(({ request }) => {
     const url = new URL(request.url);
     const theme = url.searchParams.get('theme');
+    console.log(`URL theme parameter: ${theme || 'not set'}`);
+
     if (theme) {
-      process.env.DEFAULT_LAYOUT = theme;
+      setTheme(theme);
+      console.log(`Current global theme: ${getTheme()}`);
     }
+
     return {};
   })
 
   // Home Page
   .get('/', ({ html }) => {
+    console.log(`Rendering homepage with theme: ${getTheme()}`);
     return html(`<!DOCTYPE html>${renderToStaticMarkup(
       <HomePage />
     )}`)
