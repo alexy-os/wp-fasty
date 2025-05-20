@@ -1,15 +1,11 @@
 import { Elysia } from 'elysia'
 import { html } from '@elysiajs/html'
-import { renderPage } from 'vike/server'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { setTheme, getTheme } from '@/utils/theme'
 import { RootLayout } from './app/layouts/RootLayout'
-import { HomePage } from './app/pages/HomePage'
-import { ArchivePage } from './app/pages/ArchivePage'
-import { PostPage } from './app/pages/PostPage'
-import { AboutPage } from './app/pages/AboutPage'
 import { ThemeProvider } from './store/theme/context'
 import { THEME_TYPES, type ThemeType } from './store/theme'
+import { routes } from './utils/theme/routes'
 
 const app = new Elysia()
   .use(html())
@@ -40,72 +36,56 @@ const app = new Elysia()
     };
   })
 
-  // Home Page
-  .get('/', ({ html, wrapWithTheme }) => {
-    return html(`<!DOCTYPE html>${renderToStaticMarkup(
-      wrapWithTheme(<HomePage />)
-    )}`)
-  })
+// Registering routes
+routes.forEach(({ path, component: Component, paramMapper }) => {
+  if (path.includes(':')) {
+    // Dynamic route with parameters
+    app.get(path, ({ params, html: htmlFn, wrapWithTheme }) => {
+      const typedParams = params as Record<string, string>;
 
-  // Archive
-  .get('/archive', ({ html, wrapWithTheme }) => {
-    return html(`<!DOCTYPE html>${renderToStaticMarkup(
-      wrapWithTheme(<ArchivePage />)
-    )}
+      // Use parameter mapper if it's defined, otherwise pass parameters directly
+      const componentProps = paramMapper ? paramMapper(typedParams) : typedParams;
 
-    `)
-  })
+      return htmlFn(`<!DOCTYPE html>${renderToStaticMarkup(
+        wrapWithTheme(<Component {...componentProps} />)
+      )}`)
+    });
+  } else {
+    // Static route
+    app.get(path, ({ html: htmlFn, wrapWithTheme }) => {
+      return htmlFn(`<!DOCTYPE html>${renderToStaticMarkup(
+        wrapWithTheme(<Component />)
+      )}`)
+    });
+  }
+});
 
-  // Blog (alias for archive)
-  .get('/blog', ({ html, wrapWithTheme }) => {
-    return html(`<!DOCTYPE html>${renderToStaticMarkup(
-      wrapWithTheme(<ArchivePage />)
-    )}
+// Static files
+app.get('/src/assets/*', ({ request }) => {
+  try {
+    const path = request.url.split('/assets/')[1];
+    const file = Bun.file(`./src/assets/${path}`);
+    return new Response(file);
+  } catch (error) {
+    console.error('Error serving static file:', error);
+    return new Response('File not found', { status: 404 });
+  }
+});
 
-    `)
-  })
+// 404 for other routes
+app.get('*', ({ html: htmlFn, request, wrapWithTheme }) => {
+  return htmlFn(`<!DOCTYPE html>${renderToStaticMarkup(
+    wrapWithTheme(
+      <RootLayout title="404 - Page Not Found">
+        <div className="max-w-4xl mx-auto text-center py-12">
+          <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
+          <p className="text-lg mb-8">Page {request.url} not found.</p>
+          <a href="/" className="text-primary hover:underline">Back to Home</a>
+        </div>
+      </RootLayout>
+    )
+  )}`)
+});
 
-  // About
-  .get('/about', ({ html, wrapWithTheme }) => {
-    return html(`<!DOCTYPE html>${renderToStaticMarkup(
-      wrapWithTheme(<AboutPage />)
-    )}`)
-  })
-
-  // Single post
-  .get('/post/:slug', ({ params, html, wrapWithTheme }) => {
-    return html(`<!DOCTYPE html>${renderToStaticMarkup(
-      wrapWithTheme(<PostPage slug={params.slug} />)
-    )}`)
-  })
-
-  // Static files
-  .get('/src/assets/*', ({ request }) => {
-    try {
-      const path = request.url.split('/assets/')[1];
-      const file = Bun.file(`./src/assets/${path}`);
-      return new Response(file);
-    } catch (error) {
-      console.error('Error serving static file:', error);
-      return new Response('File not found', { status: 404 });
-    }
-  })
-
-  // 404 for all other routes
-  .get('*', ({ html, request, wrapWithTheme }) => {
-    return html(`<!DOCTYPE html>${renderToStaticMarkup(
-      wrapWithTheme(
-        <RootLayout title="404 - Page Not Found">
-          <div className="max-w-4xl mx-auto text-center py-12">
-            <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
-            <p className="text-lg mb-8">Page {request.url} not found.</p>
-            <a href="/" className="text-primary hover:underline">Back to Home</a>
-          </div>
-        </RootLayout>
-      )
-    )}`)
-  })
-
-app.listen(3000)
-
-console.log('🦊 Server running at http://localhost:3000') 
+app.listen(3000);
+console.log('🦊 Server running at http://localhost:3000'); 
