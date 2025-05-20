@@ -2,10 +2,10 @@ import { useTheme } from '@/store/theme/context';
 
 /**
  * Loads components for the current theme
- * @param component - name of the component/module
+ * @param component - name of the component/module (defaults to 'index')
  * @returns loaded components
  */
-export function getComponents(component: string) {
+export function getComponents(component: string = 'index'): { [key: string]: any } {
   const { current: theme } = useTheme();
 
   try {

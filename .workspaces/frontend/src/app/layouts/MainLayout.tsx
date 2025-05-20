@@ -2,6 +2,7 @@ import React from 'react';
 import { site, menu } from '@/context/data';
 import { useTheme } from '@/store/theme/context';
 import { getComponents } from '@/utils/theme/components';
+
 interface MainLayoutProps {
   children: React.ReactNode;
 }
@@ -15,10 +16,22 @@ export function MainLayout({ children }: MainLayoutProps) {
   const buttonText = `Switch to ${targetTheme === 'semantic' ? 'Semantic' : 'UI8Kit'}`;
 
   // Get all necessary components directly
-  const { Container, SectionHeader, SectionFooter } = getComponents('section');
-  const { Nav, NavList, NavItem, NavLink } = getComponents('nav');
-  const { Main } = getComponents('main');
-  const { Button } = require('@n4shadcn/ui/button');
+  const { Main, Container, SectionHeader, SectionFooter, Nav, NavList, NavItem, NavLink } = getComponents();
+
+  let source;
+
+  try {
+    if (theme === 'semantic') {
+      source = theme;
+    } else {
+      source = 'n4shadcn';
+    }
+
+  } catch (error) {
+    console.error('Error importing Button component:', error);
+  }
+
+  const { Button } = require(`@${source}/ui/button`);
 
   return (
     <>

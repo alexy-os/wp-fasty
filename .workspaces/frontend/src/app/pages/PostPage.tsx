@@ -4,7 +4,6 @@ import { getTheme } from '@/utils/theme';
 
 export function getArticleComponents() {
   const theme = getTheme();
-  console.log(`Loading article components for theme: ${theme}`);
 
   try {
     // Dynamically import components based on the theme
