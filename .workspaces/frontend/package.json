@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "bun run --watch src/server.tsx",
     "build": "vite build",
+    "preview": "vite preview",
     "css": "vite build --config vite.config.ts",
     "tailwind": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ../../wp-fasty-ym/assets/css/theme.min.css --minify",
     "semantic:css": "bun x @tailwindcss/cli -i ./src/assets/css/import.css -o ./src/assets/css/styles.css",
@@ -26,10 +27,12 @@
     "@babel/types": "^7.27.1",
     "@elysiajs/html": "^0.8.0",
     "@types/jsdom": "^21.1.7",
+    "bati": "^0.0.2",
     "elysia": "^0.8.17",
     "lucide-react": "^0.509.0",
     "react": "^19.1.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "vike": "^0.4.229"
   },
   "devDependencies": {
     "@babel/parser": "^7.27.1",

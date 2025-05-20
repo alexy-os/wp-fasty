@@ -1,6 +1,6 @@
 import { posts } from '@/context/data'
 import { RootLayout } from '../layouts/RootLayout'
-import { getTheme } from '../../store/get-theme';
+import { getTheme } from '@/utils/theme';
 
 export function getArticleComponents() {
   const theme = getTheme();
