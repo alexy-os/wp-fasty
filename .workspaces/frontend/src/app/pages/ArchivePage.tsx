@@ -1,9 +1,10 @@
 import { posts, archive } from '@/context/data'
 import { getUI } from '@/utils/theme'
 import { RootLayout } from '@app/layouts'
+import { Button } from '@app/components'
 
 export function ArchivePage() {
-  const { A, Button } = getUI()
+  const { A } = getUI()
 
   return (
     <RootLayout title={archive.title}>
@@ -31,7 +32,9 @@ export function ArchivePage() {
                   {post.date.display}
                 </div>
                 <p className="text-base mb-4">{post.excerpt}</p>
-                <Button href={`/post/${post.slug}`}>Read more</Button>
+                <A href={`/post/${post.slug}`}>
+                  <Button variant="secondary" size="sm">Read more</Button>
+                </A>
               </div>
             </article>
           ))}
