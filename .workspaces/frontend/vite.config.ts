@@ -1,12 +1,10 @@
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
-import vike from 'vike/plugin'
 import path from "path"
 
 export default defineConfig({
   plugins: [
-    tailwindcss(),
-    vike(),
+    tailwindcss()
   ],
   optimizeDeps: {
     exclude: ['@tailwindcss/vite']
@@ -25,6 +23,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@app': path.resolve(__dirname, './src/app'),
       '@root': path.resolve(__dirname, '../../'),
       '@scripts': path.resolve(__dirname, './scripts'),
       '@wptheme': path.resolve(__dirname, '../../wp-fasty-ym'),

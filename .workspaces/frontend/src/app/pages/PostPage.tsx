@@ -1,34 +1,12 @@
+import { RootLayout } from '@app/layouts'
+import { getComponents } from '@/utils/theme';
 import { posts } from '@/context/data'
-import { RootLayout } from '../layouts/RootLayout'
-import { getTheme } from '@/utils/theme';
-
-export function getArticleComponents() {
-  const theme = getTheme();
-
-  try {
-    // Dynamically import components based on the theme
-    const components = require(`@${theme}/components/article`);
-
-    return {
-      components,
-      currentTheme: theme
-    };
-  } catch (error) {
-    console.error(`Error loading article components for theme: ${theme}`, error);
-    return {
-      components: null,
-      currentTheme: theme
-    };
-  }
-}
 
 export type PostPageProps = {
   slug: string
 }
 
 export function PostPage({ slug }: PostPageProps) {
-  // Get the Article components based on the current theme
-  const { components: ArticleComponents } = getArticleComponents()
 
   // Destructure the components
   const {
@@ -44,7 +22,7 @@ export function PostPage({ slug }: PostPageProps) {
     ArticleFooter,
     ArticleTags,
     ArticleTag,
-  } = ArticleComponents
+  } = getComponents()
 
   const post = posts.find(p => p.slug === slug)
 

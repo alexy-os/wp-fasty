@@ -3,7 +3,7 @@
  */
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { initialThemeState, themeReducer } from './reducer';
-import type { ThemeAction, ThemeState, ThemeType } from './types';
+import type { ThemeState, ThemeType } from './types';
 import { getInitialTheme, storeTheme } from './utils';
 
 interface ThemeContextType extends ThemeState {

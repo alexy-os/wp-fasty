@@ -1,8 +1,8 @@
 // Safely import page components directly for a reliable solution
-import { HomePage } from '@/app/pages/HomePage'
-import { ArchivePage } from '@/app/pages/ArchivePage'
-import { PostPage, type PostPageProps } from '@/app/pages/PostPage'
-import { AboutPage } from '@/app/pages/AboutPage'
+import { HomePage } from '@app/pages/HomePage'
+import { ArchivePage } from '@app/pages/ArchivePage'
+import { PostPage, type PostPageProps } from '@app/pages/PostPage'
+import { AboutPage } from '@app/pages/AboutPage'
 
 // Create a mapping of routes with component information
 export const routes: RouteInfo[] = [

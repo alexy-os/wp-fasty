@@ -1,5 +1,5 @@
 import { posts, archive } from '@/context/data'
-import { RootLayout } from '../layouts/RootLayout'
+import { RootLayout } from '@app/layouts'
 
 export function ArchivePage() {
   return (

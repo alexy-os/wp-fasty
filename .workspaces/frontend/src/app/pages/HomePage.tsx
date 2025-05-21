@@ -1,26 +1,6 @@
+import { RootLayout } from '@app/layouts'
+import { getComponents } from '@/utils/theme'
 import { page } from '@/context/data'
-import { RootLayout } from '../layouts/RootLayout'
-import { useTheme } from '@/store/theme/context'
-
-export function getComponents() {
-  const { current: currentTheme } = useTheme();
-
-  try {
-    // Dynamically import components based on the theme
-    const components = require(`@${currentTheme}/components/article`);
-
-    return {
-      components,
-      currentTheme: currentTheme
-    };
-  } catch (error) {
-    console.error(`Error loading article components for theme: ${currentTheme}`, error);
-    return {
-      components: null,
-      currentTheme: currentTheme
-    };
-  }
-}
 
 export type HomePageProps = {
   slug: string
@@ -28,18 +8,12 @@ export type HomePageProps = {
 
 export function HomePage() {
 
-  const { components: ArticleComponents } = getComponents()
-
-  if (!ArticleComponents) {
-    return <div>Error loading article components</div>
-  }
-
   // Destructure the components
   const {
     Article,
     ArticleHeader,
     ArticleContent,
-  } = ArticleComponents
+  } = getComponents()
 
   return (
     <RootLayout

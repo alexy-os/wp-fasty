@@ -1,4 +1,4 @@
-import { RootLayout } from '../layouts/RootLayout'
+import { RootLayout } from '@app/layouts'
 
 export function AboutPage() {
   return (

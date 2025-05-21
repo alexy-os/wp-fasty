@@ -1,5 +1,5 @@
-import { DEFAULT_THEME, THEME_TYPES } from '@/store/theme/constants';
-import type { ThemeType } from '@/store/theme/types';
+import { DEFAULT_THEME, THEME_TYPES } from '@/store/theme';
+import type { ThemeType } from '@/store/theme';
 
 // Global variable for the theme
 let currentTheme: ThemeType = DEFAULT_THEME;

@@ -2,10 +2,10 @@ import { Elysia } from 'elysia'
 import { html } from '@elysiajs/html'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { setTheme, getTheme } from '@/utils/theme'
-import { RootLayout } from './app/layouts/RootLayout'
-import { ThemeProvider } from './store/theme/context'
-import { THEME_TYPES, type ThemeType } from './store/theme'
-import { routes } from './utils/theme/routes'
+import { RootLayout } from '@app/layouts/RootLayout'
+import { ThemeProvider } from '@/store/theme/context'
+import { THEME_TYPES, type ThemeType } from '@/store/theme'
+import { routes } from '@app/routes'
 
 const app = new Elysia()
   .use(html())
@@ -87,5 +87,5 @@ app.get('*', ({ html: htmlFn, request, wrapWithTheme }) => {
   )}`)
 });
 
-app.listen(3000);
-console.log('🦊 Server running at http://localhost:3000'); 
+app.listen(777);
+console.log('🦊 Server running at http://localhost:777'); 
