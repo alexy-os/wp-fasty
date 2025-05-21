@@ -17,7 +17,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
   const buttonText = `Switch to ${targetTheme === 'semantic' ? 'Semantic' : 'UI8Kit'}`;
 
   // Get all necessary components directly
-  const { Main, Container, SectionHeader, SectionFooter, Navbar, Nav, NavList, NavItem, NavLink } = getComponents();
+  const { Main, Container, SectionHeader, SectionFooter, Navbar, Nav, NavList, NavItem, NavLink, H2, P } = getComponents();
 
   let source;
 
@@ -47,7 +47,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
         <SectionHeader>
           <Container>
             <Navbar>
-              <h1 className="text-xl font-bold">{site.title}</h1>
+              <H2>{site.title}</H2>
               <Nav>
                 <NavList>
                   {menu.primary.items.map((item) => (
