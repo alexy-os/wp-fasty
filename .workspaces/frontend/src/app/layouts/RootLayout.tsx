@@ -78,7 +78,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
 
         <SectionFooter>
           <Container>
-            <p className="text-center py-4">&copy; {new Date().getFullYear()} {site.title}</p>
+            <P className="text-center py-4">&copy; {new Date().getFullYear()} {site.title}</P>
           </Container>
         </SectionFooter>
 
