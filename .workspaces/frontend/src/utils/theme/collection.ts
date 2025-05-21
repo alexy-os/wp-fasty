@@ -26,43 +26,53 @@ export class ComponentLoader {
     const result: ComponentCollection = {};
 
     try {
-      // Load components from the current theme
-      const components = require(`@${this.theme}/${this.namespace}/${module}`);
+      // Try to load components from the current theme
+      let components;
+      try {
+        components = require(`@${this.theme}/${this.namespace}/${module}`);
+      } catch (importError: any) {
+        // If the error is related to missing dependencies, log and continue
+        if (importError.message && importError.message.includes('Cannot find module')) {
+          console.warn(`Import dependency error in module "${module}" for theme "${this.theme}": ${importError.message}`);
+          // Create an empty object instead of the broken module
+          components = {};
+        } else {
+          // If this is another type of error, pass it on
+          throw importError;
+        }
+      }
 
-      // Create proxies for each component to track missing components
+      // Create a proxy for each component
       Object.keys(components).forEach(key => {
-        result[key] = components[key] || this.createFallback(key);
+        try {
+          result[key] = components[key] || this.createFallback(key);
+        } catch (componentError) {
+          console.warn(`Error loading component "${key}" from "${module}": ${componentError}`);
+          result[key] = this.createFallback(key);
+        }
       });
 
       // Add a handler for missing components
       return new Proxy(result, {
         get: (target, prop: string) => {
-          if (!(prop in target)) {
+          if (typeof prop === 'string' && !(prop in target)) {
             console.error(`Component "${prop}" not found in theme "${this.theme}" namespace "${this.namespace}"`);
-            return this.createFallback(prop as string);
+            return this.createFallback(prop);
           }
-          return target[prop];
+          return target[prop as string];
         }
       });
     } catch (error) {
       console.error(`Failed to load module "${module}" for theme "${this.theme}" in namespace "${this.namespace}":`, error);
 
-      // Try fallback theme for non-semantic themes
-      if (this.theme !== 'semantic') {
-        try {
-          const fallbackLoader = new ComponentLoader(this.namespace);
-          fallbackLoader.theme = 'semantic';
-          return fallbackLoader.load(module);
-        } catch {
-          console.error(`Fallback failed for module "${module}" in namespace "${this.namespace}"`);
-        }
-      }
-
-      // Return proxy that creates fallbacks for any requested component
+      // Return a proxy that creates fallbacks for any requested component
       return new Proxy({}, {
         get: (_, prop: string) => {
-          console.error(`Component "${prop}" not available - module "${module}" failed to load in namespace "${this.namespace}"`);
-          return this.createFallback(prop as string);
+          if (typeof prop === 'string') {
+            console.error(`Component "${prop}" not available - module "${module}" failed to load in namespace "${this.namespace}"`);
+            return this.createFallback(prop);
+          }
+          return undefined;
         }
       });
     }

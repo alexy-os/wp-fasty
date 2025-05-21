@@ -1,7 +1,10 @@
 import { posts, archive } from '@/context/data'
+import { getUI } from '@/utils/theme'
 import { RootLayout } from '@app/layouts'
 
 export function ArchivePage() {
+  const { A, Button } = getUI()
+
   return (
     <RootLayout title={archive.title}>
       <div className="max-w-4xl mx-auto">
@@ -20,20 +23,15 @@ export function ArchivePage() {
               )}
               <div className="p-6">
                 <h2 className="text-2xl font-bold mb-2">
-                  <a href={`/post/${post.slug}`} className="hover:text-primary">
+                  <A href={`/post/${post.slug}`}>
                     {post.title}
-                  </a>
+                  </A>
                 </h2>
                 <div className="text-sm text-muted-foreground mb-4">
                   {post.date.display}
                 </div>
                 <p className="text-base mb-4">{post.excerpt}</p>
-                <a
-                  href={`/post/${post.slug}`}
-                  className="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-primary/90"
-                >
-                  Read more
-                </a>
+                <Button href={`/post/${post.slug}`}>Read more</Button>
               </div>
             </article>
           ))}

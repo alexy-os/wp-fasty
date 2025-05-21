@@ -7,7 +7,7 @@ export * from './button';
 export * from './card';
 export * from './input';
 export * from './link';
-export * from './pagination';
+//export * from './pagination';
 export * from './skeleton';
 export * from './table';
 export * from './textarea';
