@@ -68,6 +68,8 @@ class DataSlotParser {
 
       // Structure to store extracted styles
       const stylesMap: Record<string, string> = {};
+      // Track if we have any data-slot attributes with actual styles
+      let hasDataSlotsWithStyles = false;
 
       // Traverse the AST and find data-slot attributes and cn() function
       traverse(ast, {
@@ -99,9 +101,10 @@ class DataSlotParser {
 
                 // Get the first argument of cn() - these are our styles
                 const firstArg = expr.arguments[0];
-                if (t.isStringLiteral(firstArg)) {
-                  // Save styles for this slot
-                  stylesMap[slotName] = firstArg.value;
+                if (t.isStringLiteral(firstArg) && firstArg.value.trim() !== '') {
+                  // Save styles for this slot only if it has non-empty styles
+                  stylesMap[slotName] = firstArg.value.trim();
+                  hasDataSlotsWithStyles = true;
                 }
               }
             }
@@ -109,10 +112,13 @@ class DataSlotParser {
         }
       });
 
-      // If we found styles, generate CSS and copy the component
-      if (Object.keys(stylesMap).length > 0) {
+      // Generate component only if we found styles
+      if (hasDataSlotsWithStyles) {
         this.generateCssFile(componentName, stylesMap);
         this.generateSemanticComponent(componentPath, stylesMap);
+      } else {
+        // Still copy the component without modifications if it has data-slot attributes
+        this.copyComponentWithoutChanges(componentPath);
       }
     } catch (err) {
       console.error(`Error processing component ${componentPath}:`, err);
@@ -122,9 +128,9 @@ class DataSlotParser {
   private generateCssFile(componentName: string, stylesMap: Record<string, string>): void {
     let cssContent = '';
 
-    // Generate CSS for each data-slot
+    // Generate CSS for each data-slot with non-empty styles
     Object.entries(stylesMap).forEach(([slotName, styles]) => {
-      if (!styles.trim()) return; // Skip empty styles
+      if (styles.trim() === '') return; // Skip empty styles
       cssContent += `.${slotName} {\n  @apply ${styles};\n}\n\n`;
     });
 
@@ -145,6 +151,29 @@ class DataSlotParser {
     }
   }
 
+  private copyComponentWithoutChanges(componentPath: string): void {
+    try {
+      // Read the original component
+      const componentContent = fs.readFileSync(componentPath, 'utf-8');
+
+      // Create directory for the component in output dir
+      const relativePath = path.relative(this.config.inputDir, path.dirname(componentPath));
+      const outputDir = path.join(this.config.componentsOutputDir, relativePath);
+      fs.mkdirSync(outputDir, { recursive: true });
+
+      // Save the component without changes
+      const fileName = path.basename(componentPath);
+      const outputFile = path.join(outputDir, fileName);
+      fs.writeFileSync(outputFile, componentContent);
+      console.log(`Copied component without changes: ${outputFile}`);
+
+      // Call the index file generation for the folder
+      this.generateIndexFileForDirectory(outputDir);
+    } catch (err) {
+      console.error(`Error copying component ${componentPath}:`, err);
+    }
+  }
+
   private generateSemanticComponent(componentPath: string, stylesMap: Record<string, string>): void {
     try {
       // Read the original component
@@ -162,8 +191,8 @@ class DataSlotParser {
           if (path.node.name.name === 'data-slot' && t.isStringLiteral(path.node.value)) {
             const slotName = path.node.value.value;
 
-            // If we have styles for this slot
-            if (stylesMap[slotName]) {
+            // Only process elements that have non-empty styles
+            if (stylesMap[slotName] && stylesMap[slotName].trim() !== '') {
               // Find the parent JSX element
               const jsxElementPath = path.findParent(p => p.isJSXOpeningElement());
               if (!jsxElementPath || !t.isJSXOpeningElement(jsxElementPath.node)) return;

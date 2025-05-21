@@ -8,6 +8,15 @@ import { ObjectProperty, ObjectExpression, StringLiteral } from '@babel/types';
 import { UI8KitConfig, type VariantsParserConfig } from './config/VariantsParserConfig';
 
 class UICVAParser {
+  /**
+  /* inputDir: './src/uikits/n4shadcn/src/ui',
+  /* outputDir: './src/assets/css/ui8px/ui',
+  /* interfacesGlob: '** /*.tsx',
+  /* variantsObject: 'cva',
+  /* variantsKey: 'variants',
+  /* defaultVariantsKey: 'defaultVariants',
+  /* outputIndex: 'variants.css',
+  */
   public config: VariantsParserConfig;
   private cssFiles: string[] = [];
   public isWatching = false;

@@ -46,7 +46,7 @@ function Link({
   return (
     <a
       data-slot="link-button"
-      className={cn("", linkVariants({ variant, size, className }))}
+      className={cn(linkVariants({ variant, size, className }))}
       href={href}
       type="button"
       {...props}
@@ -68,7 +68,7 @@ function LinkButton({
   return (
     <a
       data-slot="button"
-      className={cn("", linkVariants({ variant, size, className }))}
+      className={cn(linkVariants({ variant, size, className }))}
       href={href}
       type="button"
       {...props}
