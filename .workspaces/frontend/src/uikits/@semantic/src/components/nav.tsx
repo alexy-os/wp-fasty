@@ -81,13 +81,7 @@ function NavLink({
     <a
       data-slot="nav-link"
       data-active={active ? "true" : undefined}
-      className={cn("nav-link",
-
-      "transition-colors duration-200",
-      "hover:bg-accent hover:text-accent-foreground",
-      "data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground",
-      className
-      )}
+      className={cn("nav-link", className)}
       {...props}>
 
       {children}
@@ -121,12 +115,7 @@ function NavTrigger({
     <button
       type="button"
       data-slot="nav-trigger"
-      className={cn("nav-trigger",
-
-      "text-foreground hover:bg-accent hover:text-accent-foreground",
-      "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring/50",
-      className
-      )}
+      className={cn("nav-trigger", className)}
       aria-label="Toggle navigation menu"
       {...props}>
 
@@ -145,13 +134,7 @@ function NavMobile({
   return (
     <div
       data-slot="nav-mobile"
-      className={cn("nav-mobile",
-
-      "opacity-0 pointer-events-none",
-      "peer-checked:opacity-100 peer-checked:pointer-events-auto",
-      "transition-opacity duration-300",
-      className
-      )}
+      className={cn("nav-mobile", className)}
       aria-hidden="true"
       {...props}>
 
@@ -194,13 +177,7 @@ function NavMobileLink({
     <a
       data-slot="nav-mobile-link"
       data-active={active ? "true" : undefined}
-      className={cn("nav-mobile-link",
-
-      "text-base font-medium transition-colors",
-      "hover:bg-accent hover:text-accent-foreground",
-      "data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground",
-      className
-      )}
+      className={cn("nav-mobile-link", className)}
       {...props}>
 
       {children}
@@ -218,11 +195,7 @@ function NavBar({
   return (
     <div
       data-slot="nav-bar"
-      className={cn("nav-bar",
-
-      "sticky top-0 z-40 w-full",
-      className
-      )}
+      className={cn("nav-bar", className)}
       {...props}>
 
       <div className="container flex h-14 items-center">

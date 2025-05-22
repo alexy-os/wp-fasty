@@ -1,7 +1,7 @@
 import React from 'react';
 import { site, menu } from '@/context/data';
 import { getComponents, getTheme } from '@/utils/theme';
-import { Button, SiteLogo } from '@app/components';
+import { Button, SiteLogo, DarkMode } from '@app/components';
 
 export type RootLayoutProps = {
   title: string
@@ -13,7 +13,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
   const theme = getTheme();
 
   // Configure UI for the theme toggle button 
-  const colorBtn = theme === 'semantic' ? 'bg-sky-500' : 'bg-teal-500 hover:bg-teal-400';
+  const colorBtn = theme === 'semantic' ? 'bg-sky-500' : 'bg-teal-500 text-white hover:bg-teal-400';
   const buttonText = `Switch to ${theme === 'semantic' ? 'Semantic' : 'UI8Kit'}`;
 
   // Get all necessary components directly
@@ -27,6 +27,22 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
         <title>{title}</title>
         {description && <meta name="description" content={description} />}
         <link rel="stylesheet" href="/src/assets/css/styles.css" />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+          // Immediately apply dark mode before any content renders
+          (function() {
+            try {
+              const isDark = localStorage.getItem('darkmode') === 'dark' || 
+                (!('darkmode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+              
+              // Apply class immediately to prevent flash
+              document.documentElement.classList.toggle('dark', isDark);
+            } catch (e) {
+              // Fall back to default if localStorage is not available
+              console.error('Failed to set initial theme:', e);
+            }
+          })();
+        ` }} />
       </head>
       <body className="bg-background text-foreground">
         <SectionHeader>
@@ -43,15 +59,18 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
                 </NavList>
               </Nav>
 
-              <Button
-                id="theme-toggle"
-                size="sm"
-                className={`${colorBtn} !rounded-full`}
-                data-current-theme={theme}
-                title={`Current Theme: ${theme}`}
-              >
-                {buttonText}
-              </Button>
+              <div className="flex items-center gap-2">
+                <DarkMode />
+                <Button
+                  id="theme-toggle"
+                  size="sm"
+                  className={`${colorBtn} !rounded-full !text-white`}
+                  data-current-theme={theme}
+                  title={`Current Theme: ${theme}`}
+                >
+                  {buttonText}
+                </Button>
+              </div>
             </Navbar>
           </Container>
         </SectionHeader>
@@ -69,6 +88,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
         </SectionFooter>
 
         <script src="/src/assets/js/themes.js"></script>
+        <script src="/src/assets/js/darkmode.js"></script>
       </body>
     </html>
   );

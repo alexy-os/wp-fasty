@@ -81,13 +81,7 @@ function NavLink({
     <a
       data-slot="nav-link"
       data-active={active ? "true" : undefined}
-      className={cn(
-        "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium",
-        "transition-colors duration-200",
-        "hover:bg-accent hover:text-accent-foreground",
-        "data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground",
-        className
-      )}
+      className={cn("flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground", className)}
       {...props}
     >
       {children}
@@ -121,12 +115,7 @@ function NavTrigger({
     <button
       type="button"
       data-slot="nav-trigger"
-      className={cn(
-        "lg:hidden inline-flex items-center justify-center p-2 rounded-md",
-        "text-foreground hover:bg-accent hover:text-accent-foreground",
-        "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring/50",
-        className
-      )}
+      className={cn("lg:hidden inline-flex items-center justify-center p-2 rounded-md text-foreground hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring/50", className)}
       aria-label="Toggle navigation menu"
       {...props}
     >
@@ -145,13 +134,7 @@ function NavMobile({
   return (
     <div
       data-slot="nav-mobile"
-      className={cn(
-        "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden",
-        "opacity-0 pointer-events-none",
-        "peer-checked:opacity-100 peer-checked:pointer-events-auto",
-        "transition-opacity duration-300",
-        className
-      )}
+      className={cn("fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden opacity-0 pointer-events-none peer-checked:opacity-100 peer-checked:pointer-events-auto transition-opacity duration-300", className)}
       aria-hidden="true"
       {...props}
     >
@@ -194,13 +177,7 @@ function NavMobileLink({
     <a
       data-slot="nav-mobile-link"
       data-active={active ? "true" : undefined}
-      className={cn(
-        "flex w-full items-center gap-2 rounded-md px-3 py-2",
-        "text-base font-medium transition-colors",
-        "hover:bg-accent hover:text-accent-foreground",
-        "data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground",
-        className
-      )}
+      className={cn("flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground", className)}
       {...props}
     >
       {children}
@@ -218,11 +195,7 @@ function NavBar({
   return (
     <div
       data-slot="nav-bar"
-      className={cn(
-        "border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        "sticky top-0 z-40 w-full",
-        className
-      )}
+      className={cn("border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full", className)}
       {...props}
     >
       <div className="container flex h-14 items-center">
