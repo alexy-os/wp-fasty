@@ -10,3 +10,5 @@ bun.lock
 composer.lock
 .cursorignore
 simple-mpa/
+.env
+dist

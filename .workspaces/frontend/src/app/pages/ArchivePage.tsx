@@ -1,44 +1,47 @@
 import { posts, archive } from '@/context/data'
-import { getUI } from '@/utils/theme'
+import { getUI, getComponents } from '@/utils/theme'
 import { RootLayout } from '@app/layouts'
 import { Button } from '@app/components'
 
 export function ArchivePage() {
   const { A } = getUI()
+  const { Article, Grid, H1, H2, P, Img } = getComponents()
 
   return (
     <RootLayout title={archive.title}>
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">{archive.title}</h1>
-        <p className="text-lg mb-12">{archive.description}</p>
+      <div className="max-w-4xl">
+        <H1>{archive.title}</H1>
+        <P>{archive.description}</P>
 
-        <div className="grid gap-8 md:grid-cols-2">
+        <Grid>
           {posts.map((post) => (
-            <article key={post.id} className="bg-card rounded-lg shadow-lg overflow-hidden">
+            <Article key={post.id}>
               {post.thumbnail && (
-                <img
+                <Img
                   src={post.thumbnail.url}
                   alt={post.thumbnail.alt}
                   className="w-full h-48 object-cover"
                 />
               )}
               <div className="p-6">
-                <h2 className="text-2xl font-bold mb-2">
+                <H2>
                   <A href={`/post/${post.slug}`}>
                     {post.title}
                   </A>
-                </h2>
-                <div className="text-sm text-muted-foreground mb-4">
+                </H2>
+                <P>
                   {post.date.display}
-                </div>
-                <p className="text-base mb-4">{post.excerpt}</p>
+                </P>
+                <P>
+                  {post.excerpt}
+                </P>
                 <A href={`/post/${post.slug}`}>
                   <Button variant="secondary" size="sm">Read more</Button>
                 </A>
               </div>
-            </article>
+            </Article>
           ))}
-        </div>
+        </Grid>
       </div>
     </RootLayout>
   )
