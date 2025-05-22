@@ -186,28 +186,30 @@ class DataSlotParser {
       });
 
       // Modify the AST, replacing utility classes with semantic classes
+      // and removing data-slot attributes
       traverse(ast, {
         JSXAttribute(path) {
+          // If this is a data-slot attribute, we will handle it
           if (path.node.name.name === 'data-slot' && t.isStringLiteral(path.node.value)) {
             const slotName = path.node.value.value;
 
+            // Find the parent JSX element
+            const jsxElementPath = path.findParent(p => p.isJSXOpeningElement());
+            if (!jsxElementPath || !t.isJSXOpeningElement(jsxElementPath.node)) return;
+
+            // Now we have a correctly typed JSXOpeningElement
+            const jsxElement = jsxElementPath.node;
+
+            // Find className attribute
+            const classNameAttr = jsxElement.attributes.find(
+              (attr): attr is t.JSXAttribute =>
+                t.isJSXAttribute(attr) &&
+                t.isJSXIdentifier(attr.name) &&
+                attr.name.name === 'className'
+            );
+
             // Only process elements that have non-empty styles
             if (stylesMap[slotName] && stylesMap[slotName].trim() !== '') {
-              // Find the parent JSX element
-              const jsxElementPath = path.findParent(p => p.isJSXOpeningElement());
-              if (!jsxElementPath || !t.isJSXOpeningElement(jsxElementPath.node)) return;
-
-              // Now we have a correctly typed JSXOpeningElement
-              const jsxElement = jsxElementPath.node;
-
-              // Find className attribute
-              const classNameAttr = jsxElement.attributes.find(
-                (attr): attr is t.JSXAttribute =>
-                  t.isJSXAttribute(attr) &&
-                  t.isJSXIdentifier(attr.name) &&
-                  attr.name.name === 'className'
-              );
-
               if (classNameAttr && t.isJSXExpressionContainer(classNameAttr.value)) {
                 // Check if this is a call to the cn() function
                 const expr = classNameAttr.value.expression;
@@ -219,6 +221,9 @@ class DataSlotParser {
                 }
               }
             }
+
+            // Remove the data-slot attribute regardless of whether we modified the className
+            path.remove();
           }
         }
       });

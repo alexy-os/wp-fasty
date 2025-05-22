@@ -11,7 +11,7 @@ function Nav({
 }: React.ComponentProps<"nav"> & {children?: React.ReactNode;}) {
   return (
     <nav
-      data-slot="nav"
+
       className={cn("nav", className)}
       {...props}>
 
@@ -23,7 +23,7 @@ function Nav({
 function Navbar({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      data-slot="navbar"
+
       className={cn("navbar", className)}
       {...props} />);
 
@@ -41,7 +41,7 @@ function NavList({
 }: React.ComponentProps<"ul"> & {children?: React.ReactNode;}) {
   return (
     <ul
-      data-slot="nav-list"
+
       className={cn("nav-list", className)}
       {...props}>
 
@@ -59,7 +59,7 @@ function NavItem({
 }: React.ComponentProps<"li"> & {children?: React.ReactNode;}) {
   return (
     <li
-      data-slot="nav-item"
+
       className={cn("", className)}
       {...props}>
 
@@ -79,7 +79,7 @@ function NavLink({
 }: React.ComponentProps<"a"> & {children?: React.ReactNode;active?: boolean;}) {
   return (
     <a
-      data-slot="nav-link"
+
       data-active={active ? "true" : undefined}
       className={cn("nav-link", className)}
       {...props}>
@@ -98,7 +98,7 @@ function NavLinkIcon({
 }: React.ComponentProps<"span"> & {children?: React.ReactNode;}) {
   return (
     <span
-      data-slot="nav-link-icon"
+
       className={cn("nav-link-icon", className)}
       {...props}>
 
@@ -114,7 +114,7 @@ function NavTrigger({
   return (
     <button
       type="button"
-      data-slot="nav-trigger"
+
       className={cn("nav-trigger", className)}
       aria-label="Toggle navigation menu"
       {...props}>
@@ -133,7 +133,7 @@ function NavMobile({
 }: React.ComponentProps<"div"> & {children?: React.ReactNode;}) {
   return (
     <div
-      data-slot="nav-mobile"
+
       className={cn("nav-mobile", className)}
       aria-hidden="true"
       {...props}>
@@ -175,7 +175,7 @@ function NavMobileLink({
 }: React.ComponentProps<"a"> & {children?: React.ReactNode;active?: boolean;}) {
   return (
     <a
-      data-slot="nav-mobile-link"
+
       data-active={active ? "true" : undefined}
       className={cn("nav-mobile-link", className)}
       {...props}>
@@ -194,7 +194,7 @@ function NavBar({
 }: React.ComponentProps<"div"> & {children?: React.ReactNode;}) {
   return (
     <div
-      data-slot="nav-bar"
+
       className={cn("nav-bar", className)}
       {...props}>
 
@@ -213,6 +213,24 @@ function NavBar({
 
 }
 
+function NavGroupButtons({
+  className,
+  children,
+  ...props
+
+
+}: React.ComponentProps<"div"> & {children?: React.ReactNode;}) {
+  return (
+    <div
+
+      className={cn("nav-group-buttons", className)}
+      {...props}>
+
+      {children}
+    </div>);
+
+}
+
 function NavGroup({
   className,
   children,
@@ -224,7 +242,7 @@ function NavGroup({
 }: React.ComponentProps<"div"> & {children?: React.ReactNode;title?: string;}) {
   return (
     <div
-      data-slot="nav-group"
+
       className={cn("nav-group", className)}
       {...props}>
 
@@ -250,7 +268,7 @@ NavMobile.displayName = "NavMobile";
 NavMobileLink.displayName = "NavMobileLink";
 NavBar.displayName = "NavBar";
 NavGroup.displayName = "NavGroup";
-
+NavGroupButtons.displayName = "NavGroupButtons";
 export {
   Nav,
   Navbar,
@@ -262,4 +280,5 @@ export {
   NavMobile,
   NavMobileLink,
   NavBar,
-  NavGroup };
+  NavGroup,
+  NavGroupButtons };

@@ -4,8 +4,20 @@ import path from 'node:path';
 import { glob } from 'glob';
 import { parse } from '@babel/parser';
 import traverse from '@babel/traverse';
+import generate from '@babel/generator';
 import { ObjectProperty, ObjectExpression, StringLiteral } from '@babel/types';
+import * as t from '@babel/types';
 import { UI8KitConfig, type VariantsParserConfig } from './config/VariantsParserConfig';
+
+interface UICVAParserConfig extends VariantsParserConfig {
+  // Директория для семантических компонентов
+  componentsOutputDir: string;
+}
+
+const DEFAULT_CONFIG: UICVAParserConfig = {
+  ...UI8KitConfig,
+  componentsOutputDir: './src/uikits/@semantic/src/ui'
+};
 
 class UICVAParser {
   /**
@@ -16,13 +28,14 @@ class UICVAParser {
   /* variantsKey: 'variants',
   /* defaultVariantsKey: 'defaultVariants',
   /* outputIndex: 'variants.css',
+  /* componentsOutputDir: './src/uikits/@semantic/src/ui',
   */
-  public config: VariantsParserConfig;
+  public config: UICVAParserConfig;
   private cssFiles: string[] = [];
   public isWatching = false;
 
-  constructor(config: Partial<VariantsParserConfig> = {}) {
-    this.config = { ...UI8KitConfig, ...config };
+  constructor(config: Partial<UICVAParserConfig> = {}) {
+    this.config = { ...DEFAULT_CONFIG, ...config };
     const args = process.argv.slice(2);
     this.isWatching = args.includes('--watch');
   }
@@ -135,9 +148,58 @@ class UICVAParser {
       fs.mkdirSync(this.config.outputDir, { recursive: true });
       fs.writeFileSync(outputFile, cssContent.trim());
       this.cssFiles.push(outputFile);
-      console.log(`Generated: ${outputFile}`);
+      console.log(`Generated CSS: ${outputFile}`);
     } else {
       console.log(`Skipped empty CSS for: ${component}`);
+    }
+
+    // Generate semantic component without data-slot attributes
+    this.generateSemanticComponent(tsxPath);
+  }
+
+  private generateSemanticComponent(tsxPath: string): void {
+    try {
+      // Read the original component
+      const tsxContent = fs.readFileSync(tsxPath, 'utf-8');
+
+      // Parse with Babel
+      const ast = parse(tsxContent, {
+        sourceType: 'module',
+        plugins: ['typescript', 'jsx']
+      });
+
+      // Track if any data-slot attributes were found and removed
+      let dataSlotFound = false;
+
+      // Modify the AST to remove data-slot attributes
+      traverse(ast, {
+        JSXAttribute(path) {
+          // If this is a data-slot attribute, remove it
+          if (path.node.name.name === 'data-slot') {
+            dataSlotFound = true;
+            path.remove();
+          }
+        }
+      });
+
+      // Only generate a new version if we found and removed data-slot attributes
+      if (dataSlotFound) {
+        // Generate code from the modified AST
+        const output = generate(ast, { retainLines: true });
+
+        // Create a directory for semantic components
+        const relativePath = path.relative(this.config.inputDir, path.dirname(tsxPath));
+        const outputDir = path.join(this.config.componentsOutputDir, relativePath);
+        fs.mkdirSync(outputDir, { recursive: true });
+
+        // Save the modified component
+        const fileName = path.basename(tsxPath);
+        const outputFile = path.join(outputDir, fileName);
+        fs.writeFileSync(outputFile, output.code);
+        console.log(`Generated semantic component: ${outputFile}`);
+      }
+    } catch (err) {
+      console.error(`Error generating semantic component for ${tsxPath}:`, err);
     }
   }
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils"
 import { Slot } from "@radix-ui/react-slot";
-import { badgeVariants } from "@ui8px/source/cva/ui/badge";
+import { badgeVariants } from "@n4shadcn/ui/badge";
 import { type VariantProps } from "class-variance-authority"
 
 function Badge({
@@ -14,7 +14,6 @@ function Badge({
 
   return (
     <Comp
-      data-slot="badge"
       className={cn(
         "badge",
         variant && `badge-${variant}`,

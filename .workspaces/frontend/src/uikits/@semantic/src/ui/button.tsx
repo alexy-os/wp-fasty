@@ -18,7 +18,6 @@ function Button({
 
   return (
     <Comp
-      data-slot="button"
       className={cn(
         "button",
         variant && `button-${variant}`,

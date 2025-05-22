@@ -1,5 +1,4 @@
 import { Button } from "./Button";
-import { Sun, Moon } from "lucide-react";
 
 export function DarkMode() {
   return (
@@ -10,8 +9,8 @@ export function DarkMode() {
       className={`!rounded-full`}
       aria-label="Toggle dark mode"
     >
-      <Sun className="w-4 h-4 sun-icon" />
-      <Moon className="w-4 h-4 moon-icon" />
+      <span className="latty latty-sun sun-icon"></span>
+      <span className="latty latty-moon moon-icon"></span>
     </Button>
   );
 }

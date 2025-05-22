@@ -17,7 +17,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
   const buttonText = `Switch to ${theme === 'semantic' ? 'Semantic' : 'UI8Kit'}`;
 
   // Get all necessary components directly
-  const { Main, Container, SectionHeader, SectionFooter, Navbar, Nav, NavList, NavItem, NavLink, H2, P } = getComponents();
+  const { Main, Container, SectionHeader, SectionFooter, Navbar, Nav, NavList, NavItem, NavLink, H2, P, NavGroupButtons } = getComponents();
 
   return (
     <html lang="en">
@@ -28,21 +28,8 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
         {description && <meta name="description" content={description} />}
         <link rel="stylesheet" href="/src/assets/css/styles.css" />
         <script dangerouslySetInnerHTML={{
-          __html: `
-          // Immediately apply dark mode before any content renders
-          (function() {
-            try {
-              const isDark = localStorage.getItem('darkmode') === 'dark' || 
-                (!('darkmode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-              
-              // Apply class immediately to prevent flash
-              document.documentElement.classList.toggle('dark', isDark);
-            } catch (e) {
-              // Fall back to default if localStorage is not available
-              console.error('Failed to set initial theme:', e);
-            }
-          })();
-        ` }} />
+          __html: `!function(){try{const e="dark"===localStorage.getItem("darkmode")||!("darkmode"in localStorage)&&window.matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.classList.toggle("dark",e)}catch(e){console.error("Failed to set initial theme:",e)}}();`
+        }} />
       </head>
       <body className="bg-background text-foreground">
         <SectionHeader>
@@ -59,7 +46,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
                 </NavList>
               </Nav>
 
-              <div className="flex items-center gap-2">
+              <NavGroupButtons>
                 <DarkMode />
                 <Button
                   id="theme-toggle"
@@ -70,7 +57,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
                 >
                   {buttonText}
                 </Button>
-              </div>
+              </NavGroupButtons>
             </Navbar>
           </Container>
         </SectionHeader>

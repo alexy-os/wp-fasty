@@ -10,7 +10,7 @@ function ArticleBase({
 }: React.ComponentProps<"article">) {
   return (
     <article
-      data-slot="article"
+
       className={cn("article",
 
       className
@@ -60,7 +60,7 @@ function ArticleHeader({
 }: React.ComponentProps<"header">) {
   return (
     <header
-      data-slot="article-header"
+
       className={cn("article-header",
 
       className
@@ -76,7 +76,7 @@ function ArticleTitle({
 }: React.ComponentProps<"h2">) {
   return (
     <h2
-      data-slot="article-title"
+
       className={cn("article-title",
 
       className
@@ -92,7 +92,7 @@ function ArticleMeta({
 }: React.ComponentProps<"div">) {
   return (
     <div
-      data-slot="article-meta"
+
       className={cn("article-meta",
 
       className
@@ -108,7 +108,7 @@ function ArticleTime({
 }: React.ComponentProps<"time">) {
   return (
     <time
-      data-slot="article-time"
+
       className={cn("article-time",
 
       className
@@ -124,7 +124,7 @@ function ArticleAuthor({
 }: React.ComponentProps<"address">) {
   return (
     <address
-      data-slot="article-author"
+
       className={cn("article-author",
 
       className
@@ -140,7 +140,7 @@ function ArticleFigure({
 }: React.ComponentProps<"figure">) {
   return (
     <figure
-      data-slot="article-figure"
+
       className={cn("article-figure",
 
       className
@@ -156,7 +156,7 @@ function ArticleImage({
 }: React.ComponentProps<"img">) {
   return (
     <img
-      data-slot="article-image"
+
       className={cn("article-image",
 
       className
@@ -172,7 +172,7 @@ function ArticleFigcaption({
 }: React.ComponentProps<"figcaption">) {
   return (
     <figcaption
-      data-slot="article-figcaption"
+
       className={cn("article-figcaption",
 
       className
@@ -188,7 +188,7 @@ function ArticleContent({
 }: React.ComponentProps<"div">) {
   return (
     <div
-      data-slot="article-content"
+
       className={cn("article-content",
 
       className
@@ -204,7 +204,7 @@ function ArticleBlockquote({
 }: React.ComponentProps<"blockquote">) {
   return (
     <blockquote
-      data-slot="article-blockquote"
+
       className={cn("article-blockquote",
 
       className
@@ -220,7 +220,7 @@ function ArticleFooter({
 }: React.ComponentProps<"footer">) {
   return (
     <footer
-      data-slot="article-footer"
+
       className={cn("article-footer",
 
       className
@@ -236,7 +236,7 @@ function ArticleTags({
 }: React.ComponentProps<"ul">) {
   return (
     <ul
-      data-slot="article-tags"
+
       className={cn("article-tags",
 
       className
@@ -252,7 +252,7 @@ function ArticleTag({
 }: React.ComponentProps<"li">) {
   return (
     <li
-      data-slot="article-tag"
+
       className={cn("article-tag",
 
       className
@@ -268,7 +268,7 @@ function ArticleActions({
 }: React.ComponentProps<"div">) {
   return (
     <div
-      data-slot="article-actions"
+
       className={cn("article-actions",
 
       className

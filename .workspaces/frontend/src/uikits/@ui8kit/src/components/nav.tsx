@@ -213,6 +213,24 @@ function NavBar({
   )
 }
 
+function NavGroupButtons({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div"> & {
+  children?: React.ReactNode
+}) {
+  return (
+    <div
+      data-slot="nav-group-buttons"
+      className={cn("flex items-center gap-2", className)}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
 function NavGroup({
   className,
   children,
@@ -250,7 +268,7 @@ NavMobile.displayName = "NavMobile"
 NavMobileLink.displayName = "NavMobileLink"
 NavBar.displayName = "NavBar"
 NavGroup.displayName = "NavGroup"
-
+NavGroupButtons.displayName = "NavGroupButtons"
 export {
   Nav,
   Navbar,
@@ -262,5 +280,6 @@ export {
   NavMobile,
   NavMobileLink,
   NavBar,
-  NavGroup
+  NavGroup,
+  NavGroupButtons
 }

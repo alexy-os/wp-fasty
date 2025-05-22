@@ -25,6 +25,8 @@
     "latte": "bun run --cwd .workspaces/frontend ui:tpl",
     "react": "bun run --cwd .workspaces/frontend ui:jsdom",
     "tree": "bun run --cwd .workspaces/frontend ui:tree",
-    "ui": "bun run react && bun run latte"
+    "ui:dev": "bun semantic && bun dev",
+    "ui:app": "bun run ui:cva && bun run ui:cn && bun run semantic && bun run dev",
+    "ui:latte": "bun run react && bun run latte"
   }
 }
