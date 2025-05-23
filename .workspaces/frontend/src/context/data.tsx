@@ -3,8 +3,8 @@ import { WPFastyContext } from './types/wpfasty';
 export const site: WPFastyContext['site'] = {
   title: 'My Site',
   description: 'My Site Description',
-  url: 'https://my-site.com',
-  theme_url: 'https://my-site.com/theme',
+  url: '',
+  theme_url: '/theme',
   lang: 'en',
   charset: 'UTF-8',
 };
@@ -45,6 +45,8 @@ export const menu: WPFastyContext['menu'] = {
 
 export const placeholderImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiM2NjY2NjYiLz48L3N2Zz4=";
 
+export const urlImage = 'https://images.unsplash.com/photo-1542125387-c71274d94f0a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=560&q=80';
+
 type PostPage = WPFastyContext['page']['page'];
 
 export const page: PostPage =
@@ -52,17 +54,17 @@ export const page: PostPage =
   title: 'Welcome to React Static Site',
   content: 'My Page Content',
   slug: 'my-page',
-  url: 'https://my-site.com/my-page',
+  url: '/my-page',
   id: 1,
   excerpt: 'My Page Excerpt',
   featuredImage: {
-    url: placeholderImage,
+    url: urlImage,
     width: 1000,
     height: 1000,
     alt: 'My Page Featured Image',
   },
   thumbnail: {
-    url: placeholderImage,
+    url: urlImage,
     width: 1000,
     height: 1000,
     alt: 'My Page Thumbnail',
@@ -94,7 +96,7 @@ export const posts: WPFastyContext['archive']['posts'][] = [
     title: 'My Post 1',
     content: 'My Post 1 Content',
     slug: 'my-post-1',
-    url: 'https://my-site.com/my-post-1',
+    url: '/my-post-1',
     id: 1,
     excerpt: 'My Post 1 Excerpt',
     featuredImage: {
@@ -116,7 +118,7 @@ export const posts: WPFastyContext['archive']['posts'][] = [
     categories: [
       {
         name: 'My Category',
-        url: 'https://my-site.com/my-category',
+        url: '/my-category',
         id: 1,
         slug: 'my-category',
         description: 'My Category Description',
@@ -138,17 +140,17 @@ export const posts: WPFastyContext['archive']['posts'][] = [
     title: 'My Post 2',
     content: 'My Post 2 Content',
     slug: 'my-post-2',
-    url: 'https://my-site.com/my-post-2',
+    url: '/my-post-2',
     id: 2,
     excerpt: 'My Post 2 Excerpt',
     featuredImage: {
-      url: placeholderImage,
+      url: urlImage,
       width: 1000,
       height: 1000,
       alt: 'My Post 2 Featured Image',
     },
     thumbnail: {
-      url: placeholderImage,
+      url: urlImage,
       width: 1000,
       height: 1000,
       alt: 'My Post 2 Thumbnail',
@@ -160,7 +162,7 @@ export const posts: WPFastyContext['archive']['posts'][] = [
     categories: [
       {
         name: 'My Category 2',
-        url: 'https://my-site.com/my-category-2',
+        url: '/my-category-2',
         id: 2,
         slug: 'my-category-2',
         description: 'My Category 2 Description',
@@ -182,7 +184,7 @@ export const posts: WPFastyContext['archive']['posts'][] = [
     title: 'My Post 3',
     content: 'My Post 3 Content',
     slug: 'my-post-3',
-    url: 'https://my-site.com/my-post-3',
+    url: '/my-post-3',
     id: 3,
     excerpt: 'My Post 3 Excerpt',
     featuredImage: {
@@ -204,7 +206,7 @@ export const posts: WPFastyContext['archive']['posts'][] = [
     categories: [
       {
         name: 'My Category 3',
-        url: 'https://my-site.com/my-category-3',
+        url: '/my-category-3',
         id: 3,
         slug: 'my-category-3',
         description: 'My Category 3 Description',

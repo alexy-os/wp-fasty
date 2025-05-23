@@ -5,44 +5,80 @@ import { Button } from '@app/components'
 
 export function ArchivePage() {
   const { A } = getUI()
-  const { Article, Grid, H1, H2, P, Img } = getComponents()
+  const {
+    Grid, P,
+    Section,
+    SectionHeader,
+    SectionContent,
+    SectionTitle,
+    SectionDescription,
+    Article,
+    ArticleFigure,
+    ArticleImage,
+    ArticleFigcaption,
+    ArticleContent,
+    ArticleHeader,
+    ArticleTitle,
+    ArticleMeta,
+    ArticleTime,
+    ArticleFooter,
+  } = getComponents()
 
   return (
-    <RootLayout title={archive.title}>
-      <div className="max-w-4xl">
-        <H1>{archive.title}</H1>
-        <P>{archive.description}</P>
 
-        <Grid>
-          {posts.map((post) => (
-            <Article key={post.id}>
-              {post.thumbnail && (
-                <Img
-                  src={post.thumbnail.url}
-                  alt={post.thumbnail.alt}
-                  className="w-full h-48 object-cover"
-                />
-              )}
-              <div className="p-6">
-                <H2>
+    <RootLayout
+      title={archive.title}
+      description={archive.description}
+    >
+      <Section>
+        <SectionHeader>
+          <SectionTitle className="text-3xl">{archive.title}</SectionTitle>
+          <SectionDescription>{archive.description}</SectionDescription>
+        </SectionHeader>
+
+        <SectionContent>
+          <Grid>
+            {posts.map((post) => (
+              <Article key={post.id}>
+
+                {post.featuredImage && (
+                  <ArticleFigure>
+                    <ArticleImage
+                      src={post.featuredImage.url}
+                      alt={post.featuredImage.alt}
+                    />
+                    {post.featuredImage.caption && (
+                      <ArticleFigcaption>{post.featuredImage.caption}</ArticleFigcaption>
+                    )}
+                  </ArticleFigure>
+                )}
+                <ArticleHeader>
+                  <ArticleTitle>
+                    <A href={`/post/${post.slug}`}>
+                      {post.title}
+                    </A>
+                  </ArticleTitle>
+                  <ArticleMeta>
+                    <ArticleTime>
+                      {post.date.display}
+                    </ArticleTime>
+                  </ArticleMeta>
+                </ArticleHeader>
+                <ArticleContent className="py-0 text-sm text-secondary-foreground">
+                  <P>
+                    {post.excerpt}
+                  </P>
+                </ArticleContent>
+                <ArticleFooter>
                   <A href={`/post/${post.slug}`}>
-                    {post.title}
+                    <Button variant="secondary" size="sm">Read more</Button>
                   </A>
-                </H2>
-                <P>
-                  {post.date.display}
-                </P>
-                <P>
-                  {post.excerpt}
-                </P>
-                <A href={`/post/${post.slug}`}>
-                  <Button variant="secondary" size="sm">Read more</Button>
-                </A>
-              </div>
-            </Article>
-          ))}
-        </Grid>
-      </div>
+                </ArticleFooter>
+              </Article>
+            ))}
+          </Grid>
+        </SectionContent>
+      </Section>
     </RootLayout>
   )
 } 

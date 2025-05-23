@@ -43,7 +43,7 @@
 }
 
 .article-footer {
-  @apply flex items-center justify-between border-t px-6 py-4;
+  @apply flex items-center justify-between px-6 py-4;
 }
 
 .article-tags {

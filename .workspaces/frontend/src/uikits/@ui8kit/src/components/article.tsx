@@ -222,7 +222,7 @@ function ArticleFooter({
     <footer
       data-slot="article-footer"
       className={cn(
-        "flex items-center justify-between border-t px-6 py-4",
+        "flex items-center justify-between px-6 py-4",
         className
       )}
       {...props}

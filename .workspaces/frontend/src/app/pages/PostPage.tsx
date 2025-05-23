@@ -6,10 +6,18 @@ export type PostPageProps = {
   slug: string
 }
 
+export const NotFound = {
+  title: 'Post Not Found',
+  content: 'The post you\'re looking for doesn\'t exist.',
+  link: '/',
+  linkText: 'Return to homepage'
+} as const;
+
 export function PostPage({ slug }: PostPageProps) {
 
   // Destructure the components
   const {
+    P,
     Article,
     ArticleHeader,
     ArticleTitle,
@@ -28,14 +36,14 @@ export function PostPage({ slug }: PostPageProps) {
 
   if (!post) {
     return (
-      <RootLayout title="Post Not Found">
+      <RootLayout title={NotFound.title}>
         <Article>
           <ArticleHeader>
-            <ArticleTitle>404 - Post Not Found</ArticleTitle>
+            <ArticleTitle>{NotFound.title}</ArticleTitle>
           </ArticleHeader>
           <ArticleContent>
-            <p>The post you're looking for doesn't exist.</p>
-            <a href="/">Return to homepage</a>
+            <p>{NotFound.content}</p>
+            <a href={NotFound.link}>{NotFound.linkText}</a>
           </ArticleContent>
         </Article>
       </RootLayout>
@@ -45,12 +53,6 @@ export function PostPage({ slug }: PostPageProps) {
   return (
     <RootLayout title={post.title}>
       <Article>
-        <ArticleHeader>
-          <ArticleTitle>{post.title}</ArticleTitle>
-          <ArticleMeta>
-            <ArticleTime>Published on {post.date.display}</ArticleTime>
-          </ArticleMeta>
-        </ArticleHeader>
 
         {post.featuredImage && (
           <ArticleFigure>
@@ -64,11 +66,19 @@ export function PostPage({ slug }: PostPageProps) {
           </ArticleFigure>
         )}
 
-        <ArticleContent dangerouslySetInnerHTML={{ __html: post.content }} />
+        <ArticleHeader>
+          <ArticleTitle>{post.title}</ArticleTitle>
+          <ArticleMeta>
+            <ArticleTime>Published on {post.date.display}</ArticleTime>
+          </ArticleMeta>
+        </ArticleHeader>
 
-        {post.categories.length > 0 && (
+        <ArticleContent>
+          <P>{post.content}</P>
+        </ArticleContent>
+
+        {post.categories && (
           <ArticleFooter>
-            <ArticleTitle>Categories</ArticleTitle>
             <ArticleTags>
               {post.categories.map(category => (
                 <ArticleTag key={category.id}>

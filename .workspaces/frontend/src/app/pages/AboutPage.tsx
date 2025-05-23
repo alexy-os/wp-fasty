@@ -1,35 +1,58 @@
 import { RootLayout } from '@app/layouts'
+import { getComponents } from '@/utils/theme'
+// import { page } from '@/context/data'
+
+export const urlImage = 'https://images.unsplash.com/photo-1542125387-c71274d94f0a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=560&q=80';
+
+const page = {
+  title: 'About Our Approach',
+  excerpt: 'Our approach to building web applications',
+  featuredImage: {
+    url: urlImage,
+    alt: 'About Our Approach',
+    caption: 'About Our Approach',
+  },
+  content: 'Our approach to building web applications',
+}
 
 export function AboutPage() {
+  // Destructure the components
+  const {
+    H1, P,
+    Section,
+    Article,
+    ArticleFigure,
+    ArticleImage,
+    ArticleFigcaption,
+    ArticleContent,
+  } = getComponents()
+
   return (
-    <RootLayout title="About Our Approach">
-      <div className="prose lg:prose-xl mx-auto">
-        <h1 className="text-4xl font-bold mb-6">Our Modern Web Architecture</h1>
-        {/* {page.featuredImage && (
-          <img
-            src={page.featuredImage.url}
-            alt={page.featuredImage.alt}
-            className="w-full h-auto mb-8 rounded-lg shadow-lg"
-          />
-        )} */}
-        <div className="content">
-          <p>At our core, we believe in building web applications that respect both users and developers. Our approach combines the best of modern tooling with timeless web principles.</p>
+    <RootLayout
+      title={page.title}
+      description={page.excerpt}
+    >
+      <Section>
+        <Article>
 
-          <h2 className="text-2xl font-bold mb-2">Performance First</h2>
-          <p>By leveraging Elysia with Bun and server-side rendering, we deliver lightning-fast initial page loads. Static HTML generation means users see content immediately, regardless of their device or connection speed.</p>
+          {page.featuredImage && (
+            <ArticleFigure>
+              <ArticleImage
+                src={page.featuredImage.url}
+                alt={page.featuredImage.alt}
+              />
+              {page.featuredImage.caption && (
+                <ArticleFigcaption>{page.featuredImage.caption}</ArticleFigcaption>
+              )}
+            </ArticleFigure>
+          )}
 
-          <h2 className="text-2xl font-bold mb-2">Progressive Enhancement</h2>
-          <p>Rather than shipping megabytes of JavaScript upfront, we enhance interactivity precisely where needed. Through strategic use of HTMX, Web Components, and WebAssembly islands, we maintain speed while adding rich functionality.</p>
-
-          <h3 className="text-xl font-bold mb-2">Future-Proofed Components</h3>
-          <p>Our React component architecture serves as a universal asset. Components remain portable across frameworks, providing insurance against changing technology landscapes and enabling seamless migration paths if needed.</p>
-
-          <h3 className="text-xl font-bold mb-2">SEO Without Compromise</h3>
-          <p>Search engines receive clean, semantic HTML without waiting for JavaScript execution. This approach ensures optimal indexing while maintaining the development experience of modern frameworks.</p>
-
-          <p>This balanced architecture delivers exceptional user experiences today while establishing a foundation that can evolve with both web standards and business requirements.</p>
-        </div>
-      </div>
+          <ArticleContent>
+            <H1>{page.title}</H1>
+            <P>{page.content}</P>
+          </ArticleContent>
+        </Article>
+      </Section>
     </RootLayout>
   )
 } 
