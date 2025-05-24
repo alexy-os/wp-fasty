@@ -17,7 +17,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
   const buttonText = `Switch to ${theme === 'semantic' ? 'Semantic' : 'UI8Kit'}`;
 
   // Get all necessary components directly
-  const { Main, Container, SectionHeader, SectionFooter, Navbar, Nav, NavList, NavItem, NavLink, H2, P, NavGroupButtons } = getComponents();
+  const { Main, Container, SectionHeader, SectionFooter, Navbar, Nav, NavList, NavItem, NavLink, H2, P, NavGroupButtons, Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose } = getComponents();
 
   return (
     <html lang="en">
@@ -67,6 +67,33 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
             {children}
           </Container>
         </Main>
+
+        <Sheet>
+          <SheetTrigger href="#my-sheet" className="button button-primary">
+            Open Menu
+          </SheetTrigger>
+
+          <SheetContent id="my-sheet">
+            <SheetHeader>
+              <SheetTitle>Navigation</SheetTitle>
+              <SheetDescription>Main menu</SheetDescription>
+            </SheetHeader>
+
+            <div className="p-6 flex-1">
+              <nav>
+                <a href="/home">Home</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+              </nav>
+            </div>
+
+            <SheetFooter>
+              <SheetClose className="button button-secondary">
+                Close
+              </SheetClose>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
 
         <SectionFooter>
           <Container>
