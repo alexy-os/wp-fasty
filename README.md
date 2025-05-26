@@ -35,7 +35,7 @@ https://wpfasty.app-server.ru/image/
 
 ***Take a look at the results PageSpeed produces: 100/100/100/100 - a page consisting of 8 blocks, including images:***
 
-[**[ PageSpeed Insights ]**](https://pagespeed.web.dev/analysis/https-wpfasty-app-server-ru-image/6skfxs0iqv?form_factor=desktop)
+[**[ PageSpeed Insights ]**](https://pagespeed.web.dev/analysis/https-wpfasty-app-server-ru-image/l14kqi8ph2?form_factor=mobile)
 
 </div>
 
