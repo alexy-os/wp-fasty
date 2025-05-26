@@ -36,7 +36,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
 
         <SheetLayout>
           <NavBar>
-            <H2><SiteLogo /></H2>
+            <SiteLogo />
             <Nav>
               <NavList>
                 {menu.primary.items.map((item) => (
@@ -86,9 +86,6 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
               <SheetDescription>Navigation menu</SheetDescription>
             </SheetHeader>
 
-            <Main>
-            </Main>
-
             <SheetBody>
               <NavMobileList>
                 {menu.primary.items.map((item) => (
@@ -98,8 +95,6 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
                 ))}
               </NavMobileList>
             </SheetBody>
-
-            <Sidebar />
           </SheetContent>
 
         </SheetLayout>

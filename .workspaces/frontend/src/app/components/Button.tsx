@@ -1,5 +1,9 @@
-import React from 'react';
-import { getTheme } from '@/utils/theme';
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cn } from "@/lib/utils";
+import { getTheme } from "@/utils/theme";
+import { Button as ButtonShadcn, buttonVariants } from "@n4shadcn/ui/button";
+import { type VariantProps } from "class-variance-authority"
 
 export function Button({
   children,
@@ -8,27 +12,51 @@ export function Button({
   className,
   ...props
 }: React.ComponentProps<"button"> & {
-  variant?: string;
-  size?: string;
+  variant?: "default" | "link" | "destructive" | "outline" | "secondary" | "ghost" | null;
+  size?: "default" | "sm" | "lg" | "icon" | null;
 }) {
   const theme = getTheme();
 
-  try {
-    // Dynamically import the Button component based on theme
-    const { Button } = require(`@${theme === 'semantic' ? 'semantic' : 'n4shadcn'}/ui/button`);
+  // Select button component based on theme
+  const ThemedButton =
+    theme === "semantic"
+      ? SemanticButton
+      : ButtonShadcn;
 
-    return (
-      <Button
-        variant={variant}
-        size={size}
-        className={className}
-        {...props}
-      >
-        {children}
-      </Button>
-    );
-  } catch (error) {
-    console.error('Error importing Button component:', error);
-    return null;
-  }
+  return (
+    <ThemedButton
+      variant={variant}
+      size={size}
+      className={className}
+      {...props}
+    >
+      {children}
+    </ThemedButton>
+  );
+}
+
+function SemanticButton({
+  className,
+  variant,
+  size,
+  asChild = false,
+  ...props
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean
+  }) {
+  const Comp = asChild ? Slot : "button"
+
+  return (
+    <Comp
+      data-slot="button"
+      className={cn(
+        "button",
+        variant && `button-${variant}`,
+        size && `button-${size}`,
+        className
+      )}
+      {...props}
+    />
+  );
 }
