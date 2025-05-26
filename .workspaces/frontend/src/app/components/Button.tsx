@@ -11,10 +11,8 @@ export function Button({
   size = 'default',
   className,
   ...props
-}: React.ComponentProps<"button"> & {
-  variant?: "default" | "link" | "destructive" | "outline" | "secondary" | "ghost" | null;
-  size?: "default" | "sm" | "lg" | "icon" | null;
-}) {
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants>) {
   const theme = getTheme();
 
   // Select button component based on theme

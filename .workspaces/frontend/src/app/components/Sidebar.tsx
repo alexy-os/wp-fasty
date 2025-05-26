@@ -7,12 +7,11 @@ export type SidebarProps = {
 
 export function Sidebar({ className }: SidebarProps) {
   const {
-    P, H1,
-    Aside,
-    Grid
+    P,
+    Aside
   } = getComponents();
 
-  const { Card, CardContent, CardHeader, CardTitle, CardFigure, CardImage, CardFigcaption } = getUI();
+  const { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFigure, CardImage, CardFigcaption } = getUI();
 
   return (
     <Aside className={className}>
@@ -31,8 +30,8 @@ export function Sidebar({ className }: SidebarProps) {
           )}
 
           <CardContent>
-            <H1>{page.title}</H1>
-            <P>{page.content}</P>
+            <CardTitle>{page.title}</CardTitle>
+            <CardDescription>{page.content}</CardDescription>
           </CardContent>
         </Card>
         <Card>
