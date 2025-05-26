@@ -3,8 +3,7 @@
 /*@import "./theme.css";*/
 @import "./ui8px/ui/variants.css";
 @import "./ui8px/components/index.css";
-@import "./source/lucide.css";
-/*@import "./source/navigation.css";*/
+@import "./source/latty.css";
 
 /*@source "src/**.{js,jsx,ts,tsx}";*/
 
