@@ -1,7 +1,8 @@
 import React from 'react';
 import { site, menu } from '@/context/data';
-import { getComponents, getTheme } from '@/utils/theme';
+import { getComponents, getTheme, getUI } from '@/utils/theme';
 import { Button, SiteLogo, DarkMode } from '@app/components';
+import { Menu } from 'lucide-react';
 
 export type RootLayoutProps = {
   title: string
@@ -16,8 +17,10 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
   const colorBtn = theme === 'semantic' ? 'bg-sky-500' : 'bg-teal-500 text-white hover:bg-teal-400';
   const buttonText = `Switch to ${theme === 'semantic' ? 'Semantic' : 'UI8Kit'}`;
 
+  const { Card, CardContent } = getUI();
+
   // Get all necessary components directly
-  const { Main, Container, SectionHeader, SectionFooter, Navbar, Nav, NavList, NavItem, NavLink, H2, P, NavGroupButtons } = getComponents();
+  const { Main, Container, SectionHeader, SectionFooter, NavBar, Nav, NavList, NavItem, NavLink, H2, P, NavGroupButtons, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetBody, SheetOverlay, NavMobileList, NavMobileItem, NavMobileLink, SheetLayout } = getComponents();
 
   return (
     <html lang="en">
@@ -32,9 +35,9 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
         }} />
       </head>
       <body className="bg-background text-foreground">
-        <SectionHeader>
-          <Container>
-            <Navbar>
+        <SheetLayout>
+          <SectionHeader>
+            <NavBar>
               <H2><SiteLogo /></H2>
               <Nav>
                 <NavList>
@@ -57,22 +60,55 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
                 >
                   {buttonText}
                 </Button>
+                <SheetTrigger htmlFor="sheet-toggle">
+                  <Menu className="h-5 w-5" />
+                </SheetTrigger>
               </NavGroupButtons>
-            </Navbar>
-          </Container>
-        </SectionHeader>
+            </NavBar>
+          </SectionHeader>
 
-        <Main>
-          <Container>
-            {children}
-          </Container>
-        </Main>
+          <Main>
+            <Container>
+              {children}
+            </Container>
+          </Main>
 
-        <SectionFooter>
-          <Container>
-            <P className="text-center py-4">&copy; {new Date().getFullYear()} {site.title}</P>
-          </Container>
-        </SectionFooter>
+          {/* <Sidebar /> */}
+
+          <SectionFooter>
+            <Container>
+              <P className="text-center py-4">&copy; {new Date().getFullYear()} {site.title}</P>
+            </Container>
+          </SectionFooter>
+
+          {/* Mobile menu overlay and content */}
+          <SheetOverlay />
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Menu</SheetTitle>
+              <SheetDescription>Navigation menu</SheetDescription>
+            </SheetHeader>
+
+            <SheetBody>
+              <NavMobileList>
+                {menu.primary.items.map((item) => (
+                  <NavMobileItem key={item.id}>
+                    <NavMobileLink href={item.url}>{item.title}</NavMobileLink>
+                  </NavMobileItem>
+                ))}
+              </NavMobileList>
+            </SheetBody>
+
+            <SheetFooter>
+              <Card className="w-full">
+                <CardContent>
+                  <P className="text-center py-4">&copy; {new Date().getFullYear()} {site.title}</P>
+                </CardContent>
+              </Card>
+            </SheetFooter>
+          </SheetContent>
+
+        </SheetLayout>
 
         <script src="/src/assets/js/themes.js"></script>
         <script src="/src/assets/js/darkmode.js"></script>

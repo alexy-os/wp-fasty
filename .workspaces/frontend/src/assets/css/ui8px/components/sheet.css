@@ -1,0 +1,35 @@
+.sheet-trigger {
+  @apply inline-flex md:hidden items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all h-9 p-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground cursor-pointer;
+}
+
+.sheet-content {
+  @apply fixed inset-y-0 left-0 z-50 w-full max-w-sm bg-background shadow-lg border-r transform -translate-x-full transition-transform duration-300 ease-out peer-checked:translate-x-0 flex flex-col overflow-hidden;
+}
+
+.sheet-overlay {
+  @apply fixed inset-0 z-40 bg-black/50 backdrop-blur-sm opacity-0 invisible transition-all duration-300 ease-out peer-checked:opacity-100 peer-checked:visible peer-checked:pointer-events-auto transform-gpu cursor-pointer;
+}
+
+.sheet-header {
+  @apply flex flex-col space-y-2 p-6;
+}
+
+.sheet-body {
+  @apply flex-1 overflow-y-auto p-6;
+}
+
+.sheet-footer {
+  @apply mt-auto flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 p-6;
+}
+
+.sheet-title {
+  @apply text-lg font-semibold text-foreground;
+}
+
+.sheet-description {
+  @apply text-sm text-muted-foreground;
+}
+
+.sheet-close {
+  @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer;
+}

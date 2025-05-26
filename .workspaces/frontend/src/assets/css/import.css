@@ -4,6 +4,7 @@
 @import "./ui8px/ui/variants.css";
 @import "./ui8px/components/index.css";
 @import "./source/lucide.css";
+/*@import "./source/navigation.css";*/
 
 /*@source "src/**.{js,jsx,ts,tsx}";*/
 
@@ -153,3 +154,5 @@
         @apply cursor-pointer;
     }
 }
+
+/* custom css */

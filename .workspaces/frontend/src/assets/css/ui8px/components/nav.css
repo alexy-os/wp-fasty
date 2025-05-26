@@ -1,43 +1,63 @@
 .nav {
-  @apply relative flex max-w-max flex-1 items-center justify-center;
+  @apply hidden lg:flex items-center space-x-1;
 }
 
-.navbar {
-  @apply flex justify-between items-center;
-}
-
-.nav-list {
-  @apply flex items-center gap-4;
-}
-
-.nav-link {
-  @apply flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground;
-}
-
-.nav-link-icon {
-  @apply mr-2 h-4 w-4;
-}
-
-.nav-trigger {
-  @apply lg:hidden inline-flex items-center justify-center p-2 rounded-md text-foreground hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring/50;
-}
-
-.nav-mobile {
-  @apply fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden opacity-0 pointer-events-none peer-checked:opacity-100 peer-checked:pointer-events-auto transition-opacity duration-300;
-}
-
-.nav-mobile-link {
-  @apply flex w-full items-center gap-2 rounded-md px-3 py-2 text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground;
+.nav-layout {
+  @apply relative;
 }
 
 .nav-bar {
-  @apply border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full;
+  @apply sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60;
 }
 
-.nav-group-buttons {
-  @apply flex items-center gap-2;
+.nav-list {
+  @apply flex items-center space-x-1;
+}
+
+.nav-item {
+  @apply relative;
+}
+
+.nav-link {
+  @apply inline-flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent data-[active=true]:text-accent-foreground;
+}
+
+.nav-dropdown {
+  @apply relative;
+}
+
+.nav-dropdown-content {
+  @apply absolute top-full left-0 mt-1 w-48 rounded-md bg-popover border border-border shadow-lg z-50 origin-top-left;
+}
+
+.nav-dropdown-item {
+  @apply block px-4 py-2 text-sm text-popover-foreground transition-colors hover:bg-accent hover:text-accent-foreground;
+}
+
+.nav-trigger {
+  @apply lg:hidden inline-flex items-center justify-center p-2 rounded-md text-foreground hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer;
+}
+
+.nav-mobile {
+  @apply fixed inset-0 z-50 lg:hidden opacity-0 invisible -translate-y-full transition-all duration-300 ease-out peer-checked:opacity-100 peer-checked:visible peer-checked:translate-y-0;
+}
+
+.nav-mobile-list {
+  @apply space-y-1;
+}
+
+.nav-mobile-link {
+  @apply flex items-center w-full px-3 py-3 text-base font-medium rounded-md;
+}
+
+.nav-mobile-dropdown-item {
+  @apply block px-3 py-2 text-sm rounded-md;
 }
 
 .nav-group {
-  @apply py-4;
+  @apply py-2;
+}
+
+.nav-group-buttons {
+  @apply flex items-center space-x-2;
 }
