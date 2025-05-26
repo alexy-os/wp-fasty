@@ -2,48 +2,30 @@
 
 ## Overview
 
-This directory contains a reusable component library built with Svelte 5 and Tailwind 4. The primary goal is to create a set of UI components that can be:
+This directory contains a next-generation, reusable component library built with React and Tailwind CSS 4. The primary goal is to empower developers to:
 
-1. Viewed and tested through a Vite application
-2. Used to generate clean semantic HTML templates for any framework
-3. Exported as standalone CSS for use in any environment 
-4. Shared across different template engines (PHP Latte, Twig, JSX, Vue, Handlebars)
+1. Rapidly prototype and build UIs using atomic, semantic-first components
+2. Automatically extract clean, semantic HTML and CSS from utility-based React components
+3. Centralize design tokens for effortless theming and global style consistency
+4. Enable seamless integration with AI/LLM-driven workflows for maximum productivity and accuracy
 
 ## Architecture
 
-The architecture follows a "semantic-first" approach where we leverage Tailwind's utility classes during development but output clean, semantic HTML with corresponding CSS variables.
+Our architecture is designed for the future of UI development, combining the speed of utility-first workflows with the clarity and maintainability of semantic HTML. Components are composed like Lego blocks—atoms, molecules, and organisms—while all design tokens and icons are managed centrally for instant, project-wide updates.
 
 ### Key Features
 
-- **Clean Semantic Output**: All components render with semantic class names (e.g., `button button-primary button-lg`) instead of Tailwind utility classes
-- **Framework Agnostic**: Components can be used as reference for generating templates in any framework
-- **CSS Variables**: All design tokens are exposed as CSS variables for easy theming
-- **Progressive Enhancement**: Uses modern CSS features with appropriate fallbacks
+- **Semantic-First Output**: Components render with clear, semantic class names (e.g., `button button-primary button-lg`) instead of utility class clutter
+- **Automated Extraction**: CLI tools parse your React components (using CVA/cn patterns) and generate semantic CSS and components automatically
+- **Centralized Design Tokens**: All colors, radii, and other tokens are defined in a single location for easy theming
+- **Framework Agnostic Output**: Semantic HTML and CSS can be used in any environment or template engine
+- **AI/LLM-Ready**: Minimal, precise code structure is easy for both humans and AI to understand, extend, and prototype
 
 ## Technical Setup
 
 ### Tailwind 4 Integration
 
-Tailwind 4 brings significant improvements that simplify our setup:
-
-```typescript
-// vite.config.ts
-import { defineConfig } from 'vite'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
-import tailwindcss from '@tailwindcss/vite'
-
-export default defineConfig({
-  plugins: [
-    svelte({
-      compilerOptions: {
-        css: "injected"
-      }
-    }),
-    tailwindcss(),
-  ],
-  // ...
-});
-```
+Tailwind 4 is used for rapid development and prototyping. Utility classes are leveraged during development, but are automatically converted to semantic classes in production builds.
 
 Key Tailwind 4 advantages:
 - No PostCSS configuration required
@@ -52,90 +34,90 @@ Key Tailwind 4 advantages:
 - Simplified theme configuration via `@theme`
 - Improved color function support
 
-### Svelte 5 Configuration
+### React Configuration
 
-Svelte 5 introduces runes and a more modern component model:
-
-```javascript
-// svelte.config.js
-import adapter from "@sveltejs/adapter-auto";
-import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
-
-const config = {
-  preprocess: [vitePreprocess({})],
-  kit: {
-    adapter: adapter(),
-  },
-};
-
-export default config;
-```
-
-Important Svelte 5 features:
-- Enhanced reactivity model
-- Better TypeScript integration
-- Improved performance
-- More flexible component composition
+React components are written using modern best practices (TypeScript, hooks, composition). The system supports atomic design principles and enables easy composition of complex UIs from simple building blocks.
 
 ## Component Design Philosophy
 
 Our components follow a "utility-to-semantic" conversion pattern:
 
-1. Components use Tailwind utilities during development for rapid prototyping
-2. The rendered HTML uses semantic class names (e.g., `button-primary`)
-3. Styles are extracted and compiled into clean CSS with semantic selectors
-4. The resulting HTML is framework-agnostic and follows W3C standards
+1. Components use Tailwind utilities and CVA/cn patterns for rapid prototyping
+2. Rendered HTML uses semantic class names (e.g., `button-primary`)
+3. CLI tools extract and compile styles into clean CSS with semantic selectors
+4. The resulting HTML and CSS are framework-agnostic and follow W3C standards
 
-### Example: Button Component
+### Example: Button Component (React)
 
-```svelte
-<script>
-  export let variant = "primary";
-  export let size = "default";
-  // ...
+```tsx
+import { cva } from 'class-variance-authority';
 
-  // Convert variants to semantic class names
-  $: classes = `button button-${variant} ${size !== "default" ? `button-${size}` : ""}`;
-</script>
+const buttonVariants = cva('button', {
+  variants: {
+    variant: {
+      primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+      secondary: 'bg-secondary text-secondary-foreground',
+      // ...
+    },
+    size: {
+      default: 'h-9 px-4 py-2',
+      lg: 'h-10 px-6',
+      sm: 'h-8 px-3',
+    },
+  },
+  defaultVariants: {
+    variant: 'primary',
+    size: 'default',
+  },
+});
 
-<button class={classes} {disabled} {type}>
-  <slot></slot>
-</button>
-
-<style>
-  /* Semantic styles defined with Tailwind utilities */
-  .button-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90;
-  }
-  /* ... */
-</style>
+export function Button({ variant, size, ...props }) {
+  return <button className={buttonVariants({ variant, size })} {...props} />;
+}
 ```
 
-## From Tailwind to W3C Semantic HTML
+**After extraction:**
 
-This library demonstrates a powerful approach to component development that combines the developer experience of Tailwind with the clean output of semantic HTML:
+```html
+<button class="button button-primary button-lg">Click me</button>
+```
 
-1. **Development**: Use Tailwind's utility classes for rapid development
-2. **Extraction**: Extract styles into semantic CSS classes
-3. **Compilation**: Compile into clean CSS with CSS variables
-4. **Output**: Deliver semantic HTML that follows W3C standards
+And the corresponding CSS:
 
-Benefits of this approach:
-- **Clean markup**: Final HTML contains only semantic class names
-- **Maintainability**: Easier to understand HTML structure
-- **Accessibility**: Better for screen readers and assistive technologies
-- **Performance**: Reduced HTML size in production
-- **Portability**: Easy to use across different frameworks and environments
+```css
+.button-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+.button-lg {
+  @apply h-10 px-6;
+}
+```
+
+## From Utility to Semantic HTML & CSS
+
+This library demonstrates a revolutionary approach to component development:
+
+1. **Development**: Use Tailwind and CVA/cn for rapid, atomic development
+2. **Extraction**: Automated scripts parse components and extract semantic CSS
+3. **Compilation**: Clean, maintainable CSS and HTML are generated for production
+4. **Output**: Semantic, accessible, and framework-agnostic markup
+
+### Why This Matters
+- **Consistency**: Centralized tokens and automated extraction guarantee pixel-perfect, consistent UIs
+- **Maintainability**: Semantic HTML is easier to read, debug, and extend
+- **AI/LLM Synergy**: Minimal, predictable code structure is ideal for AI-driven prototyping and code generation
+- **Performance**: Smaller, cleaner HTML and CSS improve load times and accessibility
+- **Portability**: Use the output in any framework, CMS, or static site generator
 
 ## Usage
 
 ### Development
 
 ```bash
-# Start the Vite development server
+# Start the development server
 bun run dev
 
-# Generate semantic CSS
+# Generate semantic CSS and components
 bun run semantic
 
 # Extract component CSS
@@ -155,10 +137,15 @@ bun run tailwind
 ## Integration Examples
 
 This component library can be used with:
+- React/Next.js applications
 - WordPress themes via PHP includes
 - Static site generators
-- React/Vue/Angular applications
+- Vue/Angular/other frameworks
 - Server-side rendering frameworks
 - Headless CMS systems
 
-The compiled CSS and extracted component templates provide a flexible foundation for any frontend project while maintaining clean, semantic markup.
+The compiled CSS and extracted component templates provide a flexible, future-proof foundation for any frontend project while maintaining clean, semantic markup.
+
+---
+
+**This approach is not just an evolution—it's a revolution in UI development. By combining atomic design, centralized tokens, and automated semantic extraction, you unlock a new level of productivity, consistency, and AI-readiness for your frontend projects.**
