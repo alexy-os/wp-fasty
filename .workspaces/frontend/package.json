@@ -20,7 +20,9 @@
     "ui:clsx": "bun scripts/data-slot-parser.ts",
     "ui:cva": "bun scripts/ui-cva-parser.ts",
     "ui:jsdom": "bun scripts/react-jsdom-html.ts",
-    "ui:tree": "bun scripts/component-tree-builder.ts"
+    "ui:tree": "bun scripts/component-tree-builder.ts",
+    "cn-merge": "bun scripts/cn-css-merge.ts",
+    "cn-merge-dry": "bun scripts/cn-css-merge.ts --dry-run --verbose"
   },
   "dependencies": {
     "@elysiajs/html": "^0.8.0",

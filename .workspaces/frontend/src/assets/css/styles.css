@@ -418,9 +418,6 @@
   .min-h-\[60px\] {
     min-height: 60px;
   }
-  .min-h-screen {
-    min-height: 100vh;
-  }
   .w-4 {
     width: calc(var(--spacing) * 4);
   }
