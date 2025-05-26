@@ -7,7 +7,6 @@ export function ArchivePage() {
   const { A } = getUI()
   const {
     Grid, P,
-    Section,
     SectionHeader,
     SectionContent,
     SectionTitle,
@@ -30,55 +29,53 @@ export function ArchivePage() {
       title={archive.title}
       description={archive.description}
     >
-      <Section>
-        <SectionHeader>
-          <SectionTitle className="text-3xl">{archive.title}</SectionTitle>
-          <SectionDescription>{archive.description}</SectionDescription>
-        </SectionHeader>
+      <SectionHeader>
+        <SectionTitle>{archive.title}</SectionTitle>
+        <SectionDescription>{archive.description}</SectionDescription>
+      </SectionHeader>
 
-        <SectionContent>
-          <Grid>
-            {posts.map((post) => (
-              <Article key={post.id}>
+      <SectionContent>
+        <Grid>
+          {posts.map((post) => (
+            <Article key={post.id}>
 
-                {post.featuredImage && (
-                  <ArticleFigure>
-                    <ArticleImage
-                      src={post.featuredImage.url}
-                      alt={post.featuredImage.alt}
-                    />
-                    {post.featuredImage.caption && (
-                      <ArticleFigcaption>{post.featuredImage.caption}</ArticleFigcaption>
-                    )}
-                  </ArticleFigure>
-                )}
-                <ArticleHeader>
-                  <ArticleTitle>
-                    <A href={`/post/${post.slug}`}>
-                      {post.title}
-                    </A>
-                  </ArticleTitle>
-                  <ArticleMeta>
-                    <ArticleTime>
-                      {post.date.display}
-                    </ArticleTime>
-                  </ArticleMeta>
-                </ArticleHeader>
-                <ArticleContent className="py-0 text-sm text-secondary-foreground">
-                  <P>
-                    {post.excerpt}
-                  </P>
-                </ArticleContent>
-                <ArticleFooter>
+              {post.featuredImage && (
+                <ArticleFigure>
+                  <ArticleImage
+                    src={post.featuredImage.url}
+                    alt={post.featuredImage.alt}
+                  />
+                  {post.featuredImage.caption && (
+                    <ArticleFigcaption>{post.featuredImage.caption}</ArticleFigcaption>
+                  )}
+                </ArticleFigure>
+              )}
+              <ArticleHeader>
+                <ArticleTitle>
                   <A href={`/post/${post.slug}`}>
-                    <Button variant="secondary" size="sm">Read more</Button>
+                    {post.title}
                   </A>
-                </ArticleFooter>
-              </Article>
-            ))}
-          </Grid>
-        </SectionContent>
-      </Section>
+                </ArticleTitle>
+                <ArticleMeta>
+                  <ArticleTime>
+                    {post.date.display}
+                  </ArticleTime>
+                </ArticleMeta>
+              </ArticleHeader>
+              <ArticleContent className="py-0 text-sm text-secondary-foreground">
+                <P>
+                  {post.excerpt}
+                </P>
+              </ArticleContent>
+              <ArticleFooter>
+                <A href={`/post/${post.slug}`}>
+                  <Button variant="secondary" size="sm">Read more</Button>
+                </A>
+              </ArticleFooter>
+            </Article>
+          ))}
+        </Grid>
+      </SectionContent>
     </RootLayout>
   )
 } 

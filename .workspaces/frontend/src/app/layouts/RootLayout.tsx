@@ -1,7 +1,7 @@
 import React from 'react';
 import { site, menu } from '@/context/data';
-import { getComponents, getTheme, getUI } from '@/utils/theme';
-import { Button, SiteLogo, DarkMode } from '@app/components';
+import { getComponents, getTheme } from '@/utils/theme';
+import { Button, SiteLogo, DarkMode, Sidebar } from '@app/components';
 import { Menu } from 'lucide-react';
 
 export type RootLayoutProps = {
@@ -17,10 +17,8 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
   const colorBtn = theme === 'semantic' ? 'bg-sky-500' : 'bg-teal-500 text-white hover:bg-teal-400';
   const buttonText = `Switch to ${theme === 'semantic' ? 'Semantic' : 'UI8Kit'}`;
 
-  const { Card, CardContent } = getUI();
-
   // Get all necessary components directly
-  const { Main, Container, SectionHeader, SectionFooter, NavBar, Nav, NavList, NavItem, NavLink, H2, P, NavGroupButtons, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetBody, SheetOverlay, NavMobileList, NavMobileItem, NavMobileLink, SheetLayout } = getComponents();
+  const { Main, Container, SectionHeader, SectionFooter, NavBar, Nav, NavList, NavItem, NavLink, H2, P, NavGroupButtons, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetBody, SheetOverlay, NavMobileList, NavMobileItem, NavMobileLink, SheetLayout } = getComponents();
 
   return (
     <html lang="en">
@@ -35,6 +33,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
         }} />
       </head>
       <body className="bg-background text-foreground">
+
         <SheetLayout>
           <SectionHeader>
             <NavBar>
@@ -67,13 +66,14 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
             </NavBar>
           </SectionHeader>
 
-          <Main>
-            <Container>
-              {children}
-            </Container>
-          </Main>
-
-          {/* <Sidebar /> */}
+          <Container>
+            <div className="grid grid-cols-3">
+              <Main className="col-span-3 md:col-span-2">
+                {children}
+              </Main>
+              <Sidebar className="col-span-3 md:col-span-1" />
+            </div>
+          </Container>
 
           <SectionFooter>
             <Container>
@@ -81,13 +81,15 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
             </Container>
           </SectionFooter>
 
-          {/* Mobile menu overlay and content */}
           <SheetOverlay />
           <SheetContent>
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
               <SheetDescription>Navigation menu</SheetDescription>
             </SheetHeader>
+
+            <Main>
+            </Main>
 
             <SheetBody>
               <NavMobileList>
@@ -99,13 +101,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
               </NavMobileList>
             </SheetBody>
 
-            <SheetFooter>
-              <Card className="w-full">
-                <CardContent>
-                  <P className="text-center py-4">&copy; {new Date().getFullYear()} {site.title}</P>
-                </CardContent>
-              </Card>
-            </SheetFooter>
+            <Sidebar />
           </SheetContent>
 
         </SheetLayout>

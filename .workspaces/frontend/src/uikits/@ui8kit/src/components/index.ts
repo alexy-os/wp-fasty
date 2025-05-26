@@ -7,3 +7,4 @@ export * from './section';
 export * from './markup';
 export * from './media';
 export * from './sheet';
+export * from './aside';

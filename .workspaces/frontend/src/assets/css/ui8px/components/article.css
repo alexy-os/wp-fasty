@@ -3,7 +3,7 @@
 }
 
 .article-header {
-  @apply flex flex-col gap-2 px-6 pt-6;
+  @apply flex flex-col gap-2 px-6 mt-4;
 }
 
 .article-title {
@@ -27,7 +27,7 @@
 }
 
 .article-image {
-  @apply aspect-video w-full object-cover rounded-t-xl;
+  @apply aspect-video w-full object-cover rounded-t-md;
 }
 
 .article-figcaption {

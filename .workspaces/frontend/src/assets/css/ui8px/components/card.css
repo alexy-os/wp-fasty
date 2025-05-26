@@ -1,9 +1,9 @@
 .card {
-  @apply bg-card text-card-foreground flex flex-col gap-6 rounded-md border py-6 shadow-sm;
+  @apply bg-card text-card-foreground flex flex-col gap-4 rounded-md border shadow-sm;
 }
 
 .card-header {
-  @apply @container/card-header grid-rows-[auto_auto] grid auto-rows-min items-start gap-1.5 px-6 has-[data-slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6;
+  @apply @container/card-header grid-rows-[auto_auto] grid auto-rows-min items-start gap-1.5 mt-4 px-6 has-[data-slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6;
 }
 
 .card-title {
@@ -11,15 +11,31 @@
 }
 
 .card-description {
-  @apply text-muted-foreground text-sm;
+  @apply text-muted-foreground text-sm mb-4;
 }
 
 .card-action {
   @apply col-start-2 row-span-2 row-start-1 self-start justify-self-end;
 }
 
+.article-meta {
+  @apply flex flex-wrap items-center gap-3 text-sm text-muted-foreground;
+}
+
+.article-figure {
+  @apply overflow-hidden;
+}
+
+.article-image {
+  @apply aspect-video w-full object-cover rounded-t-md;
+}
+
+.article-figcaption {
+  @apply mt-2 text-center text-sm text-muted-foreground;
+}
+
 .card-content {
-  @apply px-6;
+  @apply px-6 py-4;
 }
 
 .card-footer {

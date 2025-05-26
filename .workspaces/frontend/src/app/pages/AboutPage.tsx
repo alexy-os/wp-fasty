@@ -19,7 +19,6 @@ export function AboutPage() {
   // Destructure the components
   const {
     H1, P,
-    Section,
     Article,
     ArticleFigure,
     ArticleImage,
@@ -32,27 +31,25 @@ export function AboutPage() {
       title={page.title}
       description={page.excerpt}
     >
-      <Section>
-        <Article>
+      <Article>
 
-          {page.featuredImage && (
-            <ArticleFigure>
-              <ArticleImage
-                src={page.featuredImage.url}
-                alt={page.featuredImage.alt}
-              />
-              {page.featuredImage.caption && (
-                <ArticleFigcaption>{page.featuredImage.caption}</ArticleFigcaption>
-              )}
-            </ArticleFigure>
-          )}
+        {page.featuredImage && (
+          <ArticleFigure>
+            <ArticleImage
+              src={page.featuredImage.url}
+              alt={page.featuredImage.alt}
+            />
+            {page.featuredImage.caption && (
+              <ArticleFigcaption>{page.featuredImage.caption}</ArticleFigcaption>
+            )}
+          </ArticleFigure>
+        )}
 
-          <ArticleContent>
-            <H1>{page.title}</H1>
-            <P>{page.content}</P>
-          </ArticleContent>
-        </Article>
-      </Section>
+        <ArticleContent>
+          <H1>{page.title}</H1>
+          <P>{page.content}</P>
+        </ArticleContent>
+      </Article>
     </RootLayout>
   )
 } 

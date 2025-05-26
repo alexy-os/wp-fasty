@@ -6,6 +6,7 @@
 @import "./source/latty.css";
 
 @source "src/uikits/@ui8kit/src/**.{js,jsx,ts,tsx}";
+@source "src/app/**.{js,jsx,ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
 

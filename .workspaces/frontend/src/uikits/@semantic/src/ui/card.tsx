@@ -60,6 +60,70 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
 
 }
 
+function CardMeta({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+
+      className={cn("article-meta",
+
+      className
+      )}
+      {...props} />);
+
+
+}
+
+function CardFigure({
+  className,
+  ...props
+}: React.ComponentProps<"figure">) {
+  return (
+    <figure
+
+      className={cn("article-figure",
+
+      className
+      )}
+      {...props} />);
+
+
+}
+
+function CardImage({
+  className,
+  ...props
+}: React.ComponentProps<"img">) {
+  return (
+    <img
+
+      className={cn("article-image",
+
+      className
+      )}
+      {...props} />);
+
+
+}
+
+function CardFigcaption({
+  className,
+  ...props
+}: React.ComponentProps<"figcaption">) {
+  return (
+    <figcaption
+
+      className={cn("article-figcaption",
+
+      className
+      )}
+      {...props} />);
+
+
+}
+
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -87,4 +151,8 @@ export {
   CardTitle,
   CardAction,
   CardDescription,
+  CardMeta,
+  CardFigure,
+  CardImage,
+  CardFigcaption,
   CardContent };

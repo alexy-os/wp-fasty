@@ -62,7 +62,7 @@ function ArticleHeader({
     <header
       data-slot="article-header"
       className={cn(
-        "flex flex-col gap-2 px-6 pt-6",
+        "flex flex-col gap-2 px-6 mt-4",
         className
       )}
       {...props}
@@ -158,7 +158,7 @@ function ArticleImage({
     <img
       data-slot="article-image"
       className={cn(
-        "aspect-video w-full object-cover rounded-t-xl",
+        "aspect-video w-full object-cover rounded-t-md",
         className
       )}
       {...props}
