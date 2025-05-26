@@ -47,11 +47,11 @@
 }
 
 .nav-mobile-link {
-  @apply flex items-center w-full px-3 py-3 text-base font-medium rounded-md;
+  @apply flex items-center w-full px-3 py-3 text-base font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent data-[active=true]:text-accent-foreground;
 }
 
 .nav-mobile-dropdown-item {
-  @apply block px-3 py-2 text-sm rounded-md;
+  @apply block px-3 py-2 text-sm rounded-md transition-colors hover:bg-accent hover:text-accent-foreground;
 }
 
 .nav-group {

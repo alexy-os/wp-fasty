@@ -312,9 +312,8 @@ function NavMobileLink({
       data-active={active ? "true" : undefined}
       className={cn("nav-mobile-link",
 
-      "transition-colors hover:bg-accent hover:text-accent-foreground",
-      "data-[active=true]:bg-accent data-[active=true]:text-accent-foreground",
       className
+
       )}
       {...props}>
 
@@ -336,8 +335,8 @@ function NavMobileDropdownItem({
 
       className={cn("nav-mobile-dropdown-item",
 
-      "transition-colors hover:bg-accent hover:text-accent-foreground",
       className
+
       )}
       {...props}>
 

@@ -17,10 +17,9 @@ export function PostPage({ slug }: PostPageProps) {
 
   // Destructure the components
   const {
-    P,
+    P, H1,
     Article,
     ArticleHeader,
-    ArticleTitle,
     ArticleMeta,
     ArticleTime,
     ArticleContent,
@@ -39,7 +38,7 @@ export function PostPage({ slug }: PostPageProps) {
       <RootLayout title={NotFound.title}>
         <Article>
           <ArticleHeader>
-            <ArticleTitle>{NotFound.title}</ArticleTitle>
+            <H1>{NotFound.title}</H1>
           </ArticleHeader>
           <ArticleContent>
             <p>{NotFound.content}</p>
@@ -67,7 +66,7 @@ export function PostPage({ slug }: PostPageProps) {
         )}
 
         <ArticleHeader>
-          <ArticleTitle>{post.title}</ArticleTitle>
+          <H1>{post.title}</H1>
           <ArticleMeta>
             <ArticleTime>Published on {post.date.display}</ArticleTime>
           </ArticleMeta>

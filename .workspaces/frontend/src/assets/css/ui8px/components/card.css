@@ -1,5 +1,5 @@
 .card {
-  @apply bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm;
+  @apply bg-card text-card-foreground flex flex-col gap-6 rounded-md border py-6 shadow-sm;
 }
 
 .card-header {
@@ -7,7 +7,7 @@
 }
 
 .card-title {
-  @apply leading-none font-semibold;
+  @apply leading-none font-bold text-xl mb-2;
 }
 
 .card-description {

@@ -12,7 +12,7 @@ function ArticleBase({
     <article
       data-slot="article"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-4 rounded-xl border shadow-sm",
+        "bg-card text-card-foreground flex flex-col gap-4 rounded-md border shadow-sm",
         className
       )}
       {...props}
@@ -73,12 +73,12 @@ function ArticleHeader({
 function ArticleTitle({
   className,
   ...props
-}: React.ComponentProps<"h2">) {
+}: React.ComponentProps<"h3">) {
   return (
-    <h2
+    <h3
       data-slot="article-title"
       className={cn(
-        "text-2xl font-semibold tracking-tight",
+        "text-2xl font-bold mb-4",
         className
       )}
       {...props}

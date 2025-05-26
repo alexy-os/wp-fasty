@@ -311,10 +311,9 @@ function NavMobileLink({
       data-slot="nav-mobile-link"
       data-active={active ? "true" : undefined}
       className={cn(
-        "flex items-center w-full px-3 py-3 text-base font-medium rounded-md",
-        "transition-colors hover:bg-accent hover:text-accent-foreground",
-        "data-[active=true]:bg-accent data-[active=true]:text-accent-foreground",
+        "flex items-center w-full px-3 py-3 text-base font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent data-[active=true]:text-accent-foreground",
         className
+
       )}
       {...props}
     >
@@ -335,9 +334,9 @@ function NavMobileDropdownItem({
       href={href}
       data-slot="nav-mobile-dropdown-item"
       className={cn(
-        "block px-3 py-2 text-sm rounded-md",
-        "transition-colors hover:bg-accent hover:text-accent-foreground",
+        "block px-3 py-2 text-sm rounded-md transition-colors hover:bg-accent hover:text-accent-foreground",
         className
+
       )}
       {...props}
     >

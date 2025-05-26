@@ -1,20 +1,20 @@
-@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 /*@import "./theme.css";*/
 @import "./ui8px/ui/variants.css";
 @import "./ui8px/components/index.css";
 @import "./source/latty.css";
 
-/*@source "src/**.{js,jsx,ts,tsx}";*/
+@source "src/uikits/@ui8kit/src/**.{js,jsx,ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-base: "Josefin Sans", "Josefin Sans var", ui-sans-serif, system-ui, sans-serif;
+    --font-base: "Nunito", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-    --radius: 0.25rem;
+    --radius: 0.5rem;
     --background: oklch(1 0 0);
     --foreground: oklch(0.141 0.005 285.823);
     --card: oklch(1 0 0);

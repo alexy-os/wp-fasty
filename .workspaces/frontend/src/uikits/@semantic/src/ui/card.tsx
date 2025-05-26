@@ -27,9 +27,9 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
 
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
+function CardTitle({ className, ...props }: React.ComponentProps<"h3">) {
   return (
-    <div
+    <h3
 
       className={cn("card-title", className)}
       {...props} />);

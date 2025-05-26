@@ -73,9 +73,9 @@ function ArticleHeader({
 function ArticleTitle({
   className,
   ...props
-}: React.ComponentProps<"h2">) {
+}: React.ComponentProps<"h3">) {
   return (
-    <h2
+    <h3
 
       className={cn("article-title",
 

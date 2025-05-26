@@ -1,5 +1,5 @@
 /*! tailwindcss v4.1.7 | MIT License | https://tailwindcss.com */
-@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap");
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
@@ -2192,7 +2192,7 @@
   display: flex;
   flex-direction: column;
   gap: calc(var(--spacing) * 6);
-  border-radius: calc(var(--radius) + 4px);
+  border-radius: calc(var(--radius) - 2px);
   border-style: var(--tw-border-style);
   border-width: 1px;
   background-color: var(--card);
@@ -2218,10 +2218,13 @@
   }
 }
 .card-title {
+  margin-bottom: calc(var(--spacing) * 2);
+  font-size: var(--text-xl);
+  line-height: var(--tw-leading, var(--text-xl--line-height));
   --tw-leading: 1;
   line-height: 1;
-  --tw-font-weight: var(--font-weight-semibold);
-  font-weight: var(--font-weight-semibold);
+  --tw-font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 .card-description {
   font-size: var(--text-sm);
@@ -2253,7 +2256,7 @@
   align-items: center;
   justify-content: center;
   gap: calc(var(--spacing) * 2);
-  border-radius: calc(var(--radius) + 4px);
+  border-radius: calc(var(--radius) - 2px);
   border-style: var(--tw-border-style);
   border-width: 1px;
   background-color: var(--background);
@@ -2693,6 +2696,25 @@
   line-height: var(--tw-leading, var(--text-base--line-height));
   --tw-font-weight: var(--font-weight-medium);
   font-weight: var(--font-weight-medium);
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--accent);
+    }
+  }
+  &:hover {
+    @media (hover: hover) {
+      color: var(--accent-foreground);
+    }
+  }
+  &[data-active="true"] {
+    background-color: var(--accent);
+  }
+  &[data-active="true"] {
+    color: var(--accent-foreground);
+  }
 }
 .nav-mobile-dropdown-item {
   display: block;
@@ -2701,6 +2723,19 @@
   padding-block: calc(var(--spacing) * 2);
   font-size: var(--text-sm);
   line-height: var(--tw-leading, var(--text-sm--line-height));
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--accent);
+    }
+  }
+  &:hover {
+    @media (hover: hover) {
+      color: var(--accent-foreground);
+    }
+  }
 }
 .nav-group {
   padding-block: calc(var(--spacing) * 2);
@@ -2722,6 +2757,7 @@
   font-weight: var(--font-weight-bold);
 }
 .h2 {
+  margin-bottom: calc(var(--spacing) * 4);
   font-size: var(--text-2xl);
   line-height: var(--tw-leading, var(--text-2xl--line-height));
   --tw-font-weight: var(--font-weight-bold);
@@ -2758,7 +2794,7 @@
   display: flex;
   flex-direction: column;
   gap: calc(var(--spacing) * 4);
-  border-radius: calc(var(--radius) + 4px);
+  border-radius: calc(var(--radius) - 2px);
   border-style: var(--tw-border-style);
   border-width: 1px;
   background-color: var(--card);
@@ -2774,12 +2810,11 @@
   padding-top: calc(var(--spacing) * 6);
 }
 .article-title {
+  margin-bottom: calc(var(--spacing) * 4);
   font-size: var(--text-2xl);
   line-height: var(--tw-leading, var(--text-2xl--line-height));
-  --tw-font-weight: var(--font-weight-semibold);
-  font-weight: var(--font-weight-semibold);
-  --tw-tracking: var(--tracking-tight);
-  letter-spacing: var(--tracking-tight);
+  --tw-font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 .article-meta {
   display: flex;
@@ -2893,7 +2928,7 @@
   -webkit-mask-image: var(--latty-box);
 }
 :root {
-  --radius: 0.25rem;
+  --radius: 0.5rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);

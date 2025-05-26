@@ -1,5 +1,5 @@
 // bun run cn-merge-dry ./src/components
-// cn .workspaces/frontend && bun run cn-merge ./src/uikits/@ui8kit/src/components
+// cd .workspaces/frontend && bun run cn-merge ./src/uikits/@ui8kit/src/components
 import * as fs from 'fs'
 import * as path from 'path'
 import * as ts from 'typescript'

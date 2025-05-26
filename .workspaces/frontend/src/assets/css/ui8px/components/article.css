@@ -1,5 +1,5 @@
 .article {
-  @apply bg-card text-card-foreground flex flex-col gap-4 rounded-xl border shadow-sm;
+  @apply bg-card text-card-foreground flex flex-col gap-4 rounded-md border shadow-sm;
 }
 
 .article-header {
@@ -7,7 +7,7 @@
 }
 
 .article-title {
-  @apply text-2xl font-semibold tracking-tight;
+  @apply text-2xl font-bold mb-4;
 }
 
 .article-meta {

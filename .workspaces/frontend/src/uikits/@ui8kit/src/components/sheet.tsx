@@ -55,7 +55,7 @@ interface SheetContentProps {
 // Trigger component - uses peer checkbox
 function SheetTrigger({ children, className, ...props }: SheetTriggerProps) {
   return (
-    <label htmlFor="sheet-toggle" data-slot="sheet-trigger" className={cn("inline-flex md:hidden items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all h-9 p-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground cursor-pointer", className)} {...props}>
+    <label htmlFor="sheet-toggle" data-slot="sheet-trigger" className={cn("inline-flex md:hidden items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all h-9 p-2 border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground cursor-pointer", className)} {...props}>
       {children}
     </label>
   )

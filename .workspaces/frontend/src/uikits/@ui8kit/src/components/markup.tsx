@@ -17,7 +17,7 @@ function H2({ className, ...props }: React.ComponentProps<"h2">) {
   return (
     <h2
       data-slot="h2"
-      className={cn("text-2xl font-bold", className)}
+      className={cn("text-2xl font-bold mb-4", className)}
       {...props}
     />
   )
