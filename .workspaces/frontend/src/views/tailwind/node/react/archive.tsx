@@ -15,8 +15,8 @@ const ArchivePage = ({
     <div className="w-full">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         {posts && <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {posts.map((post: any) => <article key={post.id} className="bg-card text-card-foreground flex flex-col gap-4 rounded-md border shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {posts.map((post: any) => <article key={post.id} className="bg-card text-card-foreground flex flex-col gap-6 rounded-md border shadow-sm">
               {post.thumbnail && <a href={post.url}>
                 <img src={post.thumbnail.url} alt={post.thumbnail.alt} className="aspect-video w-full object-cover rounded-t-xl" />
               </a>}

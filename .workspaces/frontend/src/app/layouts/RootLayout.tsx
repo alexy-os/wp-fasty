@@ -18,7 +18,7 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
   const buttonText = `Switch to ${theme === 'semantic' ? 'Semantic' : 'UI8Kit'}`;
 
   // Get all necessary components directly
-  const { Main, Container, SectionHeader, SectionFooter, NavBar, Nav, NavList, NavItem, NavLink, H2, P, NavGroupButtons, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetBody, SheetOverlay, NavMobileList, NavMobileItem, NavMobileLink, SheetLayout } = getComponents();
+  const { Main, Container, Section, SectionFooter, NavBar, Nav, NavList, NavItem, NavLink, H2, P, NavGroupButtons, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetBody, SheetOverlay, NavMobileList, NavMobileItem, NavMobileLink, SheetLayout } = getComponents();
 
   return (
     <html lang="en">
@@ -35,45 +35,43 @@ export function RootLayout({ title, description, children }: RootLayoutProps) {
       <body className="bg-background text-foreground">
 
         <SheetLayout>
-          <SectionHeader>
-            <NavBar>
-              <H2><SiteLogo /></H2>
-              <Nav>
-                <NavList>
-                  {menu.primary.items.map((item) => (
-                    <NavItem key={item.id}>
-                      <NavLink href={item.url}>{item.title}</NavLink>
-                    </NavItem>
-                  ))}
-                </NavList>
-              </Nav>
+          <NavBar>
+            <H2><SiteLogo /></H2>
+            <Nav>
+              <NavList>
+                {menu.primary.items.map((item) => (
+                  <NavItem key={item.id}>
+                    <NavLink href={item.url}>{item.title}</NavLink>
+                  </NavItem>
+                ))}
+              </NavList>
+            </Nav>
 
-              <NavGroupButtons>
-                <DarkMode />
-                <Button
-                  id="theme-toggle"
-                  size="sm"
-                  className={`${colorBtn} !rounded-full !text-white`}
-                  data-current-theme={theme}
-                  title={`Current Theme: ${theme}`}
-                >
-                  {buttonText}
-                </Button>
-                <SheetTrigger htmlFor="sheet-toggle">
-                  <Menu className="h-5 w-5" />
-                </SheetTrigger>
-              </NavGroupButtons>
-            </NavBar>
-          </SectionHeader>
+            <NavGroupButtons>
+              <DarkMode />
+              <Button
+                id="theme-toggle"
+                size="sm"
+                className={`${colorBtn} !rounded-full !text-white`}
+                data-current-theme={theme}
+                title={`Current Theme: ${theme}`}
+              >
+                {buttonText}
+              </Button>
+              <SheetTrigger htmlFor="sheet-toggle">
+                <Menu className="h-5 w-5" />
+              </SheetTrigger>
+            </NavGroupButtons>
+          </NavBar>
 
-          <Container>
-            <div className="grid grid-cols-3">
+          <Section>
+            <Container className="grid grid-cols-3 gap-6">
               <Main className="col-span-3 md:col-span-2">
                 {children}
               </Main>
               <Sidebar className="col-span-3 md:col-span-1" />
-            </div>
-          </Container>
+            </Container>
+          </Section>
 
           <SectionFooter>
             <Container>

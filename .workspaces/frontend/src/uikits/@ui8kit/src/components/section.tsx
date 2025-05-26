@@ -2,10 +2,11 @@ import * as React from "react"
 import { cn } from "@/lib/utils";
 
 function Section({ className, ...props }: React.ComponentProps<"section">) {
+  // TODO: py-6 md:py-12 lg:py-24
   return (
     <section
       data-slot="section"
-      className={cn("w-full py-6 md:py-12 lg:py-24", className)}
+      className={cn("w-full py-6 md:py-12 lg:py-18", className)}
       {...props}
     />
   )
@@ -41,7 +42,7 @@ function SectionHeader({ className, ...props }: React.ComponentProps<"header">) 
   return (
     <header
       data-slot="section-header"
-      className={cn("w-full py-6 md:py-12 lg:py-24", className)}
+      className={cn("w-full py-6 md:py-12 lg:py-18", className)}
       {...props}
     />
   )
@@ -125,7 +126,7 @@ function Grid({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="grid"
-      className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", className)}
+      className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6", className)}
       {...props}
     />
   )

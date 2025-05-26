@@ -8,11 +8,9 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-red-200: oklch(88.5% 0.062 18.334);
     --color-teal-400: oklch(77.7% 0.152 181.912);
     --color-teal-500: oklch(70.4% 0.14 182.503);
     --color-sky-500: oklch(68.5% 0.169 237.323);
-    --color-blue-200: oklch(88.2% 0.059 254.128);
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-black: #000;
     --color-white: #fff;
@@ -47,7 +45,7 @@
     --aspect-video: 16 / 9;
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    --default-font-family: var(--font-sans);
+    --default-font-family: "Nunito", ui-sans-serif, system-ui, sans-serif;
     --default-mono-font-family: var(--font-mono);
   }
 }
@@ -703,9 +701,6 @@
       background-color: color-mix(in oklab, var(--color-black) 50%, transparent);
     }
   }
-  .bg-blue-200 {
-    background-color: var(--color-blue-200);
-  }
   .bg-card {
     background-color: var(--card);
   }
@@ -732,9 +727,6 @@
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--primary) 10%, transparent);
     }
-  }
-  .bg-red-200 {
-    background-color: var(--color-red-200);
   }
   .bg-secondary {
     background-color: var(--secondary);
@@ -1439,16 +1431,6 @@
       grid-column: span 2 / span 2;
     }
   }
-  .md\:col-span-3 {
-    @media (width >= 48rem) {
-      grid-column: span 3 / span 3;
-    }
-  }
-  .md\:col-span-9 {
-    @media (width >= 48rem) {
-      grid-column: span 9 / span 9;
-    }
-  }
   .md\:hidden {
     @media (width >= 48rem) {
       display: none;
@@ -1457,11 +1439,6 @@
   .md\:grid-cols-2 {
     @media (width >= 48rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  .md\:grid-cols-12 {
-    @media (width >= 48rem) {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
     }
   }
   .md\:px-6 {
@@ -1503,6 +1480,11 @@
   .lg\:px-8 {
     @media (width >= 64rem) {
       padding-inline: calc(var(--spacing) * 8);
+    }
+  }
+  .lg\:py-18 {
+    @media (width >= 64rem) {
+      padding-block: calc(var(--spacing) * 18);
     }
   }
   .lg\:py-24 {
@@ -2244,7 +2226,7 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--spacing) * 6);
   border-radius: calc(var(--radius) - 2px);
   border-style: var(--tw-border-style);
   border-width: 1px;
@@ -2501,12 +2483,12 @@
 }
 .section {
   width: 100%;
-  padding-block: calc(var(--spacing) * 6);
+  padding-block: calc(var(--spacing) * 4);
   @media (width >= 48rem) {
-    padding-block: calc(var(--spacing) * 12);
+    padding-block: calc(var(--spacing) * 8);
   }
   @media (width >= 64rem) {
-    padding-block: calc(var(--spacing) * 24);
+    padding-block: calc(var(--spacing) * 16);
   }
 }
 .container {
@@ -2539,6 +2521,7 @@
   width: 100%;
 }
 .section-header {
+  width: 100%;
   padding-block: calc(var(--spacing) * 6);
   @media (width >= 48rem) {
     padding-block: calc(var(--spacing) * 12);
@@ -2576,7 +2559,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--spacing) * 6);
   @media (width >= 48rem) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2880,7 +2863,7 @@
 .article {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 4);
+  gap: calc(var(--spacing) * 6);
   border-radius: calc(var(--radius) - 2px);
   border-style: var(--tw-border-style);
   border-width: 1px;
@@ -3015,7 +2998,7 @@
   -webkit-mask-image: var(--latty-box);
 }
 :root {
-  --radius: 0.5rem;
+  --radius: 0.75rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);

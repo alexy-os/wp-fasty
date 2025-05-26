@@ -1,5 +1,5 @@
 .section {
-  @apply w-full py-6 md:py-12 lg:py-24;
+  @apply w-full py-4 md:py-8 lg:py-16;
 }
 
 .container {
@@ -11,7 +11,7 @@
 }
 
 .section-header {
-  @apply py-6 md:py-12 lg:py-24;
+  @apply w-full py-6 md:py-12 lg:py-24;
 }
 
 .section-title {
@@ -39,5 +39,5 @@
 }
 
 .grid {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
 }

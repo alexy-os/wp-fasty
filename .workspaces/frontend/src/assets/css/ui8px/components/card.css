@@ -1,5 +1,5 @@
 .card {
-  @apply bg-card text-card-foreground flex flex-col gap-4 rounded-md border shadow-sm;
+  @apply bg-card text-card-foreground flex flex-col gap-6 rounded-md border shadow-sm;
 }
 
 .card-header {

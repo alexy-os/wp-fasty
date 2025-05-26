@@ -16,7 +16,7 @@ export function Sidebar({ className }: SidebarProps) {
 
   return (
     <Aside className={className}>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         <Card>
           {page.featuredImage && (
             <CardFigure>
