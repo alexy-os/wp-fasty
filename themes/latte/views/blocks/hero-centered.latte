@@ -1,6 +1,6 @@
 {**
- * Block: hero-centered — UI8Kit Button primitives.
- * Context: site
+ * Block: hero-centered — UI8Kit Link CTAs.
+ * Context: site, hero
  *}
 {capture $heroInner}
 	{capture $titleHtml}{$site['title']}{/capture}
@@ -12,10 +12,20 @@
 	{/if}
 
 	{capture $actions}
-		{capture $explore}Explore{/capture}
-		{capture $learn}Learn more{/capture}
-		{include 'button/Button.latte', variant: 'default', size: 'default', class: 'rounded-full', children: (string) $explore}
-		{include 'button/Button.latte', variant: 'secondary', size: 'default', class: 'rounded-full', children: (string) $learn}
+		{capture $explore}{$hero['primary_label'] ?? 'Explore'}{/capture}
+		{capture $learn}{$hero['secondary_label'] ?? 'Learn more'}{/capture}
+		{if !empty($hero['primary_url'])}
+			{capture $primary}
+				{include 'link/Link.latte', href: $hero['primary_url'], variant: 'default', class: 'inline-flex h-10 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground no-underline hover:opacity-90', children: (string) $explore}
+			{/capture}
+			{$primary|noescape}
+		{/if}
+		{if !empty($hero['secondary_url'])}
+			{capture $secondary}
+				{include 'link/Link.latte', href: $hero['secondary_url'], variant: 'muted', class: 'inline-flex h-10 items-center rounded-full border border-input bg-secondary px-4 text-sm font-medium no-underline', children: (string) $learn}
+			{/capture}
+			{$secondary|noescape}
+		{/if}
 	{/capture}
 	{include 'group/Group.latte', class: 'mt-8 flex flex-wrap justify-center gap-3', children: (string) $actions}
 {/capture}

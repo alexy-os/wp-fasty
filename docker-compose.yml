@@ -37,6 +37,7 @@ services:
       - wp_data:/var/www/html
       - .:/var/www/wpfasty
       - ./themes/latte:/var/www/html/wp-content/themes/latte
+      - ./themes/latte-skin:/var/www/html/wp-content/themes/latte-skin
       - ./.workspaces:/var/www/html/wp-content/.workspaces
     depends_on:
       db:
@@ -63,6 +64,7 @@ services:
       - wp_data:/var/www/html
       - .:/var/www/wpfasty
       - ./themes/latte:/var/www/html/wp-content/themes/latte
+      - ./themes/latte-skin:/var/www/html/wp-content/themes/latte-skin
       - ./.workspaces:/var/www/html/wp-content/.workspaces
     depends_on:
       - wordpress

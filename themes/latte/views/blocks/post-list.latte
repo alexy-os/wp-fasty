@@ -1,10 +1,10 @@
 {**
  * Block: post-list
- * Context: posts[], pagination
+ * Context: posts[], pagination, labels
  *}
 {capture $list}
 	{if empty($posts)}
-		<p class="py-16 text-center text-muted-foreground">No posts found.</p>
+		<p class="py-16 text-center text-muted-foreground">{$labels['no_posts'] ?? 'No posts found.'}</p>
 	{else}
 		{capture $cards}
 			{foreach $posts as $post}
@@ -30,11 +30,11 @@
 	{if !empty($pagination)}
 		<nav class="mt-10 flex justify-center gap-4" aria-label="Pagination">
 			{if $pagination['prev_url']}
-				<a href="{$pagination['prev_url']}" class="text-sm text-primary">Previous</a>
+				<a href="{$pagination['prev_url']}" class="text-sm text-primary">{$labels['previous'] ?? 'Previous'}</a>
 			{/if}
 			<span class="text-sm text-muted-foreground">{$pagination['current']} / {$pagination['total']}</span>
 			{if $pagination['next_url']}
-				<a href="{$pagination['next_url']}" class="text-sm text-primary">Next</a>
+				<a href="{$pagination['next_url']}" class="text-sm text-primary">{$labels['next'] ?? 'Next'}</a>
 			{/if}
 		</nav>
 	{/if}

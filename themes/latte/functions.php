@@ -30,4 +30,11 @@ WPFasty\Core\Application::getInstance();
 
 add_action('init', static function (): void {
     load_theme_textdomain('latte', get_template_directory() . '/languages');
+
+    if (is_child_theme()) {
+        $domain = wp_get_theme()->get('TextDomain');
+        if (is_string($domain) && $domain !== '' && $domain !== 'latte') {
+            load_child_theme_textdomain($domain, get_stylesheet_directory() . '/languages');
+        }
+    }
 });

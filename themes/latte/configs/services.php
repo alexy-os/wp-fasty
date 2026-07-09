@@ -19,12 +19,20 @@ return function (Container $container): void {
     $container->addTag('hooks.assets', ContainerInterface::TAG_BOOTABLE);
 
     $container->singleton('template.engine', static function (): LatteEngine {
-        $themeDir = get_template_directory();
-        return new LatteEngine(
-            $themeDir . '/views',
-            $themeDir . '/~cache',
-            PrimitivesLocator::resolve($themeDir),
-        );
+        $templateDir = get_template_directory();
+        $stylesheetDir = get_stylesheet_directory();
+        $primitives = PrimitivesLocator::resolve($templateDir);
+
+        $roots = array_values(array_filter([
+            $stylesheetDir . '/views',
+            $templateDir . '/views',
+            $primitives,
+        ]));
+
+        /** @var list<string> $roots */
+        $roots = apply_filters('wpfasty_latte_roots', $roots);
+
+        return new LatteEngine($roots, $templateDir . '/~cache');
     });
 
     $container->singleton('data.context_factory', static fn () => new ContextFactory());

@@ -1,0 +1,9 @@
+/**
+ * Latte Skin — token overrides (loaded after parent tokens).
+ */
+
+:root {
+  --primary: oklch(0.45 0.12 250);
+  --primary-foreground: oklch(0.98 0 0);
+  --radius: 0.75rem;
+}

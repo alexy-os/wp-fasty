@@ -1,6 +1,3 @@
-{** Front page — hero + optional featured posts *}
+{** front-page — generated from presets/themes/latte.json *}
 {include 'blocks/hero-centered.latte'}
 {include 'blocks/featured-grid.latte'}
-{if isset($page) && !empty($page['content'])}
-	{include 'blocks/post-content.latte'}
-{/if}

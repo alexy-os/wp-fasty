@@ -15,6 +15,7 @@ final class ContextFactory
         $post = $post ?? get_post();
         $context = array_merge($this->common(), [
             'page' => $post instanceof \WP_Post ? $this->post($post) : null,
+            'hero' => $this->hero(),
         ]);
 
         if (is_front_page()) {
@@ -56,6 +57,7 @@ final class ContextFactory
             ],
             'posts' => $posts,
             'pagination' => $this->pagination(),
+            'labels' => $this->labels(),
         ]);
 
         return apply_filters('wpfasty_context', $context, null);
@@ -77,20 +79,85 @@ final class ContextFactory
         return apply_filters('wpfasty_context', $context, null);
     }
 
-    /** @return array{site: array<string, mixed>, menu: array<string, mixed>} */
+    /**
+     * @return array{
+     *   site: array<string, mixed>,
+     *   menu: array<string, mixed>,
+     *   shell: string,
+     *   labels: array<string, string>
+     * }
+     */
     private function common(): array
     {
+        $shell = (string) apply_filters('wpfasty_shell', 'classic');
+
         return [
             'site' => [
                 'title' => get_bloginfo('name'),
                 'url' => home_url('/'),
                 'theme_url' => get_template_directory_uri(),
+                'stylesheet_url' => get_stylesheet_directory_uri(),
                 'lang' => get_bloginfo('language'),
                 'description' => get_bloginfo('description'),
                 'charset' => get_bloginfo('charset'),
                 'year' => gmdate('Y'),
+                'logo' => $this->logo(),
             ],
             'menu' => $this->menus(),
+            'shell' => $shell === 'app-shell' ? 'app-shell' : 'classic',
+            'labels' => $this->labels(),
+        ];
+    }
+
+    /** @return array<string, string> */
+    private function labels(): array
+    {
+        return [
+            'featured' => __('Featured', 'latte'),
+            'latest_articles' => __('Latest articles', 'latte'),
+            'no_posts' => __('No posts found.', 'latte'),
+            'previous' => __('Previous', 'latte'),
+            'next' => __('Next', 'latte'),
+            'skip_to_content' => __('Skip to content', 'latte'),
+            'open_menu' => __('Open menu', 'latte'),
+            'close_menu' => __('Close menu', 'latte'),
+            'primary_nav' => __('Primary', 'latte'),
+        ];
+    }
+
+    /** @return array<string, string> */
+    private function hero(): array
+    {
+        $postsPageId = (int) get_option('page_for_posts');
+        $blogUrl = $postsPageId > 0 ? (string) get_permalink($postsPageId) : home_url('/');
+
+        return [
+            'primary_label' => __('Explore', 'latte'),
+            'primary_url' => $blogUrl,
+            'secondary_label' => __('Learn more', 'latte'),
+            'secondary_url' => home_url('/'),
+        ];
+    }
+
+    /** @return array<string, mixed>|null */
+    private function logo(): ?array
+    {
+        if (!function_exists('has_custom_logo') || !has_custom_logo()) {
+            return null;
+        }
+        $id = (int) get_theme_mod('custom_logo');
+        if ($id <= 0) {
+            return null;
+        }
+        $src = wp_get_attachment_image_src($id, 'full');
+        if (!$src) {
+            return null;
+        }
+        return [
+            'url' => $src[0],
+            'width' => $src[1],
+            'height' => $src[2],
+            'alt' => (string) get_post_meta($id, '_wp_attachment_image_alt', true),
         ];
     }
 
@@ -117,25 +184,9 @@ final class ContextFactory
 
         if (has_post_thumbnail($post)) {
             $id = (int) get_post_thumbnail_id($post);
-            $full = wp_get_attachment_image_src($id, 'large');
-            $thumb = wp_get_attachment_image_src($id, 'medium');
             $alt = (string) get_post_meta($id, '_wp_attachment_image_alt', true);
-            if ($full) {
-                $data['featuredImage'] = [
-                    'url' => $full[0],
-                    'width' => $full[1],
-                    'height' => $full[2],
-                    'alt' => $alt,
-                ];
-            }
-            if ($thumb) {
-                $data['thumbnail'] = [
-                    'url' => $thumb[0],
-                    'width' => $thumb[1],
-                    'height' => $thumb[2],
-                    'alt' => $alt,
-                ];
-            }
+            $data['featuredImage'] = $this->image($id, 'large', $alt);
+            $data['thumbnail'] = $this->image($id, 'medium', $alt);
         }
 
         foreach (get_the_category($post->ID) ?: [] as $cat) {
@@ -147,6 +198,24 @@ final class ContextFactory
         }
 
         return $data;
+    }
+
+    /** @return array<string, mixed>|null */
+    private function image(int $id, string $size, string $alt): ?array
+    {
+        $src = wp_get_attachment_image_src($id, $size);
+        if (!$src) {
+            return null;
+        }
+
+        return [
+            'url' => $src[0],
+            'width' => $src[1],
+            'height' => $src[2],
+            'alt' => $alt,
+            'srcset' => (string) (wp_get_attachment_image_srcset($id, $size) ?: ''),
+            'sizes' => (string) (wp_get_attachment_image_sizes($id, $size) ?: ''),
+        ];
     }
 
     /** @return array<string, array{items: list<array<string, mixed>>}> */
@@ -200,6 +269,9 @@ final class ContextFactory
     private function pagination(): ?array
     {
         global $wp_query;
+        if (!isset($wp_query) || !is_object($wp_query)) {
+            return null;
+        }
         $max = (int) $wp_query->max_num_pages;
         if ($max <= 1) {
             return null;

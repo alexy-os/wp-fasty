@@ -1,0 +1,12 @@
+{
+  "id": "latte-skin",
+  "name": "Latte Skin",
+  "slug": "latte-skin",
+  "textDomain": "latte-skin",
+  "parent": "latte",
+  "kind": "skin",
+  "layout": "layouts/classic",
+  "style": "styles/default",
+  "templates": {},
+  "features": []
+}

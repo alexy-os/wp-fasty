@@ -1,6 +1,6 @@
 {**
  * Block: featured-grid — UI8Kit Card primitives.
- * Context: posts[]
+ * Context: posts[], labels
  *}
 {if isset($posts) && count($posts) > 0}
 	{capture $cards}
@@ -14,6 +14,8 @@
 							class="aspect-video w-full object-cover"
 							width="{$post['thumbnail']['width'] ?? null}"
 							height="{$post['thumbnail']['height'] ?? null}"
+							srcset="{$post['thumbnail']['srcset'] ?? ''}"
+							sizes="{$post['thumbnail']['sizes'] ?? ''}"
 							loading="lazy"
 						>
 					</a>
@@ -36,9 +38,9 @@
 	{/capture}
 
 	{capture $sectionInner}
-		{capture $heading}Featured{/capture}
+		{capture $heading}{$labels['featured'] ?? 'Featured'}{/capture}
 		{include 'title/Title.latte', as: 2, class: 'mb-2 text-center text-3xl font-bold tracking-tight', children: (string) $heading}
-		<p class="mb-10 text-center text-muted-foreground">Latest articles</p>
+		<p class="mb-10 text-center text-muted-foreground">{$labels['latest_articles'] ?? 'Latest articles'}</p>
 		{include 'grid/Grid.latte', class: 'grid gap-6 md:grid-cols-2 lg:grid-cols-3', children: (string) $cards}
 	{/capture}
 

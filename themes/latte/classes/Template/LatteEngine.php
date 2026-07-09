@@ -7,24 +7,28 @@ namespace WPFasty\Template;
 use Latte\Engine;
 
 /**
- * Latte engine — theme views + UI8Kit primitives root.
+ * Latte engine — multi-root loader (child views → parent views → UI8Kit).
  */
 final class LatteEngine implements TemplateEngineInterface
 {
     private Engine $latte;
 
-    public function __construct(string $viewsDir, string $cacheDir, ?string $primitivesDir = null)
+    /**
+     * @param array<int, string> $roots Absolute directories; first match wins
+     */
+    public function __construct(array $roots, string $cacheDir)
     {
-        if (!is_dir($viewsDir)) {
-            throw new \RuntimeException("Views directory not found: {$viewsDir}");
-        }
-        if (!is_dir($cacheDir) && !mkdir($cacheDir, 0755, true) && !is_dir($cacheDir)) {
-            throw new \RuntimeException("Cannot create cache: {$cacheDir}");
+        $roots = array_values(array_filter(
+            $roots,
+            static fn (mixed $dir): bool => is_string($dir) && $dir !== '' && is_dir($dir)
+        ));
+
+        if ($roots === []) {
+            throw new \RuntimeException('LatteEngine requires at least one views root');
         }
 
-        $roots = [$viewsDir];
-        if ($primitivesDir !== null && is_dir($primitivesDir)) {
-            $roots[] = $primitivesDir;
+        if (!is_dir($cacheDir) && !mkdir($cacheDir, 0755, true) && !is_dir($cacheDir)) {
+            throw new \RuntimeException('Cannot create cache directory: ' . $cacheDir);
         }
 
         $this->latte = new Engine();
@@ -34,6 +38,9 @@ final class LatteEngine implements TemplateEngineInterface
         $this->latte->addExtension(new WordPressExtension());
     }
 
+    /**
+     * @param array<string, mixed> $context
+     */
     public function render(string $template, array $context = []): string
     {
         if (!str_ends_with($template, '.latte')) {
@@ -42,3 +49,4 @@ final class LatteEngine implements TemplateEngineInterface
         return $this->latte->renderToString($template, $context);
     }
 }
+

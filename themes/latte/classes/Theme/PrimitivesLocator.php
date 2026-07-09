@@ -27,6 +27,7 @@ final class PrimitivesLocator
     {
         return [
             dirname($themeDir, 2) . '/.workspaces/ui8kit-latte/ui',
+            $themeDir . '/lib/ui8kit-latte/ui',
             $themeDir . '/vendor/ui8kit/latte-primitives/ui',
             $themeDir . '/vendor/ui8kit/ui',
         ];

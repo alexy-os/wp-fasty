@@ -1,0 +1,21 @@
+{**
+ * App-shell header — sheet trigger (mobile) + brand.
+ *}
+<header class="site-header flex h-16 items-center justify-between border-b border-border bg-background px-4 md:px-6">
+	<div class="flex items-center gap-3">
+		<button
+			type="button"
+			id="app-shell-mobile-sheet-trigger"
+			class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden"
+			data-ui8kit-dialog-open="true"
+			data-ui8kit-dialog-target="app-shell-mobile-sheet-panel"
+			aria-controls="app-shell-mobile-sheet-panel"
+			aria-haspopup="dialog"
+			aria-expanded="false"
+			aria-label="Open menu"
+		>
+			<span aria-hidden="true">☰</span>
+		</button>
+		<span class="text-sm font-medium text-muted-foreground md:hidden">{$site['title']}</span>
+	</div>
+</header>

@@ -24,6 +24,8 @@ themes/*/~cache/
 packages/ui8kit-codegen/generated/
 dist/
 themes/dist/
+.phpunit.cache/
+vendor/
 *.log
 
 # Local theme build stamps

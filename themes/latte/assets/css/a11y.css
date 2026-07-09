@@ -1,0 +1,45 @@
+/**
+ * Accessibility helpers — skip link + sheet scroll lock.
+ */
+
+.screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal !important;
+}
+
+.screen-reader-text:focus {
+  background-color: var(--background);
+  border-radius: 3px;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);
+  clip: auto !important;
+  clip-path: none;
+  color: var(--foreground);
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  height: auto;
+  left: 0.5rem;
+  line-height: normal;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  top: 0.5rem;
+  width: auto;
+  z-index: 100000;
+}
+
+.skip-link:focus {
+  z-index: 100001;
+}
+
+body:has(#classic-mobile-sheet-panel:not([hidden])),
+body:has(#app-shell-mobile-sheet-panel:not([hidden])) {
+  overflow: hidden;
+}

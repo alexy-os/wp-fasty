@@ -1,14 +1,33 @@
 {**
- * Site header — classic top nav.
+ * Site header — classic top nav + mobile sheet trigger.
  *}
+<a class="skip-link screen-reader-text" href="#content">{$labels['skip_to_content'] ?? 'Skip to content'}</a>
+
 <header class="site-header border-b border-border bg-background">
 	<div class="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-		<a href="{$site['url']}" class="text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary">
-			{$site['title']}
-		</a>
+		<div class="flex items-center gap-3">
+			{if !empty($menu['primary']['items'])}
+				<button
+					type="button"
+					id="classic-mobile-sheet-trigger"
+					class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden"
+					data-ui8kit-dialog-open="true"
+					data-ui8kit-dialog-target="classic-mobile-sheet-panel"
+					aria-controls="classic-mobile-sheet-panel"
+					aria-haspopup="dialog"
+					aria-expanded="false"
+					aria-label="{$labels['open_menu'] ?? 'Open menu'}"
+				>
+					<span aria-hidden="true">☰</span>
+				</button>
+			{/if}
+			<a href="{$site['url']}" class="text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary">
+				{$site['title']}
+			</a>
+		</div>
 
 		{if !empty($menu['primary']['items'])}
-			<nav class="hidden md:block" aria-label="Primary">
+			<nav class="hidden md:block" aria-label="{$labels['primary_nav'] ?? 'Primary'}">
 				<ul class="flex items-center gap-6">
 					{foreach $menu['primary']['items'] as $item}
 						<li>
@@ -26,3 +45,49 @@
 		{/if}
 	</div>
 </header>
+
+{if !empty($menu['primary']['items'])}
+	<div
+		id="classic-mobile-sheet-panel"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="classic-mobile-sheet-title"
+		data-ui8kit="sheet"
+		data-ui8kit-dialog="true"
+		behavior="ui8kit"
+		data-state="closed"
+		hidden
+		class="fixed inset-0 z-50 md:hidden"
+	>
+		<div class="absolute inset-0 bg-black/40" data-ui8kit-dialog-close="true" data-ui8kit-dialog-target="classic-mobile-sheet-panel"></div>
+		<div class="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-card shadow-lg">
+			<div class="flex h-16 items-center justify-between border-b border-border px-4">
+				<h2 id="classic-mobile-sheet-title" class="text-base font-semibold">{$site['title']}</h2>
+				<button
+					type="button"
+					class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input text-sm"
+					data-ui8kit-dialog-close="true"
+					data-ui8kit-dialog-target="classic-mobile-sheet-panel"
+					aria-label="{$labels['close_menu'] ?? 'Close menu'}"
+				>
+					×
+				</button>
+			</div>
+			<nav class="flex-1 overflow-y-auto px-3 py-4" aria-label="{$labels['primary_nav'] ?? 'Primary'}">
+				<ul class="flex flex-col gap-1">
+					{foreach $menu['primary']['items'] as $item}
+						<li>
+							<a
+								href="{$item['url']}"
+								class="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground no-underline hover:bg-accent hover:text-foreground{if $item['current']} bg-accent text-foreground{/if}"
+								{if $item['current']}aria-current="page"{/if}
+							>
+								{$item['title']}
+							</a>
+						</li>
+					{/foreach}
+				</ul>
+			</nav>
+		</div>
+	</div>
+{/if}

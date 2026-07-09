@@ -1,6 +1,7 @@
 {**
  * Document shell — raw HTML allowed here only.
  * Context: site, content, menu
+ * layout: classic (default) | app-shell via $shell
  *}
 <!DOCTYPE html>
 <html lang="{$site['lang']}">
@@ -10,15 +11,19 @@
 	{wp_head}
 </head>
 <body {body_class 'font-sans bg-background antialiased'}>
-	{include 'parts/header.latte'}
+	{if ($shell ?? 'classic') === 'app-shell'}
+		{include 'layout/app-shell.latte'}
+	{else}
+		{include 'parts/header.latte'}
 
-	<main id="content" class="site-content">
-		{do_action 'before_content'}
-		{$content|noescape}
-		{do_action 'after_content'}
-	</main>
+		<main id="content" class="site-content">
+			{do_action 'before_content'}
+			{$content|noescape}
+			{do_action 'after_content'}
+		</main>
 
-	{include 'parts/footer.latte'}
+		{include 'parts/footer.latte'}
+	{/if}
 
 	{wp_footer}
 </body>

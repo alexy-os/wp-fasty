@@ -6,6 +6,7 @@
   "description": "Assemble WordPress themes from UI8Kit Latte primitives + layout/block/style presets",
   "scripts": {
     "build": "bun src/cli.ts build",
+    "pack": "bun src/cli.ts pack",
     "new": "bun src/cli.ts new"
   }
 }

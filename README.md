@@ -33,7 +33,13 @@ bun run ui:primitives
 bun run ui:install          # composer → .workspaces/ui8kit-latte/php/vendor
 
 bun run theme:build -- latte
+composer install --working-dir=themes/latte
+composer install   # PHPUnit / PHPCS tooling
+composer test
 ```
+
+Child skin (no Composer): activate **Latte Skin** after parent.  
+Release zip: `bun run theme:pack -- latte` → see [docs/install.md](docs/install.md).
 
 ### Local WordPress (Docker / WSL)
 
@@ -52,9 +58,11 @@ docker compose --profile tools run --rm composer
 |--------|---------|
 | `ui:primitives` | Generate Latte bundle into `.workspaces/ui8kit-latte` |
 | `ui:install` | `composer install` for Latte + UI8Kit autoload |
-| `theme:build` | Stamp / assemble theme from `presets/themes/<id>.json` |
-| `theme:new` | Scaffold help for a new preset |
+| `theme:build` | Sync blocks + emit page views from `presets/themes/<id>.json` |
+| `theme:pack` | Release zip → `dist/<slug>.zip` (vendored primitives, no codegen TS) |
+| `theme:new` | Scaffold help for a new preset / skin |
 | `theme:cache` | Clear Latte `~cache` under themes |
+| `test` / `phpcs` | PHPUnit + PHPCS |
 | `codegen:verify` | Run full ui8kit/codegen suite (needs submodule) |
 
 ## Repository layout

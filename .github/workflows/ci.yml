@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "cursor/**"]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: composer
+          coverage: none
+
+      - name: Install root PHP tooling
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Generate UI8Kit Latte primitives
+        run: |
+          bun install --cwd packages/ui8kit-codegen
+          bun run ui:primitives
+          bun run ui:install
+
+      - name: Build theme views from presets
+        run: bun run theme:build -- latte
+
+      - name: PHPUnit
+        run: composer test
+
+      - name: PHPCS
+        continue-on-error: true
+        run: composer phpcs
+
+      - name: Pack theme zip
+        run: bun run theme:pack -- latte

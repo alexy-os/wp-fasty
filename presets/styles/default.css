@@ -41,3 +41,19 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
 }
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.prose :where(p, ul, ol) {
+  margin-bottom: 1rem;
+  line-height: 1.625;
+}
+
+.prose :where(a) {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

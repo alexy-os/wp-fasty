@@ -1,27 +1,37 @@
 {**
- * Block: hero-centered
- *
- * Context: site (title, description)
- * Composes UI8Kit Button when primitives are on the Latte loader path.
+ * Block: hero-centered — UI8Kit Link CTAs.
+ * Context: site, hero
  *}
-<section class="hero">
-	<div class="container">
-		<div class="hero-content">
-			<h1 class="hero-title">{$site['title']}</h1>
-			{if !empty($site['description'])}
-				<p class="hero-description">{$site['description']}</p>
-			{/if}
-			<div class="hero-actions">
-				{capture $explore}
-					Explore
-				{/capture}
-				{capture $learn}
-					Learn More
-				{/capture}
-				{* Prefer UI8Kit primitives when FileLoader includes ui8kit-latte/ui *}
-				{include 'button/Button.latte', variant: 'default', size: 'default', class: 'rounded-full', children: (string) $explore}
-				{include 'button/Button.latte', variant: 'secondary', size: 'default', class: 'rounded-full', children: (string) $learn}
-			</div>
-		</div>
-	</div>
-</section>
+{capture $heroInner}
+	{capture $titleHtml}{$site['title']}{/capture}
+	{include 'title/Title.latte', as: 1, class: 'text-4xl md:text-5xl font-bold tracking-tight text-foreground', children: (string) $titleHtml}
+
+	{if !empty($site['description'])}
+		{capture $descHtml}<p class="mt-4 text-lg text-muted-foreground">{$site['description']}</p>{/capture}
+		{$descHtml|noescape}
+	{/if}
+
+	{capture $actions}
+		{capture $explore}{$hero['primary_label'] ?? 'Explore'}{/capture}
+		{capture $learn}{$hero['secondary_label'] ?? 'Learn more'}{/capture}
+		{if !empty($hero['primary_url'])}
+			{capture $primary}
+				{include 'link/Link.latte', href: $hero['primary_url'], variant: 'default', class: 'inline-flex h-10 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground no-underline hover:opacity-90', children: (string) $explore}
+			{/capture}
+			{$primary|noescape}
+		{/if}
+		{if !empty($hero['secondary_url'])}
+			{capture $secondary}
+				{include 'link/Link.latte', href: $hero['secondary_url'], variant: 'muted', class: 'inline-flex h-10 items-center rounded-full border border-input bg-secondary px-4 text-sm font-medium no-underline', children: (string) $learn}
+			{/capture}
+			{$secondary|noescape}
+		{/if}
+	{/capture}
+	{include 'group/Group.latte', class: 'mt-8 flex flex-wrap justify-center gap-3', children: (string) $actions}
+{/capture}
+
+{capture $heroBox}
+	{include 'box/Box.latte', class: 'mx-auto max-w-3xl text-center', children: (string) $heroInner}
+{/capture}
+
+{include 'block/Block.latte', tag: 'section', class: 'bg-muted py-16 md:py-24', children: (string) $heroBox}

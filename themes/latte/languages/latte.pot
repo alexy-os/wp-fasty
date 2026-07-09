@@ -1,0 +1,83 @@
+# Copyright (C) 2026 godudy
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Latte 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/godudy/wpfasty/issues\n"
+"POT-Creation-Date: 2026-07-09 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: latte\n"
+
+#: classes/Data/ContextFactory.php
+msgid "Search results for “%s”"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Page not found"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "The page you are looking for could not be found."
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Back to home"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Featured"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Latest articles"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "No posts found."
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Previous"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Next"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Skip to content"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Open menu"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Close menu"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Primary"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Explore"
+msgstr ""
+
+#: classes/Data/ContextFactory.php
+msgid "Learn more"
+msgstr ""
+
+#: classes/Hooks/ThemeHooks.php
+msgid "Primary"
+msgstr ""
+
+#: classes/Hooks/ThemeHooks.php
+msgid "Latte theme: UI8Kit Latte primitives not found. From the monorepo root run bun run ui:primitives, then composer install in themes/latte."
+msgstr ""
+
+#: functions.php
+msgid "Latte theme: run composer install in themes/latte (and bun run ui:primitives from the monorepo root)."
+msgstr ""

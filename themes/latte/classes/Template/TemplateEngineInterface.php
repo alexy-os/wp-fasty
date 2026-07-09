@@ -6,6 +6,9 @@ namespace WPFasty\Template;
 
 interface TemplateEngineInterface
 {
-    /** @param array<string, mixed> $context */
+    /**
+     * @param string               $template Template logical name
+     * @param array<string, mixed> $context  Template variables
+     */
     public function render(string $template, array $context = []): string;
 }
