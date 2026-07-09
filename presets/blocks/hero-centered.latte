@@ -1,0 +1,27 @@
+{**
+ * Block: hero-centered
+ *
+ * Context: site (title, description)
+ * Composes UI8Kit Button when primitives are on the Latte loader path.
+ *}
+<section class="hero">
+	<div class="container">
+		<div class="hero-content">
+			<h1 class="hero-title">{$site['title']}</h1>
+			{if !empty($site['description'])}
+				<p class="hero-description">{$site['description']}</p>
+			{/if}
+			<div class="hero-actions">
+				{capture $explore}
+					Explore
+				{/capture}
+				{capture $learn}
+					Learn More
+				{/capture}
+				{* Prefer UI8Kit primitives when FileLoader includes ui8kit-latte/ui *}
+				{include 'button/Button.latte', variant: 'default', size: 'default', class: 'rounded-full', children: (string) $explore}
+				{include 'button/Button.latte', variant: 'secondary', size: 'default', class: 'rounded-full', children: (string) $learn}
+			</div>
+		</div>
+	</div>
+</section>

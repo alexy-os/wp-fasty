@@ -1,0 +1,8 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "text-sm font-medium text-destructive",
+  "byKey": {},
+  "defaults": {},
+  "id": "ui.form.message",
+  "keys": []
+}

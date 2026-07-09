@@ -1,0 +1,44 @@
+{**
+ * Block: featured-grid
+ *
+ * Context: posts[] with title, url, excerpt, thumbnail, categories, date
+ *}
+{if isset($posts) && count($posts) > 0}
+<section id="featured" class="featured-posts">
+	<div class="container">
+		<header class="section-header">
+			<h2 class="section-title">Featured</h2>
+			<p class="section-description">Discover our latest articles and updates</p>
+		</header>
+		<div class="featured-grid">
+			{foreach $posts as $post}
+				<article class="card card-featured">
+					{if !empty($post['thumbnail']['url'])}
+						<a href="{$post['url']}" class="card-link">
+							<figure class="card-thumbnail">
+								<img
+									src="{$post['thumbnail']['url']}"
+									alt="{$post['thumbnail']['alt'] ?? ''}"
+									class="card-image"
+									width="{$post['thumbnail']['width'] ?? null}"
+									height="{$post['thumbnail']['height'] ?? null}"
+								>
+							</figure>
+						</a>
+					{/if}
+					<header class="card-header">
+						<h3 class="card-title">
+							<a href="{$post['url']}">{$post['title']}</a>
+						</h3>
+					</header>
+					{if !empty($post['excerpt'])}
+						<div class="card-content">
+							<p class="card-excerpt">{$post['excerpt']}</p>
+						</div>
+					{/if}
+				</article>
+			{/foreach}
+		</div>
+	</div>
+</section>
+{/if}

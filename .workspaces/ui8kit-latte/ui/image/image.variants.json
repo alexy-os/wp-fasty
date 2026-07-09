@@ -1,0 +1,61 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "block max-w-full",
+  "byKey": {
+    "aspect": {
+      "auto": "aspect-auto",
+      "square": "aspect-square",
+      "video": "aspect-video"
+    },
+    "fit": {
+      "contain": "object-contain",
+      "cover": "object-cover",
+      "fill": "object-fill",
+      "none": "object-none",
+      "scale-down": "object-scale-down"
+    },
+    "position": {
+      "bottom": "object-bottom",
+      "center": "object-center",
+      "left": "object-left",
+      "left-bottom": "object-left-bottom",
+      "left-top": "object-left-top",
+      "right": "object-right",
+      "right-bottom": "object-right-bottom",
+      "right-top": "object-right-top",
+      "top": "object-top"
+    },
+    "size": {
+      "auto": "",
+      "default": "",
+      "full": "h-full w-full",
+      "lg": "h-16 w-16",
+      "md": "h-12 w-12",
+      "sm": "h-8 w-8",
+      "xl": "h-24 w-24",
+      "xs": "h-6 w-6"
+    },
+    "variant": {
+      "avatar": "rounded-full",
+      "default": "",
+      "logo": "object-contain",
+      "rounded": "rounded-md",
+      "thumbnail": "rounded-md border border-border"
+    }
+  },
+  "defaults": {
+    "aspect": "auto",
+    "fit": "cover",
+    "position": "center",
+    "size": "auto",
+    "variant": "default"
+  },
+  "id": "ui.image",
+  "keys": [
+    "variant",
+    "size",
+    "fit",
+    "position",
+    "aspect"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "rounded border border-primary text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  "byKey": {
+    "size": {
+      "default": "h-4 w-4",
+      "lg": "h-5 w-5",
+      "sm": "h-4 w-4",
+      "xs": "h-3 w-3"
+    },
+    "variant": {
+      "default": "border-primary",
+      "ghost": "border-primary bg-muted/30",
+      "outline": "border-primary"
+    }
+  },
+  "defaults": {
+    "size": "default",
+    "variant": "default"
+  },
+  "id": "ui.checkbox",
+  "keys": [
+    "variant",
+    "size"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "wp-fasty-ym",
+  "name": "WP FastY YM",
+  "slug": "wp-fasty-ym",
+  "textDomain": "wp-fasty-ym",
+  "layout": "layouts/classic",
+  "style": "styles/default",
+  "templates": {
+    "front-page": [
+      "blocks/hero-centered",
+      "blocks/featured-grid"
+    ],
+    "archive": [
+      "blocks/archive-header",
+      "blocks/post-list"
+    ],
+    "single": [
+      "blocks/post-single"
+    ]
+  },
+  "features": [
+    "post-thumbnails",
+    "primary-menu",
+    "title-tag"
+  ],
+  "php": {
+    "namespace": "WPFasty",
+    "container": true
+  }
+}

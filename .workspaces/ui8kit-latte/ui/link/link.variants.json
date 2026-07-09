@@ -1,0 +1,28 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "inline-flex items-center gap-2 underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+  "byKey": {
+    "size": {
+      "default": "text-sm",
+      "lg": "text-lg",
+      "md": "text-base",
+      "sm": "text-sm"
+    },
+    "variant": {
+      "block": "flex w-full text-foreground hover:text-primary",
+      "default": "text-primary hover:underline",
+      "external": "text-primary hover:underline",
+      "muted": "text-muted-foreground hover:text-foreground hover:underline",
+      "nav": "text-foreground hover:text-primary"
+    }
+  },
+  "defaults": {
+    "size": "default",
+    "variant": "default"
+  },
+  "id": "ui.link",
+  "keys": [
+    "variant",
+    "size"
+  ]
+}

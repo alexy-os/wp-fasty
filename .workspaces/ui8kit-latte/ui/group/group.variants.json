@@ -1,0 +1,8 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "flex min-w-0",
+  "byKey": {},
+  "defaults": {},
+  "id": "ui.group",
+  "keys": []
+}

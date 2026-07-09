@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.php text eol=lf
+*.latte text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.css text eol=lf

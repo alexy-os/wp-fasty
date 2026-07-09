@@ -1,0 +1,25 @@
+{
+  "name": "wpfasty",
+  "description": "WordPress theme generator — Latte + UI8Kit primitives, layout/block/style presets",
+  "version": "0.2.0",
+  "private": true,
+  "license": "MIT",
+  "author": "godudy",
+  "homepage": "https://github.com/godudy/wpfasty",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/godudy/wpfasty.git"
+  },
+  "workspaces": [
+    ".workspaces/theme-builder"
+  ],
+  "scripts": {
+    "ui:primitives": "bun tools/generate-primitives.ts",
+    "ui:install": "composer install --working-dir=.workspaces/ui8kit-latte --no-interaction",
+    "theme:build": "bun run --cwd .workspaces/theme-builder build",
+    "theme:new": "bun run --cwd .workspaces/theme-builder new",
+    "theme:cache": "rm -rf themes/*/~cache",
+    "codegen:verify": "bun run --cwd packages/ui8kit-codegen verify",
+    "verify": "bun run ui:primitives && bun run theme:build -- wp-fasty-ym"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "inline-block shrink-0",
+  "byKey": {
+    "size": {
+      "default": "h-4 w-4",
+      "lg": "h-6 w-6",
+      "md": "h-5 w-5",
+      "sm": "h-4 w-4",
+      "xl": "h-8 w-8",
+      "xs": "h-3 w-3"
+    },
+    "type": {
+      "class": "",
+      "svg": "",
+      "text": ""
+    }
+  },
+  "defaults": {
+    "size": "default",
+    "type": "class"
+  },
+  "id": "ui.icon",
+  "keys": [
+    "type",
+    "size"
+  ]
+}

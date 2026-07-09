@@ -1,0 +1,42 @@
+{**
+ * Footer partial template
+ *
+ * Required context:
+ * - site: Site data (array)
+ * - menu: Menu data (array, optional)
+ *}
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-branding">
+                <a href="{$site['url']}" class="footer-logo">
+                    {$site['title']}
+                </a>
+                {if isset($site['description']) && $site['description']}
+                    <p class="footer-description">{$site['description']}</p>
+                {/if}
+            </div>
+            
+            {if isset($menu['footer'])}
+                <nav class="footer-nav">
+                    <ul class="footer-menu">
+                        {foreach $menu['footer']['items'] as $item}
+                            <li class="footer-item">
+                                <a href="{$item['url']}" class="footer-link">
+                                    {$item['title']}
+                                </a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </nav>
+            {/if}
+            
+            <div class="footer-bottom">
+                <p class="copyright">
+                    &copy; {date('Y')} {$site['title']}. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer> 

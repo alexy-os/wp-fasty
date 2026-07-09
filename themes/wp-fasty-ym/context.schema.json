@@ -1,0 +1,626 @@
+{
+    "$schema": "http:\/\/json-schema.org\/draft-07\/schema#",
+    "title": "WPFasty Context Schema",
+    "description": "Schema for WordPress template contexts",
+    "type": "object",
+    "properties": {
+        "site": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "Title"
+                },
+                "url": {
+                    "type": "string",
+                    "description": "Url"
+                },
+                "theme_url": {
+                    "type": "string",
+                    "description": "Theme_url"
+                },
+                "lang": {
+                    "type": "string",
+                    "description": "Lang"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description"
+                },
+                "charset": {
+                    "type": "string",
+                    "description": "Charset"
+                }
+            },
+            "required": [
+                "title",
+                "url",
+                "theme_url",
+                "lang",
+                "description",
+                "charset"
+            ],
+            "description": "Site"
+        },
+        "menu": {
+            "type": "object",
+            "properties": {
+                "primary": {
+                    "type": "object",
+                    "properties": {
+                        "items": {
+                            "type": "array",
+                            "description": "Items",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Title"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "description": "Url"
+                                    },
+                                    "id": {
+                                        "type": "integer",
+                                        "description": "Id"
+                                    },
+                                    "order": {
+                                        "type": "integer",
+                                        "description": "Order"
+                                    },
+                                    "parent": {
+                                        "type": [
+                                            "null",
+                                            "string",
+                                            "object"
+                                        ],
+                                        "description": "Parent"
+                                    },
+                                    "classes": {
+                                        "type": "array",
+                                        "description": "Classes",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "current": {
+                                        "type": "boolean",
+                                        "description": "Current"
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "url",
+                                    "id",
+                                    "order",
+                                    "parent",
+                                    "classes",
+                                    "current"
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "items"
+                    ],
+                    "description": "Primary"
+                }
+            },
+            "required": [
+                "primary"
+            ],
+            "description": "Menu"
+        },
+        "page": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "type": "object",
+                    "properties": {
+                        "title": {
+                            "type": "string",
+                            "description": "Title"
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "Content"
+                        },
+                        "slug": {
+                            "type": "string",
+                            "description": "Slug"
+                        },
+                        "url": {
+                            "type": "string",
+                            "description": "Url"
+                        },
+                        "id": {
+                            "type": "integer",
+                            "description": "Id"
+                        },
+                        "excerpt": {
+                            "type": "string",
+                            "description": "Excerpt"
+                        },
+                        "featuredImage": {
+                            "type": "object",
+                            "properties": {
+                                "url": {
+                                    "type": "string",
+                                    "description": "Url"
+                                },
+                                "width": {
+                                    "type": "integer",
+                                    "description": "Width"
+                                },
+                                "height": {
+                                    "type": "integer",
+                                    "description": "Height"
+                                },
+                                "alt": {
+                                    "type": "string",
+                                    "description": "Alt"
+                                }
+                            },
+                            "required": [
+                                "url",
+                                "width",
+                                "height",
+                                "alt"
+                            ],
+                            "description": "FeaturedImage"
+                        },
+                        "thumbnail": {
+                            "type": "object",
+                            "properties": {
+                                "url": {
+                                    "type": "string",
+                                    "description": "Url"
+                                },
+                                "width": {
+                                    "type": "integer",
+                                    "description": "Width"
+                                },
+                                "height": {
+                                    "type": "integer",
+                                    "description": "Height"
+                                },
+                                "alt": {
+                                    "type": "string",
+                                    "description": "Alt"
+                                }
+                            },
+                            "required": [
+                                "url",
+                                "width",
+                                "height",
+                                "alt"
+                            ],
+                            "description": "Thumbnail"
+                        },
+                        "meta": {
+                            "type": "object",
+                            "properties": {
+                                "_edit_last": {
+                                    "type": "string",
+                                    "description": "_edit_last"
+                                },
+                                "_edit_lock": {
+                                    "type": "string",
+                                    "description": "_edit_lock"
+                                }
+                            },
+                            "required": [
+                                "_edit_last",
+                                "_edit_lock"
+                            ],
+                            "description": "Meta"
+                        },
+                        "categories": {
+                            "type": "array",
+                            "description": "Categories",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "description": "Url"
+                                    },
+                                    "id": {
+                                        "type": "integer",
+                                        "description": "Id"
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "description": "Slug"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Description"
+                                    },
+                                    "count": {
+                                        "type": "integer",
+                                        "description": "Count"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "url",
+                                    "id",
+                                    "slug",
+                                    "description",
+                                    "count"
+                                ]
+                            }
+                        },
+                        "date": {
+                            "type": "object",
+                            "properties": {
+                                "formatted": {
+                                    "type": "string",
+                                    "description": "Formatted"
+                                },
+                                "display": {
+                                    "type": "string",
+                                    "description": "Display"
+                                },
+                                "modified": {
+                                    "type": "string",
+                                    "description": "Modified"
+                                },
+                                "modified_display": {
+                                    "type": "string",
+                                    "description": "Modified_display"
+                                },
+                                "timestamp": {
+                                    "type": "integer",
+                                    "description": "Timestamp"
+                                },
+                                "year": {
+                                    "type": "string",
+                                    "description": "Year"
+                                },
+                                "month": {
+                                    "type": "string",
+                                    "description": "Month"
+                                },
+                                "day": {
+                                    "type": "string",
+                                    "description": "Day"
+                                }
+                            },
+                            "required": [
+                                "formatted",
+                                "display",
+                                "modified",
+                                "modified_display",
+                                "timestamp",
+                                "year",
+                                "month",
+                                "day"
+                            ],
+                            "description": "Date"
+                        }
+                    },
+                    "required": [
+                        "title",
+                        "content",
+                        "slug",
+                        "url",
+                        "id",
+                        "excerpt",
+                        "featuredImage",
+                        "thumbnail",
+                        "meta",
+                        "categories",
+                        "date"
+                    ],
+                    "description": "Page"
+                }
+            },
+            "required": [
+                "page"
+            ]
+        },
+        "archive": {
+            "type": "object",
+            "properties": {
+                "archive": {
+                    "type": "object",
+                    "properties": {
+                        "title": {
+                            "type": "string",
+                            "description": "Title"
+                        },
+                        "description": {
+                            "type": "string",
+                            "description": "Description"
+                        }
+                    },
+                    "required": [
+                        "title",
+                        "description"
+                    ],
+                    "description": "Archive"
+                },
+                "posts": {
+                    "type": "object",
+                    "properties": {
+                        "title": {
+                            "type": "string",
+                            "description": "Title"
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "Content"
+                        },
+                        "slug": {
+                            "type": "string",
+                            "description": "Slug"
+                        },
+                        "url": {
+                            "type": "string",
+                            "description": "Url"
+                        },
+                        "id": {
+                            "type": "integer",
+                            "description": "Id"
+                        },
+                        "excerpt": {
+                            "type": "string",
+                            "description": "Excerpt"
+                        },
+                        "featuredImage": {
+                            "type": "object",
+                            "properties": {
+                                "url": {
+                                    "type": "string",
+                                    "description": "Url"
+                                },
+                                "width": {
+                                    "type": "integer",
+                                    "description": "Width"
+                                },
+                                "height": {
+                                    "type": "integer",
+                                    "description": "Height"
+                                },
+                                "alt": {
+                                    "type": "string",
+                                    "description": "Alt"
+                                }
+                            },
+                            "required": [
+                                "url",
+                                "width",
+                                "height",
+                                "alt"
+                            ],
+                            "description": "FeaturedImage"
+                        },
+                        "thumbnail": {
+                            "type": "object",
+                            "properties": {
+                                "url": {
+                                    "type": "string",
+                                    "description": "Url"
+                                },
+                                "width": {
+                                    "type": "integer",
+                                    "description": "Width"
+                                },
+                                "height": {
+                                    "type": "integer",
+                                    "description": "Height"
+                                },
+                                "alt": {
+                                    "type": "string",
+                                    "description": "Alt"
+                                }
+                            },
+                            "required": [
+                                "url",
+                                "width",
+                                "height",
+                                "alt"
+                            ],
+                            "description": "Thumbnail"
+                        },
+                        "meta": {
+                            "type": "object",
+                            "properties": {
+                                "_edit_last": {
+                                    "type": "string",
+                                    "description": "_edit_last"
+                                },
+                                "_edit_lock": {
+                                    "type": "string",
+                                    "description": "_edit_lock"
+                                }
+                            },
+                            "required": [
+                                "_edit_last",
+                                "_edit_lock"
+                            ],
+                            "description": "Meta"
+                        },
+                        "categories": {
+                            "type": "array",
+                            "description": "Categories",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "description": "Url"
+                                    },
+                                    "id": {
+                                        "type": "integer",
+                                        "description": "Id"
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "description": "Slug"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Description"
+                                    },
+                                    "count": {
+                                        "type": "integer",
+                                        "description": "Count"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "url",
+                                    "id",
+                                    "slug",
+                                    "description",
+                                    "count"
+                                ]
+                            }
+                        },
+                        "date": {
+                            "type": "object",
+                            "properties": {
+                                "formatted": {
+                                    "type": "string",
+                                    "description": "Formatted"
+                                },
+                                "display": {
+                                    "type": "string",
+                                    "description": "Display"
+                                },
+                                "modified": {
+                                    "type": "string",
+                                    "description": "Modified"
+                                },
+                                "modified_display": {
+                                    "type": "string",
+                                    "description": "Modified_display"
+                                },
+                                "timestamp": {
+                                    "type": "integer",
+                                    "description": "Timestamp"
+                                },
+                                "year": {
+                                    "type": "string",
+                                    "description": "Year"
+                                },
+                                "month": {
+                                    "type": "string",
+                                    "description": "Month"
+                                },
+                                "day": {
+                                    "type": "string",
+                                    "description": "Day"
+                                }
+                            },
+                            "required": [
+                                "formatted",
+                                "display",
+                                "modified",
+                                "modified_display",
+                                "timestamp",
+                                "year",
+                                "month",
+                                "day"
+                            ],
+                            "description": "Date"
+                        }
+                    },
+                    "required": [
+                        "title",
+                        "content",
+                        "slug",
+                        "url",
+                        "id",
+                        "excerpt",
+                        "featuredImage",
+                        "thumbnail",
+                        "meta",
+                        "categories",
+                        "date"
+                    ],
+                    "description": "Posts"
+                },
+                "pagination": {
+                    "type": "object",
+                    "properties": {
+                        "prev_url": {
+                            "type": "string",
+                            "description": "Prev_url"
+                        },
+                        "next_url": {
+                            "type": "string",
+                            "description": "Next_url"
+                        },
+                        "pages": {
+                            "type": "array",
+                            "description": "Pages",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "number": {
+                                        "type": "integer",
+                                        "description": "Number"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "description": "Url"
+                                    },
+                                    "is_current": {
+                                        "type": "boolean",
+                                        "description": "Is_current"
+                                    }
+                                },
+                                "required": [
+                                    "number",
+                                    "url",
+                                    "is_current"
+                                ]
+                            }
+                        },
+                        "current": {
+                            "type": "integer",
+                            "description": "Current"
+                        },
+                        "total": {
+                            "type": "integer",
+                            "description": "Total"
+                        }
+                    },
+                    "required": [
+                        "prev_url",
+                        "next_url",
+                        "pages",
+                        "current",
+                        "total"
+                    ],
+                    "description": "Pagination"
+                }
+            },
+            "required": [
+                "archive",
+                "posts",
+                "pagination"
+            ]
+        }
+    },
+    "required": [
+        "site",
+        "menu",
+        "page",
+        "archive"
+    ]
+}

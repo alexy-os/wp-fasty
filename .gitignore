@@ -1,0 +1,32 @@
+# Editors / local
+.manual/
+.obsidian/
+.vscode/
+.cursor/
+.cursorignore
+.env
+
+# Dependencies
+node_modules/
+vendor/
+**/php/vendor/
+.workspaces/ui8kit-latte/php/vendor/
+
+# Locks (optional — keep if you prefer reproducible installs)
+bun.lockb
+# bun.lock
+# composer.lock
+
+# Build / cache
+~cache/
+themes/*/~cache/
+dist/
+themes/dist/
+*.log
+
+# Local theme build stamps
+themes/*/.theme-build.json
+
+# OS
+.DS_Store
+Thumbs.db

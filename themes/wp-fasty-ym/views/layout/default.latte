@@ -1,0 +1,27 @@
+{**
+ * Default layout — classic shell
+ *
+ * Context: site, content (HTML), menu (for header/footer parts)
+ *}
+<!DOCTYPE html>
+<html lang="{$site['lang']}">
+<head>
+	<meta charset="{$site['charset'] ?? 'UTF-8'}">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	{wp_head}
+	<link rel="stylesheet" href="{$site['theme_url']}/assets/css/theme.min.css">
+</head>
+<body {body_class 'theme-light'}>
+	{include 'parts/header.latte'}
+
+	<main class="site-content">
+		{do_action 'before_content'}
+		{$content|noescape}
+		{do_action 'after_content'}
+	</main>
+
+	{include 'parts/footer.latte'}
+
+	{wp_footer}
+</body>
+</html>
