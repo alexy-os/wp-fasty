@@ -18,7 +18,7 @@ final class LatteEngine implements TemplateEngineInterface
         if (!is_dir($viewsDir)) {
             throw new \RuntimeException("Views directory not found: {$viewsDir}");
         }
-        if (!is_dir($cacheDir) && !mkdir($cacheDir, 0777, true) && !is_dir($cacheDir)) {
+        if (!is_dir($cacheDir) && !mkdir($cacheDir, 0755, true) && !is_dir($cacheDir)) {
             throw new \RuntimeException("Cannot create cache: {$cacheDir}");
         }
 

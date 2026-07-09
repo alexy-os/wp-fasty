@@ -39,13 +39,39 @@ final class ContextFactory
             wp_reset_postdata();
         }
 
+        $searchQuery = is_search() ? (string) get_search_query() : null;
+        $title = $searchQuery !== null
+            ? sprintf(
+                /* translators: %s: search query */
+                __('Search results for “%s”', 'latte'),
+                $searchQuery
+            )
+            : wp_strip_all_tags(get_the_archive_title());
+
         $context = array_merge($this->common(), [
             'archive' => [
-                'title' => wp_strip_all_tags(get_the_archive_title()),
-                'description' => get_the_archive_description(),
+                'title' => $title,
+                'description' => $searchQuery !== null ? '' : get_the_archive_description(),
+                'search_query' => $searchQuery,
             ],
             'posts' => $posts,
             'pagination' => $this->pagination(),
+        ]);
+
+        return apply_filters('wpfasty_context', $context, null);
+    }
+
+    /** @return array<string, mixed> */
+    public function createErrorContext(int $code = 404): array
+    {
+        $context = array_merge($this->common(), [
+            'error' => [
+                'code' => $code,
+                'title' => __('Page not found', 'latte'),
+                'message' => __('The page you are looking for could not be found.', 'latte'),
+                'home_url' => home_url('/'),
+                'home_label' => __('Back to home', 'latte'),
+            ],
         ]);
 
         return apply_filters('wpfasty_context', $context, null);

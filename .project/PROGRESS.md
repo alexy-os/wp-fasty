@@ -20,10 +20,10 @@ Read this first, then execute the next open cycle. Do not invent a parallel road
 ### Session start checklist
 
 ```
-[ ] bun / PHP / Docker available as needed
-[ ] themes/latte is the only theme under themes/
-[ ] .workspaces/ui8kit-latte exists (bun run ui:primitives if not)
-[ ] Read Open cycle below — do that work only
+[x] bun / PHP / Docker available as needed
+[x] themes/latte is the only theme under themes/
+[x] .workspaces/ui8kit-latte exists (bun run ui:primitives if not)
+[x] Read Open cycle below — do that work only
 ```
 
 ---
@@ -41,12 +41,17 @@ Read this first, then execute the next open cycle. Do not invent a parallel road
 | Docker mounts + composer-install for `latte` | Done |
 | Deleted `themes/wp-fasty-ym` + reference cleanup | Done |
 | Theme-builder default id → `latte` | Done |
+| `ThemeService::resolveView()` + shared render entry | Done |
+| `404.php` / `search.php` + Latte views + error/search context | Done |
+| Admin notice when UI8Kit primitives missing | Done |
+| Latte cache dir mode `0755` | Done |
+| Offline Latte smoke (front, single, archive, search, 404) | Done |
 
 ### Not done (summary)
 
 | Area | Status |
 |------|--------|
-| 404 / search / fallback routing | Missing |
+| Docker WP smoke (A7) | Blocked in cloud-agent (no Docker) |
 | Child theme (“skin”) without Composer | Missing |
 | Parent packaging without monorepo path-repo | Incomplete |
 | theme-builder assembling views from presets | Stub (stamp only) |
@@ -78,9 +83,9 @@ themes/<skin>/               Layer 3b — child skins (views + CSS only)  ← TA
 
 ## Open cycle
 
-**→ Cycle A — Parent correctness (P0)**
+**→ Cycle A — Parent correctness (P0)** — A1–A6 done; **A7** (Docker WP smoke) still open when Docker is available.
 
-When A is complete, set Open cycle to **Cycle B**.
+When A7 is complete, set Open cycle to **Cycle B**.
 
 ---
 
@@ -107,18 +112,20 @@ A Parent correctness
 
 | Stage | Task | Done |
 |-------|------|------|
-| A1 | Add `ThemeService::resolveView(): string` — one place for hierarchy | [ ] |
-| A2 | Wire `index.php` + dedicated templates through `resolveView()` / shared render | [ ] |
-| A3 | Add `404.php` + `views/pages/404.latte` + context (`createErrorContext` or similar) | [ ] |
-| A4 | Dedicated search handling (view or archive variant with query string) | [ ] |
-| A5 | Admin notice if UI8Kit primitives dir missing (fail loud, not on first include) | [ ] |
-| A6 | Latte cache dir `0755` (not `0777`) | [ ] |
+| A1 | Add `ThemeService::resolveView(): string` — one place for hierarchy | [x] |
+| A2 | Wire `index.php` + dedicated templates through `resolveView()` / shared render | [x] |
+| A3 | Add `404.php` + `views/pages/404.latte` + context (`createErrorContext` or similar) | [x] |
+| A4 | Dedicated search handling (view or archive variant with query string) | [x] |
+| A5 | Admin notice if UI8Kit primitives dir missing (fail loud, not on first include) | [x] |
+| A6 | Latte cache dir `0755` (not `0777`) | [x] |
 | A7 | Smoke: front, single, archive, 404 in Docker | [ ] |
 
 **Exit criteria:** Unknown routes show a real 404; no duplicate routing logic; primitives missing → admin notice.
 
+**Notes (2026-07-09):** Offline Latte smoke (no WP/Docker) passed for front, single, archive, search, 404. Cloud-agent image has no Docker — finish A7 locally with `bun run dev:up` + `dev:wp`.
+
 **Key files:**  
-`themes/latte/classes/Theme/ThemeService.php`, `includes/render.php`, `index.php`, `configs/services.php`, `classes/Template/LatteEngine.php`
+`themes/latte/classes/Theme/ThemeService.php`, `includes/render.php`, `index.php`, `404.php`, `search.php`, `configs/services.php`, `classes/Template/LatteEngine.php`, `classes/Theme/PrimitivesLocator.php`, `classes/Data/ContextFactory.php`
 
 ---
 
@@ -322,7 +329,7 @@ rm -rf themes/latte/~cache
 
 | Priority | Item | Cycle |
 |----------|------|-------|
-| P0 | 404 + resolveView + primitives notice + cache perms | A |
+| P0 | 404 + resolveView + primitives notice + cache perms | A (A1–A6 done; A7 Docker pending) |
 | P0 | Child loader roots + example skin without Composer | B |
 | P0/P1 | Distributable parent zip | C |
 | P1 | Builder emits views from presets | D |

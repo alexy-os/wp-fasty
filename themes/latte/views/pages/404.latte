@@ -1,0 +1,22 @@
+{** 404 — not found *}
+{capture $inner}
+	{capture $codeHtml}{$error['code']}{/capture}
+	{include 'title/Title.latte', as: 1, class: 'text-5xl font-bold tracking-tight', children: (string) $codeHtml}
+
+	{capture $titleHtml}{$error['title']}{/capture}
+	{include 'title/Title.latte', as: 2, class: 'mt-4 text-2xl font-semibold tracking-tight', children: (string) $titleHtml}
+
+	<p class="mt-4 max-w-xl text-muted-foreground">{$error['message']}</p>
+
+	{capture $ctaLabel}{$error['home_label']}{/capture}
+	{capture $cta}
+		{include 'link/Link.latte', href: $error['home_url'], variant: 'default', size: 'lg', class: 'font-medium', children: (string) $ctaLabel}
+	{/capture}
+	<div class="mt-8">
+		{$cta|noescape}
+	</div>
+{/capture}
+{capture $box}
+	{include 'box/Box.latte', class: 'container mx-auto px-4 py-20 md:px-6', children: (string) $inner}
+{/capture}
+{include 'block/Block.latte', tag: 'section', class: 'min-h-[50vh]', children: (string) $box}

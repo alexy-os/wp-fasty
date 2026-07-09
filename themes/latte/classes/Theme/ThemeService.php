@@ -18,16 +18,43 @@ final class ThemeService
     ) {
     }
 
-    /** @return array<string, mixed> */
-    public function context(): array
+    /**
+     * Single source for WP template → Latte view mapping.
+     */
+    public function resolveView(): string
     {
+        if (is_404()) {
+            return 'pages/404';
+        }
+        if (is_search()) {
+            return 'pages/search';
+        }
         if (is_front_page() && !is_home()) {
-            return $this->contextFactory->createPageContext();
+            return 'pages/front-page';
         }
-        if (is_home() || is_archive() || is_search()) {
-            return $this->contextFactory->createArchiveContext();
+        if (is_home() || is_archive()) {
+            return 'pages/archive';
         }
-        return $this->contextFactory->createPageContext();
+        if (is_singular('post')) {
+            return 'pages/single';
+        }
+        if (is_page()) {
+            return 'pages/page';
+        }
+
+        return 'pages/404';
+    }
+
+    /** @return array<string, mixed> */
+    public function context(?string $view = null): array
+    {
+        $view ??= $this->resolveView();
+
+        return match ($view) {
+            'pages/404' => $this->contextFactory->createErrorContext(),
+            'pages/search', 'pages/archive' => $this->contextFactory->createArchiveContext(),
+            default => $this->contextFactory->createPageContext(),
+        };
     }
 
     /** @param array<string, mixed> $context */

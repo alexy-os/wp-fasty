@@ -21,6 +21,7 @@ bun.lockb
 # Build / cache
 ~cache/
 themes/*/~cache/
+packages/ui8kit-codegen/generated/
 dist/
 themes/dist/
 *.log

@@ -8,6 +8,7 @@ use WPFasty\Data\ContextFactory;
 use WPFasty\Hooks\AssetsHooks;
 use WPFasty\Hooks\ThemeHooks;
 use WPFasty\Template\LatteEngine;
+use WPFasty\Theme\PrimitivesLocator;
 use WPFasty\Theme\ThemeService;
 
 return function (Container $container): void {
@@ -19,19 +20,11 @@ return function (Container $container): void {
 
     $container->singleton('template.engine', static function (): LatteEngine {
         $themeDir = get_template_directory();
-        $candidates = [
-            dirname($themeDir, 2) . '/.workspaces/ui8kit-latte/ui',
-            $themeDir . '/vendor/ui8kit/latte-primitives/ui',
-            $themeDir . '/vendor/ui8kit/ui',
-        ];
-        $primitives = null;
-        foreach ($candidates as $dir) {
-            if (is_dir($dir)) {
-                $primitives = $dir;
-                break;
-            }
-        }
-        return new LatteEngine($themeDir . '/views', $themeDir . '/~cache', $primitives);
+        return new LatteEngine(
+            $themeDir . '/views',
+            $themeDir . '/~cache',
+            PrimitivesLocator::resolve($themeDir),
+        );
     });
 
     $container->singleton('data.context_factory', static fn () => new ContextFactory());
