@@ -20,6 +20,11 @@
     "theme:new": "bun run --cwd .workspaces/theme-builder new",
     "theme:cache": "rm -rf themes/*/~cache",
     "codegen:verify": "bun run --cwd packages/ui8kit-codegen verify",
-    "verify": "bun run ui:primitives && bun run theme:build -- wp-fasty-ym"
+    "verify": "bun run ui:primitives && bun run theme:build -- wp-fasty-ym",
+    "dev:up": "docker compose up -d",
+    "dev:down": "docker compose down",
+    "dev:logs": "docker compose logs -f wordpress",
+    "dev:composer": "docker compose --profile tools run --rm composer",
+    "dev:wp": "docker compose --profile tools run --rm wpcli"
   }
 }

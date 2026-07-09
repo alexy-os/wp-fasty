@@ -11,6 +11,7 @@ node_modules/
 vendor/
 **/php/vendor/
 .workspaces/ui8kit-latte/php/vendor/
+themes/*/vendor/
 
 # Locks (optional — keep if you prefer reproducible installs)
 bun.lockb

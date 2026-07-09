@@ -35,8 +35,16 @@ bun run ui:install          # composer → .workspaces/ui8kit-latte/php/vendor
 bun run theme:build -- wp-fasty-ym
 ```
 
-Point WordPress at `themes/wp-fasty-ym` (symlink into `wp-content/themes/` or
-use the folder as the theme root in your local stack).
+### Local WordPress (Docker / WSL)
+
+See **[.dev/README.md](.dev/README.md)** for the full command list.
+
+```bash
+bun run ui:primitives
+docker compose up -d
+docker compose --profile tools run --rm composer
+# → http://localhost:8080  → activate theme "WP FastY YM"
+```
 
 ## Scripts
 

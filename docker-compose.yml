@@ -1,0 +1,80 @@
+# Local WordPress for themes/wp-fasty-ym
+# Full guide: .dev/README.md
+#
+#   docker compose up -d
+#   → http://localhost:8080
+
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-wordpress}
+      MYSQL_USER: ${MYSQL_USER:-wp}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wp}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  wordpress:
+    image: wordpress:php8.2-apache
+    restart: unless-stopped
+    ports:
+      - "${WP_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER:-wp}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:-wp}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:-wordpress}
+      WORDPRESS_DEBUG: "1"
+    volumes:
+      - wp_data:/var/www/html
+      # Full monorepo (Composer path symlink → /var/www/wpfasty/.workspaces/…)
+      - .:/var/www/wpfasty
+      # Theme + workspaces under wp-content (MultiRootLoader ../../.workspaces)
+      - ./themes/wp-fasty-ym:/var/www/html/wp-content/themes/wp-fasty-ym
+      - ./.workspaces:/var/www/html/wp-content/.workspaces
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # One-shot Composer (Latte bundle + theme)
+  #   docker compose --profile tools run --rm composer
+  composer:
+    image: composer:2
+    working_dir: /var/www/wpfasty
+    volumes:
+      - .:/var/www/wpfasty
+    entrypoint: ["sh", "/var/www/wpfasty/.dev/docker/composer-install.sh"]
+    profiles:
+      - tools
+
+  # WP-CLI
+  #   docker compose --profile tools run --rm wpcli theme list
+  wpcli:
+    image: wordpress:cli-php8.2
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER:-wp}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:-wp}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:-wordpress}
+    volumes:
+      - wp_data:/var/www/html
+      - .:/var/www/wpfasty
+      - ./themes/wp-fasty-ym:/var/www/html/wp-content/themes/wp-fasty-ym
+      - ./.workspaces:/var/www/html/wp-content/.workspaces
+    depends_on:
+      - wordpress
+    profiles:
+      - tools
+
+volumes:
+  db_data:
+  wp_data:
