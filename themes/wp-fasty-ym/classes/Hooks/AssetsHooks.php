@@ -57,12 +57,6 @@ class AssetsHooks extends AbstractHooks {
      * @return string Modified URL
      */
     public function modifyStyleUrl(string $src, string $handle): string {
-        /*if ($handle === 'wp-fasty-style') {
-            return home_url('/style.css');
-        }*/
-        if ($handle === 'fasty-theme') {
-            return home_url('/theme.min.css');
-        }
         return $src;
     }
 
@@ -115,11 +109,11 @@ class AssetsHooks extends AbstractHooks {
             wp_get_theme()->get('Version')
         );*/
 
-        // Enqueue Tailwind styles
+        // Theme CSS (Tailwind build output)
         wp_enqueue_style(
-            'fasty-theme',
-            get_template_directory_uri() . '/theme.min.css',
-            [], // Depends on main style 'wp-fasty-style'
+            'wp-fasty-ym-theme',
+            get_template_directory_uri() . '/assets/css/theme.min.css',
+            [],
             wp_get_theme()->get('Version')
         );
 

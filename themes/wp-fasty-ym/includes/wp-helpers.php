@@ -17,9 +17,8 @@ if (function_exists('add_filter')) {
         $classes[] = 'text-foreground';
         $classes[] = 'antialiased';
         
-        // Adding correct theme class
-        $classes[] = 'wp-fasty';
-        
+        $classes[] = 'wp-fasty-ym';
+
         return $classes;
     }
     add_filter('body_class', 'wp_fasty_body_classes');

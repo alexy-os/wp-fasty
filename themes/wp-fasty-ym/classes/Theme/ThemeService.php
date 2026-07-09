@@ -25,12 +25,18 @@ class ThemeService
      */
     public function context(): array
     {
-        if (is_singular()) {
+        // Static page as front page
+        if (is_front_page() && !is_home()) {
             return $this->contextFactory->createPageContext();
         }
 
-        if (is_archive() || is_home()) {
+        // Blog posts index (including "posts on front")
+        if (is_home() || is_archive()) {
             return $this->contextFactory->createArchiveContext();
+        }
+
+        if (is_singular()) {
+            return $this->contextFactory->createPageContext();
         }
 
         return $this->contextFactory->createPageContext();

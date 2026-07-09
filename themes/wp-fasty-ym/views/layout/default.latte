@@ -9,9 +9,9 @@
 	<meta charset="{$site['charset'] ?? 'UTF-8'}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	{wp_head}
-	<link rel="stylesheet" href="{$site['theme_url']}/assets/css/theme.min.css">
 </head>
-<body{body_class 'theme-light'}>
+{* WP body_class() prints class="…" without a leading space — keep one before the tag *}
+<body {body_class 'theme-light'}>
 	{include 'parts/header.latte'}
 
 	<main class="site-content">

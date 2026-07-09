@@ -1,16 +1,19 @@
 {**
- * Front page — composes presets/blocks via includes when available,
- * falls back to inline structure using UI8Kit Button primitives.
+ * Front page content (layout already renders site header/footer).
  *
- * Context: site, page, posts?, menu
+ * Context: site, page? (static front page), posts? (blog on front), menu
  *}
-
-{include 'navbar.latte', site: $site, menu: $menu}
 
 <section class="hero">
 	<div class="container">
 		<div class="hero-content">
-			<h1 class="hero-title">{$page['title'] ?? $site['title']}</h1>
+			<h1 class="hero-title">
+				{if isset($page['title']) && $page['title'] !== ''}
+					{$page['title']}
+				{else}
+					{$site['title']}
+				{/if}
+			</h1>
 			{if !empty($site['description'])}
 				<p class="hero-description">{$site['description']}</p>
 			{/if}
@@ -24,7 +27,7 @@
 	</div>
 </section>
 
-{if $page && !empty($page['content'])}
+{if isset($page) && !empty($page['content'])}
 	<section id="about" class="about-section">
 		<div class="container">
 			<div class="about-content">
