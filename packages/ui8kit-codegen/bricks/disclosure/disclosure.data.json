@@ -1,0 +1,16 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.disclosure",
+  "showcase": {
+    "state.open": {
+      "props": {
+        "Open": true
+      }
+    },
+    "variant.default": {
+      "props": {
+        "Variant": "default"
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "group",
+  "byKey": {
+    "size": {
+      "default": "text-sm",
+      "lg": "text-base",
+      "sm": "text-sm"
+    },
+    "variant": {
+      "card": "rounded-md border border-border bg-card text-card-foreground",
+      "default": "rounded-md border border-border",
+      "ghost": ""
+    }
+  },
+  "defaults": {
+    "size": "default",
+    "variant": "default"
+  },
+  "id": "ui.disclosure",
+  "keys": [
+    "variant",
+    "size"
+  ]
+}

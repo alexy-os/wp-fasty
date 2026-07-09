@@ -1,0 +1,28 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.table",
+  "showcase": {
+    "layout.basic": {
+      "props": {
+        "Class": "w-full text-sm"
+      },
+      "children": {
+        "TableHeadCell": {
+          "props": {
+            "Scope": "col"
+          }
+        }
+      }
+    },
+    "cell.colspan": {
+      "props": {},
+      "children": {
+        "TableCell": {
+          "props": {
+            "ColSpan": 2
+          }
+        }
+      }
+    }
+  }
+}

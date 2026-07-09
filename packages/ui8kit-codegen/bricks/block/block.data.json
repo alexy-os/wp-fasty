@@ -1,0 +1,36 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.block",
+  "showcase": {
+    "tag.footer": {
+      "props": {
+        "Class": "border-t border-border",
+        "Tag": "footer"
+      }
+    },
+    "tag.header": {
+      "props": {
+        "Class": "border-b border-border",
+        "Tag": "header"
+      }
+    },
+    "tag.main": {
+      "props": {
+        "Class": "min-h-screen",
+        "Tag": "main"
+      }
+    },
+    "tag.nav": {
+      "props": {
+        "Class": "py-2",
+        "Tag": "nav"
+      }
+    },
+    "tag.section": {
+      "props": {
+        "Class": "py-8",
+        "Tag": "section"
+      }
+    }
+  }
+}

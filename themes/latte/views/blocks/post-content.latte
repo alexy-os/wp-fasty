@@ -1,0 +1,37 @@
+{**
+ * Block: post-single / page content
+ * Context: page
+ *}
+{if $page}
+	{capture $inner}
+		{capture $titleHtml}{$page['title']}{/capture}
+		{include 'title/Title.latte', as: 1, class: 'mb-6 text-3xl font-bold tracking-tight md:text-4xl', children: (string) $titleHtml}
+
+		{if !empty($page['featuredImage']['url'])}
+			<figure class="mb-8 overflow-hidden rounded-lg">
+				<img
+					src="{$page['featuredImage']['url']}"
+					alt="{$page['featuredImage']['alt'] ?? ''}"
+					class="w-full"
+					width="{$page['featuredImage']['width'] ?? null}"
+					height="{$page['featuredImage']['height'] ?? null}"
+				>
+			</figure>
+		{/if}
+
+		{if !empty($page['date']['display'])}
+			<p class="mb-6 text-sm text-muted-foreground">
+				<time datetime="{$page['date']['iso'] ?? ''}">{$page['date']['display']}</time>
+			</p>
+		{/if}
+
+		<div class="prose max-w-none text-foreground">
+			{$page['content']|noescape}
+		</div>
+	{/capture}
+
+	{capture $box}
+		{include 'box/Box.latte', class: 'container mx-auto max-w-3xl px-4 py-12 md:px-6', children: (string) $inner}
+	{/capture}
+	{include 'block/Block.latte', tag: 'article', children: (string) $box}
+{/if}

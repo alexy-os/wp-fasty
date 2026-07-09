@@ -7,6 +7,8 @@
 # Dependencies
 node_modules/
 vendor/
+tools/composer.phar
+tools/composer-setup.php
 **/php/vendor/
 .workspaces/ui8kit-latte/php/vendor/
 themes/*/vendor/

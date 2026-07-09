@@ -1,0 +1,8 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "grid",
+  "byKey": {},
+  "defaults": {},
+  "id": "ui.grid",
+  "keys": []
+}

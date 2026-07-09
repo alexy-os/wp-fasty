@@ -1,0 +1,16 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.box",
+  "showcase": {
+    "tag.default": {
+      "props": {
+        "Tag": "div"
+      }
+    },
+    "class.padded": {
+      "props": {
+        "Class": "p-4 rounded-md border border-border"
+      }
+    }
+  }
+}

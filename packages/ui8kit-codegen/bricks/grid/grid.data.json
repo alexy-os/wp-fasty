@@ -1,0 +1,18 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.grid",
+  "showcase": {
+    "layout.three-col": {
+      "props": {
+        "Class": "gap-4",
+        "Cols": "3"
+      }
+    },
+    "layout.two-col": {
+      "props": {
+        "Class": "gap-4",
+        "Cols": "2"
+      }
+    }
+  }
+}

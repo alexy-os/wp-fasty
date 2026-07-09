@@ -1,0 +1,8 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "text-sm font-medium leading-none",
+  "byKey": {},
+  "defaults": {},
+  "id": "ui.label",
+  "keys": []
+}

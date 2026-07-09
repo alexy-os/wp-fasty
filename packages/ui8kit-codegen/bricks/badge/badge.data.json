@@ -1,0 +1,42 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.badge",
+  "showcase": {
+    "size.lg": {
+      "props": {
+        "Size": "lg",
+        "Variant": "default"
+      }
+    },
+    "size.sm": {
+      "props": {
+        "Size": "sm",
+        "Variant": "default"
+      }
+    },
+    "variant.default": {
+      "props": {
+        "Size": "default",
+        "Variant": "default"
+      }
+    },
+    "variant.destructive": {
+      "props": {
+        "Size": "default",
+        "Variant": "destructive"
+      }
+    },
+    "variant.outline": {
+      "props": {
+        "Size": "default",
+        "Variant": "outline"
+      }
+    },
+    "variant.secondary": {
+      "props": {
+        "Size": "default",
+        "Variant": "secondary"
+      }
+    }
+  }
+}

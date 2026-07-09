@@ -1,0 +1,25 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "grid gap-4",
+  "byKey": {
+    "size": {
+      "default": "gap-4",
+      "lg": "gap-6",
+      "sm": "gap-2"
+    },
+    "variant": {
+      "card": "rounded-md border border-border p-4",
+      "default": "",
+      "inline": "flex flex-wrap items-start gap-4"
+    }
+  },
+  "defaults": {
+    "size": "default",
+    "variant": "default"
+  },
+  "id": "ui.form.fieldset",
+  "keys": [
+    "variant",
+    "size"
+  ]
+}

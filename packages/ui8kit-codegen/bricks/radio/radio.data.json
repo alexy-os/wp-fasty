@@ -1,0 +1,18 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.radio",
+  "showcase": {
+    "layout.group": {
+      "props": {
+        "Name": "plan"
+      }
+    },
+    "state.disabled": {
+      "props": {
+        "Disabled": true,
+        "Name": "plan",
+        "Value": "pro"
+      }
+    }
+  }
+}

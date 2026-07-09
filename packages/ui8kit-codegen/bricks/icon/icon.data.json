@@ -1,0 +1,22 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.icon",
+  "showcase": {
+    "type.class": {
+      "props": {
+        "BaseClass": "icon",
+        "Name": "home",
+        "Prefix": "icon-",
+        "Size": "sm",
+        "Type": "class"
+      }
+    },
+    "type.svg": {
+      "props": {
+        "Href": "#check",
+        "Title": "Done",
+        "Type": "svg"
+      }
+    }
+  }
+}

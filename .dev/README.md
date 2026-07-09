@@ -61,26 +61,36 @@ First boot pulls images (~1–2 min). Then open:
 
 Complete the WordPress install wizard (any site title / admin user).
 
-### 3) Install PHP dependencies (Composer in Docker)
+### 3) Install PHP dependencies
 
 ```bash
 cd ~/code/wpfasty
+bun run ui:install
+```
+
+`ui:install` uses `composer` if available, otherwise **Docker** (`dev:composer`), otherwise downloads `tools/composer.phar`.
+
+Equivalent Docker-only:
+
+```bash
 docker compose --profile tools run --rm composer
+# or: bun run dev:composer
 ```
 
 This runs `composer install` in:
 
 - `.workspaces/ui8kit-latte`
-- `themes/wp-fasty-ym` (path repo → `ui8kit/latte-primitives`)
+- `themes/latte` (path repo → `ui8kit/latte-primitives`)
+- `themes/wp-fasty-ym` (legacy experimental, if present)
 
 ### 4) Activate the theme
 
-**UI:** Appearance → Themes → **WP FastY YM** → Activate  
+**UI:** Appearance → Themes → **Latte** → Activate  
 
 **or CLI:**
 
 ```bash
-docker compose --profile tools run --rm wpcli theme activate wp-fasty-ym
+docker compose --profile tools run --rm wpcli theme activate latte
 docker compose --profile tools run --rm wpcli theme list
 ```
 
@@ -107,7 +117,7 @@ docker compose down -v       # WIPE database + WP files volume
 docker compose logs -f wordpress
 
 # Clear Latte cache after template changes
-rm -rf themes/wp-fasty-ym/~cache
+rm -rf themes/latte/~cache
 # or:
 docker compose --profile tools run --rm wpcli eval 'echo "ok";'
 
@@ -120,7 +130,8 @@ docker compose --profile tools run --rm composer
 
 | Host | Container |
 |------|-----------|
-| `themes/wp-fasty-ym` | `/var/www/html/wp-content/themes/wp-fasty-ym` |
+| `themes/latte` | `/var/www/html/wp-content/themes/latte` |
+| `themes/wp-fasty-ym` | `/var/www/html/wp-content/themes/wp-fasty-ym` (legacy) |
 | `.workspaces` | `/var/www/html/wp-content/.workspaces` |
 
 Relative path `../../.workspaces/ui8kit-latte` from the theme stays valid
@@ -133,7 +144,7 @@ Relative path `../../.workspaces/ui8kit-latte` from the theme stays valid
 | `Missing vendor/autoload.php` | `docker compose --profile tools run --rm composer` |
 | Theme missing / white screen | `bun run ui:primitives` then composer again; check `docker compose logs wordpress` |
 | Port 8080 busy | `WP_PORT=8081 docker compose up -d` |
-| Permission on `~cache` | `mkdir -p themes/wp-fasty-ym/~cache && chmod 777 themes/wp-fasty-ym/~cache` |
+| Permission on `~cache` | `mkdir -p themes/latte/~cache && chmod 777 themes/latte/~cache` |
 | Slow on `/mnt/d` | Clone repo into `~/code/wpfasty` inside WSL |
 | DB not ready | Wait for healthcheck; `docker compose ps` |
 

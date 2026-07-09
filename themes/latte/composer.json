@@ -1,0 +1,31 @@
+{
+  "name": "godudy/latte",
+  "description": "Latte — clean WP FastY theme with UI8Kit Codegen primitives",
+  "type": "wordpress-theme",
+  "license": "GPL-2.0-or-later",
+  "authors": [{ "name": "godudy" }],
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../../.workspaces/ui8kit-latte",
+      "options": { "symlink": true }
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "latte/latte": "^3.0",
+    "ui8kit/latte-primitives": "@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "WPFasty\\": "classes/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "platform": { "php": "8.2" }
+  }
+}

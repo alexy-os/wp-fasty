@@ -1,0 +1,18 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.container",
+  "showcase": {
+    "tag.default": {
+      "props": {
+        "Class": "mx-auto max-w-5xl px-6",
+        "Tag": "div"
+      }
+    },
+    "tag.main": {
+      "props": {
+        "Class": "mx-auto max-w-5xl px-6",
+        "Tag": "main"
+      }
+    }
+  }
+}

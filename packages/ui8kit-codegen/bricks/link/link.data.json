@@ -1,0 +1,17 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.link",
+  "showcase": {
+    "variant.default": {
+      "props": {
+        "Href": "/docs"
+      }
+    },
+    "variant.external": {
+      "props": {
+        "External": true,
+        "Href": "https://example.com"
+      }
+    }
+  }
+}

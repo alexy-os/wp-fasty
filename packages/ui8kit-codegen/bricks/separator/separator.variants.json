@@ -1,0 +1,25 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "shrink-0 border-0 bg-border",
+  "byKey": {
+    "orientation": {
+      "horizontal": "h-px w-full",
+      "vertical": "h-full w-px"
+    },
+    "variant": {
+      "default": "",
+      "muted": "bg-muted",
+      "spaced": "my-4",
+      "strong": "bg-foreground"
+    }
+  },
+  "defaults": {
+    "orientation": "horizontal",
+    "variant": "default"
+  },
+  "id": "ui.separator",
+  "keys": [
+    "orientation",
+    "variant"
+  ]
+}

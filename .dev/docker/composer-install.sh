@@ -3,7 +3,8 @@ set -eu
 
 ROOT="/var/www/wpfasty"
 LATTE="$ROOT/.workspaces/ui8kit-latte"
-THEME="$ROOT/themes/wp-fasty-ym"
+THEME_YM="$ROOT/themes/wp-fasty-ym"
+THEME_LATTE="$ROOT/themes/latte"
 
 if [ ! -f "$LATTE/composer.json" ]; then
   echo "ERROR: $LATTE/composer.json missing."
@@ -14,10 +15,18 @@ fi
 echo "==> composer install: ui8kit-latte"
 composer install --working-dir="$LATTE" --no-interaction --prefer-dist
 
-echo "==> composer install: wp-fasty-ym"
-composer install --working-dir="$THEME" --no-interaction --prefer-dist
+if [ -f "$THEME_LATTE/composer.json" ]; then
+  echo "==> composer install: latte"
+  composer install --working-dir="$THEME_LATTE" --no-interaction --prefer-dist
+fi
+
+if [ -f "$THEME_YM/composer.json" ]; then
+  echo "==> composer install: wp-fasty-ym"
+  composer install --working-dir="$THEME_YM" --no-interaction --prefer-dist
+fi
 
 echo "==> done"
-ls -la "$THEME/vendor" | head -5
-echo "UI8Kit primitives:"
 ls "$LATTE/ui/button/Button.latte"
+if [ -d "$THEME_LATTE/vendor" ]; then
+  ls -la "$THEME_LATTE/vendor" | head -5
+fi

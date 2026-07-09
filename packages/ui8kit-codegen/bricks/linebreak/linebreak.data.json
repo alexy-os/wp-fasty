@@ -1,0 +1,16 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.linebreak",
+  "showcase": {
+    "type.br": {
+      "props": {
+        "Type": "br"
+      }
+    },
+    "type.wbr": {
+      "props": {
+        "Type": "wbr"
+      }
+    }
+  }
+}

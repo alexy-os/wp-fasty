@@ -1,0 +1,27 @@
+{**
+ * Block: hero-centered — UI8Kit Button primitives.
+ * Context: site
+ *}
+{capture $heroInner}
+	{capture $titleHtml}{$site['title']}{/capture}
+	{include 'title/Title.latte', as: 1, class: 'text-4xl md:text-5xl font-bold tracking-tight text-foreground', children: (string) $titleHtml}
+
+	{if !empty($site['description'])}
+		{capture $descHtml}<p class="mt-4 text-lg text-muted-foreground">{$site['description']}</p>{/capture}
+		{$descHtml|noescape}
+	{/if}
+
+	{capture $actions}
+		{capture $explore}Explore{/capture}
+		{capture $learn}Learn more{/capture}
+		{include 'button/Button.latte', variant: 'default', size: 'default', class: 'rounded-full', children: (string) $explore}
+		{include 'button/Button.latte', variant: 'secondary', size: 'default', class: 'rounded-full', children: (string) $learn}
+	{/capture}
+	{include 'group/Group.latte', class: 'mt-8 flex flex-wrap justify-center gap-3', children: (string) $actions}
+{/capture}
+
+{capture $heroBox}
+	{include 'box/Box.latte', class: 'mx-auto max-w-3xl text-center', children: (string) $heroInner}
+{/capture}
+
+{include 'block/Block.latte', tag: 'section', class: 'bg-muted py-16 md:py-24', children: (string) $heroBox}

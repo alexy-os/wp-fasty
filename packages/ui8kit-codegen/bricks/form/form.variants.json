@@ -1,0 +1,8 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "grid gap-4",
+  "byKey": {},
+  "defaults": {},
+  "id": "ui.form",
+  "keys": []
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.dialog",
+  "showcase": {
+    "variant.default": {
+      "props": {
+        "AriaLabel": "Dialog",
+        "Size": "default",
+        "Variant": "default"
+      }
+    },
+    "variant.sheet": {
+      "props": {
+        "AriaLabel": "Panel",
+        "Size": "full",
+        "Variant": "sheet"
+      }
+    }
+  }
+}

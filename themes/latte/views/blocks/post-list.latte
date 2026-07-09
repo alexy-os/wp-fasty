@@ -1,0 +1,46 @@
+{**
+ * Block: post-list
+ * Context: posts[], pagination
+ *}
+{capture $list}
+	{if empty($posts)}
+		<p class="py-16 text-center text-muted-foreground">No posts found.</p>
+	{else}
+		{capture $cards}
+			{foreach $posts as $post}
+				{capture $body}
+					{capture $t}<a href="{$post['url']}" class="no-underline hover:text-primary">{$post['title']}</a>{/capture}
+					{capture $h}{include 'card/CardTitle.latte', children: (string) $t}{/capture}
+					{include 'card/CardHeader.latte', children: (string) $h}
+					{if !empty($post['excerpt'])}
+						{capture $ex}<p class="text-sm text-muted-foreground">{$post['excerpt']}</p>{/capture}
+						{include 'card/CardContent.latte', children: (string) $ex}
+					{/if}
+					{if !empty($post['date']['display'])}
+						{capture $ft}<time datetime="{$post['date']['iso'] ?? ''}" class="text-xs text-muted-foreground">{$post['date']['display']}</time>{/capture}
+						{include 'card/CardFooter.latte', children: (string) $ft}
+					{/if}
+				{/capture}
+				{include 'card/Card.latte', children: (string) $body}
+			{/foreach}
+		{/capture}
+		{include 'stack/Stack.latte', class: 'gap-6', children: (string) $cards}
+	{/if}
+
+	{if !empty($pagination)}
+		<nav class="mt-10 flex justify-center gap-4" aria-label="Pagination">
+			{if $pagination['prev_url']}
+				<a href="{$pagination['prev_url']}" class="text-sm text-primary">Previous</a>
+			{/if}
+			<span class="text-sm text-muted-foreground">{$pagination['current']} / {$pagination['total']}</span>
+			{if $pagination['next_url']}
+				<a href="{$pagination['next_url']}" class="text-sm text-primary">Next</a>
+			{/if}
+		</nav>
+	{/if}
+{/capture}
+
+{capture $box}
+	{include 'box/Box.latte', class: 'container mx-auto px-4 py-12 md:px-6', children: (string) $list}
+{/capture}
+{include 'block/Block.latte', tag: 'section', children: (string) $box}

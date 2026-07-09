@@ -1,0 +1,11 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.label",
+  "showcase": {
+    "layout.with-control": {
+      "props": {
+        "HTMLFor": "demo-email"
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.text",
+  "showcase": {
+    "default": {
+      "props": {}
+    },
+    "muted": {
+      "props": {
+        "Class": "text-muted-foreground"
+      }
+    },
+    "code": {
+      "props": {
+        "Class": "text-sm font-mono"
+      }
+    }
+  }
+}

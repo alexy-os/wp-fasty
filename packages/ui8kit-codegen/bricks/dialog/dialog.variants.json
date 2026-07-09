@@ -1,0 +1,27 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "m-auto rounded-lg border border-border bg-background text-foreground shadow-lg backdrop:bg-background/80",
+  "byKey": {
+    "size": {
+      "default": "w-full max-w-lg",
+      "full": "h-full w-full max-w-none",
+      "lg": "w-full max-w-2xl",
+      "sm": "w-full max-w-sm",
+      "xl": "w-full max-w-4xl"
+    },
+    "variant": {
+      "card": "bg-card text-card-foreground",
+      "default": "",
+      "sheet": "min-h-screen rounded-none"
+    }
+  },
+  "defaults": {
+    "size": "default",
+    "variant": "default"
+  },
+  "id": "ui.dialog",
+  "keys": [
+    "variant",
+    "size"
+  ]
+}

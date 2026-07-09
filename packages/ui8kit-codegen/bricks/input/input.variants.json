@@ -1,0 +1,26 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "w-full rounded-md border px-3 py-2 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  "byKey": {
+    "size": {
+      "default": "h-10 px-3 py-2 text-sm",
+      "lg": "h-12 px-4 text-base",
+      "sm": "h-8 px-3 text-sm",
+      "xs": "h-8 px-2 text-xs"
+    },
+    "variant": {
+      "default": "border-border bg-background",
+      "ghost": "border-transparent bg-muted",
+      "outline": "border-border bg-background"
+    }
+  },
+  "defaults": {
+    "size": "default",
+    "variant": "default"
+  },
+  "id": "ui.input",
+  "keys": [
+    "variant",
+    "size"
+  ]
+}

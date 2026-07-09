@@ -1,0 +1,22 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.title",
+  "showcase": {
+    "as.h1": {
+      "props": {
+        "As": 1
+      }
+    },
+    "as.h2": {
+      "props": {
+        "As": 2
+      }
+    },
+    "as.h3": {
+      "props": {
+        "As": 3,
+        "Class": "text-lg"
+      }
+    }
+  }
+}

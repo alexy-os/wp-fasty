@@ -1,0 +1,25 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "flex cursor-pointer list-none items-center justify-between gap-2 [\u0026::-webkit-details-marker]:hidden",
+  "byKey": {
+    "size": {
+      "default": "text-sm",
+      "lg": "text-base",
+      "sm": "text-sm"
+    },
+    "variant": {
+      "card": "px-4 py-3 font-medium",
+      "default": "px-4 py-3 font-medium",
+      "ghost": "py-2 font-medium"
+    }
+  },
+  "defaults": {
+    "size": "default",
+    "variant": "default"
+  },
+  "id": "ui.disclosure.summary",
+  "keys": [
+    "variant",
+    "size"
+  ]
+}

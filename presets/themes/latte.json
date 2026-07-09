@@ -1,0 +1,19 @@
+{
+  "id": "latte",
+  "name": "Latte",
+  "slug": "latte",
+  "textDomain": "latte",
+  "layout": "layouts/classic",
+  "style": "styles/default",
+  "templates": {
+    "front-page": ["blocks/hero-centered", "blocks/featured-grid"],
+    "archive": ["blocks/archive-header", "blocks/post-list"],
+    "single": ["blocks/post-content"],
+    "page": ["blocks/post-content"]
+  },
+  "features": ["post-thumbnails", "primary-menu", "title-tag"],
+  "php": {
+    "namespace": "WPFasty",
+    "container": true
+  }
+}

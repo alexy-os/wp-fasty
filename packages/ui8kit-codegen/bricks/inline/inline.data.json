@@ -1,0 +1,11 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.inline",
+  "showcase": {
+    "default": {
+      "props": {
+        "Class": "text-muted-foreground"
+      }
+    }
+  }
+}

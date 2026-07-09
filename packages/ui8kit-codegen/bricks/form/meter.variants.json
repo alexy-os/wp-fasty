@@ -1,0 +1,24 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "base": "h-2 w-full",
+  "byKey": {
+    "size": {
+      "default": "h-2",
+      "lg": "h-3",
+      "sm": "h-1"
+    },
+    "variant": {
+      "default": "accent-primary",
+      "muted": "accent-muted-foreground"
+    }
+  },
+  "defaults": {
+    "size": "default",
+    "variant": "default"
+  },
+  "id": "ui.form.meter",
+  "keys": [
+    "variant",
+    "size"
+  ]
+}

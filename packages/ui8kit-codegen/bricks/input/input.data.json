@@ -1,0 +1,42 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.input",
+  "showcase": {
+    "size.sm": {
+      "props": {
+        "Name": "q",
+        "Placeholder": "Search",
+        "Size": "sm"
+      }
+    },
+    "state.disabled": {
+      "props": {
+        "Disabled": true,
+        "Name": "locked",
+        "Value": "Read only"
+      }
+    },
+    "state.required": {
+      "props": {
+        "Name": "name",
+        "Placeholder": "Required field",
+        "Required": true
+      }
+    },
+    "type.email": {
+      "props": {
+        "ID": "demo-email",
+        "Name": "email",
+        "Type": "email"
+      }
+    },
+    "variant.default": {
+      "props": {
+        "Name": "email",
+        "Placeholder": "name@example.com",
+        "Type": "text",
+        "Variant": "default"
+      }
+    }
+  }
+}

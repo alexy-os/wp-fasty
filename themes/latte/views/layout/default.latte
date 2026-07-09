@@ -1,0 +1,25 @@
+{**
+ * Document shell — raw HTML allowed here only.
+ * Context: site, content, menu
+ *}
+<!DOCTYPE html>
+<html lang="{$site['lang']}">
+<head>
+	<meta charset="{$site['charset'] ?? 'UTF-8'}">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{wp_head}
+</head>
+<body {body_class 'font-sans bg-background antialiased'}>
+	{include 'parts/header.latte'}
+
+	<main id="content" class="site-content">
+		{do_action 'before_content'}
+		{$content|noescape}
+		{do_action 'after_content'}
+	</main>
+
+	{include 'parts/footer.latte'}
+
+	{wp_footer}
+</body>
+</html>

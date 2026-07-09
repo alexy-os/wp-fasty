@@ -33,5 +33,5 @@ docker compose --profile tools run --rm composer
 echo ""
 echo "Open http://localhost:8080 and finish the WordPress installer."
 echo "Then activate theme WP FastY YM:"
-echo "  docker compose --profile tools run --rm wpcli theme activate wp-fasty-ym"
+echo "  docker compose --profile tools run --rm wpcli theme activate latte"
 echo "Done."

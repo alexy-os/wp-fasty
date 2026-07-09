@@ -1,0 +1,75 @@
+import {
+  attrBool,
+  attrClass,
+  attrExpr,
+  attrRest,
+  brick,
+  controlPassthroughProps,
+  defaultIfEmpty,
+  el,
+  fwd,
+  pAttrs,
+  pBool,
+  pClass,
+  pPass,
+  prop,
+  pSize,
+  pStr,
+  pVariant,
+} from "../_dsl";
+import inputVariants from "./input.variants.json";
+
+export default brick({
+  id: "ui.input",
+  dir: "input",
+  docs:
+    "Input is a single-line native text field.\n" +
+    "Supports types, validation attrs, and wireframe variant/size classes.",
+  recipes: { input: { file: "input.variants.json", recipe: inputVariants } },
+  parts: [
+    {
+      name: "Input",
+      docs: "Input renders a styled single-line form control.",
+      recipeId: "input",
+      classes: { recipe: { variant: "Variant", size: "Size" } },
+      props: [
+        pVariant(),
+        pSize(),
+        pClass(),
+        pStr("Type", "input type; defaults to text"),
+        pPass("Name"),
+        pPass("Value"),
+        pPass("Placeholder"),
+        pBool("Disabled"),
+        pBool("Required"),
+        pPass("Autocomplete"),
+        pPass("Min"),
+        pPass("Max"),
+        ...controlPassthroughProps(),
+        pAttrs(),
+      ],
+      render: el(
+        "input",
+        [
+          fwd("id", "ID"),
+          attrExpr("type", defaultIfEmpty(prop("Type"), "text")),
+          fwd("name", "Name"),
+          fwd("value", "Value"),
+          fwd("placeholder", "Placeholder"),
+          fwd("autocomplete", "Autocomplete"),
+          fwd("min", "Min"),
+          fwd("max", "Max"),
+          attrClass(),
+          attrBool("disabled", prop("Disabled")),
+          attrBool("required", prop("Required")),
+          fwd("role", "Role"),
+          fwd("tabindex", "TabIndex"),
+          fwd("aria-label", "AriaLabel"),
+          attrRest(),
+        ],
+        [],
+        { void: true }
+      ),
+    },
+  ],
+});

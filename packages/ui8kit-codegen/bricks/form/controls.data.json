@@ -1,0 +1,17 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.form.controls",
+  "showcase": {
+    "group.fieldset": {
+      "props": {
+        "Variant": "card"
+      }
+    },
+    "status.progress": {
+      "props": {
+        "Max": "100",
+        "Value": "40"
+      }
+    }
+  }
+}

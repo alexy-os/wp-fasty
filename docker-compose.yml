@@ -1,4 +1,4 @@
-# Local WordPress for themes/wp-fasty-ym
+# Local WordPress for themes/latte (+ optional wp-fasty-ym)
 # Full guide: .dev/README.md
 #
 #   docker compose up -d
@@ -35,17 +35,14 @@ services:
       WORDPRESS_DEBUG: "1"
     volumes:
       - wp_data:/var/www/html
-      # Full monorepo (Composer path symlink → /var/www/wpfasty/.workspaces/…)
       - .:/var/www/wpfasty
-      # Theme + workspaces under wp-content (MultiRootLoader ../../.workspaces)
+      - ./themes/latte:/var/www/html/wp-content/themes/latte
       - ./themes/wp-fasty-ym:/var/www/html/wp-content/themes/wp-fasty-ym
       - ./.workspaces:/var/www/html/wp-content/.workspaces
     depends_on:
       db:
         condition: service_healthy
 
-  # One-shot Composer (Latte bundle + theme)
-  #   docker compose --profile tools run --rm composer
   composer:
     image: composer:2
     working_dir: /var/www/wpfasty
@@ -55,8 +52,6 @@ services:
     profiles:
       - tools
 
-  # WP-CLI
-  #   docker compose --profile tools run --rm wpcli theme list
   wpcli:
     image: wordpress:cli-php8.2
     user: "33:33"
@@ -68,6 +63,7 @@ services:
     volumes:
       - wp_data:/var/www/html
       - .:/var/www/wpfasty
+      - ./themes/latte:/var/www/html/wp-content/themes/latte
       - ./themes/wp-fasty-ym:/var/www/html/wp-content/themes/wp-fasty-ym
       - ./.workspaces:/var/www/html/wp-content/.workspaces
     depends_on:

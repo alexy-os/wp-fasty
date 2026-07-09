@@ -1,0 +1,17 @@
+{
+  "$schema": "../../schemas/variants.schema.json",
+  "id": "ui.alert",
+  "base": "rounded-lg border px-4 py-3 shadow-sm outline-none ring-offset-background gap-6",
+  "keys": ["variant"],
+  "defaults": {
+    "variant": "default"
+  },
+  "byKey": {
+    "variant": {
+      "default": "bg-card text-card-foreground",
+      "destructive": "border-destructive bg-destructive/10 text-destructive",
+      "success": "border-primary bg-primary/10 text-primary",
+      "warning": "border-border bg-accent text-accent-foreground"
+    }
+  }
+}

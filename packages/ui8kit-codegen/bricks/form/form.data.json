@@ -1,0 +1,14 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.form",
+  "showcase": {
+    "layout.field-with-label": {
+      "props": {
+        "Method": "post"
+      }
+    },
+    "layout.with-message": {
+      "props": {}
+    }
+  }
+}

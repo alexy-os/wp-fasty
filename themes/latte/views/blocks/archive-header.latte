@@ -1,0 +1,15 @@
+{**
+ * Block: archive-header
+ * Context: archive
+ *}
+{capture $inner}
+	{capture $titleHtml}{$archive['title']}{/capture}
+	{include 'title/Title.latte', as: 1, class: 'text-3xl font-bold tracking-tight', children: (string) $titleHtml}
+	{if !empty($archive['description'])}
+		<div class="mt-4 max-w-3xl text-muted-foreground">{$archive['description']|noescape}</div>
+	{/if}
+{/capture}
+{capture $box}
+	{include 'box/Box.latte', class: 'container mx-auto px-4 py-12 md:px-6', children: (string) $inner}
+{/capture}
+{include 'block/Block.latte', tag: 'header', class: 'bg-muted', children: (string) $box}

@@ -1,0 +1,32 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.image",
+  "showcase": {
+    "layout.picture": {
+      "props": {},
+      "children": {
+        "Source": {
+          "props": {
+            "SrcSet": "/hero.webp",
+            "Type": "image/webp"
+          }
+        },
+        "Image": {
+          "props": {
+            "Alt": "Hero image",
+            "Src": "/hero.jpg",
+            "Variant": "rounded"
+          }
+        }
+      }
+    },
+    "variant.avatar": {
+      "props": {
+        "Alt": "User avatar",
+        "Size": "md",
+        "Src": "/avatar.png",
+        "Variant": "avatar"
+      }
+    }
+  }
+}

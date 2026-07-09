@@ -1,0 +1,24 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.list",
+  "showcase": {
+    "tag.dl": {
+      "props": {
+        "Class": "grid grid-cols-[auto_1fr] gap-x-3 gap-y-2",
+        "Tag": "dl"
+      }
+    },
+    "tag.ol": {
+      "props": {
+        "Class": "list-decimal pl-4",
+        "Tag": "ol"
+      }
+    },
+    "tag.ul": {
+      "props": {
+        "Class": "gap-2",
+        "Tag": "ul"
+      }
+    }
+  }
+}

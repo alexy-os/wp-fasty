@@ -1,0 +1,18 @@
+{
+  "$schema": "../../schemas/data.schema.json",
+  "id": "ui.stack",
+  "showcase": {
+    "tag.default": {
+      "props": {
+        "Class": "gap-4",
+        "Tag": "div"
+      }
+    },
+    "tag.ul": {
+      "props": {
+        "Class": "gap-2",
+        "Tag": "ul"
+      }
+    }
+  }
+}
