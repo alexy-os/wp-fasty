@@ -1,0 +1,19 @@
+{**
+ * Recursive nav items — expects $items list with optional children.
+ *}
+<ul class="{$listClass ?? 'flex flex-col gap-1'}">
+	{foreach $items as $item}
+		<li>
+			<a
+				href="{$item['url']}"
+				class="{$linkClass ?? 'block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground no-underline hover:bg-accent hover:text-foreground'}{if $item['current']} bg-accent text-foreground{/if}"
+				{if $item['current']}aria-current="page"{/if}
+			>
+				{$item['title']}
+			</a>
+			{if !empty($item['children'])}
+				{include 'nav-items.latte', items: $item['children'], listClass: 'ml-3 mt-1 flex flex-col gap-1', linkClass: $linkClass ?? null}
+			{/if}
+		</li>
+	{/foreach}
+</ul>

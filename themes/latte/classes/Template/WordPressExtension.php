@@ -12,7 +12,7 @@ use Latte\Compiler\Tag;
 use Latte\Extension;
 
 /**
- * Latte tags: {wp_head}, {wp_footer}, {body_class}, {do_action}, {apply_filters}
+ * Latte tags for WordPress shell hooks.
  */
 final class WordPressExtension extends Extension
 {
@@ -23,6 +23,8 @@ final class WordPressExtension extends Extension
             'apply_filters' => [self::class, 'createApplyFiltersNode'],
             'wp_head' => [self::class, 'createWpHeadNode'],
             'wp_footer' => [self::class, 'createWpFooterNode'],
+            'wp_body_open' => [self::class, 'createWpBodyOpenNode'],
+            'language_attributes' => [self::class, 'createLanguageAttributesNode'],
             'body_class' => [self::class, 'createBodyClassNode'],
         ];
     }
@@ -93,6 +95,38 @@ final class WordPressExtension extends Extension
             public function print(PrintContext $context): string
             {
                 return 'wp_footer();';
+            }
+
+            public function &getIterator(): \Generator
+            {
+                return;
+                yield;
+            }
+        };
+    }
+
+    public static function createWpBodyOpenNode(Tag $tag): StatementNode
+    {
+        return new class extends StatementNode {
+            public function print(PrintContext $context): string
+            {
+                return 'if (function_exists(\'wp_body_open\')) { wp_body_open(); }';
+            }
+
+            public function &getIterator(): \Generator
+            {
+                return;
+                yield;
+            }
+        };
+    }
+
+    public static function createLanguageAttributesNode(Tag $tag): StatementNode
+    {
+        return new class extends StatementNode {
+            public function print(PrintContext $context): string
+            {
+                return 'language_attributes();';
             }
 
             public function &getIterator(): \Generator

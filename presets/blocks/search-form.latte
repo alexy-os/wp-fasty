@@ -1,0 +1,20 @@
+{**
+ * Block: search-form — GET search only (no PII storage).
+ *}
+{capture $fields}
+	<label class="sr-only" for="latte-search-field">{$search['label']}</label>
+	{include 'input/Input.latte',
+		type: 'search',
+		name: 's',
+		id: 'latte-search-field',
+		value: $search['query'] ?? '',
+		placeholder: $search['placeholder'] ?? '',
+		ariaLabel: $search['label'] ?? '',
+		class: 'w-full'
+	}
+	{capture $submitLabel}{$search['submit']}{/capture}
+	{include 'button/Button.latte', type: 'submit', variant: 'default', size: 'default', children: (string) $submitLabel}
+{/capture}
+<form role="search" method="get" action="{$search['action']}" class="flex w-full max-w-md items-center gap-2">
+	{$fields|noescape}
+</form>

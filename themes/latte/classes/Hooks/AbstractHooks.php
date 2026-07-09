@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace WPFasty\Hooks;
 
+use WPFasty\Core\BootableServiceInterface;
 use WPFasty\Core\ContainerInterface;
 
-abstract class AbstractHooks
+abstract class AbstractHooks implements BootableServiceInterface
 {
     public function __construct(
         protected readonly ContainerInterface $container,
     ) {
+    }
+
+    public function boot(): void
+    {
+        $this->register();
     }
 
     abstract public function register(): void;

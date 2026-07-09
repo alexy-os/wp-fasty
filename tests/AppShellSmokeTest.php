@@ -39,16 +39,41 @@ final class AppShellSmokeTest extends TestCase
             'menu' => [
                 'primary' => [
                     'items' => [
-                        ['title' => 'Home', 'url' => '/', 'id' => 1, 'current' => true],
+                        [
+                            'title' => 'Home',
+                            'url' => '/',
+                            'id' => 1,
+                            'current' => true,
+                            'children' => [],
+                        ],
                     ],
                 ],
+                'footer' => ['items' => []],
             ],
             'shell' => 'app-shell',
+            'sheet' => [
+                'trigger' => 'app-shell-mobile-sheet-trigger',
+                'panel' => 'app-shell-mobile-sheet-panel',
+                'title' => 'app-shell-mobile-sheet-title',
+            ],
+            'search' => [
+                'action' => '/',
+                'query' => '',
+                'placeholder' => 'Search…',
+                'submit' => 'Search',
+                'label' => 'Search',
+            ],
+            'widgets' => [
+                'sidebar' => '',
+                'footer' => '',
+            ],
             'labels' => [
                 'skip_to_content' => 'Skip to content',
                 'open_menu' => 'Open menu',
                 'close_menu' => 'Close menu',
                 'primary_nav' => 'Primary',
+                'footer_nav' => 'Footer',
+                'sidebar' => 'Sidebar',
             ],
             'content' => '<p>Hi</p>',
         ];
@@ -59,5 +84,7 @@ final class AppShellSmokeTest extends TestCase
         $this->assertStringContainsString('behavior="ui8kit"', $html);
         $this->assertStringContainsString('data-state="closed"', $html);
         $this->assertStringContainsString('hidden', $html);
+        $this->assertStringContainsString('<!--wp_body_open-->', $html);
+        $this->assertStringContainsString('Open menu', $html);
     }
 }

@@ -5,17 +5,20 @@
 	<div class="flex items-center gap-3">
 		<button
 			type="button"
-			id="app-shell-mobile-sheet-trigger"
+			id="{$sheet['trigger']}"
 			class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden"
 			data-ui8kit-dialog-open="true"
-			data-ui8kit-dialog-target="app-shell-mobile-sheet-panel"
-			aria-controls="app-shell-mobile-sheet-panel"
+			data-ui8kit-dialog-target="{$sheet['panel']}"
+			aria-controls="{$sheet['panel']}"
 			aria-haspopup="dialog"
 			aria-expanded="false"
-			aria-label="Open menu"
+			aria-label="{$labels['open_menu']}"
 		>
 			<span aria-hidden="true">☰</span>
 		</button>
 		<span class="text-sm font-medium text-muted-foreground md:hidden">{$site['title']}</span>
+	</div>
+	<div class="hidden md:block">
+		{include 'blocks/search-form.latte'}
 	</div>
 </header>

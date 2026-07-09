@@ -21,6 +21,12 @@ final class ThemeServiceTest extends TestCase
         return new ThemeService($engine, new ContextFactory());
     }
 
+    protected function setUp(): void
+    {
+        $GLOBALS['wp_test_flags'] = [];
+        $GLOBALS['wp_test_filters'] = [];
+    }
+
     public function testResolveView404(): void
     {
         $GLOBALS['wp_test_flags'] = ['is_404' => true];
@@ -39,15 +45,58 @@ final class ThemeServiceTest extends TestCase
         $this->assertSame('pages/front-page', $this->service()->resolveView());
     }
 
+    public function testResolveViewHomeBlog(): void
+    {
+        $GLOBALS['wp_test_flags'] = ['is_home' => true];
+        $this->assertSame('pages/archive', $this->service()->resolveView());
+    }
+
     public function testResolveViewArchive(): void
     {
         $GLOBALS['wp_test_flags'] = ['is_archive' => true];
         $this->assertSame('pages/archive', $this->service()->resolveView());
     }
 
+    public function testResolveViewAttachment(): void
+    {
+        $GLOBALS['wp_test_flags'] = ['is_attachment' => true];
+        $this->assertSame('pages/attachment', $this->service()->resolveView());
+    }
+
+    public function testResolveViewPage(): void
+    {
+        $GLOBALS['wp_test_flags'] = ['is_page' => true];
+        $this->assertSame('pages/page', $this->service()->resolveView());
+    }
+
+    public function testResolveViewSingularPost(): void
+    {
+        $GLOBALS['wp_test_flags'] = ['is_singular' => true, 'singular_type' => 'post'];
+        $this->assertSame('pages/single', $this->service()->resolveView());
+    }
+
+    public function testResolveViewSingularCpt(): void
+    {
+        $GLOBALS['wp_test_flags'] = ['is_singular' => true, 'singular_type' => 'book'];
+        $this->assertSame('pages/single', $this->service()->resolveView());
+    }
+
     public function testResolveViewFallbackIs404(): void
     {
         $GLOBALS['wp_test_flags'] = [];
         $this->assertSame('pages/404', $this->service()->resolveView());
+    }
+
+    public function testResolveViewCategoryArchive(): void
+    {
+        $GLOBALS['wp_test_flags'] = ['is_archive' => true, 'is_category' => true];
+        $this->assertSame('pages/archive', $this->service()->resolveView());
+    }
+
+    public function testResolveViewFilterOverride(): void
+    {
+        $GLOBALS['wp_test_flags'] = ['is_singular' => true, 'singular_type' => 'book'];
+        add_filter('wpfasty_resolve_view', static fn (string $view): string => 'pages/custom-book');
+        $this->assertSame('pages/custom-book', $this->service()->resolveView());
     }
 }

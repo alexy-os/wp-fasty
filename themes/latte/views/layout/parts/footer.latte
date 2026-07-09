@@ -1,8 +1,24 @@
 {**
- * Site footer.
+ * Site footer — menu, widgets, copyright.
  *}
 <footer class="site-footer mt-16 border-t border-border bg-card py-10">
-	<div class="container mx-auto px-4 md:px-6">
+	<div class="container mx-auto space-y-8 px-4 md:px-6">
+		{if !empty($menu['footer']['items'])}
+			<nav aria-label="{$labels['footer_nav']}">
+				{include 'nav-items.latte',
+					items: $menu['footer']['items'],
+					listClass: 'flex flex-wrap gap-4',
+					linkClass: 'text-sm text-muted-foreground no-underline hover:text-foreground'
+				}
+			</nav>
+		{/if}
+
+		{if !empty($widgets['footer'])}
+			<div class="grid gap-6 md:grid-cols-3 text-sm text-muted-foreground">
+				{$widgets['footer']|noescape}
+			</div>
+		{/if}
+
 		<p class="text-sm text-muted-foreground">
 			&copy; {$site['year']} {$site['title']}
 		</p>

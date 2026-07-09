@@ -1,0 +1,38 @@
+{**
+ * Block: attachment — media attachment singular.
+ *}
+{if $page}
+	{capture $inner}
+		{capture $titleHtml}{$page['title']}{/capture}
+		{include 'title/Title.latte', as: 1, class: 'mb-6 text-3xl font-bold tracking-tight', children: (string) $titleHtml}
+
+		{if !empty($page['featuredImage']['url'])}
+			{capture $img}
+				{include 'image/Image.latte',
+					src: $page['featuredImage']['url'],
+					alt: $page['featuredImage']['alt'] ?? $page['title'],
+					width: (string) ($page['featuredImage']['width'] ?? ''),
+					height: (string) ($page['featuredImage']['height'] ?? ''),
+					srcset: $page['featuredImage']['srcset'] ?? '',
+					sizes: $page['featuredImage']['sizes'] ?? '',
+					class: 'mx-auto max-h-[80vh] w-auto',
+					loading: 'eager'
+				}
+			{/capture}
+			{include 'box/Box.latte', class: 'mb-8 overflow-hidden rounded-lg', children: (string) $img}
+		{elseif !empty($page['attachment_url'])}
+			{capture $fileLink}{$labels['attachment'] ?? 'Attachment'}{/capture}
+			{include 'link/Link.latte', href: $page['attachment_url'], class: 'text-primary underline', children: (string) $fileLink}
+		{/if}
+
+		{if !empty($page['content'])}
+			{capture $body}<div class="prose max-w-none text-foreground">{$page['content']|noescape}</div>{/capture}
+			{include 'box/Box.latte', children: (string) $body}
+		{/if}
+	{/capture}
+
+	{capture $box}
+		{include 'box/Box.latte', class: 'container mx-auto max-w-3xl px-4 py-12 md:px-6', children: (string) $inner}
+	{/capture}
+	{include 'block/Block.latte', tag: 'article', class: $page['post_class'] ?? '', children: (string) $box}
+{/if}

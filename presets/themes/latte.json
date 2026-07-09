@@ -8,10 +8,20 @@
   "templates": {
     "front-page": ["blocks/hero-centered", "blocks/featured-grid"],
     "archive": ["blocks/archive-header", "blocks/post-list"],
+    "search": ["blocks/archive-header", "blocks/post-list"],
     "single": ["blocks/post-content"],
-    "page": ["blocks/post-content"]
+    "page": ["blocks/post-content"],
+    "attachment": ["blocks/attachment"],
+    "404": []
   },
-  "features": ["post-thumbnails", "primary-menu", "title-tag"],
+  "features": [
+    "post-thumbnails",
+    "primary-menu",
+    "footer-menu",
+    "title-tag",
+    "custom-logo",
+    "starter-content"
+  ],
   "php": {
     "namespace": "WPFasty",
     "container": true

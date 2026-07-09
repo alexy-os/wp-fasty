@@ -1,39 +1,91 @@
 {**
- * Block: post-single / page content
- * Context: page
+ * Block: post / page content
+ * Context: page, labels
  *}
 {if $page}
+	{capture $meta}
+		{if !empty($page['date']['display']) || !empty($page['author']) || !empty($page['categories'])}
+			{capture $metaBits}
+				{if !empty($page['date']['display'])}
+					<span>{$labels['posted_on']} <time datetime="{$page['date']['iso'] ?? ''}">{$page['date']['display']}</time></span>
+				{/if}
+				{if !empty($page['author']['name'])}
+					{capture $authorName}{$page['author']['name']}{/capture}
+					<span>{$labels['by_author']}
+						{include 'link/Link.latte', href: $page['author']['url'], class: 'underline-offset-2 hover:underline', children: (string) $authorName}
+					</span>
+				{/if}
+				{if !empty($page['categories'])}
+					<span>{$labels['categories']}:
+						{foreach $page['categories'] as $cat}
+							{capture $catName}{$cat['name']}{/capture}
+							{include 'link/Link.latte', href: $cat['url'], class: 'underline-offset-2 hover:underline', children: (string) $catName}{if !$iterator->last}, {/if}
+						{/foreach}
+					</span>
+				{/if}
+			{/capture}
+			{include 'group/Group.latte', class: 'mb-6 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground', children: (string) $metaBits}
+		{/if}
+	{/capture}
+
 	{capture $inner}
 		{capture $titleHtml}{$page['title']}{/capture}
 		{include 'title/Title.latte', as: 1, class: 'mb-6 text-3xl font-bold tracking-tight md:text-4xl', children: (string) $titleHtml}
 
+		{$meta|noescape}
+
 		{if !empty($page['featuredImage']['url'])}
-			<figure class="mb-8 overflow-hidden rounded-lg">
-				<img
-					src="{$page['featuredImage']['url']}"
-					alt="{$page['featuredImage']['alt'] ?? ''}"
-					class="w-full"
-					width="{$page['featuredImage']['width'] ?? null}"
-					height="{$page['featuredImage']['height'] ?? null}"
-					srcset="{$page['featuredImage']['srcset'] ?? ''}"
-					sizes="{$page['featuredImage']['sizes'] ?? ''}"
-				>
-			</figure>
+			{capture $img}
+				{include 'image/Image.latte',
+					src: $page['featuredImage']['url'],
+					alt: $page['featuredImage']['alt'] ?? '',
+					width: (string) ($page['featuredImage']['width'] ?? ''),
+					height: (string) ($page['featuredImage']['height'] ?? ''),
+					srcset: $page['featuredImage']['srcset'] ?? '',
+					sizes: $page['featuredImage']['sizes'] ?? '',
+					class: 'w-full',
+					loading: 'eager'
+				}
+			{/capture}
+			{include 'box/Box.latte', class: 'mb-8 overflow-hidden rounded-lg', children: (string) $img}
 		{/if}
 
-		{if !empty($page['date']['display'])}
-			<p class="mb-6 text-sm text-muted-foreground">
-				<time datetime="{$page['date']['iso'] ?? ''}">{$page['date']['display']}</time>
-			</p>
+		{capture $body}<div class="prose max-w-none text-foreground">{$page['content']|noescape}</div>{/capture}
+		{include 'box/Box.latte', children: (string) $body}
+
+		{if !empty($page['link_pages'])}
+			{$page['link_pages']|noescape}
 		{/if}
 
-		<div class="prose max-w-none text-foreground">
-			{$page['content']|noescape}
-		</div>
+		{if !empty($page['tags'])}
+			{capture $tagBits}
+				<span class="text-sm text-muted-foreground">{$labels['tags']}:</span>
+				{foreach $page['tags'] as $tag}
+					{capture $tagName}{$tag['name']}{/capture}
+					{capture $tagLink}{include 'link/Link.latte', href: $tag['url'], class: 'no-underline', children: (string) $tagName}{/capture}
+					{include 'badge/Badge.latte', variant: 'secondary', class: 'mr-1', children: (string) $tagLink}
+				{/foreach}
+			{/capture}
+			{include 'group/Group.latte', class: 'mt-8 flex flex-wrap items-center gap-2', children: (string) $tagBits}
+		{/if}
+
+		{if !empty($page['prev']) || !empty($page['next'])}
+			{capture $navBits}
+				{if !empty($page['prev']['url'])}
+					{capture $prevLabel}{$labels['previous_post']}: {$page['prev']['title']}{/capture}
+					{include 'link/Link.latte', href: $page['prev']['url'], class: 'text-sm text-primary', children: (string) $prevLabel}
+				{/if}
+				{if !empty($page['next']['url'])}
+					{capture $nextLabel}{$labels['next_post']}: {$page['next']['title']}{/capture}
+					{include 'link/Link.latte', href: $page['next']['url'], class: 'text-sm text-primary', children: (string) $nextLabel}
+				{/if}
+			{/capture}
+			{include 'group/Group.latte', class: 'mt-10 flex flex-wrap justify-between gap-4 border-t border-border pt-8', children: (string) $navBits}
+		{/if}
 	{/capture}
 
 	{capture $box}
 		{include 'box/Box.latte', class: 'container mx-auto max-w-3xl px-4 py-12 md:px-6', children: (string) $inner}
 	{/capture}
-	{include 'block/Block.latte', tag: 'article', children: (string) $box}
+	{include 'block/Block.latte', tag: 'article', class: $page['post_class'] ?? '', children: (string) $box}
 {/if}

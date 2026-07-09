@@ -3,7 +3,7 @@
 **Purpose:** Single handoff document for agents (including Cursor browser).  
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
-**Last updated:** 2026-07-09 (verification pass)  
+**Last updated:** 2026-07-09 (Cycle H complete)  
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin`  
 **Repo:** `godudy/wpfasty` · monorepo with UI8Kit Codegen Latte primitives  
 **Monorepo version:** `0.3.0` (`package.json`)
@@ -24,8 +24,9 @@ Read this first, then execute the next open cycle. Do not invent a parallel road
 [x] bun / PHP available (Composer via tools/composer.sh or composer.phar)
 [x] themes/latte + themes/latte-skin (child has no composer/vendor)
 [x] .workspaces/ui8kit-latte exists
-[x] PHPUnit 13/13 green (after UI8Kit autoload fix)
+[x] PHPUnit 26/26 green (Cycle H)
 [x] theme:pack → dist/latte.zip works
+[x] readme.txt + LICENSE present (WP.org packaging)
 ```
 
 ---
@@ -45,6 +46,7 @@ Audited claimed Cycles A–G against the tree and ran tooling.
 | **E** | `languages/latte.pot`, skip/mobile nav, PHPUnit suite, PHPCS scripts, hero URLs via context |
 | **F** | `presets/layouts/app-shell`, app-shell Latte parts, `ui8kit.js`, skin sets `wpfasty_shell` |
 | **G** | `theme.json`, custom-logo / embeds, comments off, srcset, CI workflow, screenshots |
+| **H** | WP.org completeness: entities, chrome, org hooks, starter content, packaging, tests |
 
 ### Gaps found & fixed in this pass
 
@@ -61,6 +63,8 @@ Audited claimed Cycles A–G against the tree and ran tooling.
 | Item | Notes |
 |------|-------|
 | A7 / B9 Docker smoke | Needs `bun run dev:up` on machine with Docker |
+| Theme Check on `dist/latte.zip` | Manual gate before .org submit |
+| Theme Unit Test import | Manual keyboard + template sweep |
 | PHPCS clean | CI has `continue-on-error: true` — debt remains |
 | Packagist publish of `ui8kit/latte-primitives` | Zip uses bundled `lib/` instead |
 
@@ -74,11 +78,12 @@ Audited claimed Cycles A–G against the tree and ran tooling.
 |------|--------|
 | Codegen Latte bundle | Done |
 | Docs + `.cursor/rules` + `.project` KB | Done |
-| Parent `themes/latte` | Done |
-| Cycles A–G (code) | Done |
-| PHPUnit 13 tests | Done (green) |
-| `theme:pack` → `dist/latte.zip` | Done (verified this pass) |
-| Package scripts / composer helper | Done (this pass) |
+| Parent `themes/latte` | Done (v1.1.0) |
+| Cycles A–H (code) | Done |
+| PHPUnit 26 tests | Done (green) |
+| `theme:pack` → `dist/latte.zip` | Done |
+| WP.org packaging (`readme.txt`, `LICENSE`) | Done |
+| Package scripts / composer helper | Done |
 
 ### Architecture (locked)
 
@@ -101,18 +106,22 @@ dist/latte.zip               release artifact (gitignored)
 - Variants only in `*.variants.json`
 - Layout grammar: one Block per block file
 - Child skins: no `composer.json` / `vendor/` / Application boot
+- No CPT/shortcode/plugin-like features for .org
+- Comments stay off (privacy; no PII forms)
 
 ---
 
 ## Open cycle
 
-**→ Follow-ups (post A–G)** — not a new lettered cycle; pick from backlog below.
+**→ Follow-ups (post A–H)** — not a new lettered cycle; pick from backlog below.
 
 Suggested next:
 
-1. Local Docker smoke (A7/B9): activate `latte` then `latte-skin`
-2. Tighten PHPCS until CI can drop `continue-on-error`
-3. Optional: publish `ui8kit/latte-primitives` to Packagist
+1. Theme Check plugin on unpacked `dist/latte.zip` — zero required failures
+2. Import Theme Unit Test data; keyboard sweep (skip, menus, sheet, search)
+3. Local Docker smoke (A7/B9): activate `latte` then `latte-skin`
+4. Tighten PHPCS until CI can drop `continue-on-error`
+5. Optional: publish `ui8kit/latte-primitives` to Packagist
 
 ---
 
@@ -126,7 +135,8 @@ A Parent correctness ✓
                 → E Quality (i18n, a11y, tests) ✓
                     → F Shell v2 (sidebar + sheet + ARIA) ✓
                         → G Product polish ✓
-                            → Follow-ups (Docker / PHPCS / Packagist)
+                            → H WordPress.org completeness ✓
+                                → Follow-ups (Theme Check / Unit Test / Docker / PHPCS)
 ```
 
 ---
@@ -176,7 +186,7 @@ A Parent correctness ✓
 | Stage | Task | Done |
 |-------|------|------|
 | E1–E6 | i18n, a11y, PHPUnit, PHPCS scripts, hero URLs | [x] |
-| E✓ | PHPUnit 13/13 green after autoload fix | [x] 2026-07-09 |
+| E✓ | PHPUnit green after autoload fix | [x] 2026-07-09 |
 
 ---
 
@@ -193,6 +203,25 @@ A Parent correctness ✓
 | Stage | Task | Done |
 |-------|------|------|
 | G1–G6 | theme.json, logo, comments, srcset, CI | [x] |
+
+---
+
+### Cycle H — WordPress.org Theme Completeness
+
+**Target:** WordPress.org Theme Directory (classic review).  
+**Exclusions (intentional):** WooCommerce, FSE/block templates, comments/contact forms (PII), RTL.
+
+| Stage | Task | Done |
+|-------|------|------|
+| H0 | Sheet IDs in context; `BootableServiceInterface`; shared mobile sheet; app-shell `$labels` | [x] |
+| H1 | `resolveView` matrix; home/tax/author/attachment stubs; rich context + attachment view | [x] |
+| H2 | Logo/brand, search form, footer menu, sidebars/widgets (classic + app-shell) | [x] |
+| H3 | `{wp_body_open}`, `{language_attributes}`, `post_class`, `wp_link_pages`; comments stay off | [x] |
+| H4 | Block grammar cleanup; pagination a11y; presets/blocks sync; tokens | [x] |
+| H5 | `starter-content` (Home/Blog/About, posts, menus) | [x] |
+| H6 | `readme.txt`, `LICENSE`, honest tags, Resources; style.css `1.1.0` | [x] |
+| H7 | PHPUnit matrix expanded (26 tests); Theme Check / Unit Test = manual gate | [x] |
+| H8 | PROGRESS Cycle H + version bump | [x] |
 
 ---
 
@@ -222,7 +251,7 @@ bun run dev:wp -- theme activate latte-skin
 |---------|---------|
 | `wpfasty` (root `package.json`) | `0.3.0` |
 | `@wpfasty/theme-builder` | `0.3.0` |
-| `themes/latte` style.css | `1.0.0` |
+| `themes/latte` style.css | `1.1.0` |
 | Root Composer tooling | phpunit ^10.5, phpcs, wpcs |
 
 ---
@@ -239,16 +268,21 @@ bun run dev:wp -- theme activate latte-skin
 | 2026-07 | Docker smokes deferred to local machine |
 | 2026-07 | Theme path-repo uses `symlink: false` for Windows PHP |
 | 2026-07 | Pack uses `composer.phar` + PowerShell zip on Windows |
+| 2026-07 | **Cycle H:** target WordPress.org classic directory |
+| 2026-07 | **Cycle H exclusions:** WooCommerce, FSE, comments/PII forms, RTL |
+| 2026-07 | Comments remain disabled until a privacy-safe plugin/option |
+| 2026-07 | Sheet IDs live in `ContextFactory` only (no orphan includes) |
 
 ---
 
 ## Browser Cursor handoff prompt
 
 > Continue WP FastY from `.project/PROGRESS.md`.  
-> Cycles A–G are complete and verified; follow-ups: Docker smoke (A7/B9), PHPCS debt, optional Packagist.  
-> Active theme: `themes/latte`; demo skin: `themes/latte-skin`.  
+> Cycles A–H are complete; follow-ups: Theme Check on `dist/latte.zip`, Theme Unit Test import, Docker smoke (A7/B9), PHPCS debt, optional Packagist.  
+> Active theme: `themes/latte` (v1.1.0); demo skin: `themes/latte-skin`.  
 > Use `bash tools/composer.sh` for Composer; `bun run theme:pack -- latte` for zip.  
-> Discipline: `docs/` + `.cursor/rules/`. Do not revive YM. Do not hand-edit `ui8kit-latte`.
+> Discipline: `docs/` + `.cursor/rules/`. Do not revive YM. Do not hand-edit `ui8kit-latte`.  
+> Do not add comments/contact forms or WooCommerce for .org.
 
 ---
 
@@ -262,4 +296,5 @@ bun run dev:wp -- theme activate latte-skin
 | [docs/install.md](../docs/install.md) | Zip + monorepo install |
 | [docs/architecture.md](../docs/architecture.md) | Layers |
 | [themes/latte/README.md](../themes/latte/README.md) | Parent setup |
+| [themes/latte/readme.txt](../themes/latte/readme.txt) | WP.org readme |
 | [themes/latte-skin/README.md](../themes/latte-skin/README.md) | Skin demo |

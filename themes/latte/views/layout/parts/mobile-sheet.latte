@@ -1,0 +1,39 @@
+{**
+ * Shared mobile nav sheet — IDs from $sheet context.
+ *}
+{if !empty($menu['primary']['items'])}
+	<div
+		id="{$sheet['panel']}"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="{$sheet['title']}"
+		data-ui8kit="sheet"
+		data-ui8kit-dialog="true"
+		behavior="ui8kit"
+		data-state="closed"
+		hidden
+		class="fixed inset-0 z-50 md:hidden"
+	>
+		<div class="absolute inset-0 bg-black/40" data-ui8kit-dialog-close="true" data-ui8kit-dialog-target="{$sheet['panel']}"></div>
+		<div class="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-card shadow-lg">
+			<div class="flex h-16 items-center justify-between border-b border-border px-4">
+				<h2 id="{$sheet['title']}" class="text-base font-semibold">{$site['title']}</h2>
+				<button
+					type="button"
+					class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input text-sm"
+					data-ui8kit-dialog-close="true"
+					data-ui8kit-dialog-target="{$sheet['panel']}"
+					aria-label="{$labels['close_menu']}"
+				>
+					×
+				</button>
+			</div>
+			<nav class="flex-1 overflow-y-auto px-3 py-4" aria-label="{$labels['primary_nav']}">
+				{include 'nav-items.latte', items: $menu['primary']['items']}
+			</nav>
+			<div class="border-t border-border p-4">
+				{include 'blocks/search-form.latte'}
+			</div>
+		</div>
+	</div>
+{/if}

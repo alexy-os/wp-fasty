@@ -8,6 +8,10 @@
 
 	<p class="mt-4 max-w-xl text-muted-foreground">{$error['message']}</p>
 
+	<div class="mt-8 max-w-md">
+		{include 'blocks/search-form.latte'}
+	</div>
+
 	{capture $ctaLabel}{$error['home_label']}{/capture}
 	{capture $cta}
 		{include 'link/Link.latte', href: $error['home_url'], variant: 'default', size: 'lg', class: 'font-medium', children: (string) $ctaLabel}

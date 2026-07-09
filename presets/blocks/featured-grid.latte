@@ -1,5 +1,5 @@
 {**
- * Block: featured-grid — UI8Kit Card primitives.
+ * Block: featured-grid — UI8Kit Card + Image primitives.
  * Context: posts[], labels
  *}
 {if isset($posts) && count($posts) > 0}
@@ -7,21 +7,23 @@
 		{foreach $posts as $post}
 			{capture $cardBody}
 				{if !empty($post['thumbnail']['url'])}
-					<a href="{$post['url']}" class="block overflow-hidden">
-						<img
-							src="{$post['thumbnail']['url']}"
-							alt="{$post['thumbnail']['alt'] ?? ''}"
-							class="aspect-video w-full object-cover"
-							width="{$post['thumbnail']['width'] ?? null}"
-							height="{$post['thumbnail']['height'] ?? null}"
-							srcset="{$post['thumbnail']['srcset'] ?? ''}"
-							sizes="{$post['thumbnail']['sizes'] ?? ''}"
-							loading="lazy"
-						>
-					</a>
+					{capture $thumb}
+						{include 'image/Image.latte',
+							src: $post['thumbnail']['url'],
+							alt: $post['thumbnail']['alt'] ?? '',
+							width: (string) ($post['thumbnail']['width'] ?? ''),
+							height: (string) ($post['thumbnail']['height'] ?? ''),
+							srcset: $post['thumbnail']['srcset'] ?? '',
+							sizes: $post['thumbnail']['sizes'] ?? '',
+							class: 'aspect-video w-full object-cover',
+							loading: 'lazy'
+						}
+					{/capture}
+					{include 'link/Link.latte', href: $post['url'], class: 'block overflow-hidden', children: (string) $thumb}
 				{/if}
+				{capture $postTitle}{$post['title']}{/capture}
 				{capture $cardTitle}
-					<a href="{$post['url']}" class="no-underline hover:text-primary">{$post['title']}</a>
+					{include 'link/Link.latte', href: $post['url'], class: 'no-underline hover:text-primary', children: (string) $postTitle}
 				{/capture}
 				{capture $headerInner}
 					{include 'card/CardTitle.latte', class: 'text-xl', children: (string) $cardTitle}

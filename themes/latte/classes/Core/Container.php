@@ -75,11 +75,12 @@ final class Container implements ContainerInterface
     {
         foreach ($this->findTaggedServiceIds(self::TAG_BOOTABLE) as $id) {
             $service = $this->get($id);
-            if ($service instanceof BootableServiceInterface) {
-                $service->boot();
-            } elseif (method_exists($service, 'register')) {
-                $service->register();
+            if (!$service instanceof BootableServiceInterface) {
+                throw new \RuntimeException(
+                    "Bootable service \"{$id}\" must implement BootableServiceInterface"
+                );
             }
+            $service->boot();
         }
     }
 }

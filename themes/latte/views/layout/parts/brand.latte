@@ -1,0 +1,17 @@
+{**
+ * Site brand — logo image or title text.
+ *}
+<a href="{$site['url']}" class="inline-flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary">
+	{if !empty($site['logo']['url'])}
+		{include 'image/Image.latte',
+			src: $site['logo']['url'],
+			alt: $site['logo']['alt'] ?? $site['title'],
+			width: (string) ($site['logo']['width'] ?? ''),
+			height: (string) ($site['logo']['height'] ?? ''),
+			class: 'h-8 w-auto',
+			loading: 'eager'
+		}
+	{else}
+		{$site['title']}
+	{/if}
+</a>

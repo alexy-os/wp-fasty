@@ -57,3 +57,14 @@ body {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
+/* Chrome helpers used by layout parts */
+.site-header form,
+.site-footer .widget {
+  max-width: 100%;
+}
+
+.post-pages a {
+  margin-inline-end: 0.5rem;
+  color: var(--primary);
+}

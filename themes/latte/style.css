@@ -4,14 +4,14 @@ Theme URI: https://github.com/godudy/wpfasty
 Author: godudy
 Author URI: https://github.com/godudy
 Description: Clean WP FastY Latte theme — UI8Kit Codegen primitives, DI context, classic shell.
-Version: 1.0.0
+Version: 1.1.0
 Requires at least: 6.4
 Tested up to: 6.7
 Requires PHP: 8.2
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: latte
-Tags: blog, custom-menu, featured-images, custom-logo
+Tags: blog, custom-menu, featured-images, custom-logo, one-column, two-columns, translation-ready
 */
 
 /* Styles live in assets/css/ — this file is the WordPress theme header only. */

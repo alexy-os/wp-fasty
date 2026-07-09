@@ -23,26 +23,29 @@ final class ThemeService
      */
     public function resolveView(): string
     {
+        $view = 'pages/404';
+
         if (is_404()) {
-            return 'pages/404';
-        }
-        if (is_search()) {
-            return 'pages/search';
-        }
-        if (is_front_page() && !is_home()) {
-            return 'pages/front-page';
-        }
-        if (is_home() || is_archive()) {
-            return 'pages/archive';
-        }
-        if (is_singular('post')) {
-            return 'pages/single';
-        }
-        if (is_page()) {
-            return 'pages/page';
+            $view = 'pages/404';
+        } elseif (is_search()) {
+            $view = 'pages/search';
+        } elseif (is_front_page() && !is_home()) {
+            $view = 'pages/front-page';
+        } elseif (is_home() || is_archive()) {
+            $view = 'pages/archive';
+        } elseif (is_attachment()) {
+            $view = 'pages/attachment';
+        } elseif (is_page()) {
+            $view = 'pages/page';
+        } elseif (is_singular('post')) {
+            $view = 'pages/single';
+        } elseif (is_singular()) {
+            $view = 'pages/single';
         }
 
-        return 'pages/404';
+        /** @var mixed $filtered */
+        $filtered = apply_filters('wpfasty_resolve_view', $view);
+        return is_string($filtered) && $filtered !== '' ? $filtered : $view;
     }
 
     /** @return array<string, mixed> */

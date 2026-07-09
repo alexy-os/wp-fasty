@@ -1,28 +1,41 @@
 {**
  * Document shell — raw HTML allowed here only.
- * Context: site, content, menu
- * layout: classic (default) | app-shell via $shell
+ * Context: site, content, menu, shell, labels
  *}
 <!DOCTYPE html>
-<html lang="{$site['lang']}">
+<html {language_attributes}>
 <head>
 	<meta charset="{$site['charset'] ?? 'UTF-8'}">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	{wp_head}
 </head>
 <body {body_class 'font-sans bg-background antialiased'}>
+	{wp_body_open}
 	{if ($shell ?? 'classic') === 'app-shell'}
 		{include 'layout/app-shell.latte'}
 	{else}
-		{include 'parts/header.latte'}
+		{include 'layout/parts/header.latte'}
 
-		<main id="content" class="site-content">
-			{do_action 'before_content'}
-			{$content|noescape}
-			{do_action 'after_content'}
-		</main>
+		{if !empty($widgets['sidebar'])}
+			<div class="container mx-auto flex flex-col gap-8 px-4 md:flex-row md:px-6">
+				<main id="content" class="site-content min-w-0 flex-1">
+					{do_action 'before_content'}
+					{$content|noescape}
+					{do_action 'after_content'}
+				</main>
+				<aside class="w-full shrink-0 md:w-64" aria-label="{$labels['sidebar']}">
+					{$widgets['sidebar']|noescape}
+				</aside>
+			</div>
+		{else}
+			<main id="content" class="site-content">
+				{do_action 'before_content'}
+				{$content|noescape}
+				{do_action 'after_content'}
+			</main>
+		{/if}
 
-		{include 'parts/footer.latte'}
+		{include 'layout/parts/footer.latte'}
 	{/if}
 
 	{wp_footer}

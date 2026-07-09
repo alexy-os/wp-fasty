@@ -9,7 +9,8 @@
 		{capture $cards}
 			{foreach $posts as $post}
 				{capture $body}
-					{capture $t}<a href="{$post['url']}" class="no-underline hover:text-primary">{$post['title']}</a>{/capture}
+					{capture $postTitle}{$post['title']}{/capture}
+					{capture $t}{include 'link/Link.latte', href: $post['url'], class: 'no-underline hover:text-primary', children: (string) $postTitle}{/capture}
 					{capture $h}{include 'card/CardTitle.latte', children: (string) $t}{/capture}
 					{include 'card/CardHeader.latte', children: (string) $h}
 					{if !empty($post['excerpt'])}
@@ -21,20 +22,22 @@
 						{include 'card/CardFooter.latte', children: (string) $ft}
 					{/if}
 				{/capture}
-				{include 'card/Card.latte', children: (string) $body}
+				{include 'card/Card.latte', class: $post['post_class'] ?? '', children: (string) $body}
 			{/foreach}
 		{/capture}
 		{include 'stack/Stack.latte', class: 'gap-6', children: (string) $cards}
 	{/if}
 
 	{if !empty($pagination)}
-		<nav class="mt-10 flex justify-center gap-4" aria-label="Pagination">
+		<nav class="mt-10 flex justify-center gap-4" aria-label="{$labels['pagination'] ?? 'Pagination'}">
 			{if $pagination['prev_url']}
-				<a href="{$pagination['prev_url']}" class="text-sm text-primary">{$labels['previous'] ?? 'Previous'}</a>
+				{capture $prevL}{$labels['previous'] ?? 'Previous'}{/capture}
+				{include 'link/Link.latte', href: $pagination['prev_url'], class: 'text-sm text-primary', children: (string) $prevL}
 			{/if}
 			<span class="text-sm text-muted-foreground">{$pagination['current']} / {$pagination['total']}</span>
 			{if $pagination['next_url']}
-				<a href="{$pagination['next_url']}" class="text-sm text-primary">{$labels['next'] ?? 'Next'}</a>
+				{capture $nextL}{$labels['next'] ?? 'Next'}{/capture}
+				{include 'link/Link.latte', href: $pagination['next_url'], class: 'text-sm text-primary', children: (string) $nextL}
 			{/if}
 		</nav>
 	{/if}

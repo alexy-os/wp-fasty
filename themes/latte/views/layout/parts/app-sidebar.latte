@@ -1,27 +1,18 @@
 {**
  * Desktop sidebar — hidden on small screens.
  *}
-<aside class="hidden w-64 shrink-0 flex-col border-r border-border bg-card md:flex" aria-label="Sidebar">
+<aside class="hidden w-64 shrink-0 flex-col border-r border-border bg-card md:flex" aria-label="{$labels['sidebar']}">
 	<div class="flex h-16 items-center border-b border-border px-4">
-		<a href="{$site['url']}" class="text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary">
-			{$site['title']}
-		</a>
+		{include 'brand.latte'}
 	</div>
-	<nav class="flex-1 px-3 py-4" aria-label="Primary navigation">
+	<nav class="flex-1 overflow-y-auto px-3 py-4" aria-label="{$labels['primary_nav']}">
 		{if !empty($menu['primary']['items'])}
-			<ul class="flex flex-col gap-1">
-				{foreach $menu['primary']['items'] as $item}
-					<li>
-						<a
-							href="{$item['url']}"
-							class="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground no-underline hover:bg-accent hover:text-foreground{if $item['current']} bg-accent text-foreground{/if}"
-							{if $item['current']}aria-current="page"{/if}
-						>
-							{$item['title']}
-						</a>
-					</li>
-				{/foreach}
-			</ul>
+			{include 'nav-items.latte', items: $menu['primary']['items']}
 		{/if}
 	</nav>
+	{if !empty($widgets['sidebar'])}
+		<div class="border-t border-border px-4 py-4 text-sm">
+			{$widgets['sidebar']|noescape}
+		</div>
+	{/if}
 </aside>

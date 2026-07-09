@@ -13,8 +13,9 @@ final class ContextFactory
     public function createPageContext(?\WP_Post $post = null): array
     {
         $post = $post ?? get_post();
+        $page = $post instanceof \WP_Post ? $this->post($post, true) : null;
         $context = array_merge($this->common(), [
-            'page' => $post instanceof \WP_Post ? $this->post($post) : null,
+            'page' => $page,
             'hero' => $this->hero(),
         ]);
 
@@ -34,7 +35,7 @@ final class ContextFactory
                 the_post();
                 $p = get_post();
                 if ($p instanceof \WP_Post) {
-                    $posts[] = $this->post($p);
+                    $posts[] = $this->post($p, false);
                 }
             }
             wp_reset_postdata();
@@ -54,10 +55,10 @@ final class ContextFactory
                 'title' => $title,
                 'description' => $searchQuery !== null ? '' : get_the_archive_description(),
                 'search_query' => $searchQuery,
+                'type' => $this->archiveType(),
             ],
             'posts' => $posts,
             'pagination' => $this->pagination(),
-            'labels' => $this->labels(),
         ]);
 
         return apply_filters('wpfasty_context', $context, null);
@@ -84,12 +85,16 @@ final class ContextFactory
      *   site: array<string, mixed>,
      *   menu: array<string, mixed>,
      *   shell: string,
-     *   labels: array<string, string>
+     *   sheet: array<string, string>,
+     *   labels: array<string, string>,
+     *   search: array<string, string>,
+     *   widgets: array<string, string>
      * }
      */
     private function common(): array
     {
         $shell = (string) apply_filters('wpfasty_shell', 'classic');
+        $shell = $shell === 'app-shell' ? 'app-shell' : 'classic';
 
         return [
             'site' => [
@@ -104,8 +109,32 @@ final class ContextFactory
                 'logo' => $this->logo(),
             ],
             'menu' => $this->menus(),
-            'shell' => $shell === 'app-shell' ? 'app-shell' : 'classic',
+            'shell' => $shell,
+            'sheet' => $this->sheetIds($shell),
             'labels' => $this->labels(),
+            'search' => [
+                'action' => home_url('/'),
+                'query' => is_search() ? (string) get_search_query() : '',
+                'placeholder' => __('Search…', 'latte'),
+                'submit' => __('Search', 'latte'),
+                'label' => __('Search', 'latte'),
+            ],
+            'widgets' => [
+                'sidebar' => $this->sidebarHtml('sidebar-1'),
+                'footer' => $this->sidebarHtml('footer-1'),
+            ],
+        ];
+    }
+
+    /** @return array<string, string> */
+    private function sheetIds(string $shell): array
+    {
+        $prefix = $shell === 'app-shell' ? 'app-shell' : 'classic';
+
+        return [
+            'trigger' => $prefix . '-mobile-sheet-trigger',
+            'panel' => $prefix . '-mobile-sheet-panel',
+            'title' => $prefix . '-mobile-sheet-title',
         ];
     }
 
@@ -122,7 +151,48 @@ final class ContextFactory
             'open_menu' => __('Open menu', 'latte'),
             'close_menu' => __('Close menu', 'latte'),
             'primary_nav' => __('Primary', 'latte'),
+            'footer_nav' => __('Footer', 'latte'),
+            'sidebar' => __('Sidebar', 'latte'),
+            'pagination' => __('Pagination', 'latte'),
+            'posted_on' => __('Posted on', 'latte'),
+            'by_author' => __('By', 'latte'),
+            'categories' => __('Categories', 'latte'),
+            'tags' => __('Tags', 'latte'),
+            'previous_post' => __('Previous post', 'latte'),
+            'next_post' => __('Next post', 'latte'),
+            'attachment' => __('Attachment', 'latte'),
+            'pages' => __('Pages:', 'latte'),
         ];
+    }
+
+    private function archiveType(): string
+    {
+        if (is_search()) {
+            return 'search';
+        }
+        if (is_category()) {
+            return 'category';
+        }
+        if (is_tag()) {
+            return 'tag';
+        }
+        if (is_author()) {
+            return 'author';
+        }
+        if (is_date()) {
+            return 'date';
+        }
+        if (is_post_type_archive()) {
+            return 'post_type';
+        }
+        if (is_tax()) {
+            return 'taxonomy';
+        }
+        if (is_home()) {
+            return 'home';
+        }
+
+        return 'archive';
     }
 
     /** @return array<string, string> */
@@ -157,12 +227,12 @@ final class ContextFactory
             'url' => $src[0],
             'width' => $src[1],
             'height' => $src[2],
-            'alt' => (string) get_post_meta($id, '_wp_attachment_image_alt', true),
+            'alt' => (string) get_post_meta($id, '_wp_attachment_image_alt', true) ?: get_bloginfo('name'),
         ];
     }
 
     /** @return array<string, mixed> */
-    private function post(\WP_Post $post): array
+    private function post(\WP_Post $post, bool $singular): array
     {
         $data = [
             'id' => $post->ID,
@@ -176,6 +246,14 @@ final class ContextFactory
             'featuredImage' => null,
             'thumbnail' => null,
             'categories' => [],
+            'tags' => [],
+            'author' => null,
+            'post_class' => implode(' ', get_post_class('', $post)),
+            'link_pages' => '',
+            'prev' => null,
+            'next' => null,
+            'mime_type' => $post->post_mime_type,
+            'is_attachment' => $post->post_type === 'attachment',
             'date' => [
                 'display' => get_the_date('', $post),
                 'iso' => get_the_date('c', $post),
@@ -189,12 +267,62 @@ final class ContextFactory
             $data['thumbnail'] = $this->image($id, 'medium', $alt);
         }
 
+        if ($post->post_type === 'attachment') {
+            $alt = (string) get_post_meta($post->ID, '_wp_attachment_image_alt', true);
+            $data['featuredImage'] = $this->image($post->ID, 'large', $alt) ?? $data['featuredImage'];
+            $data['attachment_url'] = (string) wp_get_attachment_url($post->ID);
+        }
+
         foreach (get_the_category($post->ID) ?: [] as $cat) {
             $data['categories'][] = [
                 'name' => $cat->name,
                 'url' => get_category_link($cat->term_id),
                 'slug' => $cat->slug,
             ];
+        }
+
+        $tags = get_the_tags($post->ID);
+        if (is_array($tags)) {
+            foreach ($tags as $tag) {
+                $data['tags'][] = [
+                    'name' => $tag->name,
+                    'url' => get_tag_link($tag->term_id),
+                    'slug' => $tag->slug,
+                ];
+            }
+        }
+
+        $authorId = (int) $post->post_author;
+        if ($authorId > 0) {
+            $data['author'] = [
+                'name' => (string) get_the_author_meta('display_name', $authorId),
+                'url' => (string) get_author_posts_url($authorId),
+            ];
+        }
+
+        if ($singular && $post->post_type !== 'attachment') {
+            $data['link_pages'] = wp_link_pages([
+                'before' => '<nav class="post-pages mt-8 text-sm text-muted-foreground" aria-label="' . esc_attr__('Pages', 'latte') . '"><span class="mr-2">' . esc_html__('Pages:', 'latte') . '</span>',
+                'after' => '</nav>',
+                'echo' => false,
+            ]) ?: '';
+
+            if ($post->post_type === 'post') {
+                $prev = get_adjacent_post(false, '', true);
+                $next = get_adjacent_post(false, '', false);
+                if ($prev instanceof \WP_Post) {
+                    $data['prev'] = [
+                        'title' => get_the_title($prev),
+                        'url' => (string) get_permalink($prev),
+                    ];
+                }
+                if ($next instanceof \WP_Post) {
+                    $data['next'] = [
+                        'title' => get_the_title($next),
+                        'url' => (string) get_permalink($next),
+                    ];
+                }
+            }
         }
 
         return $data;
@@ -210,8 +338,8 @@ final class ContextFactory
 
         return [
             'url' => $src[0],
-            'width' => $src[1],
-            'height' => $src[2],
+            'width' => (string) $src[1],
+            'height' => (string) $src[2],
             'alt' => $alt,
             'srcset' => (string) (wp_get_attachment_image_srcset($id, $size) ?: ''),
             'sizes' => (string) (wp_get_attachment_image_sizes($id, $size) ?: ''),
@@ -221,7 +349,10 @@ final class ContextFactory
     /** @return array<string, array{items: list<array<string, mixed>>}> */
     private function menus(): array
     {
-        $out = ['primary' => ['items' => []]];
+        $out = [
+            'primary' => ['items' => []],
+            'footer' => ['items' => []],
+        ];
         $locations = get_nav_menu_locations();
         if ($locations === []) {
             return $out;
@@ -229,21 +360,50 @@ final class ContextFactory
 
         foreach ($locations as $location => $menuId) {
             $items = wp_get_nav_menu_items($menuId);
-            $list = [];
-            if (is_array($items)) {
-                foreach ($items as $item) {
-                    $list[] = [
-                        'title' => $item->title,
-                        'url' => $item->url,
-                        'id' => (int) $item->ID,
-                        'current' => (bool) $item->current,
-                    ];
-                }
-            }
-            $out[$location] = ['items' => $list];
+            $out[$location] = ['items' => is_array($items) ? $this->menuTree($items) : []];
         }
 
         return $out;
+    }
+
+    /**
+     * @param list<\WP_Post> $items
+     * @return list<array<string, mixed>>
+     */
+    private function menuTree(array $items): array
+    {
+        $byParent = [];
+        foreach ($items as $item) {
+            $parent = (int) $item->menu_item_parent;
+            $byParent[$parent][] = $item;
+        }
+
+        $build = function (int $parentId) use (&$build, $byParent): array {
+            $branch = [];
+            foreach ($byParent[$parentId] ?? [] as $item) {
+                $id = (int) $item->ID;
+                $branch[] = [
+                    'title' => $item->title,
+                    'url' => $item->url,
+                    'id' => $id,
+                    'current' => (bool) $item->current,
+                    'children' => $build($id),
+                ];
+            }
+            return $branch;
+        };
+
+        return $build(0);
+    }
+
+    private function sidebarHtml(string $id): string
+    {
+        if (!function_exists('dynamic_sidebar') || !function_exists('is_active_sidebar') || !is_active_sidebar($id)) {
+            return '';
+        }
+        ob_start();
+        dynamic_sidebar($id);
+        return (string) ob_get_clean();
     }
 
     /** @return list<array<string, mixed>> */
@@ -258,7 +418,7 @@ final class ContextFactory
         $posts = [];
         foreach ($query->posts as $p) {
             if ($p instanceof \WP_Post) {
-                $posts[] = $this->post($p);
+                $posts[] = $this->post($p, false);
             }
         }
         wp_reset_postdata();
