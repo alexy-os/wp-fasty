@@ -3,6 +3,12 @@
 Deep dive for building the **theme generator**. Shared discipline (layout,
 ui8px, ARIA, Latte) lives in [`docs/`](../docs/) — do not duplicate it here.
 
+## Start here (handoff)
+
+| Path | Purpose |
+|------|---------|
+| **[PROGRESS.md](./PROGRESS.md)** | **Full progress + cycles A→G** — open this in browser Cursor to continue |
+
 ## Contents
 
 | Path | Purpose |
@@ -13,12 +19,12 @@ ui8px, ARIA, Latte) lives in [`docs/`](../docs/) — do not duplicate it here.
 
 ## Read with
 
-1. [`docs/`](../docs/) — mental model, architecture, grammar, primitives  
-2. This folder — how the assembler should compose themes  
+1. [`PROGRESS.md`](./PROGRESS.md) — current cycle and backlog  
+2. [`docs/`](../docs/) — mental model, architecture, grammar, primitives  
 3. [`.cursor/rules/`](../.cursor/rules/) — agent enforcement while coding  
 
 ## Non-goals
 
 - Not brick product specs (codegen `bricks/`)
-- Not dirty YM theme templates
+- Not a dump of deleted experimental themes
 - Not a second copy of `docs/`

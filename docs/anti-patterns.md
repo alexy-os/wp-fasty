@@ -55,15 +55,15 @@ If a PR reintroduces any of these, reject it.
 | Anti-pattern | Do instead |
 |--------------|------------|
 | Hand-edit `.workspaces/ui8kit-latte` | Change codegen bricks → `ui:primitives` |
-| Treat `themes/wp-fasty-ym` views as the design system | Rebuild from presets + grammar |
+| Revive the deleted experimental YM theme as the design system | Keep `themes/latte` + presets as the reference |
 | Copy Templ `examples/` as production theme | Extract **recipes** into `presets/` |
 | Docker rebuild for every Latte edit | Bind-mount + clear `~cache` |
 
-## What we keep from the YM experiment
+## Reference runtime (`themes/latte`)
 
 - DI `Container`, bootable services
-- `ContextFactory` / typed context idea
+- `ContextFactory` / typed context
 - `LatteEngine` + `WordPressExtension`
 - `MultiRootLoader` (views + primitives)
 
-Everything else in that theme’s views is disposable.
+Do not revive deleted experimental themes as a second design system.

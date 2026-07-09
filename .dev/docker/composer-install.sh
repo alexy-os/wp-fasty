@@ -2,31 +2,26 @@
 set -eu
 
 ROOT="/var/www/wpfasty"
-LATTE="$ROOT/.workspaces/ui8kit-latte"
-THEME_YM="$ROOT/themes/wp-fasty-ym"
-THEME_LATTE="$ROOT/themes/latte"
+PRIMITIVES="$ROOT/.workspaces/ui8kit-latte"
+THEME="$ROOT/themes/latte"
 
-if [ ! -f "$LATTE/composer.json" ]; then
-  echo "ERROR: $LATTE/composer.json missing."
+if [ ! -f "$PRIMITIVES/composer.json" ]; then
+  echo "ERROR: $PRIMITIVES/composer.json missing."
   echo "Run on the host first:  bun run ui:primitives"
   exit 1
 fi
 
 echo "==> composer install: ui8kit-latte"
-composer install --working-dir="$LATTE" --no-interaction --prefer-dist
+composer install --working-dir="$PRIMITIVES" --no-interaction --prefer-dist
 
-if [ -f "$THEME_LATTE/composer.json" ]; then
-  echo "==> composer install: latte"
-  composer install --working-dir="$THEME_LATTE" --no-interaction --prefer-dist
+if [ ! -f "$THEME/composer.json" ]; then
+  echo "ERROR: $THEME/composer.json missing."
+  exit 1
 fi
 
-if [ -f "$THEME_YM/composer.json" ]; then
-  echo "==> composer install: wp-fasty-ym"
-  composer install --working-dir="$THEME_YM" --no-interaction --prefer-dist
-fi
+echo "==> composer install: latte"
+composer install --working-dir="$THEME" --no-interaction --prefer-dist
 
 echo "==> done"
-ls "$LATTE/ui/button/Button.latte"
-if [ -d "$THEME_LATTE/vendor" ]; then
-  ls -la "$THEME_LATTE/vendor" | head -5
-fi
+ls "$PRIMITIVES/ui/button/Button.latte"
+ls -la "$THEME/vendor" | head -5

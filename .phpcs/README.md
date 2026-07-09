@@ -4,7 +4,7 @@
 
 1. Запустите в командной строке:
 ```bash
-php wp-fasty-ym/phpcs-wrapper.php [параметры] [пути]
+php .phpcs/phpcs-wrapper.php [параметры] [пути]
 ```
 
 2. Доступные параметры:
@@ -15,5 +15,5 @@ php wp-fasty-ym/phpcs-wrapper.php [параметры] [пути]
 
 Например:
 ```bash
-php wp-fasty-ym/phpcs-wrapper.php --standard=WordPress --extensions=php -p ./wp-content
+php .phpcs/phpcs-wrapper.php --standard=WordPress --extensions=php -p themes/latte
 ```

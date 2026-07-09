@@ -1,23 +1,22 @@
 <?xml version="1.0"?>
 <ruleset name="WPFasty">
-    <description>Coding standards for WP FastY YM theme with Latte templates and Symfony-style OOP</description>
+    <description>Coding standards for WP FastY Latte theme</description>
 
     <!-- Scan theme directory specifically -->
-    <file>themes/wp-fasty-ym</file>
+    <file>themes/latte</file>
 
     <!-- Exclude directories and files -->
-    <exclude-pattern>themes/wp-fasty-ym/vendor/*</exclude-pattern>
-    <exclude-pattern>themes/wp-fasty-ym/node_modules/*</exclude-pattern>
-    <exclude-pattern>themes/wp-fasty-ym/assets/*/js/vendor/*</exclude-pattern>
-    <exclude-pattern>themes/wp-fasty-ym/~cache/*</exclude-pattern>
+    <exclude-pattern>themes/latte/vendor/*</exclude-pattern>
+    <exclude-pattern>themes/latte/node_modules/*</exclude-pattern>
+    <exclude-pattern>themes/latte/assets/*/js/vendor/*</exclude-pattern>
+    <exclude-pattern>themes/latte/~cache/*</exclude-pattern>
     <exclude-pattern>.workspaces/*</exclude-pattern>
     <exclude-pattern>packages/*</exclude-pattern>
     
     <!-- Exclude all CSS files -->
     <exclude-pattern>*.css</exclude-pattern>
     <exclude-pattern>**/*.css</exclude-pattern>
-    <!-- exclude-pattern>wp-fasty-ym/style.css</exclude-pattern>
-    <exclude-pattern>wp-fasty-ym/theme.min.css</exclude-pattern -->
+    <!-- exclude-pattern>themes/latte/style.css</exclude-pattern -->
 
     <!-- Choose one style: PSR2 -->
     <rule ref="PSR2">
@@ -34,7 +33,7 @@
     <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
         <properties>
             <property name="rootNamespaces" type="array">
-                <element key="themes/wp-fasty-ym/classes" value="WPFasty"/>
+                <element key="themes/latte/classes" value="WPFasty"/>
             </property>
         </properties>
     </rule>
@@ -97,7 +96,7 @@
     <rule ref="WordPress.WP.EnqueuedResources" />
 
     <!-- Configure text domains for internationalization -->
-    <config name="text_domain" value="wp-fasty-ym"/>
+    <config name="text_domain" value="latte"/>
 
     <!-- Enable parallel processing -->
     <arg name="parallel" value="8" />

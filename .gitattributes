@@ -1,6 +1,3 @@
-* text=auto eol=lf
-*.php text eol=lf
-*.latte text eol=lf
-*.md text eol=lf
-*.json text eol=lf
-*.css text eol=lf
+# Force LF for shell scripts (WSL / Debian bash breaks on CRLF)
+*.sh text eol=lf
+.dev/docker/* text eol=lf

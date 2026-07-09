@@ -1,4 +1,4 @@
-# Local WordPress for themes/latte (+ optional wp-fasty-ym)
+# Local WordPress for themes/latte
 # Full guide: .dev/README.md
 #
 #   docker compose up -d
@@ -37,7 +37,6 @@ services:
       - wp_data:/var/www/html
       - .:/var/www/wpfasty
       - ./themes/latte:/var/www/html/wp-content/themes/latte
-      - ./themes/wp-fasty-ym:/var/www/html/wp-content/themes/wp-fasty-ym
       - ./.workspaces:/var/www/html/wp-content/.workspaces
     depends_on:
       db:
@@ -64,7 +63,6 @@ services:
       - wp_data:/var/www/html
       - .:/var/www/wpfasty
       - ./themes/latte:/var/www/html/wp-content/themes/latte
-      - ./themes/wp-fasty-ym:/var/www/html/wp-content/themes/wp-fasty-ym
       - ./.workspaces:/var/www/html/wp-content/.workspaces
     depends_on:
       - wordpress

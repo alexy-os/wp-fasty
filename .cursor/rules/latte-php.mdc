@@ -28,8 +28,8 @@ No React `asChild`: `Classes::buttonClasses(…)` on a manual `<a>`.
 - Namespace under theme slug (`WPFasty\` for reference)
 - PSR-4, strict types, DI `Container`, bootable services
 - Escape on output; i18n text domain = theme slug
-- Keep from YM: Container, ContextFactory, LatteEngine, WordPressExtension, MultiRootLoader
-- Discard dirty YM views — rebuild from presets
+- Reference: Container, ContextFactory, LatteEngine, WordPressExtension, MultiRootLoader in `themes/latte`
+- Compose views from presets + UI8Kit primitives
 
 ## Builder
 

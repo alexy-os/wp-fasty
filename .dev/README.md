@@ -81,7 +81,6 @@ This runs `composer install` in:
 
 - `.workspaces/ui8kit-latte`
 - `themes/latte` (path repo → `ui8kit/latte-primitives`)
-- `themes/wp-fasty-ym` (legacy experimental, if present)
 
 ### 4) Activate the theme
 
@@ -131,7 +130,6 @@ docker compose --profile tools run --rm composer
 | Host | Container |
 |------|-----------|
 | `themes/latte` | `/var/www/html/wp-content/themes/latte` |
-| `themes/wp-fasty-ym` | `/var/www/html/wp-content/themes/wp-fasty-ym` (legacy) |
 | `.workspaces` | `/var/www/html/wp-content/.workspaces` |
 
 Relative path `../../.workspaces/ui8kit-latte` from the theme stays valid

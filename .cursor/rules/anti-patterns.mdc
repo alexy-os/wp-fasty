@@ -17,4 +17,4 @@ Reject PRs that reintroduce:
 - Shipping codegen TS in theme zips
 - Controlled React-style `open` with `behavior="ui8kit"`
 - Twin/hand-copied variant maps
-- Treating YM theme views as the design system
+- Treating experimental/dirty theme views as the design system (use `themes/latte`)

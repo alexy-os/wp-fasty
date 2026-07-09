@@ -37,4 +37,4 @@ bun run theme:build -- <id>
 - Hand-edit `.workspaces/ui8kit-latte`
 - React→Latte / `data-slot` semantic CSS pipelines
 - Ship codegen TypeScript inside a theme zip
-- Treat dirty `themes/wp-fasty-ym` views as the design system
+- Treat dirty experimental theme views as the design system (reference is `themes/latte`)

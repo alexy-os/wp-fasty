@@ -16,16 +16,17 @@ Output: `themes/<slug>/` ready for Docker preview and later zip export.
 
 ```json
 {
-  "id": "wp-fasty-ym",
-  "name": "WP FastY YM",
-  "slug": "wp-fasty-ym",
-  "textDomain": "wp-fasty-ym",
+  "id": "latte",
+  "name": "Latte",
+  "slug": "latte",
+  "textDomain": "latte",
   "layout": "layouts/classic",
   "style": "styles/default",
   "templates": {
     "front-page": ["blocks/hero-centered", "blocks/featured-grid"],
     "archive": ["blocks/archive-header", "blocks/post-list"],
-    "single": ["blocks/post-single"]
+    "single": ["blocks/post-content"],
+    "page": ["blocks/post-content"]
   },
   "features": ["post-thumbnails", "primary-menu", "title-tag"],
   "php": { "namespace": "WPFasty", "container": true }
@@ -65,7 +66,7 @@ validate manifest
 - Emit layout shell Latte from `presets/layouts/<name>/`
 - Compose template views from block list
 - Copy style CSS into theme assets entry
-- Scaffold missing PHP files from a clean skeleton (not dirty YM views)
+- Scaffold missing PHP files from a clean skeleton (extend `themes/latte`)
 
 ### v0.3
 
@@ -101,16 +102,15 @@ Layouts compose **primitives + composites**, not raw flex divs.
 
 ## PHP skeleton (clean baseline)
 
-Emit or maintain separately from dirty YM markup:
+Emit or maintain as the clean baseline (`themes/latte`):
 
 - `functions.php` → boot container
 - `classes/` — Container, ThemeService, ContextFactory, LatteEngine, WordPressExtension, MultiRootLoader
 - `configs/services.php`
-- `context.schema.json`
 - `views/layout/default.latte` — `{wp_head}`, `{body_class}`, `{wp_footer}`
 - `views/pages/*.latte` — thin includes of preset blocks
 
-Refactor YM OOP later; **do not** copy its front-page HTML into the generator.
+Use `themes/latte` as the reference skeleton for the generator.
 
 ## Commands
 

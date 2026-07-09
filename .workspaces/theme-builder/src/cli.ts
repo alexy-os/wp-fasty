@@ -81,7 +81,7 @@ async function newTheme(): Promise<void> {
 theme:new — interactive scaffold (v0.1 stub)
 
 Next steps:
-  1. Copy presets/themes/wp-fasty-ym.json → presets/themes/<your-id>.json
+  1. Copy presets/themes/latte.json → presets/themes/<your-id>.json
   2. Edit layout / style / templates
   3. bun run theme:build -- <your-id>
 
@@ -95,7 +95,7 @@ async function main(): Promise<void> {
   const [cmd, arg] = process.argv.slice(2);
   switch (cmd) {
     case "build": {
-      const id = arg ?? "wp-fasty-ym";
+      const id = arg ?? "latte";
       await buildTheme(id);
       return;
     }

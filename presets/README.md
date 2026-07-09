@@ -11,10 +11,10 @@ Catalog for `theme-builder` — the Underscores-style “questions”, expanded.
 
 ## Example manifest
 
-See `themes/wp-fasty-ym.json`.
+See `themes/latte.json`.
 
 ## Adding a theme preset
 
-1. Copy `themes/wp-fasty-ym.json` → `themes/<id>.json`
+1. Copy `themes/latte.json` → `themes/<id>.json`
 2. Point `layout` / `style` / `templates` at existing or new presets
 3. `bun run theme:build -- <id>`

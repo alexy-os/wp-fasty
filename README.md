@@ -19,7 +19,7 @@ themes/<slug>/                # Layer 3: WordPress theme instances
 |-------|------|-------|
 | Primitives | `Button.latte`, `Classes.php` | No — regenerate from codegen |
 | Presets | `presets/blocks/*.latte`, `styles/*.css` | Yes |
-| Theme | `themes/wp-fasty-ym` | Yes (views + PHP runtime) |
+| Theme | `themes/latte` | Yes (views + PHP runtime) |
 
 ## Quick start
 
@@ -32,7 +32,7 @@ cd wpfasty
 bun run ui:primitives
 bun run ui:install          # composer → .workspaces/ui8kit-latte/php/vendor
 
-bun run theme:build -- wp-fasty-ym
+bun run theme:build -- latte
 ```
 
 ### Local WordPress (Docker / WSL)
@@ -43,7 +43,7 @@ See **[.dev/README.md](.dev/README.md)** for the full command list.
 bun run ui:primitives
 docker compose up -d
 docker compose --profile tools run --rm composer
-# → http://localhost:8080  → activate theme "WP FastY YM"
+# → http://localhost:8080  → activate theme "Latte"
 ```
 
 ## Scripts
