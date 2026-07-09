@@ -52,53 +52,7 @@
                             "type": "array",
                             "description": "Items",
                             "items": {
-                                "type": "object",
-                                "properties": {
-                                    "title": {
-                                        "type": "string",
-                                        "description": "Title"
-                                    },
-                                    "url": {
-                                        "type": "string",
-                                        "description": "Url"
-                                    },
-                                    "id": {
-                                        "type": "integer",
-                                        "description": "Id"
-                                    },
-                                    "order": {
-                                        "type": "integer",
-                                        "description": "Order"
-                                    },
-                                    "parent": {
-                                        "type": [
-                                            "null",
-                                            "string",
-                                            "object"
-                                        ],
-                                        "description": "Parent"
-                                    },
-                                    "classes": {
-                                        "type": "array",
-                                        "description": "Classes",
-                                        "items": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "current": {
-                                        "type": "boolean",
-                                        "description": "Current"
-                                    }
-                                },
-                                "required": [
-                                    "title",
-                                    "url",
-                                    "id",
-                                    "order",
-                                    "parent",
-                                    "classes",
-                                    "current"
-                                ]
+                                "type": "string"
                             }
                         }
                     },
@@ -200,22 +154,11 @@
                             "description": "Thumbnail"
                         },
                         "meta": {
-                            "type": "object",
-                            "properties": {
-                                "_edit_last": {
-                                    "type": "string",
-                                    "description": "_edit_last"
-                                },
-                                "_edit_lock": {
-                                    "type": "string",
-                                    "description": "_edit_lock"
-                                }
-                            },
-                            "required": [
-                                "_edit_last",
-                                "_edit_lock"
-                            ],
-                            "description": "Meta"
+                            "type": "array",
+                            "description": "Meta",
+                            "items": {
+                                "type": "string"
+                            }
                         },
                         "categories": {
                             "type": "array",

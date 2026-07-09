@@ -3,7 +3,7 @@
  * Context Types
  *
  * DO NOT MODIFY THIS FILE DIRECTLY. This file is auto-generated.
- * Generated on: 2025-05-05 19:15:48
+ * Generated on: 2026-07-09 11:19:01
  */
 
 namespace WPFasty\Types;
