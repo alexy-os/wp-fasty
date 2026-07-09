@@ -94,26 +94,26 @@ class ContextSchemaAdmin implements BootableServiceInterface
             
             <?php if (isset($_GET['updated']) && $_GET['updated'] === 'true') : ?>
                 <div class="notice notice-success is-dismissible">
-                    <p><?php _e('Context schema has been updated successfully.', 'wp-fasty'); ?></p>
+                    <p><?php _e('Context schema has been updated successfully.', 'wp-fasty-ym'); ?></p>
                 </div>
             <?php endif; ?>
             
             <div class="card">
-                <h2><?php _e('Update Schema', 'wp-fasty'); ?></h2>
-                <p><?php _e('This will generate or update the context.schema.json file that defines the structure of data available in templates.', 'wp-fasty'); ?></p>
+                <h2><?php _e('Update Schema', 'wp-fasty-ym'); ?></h2>
+                <p><?php _e('This will generate or update the context.schema.json file that defines the structure of data available in templates.', 'wp-fasty-ym'); ?></p>
                 
                 <form method="post">
                     <?php wp_nonce_field('wpfasty_update_schema_nonce'); ?>
                     <p>
-                        <button type="submit" name="wpfasty_update_schema" class="button button-primary"><?php _e('Update Context Schema', 'wp-fasty'); ?></button>
+                        <button type="submit" name="wpfasty_update_schema" class="button button-primary"><?php _e('Update Context Schema', 'wp-fasty-ym'); ?></button>
                     </p>
                 </form>
             </div>
             
             <?php if ($schemaExists && !empty($schemaData)) : ?>
                 <div class="card" style="margin-top: 20px;">
-                    <h2><?php _e('Current Schema', 'wp-fasty'); ?></h2>
-                    <p><?php _e('Last updated: ', 'wp-fasty'); ?> <?php echo date('F j, Y, g:i a', filemtime($schemaPath)); ?></p>
+                    <h2><?php _e('Current Schema', 'wp-fasty-ym'); ?></h2>
+                    <p><?php _e('Last updated: ', 'wp-fasty-ym'); ?> <?php echo date('F j, Y, g:i a', filemtime($schemaPath)); ?></p>
                     
                     <div style="background: #f9f9f9; padding: 15px; overflow: auto; max-height: 500px;">
                         <pre><?php echo esc_html(json_encode($schemaData, JSON_PRETTY_PRINT)); ?></pre>
@@ -121,8 +121,8 @@ class ContextSchemaAdmin implements BootableServiceInterface
                 </div>
             <?php elseif (!$schemaExists) : ?>
                 <div class="card" style="margin-top: 20px;">
-                    <h2><?php _e('Schema Not Found', 'wp-fasty'); ?></h2>
-                    <p><?php _e('No context schema file exists yet. Click the button above to generate it.', 'wp-fasty'); ?></p>
+                    <h2><?php _e('Schema Not Found', 'wp-fasty-ym'); ?></h2>
+                    <p><?php _e('No context schema file exists yet. Click the button above to generate it.', 'wp-fasty-ym'); ?></p>
                 </div>
             <?php endif; ?>
         </div>

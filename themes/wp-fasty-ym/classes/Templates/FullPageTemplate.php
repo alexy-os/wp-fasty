@@ -15,7 +15,7 @@ class FullPageTemplate {
     }
 
     public function addNewTemplate($templates): array {
-        $templates['full-page-template.php'] = __('Full Page Template', 'wp-fasty');
+        $templates['full-page-template.php'] = __('Full Page Template', 'wp-fasty-ym');
         return $templates;
     }
 

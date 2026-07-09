@@ -1,9 +1,6 @@
 # Editors / local
 .manual/
-.obsidian/
 .vscode/
-.cursor/
-.cursorignore
 .env
 
 # Dependencies
