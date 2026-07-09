@@ -1,0 +1,28 @@
+---
+description: Block / Box / Stack / Group — one Block per file, no raw flex divs
+globs: "presets/**/*.latte,themes/**/views/**/*.latte"
+alwaysApply: false
+---
+
+# Layout grammar
+
+Full doc: [`docs/layout-grammar.md`](../../docs/layout-grammar.md)
+
+## Four primitives
+
+| Primitive | Role |
+|-----------|------|
+| **Block** | Landmark entry — **exactly one per file** |
+| **Box** | Inner non-landmark container (`div` only) |
+| **Stack** | Vertical flex |
+| **Group** | Horizontal flex (or `fieldset`) |
+
+## Hard rules
+
+1. One Block per preset/block file; no nested Block in the same file
+2. No raw `<div class="flex…">` when Stack/Group/Box exists
+3. Stack ≠ row; Group ≠ column
+4. Document shell (`layout/default.latte`) may use raw `<html>` / `<body>`
+5. Children = `{capture}` → `children: (string) $…`
+
+Shell recipe (sidebar + sheet): `.project/constructor/shell-composition.md`

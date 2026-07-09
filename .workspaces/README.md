@@ -6,7 +6,8 @@ Internal tooling for wp-fasty — **not** shipped inside WordPress theme zips.
 |------|------|
 | `ui8kit-latte/` | **Generated** Latte primitives + `UI8Kit` PHP runtime (from codegen) |
 | `theme-builder/` | Theme assembler CLI (`theme:build`, `theme:new`) |
-| `.rules/` | Architecture rules, manifesto, LLM agent instructions |
+
+Agent rules: [`.cursor/rules/`](../.cursor/rules/) · docs: [`docs/`](../docs/)
 
 ## Layers
 

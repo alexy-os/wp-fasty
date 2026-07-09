@@ -1,0 +1,27 @@
+---
+description: Variants JSON only; layout utilities on class; no twin recipes
+globs: "presets/**/*.{latte,css,json},themes/**/*.{latte,css},**/*.variants.json"
+alwaysApply: false
+---
+
+# Atomic UI8px
+
+Full doc: [`docs/atomic-ui8px.md`](../../docs/atomic-ui8px.md)
+
+## Three channels
+
+| Kind | Where |
+|------|-------|
+| Visual presets (`variant`, `size`, …) | `*.variants.json` only |
+| Layout / spacing / responsive | Caller `class` / `$class` |
+| Design tokens | `presets/styles/*.css` |
+
+## MUST NOT
+
+- Duplicate variant maps in PHP/Latte by hand
+- Semantic layout props on brick APIs (`gap=`, `flex=`)
+- Empty-string variant keys or default `""`
+- `unstyled` escape hatch — add a named variant
+- Second semantic-CSS extraction (`data-slot` → `.button-primary`)
+
+After brick/recipe changes: `bun run ui:primitives`

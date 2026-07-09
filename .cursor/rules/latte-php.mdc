@@ -1,0 +1,36 @@
+---
+description: Latte composition, skipped parts, PHP theme runtime standards
+globs: "themes/**/*.{php,latte},presets/**/*.latte,.workspaces/theme-builder/**/*"
+alwaysApply: false
+---
+
+# Latte + PHP themes
+
+Full docs: [`docs/latte-primitives.md`](../../docs/latte-primitives.md), [`docs/architecture.md`](../../docs/architecture.md)
+
+## Composition
+
+```latte
+{capture $label}Explore{/capture}
+{include 'button/Button.latte', variant: 'default', children: (string) $label}
+```
+
+Loader roots: theme `views/` + `ui8kit-latte/ui`.
+
+## Skipped Latte parts (use `Classes::*`)
+
+`Breadcrumb`, `Select`, `Icon` — see codegen `docs/php-complex-parts.md`.
+
+No React `asChild`: `Classes::buttonClasses(…)` on a manual `<a>`.
+
+## PHP
+
+- Namespace under theme slug (`WPFasty\` for reference)
+- PSR-4, strict types, DI `Container`, bootable services
+- Escape on output; i18n text domain = theme slug
+- Keep from YM: Container, ContextFactory, LatteEngine, WordPressExtension, MultiRootLoader
+- Discard dirty YM views — rebuild from presets
+
+## Builder
+
+Target design: `.project/constructor/theme-constructor.md`

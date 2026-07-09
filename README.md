@@ -61,33 +61,29 @@ docker compose --profile tools run --rm composer
 
 ```
 wpfasty/
-├── packages/
-│   └── ui8kit-codegen/       # submodule (optional locally)
+├── packages/ui8kit-codegen/  # submodule (optional locally)
 ├── .workspaces/
 │   ├── ui8kit-latte/         # generated — commit or CI-regenerate
-│   ├── theme-builder/        # Bun CLI
-│   └── .rules/               # Architecture, Manifesto, LLM instructions
-├── presets/
-│   ├── themes/               # theme manifests (JSON)
-│   ├── layouts/
-│   ├── blocks/
-│   └── styles/
-├── themes/
-│   └── wp-fasty-ym/          # reference theme
+│   └── theme-builder/        # Bun CLI
+├── .cursor/rules/            # Cursor agent rules (single location)
+├── .project/                 # theme constructor KB
+├── docs/                     # human-facing documentation
+├── presets/                  # layouts × blocks × styles × manifests
+├── themes/<slug>/            # WordPress theme instances
 └── tools/
-    └── generate-primitives.ts
 ```
 
-## Principles
+## Documentation
 
-See [.workspaces/.rules/](.workspaces/.rules/):
+| Path | Role |
+|------|------|
+| [docs/](docs/) | Human SSOT — architecture, grammar, Latte, ARIA |
+| [.cursor/rules/](.cursor/rules/) | Agent enforcement |
+| [.project/](.project/) | Theme constructor deep dive |
+| [.dev/README.md](.dev/README.md) | Docker / WSL |
 
-- [Architecture](.workspaces/.rules/Architecture.md)
-- [Manifesto](.workspaces/.rules/Manifesto.md)
-- [Principles](.workspaces/.rules/Principles.md)
-- [LLM instructions](.workspaces/.rules/Instruct-llms.md)
-
-**Three WhalY:** zero redundant code · zero wasteful work · PageSpeed 100 goal.
+**Three WhalY:** zero redundant code · zero wasteful work · PageSpeed 100 goal.  
+See [docs/principles.md](docs/principles.md) and [docs/manifesto.md](docs/manifesto.md).
 
 ## UI8Kit primitives
 

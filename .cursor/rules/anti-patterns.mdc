@@ -1,0 +1,20 @@
+---
+description: Retired pipelines and forbidden patterns — reject if reintroduced
+alwaysApply: true
+---
+
+# Anti-patterns
+
+Full list: [`docs/anti-patterns.md`](../../docs/anti-patterns.md)
+
+Reject PRs that reintroduce:
+
+- React/Babel → Latte transpile
+- `data-slot` → semantic CSS extractor
+- Parallel UI kits as second codegen
+- Hand-edit of `.workspaces/ui8kit-latte`
+- WP API calls inside Latte
+- Shipping codegen TS in theme zips
+- Controlled React-style `open` with `behavior="ui8kit"`
+- Twin/hand-copied variant maps
+- Treating YM theme views as the design system

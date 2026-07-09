@@ -1,0 +1,40 @@
+---
+description: WP FastY core — layers, commands, hard bans for every session
+alwaysApply: true
+---
+
+# WP FastY — core
+
+Monorepo: WordPress **theme generator** on UI8Kit Codegen Latte primitives.
+
+## Layers
+
+```
+packages/ui8kit-codegen/       → SOURCE (submodule)
+.workspaces/ui8kit-latte/      → Layer 1 (never hand-edit)
+presets/                       → Layer 2 (layouts × blocks × styles)
+themes/<slug>/                 → Layer 3 (PHP + thin views)
+.workspaces/theme-builder/     → assembler CLI
+```
+
+## Commands
+
+```bash
+bun run ui:primitives    # regenerate Latte bundle
+bun run ui:install       # composer in ui8kit-latte
+bun run theme:build -- <id>
+```
+
+## Always
+
+- Context via PHP `ContextFactory` only — no WP queries in Latte
+- Compose with `{include 'brick/Part.latte', …}` + `{capture}` for children
+- Layout shell: `{wp_head}`, `{body_class}`, `{wp_footer}`
+- Deep docs: `docs/` · constructor KB: `.project/`
+
+## Never
+
+- Hand-edit `.workspaces/ui8kit-latte`
+- React→Latte / `data-slot` semantic CSS pipelines
+- Ship codegen TypeScript inside a theme zip
+- Treat dirty `themes/wp-fasty-ym` views as the design system
