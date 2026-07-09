@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3bab96e1d3208985cf4ee547e1aa941f",
+    "content-hash": "c1cd3a602ab95dc153fb57f60a274bbd",
     "packages": [
         {
             "name": "latte/latte",
@@ -103,7 +103,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../.workspaces/ui8kit-latte",
-                "reference": "f3a6f195fd38449a0aad20e9bcda64b77c9f7933"
+                "reference": "66d8637b2b0a00f668d5ccdf954c12e123ec5077"
             },
             "require": {
                 "latte/latte": "^3.0",
@@ -120,7 +120,7 @@
             ],
             "description": "Generated UI8Kit Latte primitives. Do not edit — regenerate via @ui8kit/codegen.",
             "transport-options": {
-                "symlink": true,
+                "symlink": false,
                 "relative": true
             }
         }

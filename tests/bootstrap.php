@@ -2,7 +2,22 @@
 
 declare(strict_types=1);
 
-require dirname(__DIR__) . '/themes/latte/vendor/autoload.php';
+$themeVendor = dirname(__DIR__) . '/themes/latte/vendor/autoload.php';
+if (!is_file($themeVendor)) {
+    fwrite(STDERR, "Missing themes/latte/vendor — run: bash tools/composer.sh install --working-dir=themes/latte\n");
+    exit(1);
+}
+require $themeVendor;
+
+// Windows path-repo junctions sometimes break PHP includes; load UI8Kit from workspace if needed.
+if (!class_exists(\UI8Kit\Rt::class)) {
+    $rt = dirname(__DIR__) . '/.workspaces/ui8kit-latte/php/UI8Kit/Rt.php';
+    $classes = dirname(__DIR__) . '/.workspaces/ui8kit-latte/php/UI8Kit/Classes.php';
+    if (is_file($rt) && is_file($classes)) {
+        require_once $rt;
+        require_once $classes;
+    }
+}
 
 // Minimal WordPress stubs for unit tests (no WP bootstrap).
 if (!function_exists('__')) {

@@ -9,6 +9,9 @@ node_modules/
 vendor/
 tools/composer.phar
 tools/composer-setup.php
+composer.phar
+composer-setup.php
+composer
 **/php/vendor/
 .workspaces/ui8kit-latte/php/vendor/
 themes/*/vendor/

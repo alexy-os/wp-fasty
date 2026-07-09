@@ -8,7 +8,7 @@
     {
       "type": "path",
       "url": "../../.workspaces/ui8kit-latte",
-      "options": { "symlink": true }
+      "options": { "symlink": false }
     }
   ],
   "require": {
