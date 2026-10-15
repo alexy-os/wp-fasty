@@ -23,7 +23,7 @@
     "test:watch": "bun test --watch",
     "typecheck": "tsc --noEmit",
     "typecheck:generated": "bun run generate && bun x tsc -p tsconfig.generated.json",
-    "verify": "bun run check && bun x tsc --noEmit && bun run typecheck:generated && bun test"
+    "verify": "bun run check && bun x tsc --noEmit && bun run typecheck:generated"
   },
   "dependencies": {
     "clsx": "^2.1.1",

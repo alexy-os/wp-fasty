@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "isolatedModules": true
+  },
+  "include": ["generated/ui/**/*.ts", "generated/ui/**/*.tsx", "generated/utils/**/*.ts"],
+  "exclude": [
+    "generated/ui/index.svelte.ts",
+    "generated/ui/index.vue.ts",
+    "generated/ui/index.solid.ts",
+    "generated/ui/**/*.solid.tsx"
+  ]
+}

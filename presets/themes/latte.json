@@ -6,13 +6,27 @@
   "layout": "layouts/classic",
   "style": "styles/default",
   "templates": {
-    "front-page": ["blocks/hero-centered", "blocks/featured-grid"],
-    "archive": ["blocks/archive-header", "blocks/post-list"],
-    "search": ["blocks/archive-header", "blocks/post-list"],
-    "single": ["blocks/post-content"],
-    "page": ["blocks/post-content"],
-    "attachment": ["blocks/attachment"],
-    "404": []
+    "front-page": [
+      "blocks/hero-centered",
+      "blocks/featured-grid"
+    ],
+    "archive": [
+      "blocks/archive-header",
+      "blocks/post-list"
+    ],
+    "search": [
+      "blocks/archive-header",
+      "blocks/post-list"
+    ],
+    "single": [
+      "blocks/post-content"
+    ],
+    "page": [
+      "blocks/post-content"
+    ],
+    "attachment": [
+      "blocks/attachment"
+    ]
   },
   "features": [
     "post-thumbnails",

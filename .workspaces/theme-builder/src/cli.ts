@@ -100,6 +100,8 @@ async function emitPageViews(preset: ThemePreset, themeDir: string): Promise<voi
 
   for (const [template, blocks] of Object.entries(preset.templates ?? {})) {
     const file = join(pagesDir, `${template}.latte`);
+    // Empty block list = hand-authored view; never overwrite it with an empty file.
+    if (!blocks || blocks.length === 0) continue;
     const body = pageViewSource(blocks, `${template} — generated from presets/themes/${preset.id}.json`);
     await writeFile(file, body);
   }
