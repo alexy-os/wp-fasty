@@ -1,0 +1,56 @@
+/*
+ * Tailwind v4 source for themes/latte/assets/css/theme.min.css.
+ * Colors: ONLY via CSS variable tokens (themes/<theme>/assets/css/tokens.css).
+ * Build: bun run css:build
+ */
+@import "tailwindcss";
+
+@source "../../themes";
+@source "../ui8kit-latte";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-body, ui-sans-serif, system-ui, sans-serif);
+  --font-heading: var(--font-display, var(--font-body, ui-sans-serif, system-ui, sans-serif));
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * { border-color: var(--border); }
+  body { background: var(--background); color: var(--foreground); }
+  h1, h2, h3, h4 { font-family: var(--font-heading); }
+}
+
+/* Post content (the_content). 8px rhythm. */
+@layer components {
+  .prose { line-height: 1.75; }
+  .prose > * + * { margin-top: 1rem; }
+  .prose h2 { font-size: 1.5rem; font-weight: 600; margin-top: 2rem; }
+  .prose h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; }
+  .prose a { color: var(--primary); text-decoration: underline; text-underline-offset: 4px; }
+  .prose ul { list-style: disc; padding-left: 1.5rem; }
+  .prose ol { list-style: decimal; padding-left: 1.5rem; }
+  .prose blockquote { border-left: 4px solid var(--border); padding-left: 1rem; color: var(--muted-foreground); }
+  .prose img { border-radius: var(--radius); }
+  .prose code { background: var(--muted); padding: 0 4px; border-radius: 4px; }
+}

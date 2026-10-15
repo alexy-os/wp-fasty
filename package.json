@@ -1,6 +1,6 @@
 {
   "name": "wpfasty",
-  "description": "WordPress theme generator — Latte + UI8Kit primitives, layout/block/style presets",
+  "description": "WordPress theme generator \u2014 Latte + UI8Kit primitives, layout/block/style presets",
   "version": "0.3.0",
   "private": true,
   "license": "MIT",
@@ -11,7 +11,8 @@
     "url": "https://github.com/godudy/wpfasty.git"
   },
   "workspaces": [
-    ".workspaces/theme-builder"
+    ".workspaces/theme-builder",
+    ".workspaces/css-build"
   ],
   "scripts": {
     "ui:primitives": "bun tools/generate-primitives.ts",
@@ -21,7 +22,7 @@
     "theme:new": "bun run --cwd .workspaces/theme-builder new",
     "theme:cache": "rm -rf themes/*/~cache",
     "codegen:verify": "bun run --cwd packages/ui8kit-codegen verify",
-    "verify": "bun run ui:primitives && bun run theme:build -- latte && bun run test",
+    "verify": "bun run ui:primitives && bun run theme:build -- latte && bun run lint:design && bun run css:build && bun run test",
     "test": "bash tools/composer.sh test",
     "phpcs": "bash tools/composer.sh phpcs",
     "composer": "bash tools/composer.sh",
@@ -29,6 +30,8 @@
     "dev:down": "docker compose down",
     "dev:logs": "docker compose logs -f wordpress",
     "dev:composer": "docker compose --profile tools run --rm composer",
-    "dev:wp": "docker compose --profile tools run --rm wpcli"
+    "dev:wp": "docker compose --profile tools run --rm wpcli",
+    "css:build": "bun run --cwd .workspaces/css-build build",
+    "lint:design": "bun tools/lint-design.ts"
   }
 }
