@@ -19,7 +19,8 @@
       "blocks/post-list"
     ],
     "single": [
-      "blocks/post-content"
+      "blocks/post-content",
+      "blocks/comments"
     ],
     "page": [
       "blocks/post-content"

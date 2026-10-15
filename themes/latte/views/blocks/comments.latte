@@ -1,0 +1,11 @@
+{**
+ * Block: comments — WP core comment list + form (core-escaped HTML).
+ * Context: comments (string, empty unless the theme enables `wpfasty_comments_enabled`)
+ *}
+{if !empty($comments)}
+	{capture $inner}{$comments|noescape}{/capture}
+	{capture $box}
+		{include 'box/Box.latte', class: 'container mx-auto max-w-3xl border-t border-border px-4 py-12 md:px-6', children: (string) $inner}
+	{/capture}
+	{include 'block/Block.latte', tag: 'section', children: (string) $box}
+{/if}

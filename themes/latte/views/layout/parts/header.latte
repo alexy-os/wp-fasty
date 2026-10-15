@@ -18,7 +18,7 @@
 					aria-expanded="false"
 					aria-label="{$labels['open_menu']}"
 				>
-					<span aria-hidden="true">☰</span>
+					{icon('menu', 'size-5')}
 				</button>
 			{/if}
 			{include 'brand.latte'}
@@ -34,8 +34,11 @@
 			</nav>
 		{/if}
 
-		<div class="hidden md:block">
-			{include 'blocks/search-form.latte'}
+		<div class="flex items-center gap-4">
+			<div class="hidden md:block">
+				{include 'blocks/search-form.latte'}
+			</div>
+			{include 'header-actions.latte'}
 		</div>
 	</div>
 </header>
