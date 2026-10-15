@@ -8,7 +8,7 @@
 				{if !empty($page['types'])}
 					<div class="flex flex-wrap gap-2">
 						{foreach $page['types'] as $type}
-							{include 'badge/Badge.latte', variant: 'secondary', children: (string) $type['name']}
+							{capture $typeName}{$type['name']}{/capture}{include 'badge/Badge.latte', variant: 'secondary', children: (string) $typeName}
 						{/foreach}
 					</div>
 				{/if}

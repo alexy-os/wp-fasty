@@ -2,6 +2,7 @@
 /**
  * Design-policy lint for theme views/CSS (not UI8Kit primitives):
  *  - colors only via CSS variable tokens (no hex/rgb/hsl/oklch, no Tailwind palette colors)
+ *  - security: raw array values must not be passed as primitive `children`
  *  - layout spacing on an 8px grid: odd spacing steps (1,3,5,7… = 4px multiples) are allowed
  *    only on control lines (button/input/select/label/badge/textarea/option).
  */
@@ -22,6 +23,8 @@ for (const pattern of ["themes/*/views/**/*.latte", "themes/*/assets/css/*.css",
       const where = `${rel}:${i + 1}`;
       if (!isTokens && rawColor.test(line) && !line.includes("var(--")) errors.push(`${where} raw color — use a token var(--…)`);
       if (palette.test(line)) errors.push(`${where} palette color class — use token classes (bg-primary, text-muted-foreground…)`);
+      // UI8Kit primitives print `children` with |noescape — pass captured (escaped) HTML, never raw data.
+      if (rel.endsWith(".latte") && /children:\s*\(string\)\s*\$\w+\[/.test(line)) errors.push(`${where} raw data passed as children (XSS) — wrap in {capture}`);
       if (rel.endsWith(".latte") && oddSpacing.test(line) && !control.test(line)) errors.push(`${where} 4px step outside a control — use 8px grid (2,4,6,8…)`);
     });
   }

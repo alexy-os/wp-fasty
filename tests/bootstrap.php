@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+if (!defined('ABSPATH')) {
+    define('ABSPATH', sys_get_temp_dir() . '/');
+}
+
 $themeVendor = dirname(__DIR__) . '/themes/latte/vendor/autoload.php';
 if (!is_file($themeVendor)) {
     fwrite(STDERR, "Missing themes/latte/vendor — run: bash tools/composer.sh install --working-dir=themes/latte\n");
@@ -50,6 +54,20 @@ if (!function_exists('esc_attr')) {
         return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
     }
 }
+if (!function_exists('wp_salt')) {
+    function wp_salt(string $scheme = 'auth'): string
+    {
+        return 'test-salt-' . $scheme;
+    }
+}
+
+if (!function_exists('wp_json_encode')) {
+    function wp_json_encode(mixed $data): string|false
+    {
+        return json_encode($data);
+    }
+}
+
 if (!function_exists('wp_kses_post')) {
     function wp_kses_post(string $html): string
     {

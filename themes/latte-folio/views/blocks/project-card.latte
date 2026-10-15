@@ -17,7 +17,7 @@
 			{if !empty($project['types'])}
 				<div class="flex flex-wrap gap-2">
 					{foreach $project['types'] as $type}
-						{include 'badge/Badge.latte', variant: 'secondary', children: (string) $type['name']}
+						{capture $typeName}{$type['name']}{/capture}{include 'badge/Badge.latte', variant: 'secondary', children: (string) $typeName}
 					{/foreach}
 				</div>
 			{/if}

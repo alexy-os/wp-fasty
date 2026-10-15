@@ -1,0 +1,87 @@
+{** Latte Shop — checkout form, or order confirmation when ?order&key match. *}
+<section class="container mx-auto px-4 py-12 md:px-6">
+	{if !empty($order)}
+		<div class="mx-auto flex max-w-2xl flex-col gap-6">
+			<div class="flex flex-col items-center gap-4 text-center">
+				<span class="text-primary">{icon('circle-check', 'size-12')}</span>
+				<h1 class="text-3xl font-bold tracking-tight">{$labels['order_received']}</h1>
+				<p class="text-muted-foreground">{$labels['order_number']} #{$order['id']} · {$order['email']}</p>
+			</div>
+			<ul class="flex flex-col divide-y divide-border rounded-xl border border-border bg-card">
+				{foreach $order['items'] as $item}
+					<li class="flex justify-between gap-4 p-4"><span>{$item['title']} × {$item['qty']}</span><span class="font-semibold">{$item['line_display']}</span></li>
+				{/foreach}
+				<li class="flex justify-between gap-4 p-4 text-sm text-muted-foreground"><span>{$labels['shipping']}</span><span>{$order['shipping_display']}</span></li>
+				<li class="flex justify-between gap-4 p-4 text-lg font-semibold"><span>{$labels['total']}</span><span>{$order['total_display']}</span></li>
+			</ul>
+			<a href="{$shop['url']}" class="mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline">{$labels['continue_shopping']}</a>
+		</div>
+	{elseif empty($cart['items'])}
+		<div class="flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center">
+			<p class="text-muted-foreground">{$labels['empty_cart']}</p>
+			<a href="{$shop['url']}" class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline">{$labels['continue_shopping']}</a>
+		</div>
+	{else}
+		<h1 class="mb-8 text-3xl font-bold tracking-tight">{$labels['checkout']}</h1>
+		{if !empty($checkout['errors'])}
+			{capture $errText}<span class="inline-flex items-center gap-2">{icon('x')}Please check: {implode(', ', $checkout['errors'])}</span>{/capture}
+			<div class="mb-6">{include 'alert/Alert.latte', variant: 'destructive', role: 'alert', class: 'px-4 py-2', children: (string) $errText}</div>
+		{/if}
+		{var $v = $checkout['values']}
+		<form method="post" action="{$shop['action']}" class="grid gap-8 lg:grid-cols-[1fr_360px]" novalidate>
+			<input type="hidden" name="action" value="latte_shop_checkout">
+			<input type="hidden" name="_wpnonce" value="{$shop['checkout_nonce']}">
+			<div class="flex flex-col gap-6 rounded-xl border border-border bg-card p-6">
+				<div class="grid gap-4 md:grid-cols-2">
+					{foreach [
+						['name', 'Full name', 'text', 'name', true],
+						['email', 'Email', 'email', 'email', true],
+						['phone', 'Phone', 'tel', 'tel', false],
+						['country', 'Country', 'text', 'country-name', true],
+						['city', 'City', 'text', 'address-level2', true],
+						['postcode', 'Postcode', 'text', 'postal-code', true],
+					] as [$field, $label, $type, $ac, $req]}
+						<div class="flex flex-col gap-2">
+							{capture $lbl}{$label}{if $req} *{/if}{/capture}
+							{include 'label/Label.latte', for: 'co-' . $field, children: (string) $lbl}
+							{include 'input/Input.latte', id: 'co-' . $field, type: $type, name: $field, value: (string) ($v[$field] ?? ''), autocomplete: $ac, required: $req, class: in_array($field, $checkout['errors'], true) ? 'border-destructive' : ''}
+						</div>
+					{/foreach}
+				</div>
+				<div class="flex flex-col gap-2">
+					{capture $addrLbl}Address *{/capture}
+					{include 'label/Label.latte', for: 'co-address', children: (string) $addrLbl}
+					{include 'textarea/Textarea.latte', id: 'co-address', name: 'address', value: (string) ($v['address'] ?? ''), rows: 2, required: true}
+				</div>
+				<fieldset class="flex flex-col gap-2">
+					<legend class="mb-2 text-sm font-medium">Payment</legend>
+					<div class="grid gap-4 md:grid-cols-2">
+						{foreach $checkout['payments'] as $pm}
+							<label class="flex cursor-pointer items-center gap-4 rounded-lg border border-border p-4 has-[:checked]:border-primary has-[:checked]:bg-accent">
+								<input type="radio" name="payment" value="{$pm['id']}" checked="{($v['payment'] ?? 'cod') === $pm['id']}" class="accent-primary">
+								<span class="text-primary">{icon($pm['icon'], 'size-5')}</span>
+								<span class="text-sm font-medium">{$pm['label']}</span>
+							</label>
+						{/foreach}
+					</div>
+				</fieldset>
+				<div class="flex flex-col gap-2">
+					{capture $notesLbl}Order notes{/capture}
+					{include 'label/Label.latte', for: 'co-notes', children: (string) $notesLbl}
+					{include 'textarea/Textarea.latte', id: 'co-notes', name: 'notes', value: (string) ($v['notes'] ?? ''), rows: 3}
+				</div>
+			</div>
+			<div class="flex flex-col gap-4">
+				<ul class="flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm">
+					{foreach $cart['items'] as $item}
+						<li class="flex justify-between gap-4"><span>{$item['title']} × {$item['qty']}</span><span>{$item['line_display']}</span></li>
+					{/foreach}
+				</ul>
+				{include 'blocks/order-summary.latte', cart: $cart, labels: $labels, showCheckout: false}
+				{capture $place}{icon('check')}{$labels['place_order']}{/capture}
+				{include 'button/Button.latte', type: 'submit', size: 'lg', class: 'w-full', children: (string) $place}
+				<p class="text-xs text-muted-foreground">Demo store — no real payment is taken.</p>
+			</div>
+		</form>
+	{/if}
+</section>
