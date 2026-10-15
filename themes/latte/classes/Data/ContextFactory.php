@@ -237,13 +237,13 @@ final class ContextFactory
     {
         $data = [
             'id' => $post->ID,
-            'title' => get_the_title($post),
+            'title' => self::text(get_the_title($post)),
             'content' => apply_filters('the_content', $post->post_content),
             'slug' => $post->post_name,
             'url' => (string) get_permalink($post),
-            'excerpt' => has_excerpt($post)
+            'excerpt' => self::text(has_excerpt($post)
                 ? get_the_excerpt($post)
-                : wp_trim_words(wp_strip_all_tags(strip_shortcodes($post->post_content)), 40),
+                : wp_trim_words(wp_strip_all_tags(strip_shortcodes($post->post_content)), 40)),
             'featuredImage' => null,
             'thumbnail' => null,
             'categories' => [],
@@ -313,13 +313,13 @@ final class ContextFactory
                 $next = get_adjacent_post(false, '', false);
                 if ($prev instanceof \WP_Post) {
                     $data['prev'] = [
-                        'title' => get_the_title($prev),
+                        'title' => self::text(get_the_title($prev)),
                         'url' => (string) get_permalink($prev),
                     ];
                 }
                 if ($next instanceof \WP_Post) {
                     $data['next'] = [
-                        'title' => get_the_title($next),
+                        'title' => self::text(get_the_title($next)),
                         'url' => (string) get_permalink($next),
                     ];
                 }
@@ -329,6 +329,15 @@ final class ContextFactory
         /** @var array<string, mixed> $data */
         $data = apply_filters('wpfasty_post_data', $data, $post, $singular);
         return $data;
+    }
+
+    /**
+     * WP returns texturized, entity-encoded strings (&#8217;, &hellip;); Latte escapes
+     * on output, so decode to plain text here to avoid double-encoding.
+     */
+    public static function text(string $value): string
+    {
+        return html_entity_decode(wp_strip_all_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     /**

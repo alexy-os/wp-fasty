@@ -1,0 +1,39 @@
+/*
+Theme Name: Latte Press
+Theme URI: https://github.com/godudy/wpfasty
+Author: godudy
+Author URI: https://github.com/godudy
+Description: A classic, readable blog theme in the spirit of wordpress.org themes — sidebar widgets, comments, featured images, menus and custom logo. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons).
+Version: 1.0.0
+Requires at least: 6.4
+Tested up to: 6.8
+Requires PHP: 8.2
+Template: latte
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: latte-press
+Tags: blog, one-column, two-columns, right-sidebar, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
+*/
+
+/* Comment list — colors via tokens only, 8px rhythm. */
+.comment-list { list-style: none; padding: 0; }
+.comment-list .children { list-style: none; margin-top: 1.5rem; padding-left: 2rem; border-left: 2px solid var(--border); }
+.comment-list .comment-body { display: grid; gap: 0.5rem; }
+.comment-list .comment-author { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+.comment-list .avatar { border-radius: 9999px; }
+.comment-list .comment-metadata, .comment-list .comment-metadata a { font-size: 0.875rem; color: var(--muted-foreground); }
+.comment-list .reply a { font-size: 0.875rem; color: var(--primary); }
+.comment-form { display: grid; gap: 1rem; }
+.comment-form label { display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 500; }
+.comment-form input[type="text"], .comment-form input[type="email"], .comment-form input[type="url"], .comment-form textarea {
+  width: 100%; border: 1px solid var(--input); border-radius: calc(var(--radius) - 2px); background: var(--background); padding: 0.5rem 0.75rem;
+}
+.comment-form input:focus-visible, .comment-form textarea:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.widget ul { display: grid; gap: 0.5rem; }
+.widget a { color: var(--foreground); }
+.widget a:hover { color: var(--primary); }
+.widget_search .search-form { display: flex; gap: 0.5rem; }
+.widget_search label { flex: 1; }
+.widget_search .search-field { width: 100%; height: 2.5rem; border: 1px solid var(--input); border-radius: calc(var(--radius) - 2px); background: var(--background); padding: 0 0.75rem; }
+.widget_search .search-submit { height: 2.5rem; border-radius: calc(var(--radius) - 2px); background: var(--primary); color: var(--primary-foreground); padding: 0 1rem; font-size: 0.875rem; }
+.widget-title { font-family: var(--font-heading); }

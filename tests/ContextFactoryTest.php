@@ -15,6 +15,12 @@ final class ContextFactoryTest extends TestCase
         $GLOBALS['wp_test_sidebars'] = [];
     }
 
+    public function testTextDecodesWpEntitiesOnce(): void
+    {
+        $this->assertSame('It’s fine…', \WPFasty\Data\ContextFactory::text('It&#8217;s fine&hellip;'));
+        $this->assertSame('<b>', \WPFasty\Data\ContextFactory::text('&lt;b&gt;'));
+    }
+
     public function testErrorContextShape(): void
     {
         $ctx = (new ContextFactory())->createErrorContext();
