@@ -17,6 +17,7 @@ final class ContextFactory
         $context = array_merge($this->common(), [
             'page' => $page,
             'hero' => $this->hero(),
+            'comments' => $post instanceof \WP_Post && is_singular() ? $this->comments($post) : '',
         ]);
 
         if (is_front_page()) {
@@ -53,7 +54,7 @@ final class ContextFactory
         $context = array_merge($this->common(), [
             'archive' => [
                 'title' => $title,
-                'description' => $searchQuery !== null ? '' : get_the_archive_description(),
+                'description' => $searchQuery !== null ? '' : wp_kses_post(get_the_archive_description()),
                 'search_query' => $searchQuery,
                 'type' => $this->archiveType(),
             ],
@@ -325,7 +326,52 @@ final class ContextFactory
             }
         }
 
+        /** @var array<string, mixed> $data */
+        $data = apply_filters('wpfasty_post_data', $data, $post, $singular);
         return $data;
+    }
+
+    /**
+     * Comment list + form as WP-generated (core-escaped) HTML.
+     * Empty unless a theme opts in via the `wpfasty_comments_enabled` filter.
+     */
+    private function comments(\WP_Post $post): string
+    {
+        if (!apply_filters('wpfasty_comments_enabled', false) || !function_exists('wp_list_comments')) {
+            return '';
+        }
+        if (!comments_open($post) && (int) get_comments_number($post) === 0) {
+            return '';
+        }
+
+        $list = wp_list_comments([
+            'style' => 'ol',
+            'short_ping' => true,
+            'avatar_size' => 40,
+            'echo' => false,
+        ], get_comments(['post_id' => $post->ID, 'status' => 'approve', 'order' => 'ASC']));
+
+        ob_start();
+        comment_form([
+            'class_submit' => 'inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium '
+                . 'text-primary-foreground',
+            'title_reply_before' => '<h3 id="reply-title" class="comment-reply-title mb-4 text-xl font-semibold">',
+            'title_reply_after' => '</h3>',
+        ], $post);
+        $form = (string) ob_get_clean();
+
+        $count = (int) get_comments_number($post);
+        $heading = $count > 0
+            ? '<h2 class="mb-6 text-2xl font-semibold">' . esc_html(sprintf(
+                /* translators: %d: number of comments */
+                _n('%d comment', '%d comments', $count, 'latte'),
+                $count
+            )) . '</h2>'
+            : '';
+
+        return '<section id="comments" class="comments-area">' . $heading
+            . ($list ? '<ol class="comment-list mb-8 flex flex-col gap-6">' . $list . '</ol>' : '')
+            . $form . '</section>';
     }
 
     /** @return array<string, mixed>|null */

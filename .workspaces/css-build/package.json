@@ -2,8 +2,9 @@
   "name": "css-build",
   "private": true,
   "devDependencies": {
-    "tailwindcss": "^4.1.14",
-    "@tailwindcss/cli": "^4.1.14"
+    "@tailwindcss/cli": "^4.1.14",
+    "lucide-static": "^1.57.0",
+    "tailwindcss": "^4.1.14"
   },
   "scripts": {
     "build": "tailwindcss -i theme.css -o ../../themes/latte/assets/css/theme.min.css --minify"

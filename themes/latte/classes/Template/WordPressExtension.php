@@ -29,6 +29,16 @@ final class WordPressExtension extends Extension
         ];
     }
 
+    /** @return array<string, callable> */
+    public function getFunctions(): array
+    {
+        return [
+            // {icon('shopping-cart', 'size-4')} — inline Lucide SVG, attributes escaped.
+            'icon' => static fn (string $name, string $class = 'size-4', string $label = ''): \Latte\Runtime\Html
+                => new \Latte\Runtime\Html(Icons::svg($name, $class, $label)),
+        ];
+    }
+
     public static function createDoActionNode(Tag $tag): StatementNode
     {
         $tag->expectArguments();

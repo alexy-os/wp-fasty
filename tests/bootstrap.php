@@ -50,6 +50,13 @@ if (!function_exists('esc_attr')) {
         return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
     }
 }
+if (!function_exists('wp_kses_post')) {
+    function wp_kses_post(string $html): string
+    {
+        return $html;
+    }
+}
+
 if (!function_exists('apply_filters')) {
     function apply_filters(string $hook, mixed $value, mixed ...$args): mixed
     {

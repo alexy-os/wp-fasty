@@ -41,10 +41,12 @@ final class ThemeHooks extends AbstractHooks
             'script',
         ]);
 
-        // Comments intentionally disabled — no PII collection in this theme.
-        add_filter('comments_open', '__return_false', 20, 2);
-        add_filter('pings_open', '__return_false', 20, 2);
-        add_filter('comments_array', static fn (): array => [], 20);
+        // Comments off by default (no PII collection); themes opt in via `wpfasty_comments_enabled`.
+        if (!apply_filters('wpfasty_comments_enabled', false)) {
+            add_filter('comments_open', '__return_false', 20, 2);
+            add_filter('pings_open', '__return_false', 20, 2);
+            add_filter('comments_array', static fn (): array => [], 20);
+        }
 
         add_theme_support('starter-content', $this->starterContent());
     }

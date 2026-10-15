@@ -53,11 +53,15 @@ final class ThemeService
     {
         $view ??= $this->resolveView();
 
-        return match ($view) {
-            'pages/404' => $this->contextFactory->createErrorContext(),
-            'pages/search', 'pages/archive' => $this->contextFactory->createArchiveContext(),
-            default => $this->contextFactory->createPageContext(),
-        };
+        if ($view === 'pages/404') {
+            return $this->contextFactory->createErrorContext();
+        }
+        // Context follows the WP query, not the view name, so child themes can
+        // map custom views (e.g. pages/shop) via `wpfasty_resolve_view`.
+        if (in_array($view, ['pages/search', 'pages/archive'], true) || is_search() || is_archive() || is_home()) {
+            return $this->contextFactory->createArchiveContext();
+        }
+        return $this->contextFactory->createPageContext();
     }
 
     /** @param array<string, mixed> $context */

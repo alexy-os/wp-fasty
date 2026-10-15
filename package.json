@@ -32,6 +32,7 @@
     "dev:composer": "docker compose --profile tools run --rm composer",
     "dev:wp": "docker compose --profile tools run --rm wpcli",
     "css:build": "bun run --cwd .workspaces/css-build build",
-    "lint:design": "bun tools/lint-design.ts"
+    "lint:design": "bun tools/lint-design.ts",
+    "icons": "bun tools/icons.ts"
   }
 }
