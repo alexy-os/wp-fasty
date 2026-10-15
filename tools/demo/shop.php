@@ -61,4 +61,4 @@ wpfasty_demo_menu('Primary', 'primary', [['Shop', get_post_type_archive_link('pr
 wpfasty_demo_menu('Footer', 'footer', [['Shop', get_post_type_archive_link('product')], ['Cart', LatteShop\Front::pageUrl('cart')], ['About', get_permalink($about)]]);
 flush_rewrite_rules();
 
-WP_CLI::success('Latte Shop demo content ready.');
+wpfasty_demo_log('Latte Shop demo content ready.');

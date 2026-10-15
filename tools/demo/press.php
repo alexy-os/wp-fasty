@@ -62,4 +62,4 @@ update_option('widget_categories', [2 => ['title' => 'Categories', 'count' => 1]
 update_option('widget_archives', [2 => ['title' => 'Archives'], '_multiwidget' => 1]);
 update_option('sidebars_widgets', ['wp_inactive_widgets' => [], 'sidebar-1' => ['search-2', 'recent-posts-2', 'categories-2', 'archives-2'], 'footer-1' => [], 'array_version' => 3]);
 
-WP_CLI::success('Latte Press demo content ready.');
+wpfasty_demo_log('Latte Press demo content ready.');

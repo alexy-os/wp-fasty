@@ -14,18 +14,38 @@ require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 
+function wpfasty_demo_log(string $msg): void
+{
+    if (class_exists('WP_CLI')) {
+        WP_CLI::log($msg);
+    } else {
+        error_log('[wpfasty-demo] ' . $msg);
+    }
+}
+
 function wpfasty_demo_image(string $seed, int $w = 1200, int $h = 800): int
 {
     $url = "https://picsum.photos/seed/{$seed}/{$w}/{$h}.jpg";
+    // Bundled images (WordPress Playground preview) take precedence over network.
+    $local = __DIR__ . "/images/{$seed}.jpg";
     $existing = get_posts(['post_type' => 'attachment', 'meta_key' => '_wpfasty_demo_src', 'meta_value' => $url, 'fields' => 'ids', 'numberposts' => 1]);
     if ($existing) {
         return (int) $existing[0];
     }
-    // Plain HTTP fetch (CLI-only demo tool; wp_safe_remote_get rejects some sandbox resolvers).
     $tmp = wp_tempnam($seed . '.jpg');
+    if (is_file($local)) {
+        copy($local, $tmp);
+        $id = media_handle_sideload(['name' => "{$seed}.jpg", 'tmp_name' => $tmp], 0);
+        if (!is_wp_error($id)) {
+            update_post_meta($id, '_wpfasty_demo_src', $url);
+            update_post_meta($id, '_wp_attachment_image_alt', ucwords(str_replace('-', ' ', $seed)));
+            return (int) $id;
+        }
+    }
+    // Plain HTTP fetch (CLI-only demo tool; wp_safe_remote_get rejects some sandbox resolvers).
     $res = wp_remote_get($url, ['timeout' => 30, 'stream' => true, 'filename' => $tmp, 'redirection' => 5]);
     if (is_wp_error($res) || wp_remote_retrieve_response_code($res) !== 200) {
-        WP_CLI::warning("image {$seed}: " . (is_wp_error($res) ? $res->get_error_message() : wp_remote_retrieve_response_code($res)));
+        wpfasty_demo_log("image {$seed}: " . (is_wp_error($res) ? $res->get_error_message() : wp_remote_retrieve_response_code($res)));
         @unlink($tmp);
         return 0;
     }

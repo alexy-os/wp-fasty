@@ -55,4 +55,4 @@ wpfasty_demo_menu('Primary', 'primary', [['Work', get_post_type_archive_link('pr
 wpfasty_demo_menu('Footer', 'footer', [['Work', get_post_type_archive_link('project')], ['Contact', get_permalink($contact)]]);
 flush_rewrite_rules();
 
-WP_CLI::success('Latte Folio demo content ready.');
+wpfasty_demo_log('Latte Folio demo content ready.');
