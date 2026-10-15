@@ -1,0 +1,16 @@
+{
+  "lockfileVersion": 2,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "wpfasty",
+    },
+    ".workspaces/theme-builder": {
+      "name": "@wpfasty/theme-builder",
+      "version": "0.3.0",
+    },
+  },
+  "packages": {
+    "@wpfasty/theme-builder": ["@wpfasty/theme-builder@workspace:.workspaces/theme-builder"],
+  }
+}
