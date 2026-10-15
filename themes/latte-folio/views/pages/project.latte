@@ -1,0 +1,60 @@
+{** Latte Folio — project case study. *}
+{if $page}
+<article class="{$page['post_class'] ?? ''}">
+	<header class="container mx-auto px-4 pb-8 pt-16 md:px-6">
+		<a href="{$work['url']}" class="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground no-underline hover:text-foreground">{icon('arrow-left')}{$labels['all_work']}</a>
+		<div class="grid gap-8 lg:grid-cols-[2fr_1fr]">
+			<div class="flex flex-col gap-4">
+				{if !empty($page['types'])}
+					<div class="flex flex-wrap gap-2">
+						{foreach $page['types'] as $type}
+							{include 'badge/Badge.latte', variant: 'secondary', children: (string) $type['name']}
+						{/foreach}
+					</div>
+				{/if}
+				<h1 class="text-4xl font-bold leading-tight tracking-tight md:text-5xl">{$page['title']}</h1>
+				{if !empty($page['excerpt'])}<p class="text-lg text-muted-foreground">{$page['excerpt']}</p>{/if}
+			</div>
+			{if !empty($page['project'])}
+				<dl class="grid grid-cols-2 gap-6 self-end rounded-xl border border-border bg-card p-6">
+					{foreach $page['project'] as $key => $meta}
+						{if $key !== 'url'}
+							<div class="flex flex-col gap-2">
+								<dt class="text-xs uppercase tracking-wide text-muted-foreground">{$meta['label']}</dt>
+								<dd class="font-medium">{$meta['value']}</dd>
+							</div>
+						{/if}
+					{/foreach}
+					{if !empty($page['project']['url']['value'])}
+						<div class="col-span-2">
+							<a href="{$page['project']['url']['value']}" class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline" rel="noopener" target="_blank">{$labels['visit_site']}{icon('external-link')}</a>
+						</div>
+					{/if}
+				</dl>
+			{/if}
+		</div>
+	</header>
+
+	{if !empty($page['featuredImage']['url'])}
+		<div class="container mx-auto px-4 md:px-6">
+			{include 'image/Image.latte', src: $page['featuredImage']['url'], alt: $page['featuredImage']['alt'] ?? '', srcset: $page['featuredImage']['srcset'] ?? '', sizes: '100vw', class: 'aspect-[16/9] w-full rounded-2xl border border-border object-cover', loading: 'eager'}
+		</div>
+	{/if}
+
+	<div class="container mx-auto max-w-3xl px-4 py-16 md:px-6">
+		<div class="prose max-w-none">{$page['content']|noescape}</div>
+	</div>
+</article>
+
+{if !empty($next_project)}
+	<section class="container mx-auto px-4 pb-16 md:px-6">
+		<a href="{$next_project['url']}" class="group flex items-center justify-between gap-6 rounded-2xl border border-border bg-card p-8 no-underline hover:border-primary">
+			<div class="flex flex-col gap-2">
+				<span class="text-sm text-muted-foreground">{$labels['next_project']}</span>
+				<span class="text-2xl font-semibold text-foreground">{$next_project['title']}</span>
+			</div>
+			<span class="text-primary">{icon('arrow-right', 'size-8')}</span>
+		</a>
+	</section>
+{/if}
+{/if}

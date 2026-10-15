@@ -38,3 +38,22 @@ add_action('init', static function (): void {
         }
     }
 });
+
+/**
+ * Child-theme API: view-model arrays for posts from secondary queries.
+ *
+ * @param list<\WP_Post|int> $posts
+ * @return list<array<string, mixed>>
+ */
+function wpfasty_posts(array $posts): array
+{
+    $factory = WPFasty\Core\Application::getInstance()->get('data.context_factory');
+    $out = [];
+    foreach ($posts as $p) {
+        $p = get_post($p);
+        if ($p instanceof WP_Post) {
+            $out[] = $factory->postData($p);
+        }
+    }
+    return $out;
+}

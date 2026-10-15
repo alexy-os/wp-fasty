@@ -27,6 +27,16 @@ final class ContextFactory
         return apply_filters('wpfasty_context', $context, $post);
     }
 
+    /**
+     * Public view-model for any post (used by child themes for secondary queries).
+     *
+     * @return array<string, mixed>
+     */
+    public function postData(\WP_Post $post, bool $singular = false): array
+    {
+        return $this->post($post, $singular);
+    }
+
     /** @return array<string, mixed> */
     public function createArchiveContext(): array
     {
