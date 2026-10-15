@@ -20,4 +20,5 @@ $view = isset($view) && is_string($view) && $view !== ''
     : $theme->resolveView();
 $context = $theme->context($view);
 
-echo $theme->renderPage($view, $context);
+// Latte auto-escapes all output; the rendered string is final HTML.
+echo $theme->renderPage($view, $context); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

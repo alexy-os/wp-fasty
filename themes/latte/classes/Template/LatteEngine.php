@@ -28,7 +28,7 @@ final class LatteEngine implements TemplateEngineInterface
         }
 
         if (!is_dir($cacheDir) && !mkdir($cacheDir, 0755, true) && !is_dir($cacheDir)) {
-            throw new \RuntimeException('Cannot create cache directory: ' . $cacheDir);
+            throw new \RuntimeException('Cannot create cache directory: ' . esc_html($cacheDir));
         }
 
         $this->latte = new Engine();
@@ -49,4 +49,3 @@ final class LatteEngine implements TemplateEngineInterface
         return $this->latte->renderToString($template, $context);
     }
 }
-

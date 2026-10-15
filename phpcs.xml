@@ -4,6 +4,7 @@
 
     <!-- Scan theme directory specifically -->
     <file>themes/latte</file>
+    <arg name="extensions" value="php"/>
 
     <!-- Exclude directories and files -->
     <exclude-pattern>themes/latte/vendor/*</exclude-pattern>
@@ -67,6 +68,9 @@
         <exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
         <exclude name="Squiz.Commenting.FunctionComment.ParamCommentNotCapital"/>
         <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
+        <!-- Squiz misreads single-line /** @param array<..> */ docblocks and generics -->
+        <exclude name="Squiz.Commenting.FunctionComment.ParamNameNoMatch"/>
+        <exclude name="Squiz.Commenting.FunctionComment.IncorrectTypeHint"/>
     </rule>
     
     <!-- Exclude redundant class comment rules -->
@@ -128,4 +132,10 @@
 
     <!-- Additional PHP 8 features -->
     <config name="php_version" value="80200" />
+    <!-- Exception messages are never rendered as HTML -->
+    <rule ref="WordPress.Security.EscapeOutput.ExceptionNotEscaped">
+        <severity>0</severity>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification"><severity>0</severity></rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification"><severity>0</severity></rule>
 </ruleset>
