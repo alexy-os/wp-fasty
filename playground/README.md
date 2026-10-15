@@ -1,12 +1,12 @@
 # Live previews (WordPress Playground)
 
-Each blueprint installs the vendored `latte` parent + one child theme from this branch and imports demo content
-(`tools/demo/*.php`, images bundled in `demo.zip`). Runs entirely in the browser — no server.
+`godudy/wpfasty` is private, so raw.githubusercontent URLs are not public. The built zips are mirrored
+(base64) in a secret gist: https://gist.github.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc
+and the blueprints (`press.json`, `folio.json`, `shop.json`) are passed inline in the Playground URL fragment.
+Everything runs in the visitor's browser — no server.
 
-| Theme | Preview |
-|---|---|
-| Latte Press (classic blog) | https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/godudy/wpfasty/improved/playground/press.json |
-| Latte Folio (portfolio) | https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/godudy/wpfasty/improved/playground/folio.json |
-| Latte Shop (no WooCommerce) | https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/godudy/wpfasty/improved/playground/shop.json |
+- Latte Press (classic blog): see `urls.txt` → `press`
+- Latte Folio (portfolio): `folio`
+- Latte Shop (no WooCommerce): `shop`
 
-Rebuild artifacts after theme changes: `bash tools/playground-build.sh`.
+Rebuild after theme changes: `bash tools/playground-build.sh`, re-upload `*.zip` as base64 to the gist, regenerate URLs.

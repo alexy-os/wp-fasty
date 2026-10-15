@@ -1,17 +1,9 @@
 {
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
-  "meta": {
-    "title": "WP FastY \u2014 latte-press",
-    "author": "godudy",
-    "description": "latte-press child theme of Latte (UI8Kit Latte primitives) with demo content."
-  },
   "landingPage": "/",
   "preferredVersions": {
     "php": "8.3",
     "wp": "latest"
-  },
-  "features": {
-    "networking": true
   },
   "steps": [
     {
@@ -19,38 +11,57 @@
       "username": "admin"
     },
     {
-      "step": "installTheme",
-      "themeData": {
+      "step": "writeFile",
+      "path": "/tmp/latte.zip.b64",
+      "data": {
         "resource": "url",
-        "url": "https://raw.githubusercontent.com/godudy/wpfasty/improved/playground/latte.zip"
-      },
-      "options": {
-        "activate": false
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/latte.zip.b64"
       }
     },
     {
-      "step": "installTheme",
-      "themeData": {
+      "step": "writeFile",
+      "path": "/tmp/latte-press.zip.b64",
+      "data": {
         "resource": "url",
-        "url": "https://raw.githubusercontent.com/godudy/wpfasty/improved/playground/latte-press.zip"
-      },
-      "options": {
-        "activate": true
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/latte-press.zip.b64"
       }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/demo.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/demo.zip.b64"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php foreach (glob('/tmp/*.zip.b64') as $f) { file_put_contents(substr($f, 0, -4), base64_decode(file_get_contents($f))); }"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/latte.zip",
+      "extractToPath": "/wordpress/wp-content/themes"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/latte-press.zip",
+      "extractToPath": "/wordpress/wp-content/themes"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/demo.zip",
+      "extractToPath": "/wordpress/wp-content"
+    },
+    {
+      "step": "activateTheme",
+      "themeFolderName": "latte-press"
     },
     {
       "step": "setSiteOptions",
       "options": {
         "permalink_structure": "/%postname%/"
       }
-    },
-    {
-      "step": "unzip",
-      "zipFile": {
-        "resource": "url",
-        "url": "https://raw.githubusercontent.com/godudy/wpfasty/improved/playground/demo.zip"
-      },
-      "extractToPath": "/wordpress/wp-content"
     },
     {
       "step": "runPHP",
