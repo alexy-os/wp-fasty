@@ -35,6 +35,7 @@ Counting: `grep -c REQUIRED|WARNING|RECOMMENDED` on the CLI output.
 |---|---|---|---|---|---|
 | 2026-10-16 baseline (4895c4d) | 7.1.3 | R1 W4 Rec17 | R1 W5 Rec16 | R3 W5 Rec17 | R6 W5 Rec17 |
 | 2026-10-16 after ADR-001 work | 7.1.3 | R0 W0 Rec10 | R0 W1 Rec9 | R0 W1 Rec10 | R0 W1 Rec10 |
+| 2026-10-17 typed meta + money in cents | 7.1.3 | R0 W0 Rec10 | – | R0 W1 Rec10 | R0 W1 Rec10 |
 
 Remaining WARNING in children: "more than one text-domain" (child domain + parent `latte` — allowed for a
 framework/parent per the Required rules, still reported). Folio/shop pass only because post types moved to the
