@@ -23,4 +23,3 @@ add_action('after_setup_theme', static function (): void {
 add_action('after_switch_theme', static function (): void {
     flush_rewrite_rules();
 });
-
