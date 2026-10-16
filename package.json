@@ -1,6 +1,6 @@
 {
   "name": "wpfasty",
-  "description": "WordPress theme generator \u2014 Latte + UI8Kit primitives, layout/block/style presets",
+  "description": "WordPress theme generator — Latte + UI8Kit primitives, layout/block/style presets",
   "version": "0.3.0",
   "private": true,
   "license": "MIT",
@@ -33,6 +33,8 @@
     "dev:wp": "docker compose --profile tools run --rm wpcli",
     "css:build": "bun run --cwd .workspaces/css-build build",
     "lint:design": "bun tools/lint-design.ts",
-    "icons": "bun tools/icons.ts"
+    "icons": "bun tools/icons.ts",
+    "i18n:pot": "for t in latte latte-press latte-folio latte-shop; do wp i18n make-pot themes/$t themes/$t/languages/$t.pot --domain=$t --exclude=vendor,~cache,node_modules; done",
+    "perf:queries": "wp eval-file tools/perf/queries.php"
   }
 }

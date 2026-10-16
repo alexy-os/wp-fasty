@@ -27,6 +27,7 @@ add_filter('wpfasty_context', static function (array $context): array {
         'visit_site' => __('Visit site', 'latte-folio'),
         'next_project' => __('Next project', 'latte-folio'),
         'contact' => __('Start a project', 'latte-folio'),
+        'no_projects' => __('Nothing here yet.', 'latte-folio'),
     ];
 
     $filter = wpfasty_term_filter('project_type');

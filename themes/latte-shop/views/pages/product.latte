@@ -2,7 +2,7 @@
 {include 'blocks/notice.latte'}
 {if $page}
 <article class="{$page['post_class'] ?? ''} container mx-auto px-4 py-12 md:px-6">
-	<nav class="mb-8 flex items-center gap-2 text-sm text-muted-foreground" aria-label="Breadcrumb">
+	<nav class="mb-8 flex items-center gap-2 text-sm text-muted-foreground" aria-label="{$labels['breadcrumb']}">
 		<a href="{$shop['url']}" class="text-muted-foreground no-underline hover:text-foreground">{$labels['all_products']}</a>
 		{if !empty($page['product_cats'])}
 			{icon('chevron-right')}
@@ -55,7 +55,7 @@
 			{/if}
 
 			<ul class="flex flex-col gap-2 text-sm text-muted-foreground">
-				<li class="flex items-center gap-2">{icon('truck')}Free shipping over {$shop['free_shipping']}</li>
+				<li class="flex items-center gap-2">{icon('truck')}{$labels['free_shipping_over']}</li>
 				<li class="flex items-center gap-2">{icon('rotate-ccw')}30-day returns</li>
 				{if !empty($page['product']['sku'])}<li class="flex items-center gap-2">{icon('tag')}SKU: {$page['product']['sku']}</li>{/if}
 			</ul>

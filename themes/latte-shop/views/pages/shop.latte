@@ -14,7 +14,7 @@
 </section>
 <section class="container mx-auto px-4 pb-16 md:px-6">
 	{if empty($posts)}
-		<p class="py-16 text-center text-muted-foreground">{$labels['no_posts'] ?? 'No products found.'}</p>
+		<p class="py-16 text-center text-muted-foreground">{$labels['no_products']}</p>
 	{else}
 		<div class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
 			{foreach $posts as $product}

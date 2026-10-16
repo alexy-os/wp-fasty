@@ -104,6 +104,14 @@ final class Front
                     ))
                     : [],
                 'values' => is_array($old) ? $old : ['payment' => 'cod', 'country' => ''],
+                'fields' => [
+                    ['name', __('Full name', 'latte-shop'), 'text', 'name', true],
+                    ['email', __('Email', 'latte-shop'), 'email', 'email', true],
+                    ['phone', __('Phone', 'latte-shop'), 'tel', 'tel', false],
+                    ['country', __('Country', 'latte-shop'), 'text', 'country-name', true],
+                    ['city', __('City', 'latte-shop'), 'text', 'address-level2', true],
+                    ['postcode', __('Postcode', 'latte-shop'), 'text', 'postal-code', true],
+                ],
                 'payments' => [
                     ['id' => 'cod', 'label' => __('Cash on delivery', 'latte-shop'), 'icon' => 'truck'],
                     ['id' => 'bank', 'label' => __('Bank transfer', 'latte-shop'), 'icon' => 'credit-card'],
@@ -136,6 +144,18 @@ final class Front
             'featured' => __('Featured products', 'latte-shop'),
             'order_received' => __('Thank you — your order has been received.', 'latte-shop'),
             'order_number' => __('Order', 'latte-shop'),
+            'address' => __('Address', 'latte-shop'),
+            'payment' => __('Payment', 'latte-shop'),
+            'demo_notice' => __('Demo store — no real payment is taken.', 'latte-shop'),
+            'no_products' => __('No products found.', 'latte-shop'),
+            'breadcrumb' => __('Breadcrumb', 'latte-shop'),
+            'returns' => __('30-day easy returns', 'latte-shop'),
+            'pay_options' => __('Pay on delivery or by bank transfer', 'latte-shop'),
+            'free_shipping_over' => sprintf(
+                /* translators: %s: order amount for free shipping */
+                __('Free shipping over %s', 'latte-shop'),
+                $context['shop']['free_shipping']
+            ),
         ];
 
         return $context;
