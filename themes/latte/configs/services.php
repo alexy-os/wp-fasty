@@ -7,7 +7,9 @@ use WPFasty\Core\ContainerInterface;
 use WPFasty\Data\ContextFactory;
 use WPFasty\Hooks\AssetsHooks;
 use WPFasty\Hooks\ThemeHooks;
-use WPFasty\Template\LatteEngine;
+use WPFasty\Template\LatteRenderer;
+use WPFasty\Template\RendererFactory;
+use WPFasty\Template\RendererInterface;
 use WPFasty\Theme\PrimitivesLocator;
 use WPFasty\Theme\ThemeService;
 
@@ -18,21 +20,30 @@ return function (Container $container): void {
     $container->singleton('hooks.assets', static fn () => new AssetsHooks($container));
     $container->addTag('hooks.assets', ContainerInterface::TAG_BOOTABLE);
 
-    $container->singleton('template.engine', static function (): LatteEngine {
+    $container->singleton('template.engine', static function (): RendererInterface {
         $templateDir = get_template_directory();
         $stylesheetDir = get_stylesheet_directory();
-        $primitives = PrimitivesLocator::resolve($templateDir);
 
-        $roots = array_values(array_filter([
-            $stylesheetDir . '/views',
-            $templateDir . '/views',
+        $roots = [$stylesheetDir . '/views', $templateDir . '/views'];
+        $primitives = [
+            'latte' => array_filter([PrimitivesLocator::resolve($templateDir)]),
+            'twig' => array_filter([PrimitivesLocator::resolveTwig($templateDir)]),
+        ];
+
+        $engine = apply_filters('wpfasty_renderer', 'latte');
+        $roots = (array) apply_filters('wpfasty_view_roots', $roots, is_string($engine) ? $engine : 'custom');
+        if ($engine === 'latte') {
+            // Legacy filter: receives the full Latte chain (views + primitives).
+            $chain = (array) apply_filters('wpfasty_latte_roots', array_merge($roots, $primitives['latte']));
+            return new LatteRenderer($chain, $templateDir . '/~cache');
+        }
+
+        return RendererFactory::create(
+            $engine instanceof RendererInterface ? $engine : (string) $engine,
+            $roots,
             $primitives,
-        ]));
-
-        /** @var list<string> $roots */
-        $roots = apply_filters('wpfasty_latte_roots', $roots);
-
-        return new LatteEngine($roots, $templateDir . '/~cache');
+            $templateDir . '/~cache'
+        );
     });
 
     $container->singleton('data.context_factory', static fn () => new ContextFactory());

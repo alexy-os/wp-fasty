@@ -13,6 +13,11 @@ if (!is_file($themeVendor)) {
 }
 require $themeVendor;
 
+// Root dev deps (twig/twig for TwigRenderer tests).
+if (is_file(dirname(__DIR__) . '/vendor/autoload.php')) {
+    require_once dirname(__DIR__) . '/vendor/autoload.php';
+}
+
 // Windows path-repo junctions sometimes break PHP includes; load UI8Kit from workspace if needed.
 if (!class_exists(\UI8Kit\Rt::class)) {
     $rt = dirname(__DIR__) . '/.workspaces/ui8kit-latte/php/UI8Kit/Rt.php';

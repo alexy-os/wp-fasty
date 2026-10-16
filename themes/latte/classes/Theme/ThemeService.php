@@ -6,6 +6,7 @@ namespace WPFasty\Theme;
 
 use WPFasty\Data\ContextFactory;
 use WPFasty\Template\TemplateEngineInterface;
+use WPFasty\Template\RendererInterface;
 
 /**
  * Context routing + two-pass render (content → layout).
@@ -62,6 +63,16 @@ final class ThemeService
             return $this->contextFactory->createArchiveContext();
         }
         return $this->contextFactory->createPageContext();
+    }
+
+    public function renderer(): TemplateEngineInterface
+    {
+        return $this->engine;
+    }
+
+    public function engine(): string
+    {
+        return $this->engine instanceof RendererInterface ? $this->engine->engine() : 'latte';
     }
 
     /** @param array<string, mixed> $context */
