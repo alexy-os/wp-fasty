@@ -67,6 +67,7 @@ final class Orders
         update_post_meta($id, '_order_subtotal', $summary['subtotal']);
         update_post_meta($id, '_order_shipping', $summary['shipping']);
         update_post_meta($id, '_order_total', $summary['total']);
+        update_post_meta($id, '_order_currency', Money::currency()); // amounts above are integer minor units
         update_post_meta($id, '_order_status', 'pending');
         update_post_meta($id, '_order_key', $key);
 

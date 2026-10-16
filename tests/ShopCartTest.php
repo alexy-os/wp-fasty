@@ -17,6 +17,9 @@ final class ShopCartTest extends TestCase
         $this->assertSame(1999, Money::toCents('19.99'));
         $this->assertSame(1050, Money::toCents('10,5'));
         $this->assertSame(0, Money::toCents('abc'));
+        $this->assertSame(4500, Money::cents('4500'));
+        $this->assertSame(4500, Money::cents(4500));
+        $this->assertSame(0, Money::cents(''));
         $this->assertSame('$12.30', Money::format(1230));
     }
 

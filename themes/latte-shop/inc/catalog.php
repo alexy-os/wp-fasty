@@ -59,14 +59,14 @@ final class Catalog
     /** Effective unit price in cents (sale wins when lower). */
     public static function price(int $id): int
     {
-        $regular = Money::toCents(self::fieldValue($id, 'price_field'));
-        $sale = Money::toCents(self::fieldValue($id, 'sale_field'));
+        $regular = Money::cents(self::fieldValue($id, 'price_field'));
+        $sale = Money::cents(self::fieldValue($id, 'sale_field'));
         return $sale > 0 && $sale < $regular ? $sale : $regular;
     }
 
     public static function regularPrice(int $id): int
     {
-        return Money::toCents(self::fieldValue($id, 'price_field'));
+        return Money::cents(self::fieldValue($id, 'price_field'));
     }
 
     public static function stock(int $id): ?int
@@ -80,7 +80,7 @@ final class Catalog
         $type = \WPFasty\Core\Application::getInstance()->get('types.registry')->get((string) get_post_type($id));
         $field = (string) ($type?->capability('purchasable')['stock_field'] ?? '');
         if ($field !== '' && isset($type->fields[$field])) {
-            update_post_meta($id, $type->fields[$field]->metaKey, (string) max(0, $stock));
+            update_post_meta($id, $type->fields[$field]->metaKey, max(0, $stock));
         }
     }
 }

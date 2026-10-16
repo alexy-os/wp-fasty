@@ -12,15 +12,18 @@ foreach (['Kitchen', 'Home', 'Accessories'] as $name) {
     $cats[$name] = (int) (is_array($t) ? $t['term_id'] : $t);
 }
 
+update_option('wpfasty_currency', 'USD');
+
+// price / sale in integer minor units (cents); null = not set; stock null = unlimited.
 $products = [
-    ['ceramic-mug', 'Ceramic mug', 'Kitchen', '18', '', 'MUG-01', '', 'ceramic-mug'],
-    ['pour-over-set', 'Pour-over coffee set', 'Kitchen', '54', '45', 'POUR-02', '12', 'pour-over'],
-    ['linen-apron', 'Linen apron', 'Kitchen', '36', '', 'APR-03', '', 'linen-apron'],
-    ['wool-throw', 'Wool throw blanket', 'Home', '120', '96', 'THR-04', '5', 'wool-throw'],
-    ['stoneware-vase', 'Stoneware vase', 'Home', '42', '', 'VAS-05', '', 'stoneware-vase'],
-    ['oak-tray', 'Oak serving tray', 'Home', '64', '', 'TRY-06', '0', 'oak-tray'],
-    ['canvas-tote', 'Canvas tote bag', 'Accessories', '28', '', 'TOT-07', '', 'canvas-tote'],
-    ['leather-wallet', 'Leather card wallet', 'Accessories', '48', '39', 'WAL-08', '20', 'leather-wallet'],
+    ['ceramic-mug', 'Ceramic mug', 'Kitchen', 1800, null, 'MUG-01', null, 'ceramic-mug'],
+    ['pour-over-set', 'Pour-over coffee set', 'Kitchen', 5400, 4500, 'POUR-02', 12, 'pour-over'],
+    ['linen-apron', 'Linen apron', 'Kitchen', 3600, null, 'APR-03', null, 'linen-apron'],
+    ['wool-throw', 'Wool throw blanket', 'Home', 12000, 9600, 'THR-04', 5, 'wool-throw'],
+    ['stoneware-vase', 'Stoneware vase', 'Home', 4200, null, 'VAS-05', null, 'stoneware-vase'],
+    ['oak-tray', 'Oak serving tray', 'Home', 6400, null, 'TRY-06', 0, 'oak-tray'],
+    ['canvas-tote', 'Canvas tote bag', 'Accessories', 2800, null, 'TOT-07', null, 'canvas-tote'],
+    ['leather-wallet', 'Leather card wallet', 'Accessories', 4800, 3900, 'WAL-08', 20, 'leather-wallet'],
 ];
 $order = 0;
 foreach ($products as [$slug, $title, $cat, $price, $sale, $sku, $stock, $img]) {
@@ -32,10 +35,13 @@ foreach ($products as [$slug, $title, $cat, $price, $sale, $sku, $stock, $img]) 
         'menu_order' => $order++,
     ]);
     wp_set_object_terms($id, [$cats[$cat]], 'product_cat');
-    update_post_meta($id, '_shop_price', $price);
-    update_post_meta($id, '_shop_sale_price', $sale);
-    update_post_meta($id, '_shop_sku', $sku);
-    update_post_meta($id, '_shop_stock', $stock);
+    foreach (['_shop_price' => $price, '_shop_sale_price' => $sale, '_shop_sku' => $sku, '_shop_stock' => $stock] as $key => $value) {
+        if ($value === null) {
+            delete_post_meta($id, $key);
+        } else {
+            update_post_meta($id, $key, $value);
+        }
+    }
     $att = wpfasty_demo_image('shop-' . $img, 1000, 1000);
     if ($att) {
         set_post_thumbnail($id, $att);
