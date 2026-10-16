@@ -48,12 +48,11 @@ add_action('init', static function (): void {
 function wpfasty_posts(array $posts): array
 {
     $factory = WPFasty\Core\Application::getInstance()->get('data.context_factory');
+    $resolved = array_values(array_filter(array_map('get_post', $posts), static fn ($p): bool => $p instanceof WP_Post));
+    $factory->prime($resolved);
     $out = [];
-    foreach ($posts as $p) {
-        $p = get_post($p);
-        if ($p instanceof WP_Post) {
-            $out[] = $factory->postData($p);
-        }
+    foreach ($resolved as $p) {
+        $out[] = $factory->postData($p);
     }
     return $out;
 }

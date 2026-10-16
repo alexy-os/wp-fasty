@@ -37,10 +37,54 @@ final class ContextFactory
         return $this->post($post, $singular);
     }
 
+    /**
+     * Batch-loads everything a list of post view-models touches (ADR-001 §4):
+     * post meta, taxonomy terms, featured image posts + meta, authors. Avoids N+1.
+     *
+     * @param list<\WP_Post> $posts
+     */
+    public function prime(array $posts): void
+    {
+        $ids = [];
+        $byType = [];
+        $authors = [];
+        foreach ($posts as $post) {
+            if ($post instanceof \WP_Post) {
+                $ids[] = $post->ID;
+                $byType[$post->post_type][] = $post->ID;
+                $authors[] = (int) $post->post_author;
+            }
+        }
+        if ($ids === []) {
+            return;
+        }
+        update_meta_cache('post', $ids);
+        foreach ($byType as $type => $typeIds) {
+            update_object_term_cache($typeIds, $type);
+        }
+        $thumbs = [];
+        foreach ($ids as $id) {
+            $thumb = (int) get_post_meta($id, '_thumbnail_id', true);
+            if ($thumb > 0) {
+                $thumbs[] = $thumb;
+            }
+        }
+        if ($thumbs !== []) {
+            _prime_post_caches(array_values(array_unique($thumbs)), false, true);
+        }
+        if (function_exists('cache_users')) {
+            cache_users(array_values(array_unique(array_filter($authors))));
+        }
+    }
+
     /** @return array<string, mixed> */
     public function createArchiveContext(): array
     {
         $posts = [];
+        global $wp_query;
+        if ($wp_query instanceof \WP_Query) {
+            $this->prime(array_values(array_filter($wp_query->posts, static fn ($p): bool => $p instanceof \WP_Post)));
+        }
         if (have_posts()) {
             while (have_posts()) {
                 the_post();
@@ -287,7 +331,8 @@ final class ContextFactory
             $data['attachment_url'] = (string) wp_get_attachment_url($post->ID);
         }
 
-        foreach (get_the_category($post->ID) ?: [] as $cat) {
+        $hasCategories = is_object_in_taxonomy($post->post_type, 'category');
+        foreach (($hasCategories ? get_the_category($post->ID) : []) ?: [] as $cat) {
             $data['categories'][] = [
                 'name' => $cat->name,
                 'url' => get_category_link($cat->term_id),
@@ -295,7 +340,7 @@ final class ContextFactory
             ];
         }
 
-        $tags = get_the_tags($post->ID);
+        $tags = is_object_in_taxonomy($post->post_type, 'post_tag') ? get_the_tags($post->ID) : false;
         if (is_array($tags)) {
             foreach ($tags as $tag) {
                 $data['tags'][] = [
