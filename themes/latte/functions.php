@@ -57,3 +57,19 @@ function wpfasty_posts(array $posts): array
     }
     return $out;
 }
+
+/**
+ * Post-type module capability lookup, e.g. wpfasty_type_supports('product', 'purchasable').
+ */
+function wpfasty_type_supports(string $postType, string $capability): bool
+{
+    return WPFasty\Core\Application::getInstance()->get('types.registry')->supports($postType, $capability);
+}
+
+/**
+ * Declared field value of a post-type module (raw, sanitized on save).
+ */
+function wpfasty_field(int $postId, string $field): string
+{
+    return WPFasty\Core\Application::getInstance()->get('types.registry')->value($postId, $field);
+}

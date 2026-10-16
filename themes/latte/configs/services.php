@@ -12,6 +12,7 @@ use WPFasty\Template\RendererFactory;
 use WPFasty\Template\RendererInterface;
 use WPFasty\Theme\PrimitivesLocator;
 use WPFasty\Theme\ThemeService;
+use WPFasty\Types\Registry;
 
 return function (Container $container): void {
     $container->singleton('hooks.theme', static fn () => new ThemeHooks($container));
@@ -45,6 +46,13 @@ return function (Container $container): void {
             $templateDir . '/~cache'
         );
     });
+
+    // Declarative post-type modules: child `types/*.php` first, then parent `types/*.php`.
+    $container->singleton('types.registry', static fn () => new Registry(array_values(array_unique([
+        get_stylesheet_directory() . '/types',
+        get_template_directory() . '/types',
+    ]))));
+    $container->addTag('types.registry', ContainerInterface::TAG_BOOTABLE);
 
     $container->singleton('data.context_factory', static fn () => new ContextFactory());
 
