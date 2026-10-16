@@ -1,6 +1,8 @@
 # Tooling & verification commands
 
-All commands from repo root (`/workspace/wpfasty`). "CI" = runs in `.github/workflows/ci.yml`.
+All commands from repo root (`/workspace/wpfasty`). "CI" = included in the proposed workflow
+[`ci.proposed.yml`](ci.proposed.yml) (the live `.github/workflows/ci.yml` is older: no lint:design/css:build/codegen/audit,
+phpcs non-blocking, no `improved` trigger — updating it needs a token with `workflow` scope).
 
 | Command | What it checks / does | CI |
 |---|---|---|
