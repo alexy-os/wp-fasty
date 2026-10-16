@@ -73,5 +73,15 @@ should always emit the plugin, or inline it for non-wp.org builds.
 Parent `:root` / `.dark` tokens (`themes/latte/assets/css/tokens.css`) → child `tokens.css` override →
 optional Customizer token block (**postponed**). Token names stay shadcn-compatible.
 
-## 6. Implementation status (update when items land)
-See git log on branch `improved`; the final report lists which items are done.
+## 6. Implementation status (2026-10-16, branch `improved`)
+| Item | Status |
+|---|---|
+| RendererInterface + LatteRenderer + TwigRenderer, `wpfasty_renderer`, `wpfasty_view_roots` | done (8aa29db); Twig↔Latte identical DOM for Button tested; Twig theme *views* not written yet |
+| types modules + Registry (DI `types.registry`) | done (891c48f); data part moved to plugin `wpfasty-types` (e175b8a) |
+| folio `project`, shop `product`/`shop_order` migrated; purchasable capability | done (db37f6a, 3dc5637); HTML output byte-identical before/after |
+| folio/shop dedupe (archive title/prefix, term filter, latest posts, full-width support) | done (6f93ce9) |
+| batch priming + N+1 guard `tools/perf/queries.php` | done (3ebdc4f): archive queries no longer grow with N |
+| i18n of hardcoded strings + .pot | done (7cf822e) |
+| Thin-view common subset enforced by lint | not yet |
+| Lazy context / per-page CSS / Customizer tokens | not yet (Customizer postponed by owner) |
+| CI workflow update | proposed only (`ci.proposed.yml`), push token lacks `workflow` scope |
