@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build WordPress Playground preview artifacts into playground/:
-#   latte.zip (parent, vendored), latte-press.zip, latte-folio.zip, latte-shop.zip, demo.zip
+#   latte.zip (parent, vendored), latte-press.zip, latte-folio.zip, latte-shop.zip, wpfasty-types.zip, demo.zip
 # Blueprints (playground/*.json) install them straight from the `improved` branch.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -14,6 +14,10 @@ for t in latte-press latte-folio latte-shop; do
   rm -f "$OUT/$t.zip"
   (cd themes && zip -qr "$OUT/$t.zip" "$t" -x "*/~cache/*" "*/node_modules/*")
 done
+
+# Companion plugin (post types for folio/shop — wordpress.org plugin territory).
+rm -f "$OUT/wpfasty-types.zip"
+(cd plugins && zip -qr "$OUT/wpfasty-types.zip" wpfasty-types)
 
 STAGE="$(mktemp -d)"
 mkdir -p "$STAGE/wpfasty-demo/images"
@@ -35,3 +39,8 @@ rm -f "$OUT/demo.zip"
 (cd "$STAGE" && zip -qr "$OUT/demo.zip" wpfasty-demo)
 rm -rf "$STAGE"
 ls -la "$OUT"/*.zip
+
+# Inline-blueprint preview URLs (playground/urls.txt).
+for t in press folio shop; do
+  printf '%s https://playground.wordpress.net/#%s\n' "$t" "$(php -r 'echo rawurlencode(json_encode(json_decode(file_get_contents($argv[1])), JSON_UNESCAPED_SLASHES));' "$OUT/$t.json")"
+done > "$OUT/urls.txt"
