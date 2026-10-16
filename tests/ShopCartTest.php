@@ -29,7 +29,7 @@ final class ShopCartTest extends TestCase
     public function testTamperedCookieIsRejected(): void
     {
         [$payload, $sig] = explode('.', Cart::encode([5 => 2]));
-        $forged = rtrim(strtr(base64_encode('{"5":1000}'), '+/', '-_'), '=');
+        $forged = '5:1000';
         $this->assertSame([], Cart::decode($forged . '.' . $sig));
         $this->assertSame([], Cart::decode($payload . '.deadbeef'));
         $this->assertSame([], Cart::decode('garbage'));

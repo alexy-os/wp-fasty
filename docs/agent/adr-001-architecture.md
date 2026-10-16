@@ -53,9 +53,12 @@ post data enrichment (`wpfasty_post_data`) and capability lookups (`wpfasty_type
 
 ### 3a. Conflict with wordpress.org (recorded, needs owner decision later)
 wp.org forbids CPTs/taxonomies/non-design metaboxes in themes (Required rules, "Plugin territory").
-Decision for now: the Registry lives in an isolated namespace and directory (`themes/latte/classes/Types/`) with **no
-dependency on the renderer**, so the generator can emit it unchanged as a companion plugin (`wpfasty-types`) for
-wp.org builds while the theme keeps only views. Until then, folio/shop are **not** wp.org-submittable.
+Implemented split (2026-10-16): the theme keeps `WPFasty\Types\Registry` for *presentation only* (module loading,
+view routing, archive query/title, post view-models, capability lookup). Data registration — `register_post_type`,
+`register_taxonomy`, `register_post_meta`, metabox + nonce + save, admin columns — is in the companion plugin
+`plugins/wpfasty-types` (hooks `wpfasty_types_loaded`). Theme Check: 0 REQUIRED for all four themes after the split.
+Folio/shop need the plugin active (admin notice otherwise). Open question for the owner: whether the generator
+should always emit the plugin, or inline it for non-wp.org builds.
 
 ## 4. Performance
 - The main query is the content query (no secondary WP_Query for the same list); `pre_get_posts` adjusts it.

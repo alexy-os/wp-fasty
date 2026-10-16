@@ -12,7 +12,8 @@ final class ThemeHooks extends AbstractHooks
     {
         $this->addAction('after_setup_theme', 'setup');
         $this->addAction('init', 'menus');
-        $this->addAction('widgets_init', 'sidebars');
+        // Direct add_action so static checks (Theme Check) see the widgets_init hook.
+        add_action('widgets_init', [$this, 'sidebars']);
         $this->addAction('admin_notices', 'primitivesNotice');
     }
 

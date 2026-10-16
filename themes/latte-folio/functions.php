@@ -23,3 +23,14 @@ add_action('after_setup_theme', static function (): void {
 add_action('after_switch_theme', static function (): void {
     flush_rewrite_rules();
 });
+
+// Post types are plugin territory (wordpress.org): they are registered by the companion plugin.
+add_action('admin_notices', static function (): void {
+    if (class_exists('WPFastyTypes\\Plugin') || !current_user_can('activate_plugins')) {
+        return;
+    }
+    printf(
+        '<div class="notice notice-warning is-dismissible"><p>%s</p></div>',
+        esc_html__('This theme needs the "WP FastY Types" plugin (plugins/wpfasty-types) to register its content types.', 'latte-folio')
+    );
+});

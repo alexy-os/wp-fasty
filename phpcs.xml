@@ -7,6 +7,7 @@
     <file>themes/latte-press</file>
     <file>themes/latte-folio</file>
     <file>themes/latte-shop</file>
+    <file>plugins/wpfasty-types</file>
     <arg name="extensions" value="php"/>
 
     <!-- Exclude directories and files -->
@@ -38,6 +39,7 @@
         <properties>
             <property name="rootNamespaces" type="array">
                 <element key="themes/latte/classes" value="WPFasty"/>
+                <element key="plugins/wpfasty-types/src" value="WPFastyTypes"/>
             </property>
         </properties>
         <!-- Child themes ship small inc/*.php files (no Composer autoload). -->
@@ -105,7 +107,7 @@
     <rule ref="WordPress.WP.EnqueuedResources" />
 
     <!-- Configure text domains for internationalization -->
-    <config name="text_domain" value="latte,latte-press,latte-folio,latte-shop"/>
+    <config name="text_domain" value="latte,latte-press,latte-folio,latte-shop,wpfasty-types"/>
 
     <!-- Enable parallel processing -->
     <arg name="parallel" value="8" />

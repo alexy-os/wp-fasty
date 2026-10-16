@@ -7,6 +7,6 @@
     "tailwindcss": "^4.1.14"
   },
   "scripts": {
-    "build": "tailwindcss -i theme.css -o ../../themes/latte/assets/css/theme.min.css --minify"
+    "build": "tailwindcss -i theme.css -o ../../themes/latte/assets/css/theme.css && tailwindcss -i theme.css -o ../../themes/latte/assets/css/theme.min.css --minify"
   }
 }

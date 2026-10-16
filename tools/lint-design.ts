@@ -19,7 +19,7 @@ const control = /<(?:button|input|select|textarea|label|option)\b|badge|Button\.
 const errors: string[] = [];
 for (const pattern of ["themes/*/views/**/*.latte", "themes/*/assets/css/*.css", "themes/*/style.css"]) {
   for await (const rel of new Glob(pattern).scan(root)) {
-    const isTokens = rel.endsWith("tokens.css") || rel.endsWith("theme.min.css") || rel.endsWith("a11y.css");
+    const isTokens = rel.endsWith("tokens.css") || rel.endsWith("theme.min.css") || rel.endsWith("assets/css/theme.css") || rel.endsWith("a11y.css");
     const text = await Bun.file(root + rel).text();
     text.split("\n").forEach((line, i) => {
       const where = `${rel}:${i + 1}`;

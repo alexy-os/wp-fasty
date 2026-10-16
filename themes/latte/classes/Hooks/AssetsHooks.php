@@ -41,6 +41,13 @@ final class AssetsHooks extends AbstractHooks
             );
         }
 
+        wp_enqueue_style(
+            'latte-wp-core',
+            get_template_directory_uri() . '/assets/css/wp-core.css',
+            ['latte-tokens'],
+            $parentVer
+        );
+
         $ariaJs = get_template_directory() . '/assets/js/ui8kit.js';
         if (is_file($ariaJs)) {
             wp_enqueue_script(

@@ -133,10 +133,12 @@ final class Cart
     /** @param array<int, int> $lines */
     public static function encode(array $lines): string
     {
+        $lines = self::clamp($lines);
         if ($lines === []) {
             return '';
         }
-        $payload = rtrim(strtr(base64_encode((string) wp_json_encode($lines)), '+/', '-_'), '=');
+        // Cookie-safe compact payload: "id:qty,id:qty" (HMAC-signed below).
+        $payload = implode(',', array_map(static fn (int $id, int $qty): string => $id . ':' . $qty, array_keys($lines), $lines));
         return $payload . '.' . self::sign($payload);
     }
 
@@ -147,16 +149,13 @@ final class Cart
         if (count($parts) !== 2 || !hash_equals(self::sign($parts[0]), $parts[1])) {
             return [];
         }
-        $json = base64_decode(strtr($parts[0], '-_', '+/'), true);
-        $data = is_string($json) ? json_decode($json, true) : null;
-        if (!is_array($data)) {
+        if (!preg_match('/^\d+:\d+(?:,\d+:\d+)*$/', $parts[0])) {
             return [];
         }
         $lines = [];
-        foreach ($data as $id => $qty) {
-            if (is_numeric($id) && is_numeric($qty)) {
-                $lines[(int) $id] = (int) $qty;
-            }
+        foreach (explode(',', $parts[0]) as $pair) {
+            [$id, $qty] = array_map('intval', explode(':', $pair, 2));
+            $lines[$id] = $qty;
         }
         return self::clamp($lines);
     }

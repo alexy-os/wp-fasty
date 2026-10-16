@@ -20,5 +20,8 @@ $view = isset($view) && is_string($view) && $view !== ''
     : $theme->resolveView();
 $context = $theme->context($view);
 
-// Latte auto-escapes all output; the rendered string is final HTML.
+// Engine-agnostic document start (kept in PHP so every layout/engine shares it).
+echo "<!DOCTYPE html>\n";
+
+// Templates auto-escape all output; the rendered string is final HTML.
 echo $theme->renderPage($view, $context); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

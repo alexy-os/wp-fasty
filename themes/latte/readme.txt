@@ -1,7 +1,7 @@
 === Latte ===
 Contributors: godudy
 Requires at least: 6.4
-Tested up to: 6.7
+Tested up to: 7.1
 Requires PHP: 8.2
 Stable tag: 1.1.0
 License: GPLv2 or later
@@ -25,7 +25,7 @@ Features:
 * Starter content for Customizer
 * Accessible skip link and mobile navigation sheet
 
-Privacy: this theme does not collect personal data. Comment forms and contact forms are intentionally not included.
+Privacy: this theme does not collect personal data and loads no remote resources.
 
 == Installation ==
 
@@ -41,7 +41,7 @@ When installing from the wp-fasty monorepo, see the project `docs/install.md`. R
 
 = Are comments supported? =
 
-No. Comments and pingbacks are disabled so the theme does not collect personal data. Use a privacy-focused plugin if you need discussions later.
+Yes. Threaded comments use the core comment form (`comment_form()`) and `wp_list_comments()`; whether they are open is controlled by WordPress discussion settings.
 
 = Does this theme support block themes / FSE? =
 
@@ -62,6 +62,21 @@ Not included in this version.
 = 1.0.0 =
 * Initial public parent theme
 
+== Copyright ==
+
+Latte WordPress Theme, Copyright 2024-2026 godudy
+Latte is distributed under the terms of the GNU GPL v2 or later.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
 == Resources ==
 
 * Latte template engine — https://latte.nette.org/ — New BSD / GPL dual (see vendor)
@@ -69,3 +84,5 @@ Not included in this version.
 * ui8kit.js (theme assets) — MIT — theme author
 * Design tokens / CSS utilities — MIT — theme author
 * screenshot.png — theme author, GPLv2+
+* Lucide icons (assets/icons) — ISC License — https://lucide.dev/license
+* Tailwind CSS build output (assets/css/theme.css, theme.min.css) — MIT — https://tailwindcss.com
