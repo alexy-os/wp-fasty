@@ -131,7 +131,10 @@ final class ContextFactory
                 'label' => __('Search', 'latte'),
             ],
             'widgets' => [
-                'sidebar' => $this->sidebarHtml('sidebar-1'),
+                // Full-width child themes: add_theme_support('wpfasty-full-width') — no content sidebar.
+                'sidebar' => function_exists('current_theme_supports') && current_theme_supports('wpfasty-full-width')
+                    ? ''
+                    : $this->sidebarHtml('sidebar-1'),
                 'footer' => $this->sidebarHtml('footer-1'),
             ],
         ];

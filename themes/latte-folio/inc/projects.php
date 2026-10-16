@@ -20,9 +20,6 @@ if (!defined('ABSPATH')) {
  * @return array<string, mixed>
  */
 add_filter('wpfasty_context', static function (array $context): array {
-    // Portfolio is full-width: no content sidebar.
-    $context['widgets']['sidebar'] = '';
-
     $context['labels'] += [
         'view_project' => __('View case study', 'latte-folio'),
         'all_work' => __('All', 'latte-folio'),
@@ -32,26 +29,18 @@ add_filter('wpfasty_context', static function (array $context): array {
         'contact' => __('Start a project', 'latte-folio'),
     ];
 
+    $filter = wpfasty_term_filter('project_type');
     $context['work'] = [
         'url' => (string) get_post_type_archive_link('project'),
-        'types' => [],
-        'current' => is_tax('project_type') ? (string) get_queried_object()->slug : '',
+        'types' => $filter['items'],
+        'current' => $filter['current'],
     ];
-    foreach (get_terms(['taxonomy' => 'project_type', 'hide_empty' => true]) ?: [] as $term) {
-        if ($term instanceof WP_Term) {
-            $context['work']['types'][] = ['name' => $term->name, 'slug' => $term->slug, 'url' => (string) get_term_link($term)];
-        }
-    }
 
     $contact = get_page_by_path('contact');
     $context['contact_url'] = $contact ? (string) get_permalink($contact) : 'mailto:' . antispambot((string) get_option('admin_email'));
 
-    if (is_front_page() && function_exists('wpfasty_posts')) {
-        $context['projects'] = wpfasty_posts(get_posts([
-            'post_type' => 'project',
-            'numberposts' => 6,
-            'orderby' => ['menu_order' => 'ASC', 'date' => 'DESC'],
-        ]));
+    if (is_front_page()) {
+        $context['projects'] = wpfasty_type_posts('project', 6);
         $context['services'] = [
             ['icon' => 'layers', 'title' => __('Product design', 'latte-folio'), 'text' => __('Flows, systems and interfaces that scale on an 8px grid.', 'latte-folio')],
             ['icon' => 'sparkles', 'title' => __('Brand & identity', 'latte-folio'), 'text' => __('Logos, type and color tokens that travel across every surface.', 'latte-folio')],

@@ -21,9 +21,6 @@ final class Front
         add_filter('wpfasty_resolve_view', [self::class, 'view']);
         add_filter('wpfasty_context', [self::class, 'context']);
         add_action('after_switch_theme', [self::class, 'ensurePages']);
-        add_filter('get_the_archive_title_prefix', '__return_empty_string');
-        add_filter('post_type_archive_title', static fn (string $t, string $type): string
-            => $type === 'product' ? __('Shop', 'latte-shop') : $t, 10, 2);
         // Cart/checkout must never be cached by proxies.
         add_action('template_redirect', static function (): void {
             if (is_page(array_keys(self::PAGES))) {
@@ -68,8 +65,8 @@ final class Front
      */
     public static function context(array $context): array
     {
-        $context['widgets']['sidebar'] = '';
         $summary = Cart::summary();
+        $filter = wpfasty_term_filter('product_cat');
 
         $context['shop'] = [
             'url' => self::shopUrl(),
@@ -80,16 +77,10 @@ final class Front
             'checkout_nonce' => wp_create_nonce('latte_shop_checkout'),
             'count' => $summary['count'],
             'notice' => self::notice(),
-            'categories' => [],
-            'current_cat' => is_tax('product_cat') ? (string) get_queried_object()->slug : '',
+            'categories' => $filter['items'],
+            'current_cat' => $filter['current'],
             'free_shipping' => Money::format((int) apply_filters('latte_shop_free_shipping_cents', 10000)),
         ];
-        foreach (get_terms(['taxonomy' => 'product_cat', 'hide_empty' => true]) ?: [] as $t) {
-            if ($t instanceof \WP_Term) {
-                $context['shop']['categories'][] = ['name' => $t->name, 'slug' => $t->slug, 'url' => (string) get_term_link($t)];
-            }
-        }
-
         if (is_page(['cart', 'checkout'])) {
             $context['cart'] = $summary + [
                 'subtotal_display' => Money::format($summary['subtotal']),
@@ -120,8 +111,8 @@ final class Front
             ];
         }
 
-        if (is_front_page() && function_exists('wpfasty_posts')) {
-            $context['products'] = wpfasty_posts(get_posts(['post_type' => 'product', 'numberposts' => 8, 'orderby' => ['menu_order' => 'ASC', 'date' => 'DESC']]));
+        if (is_front_page()) {
+            $context['products'] = wpfasty_type_posts('product', 8);
         }
 
         $context['labels'] += [

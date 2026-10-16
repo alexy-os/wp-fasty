@@ -22,4 +22,5 @@ LatteShop\Front::register();
 
 add_action('after_setup_theme', static function (): void {
     load_child_theme_textdomain('latte-shop', get_stylesheet_directory() . '/languages');
+    add_theme_support('wpfasty-full-width');
 });

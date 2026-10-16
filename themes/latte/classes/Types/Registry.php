@@ -39,6 +39,8 @@ final class Registry implements BootableServiceInterface
         add_filter('wpfasty_post_data', [$this, 'postData'], 5, 2);
         add_filter('wpfasty_resolve_view', [$this, 'resolveView'], 5);
         add_action('pre_get_posts', [$this, 'mainQuery']);
+        add_filter('post_type_archive_title', [$this, 'archiveTitle'], 10, 2);
+        add_filter('get_the_archive_title_prefix', [$this, 'archiveTitlePrefix']);
         if (is_admin()) {
             add_action('add_meta_boxes', [$this, 'metaBoxes']);
             add_action('save_post', [$this, 'save'], 10, 2);
@@ -181,6 +183,64 @@ final class Registry implements BootableServiceInterface
                 $query->set('orderby', $archive['orderby']);
             }
         }
+    }
+
+    /** Module `archive.title` overrides the post type archive title. */
+    public function archiveTitle(string $title, string $postType): string
+    {
+        $custom = $this->get($postType)?->archive()['title'] ?? null;
+        return is_string($custom) && $custom !== '' ? $custom : $title;
+    }
+
+    /** Module `archive.prefix` => false drops "Archives:"/"Category:" prefixes on its archives. */
+    public function archiveTitlePrefix(string $prefix): string
+    {
+        foreach ($this->all() as $type) {
+            if (($type->archive()['prefix'] ?? true) !== false) {
+                continue;
+            }
+            $taxonomies = array_keys($type->taxonomies());
+            if (is_post_type_archive($type->name) || ($taxonomies !== [] && is_tax($taxonomies))) {
+                return '';
+            }
+        }
+        return $prefix;
+    }
+
+    /**
+     * Latest posts of a module type using its archive ordering (for front pages / related lists).
+     *
+     * @return list<\WP_Post>
+     */
+    public function latest(string $postType, int $count): array
+    {
+        $type = $this->get($postType);
+        if ($type === null) {
+            return [];
+        }
+        $posts = get_posts([
+            'post_type' => $postType,
+            'numberposts' => $count,
+            'orderby' => $type->archive()['orderby'] ?? ['date' => 'DESC'],
+        ]);
+        return array_values(array_filter($posts, static fn ($p): bool => $p instanceof \WP_Post));
+    }
+
+    /**
+     * Non-empty terms of a taxonomy plus the currently queried slug (archive filter bars).
+     *
+     * @return array{items: list<array{name: string, slug: string, url: string}>, current: string}
+     */
+    public static function termFilter(string $taxonomy): array
+    {
+        $items = [];
+        foreach (get_terms(['taxonomy' => $taxonomy, 'hide_empty' => true]) ?: [] as $term) {
+            if ($term instanceof \WP_Term) {
+                $items[] = ['name' => $term->name, 'slug' => $term->slug, 'url' => (string) get_term_link($term)];
+            }
+        }
+        $current = is_tax($taxonomy) ? get_queried_object() : null;
+        return ['items' => $items, 'current' => $current instanceof \WP_Term ? $current->slug : ''];
     }
 
     public function metaBoxes(string $postType): void

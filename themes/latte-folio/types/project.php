@@ -47,7 +47,12 @@ return [
     ],
     'metabox' => ['title' => __('Project details', 'latte-folio'), 'context' => 'side'],
     'views' => ['single' => 'pages/project', 'archive' => 'pages/work', 'card' => 'blocks/project-card'],
-    'archive' => ['per_page' => 12, 'orderby' => ['menu_order' => 'ASC', 'date' => 'DESC']],
+    'archive' => [
+        'per_page' => 12,
+        'orderby' => ['menu_order' => 'ASC', 'date' => 'DESC'],
+        'title' => __('Work', 'latte-folio'),
+        'prefix' => false,
+    ],
     /**
      * View-model: `project` (non-empty fields with labels) and `types`.
      *

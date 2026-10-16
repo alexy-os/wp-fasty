@@ -50,7 +50,12 @@ return [
         'purchasable' => ['price_field' => 'price', 'sale_field' => 'sale_price', 'stock_field' => 'stock'],
     ],
     'views' => ['single' => 'pages/product', 'archive' => 'pages/shop', 'card' => 'blocks/product-card'],
-    'archive' => ['per_page' => 12, 'orderby' => ['menu_order' => 'ASC', 'date' => 'DESC']],
+    'archive' => [
+        'per_page' => 12,
+        'orderby' => ['menu_order' => 'ASC', 'date' => 'DESC'],
+        'title' => __('Shop', 'latte-shop'),
+        'prefix' => false,
+    ],
     'columns' => [
         'price' => ['label' => __('Price', 'latte-shop'), 'value' => static fn (int $id): string => LatteShop\Money::format(LatteShop\Catalog::price($id))],
         'stock' => ['label' => __('Stock', 'latte-shop'), 'value' => static function (int $id): string {

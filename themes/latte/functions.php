@@ -73,3 +73,23 @@ function wpfasty_field(int $postId, string $field): string
 {
     return WPFasty\Core\Application::getInstance()->get('types.registry')->value($postId, $field);
 }
+
+/**
+ * View-models of the latest posts of a declared post type (module archive ordering).
+ *
+ * @return list<array<string, mixed>>
+ */
+function wpfasty_type_posts(string $postType, int $count): array
+{
+    return wpfasty_posts(WPFasty\Core\Application::getInstance()->get('types.registry')->latest($postType, $count));
+}
+
+/**
+ * Archive filter bar data: ['items' => [...], 'current' => slug].
+ *
+ * @return array{items: list<array{name: string, slug: string, url: string}>, current: string}
+ */
+function wpfasty_term_filter(string $taxonomy): array
+{
+    return WPFasty\Types\Registry::termFilter($taxonomy);
+}
