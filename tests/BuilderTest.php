@@ -86,6 +86,9 @@ final class BuilderTest extends TestCase
         $this->assertSame('newsx', $blocks[2]['id'], 'block ids stay unique');
         $this->assertSame('', $entry['metadata']['collection']['value']);
         $this->assertSame('layout', $entry['kind']);
+        $this->assertTrue(Layout::safeHref('{page:about}#team'));
+        $this->assertTrue(Layout::safeHref('/shop/'));
+        $this->assertFalse(Layout::safeHref('data:text/html,x'));
     }
 
     public function testEntryCoreChecks(): void

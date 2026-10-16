@@ -323,7 +323,8 @@ final class Layout
 
     public static function safeHref(string $h): bool
     {
-        return $h === '' || preg_match('#^(https?://|/|\#|mailto:|tel:)#i', $h) === 1;
+        return $h === '' || preg_match('#^(https?://|/|\#|mailto:|tel:)#i', $h) === 1
+            || preg_match('/^\{(home|posts|page|category|archive)(:[a-z0-9_-]+)?\}/', $h) === 1;
     }
 
     /** @return array{code: string, path: string, message: string} */

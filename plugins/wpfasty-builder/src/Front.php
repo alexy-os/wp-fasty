@@ -157,7 +157,7 @@ final class Front
     public static function block(string $source, string $template, array $props): string
     {
         self::$renderer ??= new BlockRenderer(Sources::all(), Store::dir() . '/cache');
-        return self::$renderer->render($source, $template, $props);
+        return self::$renderer->render($source, $template, Links::walk($props));
     }
 
     public static function themeEngine(): ?\Latte\Engine
