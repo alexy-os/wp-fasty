@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Build WordPress Playground preview artifacts into playground/:
-#   latte.zip (parent, vendored), latte-press.zip, latte-folio.zip, latte-shop.zip, wpfasty-types.zip, demo.zip
+#   latte.zip (parent, vendored), latte-press.zip, latte-folio.zip, latte-shop.zip, wpfasty-types.zip,
+#   wpfasty-builder.zip, demo.zip (seeders, images, builder landings)
 # Blueprints (playground/*.json) install them straight from the `improved` branch.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -19,9 +20,16 @@ done
 rm -f "$OUT/wpfasty-types.zip"
 (cd plugins && zip -qr "$OUT/wpfasty-types.zip" wpfasty-types)
 
+# Page builder (wp-admin only; the editor sources and node_modules stay out, the built assets go in).
+rm -f "$OUT/wpfasty-builder.zip"
+(cd plugins && zip -qr "$OUT/wpfasty-builder.zip" wpfasty-builder -x "wpfasty-builder/editor/*")
+
 STAGE="$(mktemp -d)"
 mkdir -p "$STAGE/wpfasty-demo/images"
 cp tools/demo/*.php "$STAGE/wpfasty-demo/"
+# Builder landings (WPFastyBuilder\Seeder::landing in the blueprints).
+mkdir -p "$STAGE/wpfasty-demo/landings"
+cp tools/builder/landings/*.json "$STAGE/wpfasty-demo/landings/"
 # Seeds used by tools/demo/*.php — fetched once, bundled so Playground needs no network.
 php -r '
 foreach (glob("tools/demo/*.php") as $f) {

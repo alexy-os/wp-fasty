@@ -43,6 +43,14 @@
       }
     },
     {
+      "step": "writeFile",
+      "path": "/tmp/wpfasty-builder.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/wpfasty-builder.zip.b64"
+      }
+    },
+    {
       "step": "runPHP",
       "code": "<?php foreach (glob('/tmp/*.zip.b64') as $f) { file_put_contents(substr($f, 0, -4), base64_decode(file_get_contents($f))); }"
     },
@@ -71,6 +79,15 @@
       "pluginPath": "wpfasty-types/wpfasty-types.php"
     },
     {
+      "step": "unzip",
+      "zipPath": "/tmp/wpfasty-builder.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "wpfasty-builder/wpfasty-builder.php"
+    },
+    {
       "step": "activateTheme",
       "themeFolderName": "latte-shop"
     },
@@ -83,6 +100,10 @@
     {
       "step": "runPHP",
       "code": "<?php require_once '/wordpress/wp-load.php'; require '/wordpress/wp-content/wpfasty-demo/shop.php'; flush_rewrite_rules();"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; $spec = json_decode(file_get_contents('/wordpress/wp-content/wpfasty-demo/landings/shop.json'), true); $r = WPFastyBuilder\\Seeder::landing($spec); if (is_wp_error($r)) { throw new Exception($r->get_error_message()); }"
     }
   ]
 }
