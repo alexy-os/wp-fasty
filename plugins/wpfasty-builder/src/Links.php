@@ -48,7 +48,9 @@ final class Links
         $home = home_url('/');
         $url = match ($kind) {
             'home' => $home,
-            'posts' => (int) get_option('page_for_posts') > 0 ? get_permalink((int) get_option('page_for_posts')) : $home,
+            'posts' => (int) get_option('page_for_posts') > 0
+                ? get_permalink((int) get_option('page_for_posts'))
+                : $home,
             'page' => ($p = get_page_by_path($arg)) instanceof \WP_Post ? get_permalink($p) : $home,
             'category' => ($t = get_category_by_slug($arg)) instanceof \WP_Term ? get_category_link($t) : $home,
             'archive' => post_type_exists($arg) ? get_post_type_archive_link($arg) : $home,

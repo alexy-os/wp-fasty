@@ -14,7 +14,7 @@ final class Seeder
 {
     /**
      * @param array<string, mixed> $spec
-     * @return array{page: int, version: int, blocks: int, issues: list<array{code: string, path: string, message: string}>}|\WP_Error
+     * @return array{page: int, version: int, blocks: int, issues: list<array<string, string>>}|\WP_Error
      */
     public static function landing(array $spec): array|\WP_Error
     {
