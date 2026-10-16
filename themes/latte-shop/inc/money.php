@@ -36,8 +36,11 @@ final class Money
     {
         $symbols = ['USD' => '$', 'EUR' => '€', 'GBP' => '£', 'RUB' => '₽', 'JPY' => '¥'];
         $currency = self::currency();
-        $symbol = (string) apply_filters('latte_shop_currency_symbol', $symbols[$currency] ?? $currency . ' ', $currency);
-        $value = function_exists('number_format_i18n') ? number_format_i18n($cents / 100, 2) : number_format($cents / 100, 2);
+        $fallback = $symbols[$currency] ?? $currency . ' ';
+        $symbol = (string) apply_filters('latte_shop_currency_symbol', $fallback, $currency);
+        $value = function_exists('number_format_i18n')
+            ? number_format_i18n($cents / 100, 2)
+            : number_format($cents / 100, 2);
         return $symbol . $value;
     }
 }

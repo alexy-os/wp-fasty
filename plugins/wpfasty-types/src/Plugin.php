@@ -38,7 +38,10 @@ final class Plugin
         }
     }
 
-    /** Store currency (ISO 4217) for `money` fields, which hold integer minor units. Settings → General; REST /wp/v2/settings. */
+    /**
+     * Store currency (ISO 4217) for `money` fields, which hold integer minor units.
+     * Settings → General; REST /wp/v2/settings.
+     */
     public static function registerCurrency(): void
     {
         register_setting('general', 'wpfasty_currency', [
@@ -60,7 +63,8 @@ final class Plugin
     {
         add_settings_field('wpfasty_currency', __('Store currency', 'wpfasty-types'), static function (): void {
             printf(
-                '<input name="wpfasty_currency" id="wpfasty_currency" type="text" maxlength="3" class="small-text" value="%s"> <span class="description">%s</span>',
+                '<input name="wpfasty_currency" id="wpfasty_currency" type="text" maxlength="3"'
+                    . ' class="small-text" value="%s"> <span class="description">%s</span>',
                 esc_attr((string) get_option('wpfasty_currency', 'USD')),
                 esc_html__('ISO 4217 code, e.g. USD, EUR.', 'wpfasty-types')
             );
@@ -75,7 +79,8 @@ final class Plugin
                 register_taxonomy((string) $taxonomy, $type->name, (array) $args);
             }
             if ($type->fields !== []) {
-                // REST exposes `meta` only for post types that support custom-fields (keys are `_`-prefixed, so the core box hides them).
+                // REST exposes `meta` only for post types that support custom-fields
+                // (keys are `_`-prefixed, so the core box hides them).
                 add_post_type_support($type->name, 'custom-fields');
             }
             if ($type->fields !== []) {
@@ -85,7 +90,8 @@ final class Plugin
                 register_post_meta($type->name, $field->metaKey, [
                     'type' => $field->metaType(),
                     'single' => true,
-                    // Typed values in REST (money = integer minor units). Opt out per field with 'show_in_rest' => false.
+                    // Typed values in REST (money = integer minor units).
+                    // Opt out per field with 'show_in_rest' => false.
                     'show_in_rest' => (bool) ($field->def['show_in_rest'] ?? true),
                     'sanitize_callback' => [$field, 'toStorage'],
                     'auth_callback' => static fn (): bool => current_user_can('edit_posts'),
@@ -106,7 +112,8 @@ final class Plugin
             return $response;
         }
         foreach ($type->fields as $field) {
-            if (array_key_exists($field->metaKey, $data['meta']) && !metadata_exists('post', $post->ID, $field->metaKey)) {
+            $unset = !metadata_exists('post', $post->ID, $field->metaKey);
+            if (array_key_exists($field->metaKey, $data['meta']) && $unset) {
                 $data['meta'][$field->metaKey] = null;
             }
         }
@@ -148,7 +155,8 @@ final class Plugin
                 );
                 continue;
             }
-            $extra = $input === 'number' ? ' min="0" step="' . esc_attr($field->type === 'integer' ? '1' : '0.01') . '"' : '';
+            $step = $field->type === 'integer' ? '1' : '0.01';
+            $extra = $input === 'number' ? ' min="0" step="' . esc_attr($step) . '"' : '';
             printf(
                 '<p><label for="%1$s"><strong>%2$s</strong></label><br><input class="widefat" type="%3$s"%4$s id="%1$s" name="wpfasty_fields[%5$s]" value="%6$s"></p>',
                 esc_attr($id),
