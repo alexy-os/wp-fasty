@@ -29,11 +29,42 @@ final class Plugin
     {
         $plugin = new self($types);
         add_action('init', [$plugin, 'register']);
+        add_action('init', [self::class, 'registerCurrency']);
         if (is_admin()) {
+            add_action('admin_init', [self::class, 'currencyField']);
             add_action('add_meta_boxes', [$plugin, 'metaBoxes']);
             add_action('save_post', [$plugin, 'save'], 10, 2);
             add_action('admin_init', [$plugin, 'columns']);
         }
+    }
+
+    /** Store currency (ISO 4217) for `money` fields, which hold integer minor units. Settings → General; REST /wp/v2/settings. */
+    public static function registerCurrency(): void
+    {
+        register_setting('general', 'wpfasty_currency', [
+            'type' => 'string',
+            'default' => 'USD',
+            'show_in_rest' => ['schema' => ['pattern' => '^[A-Z]{3}$']],
+            'sanitize_callback' => [self::class, 'sanitizeCurrency'],
+            'description' => __('Currency of money fields (ISO 4217 code, e.g. USD, EUR).', 'wpfasty-types'),
+        ]);
+    }
+
+    public static function sanitizeCurrency(mixed $value): string
+    {
+        $code = strtoupper(trim(is_scalar($value) ? (string) $value : ''));
+        return preg_match('/^[A-Z]{3}$/', $code) === 1 ? $code : 'USD';
+    }
+
+    public static function currencyField(): void
+    {
+        add_settings_field('wpfasty_currency', __('Store currency', 'wpfasty-types'), static function (): void {
+            printf(
+                '<input name="wpfasty_currency" id="wpfasty_currency" type="text" maxlength="3" class="small-text" value="%s"> <span class="description">%s</span>',
+                esc_attr((string) get_option('wpfasty_currency', 'USD')),
+                esc_html__('ISO 4217 code, e.g. USD, EUR.', 'wpfasty-types')
+            );
+        }, 'general');
     }
 
     public function register(): void
@@ -43,16 +74,44 @@ final class Plugin
             foreach ($type->taxonomies() as $taxonomy => $args) {
                 register_taxonomy((string) $taxonomy, $type->name, (array) $args);
             }
+            if ($type->fields !== []) {
+                // REST exposes `meta` only for post types that support custom-fields (keys are `_`-prefixed, so the core box hides them).
+                add_post_type_support($type->name, 'custom-fields');
+            }
+            if ($type->fields !== []) {
+                add_filter('rest_prepare_' . $type->name, [$this, 'restNullMeta'], 10, 2);
+            }
             foreach ($type->fields as $field) {
                 register_post_meta($type->name, $field->metaKey, [
-                    'type' => 'string',
+                    'type' => $field->metaType(),
                     'single' => true,
-                    'show_in_rest' => (bool) ($field->def['show_in_rest'] ?? false),
-                    'sanitize_callback' => [$field, 'sanitize'],
+                    // Typed values in REST (money = integer minor units). Opt out per field with 'show_in_rest' => false.
+                    'show_in_rest' => (bool) ($field->def['show_in_rest'] ?? true),
+                    'sanitize_callback' => [$field, 'toStorage'],
                     'auth_callback' => static fn (): bool => current_user_can('edit_posts'),
                 ]);
             }
         }
+    }
+
+    /**
+     * REST would show a missing integer/number/boolean meta as 0/false; send null instead, so "not set"
+     * (e.g. stock = unlimited) differs from 0.
+     */
+    public function restNullMeta(\WP_REST_Response $response, \WP_Post $post): \WP_REST_Response
+    {
+        $data = $response->get_data();
+        $type = $this->types->get($post->post_type);
+        if ($type === null || !isset($data['meta']) || !is_array($data['meta'])) {
+            return $response;
+        }
+        foreach ($type->fields as $field) {
+            if (array_key_exists($field->metaKey, $data['meta']) && !metadata_exists('post', $post->ID, $field->metaKey)) {
+                $data['meta'][$field->metaKey] = null;
+            }
+        }
+        $response->set_data($data);
+        return $response;
     }
 
     public function metaBoxes(string $postType): void
@@ -76,7 +135,7 @@ final class Plugin
     {
         wp_nonce_field('wpfasty_save_' . $type->name, 'wpfasty_' . $type->name . '_nonce');
         foreach ($type->fields as $name => $field) {
-            $value = (string) get_post_meta($post->ID, $field->metaKey, true);
+            $value = $field->toInput(get_post_meta($post->ID, $field->metaKey, true));
             $id = 'wpfasty-' . $type->name . '-' . $name;
             $input = $field->inputType();
             if ($input === 'checkbox') {
@@ -121,7 +180,12 @@ final class Plugin
             ? wp_unslash($_POST['wpfasty_fields']) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             : [];
         foreach ($type->fields as $name => $field) {
-            update_post_meta($postId, $field->metaKey, $field->sanitize($input[$name] ?? ''));
+            $value = $field->fromInput($input[$name] ?? '');
+            if ($value === null) {
+                delete_post_meta($postId, $field->metaKey);
+            } else {
+                update_post_meta($postId, $field->metaKey, $value);
+            }
         }
     }
 

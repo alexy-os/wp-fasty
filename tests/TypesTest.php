@@ -65,4 +65,36 @@ final class TypesTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         Field::fromArray('x', ['type' => 'color'], 'p');
     }
+
+    public function testTypedStorage(): void
+    {
+        $money = Field::fromArray('price', ['type' => 'money'], 'shop');
+        self::assertSame('integer', $money->metaType());
+        self::assertSame(1250, $money->fromInput('12.50'));
+        self::assertSame(1050, $money->fromInput('10,5'));
+        self::assertNull($money->fromInput(''));
+        self::assertSame(4500, $money->toStorage(4500));
+        self::assertSame(4500, $money->toStorage('4500'));
+        self::assertSame('45.00', $money->toInput(4500));
+        self::assertSame('45.00', $money->toInput('4500'));
+        self::assertSame('', $money->toInput(''));
+
+        $int = Field::fromArray('stock', ['type' => 'integer'], 'shop');
+        self::assertSame('integer', $int->metaType());
+        self::assertSame(12, $int->fromInput('12'));
+        self::assertNull($int->fromInput(''));
+
+        $num = Field::fromArray('w', ['type' => 'number'], 'p');
+        self::assertSame('number', $num->metaType());
+        self::assertSame(1.5, $num->fromInput('1,5'));
+
+        $bool = Field::fromArray('b', ['type' => 'boolean'], 'p');
+        self::assertSame('boolean', $bool->metaType());
+        self::assertTrue($bool->fromInput('on'));
+        self::assertFalse($bool->fromInput(''));
+        self::assertTrue($bool->toStorage(true));
+
+        $url = Field::fromArray('url', ['type' => 'url'], 'p');
+        self::assertSame('string', $url->metaType());
+    }
 }

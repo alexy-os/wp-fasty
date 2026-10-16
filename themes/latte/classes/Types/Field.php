@@ -1,6 +1,8 @@
 <?php
 /**
  * Declarative field: type → sanitizer, input type, meta type.
+ * Storage is typed: integer → int, number → float, boolean → bool, money → int minor units (cents),
+ * everything else → string. The admin form shows money as a decimal (12.50) and stores cents (1250).
  *
  * @package Latte
  */
@@ -59,6 +61,59 @@ final class Field
             'number', 'money' => self::number($raw),
             'boolean' => in_array(strtolower($raw), ['1', 'on', 'yes', 'true'], true) ? '1' : '',
             default => function_exists('sanitize_text_field') ? sanitize_text_field($raw) : strip_tags($raw),
+        };
+    }
+
+    /** register_post_meta() type for this field. */
+    public function metaType(): string
+    {
+        return match ($this->type) {
+            'integer', 'money' => 'integer',
+            'number' => 'number',
+            'boolean' => 'boolean',
+            default => 'string',
+        };
+    }
+
+    /** Admin form value (money as a decimal) → typed storage value; null when empty (meta is deleted). */
+    public function fromInput(mixed $raw): int|float|bool|string|null
+    {
+        $clean = $this->sanitize($raw);
+        if ($this->type === 'boolean') {
+            return $clean === '1';
+        }
+        if ($clean === '') {
+            return null;
+        }
+        return match ($this->type) {
+            'money' => (int) round(((float) $clean) * 100),
+            'integer' => (int) $clean,
+            'number' => (float) $clean,
+            default => $clean,
+        };
+    }
+
+    /** REST / programmatic value (money already in cents) → typed storage value. Used as the meta sanitize_callback. */
+    public function toStorage(mixed $value): int|float|bool|string
+    {
+        return match ($this->type) {
+            'money', 'integer' => is_numeric($value) ? max(0, (int) round((float) $value)) : 0,
+            'number' => is_numeric($value) ? max(0.0, round((float) $value, 2)) : 0.0,
+            'boolean' => in_array($value, [true, 1, '1', 'true', 'on', 'yes'], true),
+            default => $this->sanitize($value),
+        };
+    }
+
+    /** Stored value → admin form value (money cents → decimal string). */
+    public function toInput(mixed $stored): string
+    {
+        if ($stored === '' || $stored === null) {
+            return '';
+        }
+        return match ($this->type) {
+            'money' => number_format(((int) $stored) / 100, 2, '.', ''),
+            'boolean' => $stored ? '1' : '',
+            default => (string) $stored,
         };
     }
 
