@@ -1,0 +1,14 @@
+{
+  "version": "0.1",
+  "engine": "latte",
+  "theme": { "name": "Acme Studio", "slug": "acme-studio", "prefix": "acme", "author": "Acme", "preset": "folio", "license": "GPL-2.0-or-later" },
+  "brand": { "radius": "0.5rem", "light": { "primary": "#1d4ed8", "primary-foreground": "#ffffff" } },
+  "postTypes": [
+    { "name": "project", "singular": "Project", "plural": "Projects", "slug": "work",
+      "supports": ["title", "editor", "excerpt", "thumbnail"],
+      "taxonomies": { "project_type": { "singular": "Type", "plural": "Types", "hierarchical": true } },
+      "fields": { "client": { "type": "string", "label": "Client" }, "year": { "type": "integer", "label": "Year" }, "url": { "type": "url", "label": "Live URL" } },
+      "perPage": 9 }
+  ],
+  "output": { "wporg": false, "includeDemo": true }
+}

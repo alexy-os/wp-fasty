@@ -12,6 +12,8 @@ const root = new URL("..", import.meta.url).pathname;
 const palette = /\b(?:bg|text|border|ring|fill|stroke|from|to|via|outline|divide)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|black|white)(?:-\d{2,3})?\b/;
 const rawColor = /#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|oklch)\(/;
 const oddSpacing = /(?<![\w-])-?(?:p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap|gap-x|gap-y|space-x|space-y)-(?:1|3|5|7|9|11)(?![\w.\/])/;
+const halfStep = /(?<![\w-])-?(?:p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap|gap-x|gap-y|space-x|space-y|w|h|size|top|left|right|bottom|inset)-\d+\.5(?![\w])/;
+const arbitraryPx = /\b[a-z-]+-\[-?\d+(?:\.\d+)?px\]/;
 const control = /<(?:button|input|select|textarea|label|option)\b|badge|Button\.latte|Input\.latte|Badge\.latte|control/i;
 
 const errors: string[] = [];
@@ -25,6 +27,8 @@ for (const pattern of ["themes/*/views/**/*.latte", "themes/*/assets/css/*.css",
       if (palette.test(line)) errors.push(`${where} palette color class — use token classes (bg-primary, text-muted-foreground…)`);
       // UI8Kit primitives print `children` with |noescape — pass captured (escaped) HTML, never raw data.
       if (rel.endsWith(".latte") && /children:\s*\(string\)\s*\$\w+\[/.test(line)) errors.push(`${where} raw data passed as children (XSS) — wrap in {capture}`);
+      if (rel.endsWith(".latte") && halfStep.test(line)) errors.push(`${where} half spacing step — use the 8px grid`);
+      if (rel.endsWith(".latte") && arbitraryPx.test(line)) errors.push(`${where} arbitrary px value — use scale/tokens`);
       if (rel.endsWith(".latte") && oddSpacing.test(line) && !control.test(line)) errors.push(`${where} 4px step outside a control — use 8px grid (2,4,6,8…)`);
     });
   }
