@@ -1,0 +1,67 @@
+<?php
+/**
+ * Post-type module: project (registered by the parent WPFasty\Types\Registry).
+ *
+ * @package Latte_Folio
+ */
+
+declare(strict_types=1);
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+return [
+    'name' => 'project',
+    'text_domain' => 'latte-folio',
+    'meta_prefix' => 'folio',
+    'args' => [
+        'labels' => [
+            'name' => __('Projects', 'latte-folio'),
+            'singular_name' => __('Project', 'latte-folio'),
+            'add_new_item' => __('Add project', 'latte-folio'),
+            'edit_item' => __('Edit project', 'latte-folio'),
+        ],
+        'public' => true,
+        'has_archive' => 'work',
+        'rewrite' => ['slug' => 'work/project', 'with_front' => false],
+        'menu_icon' => 'dashicons-portfolio',
+        'show_in_rest' => true,
+        'supports' => ['title', 'editor', 'excerpt', 'thumbnail', 'page-attributes'],
+    ],
+    'taxonomies' => [
+        'project_type' => [
+            'labels' => ['name' => __('Project types', 'latte-folio'), 'singular_name' => __('Project type', 'latte-folio')],
+            'public' => true,
+            'hierarchical' => true,
+            'show_in_rest' => true,
+            'show_admin_column' => true,
+            'rewrite' => ['slug' => 'work/type', 'with_front' => false],
+        ],
+    ],
+    'fields' => [
+        'client' => ['type' => 'string', 'label' => __('Client', 'latte-folio')],
+        'year' => ['type' => 'string', 'label' => __('Year', 'latte-folio')],
+        'role' => ['type' => 'string', 'label' => __('Role', 'latte-folio')],
+        'url' => ['type' => 'url', 'label' => __('Live URL', 'latte-folio')],
+    ],
+    'metabox' => ['title' => __('Project details', 'latte-folio'), 'context' => 'side'],
+    'views' => ['single' => 'pages/project', 'archive' => 'pages/work', 'card' => 'blocks/project-card'],
+    'archive' => ['per_page' => 12, 'orderby' => ['menu_order' => 'ASC', 'date' => 'DESC']],
+    /**
+     * View-model: `project` (non-empty fields with labels) and `types`.
+     *
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    'context' => static function (array $data, WP_Post $post, WPFasty\Types\PostType $type): array {
+        $data['project'] = [];
+        foreach ($type->fields as $key => $field) {
+            if (($data['fields'][$key] ?? '') !== '') {
+                $data['project'][$key] = ['label' => $field->label, 'value' => $data['fields'][$key]];
+            }
+        }
+        $data['types'] = $data['terms']['project_type'] ?? [];
+        return $data;
+    },
+];

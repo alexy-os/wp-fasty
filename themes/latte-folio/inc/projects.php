@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Projects: CPT, taxonomy, meta (with nonce + sanitization), view routing and context.
+ * Portfolio site context (work filters, services, next project).
  *
  * @package Latte_Folio
  */
@@ -12,121 +12,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-const LATTE_FOLIO_META = [
-    'client' => 'Client',
-    'year' => 'Year',
-    'role' => 'Role',
-    'url' => 'Live URL',
-];
-
-add_action('init', static function (): void {
-    register_post_type('project', [
-        'labels' => [
-            'name' => __('Projects', 'latte-folio'),
-            'singular_name' => __('Project', 'latte-folio'),
-            'add_new_item' => __('Add project', 'latte-folio'),
-            'edit_item' => __('Edit project', 'latte-folio'),
-        ],
-        'public' => true,
-        'has_archive' => 'work',
-        'rewrite' => ['slug' => 'work/project', 'with_front' => false],
-        'menu_icon' => 'dashicons-portfolio',
-        'show_in_rest' => true,
-        'supports' => ['title', 'editor', 'excerpt', 'thumbnail', 'page-attributes'],
-    ]);
-
-    register_taxonomy('project_type', 'project', [
-        'labels' => ['name' => __('Project types', 'latte-folio'), 'singular_name' => __('Project type', 'latte-folio')],
-        'public' => true,
-        'hierarchical' => true,
-        'show_in_rest' => true,
-        'show_admin_column' => true,
-        'rewrite' => ['slug' => 'work/type', 'with_front' => false],
-    ]);
-
-    foreach (array_keys(LATTE_FOLIO_META) as $key) {
-        register_post_meta('project', "_folio_{$key}", [
-            'type' => 'string',
-            'single' => true,
-            'show_in_rest' => false,
-            'sanitize_callback' => $key === 'url' ? 'esc_url_raw' : 'sanitize_text_field',
-            'auth_callback' => static fn (): bool => current_user_can('edit_posts'),
-        ]);
-    }
-});
-
-add_action('add_meta_boxes_project', static function (): void {
-    add_meta_box('latte-folio-details', __('Project details', 'latte-folio'), static function (WP_Post $post): void {
-        wp_nonce_field('latte_folio_save', 'latte_folio_nonce');
-        foreach (LATTE_FOLIO_META as $key => $label) {
-            $value = (string) get_post_meta($post->ID, "_folio_{$key}", true);
-            printf(
-                '<p><label for="folio-%1$s"><strong>%2$s</strong></label><br><input class="widefat" type="%3$s" id="folio-%1$s" name="folio[%1$s]" value="%4$s"></p>',
-                esc_attr($key),
-                esc_html($label),
-                $key === 'url' ? 'url' : 'text',
-                esc_attr($value)
-            );
-        }
-    }, 'project', 'side');
-});
-
-add_action('save_post_project', static function (int $postId): void {
-    if (!isset($_POST['latte_folio_nonce'])
-        || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['latte_folio_nonce'])), 'latte_folio_save')
-        || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
-        || !current_user_can('edit_post', $postId)
-    ) {
-        return;
-    }
-    $input = isset($_POST['folio']) && is_array($_POST['folio']) ? wp_unslash($_POST['folio']) : [];
-    foreach (array_keys(LATTE_FOLIO_META) as $key) {
-        $raw = isset($input[$key]) ? (string) $input[$key] : '';
-        $clean = $key === 'url' ? esc_url_raw($raw) : sanitize_text_field($raw);
-        update_post_meta($postId, "_folio_{$key}", $clean);
-    }
-});
-
-/**
- * Project view-model: meta + types.
- *
- * @param array<string, mixed> $data
- * @return array<string, mixed>
- */
-add_filter('wpfasty_post_data', static function (array $data, WP_Post $post): array {
-    if ($post->post_type !== 'project') {
-        return $data;
-    }
-    $data['project'] = [];
-    foreach (LATTE_FOLIO_META as $key => $label) {
-        $value = (string) get_post_meta($post->ID, "_folio_{$key}", true);
-        if ($value !== '') {
-            $data['project'][$key] = ['label' => $label, 'value' => $value];
-        }
-    }
-    $data['types'] = [];
-    foreach (get_the_terms($post, 'project_type') ?: [] as $term) {
-        $data['types'][] = ['name' => $term->name, 'slug' => $term->slug, 'url' => (string) get_term_link($term)];
-    }
-    return $data;
-}, 10, 2);
-
-add_filter('wpfasty_resolve_view', static function (string $view): string {
-    if (is_post_type_archive('project') || is_tax('project_type')) {
-        return 'pages/work';
-    }
-    if (is_singular('project')) {
-        return 'pages/project';
-    }
-    return $view;
-});
-
-add_action('pre_get_posts', static function (WP_Query $q): void {
-    if (!is_admin() && $q->is_main_query() && ($q->is_post_type_archive('project') || $q->is_tax('project_type'))) {
-        $q->set('posts_per_page', 12);
-        $q->set('orderby', ['menu_order' => 'ASC', 'date' => 'DESC']);
-    }
-});
+// CPT, taxonomy, fields, metabox, routing and archive query live in types/project.php
+// (registered by the parent WPFasty\Types\Registry).
 
 /**
  * @param array<string, mixed> $context
