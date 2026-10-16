@@ -19,14 +19,7 @@ final class Front
     public static function register(): void
     {
         add_filter('wpfasty_resolve_view', [self::class, 'view']);
-        add_filter('wpfasty_post_data', [self::class, 'productData'], 10, 2);
         add_filter('wpfasty_context', [self::class, 'context']);
-        add_action('pre_get_posts', static function (\WP_Query $q): void {
-            if (!is_admin() && $q->is_main_query() && ($q->is_post_type_archive('product') || $q->is_tax('product_cat'))) {
-                $q->set('posts_per_page', 12);
-                $q->set('orderby', ['menu_order' => 'ASC', 'date' => 'DESC']);
-            }
-        });
         add_action('after_switch_theme', [self::class, 'ensurePages']);
         add_filter('get_the_archive_title_prefix', '__return_empty_string');
         add_filter('post_type_archive_title', static fn (string $t, string $type): string
@@ -63,40 +56,10 @@ final class Front
     public static function view(string $view): string
     {
         return match (true) {
-            is_post_type_archive('product') || is_tax('product_cat') => 'pages/shop',
-            is_singular('product') => 'pages/product',
             is_page('cart') => 'pages/cart',
             is_page('checkout') => 'pages/checkout',
             default => $view,
         };
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     * @return array<string, mixed>
-     */
-    public static function productData(array $data, \WP_Post $post): array
-    {
-        if ($post->post_type !== 'product') {
-            return $data;
-        }
-        $price = Catalog::price($post->ID);
-        $regular = Catalog::regularPrice($post->ID);
-        $stock = Catalog::stock($post->ID);
-        $data['product'] = [
-            'price' => Money::format($price),
-            'regular' => $regular > $price ? Money::format($regular) : '',
-            'on_sale' => $regular > $price,
-            'sku' => (string) get_post_meta($post->ID, '_shop_sku', true),
-            'stock' => $stock,
-            'in_stock' => $stock === null || $stock > 0,
-            'purchasable' => Catalog::isPurchasable($post->ID),
-        ];
-        $data['product_cats'] = [];
-        foreach (get_the_terms($post, 'product_cat') ?: [] as $t) {
-            $data['product_cats'][] = ['name' => $t->name, 'slug' => $t->slug, 'url' => (string) get_term_link($t)];
-        }
-        return $data;
     }
 
     /**

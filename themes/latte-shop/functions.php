@@ -16,7 +16,6 @@ foreach (['money', 'catalog', 'cart', 'orders', 'handlers', 'front'] as $file) {
     require_once __DIR__ . "/inc/{$file}.php";
 }
 
-LatteShop\Catalog::register();
 LatteShop\Orders::register();
 LatteShop\Handlers::register();
 LatteShop\Front::register();

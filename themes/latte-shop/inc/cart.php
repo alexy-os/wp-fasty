@@ -94,7 +94,7 @@ final class Cart
                 'unit_display' => Money::format($unit),
                 'line_display' => Money::format($line),
                 'image' => $thumb ? (string) wp_get_attachment_image_url((int) $thumb, 'thumbnail') : '',
-                'sku' => (string) get_post_meta($id, '_shop_sku', true),
+                'sku' => wpfasty_field($id, 'sku'),
             ];
         }
         $shipping = self::shipping($subtotal);

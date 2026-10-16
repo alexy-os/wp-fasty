@@ -17,22 +17,7 @@ final class Orders
 
     public static function register(): void
     {
-        add_action('init', static function (): void {
-            register_post_type('shop_order', [
-                'labels' => [
-                    'name' => __('Orders', 'latte-shop'),
-                    'singular_name' => __('Order', 'latte-shop'),
-                    'edit_item' => __('Order', 'latte-shop'),
-                ],
-                'public' => false,
-                'show_ui' => true,
-                'show_in_menu' => 'edit.php?post_type=product',
-                'supports' => ['title'],
-                'capability_type' => 'post',
-                'capabilities' => ['create_posts' => 'do_not_allow'],
-                'map_meta_cap' => true,
-            ]);
-        });
+        // Post type itself: types/shop_order.php.
         add_filter('manage_shop_order_posts_columns', static fn (array $c): array => [
             'cb' => $c['cb'] ?? '',
             'title' => __('Order', 'latte-shop'),
@@ -88,7 +73,7 @@ final class Orders
         foreach ($items as $item) {
             $stock = Catalog::stock($item['id']);
             if ($stock !== null) {
-                update_post_meta($item['id'], '_shop_stock', (string) max(0, $stock - $item['qty']));
+                Catalog::setStock((int) $item['id'], $stock - (int) $item['qty']);
             }
         }
 
