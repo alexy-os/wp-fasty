@@ -66,7 +66,7 @@ final class DataSources
     /**
      * Records for one binding.
      *
-     * @param array{source: string, limit?: int, term?: string} $binding
+     * @param array{source: string, limit?: int, term?: string, sale?: bool} $binding
      * @return list<array<string, mixed>>
      */
     public static function resolve(array $binding, string $kind): array
@@ -107,6 +107,10 @@ final class DataSources
         $tax = ['post' => 'category', 'project' => 'project_type', 'product' => 'product_cat'][$src['object']] ?? '';
         if ($term !== '' && $tax !== '') {
             $args['tax_query'] = [['taxonomy' => $tax, 'field' => 'slug', 'terms' => $term]];
+        }
+        if (!empty($binding['sale']) && $src['object'] === 'product') {
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- small demo catalogs, bounded by limit.
+            $args['meta_query'] = [['key' => '_shop_sale_price', 'value' => 0, 'compare' => '>', 'type' => 'NUMERIC']];
         }
         $out = [];
         foreach (get_posts($args) as $post) {

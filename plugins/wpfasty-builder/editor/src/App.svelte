@@ -390,6 +390,9 @@
                 <label class="wpfb-field"><span>Term slug (optional)</span>
                   <input type="text" placeholder="e.g. design" value={bound.term ?? ""} onchange={(e) => update((it) => ({ ...it, bindings: { ...it.bindings, [bp.path]: { ...bound, term: (e.currentTarget as HTMLInputElement).value } } }))} />
                 </label>
+                {#if bound.source === "products"}
+                  <label class="wpfb-check"><input type="checkbox" checked={bound.sale === true} onchange={(e) => update((it) => { const b = { ...bound }; if ((e.currentTarget as HTMLInputElement).checked) b.sale = true; else delete b.sale; return { ...it, bindings: { ...it.bindings, [bp.path]: b } }; })} /> On sale only</label>
+                {/if}
               {/if}
             </fieldset>
           {/each}
@@ -438,6 +441,7 @@
     .wpfb-field { display: flex; flex-direction: column; gap: 4px; margin: 0 0 8px; }
     .wpfb-field > span, .wpfb-field > label, .wpfb-field > summary { font-size: 12px; color: #1d2327; }
     .wpfb-field.is-set > label { font-weight: 600; }
+    .wpfb-check { display: flex; align-items: center; gap: 6px; font-size: 12px; margin: 0 0 8px; }
     .wpfb-field input[type="text"], .wpfb-field input[type="number"], .wpfb-field select, .wpfb-field textarea, .wpfb-search { width: 100%; max-width: none; }
     .wpfb-check { flex-direction: row; }
     .wpfb-group { border: 1px solid var(--wpfb-line); border-radius: 4px; padding: 8px; margin: 0 0 8px; }

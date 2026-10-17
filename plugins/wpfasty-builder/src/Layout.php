@@ -10,7 +10,7 @@ namespace WPFastyBuilder;
  *     metadata: { source: {value}, collection: {value}, page_id: {value}, blocks: {value: [ {id, block, variant,
  * props, bindings} ]} } }
  * `props` are overrides of the variant sample props; `bindings` map a bindable path ("posts", "filter.topics")
- * to a data source {source, limit, term}. normalize() sanitizes untrusted input and reports contract issues.
+ * to a data source {source, limit, term, sale}. normalize() sanitizes untrusted input and reports contract issues.
  */
 final class Layout
 {
@@ -89,6 +89,9 @@ final class Layout
                 )) : '';
                 if ($term !== '') {
                     $one['term'] = $term;
+                }
+                if (($bind['sale'] ?? false) === true) {
+                    $one['sale'] = true;
                 }
                 $bindings[$path] = $one;
             }

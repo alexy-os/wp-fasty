@@ -67,7 +67,7 @@ final class BuilderTest extends TestCase
             'blocks' => [
                 ['block' => 'pagehead', 'variant' => 'start', 'props' => ['title' => '<script>x</script>Hi', 'href' => 'javascript:alert(1)']],
                 ['id' => 'news', 'block' => 'posts', 'variant' => 'grid', 'props' => ['posts' => [['id' => 'stale']]],
-                    'bindings' => ['posts' => ['source' => 'posts', 'limit' => 99, 'term' => 'De sign!'], 'bad' => ['source' => 'posts']]],
+                    'bindings' => ['posts' => ['source' => 'posts', 'limit' => 99, 'term' => 'De sign!', 'sale' => 'yes'], 'bad' => ['source' => 'posts']]],
                 ['block' => 'missing', 'variant' => 'x'],
                 ['id' => 'news', 'block' => 'stats', 'variant' => 'plain4', 'bindings' => ['stats' => ['source' => 'evil']]],
             ],
@@ -89,6 +89,11 @@ final class BuilderTest extends TestCase
         $this->assertTrue(Layout::safeHref('{page:about}#team'));
         $this->assertTrue(Layout::safeHref('/shop/'));
         $this->assertFalse(Layout::safeHref('data:text/html,x'));
+        [$sale] = Layout::normalize([
+            'blocks' => [['id' => 'sale', 'block' => 'products', 'variant' => 'grid3',
+                'bindings' => ['products' => ['source' => 'products', 'limit' => 4, 'sale' => true]]]],
+        ], 'ui8kit', self::catalog(), ['products'], self::base());
+        $this->assertSame(['source' => 'products', 'limit' => 4, 'sale' => true], Layout::blocks($sale)[0]['bindings']['products']);
     }
 
     public function testEntryCoreChecks(): void

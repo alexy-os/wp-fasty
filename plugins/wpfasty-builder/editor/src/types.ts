@@ -13,7 +13,7 @@ export interface BlockSpec {
 }
 export interface Collection { id: string; label: string; type: string; docs?: string; blocks: string[]; pages?: { id: string; blocks: { block: string; variant: string; props: Obj }[] }[] }
 export interface DataSource { id: string; label: string; kinds: string[]; type: string; object: string }
-export interface Binding { source: string; limit: number; term?: string }
+export interface Binding { source: string; limit: number; term?: string; sale?: boolean }
 export interface Item { id: string; block: string; variant: string; props: Obj; bindings: Record<string, Binding> }
 export interface Catalog {
   source: string; sources: { id: string; label: string }[]; collections: { id: string; label: string; type: string; blocks: number }[];
