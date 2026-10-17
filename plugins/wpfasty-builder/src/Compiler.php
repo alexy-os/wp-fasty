@@ -30,7 +30,7 @@ final class Compiler
                 $lines[] = '{* skipped: unknown block ' . self::comment($b['block'] . '/' . $b['variant']) . ' *}';
                 continue;
             }
-            $props = Layout::merge((array) $variant['props'], $b['props']);
+            $props = self::readLabel(Layout::merge((array) $variant['props'], $b['props']), $b);
             $exprs = [];
             foreach (array_keys($b['bindings']) as $path) {
                 $exprs[(string) $path] = '$wpfb[' . self::str((string) $b['id']) . ']['
@@ -83,6 +83,37 @@ final class Compiler
             return is_finite($v) ? var_export($v, true) : '0';
         }
         return 'null';
+    }
+
+    /**
+     * Kind-aware default for the card link label ("Read the post" in the samples): when the block's list is bound
+     * to projects, products or pages and the layout did not set labels.read itself, use a label for that kind.
+     *
+     * @param array<string, mixed> $props
+     * @param array<string, mixed> $block
+     * @return array<string, mixed>
+     */
+    public static function readLabel(array $props, array $block): array
+    {
+        if (!is_array($props['labels'] ?? null) || !isset($props['labels']['read'])) {
+            return $props;
+        }
+        if (isset($block['props']['labels']['read'])) {
+            return $props;
+        }
+        $labels = [
+            'projects' => __('View project', 'wpfasty-builder'),
+            'products' => __('View product', 'wpfasty-builder'),
+            'pages' => __('Read more', 'wpfasty-builder'),
+        ];
+        foreach ((array) ($block['bindings'] ?? []) as $binding) {
+            $source = is_array($binding) ? (string) ($binding['source'] ?? '') : '';
+            if (isset($labels[$source])) {
+                $props['labels']['read'] = $labels[$source];
+                break;
+            }
+        }
+        return $props;
     }
 
     /** @param array<string, mixed> $entry */

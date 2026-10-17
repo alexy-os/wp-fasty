@@ -103,6 +103,18 @@ final class BuilderTest extends TestCase
         $this->assertSame('layout', Layout::manifest()['resources'][0]['record']['id']);
     }
 
+    public function testReadLabelIsKindAware(): void
+    {
+        $props = ['labels' => ['read' => 'Read the post', 'by' => 'By {0}']];
+        $projects = ['props' => [], 'bindings' => ['posts' => ['source' => 'projects']]];
+        $this->assertSame('View project', Compiler::readLabel($props, $projects)['labels']['read']);
+        $this->assertSame('By {0}', Compiler::readLabel($props, $projects)['labels']['by']);
+        $posts = ['props' => [], 'bindings' => ['posts' => ['source' => 'posts']]];
+        $this->assertSame('Read the post', Compiler::readLabel($props, $posts)['labels']['read']);
+        $own = ['props' => ['labels' => ['read' => 'Case study']], 'bindings' => ['posts' => ['source' => 'projects']]];
+        $this->assertSame('Read the post', Compiler::readLabel($props, $own)['labels']['read']);
+    }
+
     public function testLiteralEscapesStrings(): void
     {
         $this->assertSame("['a' => 'It\\'s {x}', 'n' => [1, 2.5, true, null]]", Compiler::literal(['a' => "It's {x}", 'n' => [1, 2.5, true, null]], [], []));
