@@ -36,5 +36,8 @@
     "icons": "bun tools/icons.ts",
     "i18n:pot": "for t in latte latte-press latte-folio latte-shop; do wp i18n make-pot themes/$t themes/$t/languages/$t.pot --domain=$t --exclude=vendor,~cache,node_modules; done",
     "perf:queries": "wp eval-file tools/perf/queries.php"
+  },
+  "devDependencies": {
+    "@ui8kit/contract": "^0.2.0"
   }
 }
