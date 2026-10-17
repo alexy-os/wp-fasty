@@ -103,7 +103,7 @@
     },
     {
       "step": "runPHP",
-      "code": "<?php require_once '/wordpress/wp-load.php'; $spec = json_decode(file_get_contents('/wordpress/wp-content/wpfasty-demo/landings/shop.json'), true); $r = WPFastyBuilder\\Seeder::landing($spec); if (is_wp_error($r)) { throw new Exception($r->get_error_message()); }"
+      "code": "<?php require_once '/wordpress/wp-load.php'; $files = glob('/wordpress/wp-content/wpfasty-demo/landings/shop*.json'); usort($files, static fn ($a, $b) => strlen($a) <=> strlen($b)); foreach ($files as $f) { $r = WPFastyBuilder\\Seeder::landing(json_decode(file_get_contents($f), true)); if (is_wp_error($r)) { throw new Exception(basename($f) . ': ' . $r->get_error_message()); } }"
     }
   ]
 }
