@@ -1,0 +1,128 @@
+{
+  "page": {
+    "title": "Services",
+    "slug": "services"
+  },
+  "front": false,
+  "menu": {
+    "location": "primary",
+    "label": "Services"
+  },
+  "layout": {
+    "source": "ui8kit",
+    "collection": "",
+    "blocks": [
+      {
+        "id": "intro",
+        "block": "pagehead",
+        "variant": "start",
+        "props": {
+          "title": "Services",
+          "text": "Design and front-end work, from the first sketch to a site that ships.",
+          "cta": "Start a project",
+          "href": "{page:contact}"
+        }
+      },
+      {
+        "id": "services",
+        "block": "features",
+        "variant": "grid",
+        "props": {
+          "title": "What I can help with",
+          "item": "card",
+          "features": [
+            {
+              "id": "service-product",
+              "title": "Product design",
+              "text": "Flows, screens and prototypes tested with real users.",
+              "icon": "palette"
+            },
+            {
+              "id": "service-web",
+              "title": "Front-end development",
+              "text": "Fast, accessible sites built on plain templates.",
+              "icon": "zap"
+            },
+            {
+              "id": "service-brand",
+              "title": "Branding",
+              "text": "Identity, type and a small system that stays consistent.",
+              "icon": "sparkles"
+            }
+          ],
+          "action": {
+            "label": "See the work",
+            "href": "{archive:project}"
+          }
+        }
+      },
+      {
+        "id": "process",
+        "block": "steps",
+        "variant": "row",
+        "props": {
+          "title": "How a project runs",
+          "steps": [
+            {
+              "id": "step-call",
+              "title": "Intro call",
+              "text": "We talk about the goal, the audience and the timeline.",
+              "icon": "phone"
+            },
+            {
+              "id": "step-plan",
+              "title": "Plan",
+              "text": "A short written plan with scope and milestones.",
+              "icon": "clipboard-list"
+            },
+            {
+              "id": "step-build",
+              "title": "Design and build",
+              "text": "Weekly check-ins with something you can click.",
+              "icon": "layout-grid"
+            },
+            {
+              "id": "step-launch",
+              "title": "Launch",
+              "text": "Release, hand-over and a month of support.",
+              "icon": "rocket"
+            }
+          ]
+        }
+      },
+      {
+        "id": "recent",
+        "block": "posts",
+        "variant": "twoUp",
+        "props": {
+          "title": "Recent projects",
+          "meta": "short",
+          "action": {
+            "label": "All projects",
+            "href": "{archive:project}"
+          }
+        },
+        "bindings": {
+          "posts": {
+            "source": "projects",
+            "limit": 4
+          }
+        }
+      },
+      {
+        "id": "contact",
+        "block": "cta",
+        "variant": "banner",
+        "props": {
+          "title": "Have a project in mind?",
+          "text": "Tell me about it, I reply within two working days.",
+          "actions": {
+            "cta": "Get in touch",
+            "href": "{page:contact}",
+            "mode": "one"
+          }
+        }
+      }
+    ]
+  }
+}

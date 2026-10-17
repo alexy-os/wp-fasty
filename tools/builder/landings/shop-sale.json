@@ -1,0 +1,25 @@
+{
+  "page": { "title": "Sale", "slug": "sale" },
+  "front": false,
+  "menu": { "location": "primary", "label": "Sale" },
+  "layout": {
+    "source": "ui8kit",
+    "collection": "commerce-shop",
+    "blocks": [
+      { "id": "intro", "block": "pagehead", "variant": "start",
+        "props": { "title": "On sale now", "text": "A few favourites at a lower price while stock lasts.", "cta": "Browse the shop", "href": "{archive:product}" } },
+      { "id": "sale", "block": "products", "variant": "grid3",
+        "props": { "title": "Reduced prices", "rating": "hide", "action": "none" },
+        "bindings": { "products": { "source": "products", "limit": 6, "sale": true } } },
+      { "id": "categories", "block": "categories", "variant": "tiles",
+        "props": { "label": "Shop by category" },
+        "bindings": { "categories": { "source": "product_cats", "limit": 6 } } },
+      { "id": "home", "block": "products", "variant": "grid4",
+        "props": { "title": "For the home", "rating": "hide", "action": "none" },
+        "bindings": { "products": { "source": "products", "limit": 4, "term": "home" } } },
+      { "id": "back", "block": "cta", "variant": "banner",
+        "props": { "title": "Looking for something else?", "text": "The full range is in the shop, sorted by category.",
+          "actions": { "cta": "Go to the shop", "href": "{archive:product}", "mode": "one" } } }
+    ]
+  }
+}

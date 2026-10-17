@@ -1,0 +1,26 @@
+{
+  "page": { "title": "Subscribe", "slug": "subscribe" },
+  "front": false,
+  "menu": { "location": "primary", "label": "Subscribe" },
+  "layout": {
+    "source": "ui8kit",
+    "collection": "",
+    "blocks": [
+      { "id": "intro", "block": "pagehead", "variant": "center",
+        "props": { "title": "Notes on design and engineering", "text": "Short, practical articles about building calm, fast websites.", "cta": "Read the latest", "href": "{posts}" } },
+      { "id": "topics", "block": "features", "variant": "grid",
+        "props": { "title": "What we write about", "item": "card",
+          "features": [
+            { "id": "topic-design", "title": "Design", "text": "Type, layout and the small decisions that make pages easy to read.", "icon": "palette" },
+            { "id": "topic-engineering", "title": "Engineering", "text": "Templates, performance and keeping the front end light.", "icon": "zap" },
+            { "id": "topic-notes", "title": "Notes", "text": "Shorter thoughts, links and lessons from ongoing work.", "icon": "file-text" }
+          ],
+          "action": { "label": "All articles", "href": "{posts}" } } },
+      { "id": "recent", "block": "posts", "variant": "list",
+        "props": { "title": "Recent articles", "action": { "label": "Browse the archive", "href": "{posts}" } },
+        "bindings": { "posts": { "source": "posts", "limit": 4 } } },
+      { "id": "signup", "block": "newsletter", "variant": "stacked",
+        "props": { "title": "New articles by email", "text": "One email when something new is published. No tracking, no ads.", "consent": "You can unsubscribe at any time." } }
+    ]
+  }
+}
