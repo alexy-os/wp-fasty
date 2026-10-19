@@ -5,9 +5,20 @@ on:
     branches: [main, "cursor/**"]
   pull_request:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PHP_VERSION: "8.3"
+  WP_VERSION: "7.1.3"
+  THEME_CHECK_VERSION: "20260901"
+
 jobs:
   verify:
+    # Static checks + build: audit, codegen, design lint, CSS, PHPUnit, strict PHPCS, release zip.
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,21 +31,49 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.3"
+          php-version: ${{ env.PHP_VERSION }}
           tools: composer
           coverage: none
+
+      - name: Cache bun + composer downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ~/.cache/composer
+          key: deps-${{ runner.os }}-${{ hashFiles('**/bun.lock', '**/composer.lock') }}
+          restore-keys: deps-${{ runner.os }}-
 
       - name: Install root PHP tooling
         run: composer install --no-interaction --prefer-dist
 
-      - name: Generate UI8Kit Latte primitives
+      - name: Composer audit (root)
+        run: composer audit --no-interaction
+
+      - name: Codegen verify (Latte + Twig primitives)
         run: |
           bun install --cwd packages/ui8kit-codegen
+          bun run codegen:verify
+
+      - name: Generate UI8Kit Latte primitives
+        run: |
           bun run ui:primitives
           bun run ui:install
 
+      - name: Composer audit (theme)
+        run: composer audit --no-interaction --working-dir=themes/latte
+
       - name: Build theme views from presets
         run: bun run theme:build -- latte
+
+      - name: Design lint (tokens, 8px grid, no half-steps / arbitrary px)
+        run: bun run lint:design
+
+      - name: CSS build (Tailwind v4, token-only) — committed CSS must be up to date
+        run: |
+          bun install --cwd .workspaces/css-build
+          bun run css:build
+          git diff --exit-code -- themes/latte/assets/css
 
       - name: PHPUnit
         run: composer test
@@ -44,3 +83,106 @@ jobs:
 
       - name: Pack theme zip
         run: bun run theme:pack -- latte
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: latte-zip
+          path: dist/latte.zip
+          retention-days: 7
+
+  wordpress:
+    # Integration on a real WordPress + MariaDB: Theme Check (0 REQUIRED) and the N+1 query guard.
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: wp
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP + WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          tools: wp-cli
+          extensions: mysqli
+          coverage: none
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: latte-zip
+          path: dist
+
+      - name: Cache WordPress core + Theme Check
+        uses: actions/cache@v4
+        with:
+          path: /tmp/wp-dl
+          key: wp-${{ env.WP_VERSION }}-tc-${{ env.THEME_CHECK_VERSION }}
+
+      - name: Install WordPress, themes and plugins
+        run: |
+          mkdir -p /tmp/wp-dl /tmp/wp
+          [ -f /tmp/wp-dl/wp.tar.gz ] || curl -sSfLo /tmp/wp-dl/wp.tar.gz "https://wordpress.org/wordpress-${WP_VERSION}.tar.gz"
+          [ -f /tmp/wp-dl/tc.zip ] || curl -sSfLo /tmp/wp-dl/tc.zip "https://downloads.wordpress.org/plugin/theme-check.${THEME_CHECK_VERSION}.zip"
+          tar -xzf /tmp/wp-dl/wp.tar.gz -C /tmp/wp --strip-components=1
+          cd /tmp/wp
+          wp config create --dbname=wp --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check
+          wp core install --url=http://localhost --title=CI --admin_user=admin --admin_password=admin \
+            --admin_email=ci@example.com --skip-email
+          unzip -q "$GITHUB_WORKSPACE/dist/latte.zip" -d wp-content/themes/
+          for t in latte-press latte-folio latte-shop latte-skin; do
+            rsync -a --exclude '~cache' "$GITHUB_WORKSPACE/themes/$t" wp-content/themes/
+          done
+          rsync -a "$GITHUB_WORKSPACE/plugins/wpfasty-types" wp-content/plugins/
+          unzip -q /tmp/wp-dl/tc.zip -d wp-content/plugins/
+          wp plugin activate wpfasty-types theme-check
+          wp theme list --fields=name,version,status
+
+      - name: Theme Check — no REQUIRED issues (parent from zip + 4 child themes)
+        run: |
+          cd /tmp/wp
+          fail=0
+          for t in latte latte-press latte-folio latte-shop latte-skin; do
+            code=0
+            PAGER=cat wp theme-check run "$t" > "/tmp/tc-$t.txt" 2>&1 || code=$?
+            r=$(grep -c '^REQUIRED' "/tmp/tc-$t.txt" || true)
+            w=$(grep -c '^WARNING' "/tmp/tc-$t.txt" || true)
+            rec=$(grep -c '^RECOMMENDED' "/tmp/tc-$t.txt" || true)
+            echo "::group::$t — exit $code, REQUIRED $r, WARNING $w, RECOMMENDED $rec"
+            cat "/tmp/tc-$t.txt"
+            echo "::endgroup::"
+            echo "| $t | $r | $w | $rec |" >> /tmp/tc-summary.md
+            if [ "$r" -ne 0 ] || [ "$code" -ne 0 ]; then
+              echo "::error::Theme Check $t: REQUIRED=$r exit=$code"
+              fail=1
+            fi
+          done
+          { echo "### Theme Check ${THEME_CHECK_VERSION} (WP ${WP_VERSION})"; echo "| theme | REQUIRED | WARNING | RECOMMENDED |"; echo "|---|---|---|---|"; cat /tmp/tc-summary.md; } >> "$GITHUB_STEP_SUMMARY"
+          exit $fail
+
+      - name: N+1 guard (SAVEQUERIES) — posts, projects, products
+        run: |
+          cd /tmp/wp
+          guard() { # theme post_type
+            wp theme activate "$1" --quiet
+            for i in 1 2 3 4 5 6 7; do
+              wp post create --post_type="$2" --post_title="$2 $i" --post_status=publish --quiet
+            done
+            out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/queries.php" "$2" 2 6 2>&1) || { echo "$out"; exit 1; }
+            echo "$out"
+            echo "- $1: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
+            # A comparison that could not run (too few posts) is a failure in CI, not a pass.
+            if echo "$out" | grep -q '^Warning:'; then echo "::error::N+1 guard for $2 did not compare"; exit 1; fi
+          }
+          echo "### N+1 guard" >> "$GITHUB_STEP_SUMMARY"
+          guard latte-press post
+          guard latte-folio project
+          guard latte-shop product
