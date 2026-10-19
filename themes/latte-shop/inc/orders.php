@@ -95,12 +95,8 @@ final class Orders
     {
         $post = get_post($id);
         $stored = (string) get_post_meta($id, '_order_key', true);
-        if (
-            !$post instanceof \WP_Post
-            || $post->post_type !== 'shop_order'
-            || $stored === ''
-            || !hash_equals($stored, $key)
-        ) {
+        $isOrder = $post instanceof \WP_Post && $post->post_type === 'shop_order';
+        if (!$isOrder || $stored === '' || !hash_equals($stored, $key)) {
             return null;
         }
         $items = (array) get_post_meta($id, '_order_items', true);
