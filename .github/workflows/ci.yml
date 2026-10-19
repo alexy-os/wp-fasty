@@ -242,7 +242,16 @@ jobs:
               fi
             done
           done
-          (cd "$GITHUB_WORKSPACE" && bun tools/builder/validate-layouts.ts --manifest /tmp/layout-manifest.json /tmp/layouts/*.json) | tee -a "$GITHUB_STEP_SUMMARY"
+          # One collection per site (the home landing of each site reuses the same page, key and slug).
+          for site in press folio shop; do
+            if ! (cd "$GITHUB_WORKSPACE" && bun tools/builder/validate-layouts.ts --manifest /tmp/layout-manifest.json \
+                /tmp/layouts/$site-*.json) > "/tmp/validate-$site.txt" 2>&1; then
+              echo "::error::@ui8kit/contract validation failed for latte-$site landings"
+              fail=1
+            fi
+            cat "/tmp/validate-$site.txt"
+            echo "- latte-$site contract: $(tail -1 "/tmp/validate-$site.txt")" >> "$GITHUB_STEP_SUMMARY"
+          done
           exit $fail
 
       - name: No PHP notices / warnings / deprecations logged
