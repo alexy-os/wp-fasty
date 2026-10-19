@@ -55,8 +55,12 @@ final class Field
         $raw = is_scalar($raw) ? trim((string) $raw) : '';
         return match ($this->type) {
             'text' => function_exists('sanitize_textarea_field') ? sanitize_textarea_field($raw) : strip_tags($raw),
-            'url' => function_exists('esc_url_raw') ? esc_url_raw($raw) : (filter_var($raw, FILTER_VALIDATE_URL) ? $raw : ''),
-            'email' => function_exists('sanitize_email') ? sanitize_email($raw) : (string) filter_var($raw, FILTER_SANITIZE_EMAIL),
+            'url' => function_exists('esc_url_raw')
+                ? esc_url_raw($raw)
+                : (filter_var($raw, FILTER_VALIDATE_URL) ? $raw : ''),
+            'email' => function_exists('sanitize_email')
+                ? sanitize_email($raw)
+                : (string) filter_var($raw, FILTER_SANITIZE_EMAIL),
             'integer' => $raw === '' || !is_numeric($raw) ? '' : (string) (int) $raw,
             'number', 'money' => self::number($raw),
             'boolean' => in_array(strtolower($raw), ['1', 'on', 'yes', 'true'], true) ? '1' : '',

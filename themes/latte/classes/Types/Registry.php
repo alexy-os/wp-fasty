@@ -49,7 +49,9 @@ final class Registry implements BootableServiceInterface
             return;
         }
         $this->loaded = true;
-        $dirs = function_exists('apply_filters') ? (array) apply_filters('wpfasty_type_dirs', $this->dirs) : $this->dirs;
+        $dirs = function_exists('apply_filters')
+            ? (array) apply_filters('wpfasty_type_dirs', $this->dirs)
+            : $this->dirs;
         $defs = [];
         foreach (array_unique($dirs) as $dir) {
             foreach (glob(rtrim((string) $dir, '/\\') . '/*.php') ?: [] as $file) {
@@ -125,7 +127,11 @@ final class Registry implements BootableServiceInterface
         foreach (array_keys($type->taxonomies()) as $taxonomy) {
             $data['terms'][$taxonomy] = [];
             foreach (get_the_terms($post, (string) $taxonomy) ?: [] as $term) {
-                $data['terms'][$taxonomy][] = ['name' => $term->name, 'slug' => $term->slug, 'url' => (string) get_term_link($term)];
+                $data['terms'][$taxonomy][] = [
+                    'name' => $term->name,
+                    'slug' => $term->slug,
+                    'url' => (string) get_term_link($term),
+                ];
             }
         }
         $context = $type->def['context'] ?? null;
@@ -136,8 +142,11 @@ final class Registry implements BootableServiceInterface
     {
         foreach ($this->all() as $type) {
             $archive = $type->view('archive');
-            if ($archive && (is_post_type_archive($type->name) || ($type->taxonomies() !== [] && is_tax(array_keys($type->taxonomies()))))) {
-                return $archive;
+            if ($archive) {
+                $taxonomies = array_keys($type->taxonomies());
+                if (is_post_type_archive($type->name) || ($taxonomies !== [] && is_tax($taxonomies))) {
+                    return $archive;
+                }
             }
             $single = $type->view('single');
             if ($single && is_singular($type->name)) {

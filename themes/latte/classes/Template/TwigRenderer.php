@@ -78,10 +78,17 @@ final class TwigRenderer implements RendererInterface
     {
         $this->twig->addFilter(new TwigFilter('esc_url', static fn (mixed $v): string
             => function_exists('esc_url') ? esc_url((string) $v) : htmlspecialchars((string) $v, ENT_QUOTES)));
-        $this->twig->addFilter(new TwigFilter('kses', static fn (mixed $v): string
-            => function_exists('wp_kses_post') ? wp_kses_post((string) $v) : strip_tags((string) $v), ['is_safe' => ['html']]));
-        $this->twig->addFunction(new TwigFunction('icon', static fn (string $name, string $class = 'size-4', string $label = ''): Markup
-            => new Markup(Icons::svg($name, $class, $label), 'UTF-8')));
+        $this->twig->addFilter(new TwigFilter(
+            'kses',
+            static fn (mixed $v): string
+                => function_exists('wp_kses_post') ? wp_kses_post((string) $v) : strip_tags((string) $v),
+            ['is_safe' => ['html']]
+        ));
+        $this->twig->addFunction(new TwigFunction(
+            'icon',
+            static fn (string $name, string $class = 'size-4', string $label = ''): Markup
+                => new Markup(Icons::svg($name, $class, $label), 'UTF-8')
+        ));
         $this->twig->addFunction(new TwigFunction('t', static fn (string $text, string $domain = 'latte'): string
             => function_exists('__') ? __($text, $domain) : $text)); // phpcs:ignore WordPress.WP.I18n
     }

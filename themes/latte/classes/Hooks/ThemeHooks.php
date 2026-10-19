@@ -98,6 +98,7 @@ final class ThemeHooks extends AbstractHooks
 
         echo '<div class="notice notice-error"><p>';
         echo esc_html__(
+            // phpcs:ignore Generic.Files.LineLength.TooLong -- a translatable literal must stay one string (msgid).
             'Latte theme: UI8Kit Latte primitives not found. From the monorepo root run bun run ui:primitives, then composer install in themes/latte.',
             'latte'
         );

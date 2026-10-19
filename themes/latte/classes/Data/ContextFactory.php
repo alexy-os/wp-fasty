@@ -361,7 +361,9 @@ final class ContextFactory
 
         if ($singular && $post->post_type !== 'attachment') {
             $data['link_pages'] = wp_link_pages([
-                'before' => '<nav class="post-pages mt-8 text-sm text-muted-foreground" aria-label="' . esc_attr__('Pages', 'latte') . '"><span class="mr-2">' . esc_html__('Pages:', 'latte') . '</span>',
+                'before' => '<nav class="post-pages mt-8 text-sm text-muted-foreground" aria-label="'
+                    . esc_attr__('Pages', 'latte') . '"><span class="mr-2">'
+                    . esc_html__('Pages:', 'latte') . '</span>',
                 'after' => '</nav>',
                 'echo' => false,
             ]) ?: '';

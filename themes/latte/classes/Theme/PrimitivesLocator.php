@@ -45,8 +45,9 @@ final class PrimitivesLocator
         ];
         foreach ($candidates as $dir) {
             if (is_dir($dir)) {
-                if (!class_exists(\UI8Kit\TwigExtension::class) && is_file(dirname($dir, 2) . '/runtime/php/TwigExtension.php')) {
-                    require_once dirname($dir, 2) . '/runtime/php/TwigExtension.php';
+                $twigExtension = dirname($dir, 2) . '/runtime/php/TwigExtension.php';
+                if (!class_exists(\UI8Kit\TwigExtension::class) && is_file($twigExtension)) {
+                    require_once $twigExtension;
                 }
                 return $dir;
             }

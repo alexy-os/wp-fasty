@@ -16,8 +16,12 @@ final class RendererFactory
      * @param array<int, mixed>        $roots  Shared view roots (child → parent).
      * @param array<int, mixed>        $primitives Engine-specific primitives roots, keyed by engine.
      */
-    public static function create(string|RendererInterface $engine, array $roots, array $primitives, string $cacheDir): RendererInterface
-    {
+    public static function create(
+        string|RendererInterface $engine,
+        array $roots,
+        array $primitives,
+        string $cacheDir
+    ): RendererInterface {
         if ($engine instanceof RendererInterface) {
             return $engine;
         }
