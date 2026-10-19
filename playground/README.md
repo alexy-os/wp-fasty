@@ -1,6 +1,6 @@
 # Live previews (WordPress Playground)
 
-`godudy/wpfasty` is private, so raw.githubusercontent URLs are not public. The built zips are mirrored
+The built zips are mirrored
 (base64) in a secret gist: https://gist.github.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc
 and the blueprints (`press.json`, `folio.json`, `shop.json`) are passed inline in the Playground URL fragment.
 Everything runs in the visitor's browser — no server.

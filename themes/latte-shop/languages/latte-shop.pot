@@ -21,7 +21,7 @@ msgstr ""
 
 #. Theme URI of the theme
 #: style.css
-msgid "https://github.com/godudy/wpfasty"
+msgid "https://github.com/alexy-os/wp-fasty"
 msgstr ""
 
 #. Description of the theme

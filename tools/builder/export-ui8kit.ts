@@ -102,7 +102,7 @@ for (const s of plan.inputs.screens.filter((x: any) => x.composed && String(x.va
 }
 
 const catalog = {
-  $schema: "https://github.com/godudy/wpfasty/plugins/wpfasty-builder/catalog@1",
+  $schema: "https://github.com/alexy-os/wp-fasty/plugins/wpfasty-builder/catalog@1",
   id: "ui8kit",
   label: "ui8kit blocks (codegen-x)",
   version: 1,

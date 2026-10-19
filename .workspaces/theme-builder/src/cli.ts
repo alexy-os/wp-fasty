@@ -125,7 +125,7 @@ async function scaffoldSkin(preset: ThemePreset): Promise<void> {
   if (!existsSync(stylePath)) {
     const style = `/*
 Theme Name: ${preset.name}
-Theme URI: https://github.com/godudy/wpfasty
+Theme URI: https://github.com/alexy-os/wp-fasty
 Author: alexy-os
 Author URI: https://github.com/alexy-os
 Description: Child skin for ${parent} — no Composer.
@@ -250,7 +250,7 @@ async function packTheme(id: string): Promise<void> {
 
   // Release composer.json: path repo → bundled lib (dev monorepo keeps ../../.workspaces)
   const releaseComposer = {
-    name: `godudy/${preset.slug}`,
+    name: `alexy-os/${preset.slug}`,
     description: `${preset.name} — WP FastY theme with vendored UI8Kit Latte primitives`,
     type: "wordpress-theme",
     license: "GPL-2.0-or-later",

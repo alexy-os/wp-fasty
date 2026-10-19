@@ -5,10 +5,10 @@
   "private": true,
   "license": "MIT",
   "author": "alexy-os",
-  "homepage": "https://github.com/godudy/wpfasty",
+  "homepage": "https://github.com/alexy-os/wp-fasty",
   "repository": {
     "type": "git",
-    "url": "https://github.com/godudy/wpfasty.git"
+    "url": "https://github.com/alexy-os/wp-fasty.git"
   },
   "workspaces": [
     ".workspaces/theme-builder",

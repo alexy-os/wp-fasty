@@ -12,7 +12,7 @@ git submodule add https://github.com/ui8kit/codegen.git packages/ui8kit-codegen
 git submodule update --init --recursive
 
 # Or clone with submodules
-git clone --recurse-submodules https://github.com/godudy/wpfasty.git
+git clone --recurse-submodules https://github.com/alexy-os/wp-fasty.git
 ```
 
 **Not** a Bun workspace package — invoke explicitly:

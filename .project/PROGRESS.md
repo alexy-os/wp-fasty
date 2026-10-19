@@ -6,7 +6,7 @@ Read this first, then execute the next open cycle. Do not invent a parallel road
 **Last updated:** 2026-10-19 (Cycles I–J recorded from git log 2026-10-16..17)  
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
-**Repo:** `godudy/wpfasty` · monorepo with UI8Kit Codegen Latte primitives  
+**Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
 **Monorepo version:** `0.3.0` (`package.json`)
 
 ---

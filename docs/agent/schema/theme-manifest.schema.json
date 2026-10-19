@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/godudy/wpfasty/docs/agent/schema/theme-manifest.schema.json",
+  "$id": "https://github.com/alexy-os/wp-fasty/docs/agent/schema/theme-manifest.schema.json",
   "title": "wpfasty theme manifest (draft 0.1)",
   "description": "Input for external generation (web form, CLI, MCP): produces parent + child theme.",
   "type": "object",

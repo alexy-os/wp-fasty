@@ -3,7 +3,7 @@
 WordPress theme **generator** — Latte templates, UI8Kit primitives, and a
 catalog of layout / block / style presets.
 
-> Temporary developer remote: [godudy/wpfasty](https://github.com/godudy/wpfasty)
+> Repository: [alexy-os/wp-fasty](https://github.com/alexy-os/wp-fasty)
 
 ## Architecture (three layers)
 
@@ -25,8 +25,8 @@ themes/<slug>/                # Layer 3: WordPress theme instances
 
 ```bash
 # Clone (with submodule when published)
-git clone --recurse-submodules https://github.com/godudy/wpfasty.git
-cd wpfasty
+git clone --recurse-submodules https://github.com/alexy-os/wp-fasty.git
+cd wp-fasty
 
 # Or: local codegen sibling / UI8KIT_CODEGEN env
 bun run ui:primitives

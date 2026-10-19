@@ -80,7 +80,7 @@ GNU General Public License for more details.
 == Resources ==
 
 * Latte template engine — https://latte.nette.org/ — New BSD / GPL dual (see vendor)
-* UI8Kit Latte primitives (bundled) — MIT — https://github.com/godudy/wpfasty
+* UI8Kit Latte primitives (bundled) — MIT — https://github.com/alexy-os/wp-fasty
 * ui8kit.js (theme assets) — MIT — theme author
 * Design tokens / CSS utilities — MIT — theme author
 * screenshot.png — theme author, GPLv2+

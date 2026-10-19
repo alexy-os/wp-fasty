@@ -25,8 +25,8 @@ Prefer cloning the repo **inside the Linux filesystem** (faster than `/mnt/d/...
 ```bash
 mkdir -p ~/code && cd ~/code
 # if not cloned yet:
-# git clone https://github.com/godudy/wpfasty.git
-cd ~/code/wpfasty   # or: cd /mnt/d/WPFasty/wpfasty
+# git clone https://github.com/alexy-os/wp-fasty.git
+cd ~/code/wp-fasty   # or: cd /mnt/d/WPFasty/wpfasty
 ```
 
 ## Commands (copy-paste)

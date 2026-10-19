@@ -1,5 +1,5 @@
 {
-  "name": "godudy/wpfasty",
+  "name": "alexy-os/wp-fasty",
   "description": "WP FastY monorepo — PHPUnit + PHPCS tooling",
   "license": "MIT",
   "require": {

@@ -7,7 +7,7 @@ Constructor roadmap: [`.project/constructor/theme-constructor.md`](../.project/c
 | Repo | Role |
 |------|------|
 | `ui8kit/codegen` | Primitive SSOT + emitters (submodule → `packages/ui8kit-codegen`) |
-| `godudy/wpfasty` | Theme generator monorepo (this repo) |
+| `alexy-os/wp-fasty` | Theme generator monorepo (this repo) |
 
 ## Four layers
 
