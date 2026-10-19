@@ -35,9 +35,12 @@
     "lint:design": "bun tools/lint-design.ts",
     "icons": "bun tools/icons.ts",
     "i18n:pot": "for t in latte latte-press latte-folio latte-shop latte-skin; do wp i18n make-pot themes/$t themes/$t/languages/$t.pot --domain=$t --exclude=vendor,~cache,node_modules; done",
-    "perf:queries": "wp eval-file tools/perf/queries.php"
+    "perf:queries": "wp eval-file tools/perf/queries.php",
+    "manifest:validate": "bun tools/manifest/validate.ts"
   },
   "devDependencies": {
-    "@ui8kit/contract": "^0.2.0"
+    "@ui8kit/contract": "^0.2.0",
+    "ajv": "^8",
+    "ajv-formats": "^3"
   }
 }
