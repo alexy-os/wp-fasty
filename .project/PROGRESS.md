@@ -3,7 +3,7 @@
 **Purpose:** Single handoff document for agents (including Cursor browser).  
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
-**Last updated:** 2026-10-19 (Cycles I–J recorded from git log 2026-10-16..17)  
+**Last updated:** 2026-10-19 (Cycles I–J from git log 2026-10-16..17; Cycle K opened, K1 site manifest v0.2 done)  
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
 **Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
@@ -129,7 +129,7 @@ dist/latte.zip               release artifact (gitignored)
 
 ## Open cycle
 
-**→ Follow-ups (post A–J)** — not a new lettered cycle; pick from backlog below.
+**→ Cycle K — Configurator** (see [Cycle K](#cycle-k--configurator-2026-10-19)); next stage K2. Follow-ups below stay open.
 
 | # | Task | Done |
 |---|------|------|
@@ -166,6 +166,7 @@ A Parent correctness ✓
                             → H WordPress.org completeness ✓
                                 → I Child themes, data & perf ✓
                                     → J Builder plugin (wpfasty-builder) ✓
+                                        → K Configurator (manifest ✓ → generator → zips → form/CLI/MCP)
                                         → Follow-ups (Theme Check zip / Unit Test / Docker / PHPCS / CI / saas-design)
 ```
 
@@ -297,6 +298,19 @@ A Parent correctness ✓
 | J9 | Layouts validated by published `@ui8kit/contract` (`validateCollectionV04`); remote source packing | `71a53bb`, `35ea512`, `tools/builder/validate-layouts.ts` | [x] |
 | J10 | PHPCS line wrapping in builder / types / shop money | `0c2b93d`, `79d0bbb` | [x] |
 
+### Cycle K — Configurator (2026-10-19)
+
+**Target:** Underscores-style configurator — pick archetype + types + engine + brand tokens + blocks/landings, get parent + child zip + types-plugin config from one manifest.
+
+| Stage | Task | Evidence | Done |
+|-------|------|----------|------|
+| K1 | Site manifest v0.2: one schema (engine, theme meta, archetype, parent preset, features, brand tokens, currency, postTypes/fields/taxonomies/capabilities/archive/views, templates, builder landings, output); `date` field type; press/folio/shop examples reproduce the child themes; `bun run manifest:validate` (ajv + rules + repo parity) in CI `verify`; 0.1 draft `docs/agent/schema/theme-manifest.schema.json` removed | `f8bbacf`, `ce4dcc3`, `70c4c64`, `77c0703`, `61398c7`, `schema/site.manifest.schema.json`, `manifests/examples/`, `tools/manifest/`, `docs/validation.md` | [x] |
+| K2 | Generator: manifest → child theme (style.css, tokens.css, `types/*.php`, functions.php switches, archetype code + views) | – | [ ] |
+| K3 | Round-trip gate: regenerate press/folio/shop from `manifests/examples/` with no diff | – | [ ] |
+| K4 | Output: child zip + types-plugin config (`companion` for wporg), demo + Playground blueprint from `output` | – | [ ] |
+| K5 | Front ends: web form / CLI prompts / MCP tool producing a manifest | – | [ ] |
+| K6 | Twig engine: ship `.twig` views so `engine: twig` is buildable | – | [ ] |
+
 ---
 
 ## Commands cheat sheet
@@ -310,6 +324,7 @@ bun run theme:build -- latte-skin
 bun run theme:pack -- latte          # → dist/latte.zip
 bun run test                         # PHPUnit via tools/composer.sh
 bun run phpcs
+bun run manifest:validate          # site manifests (schema + rules + parity)
 
 # Docker (local)
 bun run dev:up
@@ -355,6 +370,7 @@ bun run dev:wp -- theme activate latte-skin
 | 2026-10-16 | Shop is WooCommerce-free; money stored as integer cents, currency via `wpfasty_currency` |
 | 2026-10-16 | Previews via WordPress Playground blueprints (repo is private; zips mirrored outside the repo) |
 | 2026-10-17 | Landings are a plugin (`wpfasty-builder`), not theme code; layouts validated by `@ui8kit/contract` |
+| 2026-10-19 | One site manifest (`schema/site.manifest.schema.json` v0.2) replaces the 0.1 theme-manifest draft; `presets/themes/*.json` stay parent presets referenced by `parent.preset`; platform-neutral names, money in cents; `wporg` ⇒ types in the companion plugin |
 
 ---
 
