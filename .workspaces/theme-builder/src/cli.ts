@@ -6,6 +6,7 @@
  *   bun src/cli.ts new
  */
 
+import { generateCli, roundtrip } from "./generate/index";
 import { existsSync } from "node:fs";
 import {
   copyFile,
@@ -479,6 +480,14 @@ Pack release zip:
 async function main(): Promise<void> {
   const [cmd, arg] = process.argv.slice(2);
   switch (cmd) {
+    case "generate": {
+      generateCli(process.argv.slice(3));
+      return;
+    }
+    case "roundtrip": {
+      process.exitCode = roundtrip();
+      return;
+    }
     case "build": {
       await buildTheme(arg ?? "latte");
       return;
@@ -491,7 +500,7 @@ async function main(): Promise<void> {
       await newTheme();
       return;
     default:
-      console.error("Usage: theme-builder <build|pack|new> [theme-id]");
+      console.error("Usage: theme-builder <build|pack|new> [theme-id] | generate <manifest> [--out dir] [--no-pot] | roundtrip");
       process.exitCode = 1;
   }
 }

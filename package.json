@@ -36,7 +36,9 @@
     "icons": "bun tools/icons.ts",
     "i18n:pot": "for t in latte latte-press latte-folio latte-shop latte-skin; do wp i18n make-pot themes/$t themes/$t/languages/$t.pot --domain=$t --exclude=vendor,~cache,node_modules; done",
     "perf:queries": "wp eval-file tools/perf/queries.php",
-    "manifest:validate": "bun tools/manifest/validate.ts"
+    "manifest:validate": "bun tools/manifest/validate.ts",
+    "theme:generate": "bun .workspaces/theme-builder/src/cli.ts generate",
+    "theme:roundtrip": "bun .workspaces/theme-builder/src/cli.ts roundtrip"
   },
   "devDependencies": {
     "@ui8kit/contract": "^0.2.0",
