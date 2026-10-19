@@ -75,10 +75,17 @@ jobs:
           bun run css:build
           git diff --exit-code -- themes/latte/assets/css
 
-      - name: PHPUnit
+      - name: Builder editor (Svelte 5, Vite IIFE) — svelte-check, build, committed assets must match
+        run: |
+          bun install --cwd plugins/wpfasty-builder/editor --frozen-lockfile
+          bun run --cwd plugins/wpfasty-builder/editor check
+          bun run --cwd plugins/wpfasty-builder/editor build
+          git diff --exit-code -- plugins/wpfasty-builder/assets
+
+      - name: PHPUnit (themes, types, builder compiler/links)
         run: composer test
 
-      - name: PHPCS (errors and warnings fail the build)
+      - name: PHPCS (errors and warnings fail the build; themes + wpfasty-types + wpfasty-builder)
         run: composer phpcs
 
       - name: Pack theme zip
@@ -108,12 +115,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache bun downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+
+      - name: Install @ui8kit/contract (layout validator)
+        run: bun install --frozen-lockfile
+
       - name: Setup PHP + WP-CLI
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
           tools: wp-cli
-          extensions: mysqli
+          extensions: mysqli, gd
           coverage: none
 
       - uses: actions/download-artifact@v4
@@ -135,6 +155,9 @@ jobs:
           tar -xzf /tmp/wp-dl/wp.tar.gz -C /tmp/wp --strip-components=1
           cd /tmp/wp
           wp config create --dbname=wp --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check
+          wp config set WP_DEBUG true --raw
+          wp config set WP_DEBUG_DISPLAY true --raw
+          wp config set WP_DEBUG_LOG "'/tmp/wp-debug.log'" --raw
           wp core install --url=http://localhost --title=CI --admin_user=admin --admin_password=admin \
             --admin_email=ci@example.com --skip-email
           unzip -q "$GITHUB_WORKSPACE/dist/latte.zip" -d wp-content/themes/
@@ -142,8 +165,10 @@ jobs:
             rsync -a --exclude '~cache' "$GITHUB_WORKSPACE/themes/$t" wp-content/themes/
           done
           rsync -a "$GITHUB_WORKSPACE/plugins/wpfasty-types" wp-content/plugins/
+          rsync -a --exclude editor "$GITHUB_WORKSPACE/plugins/wpfasty-builder" wp-content/plugins/
           unzip -q /tmp/wp-dl/tc.zip -d wp-content/plugins/
-          wp plugin activate wpfasty-types theme-check
+          wp plugin activate wpfasty-types wpfasty-builder theme-check
+          wp rewrite structure '/%postname%/' --hard
           wp theme list --fields=name,version,status
 
       - name: Theme Check — no REQUIRED issues (parent from zip + 4 child themes)
@@ -168,21 +193,64 @@ jobs:
           { echo "### Theme Check ${THEME_CHECK_VERSION} (WP ${WP_VERSION})"; echo "| theme | REQUIRED | WARNING | RECOMMENDED |"; echo "|---|---|---|---|"; cat /tmp/tc-summary.md; } >> "$GITHUB_STEP_SUMMARY"
           exit $fail
 
-      - name: N+1 guard (SAVEQUERIES) — posts, projects, products
+      - name: N+1 guard — seeded items with thumbnails, terms, typed meta, several authors (2 vs 6)
         run: |
           cd /tmp/wp
+          echo "### N+1 guard (queries for 2 vs 6 items)" >> "$GITHUB_STEP_SUMMARY"
+          echo "| theme | type | 2 items | 6 items | list only (no widgets) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
           guard() { # theme post_type
             wp theme activate "$1" --quiet
-            for i in 1 2 3 4 5 6 7; do
-              wp post create --post_type="$2" --post_title="$2 $i" --post_status=publish --quiet
-            done
+            wp eval-file "$GITHUB_WORKSPACE/tools/perf/seed.php" "$2" 7
             out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/queries.php" "$2" 2 6 2>&1) || { echo "$out"; exit 1; }
             echo "$out"
-            echo "- $1: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
             # A comparison that could not run (too few posts) is a failure in CI, not a pass.
             if echo "$out" | grep -q '^Warning:'; then echo "::error::N+1 guard for $2 did not compare"; exit 1; fi
+            echo "$out" | head -1 | sed -E 's/^[a-z_]+: [0-9]+ posts → ([0-9]+) queries; [0-9]+ posts → ([0-9]+) queries \(list only, no widgets: ([0-9]+) → ([0-9]+)\)$/| '"$1"' | '"$2"' | \1 | \2 | \3 → \4 |/' >> "$GITHUB_STEP_SUMMARY"
           }
-          echo "### N+1 guard" >> "$GITHUB_STEP_SUMMARY"
           guard latte-press post
           guard latte-folio project
           guard latte-shop product
+
+      - name: Builder — seed landings, smoke-render (200, no PHP notices), validate layouts with @ui8kit/contract
+        run: |
+          cd /tmp/wp
+          php -S 127.0.0.1:8080 -t /tmp/wp > /tmp/php-server.log 2>&1 &
+          wp option update home http://127.0.0.1:8080 --quiet
+          wp option update siteurl http://127.0.0.1:8080 --quiet
+          sleep 1
+          mkdir -p /tmp/layouts
+          php "$GITHUB_WORKSPACE/tools/builder/layout-manifest.php" > /tmp/layout-manifest.json
+          echo "### Builder landings" >> "$GITHUB_STEP_SUMMARY"
+          fail=0
+          for site in press folio shop; do
+            wp theme activate "latte-$site" --quiet
+            # Shorter file first (the front-page landing), as in the Playground blueprints.
+            for f in $(ls "$GITHUB_WORKSPACE"/tools/builder/landings/$site*.json | awk '{ print length, $0 }' | sort -n | cut -d' ' -f2); do
+              out=$(wp eval-file "$GITHUB_WORKSPACE/tools/builder/seed-landing.php" "$f" 2>&1) || { echo "$out"; exit 1; }
+              echo "$out"
+              id=$(echo "$out" | sed -n 's/^Success: Page \([0-9]*\) .*/\1/p')
+              url=$(wp eval "echo get_permalink($id);")
+              code=$(curl -s -o /tmp/landing.html -w '%{http_code}' "$url")
+              notices=$(grep -cE '<b>(Warning|Notice|Deprecated|Fatal error)</b>' /tmp/landing.html || true)
+              blocks=$(grep -c 'wpfb-page' /tmp/landing.html || true)
+              wp post meta get "$id" _wpfb_layout > "/tmp/layouts/$site-$(basename "$f")"
+              echo "- latte-$site \`$(basename "$f")\` → $url: HTTP $code, notices $notices" | tee -a "$GITHUB_STEP_SUMMARY"
+              if [ "$code" != 200 ] || [ "$notices" -ne 0 ] || [ "$blocks" -eq 0 ]; then
+                echo "::error::landing $(basename "$f") on latte-$site: HTTP $code, notices $notices, builder markup $blocks"
+                fail=1
+              fi
+            done
+          done
+          (cd "$GITHUB_WORKSPACE" && bun tools/builder/validate-layouts.ts --manifest /tmp/layout-manifest.json /tmp/layouts/*.json) | tee -a "$GITHUB_STEP_SUMMARY"
+          exit $fail
+
+      - name: No PHP notices / warnings / deprecations logged
+        if: always()
+        run: |
+          if [ -s /tmp/wp-debug.log ]; then
+            echo "::error::PHP messages were logged during the WordPress job"
+            sort /tmp/wp-debug.log | uniq -c | sort -rn | head -50
+            exit 1
+          fi
+          echo "debug.log empty"
