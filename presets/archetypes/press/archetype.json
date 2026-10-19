@@ -1,0 +1,17 @@
+{
+  "$comment": "Archetype package: everything a press child theme needs beyond the manifest. Consumed by `bun run theme:generate`.",
+  "id": "press",
+  "summary": "classic blog child theme of Latte",
+  "palette": "editorial warm palette",
+  "copyrightYear": 2026,
+  "views": "views",
+  "templates": {
+    "functions.php": "templates/functions.php.tpl",
+    "readme.txt": "templates/readme.txt.tpl",
+    "style.body": "templates/style.body.css"
+  },
+  "requiresTypes": [],
+  "demo": "tools/demo/press.php",
+  "playground": "playground/press.json",
+  "landings": ["tools/builder/landings/press.json", "tools/builder/landings/press-subscribe.json"]
+}

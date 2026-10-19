@@ -1,0 +1,66 @@
+{**
+ * Latte Press — editorial post list (thumbnail + category + excerpt).
+ * Context: posts[], pagination, labels
+ *}
+{capture $list}
+	{if empty($posts)}
+		<p class="py-16 text-center text-muted-foreground">{$labels['no_posts'] ?? 'No posts found.'}</p>
+	{else}
+		{capture $items}
+			{foreach $posts as $post}
+				<article class="{$post['post_class'] ?? ''} grid gap-6 border-b border-border pb-8 md:grid-cols-[240px_1fr]">
+					{if !empty($post['thumbnail']['url'])}
+						{capture $thumb}
+							{include 'image/Image.latte', src: $post['thumbnail']['url'], alt: $post['thumbnail']['alt'] ?? '', srcset: $post['thumbnail']['srcset'] ?? '', sizes: '(min-width: 768px) 240px, 100vw', class: 'aspect-[4/3] w-full rounded-lg object-cover', loading: 'lazy'}
+						{/capture}
+						{include 'link/Link.latte', href: $post['url'], class: 'block', children: (string) $thumb}
+					{else}
+						<div class="hidden md:block"></div>
+					{/if}
+					<div class="flex flex-col gap-2">
+						{if !empty($post['categories'])}
+							<div class="flex flex-wrap gap-2">
+								{foreach $post['categories'] as $cat}
+									<a href="{$cat['url']}" class="text-xs font-semibold uppercase tracking-wide text-primary no-underline">{$cat['name']}</a>
+								{/foreach}
+							</div>
+						{/if}
+						<h2 class="text-2xl font-semibold leading-tight">
+							<a href="{$post['url']}" class="text-foreground no-underline hover:text-primary">{$post['title']}</a>
+						</h2>
+						<div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+							{if !empty($post['date']['display'])}
+								<span class="inline-flex items-center gap-2">{icon('calendar')}<time datetime="{$post['date']['iso'] ?? ''}">{$post['date']['display']}</time></span>
+							{/if}
+							{if !empty($post['author']['name'])}
+								<span class="inline-flex items-center gap-2">{icon('user')}{$post['author']['name']}</span>
+							{/if}
+						</div>
+						{if !empty($post['excerpt'])}
+							<p class="text-muted-foreground">{$post['excerpt']}</p>
+						{/if}
+						<a href="{$post['url']}" class="inline-flex items-center gap-2 text-sm font-medium text-primary no-underline">{$labels['read_more'] ?? 'Read more'}{icon('arrow-right')}</a>
+					</div>
+				</article>
+			{/foreach}
+		{/capture}
+		{include 'stack/Stack.latte', class: 'gap-8', children: (string) $items}
+	{/if}
+
+	{if !empty($pagination)}
+		<nav class="mt-10 flex items-center justify-center gap-4" aria-label="{$labels['pagination'] ?? 'Pagination'}">
+			{if $pagination['prev_url']}
+				<a href="{$pagination['prev_url']}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{icon('arrow-left')}{$labels['previous'] ?? 'Previous'}</a>
+			{/if}
+			<span class="text-sm text-muted-foreground">{$pagination['current']} / {$pagination['total']}</span>
+			{if $pagination['next_url']}
+				<a href="{$pagination['next_url']}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{$labels['next'] ?? 'Next'}{icon('arrow-right')}</a>
+			{/if}
+		</nav>
+	{/if}
+{/capture}
+
+{capture $box}
+	{include 'box/Box.latte', class: 'container mx-auto px-4 py-12 md:px-6', children: (string) $list}
+{/capture}
+{include 'block/Block.latte', tag: 'section', children: (string) $box}
