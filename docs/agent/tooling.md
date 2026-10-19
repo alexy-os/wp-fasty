@@ -1,8 +1,9 @@
 # Tooling & verification commands
 
-All commands from repo root (`/workspace/wpfasty`). "CI" = included in the proposed workflow
-[`ci.proposed.yml`](ci.proposed.yml) (the live `.github/workflows/ci.yml` is older: no lint:design/css:build/codegen/audit,
-phpcs non-blocking, no `improved` trigger — updating it needs a token with `workflow` scope).
+All commands from repo root. "CI" = run by [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)
+(since 2026-10-19): job `verify` (audit, codegen verify, lint:design, CSS drift check, PHPUnit, strict PHPCS, zip) and
+job `wordpress` (WP 7.1.3 + MariaDB: Theme Check 20260901 on the unpacked zip and the 4 child themes with
+`wpfasty-types` active — any REQUIRED fails; N+1 guard for post / project / product archives).
 
 | Command | What it checks / does | CI |
 |---|---|---|

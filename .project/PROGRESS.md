@@ -133,12 +133,12 @@ dist/latte.zip               release artifact (gitignored)
 
 | # | Task | Done |
 |---|------|------|
-| 1 | Theme Check on unpacked `dist/latte.zip` — manual re-verify of 0 REQUIRED (recorded results are for theme folders) | [ ] |
+| 1 | Theme Check on unpacked `dist/latte.zip` — manual re-verify of 0 REQUIRED (recorded results are for theme folders) | [x] 2026-10-19 (0 REQUIRED; now enforced in CI job `wordpress`) |
 | 2 | Import Theme Unit Test data; keyboard sweep (skip, menus, sheet, search) | [ ] |
 | 3 | Local Docker smoke (A7/B9): activate `latte` then `latte-skin` | [ ] deferred local |
-| 4 | Tighten PHPCS until CI can drop `continue-on-error` (`.github/workflows/ci.yml`) | [ ] |
+| 4 | Tighten PHPCS until CI can drop `continue-on-error` (`.github/workflows/ci.yml`) | [x] 2026-10-19 (0 errors, 0 warnings; CI strict) |
 | 5 | Optional: publish `ui8kit/latte-primitives` to Packagist | [ ] |
-| 6 | Adopt `docs/agent/ci.proposed.yml` as real CI (lint:design, css:build, codegen verify, audit, Theme Check, N+1 guard) | [ ] |
+| 6 | Adopt `docs/agent/ci.proposed.yml` as real CI (lint:design, css:build, codegen verify, audit, Theme Check, N+1 guard) | [x] 2026-10-19 (`.github/workflows/ci.yml`, jobs `verify` + `wordpress`) |
 | 7 | Port saas-design rules (below) into `docs/` + `lint:design` | [ ] |
 
 **saas-design rules to port (item 7):**
@@ -358,7 +358,7 @@ bun run dev:wp -- theme activate latte-skin
 ## Browser Cursor handoff prompt
 
 > Continue WP FastY from `.project/PROGRESS.md`.  
-> Cycles A–J are complete; follow-ups: Theme Check on `dist/latte.zip` (manual re-verify), Theme Unit Test import + keyboard sweep, Docker smoke (A7/B9), PHPCS debt, CI from `docs/agent/ci.proposed.yml`, saas-design rules, optional Packagist.  
+> Cycles A–J are complete; follow-ups: Theme Check on `dist/latte.zip` (manual re-verify), Theme Unit Test import + keyboard sweep, Docker smoke (A7/B9), saas-design rules, optional Packagist. CI (`.github/workflows/ci.yml`) runs PHPUnit, strict PHPCS, lint:design, Theme Check and the N+1 guard.  
 > Active theme: `themes/latte` (v1.1.0); demo skin: `themes/latte-skin`; child themes `latte-press`, `latte-folio`, `latte-shop`; plugins `wpfasty-types`, `wpfasty-builder`.  
 > Use `bash tools/composer.sh` for Composer; `bun run theme:pack -- latte` for zip.  
 > Discipline: `docs/` + `.cursor/rules/`. Do not revive YM. Do not hand-edit `ui8kit-latte`.  

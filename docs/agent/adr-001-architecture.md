@@ -84,4 +84,4 @@ optional Customizer token block (**postponed**). Token names stay shadcn-compati
 | i18n of hardcoded strings + .pot | done (7cf822e) |
 | Thin-view common subset enforced by lint | not yet |
 | Lazy context / per-page CSS / Customizer tokens | not yet (Customizer postponed by owner) |
-| CI workflow update | proposed only (`ci.proposed.yml`), push token lacks `workflow` scope |
+| CI workflow update | done 2026-10-19 (`.github/workflows/ci.yml`: verify + wordpress jobs) |
