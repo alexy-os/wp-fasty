@@ -140,6 +140,9 @@ dist/latte.zip               release artifact (gitignored)
 | 5 | Optional: publish `ui8kit/latte-primitives` to Packagist | [ ] |
 | 6 | Adopt `docs/agent/ci.proposed.yml` as real CI (lint:design, css:build, codegen verify, audit, Theme Check, N+1 guard) | [x] 2026-10-19 (`.github/workflows/ci.yml`, jobs `verify` + `wordpress`) |
 | 7 | Port saas-design rules (below) into `docs/` + `lint:design` | [ ] |
+| 8 | `wpfasty-builder` in CI: svelte-check + Vite IIFE build with committed-asset check, PHPUnit (compiler, `Links`), PHPCS, Seeder landings on the CI site (HTTP 200, no PHP notices), layouts validated per site with `@ui8kit/contract` | [x] 2026-10-19 |
+| 9 | N+1 guard on realistic data: `tools/perf/seed.php` (thumbnails, terms, typed meta, 3 authors) for post / project / product, 2 vs 6 items, also measured without widgets; numbers in the CI run summary | [x] 2026-10-19 (no N+1 found) |
+| 10 | CI fails on any PHP notice / warning / deprecation logged by the WordPress job (`WP_DEBUG_LOG`) | [x] 2026-10-19 |
 
 **saas-design rules to port (item 7):**
 
