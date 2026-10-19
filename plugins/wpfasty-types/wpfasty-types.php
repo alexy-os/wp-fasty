@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       WP FastY Types
- * Description:       Registers the declarative post-type modules (types/<name>.php) of WP FastY themes: post types, taxonomies, typed meta, admin metaboxes and list columns.
+ * Description:       Data layer for WP FastY post-type modules: post types, taxonomies, typed meta, metaboxes.
  * Version:           1.0.0
  * Requires at least: 6.4
  * Requires PHP:      8.2

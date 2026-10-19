@@ -12,10 +12,6 @@ namespace WPFastyTypes;
 use WPFasty\Types\PostType;
 use WPFasty\Types\Registry;
 
-if (!defined('ABSPATH')) {
-    exit;
-}
-
 /**
  * Data side of the module system; the theme's Registry hands itself over on `wpfasty_types_loaded`.
  */
@@ -147,7 +143,8 @@ final class Plugin
             $input = $field->inputType();
             if ($input === 'checkbox') {
                 printf(
-                    '<p><label for="%1$s"><input type="checkbox" id="%1$s" name="wpfasty_fields[%2$s]" value="1"%3$s> %4$s</label></p>',
+                    '<p><label for="%1$s"><input type="checkbox" id="%1$s"'
+                        . ' name="wpfasty_fields[%2$s]" value="1"%3$s> %4$s</label></p>',
                     esc_attr($id),
                     esc_attr($name),
                     checked($value, '1', false),
@@ -158,7 +155,8 @@ final class Plugin
             $step = $field->type === 'integer' ? '1' : '0.01';
             $extra = $input === 'number' ? ' min="0" step="' . esc_attr($step) . '"' : '';
             printf(
-                '<p><label for="%1$s"><strong>%2$s</strong></label><br><input class="widefat" type="%3$s"%4$s id="%1$s" name="wpfasty_fields[%5$s]" value="%6$s"></p>',
+                '<p><label for="%1$s"><strong>%2$s</strong></label><br>'
+                    . '<input class="widefat" type="%3$s"%4$s id="%1$s" name="wpfasty_fields[%5$s]" value="%6$s"></p>',
                 esc_attr($id),
                 esc_html($field->label),
                 esc_attr($input),
@@ -184,8 +182,9 @@ final class Plugin
             return;
         }
         // Each value is sanitized per field type below.
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $input = isset($_POST['wpfasty_fields']) && is_array($_POST['wpfasty_fields'])
-            ? wp_unslash($_POST['wpfasty_fields']) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            ? wp_unslash($_POST['wpfasty_fields'])
             : [];
         foreach ($type->fields as $name => $field) {
             $value = $field->fromInput($input[$name] ?? '');
@@ -212,7 +211,8 @@ final class Plugin
                 }
                 return array_slice($c, 0, 2, true) + $extra + $c;
             });
-            add_action('manage_' . $type->name . '_posts_custom_column', static function (string $col, int $id) use ($columns): void {
+            $hook = 'manage_' . $type->name . '_posts_custom_column';
+            add_action($hook, static function (string $col, int $id) use ($columns): void {
                 if (isset($columns[$col]['value']) && is_callable($columns[$col]['value'])) {
                     echo esc_html((string) $columns[$col]['value']($id));
                 }
