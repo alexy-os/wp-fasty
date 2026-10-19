@@ -31,7 +31,10 @@ return [
     ],
     'taxonomies' => [
         'project_type' => [
-            'labels' => ['name' => __('Project types', 'latte-folio'), 'singular_name' => __('Project type', 'latte-folio')],
+            'labels' => [
+                'name' => __('Project types', 'latte-folio'),
+                'singular_name' => __('Project type', 'latte-folio'),
+            ],
             'public' => true,
             'hierarchical' => true,
             'show_in_rest' => true,
