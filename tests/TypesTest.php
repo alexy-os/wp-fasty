@@ -46,6 +46,11 @@ final class TypesTest extends TestCase
         yield 'boolean off' => ['boolean', '0', ''];
         yield 'url invalid' => ['url', 'javascript-ish', ''];
         yield 'string tags' => ['string', '<b>x</b>', 'x'];
+        yield 'date ok' => ['date', '2026-10-19', '2026-10-19'];
+        yield 'date iso datetime' => ['date', '2026-10-19T08:00:00Z', '2026-10-19'];
+        yield 'date impossible' => ['date', '2026-02-30', ''];
+        yield 'date other format' => ['date', '19.10.2026', ''];
+        yield 'date junk' => ['date', 'soon', ''];
     }
 
     /** @dataProvider sanitizeCases */
@@ -96,5 +101,19 @@ final class TypesTest extends TestCase
 
         $url = Field::fromArray('url', ['type' => 'url'], 'p');
         self::assertSame('string', $url->metaType());
+    }
+
+    public function testDateFieldStorageAndInput(): void
+    {
+        $date = Field::fromArray('launch', ['type' => 'date'], 'p');
+        self::assertSame('_p_launch', $date->metaKey);
+        self::assertSame('string', $date->metaType());
+        self::assertSame('date', $date->inputType());
+        self::assertSame('2026-10-19', $date->fromInput(' 2026-10-19 '));
+        self::assertNull($date->fromInput('2026-13-01'));
+        self::assertSame('2026-10-19', $date->toStorage('2026-10-19T23:59:00+03:00'));
+        self::assertSame('', $date->toStorage('tomorrow'));
+        self::assertSame('2026-10-19', $date->toInput('2026-10-19'));
+        self::assertSame(1, preg_match('/' . Field::DATE_PATTERN . '/', '2026-10-19'));
     }
 }

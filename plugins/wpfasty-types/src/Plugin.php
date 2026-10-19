@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace WPFastyTypes;
 
+use WPFasty\Types\Field;
 use WPFasty\Types\PostType;
 use WPFasty\Types\Registry;
 
@@ -88,7 +89,9 @@ final class Plugin
                     'single' => true,
                     // Typed values in REST (money = integer minor units).
                     // Opt out per field with 'show_in_rest' => false.
-                    'show_in_rest' => (bool) ($field->def['show_in_rest'] ?? true),
+                    'show_in_rest' => ($field->def['show_in_rest'] ?? true) === false ? false : (
+                        $field->type === 'date' ? ['schema' => ['pattern' => Field::DATE_PATTERN]] : true
+                    ),
                     'sanitize_callback' => [$field, 'toStorage'],
                     'auth_callback' => static fn (): bool => current_user_can('edit_posts'),
                 ]);

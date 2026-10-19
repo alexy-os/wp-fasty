@@ -3,6 +3,7 @@
  * Declarative field: type → sanitizer, input type, meta type.
  * Storage is typed: integer → int, number → float, boolean → bool, money → int minor units (cents),
  * everything else → string. The admin form shows money as a decimal (12.50) and stores cents (1250).
+ * date → ISO calendar date string `YYYY-MM-DD` (no time, no timezone).
  *
  * @package Latte
  */
@@ -13,7 +14,10 @@ namespace WPFasty\Types;
 
 final class Field
 {
-    public const TYPES = ['string', 'text', 'url', 'email', 'integer', 'number', 'money', 'boolean'];
+    public const TYPES = ['string', 'text', 'url', 'email', 'integer', 'number', 'money', 'boolean', 'date'];
+
+    /** REST schema pattern of a `date` field value. */
+    public const DATE_PATTERN = '^\\d{4}-\\d{2}-\\d{2}$';
 
     /**
      * @param array<string, mixed> $def
@@ -64,6 +68,7 @@ final class Field
             'integer' => $raw === '' || !is_numeric($raw) ? '' : (string) (int) $raw,
             'number', 'money' => self::number($raw),
             'boolean' => in_array(strtolower($raw), ['1', 'on', 'yes', 'true'], true) ? '1' : '',
+            'date' => self::date($raw),
             default => function_exists('sanitize_text_field') ? sanitize_text_field($raw) : strip_tags($raw),
         };
     }
@@ -128,8 +133,18 @@ final class Field
             'email' => 'email',
             'integer', 'number', 'money' => 'number',
             'boolean' => 'checkbox',
+            'date' => 'date',
             default => 'text',
         };
+    }
+
+    /** Valid calendar date `YYYY-MM-DD` (a leading date of a longer ISO string is accepted); '' otherwise. */
+    public static function date(string $raw): string
+    {
+        if (preg_match('/^(\d{4})-(\d{2})-(\d{2})(?:$|[T ])/', $raw, $m) !== 1) {
+            return '';
+        }
+        return checkdate((int) $m[2], (int) $m[3], (int) $m[1]) ? "{$m[1]}-{$m[2]}-{$m[3]}" : '';
     }
 
     /** Non-negative decimal with max 2 places, comma accepted; '' when empty/invalid. */
