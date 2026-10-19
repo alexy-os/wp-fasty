@@ -1,0 +1,48 @@
+# Copyright (C) 2026 godudy
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Latte Skin 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/latte-skin\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-19T08:53:46+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: latte-skin\n"
+
+#. Theme Name of the theme
+#: style.css
+msgid "Latte Skin"
+msgstr ""
+
+#. Theme URI of the theme
+#: style.css
+msgid "https://github.com/godudy/wpfasty"
+msgstr ""
+
+#. Description of the theme
+#: style.css
+msgid "Child skin for latte — no Composer."
+msgstr ""
+
+#. Author of the theme
+#: style.css
+msgid "godudy"
+msgstr ""
+
+#. Author URI of the theme
+#: style.css
+msgid "https://github.com/godudy"
+msgstr ""
+
+#: functions.php:31
+msgid "Explore"
+msgstr ""
+
+#: functions.php:32
+msgid "Learn more"
+msgstr ""
