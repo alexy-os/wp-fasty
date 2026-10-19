@@ -32,6 +32,9 @@ add_action('admin_notices', static function (): void {
     }
     printf(
         '<div class="notice notice-warning is-dismissible"><p>%s</p></div>',
-        esc_html__('This theme needs the "WP FastY Types" plugin (plugins/wpfasty-types) to register its content types.', 'latte-shop')
+        esc_html__(
+            'This theme needs the "WP FastY Types" plugin (plugins/wpfasty-types) to register its content types.',
+            'latte-shop'
+        )
     );
 });

@@ -96,7 +96,8 @@ final class Handlers
             // Keep non-sensitive input across the redirect for 10 minutes, keyed by a random token.
             $token = wp_generate_password(16, false);
             set_transient('latte_shop_co_' . $token, $c, 10 * MINUTE_IN_SECONDS);
-            wp_safe_redirect(add_query_arg(['co_errors' => implode(',', array_unique($errors)), 'co' => $token], $back));
+            $args = ['co_errors' => implode(',', array_unique($errors)), 'co' => $token];
+            wp_safe_redirect(add_query_arg($args, $back));
             exit;
         }
 
@@ -115,7 +116,11 @@ final class Handlers
     {
         $nonce = isset($_POST['_wpnonce']) ? sanitize_text_field(wp_unslash($_POST['_wpnonce'])) : '';
         if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !wp_verify_nonce($nonce, $action)) {
-            wp_die(esc_html__('Your session expired. Please go back and try again.', 'latte-shop'), '', ['response' => 403, 'back_link' => true]);
+            wp_die(
+                esc_html__('Your session expired. Please go back and try again.', 'latte-shop'),
+                '',
+                ['response' => 403, 'back_link' => true]
+            );
         }
     }
 }

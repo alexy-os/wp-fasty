@@ -138,7 +138,11 @@ final class Cart
             return '';
         }
         // Cookie-safe compact payload: "id:qty,id:qty" (HMAC-signed below).
-        $payload = implode(',', array_map(static fn (int $id, int $qty): string => $id . ':' . $qty, array_keys($lines), $lines));
+        $payload = implode(',', array_map(
+            static fn (int $id, int $qty): string => $id . ':' . $qty,
+            array_keys($lines),
+            $lines
+        ));
         return $payload . '.' . self::sign($payload);
     }
 

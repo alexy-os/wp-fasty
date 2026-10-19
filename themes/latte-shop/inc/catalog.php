@@ -10,10 +10,6 @@ declare(strict_types=1);
 
 namespace LatteShop;
 
-if (!defined('ABSPATH')) {
-    exit;
-}
-
 final class Catalog
 {
     /**
@@ -44,7 +40,8 @@ final class Catalog
     private static function fieldValue(int $id, string $option): string
     {
         $type = (string) get_post_type($id);
-        $cap = \WPFasty\Core\Application::getInstance()->get('types.registry')->get($type)?->capability('purchasable') ?? [];
+        $module = \WPFasty\Core\Application::getInstance()->get('types.registry')->get($type);
+        $cap = $module?->capability('purchasable') ?? [];
         $field = (string) ($cap[$option] ?? '');
         return $field === '' ? '' : wpfasty_field($id, $field);
     }
@@ -52,7 +49,10 @@ final class Catalog
     public static function isPurchasable(int $id): bool
     {
         $p = get_post($id);
-        return $p instanceof \WP_Post && wpfasty_type_supports($p->post_type, 'purchasable') && $p->post_status === 'publish' && self::price($id) > 0
+        return $p instanceof \WP_Post
+            && wpfasty_type_supports($p->post_type, 'purchasable')
+            && $p->post_status === 'publish'
+            && self::price($id) > 0
             && (self::stock($id) === null || self::stock($id) > 0);
     }
 

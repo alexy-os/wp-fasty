@@ -28,7 +28,10 @@ final class Orders
         ]);
         add_action('manage_shop_order_posts_custom_column', static function (string $col, int $id): void {
             match ($col) {
-                'customer' => print(esc_html((string) get_post_meta($id, '_order_name', true) . ' <' . get_post_meta($id, '_order_email', true) . '>')),
+                'customer' => print(esc_html(
+                    (string) get_post_meta($id, '_order_name', true)
+                    . ' <' . get_post_meta($id, '_order_email', true) . '>'
+                )),
                 'total' => print(esc_html(Money::format((int) get_post_meta($id, '_order_total', true)))),
                 'order_status' => print(esc_html(ucfirst((string) get_post_meta($id, '_order_status', true)))),
                 default => null,
@@ -92,7 +95,12 @@ final class Orders
     {
         $post = get_post($id);
         $stored = (string) get_post_meta($id, '_order_key', true);
-        if (!$post instanceof \WP_Post || $post->post_type !== 'shop_order' || $stored === '' || !hash_equals($stored, $key)) {
+        if (
+            !$post instanceof \WP_Post
+            || $post->post_type !== 'shop_order'
+            || $stored === ''
+            || !hash_equals($stored, $key)
+        ) {
             return null;
         }
         $items = (array) get_post_meta($id, '_order_items', true);
@@ -102,7 +110,10 @@ final class Orders
             'email' => (string) get_post_meta($id, '_order_email', true),
             'payment' => (string) get_post_meta($id, '_order_payment', true),
             'status' => (string) get_post_meta($id, '_order_status', true),
-            'items' => array_map(static fn (array $i): array => $i + ['line_display' => Money::format((int) $i['line'])], $items),
+            'items' => array_map(
+                static fn (array $i): array => $i + ['line_display' => Money::format((int) $i['line'])],
+                $items
+            ),
             'subtotal_display' => Money::format((int) get_post_meta($id, '_order_subtotal', true)),
             'shipping_display' => Money::format((int) get_post_meta($id, '_order_shipping', true)),
             'total_display' => Money::format((int) get_post_meta($id, '_order_total', true)),
@@ -113,9 +124,18 @@ final class Orders
     {
         add_meta_box('latte-shop-order', __('Order details', 'latte-shop'), static function (\WP_Post $post): void {
             $id = $post->ID;
-            echo '<table class="widefat striped"><thead><tr><th>' . esc_html__('Item', 'latte-shop') . '</th><th>' . esc_html__('Qty', 'latte-shop') . '</th><th>' . esc_html__('Total', 'latte-shop') . '</th></tr></thead><tbody>';
+            echo '<table class="widefat striped"><thead><tr>'
+                . '<th>' . esc_html__('Item', 'latte-shop') . '</th>'
+                . '<th>' . esc_html__('Qty', 'latte-shop') . '</th>'
+                . '<th>' . esc_html__('Total', 'latte-shop') . '</th>'
+                . '</tr></thead><tbody>';
             foreach ((array) get_post_meta($id, '_order_items', true) as $item) {
-                printf('<tr><td>%s</td><td>%d</td><td>%s</td></tr>', esc_html((string) $item['title']), (int) $item['qty'], esc_html(Money::format((int) $item['line'])));
+                printf(
+                    '<tr><td>%s</td><td>%d</td><td>%s</td></tr>',
+                    esc_html((string) $item['title']),
+                    (int) $item['qty'],
+                    esc_html(Money::format((int) $item['line']))
+                );
             }
             echo '</tbody></table><p>';
             foreach (['name', 'email', 'phone', 'address', 'city', 'postcode', 'country', 'payment', 'notes'] as $f) {
@@ -124,7 +144,11 @@ final class Orders
                     printf('<strong>%s:</strong> %s<br>', esc_html(ucfirst($f)), esc_html($v));
                 }
             }
-            printf('<strong>%s:</strong> %s</p>', esc_html__('Total', 'latte-shop'), esc_html(Money::format((int) get_post_meta($id, '_order_total', true))));
+            printf(
+                '<strong>%s:</strong> %s</p>',
+                esc_html__('Total', 'latte-shop'),
+                esc_html(Money::format((int) get_post_meta($id, '_order_total', true)))
+            );
         }, 'shop_order', 'normal', 'high');
 
         add_meta_box('latte-shop-order-status', __('Status', 'latte-shop'), static function (\WP_Post $post): void {
@@ -132,7 +156,12 @@ final class Orders
             $current = (string) get_post_meta($post->ID, '_order_status', true);
             echo '<select name="order_status" class="widefat">';
             foreach (self::STATUSES as $s) {
-                printf('<option value="%1$s"%2$s>%3$s</option>', esc_attr($s), selected($current, $s, false), esc_html(ucfirst($s)));
+                printf(
+                    '<option value="%1$s"%2$s>%3$s</option>',
+                    esc_attr($s),
+                    selected($current, $s, false),
+                    esc_html(ucfirst($s))
+                );
             }
             echo '</select>';
         }, 'shop_order', 'side');
@@ -140,7 +169,9 @@ final class Orders
 
     public static function saveStatus(int $postId): void
     {
-        $nonce = isset($_POST['latte_shop_order_nonce']) ? sanitize_text_field(wp_unslash($_POST['latte_shop_order_nonce'])) : '';
+        $nonce = isset($_POST['latte_shop_order_nonce'])
+            ? sanitize_text_field(wp_unslash($_POST['latte_shop_order_nonce']))
+            : '';
         if (!wp_verify_nonce($nonce, 'latte_shop_order_status') || !current_user_can('edit_post', $postId)) {
             return;
         }

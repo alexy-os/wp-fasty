@@ -31,7 +31,10 @@ return [
     ],
     'taxonomies' => [
         'product_cat' => [
-            'labels' => ['name' => __('Product categories', 'latte-shop'), 'singular_name' => __('Product category', 'latte-shop')],
+            'labels' => [
+                'name' => __('Product categories', 'latte-shop'),
+                'singular_name' => __('Product category', 'latte-shop'),
+            ],
             'public' => true,
             'hierarchical' => true,
             'show_in_rest' => true,
@@ -57,7 +60,10 @@ return [
         'prefix' => false,
     ],
     'columns' => [
-        'price' => ['label' => __('Price', 'latte-shop'), 'value' => static fn (int $id): string => LatteShop\Money::format(LatteShop\Catalog::price($id))],
+        'price' => [
+            'label' => __('Price', 'latte-shop'),
+            'value' => static fn (int $id): string => LatteShop\Money::format(LatteShop\Catalog::price($id)),
+        ],
         'stock' => ['label' => __('Stock', 'latte-shop'), 'value' => static function (int $id): string {
             $stock = LatteShop\Catalog::stock($id);
             return $stock === null ? '∞' : (string) $stock;

@@ -33,7 +33,12 @@ final class Front
     {
         foreach (self::PAGES as $slug => $title) {
             if (!get_page_by_path($slug)) {
-                wp_insert_post(['post_type' => 'page', 'post_status' => 'publish', 'post_name' => $slug, 'post_title' => $title]);
+                wp_insert_post([
+                    'post_type' => 'page',
+                    'post_status' => 'publish',
+                    'post_name' => $slug,
+                    'post_title' => $title,
+                ]);
             }
         }
         flush_rewrite_rules();
@@ -84,7 +89,9 @@ final class Front
         if (is_page(['cart', 'checkout'])) {
             $context['cart'] = $summary + [
                 'subtotal_display' => Money::format($summary['subtotal']),
-                'shipping_display' => $summary['shipping'] === 0 ? __('Free', 'latte-shop') : Money::format($summary['shipping']),
+                'shipping_display' => $summary['shipping'] === 0
+                    ? __('Free', 'latte-shop')
+                    : Money::format($summary['shipping']),
                 'total_display' => Money::format($summary['total']),
             ];
         }
@@ -165,11 +172,23 @@ final class Front
     {
         $code = isset($_GET['cart']) ? sanitize_key(wp_unslash($_GET['cart'])) : '';
         return match ($code) {
-            'added' => ['variant' => 'success', 'icon' => 'circle-check', 'text' => __('Added to your cart.', 'latte-shop')],
+            'added' => [
+                'variant' => 'success',
+                'icon' => 'circle-check',
+                'text' => __('Added to your cart.', 'latte-shop'),
+            ],
             'removed' => ['variant' => 'default', 'icon' => 'trash-2', 'text' => __('Item removed.', 'latte-shop')],
             'updated' => ['variant' => 'default', 'icon' => 'check', 'text' => __('Cart updated.', 'latte-shop')],
-            'unavailable' => ['variant' => 'destructive', 'icon' => 'x', 'text' => __('Sorry, this product is unavailable.', 'latte-shop')],
-            'empty' => ['variant' => 'default', 'icon' => 'shopping-cart', 'text' => __('Your cart is empty.', 'latte-shop')],
+            'unavailable' => [
+                'variant' => 'destructive',
+                'icon' => 'x',
+                'text' => __('Sorry, this product is unavailable.', 'latte-shop'),
+            ],
+            'empty' => [
+                'variant' => 'default',
+                'icon' => 'shopping-cart',
+                'text' => __('Your cart is empty.', 'latte-shop'),
+            ],
             default => null,
         };
     }
