@@ -1,0 +1,98 @@
+{
+  "$schema": "../../schema/site.manifest.schema.json",
+  "manifestVersion": "0.2",
+  "engine": "latte",
+  "archetype": "press",
+  "theme": {
+    "name": "Latte Press",
+    "slug": "latte-press",
+    "textDomain": "latte-press",
+    "prefix": "press",
+    "namespace": "LattePress",
+    "description": "A classic, readable blog theme in the spirit of wordpress.org themes — sidebar widgets, comments, featured images, menus and custom logo. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons).",
+    "version": "1.0.0",
+    "uri": "https://github.com/alexy-os/wp-fasty",
+    "author": {
+      "name": "alexy-os",
+      "uri": "https://github.com/alexy-os"
+    },
+    "requires": {
+      "platform": "6.4",
+      "php": "8.2"
+    },
+    "testedUpTo": "7.1",
+    "license": "GPL-2.0-or-later",
+    "tags": [
+      "blog",
+      "one-column",
+      "two-columns",
+      "right-sidebar",
+      "custom-logo",
+      "custom-menu",
+      "featured-images",
+      "threaded-comments",
+      "translation-ready"
+    ]
+  },
+  "parent": {
+    "preset": "latte",
+    "layout": "classic",
+    "style": "default"
+  },
+  "features": {
+    "comments": true,
+    "fullWidth": false,
+    "background": "#fcfbf8",
+    "blogIndexTitle": "site"
+  },
+  "labels": {
+    "readMore": "Continue reading"
+  },
+  "brand": {
+    "radius": "0.5rem",
+    "fonts": {
+      "body": "\"Inter\", ui-sans-serif, system-ui, sans-serif",
+      "display": "\"Georgia\", \"Iowan Old Style\", ui-serif, serif"
+    },
+    "light": {
+      "background": "oklch(0.99 0.004 85)",
+      "foreground": "oklch(0.22 0.01 60)",
+      "card": "oklch(1 0 0)",
+      "card-foreground": "oklch(0.22 0.01 60)",
+      "primary": "oklch(0.5 0.13 35)",
+      "primary-foreground": "oklch(0.99 0 0)",
+      "secondary": "oklch(0.95 0.015 80)",
+      "secondary-foreground": "oklch(0.3 0.02 60)",
+      "muted": "oklch(0.96 0.01 80)",
+      "muted-foreground": "oklch(0.5 0.015 60)",
+      "accent": "oklch(0.94 0.03 60)",
+      "accent-foreground": "oklch(0.3 0.05 40)",
+      "destructive": "oklch(0.577 0.245 27.325)",
+      "border": "oklch(0.9 0.012 80)",
+      "input": "oklch(0.88 0.012 80)",
+      "ring": "oklch(0.5 0.13 35)"
+    }
+  },
+  "postTypes": [],
+  "templates": {},
+  "views": [
+    "blocks/post-list"
+  ],
+  "builder": {
+    "enabled": true,
+    "landings": [
+      {
+        "file": "tools/builder/landings/press.json"
+      },
+      {
+        "file": "tools/builder/landings/press-subscribe.json"
+      }
+    ]
+  },
+  "output": {
+    "wporg": true,
+    "typesPlugin": "companion",
+    "includeDemo": true,
+    "playground": true
+  }
+}

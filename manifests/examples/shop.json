@@ -1,0 +1,216 @@
+{
+  "$schema": "../../schema/site.manifest.schema.json",
+  "manifestVersion": "0.2",
+  "engine": "latte",
+  "archetype": "shop",
+  "theme": {
+    "name": "Latte Shop",
+    "slug": "latte-shop",
+    "textDomain": "latte-shop",
+    "prefix": "shop",
+    "namespace": "LatteShop",
+    "description": "Lightweight shop without WooCommerce — Product post type with categories, price/sale/SKU/stock, signed-cookie cart, checkout that creates Orders (cash on delivery / bank transfer). Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons).",
+    "version": "1.0.0",
+    "uri": "https://github.com/alexy-os/wp-fasty",
+    "author": {
+      "name": "alexy-os",
+      "uri": "https://github.com/alexy-os"
+    },
+    "requires": {
+      "platform": "6.4",
+      "php": "8.2"
+    },
+    "testedUpTo": "7.1",
+    "license": "GPL-2.0-or-later",
+    "tags": [
+      "e-commerce",
+      "grid-layout",
+      "custom-menu",
+      "featured-images",
+      "translation-ready"
+    ]
+  },
+  "parent": {
+    "preset": "latte",
+    "layout": "classic",
+    "style": "default"
+  },
+  "features": {
+    "comments": false,
+    "fullWidth": true
+  },
+  "brand": {
+    "radius": "0.75rem",
+    "fonts": {
+      "body": "\"Inter\", ui-sans-serif, system-ui, sans-serif",
+      "display": "\"Inter\", ui-sans-serif, system-ui, sans-serif"
+    },
+    "light": {
+      "background": "oklch(0.985 0.003 250)",
+      "foreground": "oklch(0.2 0.02 260)",
+      "card": "oklch(1 0 0)",
+      "card-foreground": "oklch(0.2 0.02 260)",
+      "primary": "oklch(0.55 0.2 265)",
+      "primary-foreground": "oklch(0.99 0 0)",
+      "secondary": "oklch(0.95 0.02 265)",
+      "secondary-foreground": "oklch(0.35 0.12 265)",
+      "muted": "oklch(0.96 0.006 250)",
+      "muted-foreground": "oklch(0.52 0.02 260)",
+      "accent": "oklch(0.94 0.03 265)",
+      "accent-foreground": "oklch(0.3 0.12 265)",
+      "destructive": "oklch(0.58 0.22 27)",
+      "border": "oklch(0.91 0.008 250)",
+      "input": "oklch(0.88 0.01 250)",
+      "ring": "oklch(0.55 0.2 265)"
+    }
+  },
+  "settings": {
+    "currency": "USD"
+  },
+  "postTypes": [
+    {
+      "name": "product",
+      "labels": {
+        "singular": "Product",
+        "plural": "Products",
+        "addNew": "Add product",
+        "edit": "Edit product"
+      },
+      "public": true,
+      "slug": "product",
+      "archiveSlug": "shop",
+      "icon": "cart",
+      "rest": true,
+      "supports": [
+        "title",
+        "editor",
+        "excerpt",
+        "thumbnail",
+        "order"
+      ],
+      "metaPrefix": "shop",
+      "fields": {
+        "price": {
+          "type": "money",
+          "label": "Price"
+        },
+        "sale_price": {
+          "type": "money",
+          "label": "Sale price"
+        },
+        "sku": {
+          "type": "string",
+          "label": "SKU"
+        },
+        "stock": {
+          "type": "integer",
+          "label": "Stock (empty = unlimited)"
+        }
+      },
+      "metabox": {
+        "title": "Product data",
+        "position": "side",
+        "priority": "high"
+      },
+      "taxonomies": {
+        "product_cat": {
+          "labels": {
+            "singular": "Product category",
+            "plural": "Product categories"
+          },
+          "public": true,
+          "hierarchical": true,
+          "rest": true,
+          "adminColumn": true,
+          "slug": "shop/category"
+        }
+      },
+      "capabilities": {
+        "purchasable": {
+          "price": "price",
+          "sale": "sale_price",
+          "stock": "stock"
+        }
+      },
+      "archive": {
+        "perPage": 12,
+        "orderBy": [
+          {
+            "field": "order",
+            "direction": "asc"
+          },
+          {
+            "field": "date",
+            "direction": "desc"
+          }
+        ],
+        "title": "Shop",
+        "titlePrefix": false
+      },
+      "views": {
+        "single": "pages/product",
+        "archive": "pages/shop",
+        "card": "blocks/product-card"
+      },
+      "adminColumns": [
+        {
+          "field": "price",
+          "label": "Price"
+        },
+        {
+          "field": "stock",
+          "label": "Stock"
+        }
+      ]
+    },
+    {
+      "name": "shop_order",
+      "labels": {
+        "singular": "Order",
+        "plural": "Orders",
+        "edit": "Order"
+      },
+      "public": false,
+      "adminParent": "product",
+      "createInAdmin": false,
+      "archiveSlug": false,
+      "rest": false,
+      "supports": [
+        "title"
+      ],
+      "metabox": false,
+      "capabilities": {
+        "orderable": {}
+      }
+    }
+  ],
+  "templates": {},
+  "views": [
+    "blocks/notice",
+    "blocks/order-summary",
+    "blocks/product-card",
+    "layout/parts/header-actions",
+    "pages/cart",
+    "pages/checkout",
+    "pages/front-page",
+    "pages/product",
+    "pages/shop"
+  ],
+  "builder": {
+    "enabled": true,
+    "landings": [
+      {
+        "file": "tools/builder/landings/shop.json"
+      },
+      {
+        "file": "tools/builder/landings/shop-sale.json"
+      }
+    ]
+  },
+  "output": {
+    "wporg": true,
+    "typesPlugin": "companion",
+    "includeDemo": true,
+    "playground": true
+  }
+}

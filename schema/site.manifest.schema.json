@@ -1,0 +1,478 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/alexy-os/wp-fasty/schema/site.manifest.schema.json",
+  "title": "WP FastY site manifest",
+  "description": "v0.2. One declarative description of a generated site: parent preset + child archetype + brand + content types + builder landings + output. Platform-neutral names (the generator maps them to platform APIs). Money is always integer minor units (cents). Validate with `bun run manifest:validate [file]`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifestVersion", "engine", "archetype", "theme"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "manifestVersion": { "const": "0.2" },
+    "engine": {
+      "description": "Template engine of the generated views. Only latte ships today; twig is reserved (renderer exists, no .twig views).",
+      "enum": ["latte", "twig"],
+      "default": "latte"
+    },
+    "archetype": {
+      "description": "Child-theme code family the generator copies (PHP behaviour, view models, views). blank = parent preset only.",
+      "enum": ["press", "folio", "shop", "blank"]
+    },
+    "theme": { "$ref": "#/$defs/theme" },
+    "parent": { "$ref": "#/$defs/parent" },
+    "features": { "$ref": "#/$defs/features" },
+    "labels": {
+      "description": "UI copy overrides of parent context labels (translatable strings in the theme text domain).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "readMore": { "type": "string", "minLength": 1 }
+      }
+    },
+    "brand": { "$ref": "#/$defs/brand" },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "currency": {
+          "description": "ISO 4217 code of every money field (stored in minor units). Required when a post type is purchasable.",
+          "type": "string",
+          "pattern": "^[A-Z]{3}$",
+          "default": "USD"
+        }
+      }
+    },
+    "postTypes": {
+      "description": "Content types owned by the companion types plugin (data) and the theme (presentation).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/postType" },
+      "default": []
+    },
+    "templates": {
+      "description": "Child template views compiled from presets/blocks (template → ordered block list). Empty = inherit parent / archetype views.",
+      "$ref": "#/$defs/templates"
+    },
+    "views": {
+      "description": "View files the child theme owns (relative to views/, without extension); provided by the archetype or by `templates`.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/viewPath" }
+    },
+    "builder": { "$ref": "#/$defs/builder" },
+    "output": { "$ref": "#/$defs/output" }
+  },
+  "allOf": [
+    {
+      "description": "wordpress.org builds must keep content types out of the theme: the types plugin split is mandatory.",
+      "if": {
+        "required": ["output"],
+        "properties": { "output": { "required": ["wporg"], "properties": { "wporg": { "const": true } } } }
+      },
+      "then": { "properties": { "output": { "properties": { "typesPlugin": { "const": "companion" } } } } }
+    },
+    {
+      "description": "twig is reserved until the parent ships .twig views.",
+      "if": { "properties": { "engine": { "const": "twig" } }, "required": ["engine"] },
+      "then": { "properties": { "output": { "properties": { "wporg": { "const": false } } } } }
+    }
+  ],
+  "$defs": {
+    "slug": { "type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$", "maxLength": 40 },
+    "ident": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+    "urlPath": {
+      "description": "Public URL path segment(s), no leading/trailing slash.",
+      "type": "string",
+      "pattern": "^[a-z0-9-]+(/[a-z0-9-]+)*$"
+    },
+    "viewPath": { "type": "string", "pattern": "^(pages|blocks|layout|partials)/[a-z0-9/-]+$" },
+    "blockRef": { "type": "string", "pattern": "^blocks/[a-z0-9-]+$" },
+    "semver": { "type": "string", "pattern": "^\\d+\\.\\d+(\\.\\d+)?$" },
+    "color": {
+      "type": "string",
+      "pattern": "^(#[0-9a-fA-F]{6}|#[0-9a-fA-F]{8}|oklch\\([^)]+\\)|hsl\\([^)]+\\))$"
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "slug", "textDomain", "prefix", "namespace"],
+      "properties": {
+        "name": { "type": "string", "minLength": 2, "maxLength": 60 },
+        "slug": { "$ref": "#/$defs/slug" },
+        "textDomain": {
+          "description": "Must equal slug (theme review rule); the validator enforces it.",
+          "$ref": "#/$defs/slug"
+        },
+        "prefix": {
+          "description": "Short identifier prefix for meta keys (_<prefix>_<field>), functions and handles.",
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]{1,15}$"
+        },
+        "namespace": {
+          "description": "Code namespace of the child (PascalCase segments).",
+          "type": "string",
+          "pattern": "^[A-Z][A-Za-z0-9]*(\\\\[A-Z][A-Za-z0-9]*)*$"
+        },
+        "description": { "type": "string", "maxLength": 400 },
+        "version": { "$ref": "#/$defs/semver", "default": "1.0.0" },
+        "uri": { "type": "string", "format": "uri", "default": "https://github.com/alexy-os/wp-fasty" },
+        "author": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "default": "alexy-os" },
+            "uri": { "type": "string", "format": "uri", "default": "https://github.com/alexy-os" }
+          },
+          "default": { "name": "alexy-os", "uri": "https://github.com/alexy-os" }
+        },
+        "requires": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "platform": { "$ref": "#/$defs/semver", "default": "6.4" },
+            "php": { "$ref": "#/$defs/semver", "default": "8.2" }
+          }
+        },
+        "testedUpTo": { "$ref": "#/$defs/semver", "default": "7.1" },
+        "license": { "const": "GPL-2.0-or-later", "default": "GPL-2.0-or-later" },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }
+        }
+      }
+    },
+    "parent": {
+      "description": "Parent theme the child extends. preset = presets/themes/<id>.json (layout, style, templates, features).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preset"],
+      "properties": {
+        "preset": { "$ref": "#/$defs/slug", "default": "latte" },
+        "layout": { "enum": ["classic", "app-shell"], "default": "classic" },
+        "style": { "$ref": "#/$defs/slug", "default": "default" }
+      },
+      "default": { "preset": "latte" }
+    },
+    "features": {
+      "description": "Theme behaviour switches (platform-neutral).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "comments": { "type": "boolean", "default": false, "description": "Render comments + reply script." },
+        "fullWidth": { "type": "boolean", "default": false, "description": "Content without the sidebar column." },
+        "background": {
+          "description": "Admin-customizable page background, default color as #rrggbb.",
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "blogIndexTitle": {
+          "description": "Heading of the posts index: archive label or the site name/tagline.",
+          "enum": ["archive", "site"],
+          "default": "archive"
+        }
+      }
+    },
+    "tokens": {
+      "description": "shadcn-compatible token names (without --).",
+      "type": "object",
+      "propertyNames": {
+        "enum": [
+          "background", "foreground", "card", "card-foreground", "popover", "popover-foreground",
+          "primary", "primary-foreground", "secondary", "secondary-foreground", "muted", "muted-foreground",
+          "accent", "accent-foreground", "destructive", "destructive-foreground", "border", "input", "ring"
+        ]
+      },
+      "additionalProperties": { "$ref": "#/$defs/color" }
+    },
+    "brand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["light"],
+      "properties": {
+        "radius": { "type": "string", "pattern": "^(0|\\d+(\\.\\d+)?rem)$", "default": "0.625rem" },
+        "fonts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "body": { "type": "string", "minLength": 1, "description": "CSS font-family stack." },
+            "display": { "type": "string", "minLength": 1, "description": "Headings font-family stack." }
+          }
+        },
+        "light": { "$ref": "#/$defs/tokens" },
+        "dark": { "$ref": "#/$defs/tokens", "description": "Omit to keep the parent dark palette." }
+      }
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["singular", "plural"],
+      "properties": {
+        "singular": { "type": "string", "minLength": 1 },
+        "plural": { "type": "string", "minLength": 1 },
+        "addNew": { "type": "string" },
+        "edit": { "type": "string" }
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "label"],
+      "properties": {
+        "type": {
+          "description": "1:1 with WPFasty\\Types\\Field::TYPES. money = integer minor units (cents); date = YYYY-MM-DD.",
+          "enum": ["string", "text", "url", "email", "integer", "number", "money", "boolean", "date"]
+        },
+        "label": { "type": "string", "minLength": 1 },
+        "rest": { "type": "boolean", "default": true, "description": "Expose in the REST API (typed)." }
+      }
+    },
+    "taxonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["labels"],
+      "properties": {
+        "labels": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["singular", "plural"],
+          "properties": { "singular": { "type": "string" }, "plural": { "type": "string" } }
+        },
+        "public": { "type": "boolean", "default": true },
+        "hierarchical": { "type": "boolean", "default": true },
+        "rest": { "type": "boolean", "default": true },
+        "adminColumn": { "type": "boolean", "default": true },
+        "slug": { "$ref": "#/$defs/urlPath" }
+      }
+    },
+    "postType": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "labels"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]{2,19}$" },
+        "labels": { "$ref": "#/$defs/labels" },
+        "public": { "type": "boolean", "default": true },
+        "adminParent": {
+          "description": "Show the admin list under another post type's menu (private types such as orders).",
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,19}$"
+        },
+        "createInAdmin": { "type": "boolean", "default": true, "description": "false = records are created by code only." },
+        "slug": { "$ref": "#/$defs/urlPath", "description": "Single permalink base." },
+        "archiveSlug": {
+          "description": "Archive URL path, or false for no archive.",
+          "oneOf": [{ "$ref": "#/$defs/urlPath" }, { "const": false }]
+        },
+        "icon": {
+          "description": "Admin menu icon name (generator maps to the platform icon set, e.g. dashicons-<icon>).",
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "rest": { "type": "boolean", "default": true },
+        "supports": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["title", "editor", "excerpt", "thumbnail", "order", "comments", "revisions", "author"] },
+          "default": ["title", "editor"]
+        },
+        "metaPrefix": { "type": "string", "pattern": "^[a-z][a-z0-9]{1,15}$", "description": "Defaults to theme.prefix." },
+        "fields": {
+          "type": "object",
+          "propertyNames": { "pattern": "^[a-z][a-z0-9_]{0,31}$" },
+          "additionalProperties": { "$ref": "#/$defs/field" },
+          "default": {}
+        },
+        "metabox": {
+          "description": "Admin field box; false = no box (fields edited by code).",
+          "oneOf": [
+            { "const": false },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["title"],
+              "properties": {
+                "title": { "type": "string" },
+                "position": { "enum": ["main", "side"], "default": "main" },
+                "priority": { "enum": ["high", "default", "low"], "default": "default" }
+              }
+            }
+          ]
+        },
+        "taxonomies": {
+          "type": "object",
+          "propertyNames": { "pattern": "^[a-z][a-z0-9_]{2,31}$" },
+          "additionalProperties": { "$ref": "#/$defs/taxonomy" },
+          "default": {}
+        },
+        "capabilities": {
+          "description": "Behaviour contracts consumed by archetype code (cart, checkout).",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "purchasable": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["price"],
+              "properties": {
+                "price": { "type": "string", "description": "money field" },
+                "sale": { "type": "string", "description": "money field" },
+                "stock": { "type": "string", "description": "integer field; empty = unlimited" }
+              }
+            },
+            "orderable": { "type": "object", "additionalProperties": false, "properties": {} }
+          }
+        },
+        "archive": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "perPage": { "type": "integer", "minimum": 1, "maximum": 100 },
+            "orderBy": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["field", "direction"],
+                "properties": {
+                  "field": { "enum": ["order", "date", "title", "modified"] },
+                  "direction": { "enum": ["asc", "desc"] }
+                }
+              }
+            },
+            "title": { "type": "string" },
+            "titlePrefix": { "type": "boolean", "default": true, "description": "Keep the platform 'Archives:' prefix." }
+          }
+        },
+        "views": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "single": { "$ref": "#/$defs/viewPath" },
+            "archive": { "$ref": "#/$defs/viewPath" },
+            "card": { "$ref": "#/$defs/viewPath" }
+          }
+        },
+        "adminColumns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["field", "label"],
+            "properties": {
+              "field": { "type": "string" },
+              "label": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "type": "object",
+      "propertyNames": {
+        "enum": ["front-page", "home", "archive", "search", "single", "page", "attachment", "404"]
+      },
+      "additionalProperties": { "type": "array", "items": { "$ref": "#/$defs/blockRef" } },
+      "default": {}
+    },
+    "layoutBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["block", "variant"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "Unique within the layout." },
+        "block": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "variant": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*$" },
+        "props": { "type": "object", "description": "Block props; strings may carry link tokens such as {home}, {posts}, {archive:<type>}." },
+        "bindings": {
+          "description": "Prop name → live data source (filled at render time).",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source"],
+            "properties": {
+              "source": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "Builder data source id (posts, pages, projects, products, product_cats, …)." },
+              "limit": { "type": "integer", "minimum": 1, "maximum": 24, "default": 6 },
+              "term": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+              "sale": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "landing": {
+      "description": "Builder landing page; same shape as tools/builder/landings/*.json (Seeder spec).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page", "layout"],
+      "properties": {
+        "page": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["title", "slug"],
+          "properties": { "title": { "type": "string" }, "slug": { "$ref": "#/$defs/slug" } }
+        },
+        "front": { "type": "boolean", "default": false },
+        "menu": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["location", "label"],
+          "properties": { "location": { "enum": ["primary", "footer"] }, "label": { "type": "string" } }
+        },
+        "layout": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source", "blocks"],
+          "properties": {
+            "source": { "const": "ui8kit" },
+            "collection": { "type": "string" },
+            "blocks": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/layoutBlock" } }
+          }
+        }
+      }
+    },
+    "builder": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "landings": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["file"],
+                "properties": {
+                  "file": {
+                    "description": "Repo-relative path to a landing spec JSON.",
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_./-]+\\.json$"
+                  }
+                }
+              },
+              { "$ref": "#/$defs/landing" }
+            ]
+          },
+          "default": []
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "wporg": { "type": "boolean", "default": false, "description": "Build for the wordpress.org directory rules." },
+        "typesPlugin": {
+          "description": "companion = post types ship in the types plugin (mandatory for wporg); bundled = registered by the theme.",
+          "enum": ["companion", "bundled"],
+          "default": "companion"
+        },
+        "includeDemo": { "type": "boolean", "default": false, "description": "Ship demo content (posts, media, landings)." },
+        "playground": { "type": "boolean", "default": false, "description": "Emit a Playground blueprint." }
+      }
+    }
+  }
+}

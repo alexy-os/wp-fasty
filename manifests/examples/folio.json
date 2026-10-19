@@ -1,0 +1,171 @@
+{
+  "$schema": "../../schema/site.manifest.schema.json",
+  "manifestVersion": "0.2",
+  "engine": "latte",
+  "archetype": "folio",
+  "theme": {
+    "name": "Latte Folio",
+    "slug": "latte-folio",
+    "textDomain": "latte-folio",
+    "prefix": "folio",
+    "namespace": "LatteFolio",
+    "description": "Portfolio theme — Projects post type with types, client/year/role meta, filterable work grid and case-study pages. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons).",
+    "version": "1.0.0",
+    "uri": "https://github.com/alexy-os/wp-fasty",
+    "author": {
+      "name": "alexy-os",
+      "uri": "https://github.com/alexy-os"
+    },
+    "requires": {
+      "platform": "6.4",
+      "php": "8.2"
+    },
+    "testedUpTo": "7.1",
+    "license": "GPL-2.0-or-later",
+    "tags": [
+      "portfolio",
+      "grid-layout",
+      "custom-menu",
+      "featured-images",
+      "translation-ready"
+    ]
+  },
+  "parent": {
+    "preset": "latte",
+    "layout": "classic",
+    "style": "default"
+  },
+  "features": {
+    "comments": false,
+    "fullWidth": true
+  },
+  "brand": {
+    "radius": "0.75rem",
+    "fonts": {
+      "body": "\"Inter\", ui-sans-serif, system-ui, sans-serif",
+      "display": "\"Inter\", ui-sans-serif, system-ui, sans-serif"
+    },
+    "light": {
+      "background": "oklch(0.16 0.005 260)",
+      "foreground": "oklch(0.96 0.005 260)",
+      "card": "oklch(0.2 0.006 260)",
+      "card-foreground": "oklch(0.96 0.005 260)",
+      "primary": "oklch(0.88 0.19 125)",
+      "primary-foreground": "oklch(0.18 0.02 125)",
+      "secondary": "oklch(0.26 0.008 260)",
+      "secondary-foreground": "oklch(0.92 0.005 260)",
+      "muted": "oklch(0.22 0.006 260)",
+      "muted-foreground": "oklch(0.7 0.01 260)",
+      "accent": "oklch(0.28 0.01 260)",
+      "accent-foreground": "oklch(0.96 0.005 260)",
+      "destructive": "oklch(0.65 0.2 25)",
+      "border": "oklch(0.3 0.008 260)",
+      "input": "oklch(0.32 0.008 260)",
+      "ring": "oklch(0.88 0.19 125)"
+    }
+  },
+  "postTypes": [
+    {
+      "name": "project",
+      "labels": {
+        "singular": "Project",
+        "plural": "Projects",
+        "addNew": "Add project",
+        "edit": "Edit project"
+      },
+      "public": true,
+      "slug": "work/project",
+      "archiveSlug": "work",
+      "icon": "portfolio",
+      "rest": true,
+      "supports": [
+        "title",
+        "editor",
+        "excerpt",
+        "thumbnail",
+        "order"
+      ],
+      "metaPrefix": "folio",
+      "fields": {
+        "client": {
+          "type": "string",
+          "label": "Client"
+        },
+        "year": {
+          "type": "string",
+          "label": "Year"
+        },
+        "role": {
+          "type": "string",
+          "label": "Role"
+        },
+        "url": {
+          "type": "url",
+          "label": "Live URL"
+        }
+      },
+      "metabox": {
+        "title": "Project details",
+        "position": "side",
+        "priority": "default"
+      },
+      "taxonomies": {
+        "project_type": {
+          "labels": {
+            "singular": "Project type",
+            "plural": "Project types"
+          },
+          "public": true,
+          "hierarchical": true,
+          "rest": true,
+          "adminColumn": true,
+          "slug": "work/type"
+        }
+      },
+      "archive": {
+        "perPage": 12,
+        "orderBy": [
+          {
+            "field": "order",
+            "direction": "asc"
+          },
+          {
+            "field": "date",
+            "direction": "desc"
+          }
+        ],
+        "title": "Work",
+        "titlePrefix": false
+      },
+      "views": {
+        "single": "pages/project",
+        "archive": "pages/work",
+        "card": "blocks/project-card"
+      }
+    }
+  ],
+  "templates": {},
+  "views": [
+    "blocks/project-card",
+    "pages/front-page",
+    "pages/project",
+    "pages/work"
+  ],
+  "builder": {
+    "enabled": true,
+    "landings": [
+      {
+        "file": "tools/builder/landings/folio.json"
+      },
+      {
+        "file": "tools/builder/landings/folio-services.json"
+      }
+    ]
+  },
+  "output": {
+    "wporg": true,
+    "typesPlugin": "companion",
+    "includeDemo": true,
+    "playground": true
+  }
+}
