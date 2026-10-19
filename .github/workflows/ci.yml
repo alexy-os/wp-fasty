@@ -16,7 +16,7 @@ env:
 
 jobs:
   verify:
-    # Static checks + build: audit, codegen, design lint, CSS, PHPUnit, strict PHPCS, release zip.
+    # Static checks + build: audit, site manifests, codegen, design lint, CSS, PHPUnit, strict PHPCS, release zip.
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -49,6 +49,11 @@ jobs:
 
       - name: Composer audit (root)
         run: composer audit --no-interaction
+
+      - name: Site manifests (schema v0.2, rules, parity with press/folio/shop)
+        run: |
+          bun install --frozen-lockfile
+          bun run manifest:validate
 
       - name: Codegen verify (Latte + Twig primitives)
         run: |
