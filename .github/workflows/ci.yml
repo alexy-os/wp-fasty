@@ -215,10 +215,11 @@ jobs:
       - name: Builder — seed landings, smoke-render (200, no PHP notices), validate layouts with @ui8kit/contract
         run: |
           cd /tmp/wp
-          php -S 127.0.0.1:8080 -t /tmp/wp > /tmp/php-server.log 2>&1 &
           wp option update home http://127.0.0.1:8080 --quiet
           wp option update siteurl http://127.0.0.1:8080 --quiet
-          sleep 1
+          # Several workers: a page render may request its own assets / loopback while being served.
+          PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8080 -t /tmp/wp > /tmp/php-server.log 2>&1 &
+          for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8080/wp-login.php && break; sleep 1; done
           mkdir -p /tmp/layouts
           php "$GITHUB_WORKSPACE/tools/builder/layout-manifest.php" > /tmp/layout-manifest.json
           echo "### Builder landings" >> "$GITHUB_STEP_SUMMARY"
@@ -231,7 +232,7 @@ jobs:
               echo "$out"
               id=$(echo "$out" | sed -n 's/^Success: Page \([0-9]*\) .*/\1/p')
               url=$(wp eval "echo get_permalink($id);")
-              code=$(curl -s -o /tmp/landing.html -w '%{http_code}' "$url")
+              code=$(curl -s --retry 3 --retry-all-errors -o /tmp/landing.html -w '%{http_code}' "$url" || true)
               notices=$(grep -cE '<b>(Warning|Notice|Deprecated|Fatal error)</b>' /tmp/landing.html || true)
               blocks=$(grep -c 'wpfb-page' /tmp/landing.html || true)
               wp post meta get "$id" _wpfb_layout > "/tmp/layouts/$site-$(basename "$f")"
@@ -257,6 +258,7 @@ jobs:
       - name: No PHP notices / warnings / deprecations logged
         if: always()
         run: |
+          [ ! -s /tmp/php-server.log ] || { echo "::group::php -S log"; tail -50 /tmp/php-server.log; echo "::endgroup::"; }
           if [ -s /tmp/wp-debug.log ]; then
             echo "::error::PHP messages were logged during the WordPress job"
             sort /tmp/wp-debug.log | uniq -c | sort -rn | head -50
