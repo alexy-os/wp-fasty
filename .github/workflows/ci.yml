@@ -32,7 +32,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
-          tools: composer
+          tools: composer, wp-cli
           coverage: none
 
       - name: Cache bun + composer downloads
@@ -54,6 +54,9 @@ jobs:
         run: |
           bun install --frozen-lockfile
           bun run manifest:validate
+
+      - name: Generator round-trip (manifests/examples → themes/<slug>, byte-identical)
+        run: bun run theme:roundtrip
 
       - name: Codegen verify (Latte + Twig primitives)
         run: |
@@ -196,6 +199,26 @@ jobs:
             fi
           done
           { echo "### Theme Check ${THEME_CHECK_VERSION} (WP ${WP_VERSION})"; echo "| theme | REQUIRED | WARNING | RECOMMENDED |"; echo "|---|---|---|---|"; cat /tmp/tc-summary.md; } >> "$GITHUB_STEP_SUMMARY"
+          exit $fail
+
+      - name: Theme Check — generated child themes (theme:generate from manifests/examples), no REQUIRED issues
+        run: |
+          fail=0
+          for t in press; do
+            slug=$(bun -e "console.log(require('./manifests/examples/$t.json').theme.slug)")
+            bun run theme:generate "manifests/examples/$t.json" --out "/tmp/gen/$slug"
+            cd /tmp/wp
+            mv "wp-content/themes/$slug" "/tmp/orig-$slug"
+            cp -r "/tmp/gen/$slug" wp-content/themes/
+            code=0
+            PAGER=cat wp theme-check run "$slug" > "/tmp/tcg-$slug.txt" 2>&1 || code=$?
+            r=$(grep -c '^REQUIRED' "/tmp/tcg-$slug.txt" || true)
+            echo "::group::generated $slug — exit $code, REQUIRED $r"; cat "/tmp/tcg-$slug.txt"; echo "::endgroup::"
+            echo "| $slug (generated) | $r |" >> "$GITHUB_STEP_SUMMARY"
+            rm -rf "wp-content/themes/$slug" && mv "/tmp/orig-$slug" "wp-content/themes/$slug"
+            if [ "$r" -ne 0 ] || [ "$code" -ne 0 ]; then echo "::error::Theme Check generated $slug: REQUIRED=$r exit=$code"; fail=1; fi
+            cd "$GITHUB_WORKSPACE"
+          done
           exit $fail
 
       - name: N+1 guard — seeded items with thumbnails, terms, typed meta, several authors (2 vs 6)
