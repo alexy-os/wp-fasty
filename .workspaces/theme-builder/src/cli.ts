@@ -126,8 +126,8 @@ async function scaffoldSkin(preset: ThemePreset): Promise<void> {
     const style = `/*
 Theme Name: ${preset.name}
 Theme URI: https://github.com/godudy/wpfasty
-Author: godudy
-Author URI: https://github.com/godudy
+Author: alexy-os
+Author URI: https://github.com/alexy-os
 Description: Child skin for ${parent} — no Composer.
 Version: 1.0.0
 Requires at least: 6.4

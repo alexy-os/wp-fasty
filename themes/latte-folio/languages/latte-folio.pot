@@ -1,4 +1,4 @@
-# Copyright (C) 2026 godudy
+# Copyright (C) 2026 alexy-os
 # This file is distributed under the GNU General Public License v2 or later.
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-16T07:19:29+00:00\n"
+"POT-Creation-Date: 2026-10-19T09:04:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: latte-folio\n"
@@ -31,12 +31,16 @@ msgstr ""
 
 #. Author of the theme
 #: style.css
-msgid "godudy"
+msgid "alexy-os"
 msgstr ""
 
 #. Author URI of the theme
 #: style.css
-msgid "https://github.com/godudy"
+msgid "https://github.com/alexy-os"
+msgstr ""
+
+#: functions.php:34
+msgid "This theme needs the \"WP FastY Types\" plugin (plugins/wpfasty-types) to register its content types."
 msgstr ""
 
 #: inc/projects.php:24
@@ -67,27 +71,27 @@ msgstr ""
 msgid "Nothing here yet."
 msgstr ""
 
-#: inc/projects.php:46
+#: inc/projects.php:50
 msgid "Product design"
 msgstr ""
 
-#: inc/projects.php:46
+#: inc/projects.php:51
 msgid "Flows, systems and interfaces that scale on an 8px grid."
 msgstr ""
 
-#: inc/projects.php:47
+#: inc/projects.php:55
 msgid "Brand & identity"
 msgstr ""
 
-#: inc/projects.php:47
+#: inc/projects.php:56
 msgid "Logos, type and color tokens that travel across every surface."
 msgstr ""
 
-#: inc/projects.php:48
+#: inc/projects.php:60
 msgid "WordPress builds"
 msgstr ""
 
-#: inc/projects.php:48
+#: inc/projects.php:61
 msgid "Fast Latte themes on UI8Kit primitives, no page builders."
 msgstr ""
 
@@ -107,34 +111,34 @@ msgstr ""
 msgid "Edit project"
 msgstr ""
 
-#: types/project.php:34
+#: types/project.php:35
 msgid "Project types"
 msgstr ""
 
-#: types/project.php:34
+#: types/project.php:36
 msgid "Project type"
 msgstr ""
 
-#: types/project.php:43
+#: types/project.php:46
 msgid "Client"
 msgstr ""
 
-#: types/project.php:44
+#: types/project.php:47
 msgid "Year"
 msgstr ""
 
-#: types/project.php:45
+#: types/project.php:48
 msgid "Role"
 msgstr ""
 
-#: types/project.php:46
+#: types/project.php:49
 msgid "Live URL"
 msgstr ""
 
-#: types/project.php:48
+#: types/project.php:51
 msgid "Project details"
 msgstr ""
 
-#: types/project.php:53
+#: types/project.php:56
 msgid "Work"
 msgstr ""

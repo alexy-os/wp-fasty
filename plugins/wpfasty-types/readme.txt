@@ -1,5 +1,5 @@
 === WP FastY Types ===
-Contributors: godudy
+Contributors: alexy-os
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.2

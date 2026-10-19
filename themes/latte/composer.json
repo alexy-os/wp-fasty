@@ -3,7 +3,7 @@
   "description": "Latte — clean WP FastY theme with UI8Kit Codegen primitives",
   "type": "wordpress-theme",
   "license": "GPL-2.0-or-later",
-  "authors": [{ "name": "godudy" }],
+  "authors": [{ "name": "alexy-os" }],
   "repositories": [
     {
       "type": "path",

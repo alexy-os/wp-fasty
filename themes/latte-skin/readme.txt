@@ -1,5 +1,5 @@
 === Latte Skin ===
-Contributors: godudy
+Contributors: alexy-os
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.2
@@ -15,7 +15,7 @@ Child theme of Latte (parent theme required). It switches the parent to the app-
 
 == Copyright ==
 
-Latte Skin WordPress Theme, Copyright 2026 godudy
+Latte Skin WordPress Theme, Copyright 2026 alexy-os
 Latte Skin is distributed under the terms of the GNU GPL v2 or later.
 
 This program is distributed in the hope that it will be useful,

@@ -1,5 +1,5 @@
 === Latte Folio ===
-Contributors: godudy
+Contributors: alexy-os
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.2
@@ -17,7 +17,7 @@ Child theme of Latte (parent theme required). Colors come from design tokens (to
 
 == Copyright ==
 
-Latte Folio WordPress Theme, Copyright 2026 godudy
+Latte Folio WordPress Theme, Copyright 2026 alexy-os
 Latte Folio is distributed under the terms of the GNU GPL v2 or later.
 
 This program is distributed in the hope that it will be useful,

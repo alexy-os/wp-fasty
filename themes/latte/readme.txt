@@ -1,5 +1,5 @@
 === Latte ===
-Contributors: godudy
+Contributors: alexy-os
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.2
@@ -64,7 +64,7 @@ Not included in this version.
 
 == Copyright ==
 
-Latte WordPress Theme, Copyright 2024-2026 godudy
+Latte WordPress Theme, Copyright 2024-2026 alexy-os
 Latte is distributed under the terms of the GNU GPL v2 or later.
 
 This program is free software: you can redistribute it and/or modify
