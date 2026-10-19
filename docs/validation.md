@@ -76,6 +76,13 @@ the generator maps them.
    `tokens.css` (`:root`, `.dark`), the set of `views/**.latte`, `types/*.php` (dumped by `tools/manifest/dump-types.php`
    without WordPress), and feature switches in `functions.php`.
 
+### Generator round-trip
+
+`bun run theme:roundtrip` regenerates each `manifests/examples/*.json` whose archetype has a package in
+`presets/archetypes/` and diffs it against `themes/<slug>`: same file set, identical bytes; only the `.pot`
+`POT-Creation-Date` and `X-Generator` lines are normalized. CI `wordpress` also runs Theme Check on the generated
+theme (0 REQUIRED). Packaged today: press.
+
 ## What agents should run
 
 **Changing bricks (codegen):**

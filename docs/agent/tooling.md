@@ -12,6 +12,8 @@ job `wordpress` (WP 7.1.3 + MariaDB: Theme Check 20260901 on the unpacked zip an
 | `bun run codegen:verify` | codegen typecheck + generation (also produces `generated/ui/**/*.html.twig`) | yes |
 | `bun run theme:build -- latte` | builds views from `presets/themes/latte.json` (skips empty templates) | yes |
 | `bun run manifest:validate [file] [--repo]` | `tools/manifest/validate.ts`: site manifest v0.2 — ajv schema, semantic rules (text domain, capability fields, archetype types, landing blocks/variants/sources), and parity with `themes/<slug>` (style.css, tokens, views, `types/*.php`); no file = all `manifests/examples/*.json` with parity | yes |
+| `bun run theme:generate <manifest> [--out dir] [--no-pot]` | manifest + `presets/archetypes/<id>/` → child theme (default `dist/generated/<slug>`); validates the manifest first | – |
+| `bun run theme:roundtrip` | regenerates every example with a packaged archetype; must equal `themes/<slug>` byte for byte (pot date lines normalized) | yes |
 | `bun run lint:design` | `tools/lint-design.ts`: token-only colors, 8/4 spacing, no half steps/arbitrary px, no raw `children` | yes |
 | `bun run css:build` | Tailwind v4 (`.workspaces/css-build`) → `themes/latte/assets/css/app.css` | yes |
 | `bun run icons` | copies used Lucide SVGs (`tools/icons.ts`) | – |

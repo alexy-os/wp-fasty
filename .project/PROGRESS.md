@@ -3,7 +3,7 @@
 **Purpose:** Single handoff document for agents (including Cursor browser).  
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
-**Last updated:** 2026-10-19 (Cycles I–J from git log 2026-10-16..17; Cycle K opened, K1 site manifest v0.2 done)  
+**Last updated:** 2026-10-19 (Cycles I–J from git log 2026-10-16..17; Cycle K: K1 site manifest v0.2, K2/K3 generator + round-trip for press)  
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
 **Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
@@ -129,7 +129,7 @@ dist/latte.zip               release artifact (gitignored)
 
 ## Open cycle
 
-**→ Cycle K — Configurator** (see [Cycle K](#cycle-k--configurator-2026-10-19)); next stage K2. Follow-ups below stay open.
+**→ Cycle K — Configurator** (see [Cycle K](#cycle-k--configurator-2026-10-19)); next: K2/K3 for folio and shop. Follow-ups below stay open.
 
 | # | Task | Done |
 |---|------|------|
@@ -305,8 +305,8 @@ A Parent correctness ✓
 | Stage | Task | Evidence | Done |
 |-------|------|----------|------|
 | K1 | Site manifest v0.2: one schema (engine, theme meta, archetype, parent preset, features, brand tokens, currency, postTypes/fields/taxonomies/capabilities/archive/views, templates, builder landings, output); `date` field type; press/folio/shop examples reproduce the child themes; `bun run manifest:validate` (ajv + rules + repo parity) in CI `verify`; 0.1 draft `docs/agent/schema/theme-manifest.schema.json` removed | `f8bbacf`, `ce4dcc3`, `70c4c64`, `77c0703`, `61398c7`, `schema/site.manifest.schema.json`, `manifests/examples/`, `tools/manifest/`, `docs/validation.md` | [x] |
-| K2 | Generator: manifest → child theme (style.css, tokens.css, `types/*.php`, functions.php switches, archetype code + views) | – | [ ] |
-| K3 | Round-trip gate: regenerate press/folio/shop from `manifests/examples/` with no diff | – | [ ] |
+| K2 | Generator `bun run theme:generate <manifest> [--out dir]`: manifest + archetype package (`presets/archetypes/<id>/`) → style.css, functions.php, tokens.css, `types/*.php`, views, readme.txt, `.pot` (wp-cli) | `9eedf43`, `71f0eda`, `.workspaces/theme-builder/src/generate/` | [x] press · [ ] folio · [ ] shop |
+| K3 | Round-trip gate `bun run theme:roundtrip` (CI `verify`): examples regenerate byte-identical to `themes/<slug>` (only `.pot` date/generator lines normalized); Theme Check on the generated theme (CI `wordpress`, 0 REQUIRED) | `<ci>` | [x] press · [ ] folio · [ ] shop |
 | K4 | Output: child zip + types-plugin config (`companion` for wporg), demo + Playground blueprint from `output` | – | [ ] |
 | K5 | Front ends: web form / CLI prompts / MCP tool producing a manifest | – | [ ] |
 | K6 | Twig engine: ship `.twig` views so `engine: twig` is buildable | – | [ ] |
@@ -325,6 +325,8 @@ bun run theme:pack -- latte          # → dist/latte.zip
 bun run test                         # PHPUnit via tools/composer.sh
 bun run phpcs
 bun run manifest:validate          # site manifests (schema + rules + parity)
+bun run theme:generate manifests/examples/press.json --out /tmp/latte-press
+bun run theme:roundtrip            # generated == themes/<slug> for packaged archetypes
 
 # Docker (local)
 bun run dev:up
