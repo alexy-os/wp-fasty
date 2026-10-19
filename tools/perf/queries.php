@@ -3,6 +3,7 @@
  * N+1 guard: DB query count of a rendered archive page must not grow with the number of posts.
  *
  * Usage: wp eval-file tools/perf/queries.php [post_type] [small] [large]
+ * Counts $wpdb->num_queries (SAVEQUERIES is not needed).
  * Exit code 1 when the large page needs more queries than the small one.
  *
  * @package Latte
@@ -13,9 +14,6 @@ if (!defined('ABSPATH')) {
 }
 
 $_SERVER['SERVER_NAME'] ??= 'localhost';
-if (!defined('SAVEQUERIES')) {
-    define('SAVEQUERIES', true);
-}
 
 $wpfasty_perf_type = $args[0] ?? 'post';
 $wpfasty_perf_small = (int) ($args[1] ?? 2);
@@ -52,10 +50,31 @@ wpfasty_perf_render($wpfasty_perf_type, 1); // Warm-up: options, menus, compiled
 [$wpfasty_perf_q1, $wpfasty_perf_p1] = wpfasty_perf_render($wpfasty_perf_type, $wpfasty_perf_small);
 [$wpfasty_perf_q2, $wpfasty_perf_p2] = wpfasty_perf_render($wpfasty_perf_type, $wpfasty_perf_large);
 
-WP_CLI::log(sprintf('%s: %d posts → %d queries; %d posts → %d queries', $wpfasty_perf_type, $wpfasty_perf_p1, $wpfasty_perf_q1, $wpfasty_perf_p2, $wpfasty_perf_q2));
+// Same comparison with widget areas emptied: sidebar widgets (recent posts, comments, archives) have a constant size,
+// but they reuse posts the list already loaded, so with them a larger page can need *fewer* queries and hide an N+1.
+add_filter('sidebars_widgets', static fn (): array => []);
+wpfasty_perf_render($wpfasty_perf_type, 1);
+[$wpfasty_perf_l1] = wpfasty_perf_render($wpfasty_perf_type, $wpfasty_perf_small);
+[$wpfasty_perf_l2] = wpfasty_perf_render($wpfasty_perf_type, $wpfasty_perf_large);
+
+WP_CLI::log(sprintf(
+    '%s: %d posts → %d queries; %d posts → %d queries (list only, no widgets: %d → %d)',
+    $wpfasty_perf_type,
+    $wpfasty_perf_p1,
+    $wpfasty_perf_q1,
+    $wpfasty_perf_p2,
+    $wpfasty_perf_q2,
+    $wpfasty_perf_l1,
+    $wpfasty_perf_l2
+));
 if ($wpfasty_perf_p2 <= $wpfasty_perf_p1) {
     WP_CLI::warning('Not enough posts to compare; seed demo content first.');
-} elseif ($wpfasty_perf_q2 > $wpfasty_perf_q1) {
-    WP_CLI::error(sprintf('N+1: %d extra queries for %d extra posts', $wpfasty_perf_q2 - $wpfasty_perf_q1, $wpfasty_perf_p2 - $wpfasty_perf_p1));
+} elseif ($wpfasty_perf_q2 > $wpfasty_perf_q1 || $wpfasty_perf_l2 > $wpfasty_perf_l1) {
+    WP_CLI::error(sprintf(
+        'N+1: %d extra queries (list only: %d) for %d extra posts',
+        $wpfasty_perf_q2 - $wpfasty_perf_q1,
+        $wpfasty_perf_l2 - $wpfasty_perf_l1,
+        $wpfasty_perf_p2 - $wpfasty_perf_p1
+    ));
 }
 WP_CLI::success('No N+1 detected');
