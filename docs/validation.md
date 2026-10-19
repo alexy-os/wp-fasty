@@ -32,13 +32,49 @@ Parity is the **DOM contract**. Do not weaken it for WordPress convenience.
 | Gate | Status | Intent |
 |------|--------|--------|
 | Primitives fresh | Partial | `ui:primitives` before build; stamp records `manifest.json` |
-| Theme manifest schema | Stub | Validate `presets/themes/*.json` (layout/style/templates exist) |
+| Site manifest schema | **Enforced (CI)** | `bun run manifest:validate` — see [Site manifest v0.2](#site-manifest-v02) |
+| Preset schema | Stub | Validate `presets/themes/*.json` (layout/style/templates exist) |
 | `blockonce` on presets | **TODO** | One Block landmark per `presets/blocks/*.latte` |
 | ui8px on presets | **TODO** | Lint `class:` strings in preset Latte (+ theme views) |
 | ARIA twin IDs | **TODO** | Sheet trigger/panel/title IDs consistent in shell presets |
 | Context schema | Soft | `context.schema.json` ↔ `ContextFactory` keys |
 | No WP in Latte | Review | Ban `get_*`, `have_posts`, etc. in `.latte` |
 | No hand-edit primitives | Review | Diff / CI: `.workspaces/ui8kit-latte` only from generator |
+
+## Site manifest v0.2
+
+One JSON file describes a whole generated site; no generator consumes it yet (cycle K). Schema:
+[`schema/site.manifest.schema.json`](../schema/site.manifest.schema.json) (draft 2020-12). Examples that reproduce the
+current child themes: [`manifests/examples/`](../manifests/examples/) (`press`, `folio`, `shop`).
+
+| Section | Content |
+|---------|---------|
+| `manifestVersion`, `engine` | `"0.2"`; `latte` \| `twig` (twig reserved: no `.twig` views ship, so `wporg` must be false) |
+| `archetype` | `press` \| `folio` \| `shop` \| `blank` — child code family (PHP behaviour, view models, views) |
+| `theme` | name, slug, textDomain (= slug), prefix, namespace, description, version, uri, author (default `alexy-os`), requires, testedUpTo, license, tags |
+| `parent` | `preset` (`presets/themes/<id>.json`), `layout` (`classic` \| `app-shell`), `style` |
+| `features`, `labels` | comments, fullWidth, background, blogIndexTitle; copy overrides (readMore) |
+| `brand` | radius, fonts (body/display), `light` / `dark` shadcn token sets (oklch / hsl / hex) |
+| `settings` | `currency` (ISO 4217); money fields are integer minor units (cents) of it |
+| `postTypes[]` | labels, public, adminParent, createInAdmin, slug, archiveSlug, icon, rest, supports, metaPrefix, `fields` (type ∈ `Field::TYPES`: string, text, url, email, integer, number, money, boolean, date), metabox, `taxonomies`, `capabilities` (purchasable / orderable), `archive`, `views`, adminColumns |
+| `templates`, `views` | template → `blocks/*` from presets; view files the child owns |
+| `builder` | `enabled`, `landings[]` — `{file}` or an inline Seeder spec (page, front, menu, layout of catalog blocks + bindings) |
+| `output` | `wporg`, `typesPlugin` (`companion` mandatory when `wporg`), `includeDemo`, `playground` |
+
+Names are platform-neutral (`archiveSlug`, `rest`, `order` instead of `has_archive`, `show_in_rest`, `page-attributes`);
+the generator maps them.
+
+`bun run manifest:validate [file] [--repo]` (`tools/manifest/validate.ts`, ajv):
+
+1. **Schema** — strict draft 2020-12, formats.
+2. **Rules** — textDomain = slug; parent preset/layout and template blocks exist; unique post type / taxonomy names;
+   capability fields exist with the right type (price/sale `money`, stock `integer`); purchasable ⇒ `settings.currency`;
+   `adminParent` declared; archetype contract (folio needs `project`, shop needs purchasable `product` + orderable
+   `shop_order`); landings: Seeder shape, ≤ 1 front page, unique slugs/block ids, block + variant exist in the builder
+   catalog, data sources need their post type / taxonomy.
+3. **Repo parity** (`--repo`, always for the examples) — the manifest equals `themes/<slug>`: style.css headers,
+   `tokens.css` (`:root`, `.dark`), the set of `views/**.latte`, `types/*.php` (dumped by `tools/manifest/dump-types.php`
+   without WordPress), and feature switches in `functions.php`.
 
 ## What agents should run
 

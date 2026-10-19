@@ -1,7 +1,7 @@
 # Tooling & verification commands
 
 All commands from repo root. "CI" = run by [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)
-(since 2026-10-19): job `verify` (audit, codegen verify, lint:design, CSS drift check, PHPUnit, strict PHPCS, zip) and
+(since 2026-10-19): job `verify` (audit, site manifests, codegen verify, lint:design, CSS drift check, PHPUnit, strict PHPCS, zip) and
 job `wordpress` (WP 7.1.3 + MariaDB: Theme Check 20260901 on the unpacked zip and the 4 child themes with
 `wpfasty-types` active — any REQUIRED fails; N+1 guard for post / project / product archives).
 
@@ -11,6 +11,7 @@ job `wordpress` (WP 7.1.3 + MariaDB: Theme Check 20260901 on the unpacked zip an
 | `bun run ui:install` | copies primitives into `themes/latte/views/ui` | yes |
 | `bun run codegen:verify` | codegen typecheck + generation (also produces `generated/ui/**/*.html.twig`) | yes |
 | `bun run theme:build -- latte` | builds views from `presets/themes/latte.json` (skips empty templates) | yes |
+| `bun run manifest:validate [file] [--repo]` | `tools/manifest/validate.ts`: site manifest v0.2 — ajv schema, semantic rules (text domain, capability fields, archetype types, landing blocks/variants/sources), and parity with `themes/<slug>` (style.css, tokens, views, `types/*.php`); no file = all `manifests/examples/*.json` with parity | yes |
 | `bun run lint:design` | `tools/lint-design.ts`: token-only colors, 8/4 spacing, no half steps/arbitrary px, no raw `children` | yes |
 | `bun run css:build` | Tailwind v4 (`.workspaces/css-build`) → `themes/latte/assets/css/app.css` | yes |
 | `bun run icons` | copies used Lucide SVGs (`tools/icons.ts`) | – |

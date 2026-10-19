@@ -17,5 +17,5 @@ Rules for editing this folder:
 | [demo-content.md](demo-content.md) | Demo content completeness checklist, image licensing |
 | [tooling.md](tooling.md) | Every verification command in the repo, what it checks, CI coverage |
 | [adr-001-architecture.md](adr-001-architecture.md) | Architecture decisions (renderer, post-type modules, performance, skins) + current-state audit |
-| [schema/theme-manifest.schema.json](schema/theme-manifest.schema.json) | Draft JSON Schema for external generation (form / CLI / MCP) |
-| [schema/example.manifest.json](schema/example.manifest.json) | Example manifest validating against the schema |
+| [../../schema/site.manifest.schema.json](../../schema/site.manifest.schema.json) | Site manifest v0.2 — JSON Schema for external generation (form / CLI / MCP); replaces the 0.1 draft `schema/theme-manifest.schema.json` |
+| [../../manifests/examples/](../../manifests/examples/) | press / folio / shop manifests that reproduce the current child themes (checked by `bun run manifest:validate`) |

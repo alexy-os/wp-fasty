@@ -4,14 +4,14 @@ Catalog for `theme-builder` — the Underscores-style “questions”, expanded.
 
 | Path | Role |
 |------|------|
-| `themes/*.json` | Theme manifests (id, layout, style, template → blocks) |
+| `themes/*.json` | Parent theme presets (id, layout, style, template → blocks) consumed by `theme:build`; a site manifest ([`schema/site.manifest.schema.json`](../schema/site.manifest.schema.json)) points at one via `parent.preset` |
 | `layouts/` | Shell contracts (classic, magazine, landing, …) |
 | `blocks/*.latte` | Reusable page sections (compose UI8Kit primitives) |
 | `styles/*.css` | Color / token presets |
 
-## Example manifest
+## Example preset
 
-See `themes/latte.json`.
+See `themes/latte.json`. Whole-site examples (child theme + types + brand + landings): [`manifests/examples/`](../manifests/examples/).
 
 ## Adding a theme preset
 

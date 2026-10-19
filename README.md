@@ -76,7 +76,9 @@ wpfasty/
 ├── .cursor/rules/            # Cursor agent rules (single location)
 ├── .project/                 # theme constructor KB
 ├── docs/                     # human-facing documentation
-├── presets/                  # layouts × blocks × styles × manifests
+├── presets/                  # layouts × blocks × styles × parent presets
+├── schema/                   # site.manifest.schema.json (v0.2)
+├── manifests/examples/       # press / folio / shop site manifests
 ├── themes/<slug>/            # WordPress theme instances
 └── tools/
 ```
