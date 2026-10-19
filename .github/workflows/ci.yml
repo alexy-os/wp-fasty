@@ -39,9 +39,8 @@ jobs:
       - name: PHPUnit
         run: composer test
 
-      - name: PHPCS
-        continue-on-error: true
-        run: composer phpcs
+      - name: PHPCS (errors fail the build; warnings ignored)
+        run: composer phpcs -- --warning-severity=0
 
       - name: Pack theme zip
         run: bun run theme:pack -- latte
