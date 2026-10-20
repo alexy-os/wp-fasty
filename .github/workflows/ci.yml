@@ -99,10 +99,20 @@ jobs:
       - name: Pack theme zip
         run: bun run theme:pack -- latte
 
+      - name: Package site examples (theme:package → dist/<slug>/ zips + Playground bundle)
+        run: |
+          for t in press folio shop; do bun run theme:package "manifests/examples/$t.json"; done
+          { echo "### Packages"; echo "| file | bytes |"; echo "|---|---|"
+            for f in dist/latte.zip dist/latte-*/*; do echo "| \`$f\` | $(stat -c %s "$f") |"; done; } >> "$GITHUB_STEP_SUMMARY"
+
       - uses: actions/upload-artifact@v4
         with:
-          name: latte-zip
-          path: dist/latte.zip
+          name: dist
+          path: |
+            dist/latte.zip
+            dist/latte-press
+            dist/latte-folio
+            dist/latte-shop
           retention-days: 7
 
   wordpress:
@@ -146,7 +156,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: latte-zip
+          name: dist
           path: dist
 
       - name: Cache WordPress core + Theme Check
@@ -168,18 +178,23 @@ jobs:
           wp config set WP_DEBUG_LOG "'/tmp/wp-debug.log'" --raw
           wp core install --url=http://localhost --title=CI --admin_user=admin --admin_password=admin \
             --admin_email=ci@example.com --skip-email
-          unzip -q "$GITHUB_WORKSPACE/dist/latte.zip" -d wp-content/themes/
-          for t in latte-press latte-folio latte-shop latte-skin; do
-            rsync -a --exclude '~cache' "$GITHUB_WORKSPACE/themes/$t" wp-content/themes/
+          # Everything under test comes from the theme:package zips (dist artifact), not from repo folders.
+          D="$GITHUB_WORKSPACE/dist"
+          unzip -q "$D/latte.zip" -d wp-content/themes/
+          for t in latte-press latte-folio latte-shop; do
+            unzip -q "$D/$t/$t.zip" -d wp-content/themes/
+            mkdir -p "/tmp/demo-$t" && unzip -q "$D/$t/demo.zip" -d "/tmp/demo-$t"
           done
-          rsync -a "$GITHUB_WORKSPACE/plugins/wpfasty-types" wp-content/plugins/
-          rsync -a --exclude editor "$GITHUB_WORKSPACE/plugins/wpfasty-builder" wp-content/plugins/
+          unzip -q "$D/latte-shop/wpfasty-types.zip" -d wp-content/plugins/
+          unzip -q "$D/latte-shop/wpfasty-builder.zip" -d wp-content/plugins/
+          # latte-skin has no site manifest yet: still from the repo.
+          rsync -a --exclude '~cache' "$GITHUB_WORKSPACE/themes/latte-skin" wp-content/themes/
           unzip -q /tmp/wp-dl/tc.zip -d wp-content/plugins/
           wp plugin activate wpfasty-types wpfasty-builder theme-check
           wp rewrite structure '/%postname%/' --hard
           wp theme list --fields=name,version,status
 
-      - name: Theme Check — no REQUIRED issues (parent from zip + 4 child themes)
+      - name: Theme Check — no REQUIRED issues (parent + 3 packaged children from theme:package zips, latte-skin from repo)
         run: |
           cd /tmp/wp
           fail=0
@@ -199,26 +214,6 @@ jobs:
             fi
           done
           { echo "### Theme Check ${THEME_CHECK_VERSION} (WP ${WP_VERSION})"; echo "| theme | REQUIRED | WARNING | RECOMMENDED |"; echo "|---|---|---|---|"; cat /tmp/tc-summary.md; } >> "$GITHUB_STEP_SUMMARY"
-          exit $fail
-
-      - name: Theme Check — generated child themes (theme:generate from manifests/examples), no REQUIRED issues
-        run: |
-          fail=0
-          for t in press folio shop; do
-            slug=$(bun -e "console.log(require('./manifests/examples/$t.json').theme.slug)")
-            bun run theme:generate "manifests/examples/$t.json" --out "/tmp/gen/$slug"
-            cd /tmp/wp
-            mv "wp-content/themes/$slug" "/tmp/orig-$slug"
-            cp -r "/tmp/gen/$slug" wp-content/themes/
-            code=0
-            PAGER=cat wp theme-check run "$slug" > "/tmp/tcg-$slug.txt" 2>&1 || code=$?
-            r=$(grep -c '^REQUIRED' "/tmp/tcg-$slug.txt" || true)
-            echo "::group::generated $slug — exit $code, REQUIRED $r"; cat "/tmp/tcg-$slug.txt"; echo "::endgroup::"
-            echo "| $slug (generated) | $r |" >> "$GITHUB_STEP_SUMMARY"
-            rm -rf "wp-content/themes/$slug" && mv "/tmp/orig-$slug" "wp-content/themes/$slug"
-            if [ "$r" -ne 0 ] || [ "$code" -ne 0 ]; then echo "::error::Theme Check generated $slug: REQUIRED=$r exit=$code"; fail=1; fi
-            cd "$GITHUB_WORKSPACE"
-          done
           exit $fail
 
       - name: N+1 guard — seeded items with thumbnails, terms, typed meta, several authors (2 vs 6)
@@ -254,8 +249,8 @@ jobs:
           fail=0
           for site in press folio shop; do
             wp theme activate "latte-$site" --quiet
-            # Shorter file first (the front-page landing), as in the Playground blueprints.
-            for f in $(ls "$GITHUB_WORKSPACE"/tools/builder/landings/$site*.json | awk '{ print length, $0 }' | sort -n | cut -d' ' -f2); do
+            # Landings from the packaged demo.zip, in manifest order (front page first).
+            for f in $(bun -e "for (const l of require('$GITHUB_WORKSPACE/manifests/examples/$site.json').builder.landings) console.log('/tmp/demo-latte-$site/wpfasty-demo/landings/' + l.file.split('/').pop())"); do
               out=$(wp eval-file "$GITHUB_WORKSPACE/tools/builder/seed-landing.php" "$f" 2>&1) || { echo "$out"; exit 1; }
               echo "$out"
               id=$(echo "$out" | sed -n 's/^Success: Page \([0-9]*\) .*/\1/p')
