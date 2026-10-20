@@ -2,6 +2,7 @@
   "$comment": "Archetype package: everything a folio child theme needs beyond the manifest. Consumed by `bun run theme:generate`.",
   "id": "folio",
   "sourceTextDomain": "latte-folio",
+  "sourceNamespace": "LatteFolio",
   "summary": "portfolio child theme of Latte",
   "palette": "dark, high-contrast portfolio palette",
   "copyrightYear": 2026,

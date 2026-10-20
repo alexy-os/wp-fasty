@@ -2,6 +2,7 @@
   "$comment": "Archetype package: everything a shop child theme needs beyond the manifest. Consumed by `bun run theme:generate`.",
   "id": "shop",
   "sourceTextDomain": "latte-shop",
+  "sourceNamespace": "LatteShop",
   "summary": "WooCommerce-free shop child theme of Latte",
   "palette": "fresh retail palette",
   "copyrightYear": 2026,

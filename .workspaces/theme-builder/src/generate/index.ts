@@ -64,6 +64,18 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
         }
   if (arch.views && existsSync(join(adir, arch.views))) cpSync(join(adir, arch.views), join(dir, "views"), { recursive: true });
 
+  // Same for the PHP namespace (namespace LatteShop; LatteShop\\Money::…) across every emitted PHP file.
+  const ns = m.theme.namespace ?? pascalCase(m.theme.slug);
+  if (arch.sourceNamespace && arch.sourceNamespace !== ns) {
+    const word = new RegExp(`(?<![A-Za-z0-9_])${arch.sourceNamespace}(?![A-Za-z0-9_])`, "g");
+    for (const rel of files(dir).filter((r) => r.endsWith(".php"))) {
+      const p = join(dir, rel);
+      const src = readFileSync(p, "utf8");
+      const out = src.replace(word, ns);
+      if (out !== src) writeFileSync(p, out);
+    }
+  }
+
   if (opts.pot) {
     if (!hasWp()) throw new Error("wp-cli not found (needed for languages/*.pot); pass --no-pot to skip");
     const slug = m.theme.textDomain;
@@ -75,6 +87,9 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
   }
   return dir;
 }
+
+export const pascalCase = (slug: string): string =>
+  slug.split("-").filter(Boolean).map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join("");
 
 function files(dir: string, base = dir): string[] {
   return readdirSync(dir).flatMap((n) => {

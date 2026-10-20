@@ -2,6 +2,7 @@
   "$comment": "Archetype package: everything a press child theme needs beyond the manifest. Consumed by `bun run theme:generate`.",
   "id": "press",
   "sourceTextDomain": "latte-press",
+  "sourceNamespace": "LattePress",
   "summary": "classic blog child theme of Latte",
   "palette": "editorial warm palette",
   "copyrightYear": 2026,

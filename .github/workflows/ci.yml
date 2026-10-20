@@ -55,8 +55,10 @@ jobs:
           bun install --frozen-lockfile
           bun run manifest:validate
 
-      - name: Generator round-trip (manifests/examples → themes/<slug>, byte-identical)
-        run: bun run theme:roundtrip
+      - name: Generator round-trip (byte-identical) + slug retarget test (namespace, text domain)
+        run: |
+          bun run theme:roundtrip
+          bun run generate:test
 
       - name: Configurator self-test + static form up to date
         run: |
