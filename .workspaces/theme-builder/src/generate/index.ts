@@ -52,6 +52,16 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
     write(dir, `types/${pt.name}.php`, typePhp(pt, m, extra));
   }
   if (arch.inc && existsSync(join(adir, arch.inc))) cpSync(join(adir, arch.inc), join(dir, "inc"), { recursive: true });
+  // Archetype code is copied verbatim but written for its reference theme: retarget its text domain literals.
+  if (arch.sourceTextDomain && arch.sourceTextDomain !== m.theme.textDomain)
+    for (const sub of ["inc", "views"])
+      if (existsSync(join(dir, sub)))
+        for (const rel of files(join(dir, sub))) {
+          const p = join(dir, sub, rel);
+          const src = readFileSync(p, "utf8");
+          const out = src.split(`'${arch.sourceTextDomain}'`).join(`'${m.theme.textDomain}'`);
+          if (out !== src) writeFileSync(p, out);
+        }
   if (arch.views && existsSync(join(adir, arch.views))) cpSync(join(adir, arch.views), join(dir, "views"), { recursive: true });
 
   if (opts.pot) {
