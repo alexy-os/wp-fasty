@@ -9,13 +9,13 @@ const json = (p: string): J => JSON.parse(readFileSync(p, "utf8"));
 
 export function loadData(): Data {
   const examples: Record<string, J> = {};
-  for (const f of readdirSync(join(root, "manifests/examples")).filter((n) => n.endsWith(".json"))) {
+  for (const f of readdirSync(join(root, "manifests/examples")).filter((n) => n.endsWith(".json")).sort()) {
     const m = json(join(root, "manifests/examples", f));
     // Only archetypes with a package can be generated.
     if (existsSync(join(root, "presets/archetypes", m.archetype, "archetype.json"))) examples[m.archetype] = m;
   }
   const palettes: Record<string, J> = {};
-  for (const f of readdirSync(join(root, "presets/palettes")).filter((n) => n.endsWith(".json"))) {
+  for (const f of readdirSync(join(root, "presets/palettes")).filter((n) => n.endsWith(".json")).sort()) {
     const p = json(join(root, "presets/palettes", f));
     palettes[p.id] = p;
   }
