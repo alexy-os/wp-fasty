@@ -14,6 +14,10 @@ job `wordpress` (WP 7.1.3 + MariaDB: Theme Check 20260901 on the unpacked zip an
 | `bun run manifest:validate [file] [--repo]` | `tools/manifest/validate.ts`: site manifest v0.2 — ajv schema, semantic rules (text domain, capability fields, archetype types, landing blocks/variants/sources), and parity with `themes/<slug>` (style.css, tokens, views, `types/*.php`); no file = all `manifests/examples/*.json` with parity | yes |
 | `bun run theme:generate <manifest> [--out dir] [--no-pot]` | manifest + `presets/archetypes/<id>/` → child theme (default `dist/generated/<slug>`); validates the manifest first | – |
 | `bun run theme:package <manifest> [--out dir]` | release set in `dist/<slug>/`: `latte.zip` (reused / `theme:pack`), `<slug>.zip`, `wpfasty-types.zip` (`output.typesPlugin=companion` and post types), `wpfasty-builder.zip` (`builder.enabled`), `demo.zip` (`output.includeDemo`), `blueprint.json` + `<slug>-playground.zip` (`output.playground`), `site.manifest.json` | yes (artifact `dist`) |
+| `bun run theme:new-site [--answers f.json] [--out f.json] [--package]` | configurator: answers (interactive prompts without `--answers`) → validated manifest in `dist/manifests/<slug>.json`, optionally packaged; fixtures `manifests/answers/*.json` | yes |
+| `bun run configure:test` | `buildManifest` self-test: reference answers rebuild `manifests/examples/*.json` exactly; contrast / clash / reserved-name / palette rejections | yes |
+| `bun run configure:form` | regenerates the static form `configurator/index.html` (committed; CI fails on drift) | yes |
+| `bun run mcp:server` / `bun run mcp:smoke` | MCP stdio configurator server (`tools/mcp/README.md`); smoke calls all five tools | yes (smoke) |
 | `bun run theme:roundtrip` | regenerates every example with a packaged archetype; must equal `themes/<slug>` byte for byte (pot date lines normalized) | yes |
 | `bun run lint:design` | `tools/lint-design.ts`: token-only colors, 8/4 spacing, no half steps/arbitrary px, no raw `children` | yes |
 | `bun run css:build` | Tailwind v4 (`.workspaces/css-build`) → `themes/latte/assets/css/app.css` | yes |

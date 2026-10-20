@@ -129,7 +129,7 @@ dist/latte.zip               release artifact (gitignored)
 
 ## Open cycle
 
-**→ Cycle K — Configurator** (see [Cycle K](#cycle-k--configurator-2026-10-19)); next stage K5 (form / CLI / MCP). Follow-ups below stay open.
+**→ Cycle K — Configurator** (see [Cycle K](#cycle-k--configurator-2026-10-19)); next stage K6 (Twig views) or K7 (publish the form / MCP package). Follow-ups below stay open.
 
 | # | Task | Done |
 |---|------|------|
@@ -308,7 +308,7 @@ A Parent correctness ✓
 | K2 | Generator `bun run theme:generate <manifest> [--out dir]`: manifest + archetype package (`presets/archetypes/<id>/`) → style.css, functions.php, tokens.css, `types/*.php`, views, readme.txt, `.pot` (wp-cli) | `9eedf43`, `71f0eda`, folio/shop: `b7f82ee`, `0fb755e`; folio/shop `types/*.php` regenerated (`a554ab1`, docblock-only diff, dumper content identical) | [x] |
 | K3 | Round-trip gate `bun run theme:roundtrip` (CI `verify`): examples regenerate byte-identical to `themes/<slug>` (only `.pot` date/generator lines normalized); Theme Check on the generated theme (CI `wordpress`, 0 REQUIRED) | `572dff8` (press), `4449ddd` (folio, shop) | [x] |
 | K4 | `bun run theme:package <manifest> [--out dist/<slug>/]`: parent `latte.zip` (reused), generated child zip, `wpfasty-types.zip` (companion), `wpfasty-builder.zip`, separate `demo.zip` (seeder, bundled images, landings), `blueprint.json` + `<slug>-playground.zip` bundle (all resources `bundled`, no external URLs); wpfasty-types keeps reading the active theme's `types/`. CI packages the three examples, runs Theme Check / N+1 guard / landing smoke on the unzipped packages, uploads `dist` | `3408eb8`, `7939780`, CI run 39402141286 | [x] |
-| K5 | Front ends: web form / CLI prompts / MCP tool producing a manifest | – | [ ] |
+| K5 | Configurator front ends over one pure `buildManifest(answers)` (`.workspaces/theme-builder/src/configure/`): fixed palettes `presets/palettes/` (free tokens only past a WCAG AA 4.5:1 gate), extra post types on any archetype (clash / reserved-name checks); `bun run theme:new-site` (interactive or `--answers`, `--package`); MCP stdio server `tools/mcp/` (5 tools, writes only to `dist/`); static form `configurator/index.html` (`bun run configure:form`); CI: self-test (examples rebuilt exactly from answers), form drift, MCP smoke, 4 answers fixtures → package → Theme Check 0 REQUIRED. Playground bundle verified end to end locally (Playground CLI, Node 24) | `1968cd9`, `80bbf2f`, `c512817`, `2a2bb0c`, `b6ce7c9`, `f5f4994`, `70197ba`, CI run 39409753325 | [x] |
 | K6 | Twig engine: ship `.twig` views so `engine: twig` is buildable | – | [ ] |
 
 ---
@@ -328,6 +328,8 @@ bun run manifest:validate          # site manifests (schema + rules + parity)
 bun run theme:generate manifests/examples/press.json --out /tmp/latte-press
 bun run theme:roundtrip            # generated == themes/<slug> for packaged archetypes
 bun run theme:package manifests/examples/shop.json   # → dist/latte-shop/ (zips + Playground bundle)
+bun run theme:new-site --answers manifests/answers/press-events.json --package   # answers → manifest → dist/<slug>/
+bun run configure:test && bun run configure:form && bun run mcp:smoke
 
 # Docker (local)
 bun run dev:up
@@ -373,6 +375,7 @@ bun run dev:wp -- theme activate latte-skin
 | 2026-10-16 | Shop is WooCommerce-free; money stored as integer cents, currency via `wpfasty_currency` |
 | 2026-10-16 | Previews via WordPress Playground blueprints (repo is private; zips mirrored outside the repo) |
 | 2026-10-17 | Landings are a plugin (`wpfasty-builder`), not theme code; layouts validated by `@ui8kit/contract` |
+| 2026-10-20 | K5: brand = fixed palette list, free tokens only with WCAG AA contrast; custom post types allowed on top of any archetype; MCP server lives in the repo (separate package later) |
 | 2026-10-20 | K4: demo ships as a separate `demo.zip`; wpfasty-types keeps reading the active theme's `types/` (no generated plugin config) |
 | 2026-10-19 | One site manifest (`schema/site.manifest.schema.json` v0.2) replaces the 0.1 theme-manifest draft; `presets/themes/*.json` stay parent presets referenced by `parent.preset`; platform-neutral names, money in cents; `wporg` ⇒ types in the companion plugin |
 

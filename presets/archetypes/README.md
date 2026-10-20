@@ -33,3 +33,16 @@ result to equal `themes/<slug>` byte for byte (only the `.pot` `POT-Creation-Dat
 | `demo.zip` | `output.includeDemo` | `wpfasty-demo/`: `common.php`, the archetype seeder (`archetype.json` → `demo`), `images/` taken from the committed `playground/demo.zip` (missing seeds are fetched by `common.php` at seeding time), `landings/` from the manifest |
 | `blueprint.json`, `<slug>-playground.zip` | `output.playground` | Playground blueprint (install parent + child + plugins, activate, permalinks, unzip demo, run seeder, seed landings in manifest order); every resource is `bundled`, so the bundle zip (one top-level folder) is self-contained — no gist or other external URLs |
 | `site.manifest.json` | always | copy of the input manifest |
+
+## Configurator
+
+`buildManifest(answers)` (`.workspaces/theme-builder/src/configure/core.ts`) starts from
+`manifests/examples/<archetype>.json` and applies the answers: name/slug (text domain = slug, prefix = last slug word,
+namespace = PascalCase slug), a palette from `presets/palettes/*.json` or free tokens (rejected below WCAG AA 4.5:1 on
+any text/surface pair), features, currency, a landing subset, output flags, and extra post types appended to the
+archetype's required ones (name/taxonomy clashes and reserved platform names rejected). Archetype code written for the
+reference theme has its text domain literal retargeted (`archetype.json` → `sourceTextDomain`). Front ends:
+`bun run theme:new-site`, the MCP server (`tools/mcp/`), and the static form `configurator/index.html`.
+
+Note: the `neutral` palette (shadcn default) has light `muted-foreground` on `muted` at 4.34:1; presets are a fixed,
+reviewed list and are not gated, custom tokens are.
