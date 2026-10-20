@@ -9,4 +9,6 @@ Everything runs in the visitor's browser — no server.
 - Latte Folio (portfolio): `folio`
 - Latte Shop (no WooCommerce): `shop`
 
+Self-contained alternative (no gist): `bun run theme:package manifests/examples/<site>.json` writes `dist/<slug>/<slug>-playground.zip`, a blueprint bundle loadable with `?blueprint-url=<hosted zip>`.
+
 Rebuild after theme changes: `bash tools/playground-build.sh`, re-upload `*.zip` as base64 to the gist, regenerate URLs.
