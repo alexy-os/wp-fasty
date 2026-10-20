@@ -79,7 +79,10 @@ export function buildManifest(a: Answers, data: Data): { manifest: J; warnings: 
   if (a.palette) {
     const p = data.palettes[a.palette];
     if (!p) problems.push(`unknown palette "${a.palette}" (have: ${Object.keys(data.palettes).join(", ")})`);
-    else m.brand = { radius: p.radius, ...(p.fonts ? { fonts: p.fonts } : {}), light: p.light, ...(p.dark ? { dark: p.dark } : {}) };
+    else {
+      for (const i of checkTokens({ light: p.light, dark: p.dark })) problems.push(`palette ${a.palette}: contrast ${i.scheme} ${i.fg} on ${i.bg} is ${i.ratio}:1 (< ${AA}:1 WCAG AA)`);
+      m.brand = { radius: p.radius, ...(p.fonts ? { fonts: p.fonts } : {}), light: p.light, ...(p.dark ? { dark: p.dark } : {}) };
+    }
   } else if (a.tokens) {
     const issues = checkTokens({ light: a.tokens.light, dark: a.tokens.dark });
     for (const i of issues) problems.push(`contrast ${i.scheme} ${i.fg} on ${i.bg} is ${i.ratio}:1 (< ${AA}:1 WCAG AA)`);
