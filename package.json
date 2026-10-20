@@ -41,11 +41,15 @@
     "theme:roundtrip": "bun .workspaces/theme-builder/src/cli.ts roundtrip",
     "theme:package": "bun .workspaces/theme-builder/src/cli.ts package",
     "theme:new-site": "bun .workspaces/theme-builder/src/cli.ts new-site",
-    "configure:test": "bun .workspaces/theme-builder/src/configure/selftest.ts"
+    "configure:test": "bun .workspaces/theme-builder/src/configure/selftest.ts",
+    "mcp:server": "bun tools/mcp/server.ts",
+    "mcp:smoke": "bun tools/mcp/smoke.ts"
   },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
     "@ui8kit/contract": "^0.2.0",
     "ajv": "^8",
-    "ajv-formats": "^3"
+    "ajv-formats": "^3",
+    "zod": "^4.6.7"
   }
 }
