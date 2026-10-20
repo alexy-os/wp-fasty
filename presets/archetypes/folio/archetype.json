@@ -1,0 +1,23 @@
+{
+  "$comment": "Archetype package: everything a folio child theme needs beyond the manifest. Consumed by `bun run theme:generate`.",
+  "id": "folio",
+  "summary": "portfolio child theme of Latte",
+  "palette": "dark, high-contrast portfolio palette",
+  "copyrightYear": 2026,
+  "views": "views",
+  "inc": "inc",
+  "templates": {
+    "functions.php": "templates/functions.php.tpl",
+    "readme.txt": "templates/readme.txt.tpl",
+    "style.body": "templates/style.body.css"
+  },
+  "requiresTypes": [
+    "project"
+  ],
+  "demo": "tools/demo/folio.php",
+  "playground": "playground/folio.json",
+  "landings": [
+    "tools/builder/landings/folio.json",
+    "tools/builder/landings/folio-services.json"
+  ]
+}

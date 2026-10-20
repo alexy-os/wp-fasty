@@ -1,0 +1,36 @@
+{** Latte Shop — home: hero, perks, featured products. *}
+{include 'blocks/notice.latte'}
+<section class="container mx-auto px-4 py-8 md:px-6">
+	<div class="grid items-center gap-8 overflow-hidden rounded-2xl bg-secondary p-8 md:grid-cols-2 md:p-16">
+		<div class="flex flex-col gap-6">
+			<h1 class="text-4xl font-bold leading-tight tracking-tight text-secondary-foreground md:text-5xl">{if !empty($page['title'])}{$page['title']}{else}{$site['title']}{/if}</h1>
+			{if !empty($page['excerpt'])}<p class="text-lg text-muted-foreground">{$page['excerpt']}</p>{/if}
+			<div><a href="{$shop['url']}" class="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90">{icon('shopping-bag')}{$labels['shop_now']}</a></div>
+		</div>
+		{if !empty($page['featuredImage']['url'])}
+			{include 'image/Image.latte', src: $page['featuredImage']['url'], alt: $page['featuredImage']['alt'] ?? '', class: 'aspect-[4/3] w-full rounded-xl object-cover', loading: 'eager'}
+		{/if}
+	</div>
+</section>
+
+<section class="container mx-auto px-4 py-8 md:px-6">
+	<ul class="grid gap-4 md:grid-cols-3">
+		<li class="flex items-center gap-4 rounded-xl border border-border bg-card p-4"><span class="text-primary">{icon('truck', 'size-6')}</span><span class="text-sm">{$labels['free_shipping_over']}</span></li>
+		<li class="flex items-center gap-4 rounded-xl border border-border bg-card p-4"><span class="text-primary">{icon('rotate-ccw', 'size-6')}</span><span class="text-sm">{$labels['returns']}</span></li>
+		<li class="flex items-center gap-4 rounded-xl border border-border bg-card p-4"><span class="text-primary">{icon('shield-check', 'size-6')}</span><span class="text-sm">{$labels['pay_options']}</span></li>
+	</ul>
+</section>
+
+{if !empty($products)}
+	<section class="container mx-auto px-4 py-16 md:px-6">
+		<div class="mb-8 flex items-end justify-between gap-4">
+			<h2 class="text-2xl font-semibold tracking-tight md:text-3xl">{$labels['featured']}</h2>
+			<a href="{$shop['url']}" class="inline-flex items-center gap-2 text-sm font-medium text-primary no-underline">{$labels['shop_now']}{icon('arrow-right')}</a>
+		</div>
+		<div class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+			{foreach $products as $product}
+				{include 'blocks/product-card.latte', product: $product, shop: $shop, labels: $labels}
+			{/foreach}
+		</div>
+	</section>
+{/if}

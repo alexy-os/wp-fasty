@@ -1,0 +1,49 @@
+{** Latte Shop — cart. *}
+{include 'blocks/notice.latte'}
+<section class="container mx-auto px-4 py-12 md:px-6">
+	<h1 class="mb-8 text-3xl font-bold tracking-tight">{$labels['cart']}</h1>
+	{if empty($cart['items'])}
+		<div class="flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center">
+			<span class="text-muted-foreground">{icon('shopping-cart', 'size-8')}</span>
+			<p class="text-muted-foreground">{$labels['empty_cart']}</p>
+			<a href="{$shop['url']}" class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline">{$labels['continue_shopping']}</a>
+		</div>
+	{else}
+		<div class="grid gap-8 lg:grid-cols-[1fr_360px]">
+			<form method="post" action="{$shop['action']}" class="flex flex-col gap-4">
+				<input type="hidden" name="action" value="latte_shop_cart">
+				<input type="hidden" name="op" value="update">
+				<input type="hidden" name="_wpnonce" value="{$shop['cart_nonce']}">
+				<ul class="flex flex-col divide-y divide-border rounded-xl border border-border bg-card">
+					{foreach $cart['items'] as $item}
+						<li class="flex items-center gap-4 p-4">
+							{if $item['image']}<img src="{$item['image']}" alt="" class="size-16 rounded-lg object-cover" loading="lazy">{else}<span class="flex size-16 items-center justify-center rounded-lg bg-muted text-muted-foreground">{icon('package')}</span>{/if}
+							<div class="flex min-w-0 flex-1 flex-col gap-2">
+								<a href="{$item['url']}" class="font-medium text-foreground no-underline hover:text-primary">{$item['title']}</a>
+								<span class="text-sm text-muted-foreground">{$item['unit_display']}</span>
+							</div>
+							<label class="sr-only" for="qty-{$item['id']}">{$labels['qty']}</label>
+							<div class="w-20 shrink-0">{include 'input/Input.latte', id: 'qty-' . $item['id'], type: 'number', name: 'qtys[' . $item['id'] . ']', value: (string) $item['qty'], min: '0', max: '99'}</div>
+							<span class="w-24 text-right font-semibold">{$item['line_display']}</span>
+							<button type="submit" form="remove-{$item['id']}" class="inline-flex size-10 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-destructive" aria-label="{$labels['remove']}: {$item['title']}">{icon('trash-2')}</button>
+						</li>
+					{/foreach}
+				</ul>
+				<div class="flex flex-wrap justify-between gap-4">
+					<a href="{$shop['url']}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{icon('arrow-left')}{$labels['continue_shopping']}</a>
+					{capture $upd}{icon('rotate-ccw')}{$labels['update_cart']}{/capture}
+					{include 'button/Button.latte', type: 'submit', variant: 'outline', children: (string) $upd}
+				</div>
+			</form>
+			{foreach $cart['items'] as $item}
+				<form id="remove-{$item['id']}" method="post" action="{$shop['action']}" hidden>
+					<input type="hidden" name="action" value="latte_shop_cart">
+					<input type="hidden" name="op" value="remove">
+					<input type="hidden" name="product_id" value="{$item['id']}">
+					<input type="hidden" name="_wpnonce" value="{$shop['cart_nonce']}">
+				</form>
+			{/foreach}
+			{include 'blocks/order-summary.latte', cart: $cart, labels: $labels}
+		</div>
+	{/if}
+</section>

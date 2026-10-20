@@ -1,0 +1,27 @@
+{** Latte Folio — work archive with type filter. *}
+<section class="container mx-auto px-4 pb-8 pt-16 md:px-6">
+	<h1 class="text-4xl font-bold tracking-tight md:text-5xl">{$archive['title']}</h1>
+	{if !empty($archive['description'])}
+		<div class="mt-4 max-w-2xl text-muted-foreground">{$archive['description']|noescape}</div>
+	{/if}
+	{if !empty($work['types'])}
+		<nav class="mt-8 flex flex-wrap gap-2" aria-label="{$labels['all_work']}">
+			<a href="{$work['url']}" n:class="'inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $work['current'] === '' ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent'" aria-current="{$work['current'] === '' ? 'page' : null}">{$labels['all_work']}</a>
+			{foreach $work['types'] as $type}
+				<a href="{$type['url']}" n:class="'inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $work['current'] === $type['slug'] ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent'" aria-current="{$work['current'] === $type['slug'] ? 'page' : null}">{$type['name']}</a>
+			{/foreach}
+		</nav>
+	{/if}
+</section>
+
+<section class="container mx-auto px-4 py-8 md:px-6">
+	{if empty($posts)}
+		<p class="py-16 text-center text-muted-foreground">{$labels['no_projects']}</p>
+	{else}
+		<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+			{foreach $posts as $project}
+				{include 'blocks/project-card.latte', project: $project, labels: $labels}
+			{/foreach}
+		</div>
+	{/if}
+</section>

@@ -1,0 +1,62 @@
+{** Latte Folio — home: hero, selected work, services, contact CTA. *}
+<section class="container mx-auto px-4 pb-16 pt-24 md:px-6 md:pt-32">
+	<div class="flex max-w-4xl flex-col gap-6">
+		<span class="inline-flex w-fit items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-muted-foreground">
+			<span class="size-2 rounded-full bg-primary"></span>{$site['description']}
+		</span>
+		<h1 class="text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+			{if !empty($page['title'])}{$page['title']}{else}{$site['title']}{/if}
+		</h1>
+		{if !empty($page['excerpt'])}
+			<p class="max-w-2xl text-lg text-muted-foreground">{$page['excerpt']}</p>
+		{/if}
+		<div class="flex flex-wrap gap-4">
+			<a href="#work" class="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90">{$labels['selected_work']}{icon('arrow-right')}</a>
+			<a href="{$contact_url}" class="inline-flex h-12 items-center gap-2 rounded-md border border-border px-6 text-sm font-semibold text-foreground no-underline hover:bg-accent">{icon('mail')}{$labels['contact']}</a>
+		</div>
+	</div>
+</section>
+
+{if !empty($projects)}
+	<section id="work" class="container mx-auto px-4 py-16 md:px-6">
+		<div class="mb-8 flex items-end justify-between gap-4">
+			<h2 class="text-2xl font-semibold tracking-tight md:text-3xl">{$labels['selected_work']}</h2>
+			<a href="{$work['url']}" class="inline-flex items-center gap-2 text-sm font-medium text-primary no-underline">{$labels['all_work']}{icon('arrow-up-right')}</a>
+		</div>
+		<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+			{foreach $projects as $project}
+				{include 'blocks/project-card.latte', project: $project, labels: $labels}
+			{/foreach}
+		</div>
+	</section>
+{/if}
+
+{if !empty($services)}
+	<section class="container mx-auto px-4 py-16 md:px-6">
+		<div class="grid gap-6 md:grid-cols-3">
+			{foreach $services as $service}
+				{capture $svc}
+					<div class="flex flex-col gap-4 p-6">
+						<span class="inline-flex size-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">{icon($service['icon'], 'size-6')}</span>
+						<h3 class="text-lg font-semibold">{$service['title']}</h3>
+						<p class="text-sm text-muted-foreground">{$service['text']}</p>
+					</div>
+				{/capture}
+				{include 'card/Card.latte', class: 'border-border', children: (string) $svc}
+			{/foreach}
+		</div>
+	</section>
+{/if}
+
+{if !empty($page['content'])}
+	<section class="container mx-auto max-w-3xl px-4 py-16 md:px-6">
+		<div class="prose max-w-none">{$page['content']|noescape}</div>
+	</section>
+{/if}
+
+<section class="container mx-auto px-4 py-16 md:px-6">
+	<div class="flex flex-col items-start gap-6 rounded-2xl border border-border bg-card p-8 md:flex-row md:items-center md:justify-between md:p-12">
+		<h2 class="text-2xl font-semibold tracking-tight md:text-3xl">{$labels['contact']}?</h2>
+		<a href="{$contact_url}" class="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90">{icon('send')}{$labels['contact']}</a>
+	</div>
+</section>

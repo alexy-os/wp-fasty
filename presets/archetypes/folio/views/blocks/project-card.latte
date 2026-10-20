@@ -1,0 +1,29 @@
+{**
+ * Folio — project card. Params: $project (post view-model), $labels
+ *}
+<article class="group flex flex-col gap-4">
+	<a href="{$project['url']}" class="block overflow-hidden rounded-xl border border-border bg-card no-underline" aria-label="{$project['title']}">
+		{if !empty($project['featuredImage']['url'])}
+			{include 'image/Image.latte', src: $project['featuredImage']['url'], alt: $project['featuredImage']['alt'] ?? '', srcset: $project['featuredImage']['srcset'] ?? '', sizes: '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw', class: 'aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105', loading: 'lazy'}
+		{else}
+			<div class="flex aspect-[4/3] items-center justify-center text-muted-foreground">{icon('image', 'size-8')}</div>
+		{/if}
+	</a>
+	<div class="flex items-start justify-between gap-4">
+		<div class="flex flex-col gap-2">
+			<h3 class="text-lg font-semibold leading-tight">
+				<a href="{$project['url']}" class="text-foreground no-underline hover:text-primary">{$project['title']}</a>
+			</h3>
+			{if !empty($project['types'])}
+				<div class="flex flex-wrap gap-2">
+					{foreach $project['types'] as $type}
+						{capture $typeName}{$type['name']}{/capture}{include 'badge/Badge.latte', variant: 'secondary', children: (string) $typeName}
+					{/foreach}
+				</div>
+			{/if}
+		</div>
+		{if !empty($project['project']['year']['value'])}
+			<span class="text-sm text-muted-foreground">{$project['project']['year']['value']}</span>
+		{/if}
+	</div>
+</article>

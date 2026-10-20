@@ -1,0 +1,24 @@
+{
+  "$comment": "Archetype package: everything a shop child theme needs beyond the manifest. Consumed by `bun run theme:generate`.",
+  "id": "shop",
+  "summary": "WooCommerce-free shop child theme of Latte",
+  "palette": "fresh retail palette",
+  "copyrightYear": 2026,
+  "views": "views",
+  "inc": "inc",
+  "templates": {
+    "functions.php": "templates/functions.php.tpl",
+    "readme.txt": "templates/readme.txt.tpl",
+    "style.body": "templates/style.body.css"
+  },
+  "requiresTypes": [
+    "product",
+    "shop_order"
+  ],
+  "demo": "tools/demo/shop.php",
+  "playground": "playground/shop.json",
+  "landings": [
+    "tools/builder/landings/shop.json",
+    "tools/builder/landings/shop-sale.json"
+  ]
+}
