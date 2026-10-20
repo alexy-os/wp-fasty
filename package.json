@@ -39,7 +39,9 @@
     "manifest:validate": "bun tools/manifest/validate.ts",
     "theme:generate": "bun .workspaces/theme-builder/src/cli.ts generate",
     "theme:roundtrip": "bun .workspaces/theme-builder/src/cli.ts roundtrip",
-    "theme:package": "bun .workspaces/theme-builder/src/cli.ts package"
+    "theme:package": "bun .workspaces/theme-builder/src/cli.ts package",
+    "theme:new-site": "bun .workspaces/theme-builder/src/cli.ts new-site",
+    "configure:test": "bun .workspaces/theme-builder/src/configure/selftest.ts"
   },
   "devDependencies": {
     "@ui8kit/contract": "^0.2.0",

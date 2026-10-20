@@ -1,0 +1,37 @@
+{
+  "archetype": "press",
+  "name": "Town Events",
+  "tokens": {
+    "radius": "0.5rem",
+    "light": {
+      "background": "#ffffff", "foreground": "#1a1a2e",
+      "card": "#ffffff", "card-foreground": "#1a1a2e",
+      "primary": "#0b5394", "primary-foreground": "#ffffff",
+      "secondary": "#eef2f7", "secondary-foreground": "#1a1a2e",
+      "muted": "#f3f4f6", "muted-foreground": "#4b5563",
+      "accent": "#e0ecf8", "accent-foreground": "#0b3d6e",
+      "destructive": "#b42318", "border": "#e5e7eb", "input": "#d1d5db", "ring": "#0b5394"
+    }
+  },
+  "postTypes": [
+    {
+      "name": "event",
+      "labels": { "singular": "Event", "plural": "Events", "addNew": "Add event", "edit": "Edit event" },
+      "slug": "events/event",
+      "archiveSlug": "events",
+      "icon": "calendar-alt",
+      "supports": ["title", "editor", "excerpt", "thumbnail"],
+      "fields": {
+        "starts_on": { "type": "date", "label": "Starts on" },
+        "venue": { "type": "string", "label": "Venue" },
+        "ticket_price": { "type": "money", "label": "Ticket price" },
+        "tickets_url": { "type": "url", "label": "Tickets URL" }
+      },
+      "metabox": { "title": "Event details", "position": "side" },
+      "taxonomies": {
+        "event_type": { "labels": { "singular": "Event type", "plural": "Event types" }, "slug": "events/type" }
+      },
+      "archive": { "perPage": 12, "orderBy": [{ "field": "date", "direction": "desc" }], "title": "Events", "titlePrefix": false }
+    }
+  ]
+}

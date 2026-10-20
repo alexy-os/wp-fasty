@@ -8,6 +8,7 @@
 
 import { generateCli, roundtrip } from "./generate/index";
 import { packageCli } from "./generate/package";
+import { newSiteCli } from "./configure/cli";
 import { writeZipFromDir } from "./zip";
 import { existsSync } from "node:fs";
 import {
@@ -353,6 +354,10 @@ async function main(): Promise<void> {
       generateCli(process.argv.slice(3));
       return;
     }
+    case "new-site": {
+      await newSiteCli(process.argv.slice(3));
+      return;
+    }
     case "package": {
       await packageCli(process.argv.slice(3));
       return;
@@ -373,7 +378,7 @@ async function main(): Promise<void> {
       await newTheme();
       return;
     default:
-      console.error("Usage: theme-builder <build|pack|new> [theme-id] | generate <manifest> [--out dir] [--no-pot] | package <manifest> [--out dir] | roundtrip");
+      console.error("Usage: theme-builder <build|pack|new> [theme-id] | generate <manifest> [--out dir] [--no-pot] | package <manifest> [--out dir] | new-site [--answers f] [--out f] [--package] | roundtrip");
       process.exitCode = 1;
   }
 }
