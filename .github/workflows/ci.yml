@@ -204,7 +204,7 @@ jobs:
       - name: Theme Check — generated child themes (theme:generate from manifests/examples), no REQUIRED issues
         run: |
           fail=0
-          for t in press; do
+          for t in press folio shop; do
             slug=$(bun -e "console.log(require('./manifests/examples/$t.json').theme.slug)")
             bun run theme:generate "manifests/examples/$t.json" --out "/tmp/gen/$slug"
             cd /tmp/wp
