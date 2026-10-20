@@ -101,6 +101,9 @@ jobs:
       - name: PHPUnit (themes, types, builder compiler/links)
         run: composer test
 
+      - name: Latte ↔ Twig parity (press views, fixture contexts, normalized HTML)
+        run: bun run parity:press
+
       - name: PHPCS (errors and warnings fail the build; themes + wpfasty-types + wpfasty-builder)
         run: composer phpcs
 

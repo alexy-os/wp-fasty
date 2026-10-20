@@ -1,0 +1,4 @@
+{
+  "view": "blocks/post-list",
+  "context": { "labels": { "no_posts": "Nothing here yet." }, "posts": [], "pagination": [] }
+}

@@ -129,7 +129,7 @@ dist/latte.zip               release artifact (gitignored)
 
 ## Open cycle
 
-**→ Cycle K — Configurator** (see [Cycle K](#cycle-k--configurator-2026-10-19)); next stage K6 (Twig views) or K7 (publish the form / MCP package). Follow-ups below stay open.
+**→ Cycle K — Configurator** (see [Cycle K](#cycle-k--configurator-2026-10-19)); K6 in progress (step 1: press Twig views + parity gate done; next: parent page/layout Twig views) or K7 (publish the form / MCP package). Follow-ups below stay open.
 
 | # | Task | Done |
 |---|------|------|
@@ -310,6 +310,7 @@ A Parent correctness ✓
 | K4 | `bun run theme:package <manifest> [--out dist/<slug>/]`: parent `latte.zip` (reused), generated child zip, `wpfasty-types.zip` (companion), `wpfasty-builder.zip`, separate `demo.zip` (seeder, bundled images, landings), `blueprint.json` + `<slug>-playground.zip` bundle (all resources `bundled`, no external URLs); wpfasty-types keeps reading the active theme's `types/`. CI packages the three examples, runs Theme Check / N+1 guard / landing smoke on the unzipped packages, uploads `dist` | `3408eb8`, `7939780`, CI run 39402141286 | [x] |
 | K5 | Configurator front ends over one pure `buildManifest(answers)` (`.workspaces/theme-builder/src/configure/`): fixed palettes `presets/palettes/` (free tokens only past a WCAG AA 4.5:1 gate), extra post types on any archetype (clash / reserved-name checks); `bun run theme:new-site` (interactive or `--answers`, `--package`); MCP stdio server `tools/mcp/` (5 tools, writes only to `dist/`); static form `configurator/index.html` (`bun run configure:form`); CI: self-test (examples rebuilt exactly from answers), form drift, MCP smoke, 4 answers fixtures → package → Theme Check 0 REQUIRED. Playground bundle verified end to end locally (Playground CLI, Node 24) | `1968cd9`, `80bbf2f`, `c512817`, `2a2bb0c`, `b6ce7c9`, `f5f4994`, `70197ba`, CI run 39409753325 | [x] |
 | K6 | Twig engine: ship `.twig` views so `engine: twig` is buildable | – | [ ] |
+| K6.1 | Press Twig views: `presets/archetypes/press/views/blocks/post-list.html.twig` (+ round-tripped copy in `themes/latte-press`), same DOM as the `.latte` twin via the existing `TwigRenderer` (ADR-001 §1, `.html.twig` suffix, codegen Twig primitives, `include … only`); parity gate `bun run parity:press` (`tools/parity/press.php`, fixtures `tests/fixtures/parity/press/*.json`, Latte vs Twig normalized HTML) in CI `verify`; `lint:design` covers `.twig` views. twig/twig stays a root dev/tooling dependency (children ship no composer/vendor); engine selection unchanged (`wpfasty_renderer`), `engine: twig` still reserved until parent page/layout views exist | K6 step 1 commit | [x] |
 
 ---
 
@@ -375,6 +376,7 @@ bun run dev:wp -- theme activate latte-skin
 | 2026-10-16 | Shop is WooCommerce-free; money stored as integer cents, currency via `wpfasty_currency` |
 | 2026-10-16 | Previews via WordPress Playground blueprints (repo is private; zips mirrored outside the repo) |
 | 2026-10-17 | Landings are a plugin (`wpfasty-builder`), not theme code; layouts validated by `@ui8kit/contract` |
+| 2026-10-21 | K6.1: Twig views live next to Latte views (`<view>.html.twig`), DOM parity enforced by fixture rendering; twig/twig only in root tooling; renderer still picked by `wpfasty_renderer` |
 | 2026-10-20 | K5: brand = fixed palette list, free tokens only with WCAG AA contrast; custom post types allowed on top of any archetype; MCP server lives in the repo (separate package later) |
 | 2026-10-20 | K4: demo ships as a separate `demo.zip`; wpfasty-types keeps reading the active theme's `types/` (no generated plugin config) |
 | 2026-10-19 | One site manifest (`schema/site.manifest.schema.json` v0.2) replaces the 0.1 theme-manifest draft; `presets/themes/*.json` stay parent presets referenced by `parent.preset`; platform-neutral names, money in cents; `wporg` ⇒ types in the companion plugin |

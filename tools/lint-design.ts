@@ -17,7 +17,7 @@ const arbitraryPx = /\b[a-z-]+-\[-?\d+(?:\.\d+)?px\]/;
 const control = /<(?:button|input|select|textarea|label|option)\b|badge|Button\.latte|Input\.latte|Badge\.latte|control/i;
 
 const errors: string[] = [];
-for (const pattern of ["themes/*/views/**/*.latte", "themes/*/assets/css/*.css", "themes/*/style.css"]) {
+for (const pattern of ["themes/*/views/**/*.latte", "themes/*/views/**/*.twig", "themes/*/assets/css/*.css", "themes/*/style.css"]) {
   for await (const rel of new Glob(pattern).scan(root)) {
     const isTokens = rel.endsWith("tokens.css") || rel.endsWith("theme.min.css") || rel.endsWith("assets/css/theme.css") || rel.endsWith("a11y.css");
     const text = await Bun.file(root + rel).text();
@@ -27,9 +27,10 @@ for (const pattern of ["themes/*/views/**/*.latte", "themes/*/assets/css/*.css",
       if (palette.test(line)) errors.push(`${where} palette color class — use token classes (bg-primary, text-muted-foreground…)`);
       // UI8Kit primitives print `children` with |noescape — pass captured (escaped) HTML, never raw data.
       if (rel.endsWith(".latte") && /children:\s*\(string\)\s*\$\w+\[/.test(line)) errors.push(`${where} raw data passed as children (XSS) — wrap in {capture}`);
-      if (rel.endsWith(".latte") && halfStep.test(line)) errors.push(`${where} half spacing step — use the 8px grid`);
-      if (rel.endsWith(".latte") && arbitraryPx.test(line)) errors.push(`${where} arbitrary px value — use scale/tokens`);
-      if (rel.endsWith(".latte") && oddSpacing.test(line) && !control.test(line)) errors.push(`${where} 4px step outside a control — use 8px grid (2,4,6,8…)`);
+      if (rel.endsWith(".twig") && /children:\s*[\w]+(?:\.|\[)/.test(line)) errors.push(`${where} raw data passed as children (XSS) — wrap in {% set %}…{% endset %}`);
+      if (/\.(latte|twig)$/.test(rel) && halfStep.test(line)) errors.push(`${where} half spacing step — use the 8px grid`);
+      if (/\.(latte|twig)$/.test(rel) && arbitraryPx.test(line)) errors.push(`${where} arbitrary px value — use scale/tokens`);
+      if (/\.(latte|twig)$/.test(rel) && oddSpacing.test(line) && !control.test(line)) errors.push(`${where} 4px step outside a control — use 8px grid (2,4,6,8…)`);
     });
   }
 }

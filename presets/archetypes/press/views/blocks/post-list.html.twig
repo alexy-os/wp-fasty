@@ -1,0 +1,66 @@
+{#
+ # Latte Press — editorial post list (thumbnail + category + excerpt). Twig twin of post-list.latte (same DOM).
+ # Context: posts[], pagination, labels
+ #}
+{% set list %}
+	{% if posts is empty %}
+		<p class="py-16 text-center text-muted-foreground">{{ labels.no_posts ?? 'No posts found.' }}</p>
+	{% else %}
+		{% set items %}
+			{% for post in posts %}
+				<article class="{{ post.post_class ?? '' }} grid gap-6 border-b border-border pb-8 md:grid-cols-[240px_1fr]">
+					{% if post.thumbnail.url is not empty %}
+						{% set thumb %}
+							{% include 'image/Image.html.twig' with { src: post.thumbnail.url, alt: post.thumbnail.alt ?? '', srcset: post.thumbnail.srcset ?? '', sizes: '(min-width: 768px) 240px, 100vw', class: 'aspect-[4/3] w-full rounded-lg object-cover', loading: 'lazy' } only %}
+						{% endset %}
+						{% include 'link/Link.html.twig' with { href: post.url, class: 'block', children: thumb } only %}
+					{% else %}
+						<div class="hidden md:block"></div>
+					{% endif %}
+					<div class="flex flex-col gap-2">
+						{% if post.categories is not empty %}
+							<div class="flex flex-wrap gap-2">
+								{% for cat in post.categories %}
+									<a href="{{ cat.url }}" class="text-xs font-semibold uppercase tracking-wide text-primary no-underline">{{ cat.name }}</a>
+								{% endfor %}
+							</div>
+						{% endif %}
+						<h2 class="text-2xl font-semibold leading-tight">
+							<a href="{{ post.url }}" class="text-foreground no-underline hover:text-primary">{{ post.title }}</a>
+						</h2>
+						<div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+							{% if post.date.display is not empty %}
+								<span class="inline-flex items-center gap-2">{{ icon('calendar') }}<time datetime="{{ post.date.iso ?? '' }}">{{ post.date.display }}</time></span>
+							{% endif %}
+							{% if post.author.name is not empty %}
+								<span class="inline-flex items-center gap-2">{{ icon('user') }}{{ post.author.name }}</span>
+							{% endif %}
+						</div>
+						{% if post.excerpt is not empty %}
+							<p class="text-muted-foreground">{{ post.excerpt }}</p>
+						{% endif %}
+						<a href="{{ post.url }}" class="inline-flex items-center gap-2 text-sm font-medium text-primary no-underline">{{ labels.read_more ?? 'Read more' }}{{ icon('arrow-right') }}</a>
+					</div>
+				</article>
+			{% endfor %}
+		{% endset %}
+		{% include 'stack/Stack.html.twig' with { class: 'gap-8', children: items } only %}
+	{% endif %}
+
+	{% if pagination is not empty %}
+		<nav class="mt-10 flex items-center justify-center gap-4" aria-label="{{ labels.pagination ?? 'Pagination' }}">
+			{% if pagination.prev_url %}
+				<a href="{{ pagination.prev_url }}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{{ icon('arrow-left') }}{{ labels.previous ?? 'Previous' }}</a>
+			{% endif %}
+			<span class="text-sm text-muted-foreground">{{ pagination.current }} / {{ pagination.total }}</span>
+			{% if pagination.next_url %}
+				<a href="{{ pagination.next_url }}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{{ labels.next ?? 'Next' }}{{ icon('arrow-right') }}</a>
+			{% endif %}
+		</nav>
+	{% endif %}
+{% endset %}
+
+{% set box %}
+	{% include 'box/Box.html.twig' with { class: 'container mx-auto px-4 py-12 md:px-6', children: list } only %}
+{% endset %}
+{% include 'block/Block.html.twig' with { tag: 'section', children: box } only %}

@@ -1,0 +1,28 @@
+{
+  "view": "blocks/post-list",
+  "context": {
+    "labels": { "read_more": "Read more", "pagination": "Posts navigation", "previous": "Newer", "next": "Older" },
+    "posts": [
+      {
+        "post_class": "post-1 post type-post status-publish",
+        "url": "https://example.test/hello-world/",
+        "title": "Hello <world> & \"friends\" 'quoted'",
+        "thumbnail": { "url": "https://example.test/wp-content/uploads/a.jpg", "alt": "A \"photo\"", "srcset": "https://example.test/a-300.jpg 300w, https://example.test/a-768.jpg 768w" },
+        "categories": [ { "url": "https://example.test/category/news/", "name": "News & Notes" }, { "url": "https://example.test/category/x/", "name": "X" } ],
+        "date": { "display": "October 21, 2026", "iso": "2026-10-21T02:55:00+03:00" },
+        "author": { "name": "Ann O'Neil" },
+        "excerpt": "An excerpt with <tags> that must be escaped."
+      },
+      {
+        "url": "https://example.test/no-thumb/",
+        "title": "No thumbnail, no meta",
+        "thumbnail": { "url": "" },
+        "categories": [],
+        "date": {},
+        "author": {},
+        "excerpt": ""
+      }
+    ],
+    "pagination": { "prev_url": "https://example.test/page/1/", "next_url": "https://example.test/page/3/", "current": 2, "total": 3 }
+  }
+}
