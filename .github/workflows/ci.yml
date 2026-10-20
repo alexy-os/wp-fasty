@@ -58,6 +58,12 @@ jobs:
       - name: Generator round-trip (manifests/examples → themes/<slug>, byte-identical)
         run: bun run theme:roundtrip
 
+      - name: Configurator self-test + static form up to date
+        run: |
+          bun run configure:test
+          bun run configure:form
+          git diff --exit-code -- configurator
+
       - name: Codegen verify (Latte + Twig primitives)
         run: |
           bun install --cwd packages/ui8kit-codegen
@@ -99,20 +105,27 @@ jobs:
       - name: Pack theme zip
         run: bun run theme:pack -- latte
 
+      - name: MCP server smoke (stdio; all five tools, writes only to dist/)
+        run: bun run mcp:smoke
+
       - name: Package site examples (theme:package → dist/<slug>/ zips + Playground bundle)
         run: |
           for t in press folio shop; do bun run theme:package "manifests/examples/$t.json"; done
+          # Configurator fixtures: answers → manifest (validated) → package.
+          for a in manifests/answers/*.json; do bun run theme:new-site --answers "$a" --package; done
+          ls -d dist/*/ | grep -v -e generated -e manifests | xargs -n1 basename > dist/sites.txt
           { echo "### Packages"; echo "| file | bytes |"; echo "|---|---|"
-            for f in dist/latte.zip dist/latte-*/*; do echo "| \`$f\` | $(stat -c %s "$f") |"; done; } >> "$GITHUB_STEP_SUMMARY"
+            for f in dist/latte.zip $(sed 's#^#dist/#; s#$#/*#' dist/sites.txt); do echo "| \`$f\` | $(stat -c %s "$f") |"; done; } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
         with:
           name: dist
           path: |
             dist/latte.zip
-            dist/latte-press
-            dist/latte-folio
-            dist/latte-shop
+            dist/sites.txt
+            dist/*/*.zip
+            dist/*/*.json
+            !dist/generated
           retention-days: 7
 
   wordpress:
@@ -187,6 +200,8 @@ jobs:
           done
           unzip -q "$D/latte-shop/wpfasty-types.zip" -d wp-content/plugins/
           unzip -q "$D/latte-shop/wpfasty-builder.zip" -d wp-content/plugins/
+          # Configurator fixtures (answers → package): child themes only, for Theme Check.
+          for s in $(grep -v '^latte-' "$D/sites.txt"); do unzip -q "$D/$s/$s.zip" -d wp-content/themes/; done
           # latte-skin has no site manifest yet: still from the repo.
           rsync -a --exclude '~cache' "$GITHUB_WORKSPACE/themes/latte-skin" wp-content/themes/
           unzip -q /tmp/wp-dl/tc.zip -d wp-content/plugins/
@@ -194,11 +209,11 @@ jobs:
           wp rewrite structure '/%postname%/' --hard
           wp theme list --fields=name,version,status
 
-      - name: Theme Check — no REQUIRED issues (parent + 3 packaged children from theme:package zips, latte-skin from repo)
+      - name: Theme Check — no REQUIRED issues (parent + packaged children incl. configurator fixtures, latte-skin from repo)
         run: |
           cd /tmp/wp
           fail=0
-          for t in latte latte-press latte-folio latte-shop latte-skin; do
+          for t in latte latte-press latte-folio latte-shop latte-skin $(grep -v '^latte-' "$GITHUB_WORKSPACE/dist/sites.txt"); do
             code=0
             PAGER=cat wp theme-check run "$t" > "/tmp/tc-$t.txt" 2>&1 || code=$?
             r=$(grep -c '^REQUIRED' "/tmp/tc-$t.txt" || true)
