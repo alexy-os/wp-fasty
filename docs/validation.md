@@ -81,7 +81,7 @@ the generator maps them.
 `bun run theme:roundtrip` regenerates each `manifests/examples/*.json` whose archetype has a package in
 `presets/archetypes/` and diffs it against `themes/<slug>`: same file set, identical bytes; only the `.pot`
 `POT-Creation-Date` and `X-Generator` lines are normalized. CI `wordpress` also runs Theme Check on the generated
-theme (0 REQUIRED). Packaged today: press.
+theme (0 REQUIRED). Packaged today: press, folio, shop.
 
 ## What agents should run
 
