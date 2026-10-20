@@ -24,12 +24,12 @@ export function archetypeDir(id: string): string {
   return join(root, "presets/archetypes", id);
 }
 
-export function generate(manifestPath: string, out: string | undefined, opts: { pot: boolean }): string {
+export function generate(manifestPath: string, out: string | undefined, opts: { pot: boolean; archetypes?: string }): string {
   const file = resolve(manifestPath);
   const check = spawnSync("bun", [join(root, "tools/manifest/validate.ts"), file], { encoding: "utf8" });
   if (check.status !== 0) throw new Error(`manifest invalid:\n${check.stdout}${check.stderr}`);
   const m = json(file);
-  const adir = archetypeDir(m.archetype);
+  const adir = opts.archetypes ? join(opts.archetypes, m.archetype) : archetypeDir(m.archetype);
   if (!existsSync(join(adir, "archetype.json")))
     throw new Error(`archetype "${m.archetype}" has no package (presets/archetypes/${m.archetype}/archetype.json)`);
   const arch = json(join(adir, "archetype.json"));
@@ -52,6 +52,7 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
     write(dir, `types/${pt.name}.php`, typePhp(pt, m, extra));
   }
   if (arch.inc && existsSync(join(adir, arch.inc))) cpSync(join(adir, arch.inc), join(dir, "inc"), { recursive: true });
+  if (arch.views && existsSync(join(adir, arch.views))) cpSync(join(adir, arch.views), join(dir, "views"), { recursive: true });
   // Archetype code is copied verbatim but written for its reference theme: retarget its text domain literals.
   if (arch.sourceTextDomain && arch.sourceTextDomain !== m.theme.textDomain)
     for (const sub of ["inc", "views"])
@@ -59,16 +60,16 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
         for (const rel of files(join(dir, sub))) {
           const p = join(dir, sub, rel);
           const src = readFileSync(p, "utf8");
-          const out = src.split(`'${arch.sourceTextDomain}'`).join(`'${m.theme.textDomain}'`);
+          const out = src.split(`'${arch.sourceTextDomain}'`).join(`'${m.theme.textDomain}'`)
+            .split(`"${arch.sourceTextDomain}"`).join(`"${m.theme.textDomain}"`);
           if (out !== src) writeFileSync(p, out);
         }
-  if (arch.views && existsSync(join(adir, arch.views))) cpSync(join(adir, arch.views), join(dir, "views"), { recursive: true });
 
-  // Same for the PHP namespace (namespace LatteShop; LatteShop\\Money::…) across every emitted PHP file.
+  // Same for the PHP namespace (namespace LatteShop; LatteShop\\Money::…) across every emitted PHP and Latte file.
   const ns = m.theme.namespace ?? pascalCase(m.theme.slug);
   if (arch.sourceNamespace && arch.sourceNamespace !== ns) {
     const word = new RegExp(`(?<![A-Za-z0-9_])${arch.sourceNamespace}(?![A-Za-z0-9_])`, "g");
-    for (const rel of files(dir).filter((r) => r.endsWith(".php"))) {
+    for (const rel of files(dir).filter((r) => r.endsWith(".php") || r.endsWith(".latte"))) {
       const p = join(dir, rel);
       const src = readFileSync(p, "utf8");
       const out = src.replace(word, ns);
