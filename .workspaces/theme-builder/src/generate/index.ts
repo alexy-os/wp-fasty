@@ -6,7 +6,7 @@ import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, 
 import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import { render } from "./template";
-import { type J, styleCss, templateVars, tokensCss, typePhp } from "./emit";
+import { extraEntries, type J, styleCss, templateVars, tokensCss, typePhp } from "./emit";
 
 const root = resolve(dirname(new URL(import.meta.url).pathname), "../../../..");
 const json = (p: string): J => JSON.parse(readFileSync(p, "utf8"));
@@ -46,14 +46,21 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
   write(dir, "functions.php", render(tpl("functions.php"), vars));
   write(dir, "readme.txt", render(tpl("readme.txt"), vars));
   write(dir, "assets/css/tokens.css", tokensCss(m, arch.palette));
-  for (const pt of m.postTypes ?? []) write(dir, `types/${pt.name}.php`, typePhp(pt, m));
+  for (const pt of m.postTypes ?? []) {
+    const extraFile = join(adir, "types", `${pt.name}.extra.php`);
+    const extra = existsSync(extraFile) ? render(extraEntries(readFileSync(extraFile, "utf8")), vars) : "";
+    write(dir, `types/${pt.name}.php`, typePhp(pt, m, extra));
+  }
+  if (arch.inc && existsSync(join(adir, arch.inc))) cpSync(join(adir, arch.inc), join(dir, "inc"), { recursive: true });
   if (arch.views && existsSync(join(adir, arch.views))) cpSync(join(adir, arch.views), join(dir, "views"), { recursive: true });
 
   if (opts.pot) {
     if (!hasWp()) throw new Error("wp-cli not found (needed for languages/*.pot); pass --no-pot to skip");
     const slug = m.theme.textDomain;
     const r = spawnSync("wp", ["i18n", "make-pot", dir, join(dir, "languages", `${slug}.pot`), `--domain=${slug}`,
-      "--exclude=vendor,~cache,node_modules", "--quiet"], { encoding: "utf8" });
+      "--exclude=vendor,~cache,node_modules", "--quiet",
+      // make-pot derives this from the folder name; pin it so any --out dir yields the same file.
+      `--headers=${JSON.stringify({ "Report-Msgid-Bugs-To": `https://wordpress.org/support/theme/${m.theme.slug}` })}`], { encoding: "utf8" });
     if (r.status !== 0) throw new Error(`wp i18n make-pot failed: ${r.stderr}`);
   }
   return dir;
