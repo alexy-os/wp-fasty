@@ -43,7 +43,8 @@
     "theme:new-site": "bun .workspaces/theme-builder/src/cli.ts new-site",
     "configure:test": "bun .workspaces/theme-builder/src/configure/selftest.ts",
     "mcp:server": "bun tools/mcp/server.ts",
-    "mcp:smoke": "bun tools/mcp/smoke.ts"
+    "mcp:smoke": "bun tools/mcp/smoke.ts",
+    "configure:form": "bun .workspaces/theme-builder/src/configure/form.ts"
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",
