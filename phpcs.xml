@@ -143,6 +143,10 @@
         </properties>
     </rule>
 
+    <!-- PHP compatibility: release minimum (Requires PHP 8.2) up to the FrankenPHP runtime (8.5) -->
+    <config name="testVersion" value="8.2-8.5"/>
+    <rule ref="PHPCompatibilityWP"/>
+
     <!-- Additional PHP 8 features -->
     <config name="php_version" value="80200" />
     <!-- Exception messages are never rendered as HTML -->

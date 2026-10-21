@@ -10,12 +10,17 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PHP_VERSION: "8.3"
   WP_VERSION: "7.1.3"
   THEME_CHECK_VERSION: "20260901"
 
 jobs:
   verify:
+    name: verify (PHP ${{ matrix.php }})
+    strategy:
+      fail-fast: false
+      matrix:
+        # 8.2 = release minimum (Requires PHP, composer platform); 8.5 = FrankenPHP runtime of the wpthemes service.
+        php: ["8.2", "8.5"]
     # Static checks + build: audit, site manifests, codegen, design lint, CSS, PHPUnit, strict PHPCS, release zip.
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -31,7 +36,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version: ${{ matrix.php }}
           tools: composer, wp-cli
           coverage: none
 
@@ -162,7 +167,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: dist
+          name: dist-php${{ matrix.php }}
           path: |
             dist/latte.zip
             dist/twig.zip
@@ -174,6 +179,12 @@ jobs:
           retention-days: 7
 
   wordpress:
+    name: wordpress (PHP ${{ matrix.php }})
+    strategy:
+      fail-fast: false
+      matrix:
+        # 8.2 = release minimum (Requires PHP, composer platform); 8.5 = FrankenPHP runtime of the wpthemes service.
+        php: ["8.2", "8.5"]
     # Integration on a real WordPress + MariaDB: Theme Check (0 REQUIRED) and the N+1 query guard.
     needs: verify
     runs-on: ubuntu-latest
@@ -207,14 +218,14 @@ jobs:
       - name: Setup PHP + WP-CLI
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version: ${{ matrix.php }}
           tools: wp-cli
           extensions: mysqli, gd
           coverage: none
 
       - uses: actions/download-artifact@v4
         with:
-          name: dist
+          name: dist-php${{ matrix.php }}
           path: dist
 
       - name: Cache WordPress core + Theme Check

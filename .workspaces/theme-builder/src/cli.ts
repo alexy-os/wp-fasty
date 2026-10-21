@@ -21,7 +21,10 @@ import {
   stat,
   writeFile,
 } from "node:fs/promises";
-import { dirname, join, relative } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
+import { createHash } from "node:crypto";
+
+const sha256 = (b: Uint8Array | string): string => createHash("sha256").update(b).digest("hex");
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
@@ -241,7 +244,7 @@ async function filesOf(dir: string, base = dir): Promise<string[]> {
  * twig/twig + UI8Kit Twig primitives in lib/ui8kit-twig, .html.twig views, text domain `twig`). Neither build contains
  * the other engine's library, primitives, renderer or views; `WPFasty\Template\Engines` names the build's engine.
  */
-async function packTheme(id: string, engine: "latte" | "twig" = "latte"): Promise<void> {
+async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorCache?: string): Promise<void> {
   const preset = await loadPreset(id);
   if (preset.kind === "skin" || preset.parent) {
     throw new Error("theme:pack is for parent themes only");
@@ -388,13 +391,39 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte"): Promis
   await rm(join(stagedTheme, "composer.lock"), { force: true });
 
   const composerCmd = resolveComposer(repoRoot);
-  const composer = spawnSync(
-    composerCmd[0],
-    [...composerCmd.slice(1), "update", "--no-dev", "--optimize-autoloader", "--working-dir", stagedTheme],
-    { stdio: "inherit", cwd: repoRoot, shell: process.platform === "win32" }
-  );
-  if (composer.status !== 0) {
-    throw new Error("composer update failed in staged theme — install Composer or place composer.phar at repo root");
+  const runComposer = (...args: string[]) => {
+    const r = spawnSync(composerCmd[0], [...composerCmd.slice(1), ...args, "--no-dev", "--optimize-autoloader", "--working-dir", stagedTheme],
+      { stdio: "inherit", cwd: repoRoot, shell: process.platform === "win32" });
+    if (r.status !== 0) {
+      throw new Error(`composer ${args[0]} failed in staged theme — install Composer or place composer.phar at repo root`);
+    }
+  };
+  if (!vendorCache) {
+    runComposer("update");
+  } else {
+    // --vendor-cache <dir>: composer.lock reused per release composer.json, vendor/ reused per lock + bundled path repo
+    // (lib/ui8kit-latte is copied into vendor, symlink: false). Same staged tree as `composer update`; no network on a hit.
+    const lockFile = join(vendorCache, "locks", `${slug}-${sha256(await readFile(join(stagedTheme, "composer.json")))}.lock`);
+    const lockHit = existsSync(lockFile);
+    if (lockHit) await copyFile(lockFile, join(stagedTheme, "composer.lock"));
+    const lockKey = async () => {
+      const parts = [await readFile(join(stagedTheme, "composer.lock"))];
+      const lib = join(stagedTheme, "lib", "ui8kit-latte");
+      if (existsSync(lib)) for (const f of (await filesOf(lib)).sort()) parts.push(Buffer.from(f), await readFile(join(lib, f)));
+      return sha256(Buffer.concat(parts));
+    };
+    const vendorDir = lockHit ? join(vendorCache, "vendor", await lockKey()) : "";
+    if (lockHit && existsSync(join(vendorDir, "autoload.php"))) {
+      await cp(vendorDir, join(stagedTheme, "vendor"), { recursive: true });
+      console.log(`vendor cache hit: ${relative(vendorCache, vendorDir)}`);
+    } else {
+      runComposer(lockHit ? "install" : "update");
+      await mkdir(dirname(lockFile), { recursive: true });
+      await copyFile(join(stagedTheme, "composer.lock"), lockFile);
+      const dest = join(vendorCache, "vendor", await lockKey());
+      await rm(dest, { recursive: true, force: true });
+      await cp(join(stagedTheme, "vendor"), dest, { recursive: true });
+    }
   }
 
   // Isolation guard: nothing of the other engine may be in the build.
@@ -439,7 +468,7 @@ Skin (no Composer):
   3. bun run theme:build -- <id>
 
 Pack release zip:
-  bun run theme:pack -- latte
+  bun run theme:pack -- latte [--engine twig] [--vendor-cache dir]   (or WPFASTY_VENDOR_CACHE=dir)
 `);
 }
 
@@ -470,7 +499,9 @@ async function main(): Promise<void> {
       const ei = process.argv.indexOf("--engine");
       const eng = ei > 0 ? process.argv[ei + 1] : "latte";
       if (eng !== "latte" && eng !== "twig") throw new Error(`--engine must be latte or twig (got ${eng})`);
-      await packTheme(arg && !arg.startsWith("--") ? arg : "latte", eng);
+      const vi = process.argv.indexOf("--vendor-cache");
+      const vc = vi > 0 ? process.argv[vi + 1] : process.env.WPFASTY_VENDOR_CACHE;
+      await packTheme(arg && !arg.startsWith("--") ? arg : "latte", eng, vc ? resolve(vc) : undefined);
       return;
     }
     case "new":

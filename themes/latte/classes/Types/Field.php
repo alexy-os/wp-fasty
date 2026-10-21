@@ -59,9 +59,7 @@ final class Field
         $raw = is_scalar($raw) ? trim((string) $raw) : '';
         return match ($this->type) {
             'text' => function_exists('sanitize_textarea_field') ? sanitize_textarea_field($raw) : strip_tags($raw),
-            'url' => function_exists('esc_url_raw')
-                ? esc_url_raw($raw)
-                : (filter_var($raw, FILTER_VALIDATE_URL) ? $raw : ''),
+            'url' => self::url($raw),
             'email' => function_exists('sanitize_email')
                 ? sanitize_email($raw)
                 : (string) filter_var($raw, FILTER_SANITIZE_EMAIL),
@@ -148,6 +146,14 @@ final class Field
     }
 
     /** Non-negative decimal with max 2 places, comma accepted; '' when empty/invalid. */
+    private static function url(string $raw): string
+    {
+        if (function_exists('esc_url_raw')) {
+            return esc_url_raw($raw);
+        }
+        return filter_var($raw, FILTER_VALIDATE_URL) ? $raw : '';
+    }
+
     public static function number(string $raw): string
     {
         $raw = str_replace(',', '.', $raw);
