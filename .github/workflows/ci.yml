@@ -148,7 +148,7 @@ jobs:
           for a in $(bun tools/matrix/engine-variants.ts); do
             case "$a" in */manifest-*) bun run theme:package "$a" ;; *) bun run theme:new-site --answers "$a" --package ;; esac
           done
-          ls -d dist/*/ | grep -v -e generated -e manifests -e answers-matrix | xargs -n1 basename > dist/sites.txt
+          ls -d dist/*/ | grep -v -e generated -e manifests -e answers-matrix -e registry | xargs -n1 basename > dist/sites.txt
           # Every site ships only its engine: the parent of that engine, its views, its builder runtime.
           for s in $(cat dist/sites.txt); do
             e=$(bun -e "console.log(require('./dist/$s/site.manifest.json').engine ?? 'latte')"); o=$([ "$e" = twig ] && echo latte || echo twig)
