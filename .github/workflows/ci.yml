@@ -462,6 +462,12 @@ jobs:
         if: always()
         run: |
           [ ! -s /tmp/php-server.log ] || { echo "::group::php -S log"; tail -50 /tmp/php-server.log; echo "::endgroup::"; }
+          # WP-CLI's own phar (third-party tool, not shipped code) still emits PHP 8.5 deprecations: reported, not gated.
+          if grep -q 'phar://[^ ]*/wp-cli/vendor/' /tmp/wp-debug.log 2>/dev/null; then
+            echo "::notice::WP-CLI phar deprecations (not ours): $(grep -c 'phar://[^ ]*/wp-cli/vendor/' /tmp/wp-debug.log)"
+            grep -v 'phar://[^ ]*/wp-cli/vendor/' /tmp/wp-debug.log > /tmp/wp-debug.own.log || true
+            mv /tmp/wp-debug.own.log /tmp/wp-debug.log
+          fi
           if [ -s /tmp/wp-debug.log ]; then
             echo "::error::PHP messages were logged during the WordPress job"
             sort /tmp/wp-debug.log | uniq -c | sort -rn | head -50

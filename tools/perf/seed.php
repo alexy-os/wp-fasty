@@ -28,7 +28,6 @@ function wpfasty_seed_image(string $name, int $i): int
     $img = imagecreatetruecolor(320, 240);
     imagefill($img, 0, 0, imagecolorallocate($img, (40 * $i) % 255, 120, 200));
     imagejpeg($img, $file);
-    imagedestroy($img);
     $id = media_handle_sideload(['name' => $name . '.jpg', 'tmp_name' => $file], 0);
     if (is_wp_error($id)) {
         WP_CLI::error($id->get_error_message());
