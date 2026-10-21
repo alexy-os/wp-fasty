@@ -324,6 +324,15 @@ A Parent correctness ✓
 | K6.12 | Blocks render with Twig under Twig, Latte under Latte; lazy engines; Twig sandbox for remote sources; optional remote `twig.zip`; builder parity page+blocks per engine | `d3bee68` | [x] |
 | K6.13 | CI: Twig site without the Latte library (latte/latte + UI8Kit Latte removed from `latte-twig`), pages + builder landings 200, no notices, no `Latte\` class loaded, DOM = with-Latte render; Twig build bundles the engine-agnostic UI8Kit runtime (`Rt`, `Classes`) in `lib/ui8kit-twig/runtime/php` | `bb90053`, fix `e699b39`, CI `39573868526` | [x] |
 | K6.14 | Docs: ADR-001 (engine-native blocks, DOM contract), tooling, PROGRESS | K6.14 commit | [x] |
+| K7 | Latte and Twig are isolated runtimes: a Twig site never requires or falls back to Latte and vice versa; one builder registry per runtime | K7.1–K7.8 | [x] |
+| K7.1 | ADR-001 "Engines are isolated runtimes", spec docs/agent/builder-registry.md, CHANGELOG (breaking) | `29d627f`, CI `39583891938` | [x] |
+| K7.2 | Builder: wpfasty-catalog@2 (runtime, semver, archive sha256), one catalog per runtime, no cross-runtime fallback (missing → '' + admin notice), runtime-checked remote import, pack-source.ts | `4d3d190`, CI `39585324158` | [x] |
+| K7.3 | Theme: `Engines` (BUILT/DEFAULT), `EngineUnavailable`, no renderer fallback (front end HTTP 500 "Install the <engine> parent theme", admin notice) | `f0bae17`, CI `39585817363` | [x] |
+| K7.4 | Builds: latte.zip only Latte, twig.zip (slug `twig`) only Twig; sites packaged per engine; CI Theme Check both parents + all sites, N+1 both engines, class markers, parity of twins | `b35e660`, CI `39588325086` | [x] |
+| K7.5 | registry:build / registry:verify (both runtimes, immutable v<semver>, deterministic zip), CI negatives | `8ce9835`, fix `2757768`, CI `39590627850` | [x] |
+| K7.6 | CI mirror isolation: other parent physically absent, remote own-runtime registry import + render over HTTP; negatives (other runtime, tampered archive, forced absent engine → 500) | `b0a2c76`, CI `39590986557` | [x] |
+| K7.7 | Published https://registry.buildy.tw/{latte,twig}/wpfasty/{v1.0.0,latest}/ from ui8kit/site (`builder-registry/`, registry:validate); verified over HTTPS with registry-verify.ts | ui8kit/site `236f670` | [x] |
+| K7.8 | Docs, ADR-001 status, PROGRESS | K7.8 commit | [x] |
 
 ---
 
@@ -392,6 +401,7 @@ bun run dev:wp -- theme activate latte-skin
 | 2026-10-21 | K6.11–K6.13: builder blocks are engine-native (codegen-x Latte + Twig packages from one commit); a Twig site needs no Latte library (CI-checked); block/landing parity = codegen-x DOM contract; remote sources without `twig.zip` fall back to Latte |
 | 2026-10-21 | K6.7–K6.9 (supersedes K6.4): Latte and Twig are equal options — twig sites may be wordpress.org builds (`latte-twig.zip`), builder compiles both, every child ships both view sets, `engine` = default renderer, Twig→Latte fallback; parity is the K6 completion criterion |
 | 2026-10-21 | K6.4: a Twig site is not wordpress.org-eligible (the .org parent `latte.zip` stays Latte-only, no vendor); Twig parent is a separate `latte-twig` build; builder landings are Latte-only, disabled for twig sites |
+| 2026-10-21 | K7: engines are isolated runtimes (supersedes the K6.9/K6.12 fallbacks). Twig parent is `twig` (twig.zip), Latte parent `latte` (latte.zip), each ships only its engine; the engine is chosen at site creation (no live switch); builder registries are per runtime at registry.buildy.tw/<runtime>/wpfasty/ (immutable v<semver>/ + latest), separate from the shadcn-style registry; parity stays a quality check |
 | 2026-10-21 | K6.1: Twig views live next to Latte views (`<view>.html.twig`), DOM parity enforced by fixture rendering; twig/twig only in root tooling; renderer still picked by `wpfasty_renderer` |
 | 2026-10-20 | K5: brand = fixed palette list, free tokens only with WCAG AA contrast; custom post types allowed on top of any archetype; MCP server lives in the repo (separate package later) |
 | 2026-10-20 | K4: demo ships as a separate `demo.zip`; wpfasty-types keeps reading the active theme's `types/` (no generated plugin config) |

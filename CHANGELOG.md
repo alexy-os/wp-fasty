@@ -14,3 +14,12 @@
   - Remote block sources are per-runtime registries (`wpfasty-catalog@2`, `catalog.json` + `blocks.zip`), published at
     `https://registry.buildy.tw/<runtime>/wpfasty/`. Format-1 sources still import, using only the site engine's zip.
 - The engine is chosen at site creation; there is no supported live switch between engines.
+
+### Added
+- Builder registries v1.0.0: `https://registry.buildy.tw/latte/wpfasty/v1.0.0/` and
+  `https://registry.buildy.tw/twig/wpfasty/v1.0.0/` (+ `latest/`); `bun run registry:build` / `registry:verify`.
+- QA: `tools/qa/site-pair.sh`, `engine-marker.php`, `registry-import.php` (CI: each site on its own parent with only its
+  engine loaded, mirror checks with the other engine physically absent, negative import and engine tests).
+
+### Removed
+- `tools/qa/live-render.sh`, `no-latte.sh`, `no-latte.php` (one site rendered by both engines no longer exists).

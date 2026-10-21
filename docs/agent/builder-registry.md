@@ -13,6 +13,11 @@ Served from `ui8kit/site` (`r/<runtime>/wpfasty/`), next to and independent of t
 registry (its format is unchanged). A version directory is written once and never changed; `latest` is a copy of the
 newest version. Sites should import a pinned URL.
 
+Published: v1.0.0 (ui8kit/site `236f670`, source `builder-registry/`, checked by its `registry:validate`) —
+`latte` blocks.zip sha256 `08d0b36868f4…`, `twig` `f0564786cb9a…`; verified over HTTPS with
+`bun run registry:verify <runtime> https://registry.buildy.tw/<runtime>/wpfasty/v1.0.0/`. New versions:
+`WPFASTY=<wp-fasty checkout> bun run registry:wpfasty --version x.y.z` in ui8kit/site, then commit and push.
+
 ## Files
 
 - `catalog.json` — the builder catalog (blocks, variants, props, bindings, collections) with:
