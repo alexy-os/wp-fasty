@@ -333,7 +333,7 @@ jobs:
           test -f wp-content/themes/latte/vendor/twig/twig/src/Environment.php
           # Restart php -S (the supervisor brings it back): its opcache may still hold the Latte-only parent's
           # composer autoload files, which the swap replaced at the same paths.
-          pkill -f 'php -S 127.0.0.1:8080' || true
+          pkill -f '^php -S 127.0.0.1:8080' || true   # the php process only, not the bash supervisor
           for i in $(seq 1 30); do sleep 1; curl -s -o /dev/null http://127.0.0.1:8080/wp-login.php && break; done
           mkdir -p wp-content/mu-plugins && cp "$GITHUB_WORKSPACE/tools/qa/renderer-switch.php" wp-content/mu-plugins/
           L="$GITHUB_WORKSPACE/tools/qa/live-render.sh"; B=http://127.0.0.1:8080
