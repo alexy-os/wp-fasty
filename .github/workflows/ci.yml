@@ -361,6 +361,40 @@ jobs:
           wp option delete wpfasty_qa_renderer --quiet
           exit $fail
 
+      - name: Twig site without the Latte library (latte-twig parent with latte/latte + UI8Kit Latte removed; pages + builder landings)
+        run: |
+          cd /tmp/wp
+          D="$GITHUB_WORKSPACE/dist"; N="$GITHUB_WORKSPACE/tools/qa/no-latte.sh"; B=http://127.0.0.1:8080
+          cp "$GITHUB_WORKSPACE/tools/qa/no-latte.php" wp-content/mu-plugins/
+          url() { wp theme activate "$1" --quiet; wp post list --post_type="$2" --posts_per_page=1 --field=url | sed "s#^$B##"; }
+          restart() {
+            old=$(pgrep -f '^php -S 127.0.0.1:8080' || true)
+            pkill -f '^php -S 127.0.0.1:8080' || true
+            for pid in $old; do while kill -0 "$pid" 2>/dev/null; do sleep 0.2; done; done
+            for i in $(seq 1 60); do sleep 0.5; curl -s -o /dev/null http://127.0.0.1:8080/wp-login.php && break; done
+            pgrep -f '^php -S 127.0.0.1:8080' >/dev/null
+          }
+          P=$(url latte-press post); F=$(url latte-folio project); S=$(url latte-shop product)
+          T=$(grep -e '-twig$' -e '^twig-' "$D/sites.txt" | grep -v -e '-latte$')
+          run() {
+            fail=0
+            bash "$N" "$1" . "$B" latte-press "$P" "/?s=post" "/no-such-page/|404" / /subscribe/ || fail=1
+            bash "$N" "$1" . "$B" latte-folio "$F" /work/ / /services/ || fail=1
+            bash "$N" "$1" . "$B" latte-shop "$S" /shop/ /cart/ /checkout/ / /sale/ || fail=1
+            for s in $T; do bash "$N" "$1" . "$B" "$s" / "/?s=a" "/no-such-page/|404" || fail=1; done
+            return $fail
+          }
+          echo "::group::Twig render with Latte installed (reference; no Latte class may load)"; run ref; r=$?; echo "::endgroup::"
+          [ $r -eq 0 ] || exit 1
+          L=wp-content/themes/latte
+          rm -rf "$L/vendor/latte" "$L/vendor/ui8kit/latte-primitives" "$L/lib/ui8kit-latte"
+          ! ls "$L"/vendor/latte "$L"/lib/ui8kit-latte 2>/dev/null
+          php -r 'require "'"$L"'/vendor/autoload.php"; exit(class_exists("Latte\\Engine") ? 1 : 0);' 2>/dev/null
+          restart
+          echo "::group::Twig render with Latte absent"; run check; r=$?; echo "::endgroup::"
+          echo "- Twig without Latte library (pages + builder landings, $(echo $T | wc -w) twig sites + 3 latte sites): $([ $r -eq 0 ] && echo ok || echo FAIL)" >> "$GITHUB_STEP_SUMMARY"
+          exit $r
+
       - name: No PHP notices / warnings / deprecations logged
         if: always()
         run: |
