@@ -1,0 +1,32 @@
+{# Latte Shop — catalog archive with category filter (Twig twin of shop.latte). #}
+{% include 'blocks/notice.html.twig' %}
+<section class="container mx-auto px-4 pb-8 pt-16 md:px-6">
+	<h1 class="text-3xl font-bold tracking-tight md:text-4xl">{{ archive.title }}</h1>
+	{% if archive.description ?? false %}<div class="mt-4 max-w-2xl text-muted-foreground">{{ archive.description|raw }}</div>{% endif %}
+	{% if shop.categories ?? false %}
+		<nav class="mt-8 flex flex-wrap gap-2" aria-label="{{ labels.all_products }}">
+			<a href="{{ shop.url|safe_url }}" class="inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline {{ shop.current_cat is same as('') ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent' }}">{{ labels.all_products }}</a>
+			{% for cat in shop.categories %}
+				<a href="{{ cat.url|safe_url }}" class="inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline {{ shop.current_cat is same as(cat.slug) ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent' }}">{{ cat.name }}</a>
+			{% endfor %}
+		</nav>
+	{% endif %}
+</section>
+<section class="container mx-auto px-4 pb-16 md:px-6">
+	{% if not posts %}
+		<p class="py-16 text-center text-muted-foreground">{{ labels.no_products }}</p>
+	{% else %}
+		<div class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+			{% for product in posts %}
+				{% include 'blocks/product-card.html.twig' with { product: product, shop: shop, labels: labels } %}
+			{% endfor %}
+		</div>
+		{% if pagination ?? false %}
+			<nav class="mt-10 flex items-center justify-center gap-4" aria-label="{{ labels.pagination ?? 'Pagination' }}">
+				{% if pagination.prev_url %}<a href="{{ pagination.prev_url|safe_url }}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{{ icon('arrow-left') }}{{ labels.previous }}</a>{% endif %}
+				<span class="text-sm text-muted-foreground">{{ pagination.current }} / {{ pagination.total }}</span>
+				{% if pagination.next_url %}<a href="{{ pagination.next_url|safe_url }}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{{ labels.next }}{{ icon('arrow-right') }}</a>{% endif %}
+			</nav>
+		{% endif %}
+	{% endif %}
+</section>

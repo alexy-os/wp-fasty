@@ -1,0 +1,209 @@
+{
+    "uri": "/product/product-1-2/",
+    "view": "pages/product",
+    "page": true,
+    "context": {
+        "site": {
+            "title": "QA",
+            "url": "http://127.0.0.1:8099/",
+            "theme_url": "http://127.0.0.1:8099/wp-content/themes/latte",
+            "stylesheet_url": "http://127.0.0.1:8099/wp-content/themes/latte-shop",
+            "lang": "en-US",
+            "description": "",
+            "charset": "UTF-8",
+            "year": "2026",
+            "logo": null
+        },
+        "menu": {
+            "primary": {
+                "items": []
+            },
+            "footer": {
+                "items": []
+            }
+        },
+        "shell": "classic",
+        "sheet": {
+            "trigger": "classic-mobile-sheet-trigger",
+            "panel": "classic-mobile-sheet-panel",
+            "title": "classic-mobile-sheet-title"
+        },
+        "labels": {
+            "featured": "Featured",
+            "latest_articles": "Latest articles",
+            "no_posts": "No posts found.",
+            "previous": "Previous",
+            "next": "Next",
+            "skip_to_content": "Skip to content",
+            "open_menu": "Open menu",
+            "close_menu": "Close menu",
+            "primary_nav": "Primary",
+            "footer_nav": "Footer",
+            "sidebar": "Sidebar",
+            "pagination": "Pagination",
+            "posted_on": "Posted on",
+            "by_author": "By",
+            "categories": "Categories",
+            "tags": "Tags",
+            "previous_post": "Previous post",
+            "next_post": "Next post",
+            "attachment": "Attachment",
+            "pages": "Pages:",
+            "add_to_cart": "Add to cart",
+            "buy_now": "Buy now",
+            "cart": "Cart",
+            "checkout": "Checkout",
+            "subtotal": "Subtotal",
+            "shipping": "Shipping",
+            "total": "Total",
+            "qty": "Quantity",
+            "remove": "Remove",
+            "update_cart": "Update cart",
+            "empty_cart": "Your cart is empty.",
+            "continue_shopping": "Continue shopping",
+            "place_order": "Place order",
+            "out_of_stock": "Out of stock",
+            "sale": "Sale",
+            "all_products": "All",
+            "shop_now": "Shop now",
+            "order_received": "Thank you — your order has been received.",
+            "order_number": "Order",
+            "address": "Address",
+            "payment": "Payment",
+            "demo_notice": "Demo store — no real payment is taken.",
+            "no_products": "No products found.",
+            "breadcrumb": "Breadcrumb",
+            "returns": "30-day easy returns",
+            "pay_options": "Pay on delivery or by bank transfer",
+            "free_shipping_over": "Free shipping over $100.00"
+        },
+        "search": {
+            "action": "http://127.0.0.1:8099/",
+            "query": "",
+            "placeholder": "Search…",
+            "submit": "Search",
+            "label": "Search"
+        },
+        "widgets": {
+            "sidebar": "",
+            "footer": ""
+        },
+        "page": {
+            "id": 81,
+            "title": "Product 1",
+            "content": "<p>Body of item 1.</p>\n",
+            "slug": "product-1-2",
+            "url": "http://127.0.0.1:8099/product/product-1-2/",
+            "excerpt": "Excerpt 1",
+            "featuredImage": {
+                "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1-1.jpg",
+                "width": "320",
+                "height": "240",
+                "alt": "",
+                "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1-1.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1-1-300x225.jpg 300w",
+                "sizes": "(max-width: 320px) 100vw, 320px"
+            },
+            "thumbnail": {
+                "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1-1-300x225.jpg",
+                "width": "300",
+                "height": "225",
+                "alt": "",
+                "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1-1-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1-1.jpg 320w",
+                "sizes": "(max-width: 300px) 100vw, 300px"
+            },
+            "categories": [],
+            "tags": [],
+            "author": {
+                "name": "Bob",
+                "url": "http://127.0.0.1:8099/author/perf-bob/"
+            },
+            "post_class": "post-81 product type-product status-publish has-post-thumbnail hentry product_cat-perf-beta product_cat-perf-gamma",
+            "link_pages": "",
+            "prev": null,
+            "next": null,
+            "mime_type": "",
+            "is_attachment": false,
+            "date": {
+                "display": "October 20, 2026",
+                "iso": "2026-10-20T00:20:29+00:00"
+            },
+            "fields": {
+                "price": "1100",
+                "sale_price": "901",
+                "sku": "Sku 1",
+                "stock": "6"
+            },
+            "terms": {
+                "product_cat": [
+                    {
+                        "name": "Perf beta",
+                        "slug": "perf-beta",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "slug": "perf-gamma",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                    }
+                ]
+            },
+            "product": {
+                "price": "$9.01",
+                "regular": "$11.00",
+                "on_sale": true,
+                "sku": "Sku 1",
+                "stock": 6,
+                "in_stock": true,
+                "purchasable": true
+            },
+            "product_cats": [
+                {
+                    "name": "Perf beta",
+                    "slug": "perf-beta",
+                    "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                },
+                {
+                    "name": "Perf gamma",
+                    "slug": "perf-gamma",
+                    "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                }
+            ]
+        },
+        "hero": {
+            "primary_label": "Explore",
+            "primary_url": "http://127.0.0.1:8099/blog/",
+            "secondary_label": "Learn more",
+            "secondary_url": "http://127.0.0.1:8099/"
+        },
+        "comments": "",
+        "shop": {
+            "url": "http://127.0.0.1:8099/shop/",
+            "cart_url": "http://127.0.0.1:8099/cart/",
+            "checkout_url": "http://127.0.0.1:8099/checkout/",
+            "action": "http://127.0.0.1:8099/wp-admin/admin-post.php",
+            "cart_nonce": "c53264c99f",
+            "checkout_nonce": "b42949336f",
+            "count": 0,
+            "notice": null,
+            "categories": [
+                {
+                    "name": "Perf alpha",
+                    "slug": "perf-alpha",
+                    "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                },
+                {
+                    "name": "Perf beta",
+                    "slug": "perf-beta",
+                    "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                },
+                {
+                    "name": "Perf gamma",
+                    "slug": "perf-gamma",
+                    "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                }
+            ],
+            "current_cat": "",
+            "free_shipping": "$100.00"
+        }
+    }
+}

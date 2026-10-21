@@ -1,0 +1,7 @@
+{# Latte Shop — cart link with live count (Twig twin of header-actions.latte). #}
+<a href="{{ shop.cart_url|safe_url }}" class="relative inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-background text-foreground no-underline hover:bg-accent" aria-label="{{ labels.cart }} ({{ shop.count }})">
+	{{ icon('shopping-bag', 'size-5') }}
+	{% if shop.count > 0 %}
+		<span class="absolute -right-2 -top-2 badge inline-flex min-w-6 items-center justify-center rounded-full bg-primary px-2 text-xs font-semibold text-primary-foreground">{{ shop.count }}</span>
+	{% endif %}
+</a>

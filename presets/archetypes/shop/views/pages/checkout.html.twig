@@ -1,0 +1,81 @@
+{# Latte Shop — checkout form, or order confirmation when ?order&key match (Twig twin of checkout.latte). #}
+<section class="container mx-auto px-4 py-12 md:px-6">
+	{% if order ?? false %}
+		<div class="mx-auto flex max-w-2xl flex-col gap-6">
+			<div class="flex flex-col items-center gap-4 text-center">
+				<span class="text-primary">{{ icon('circle-check', 'size-12') }}</span>
+				<h1 class="text-3xl font-bold tracking-tight">{{ labels.order_received }}</h1>
+				<p class="text-muted-foreground">{{ labels.order_number }} #{{ order.id }} · {{ order.email }}</p>
+			</div>
+			<ul class="flex flex-col divide-y divide-border rounded-xl border border-border bg-card">
+				{% for item in order.items %}
+					<li class="flex justify-between gap-4 p-4"><span>{{ item.title }} × {{ item.qty }}</span><span class="font-semibold">{{ item.line_display }}</span></li>
+				{% endfor %}
+				<li class="flex justify-between gap-4 p-4 text-sm text-muted-foreground"><span>{{ labels.shipping }}</span><span>{{ order.shipping_display }}</span></li>
+				<li class="flex justify-between gap-4 p-4 text-lg font-semibold"><span>{{ labels.total }}</span><span>{{ order.total_display }}</span></li>
+			</ul>
+			<a href="{{ shop.url|safe_url }}" class="mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline">{{ labels.continue_shopping }}</a>
+		</div>
+	{% elseif not cart.items %}
+		<div class="flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center">
+			<p class="text-muted-foreground">{{ labels.empty_cart }}</p>
+			<a href="{{ shop.url|safe_url }}" class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline">{{ labels.continue_shopping }}</a>
+		</div>
+	{% else %}
+		<h1 class="mb-8 text-3xl font-bold tracking-tight">{{ labels.checkout }}</h1>
+		{% if checkout.errors ?? false %}
+			{% set errText %}<span class="inline-flex items-center gap-2">{{ icon('x') }}Please check: {{ checkout.errors|join(', ') }}</span>{% endset %}
+			<div class="mb-6">{% include 'alert/Alert.html.twig' with { variant: 'destructive', role: 'alert', class: 'px-4 py-2', children: errText } %}</div>
+		{% endif %}
+		{% set v = checkout.values %}
+		<form method="post" action="{{ shop.action|safe_url }}" class="grid gap-8 lg:grid-cols-[1fr_360px]" novalidate>
+			<input type="hidden" name="action" value="latte_shop_checkout">
+			<input type="hidden" name="_wpnonce" value="{{ shop.checkout_nonce }}">
+			<div class="flex flex-col gap-6 rounded-xl border border-border bg-card p-6">
+				<div class="grid gap-4 md:grid-cols-2">
+					{% for f in checkout.fields %}
+						{% set field = f[0] %}{% set label = f[1] %}{% set type = f[2] %}{% set ac = f[3] %}{% set req = f[4] %}
+						<div class="flex flex-col gap-2">
+							{% set lbl %}{{ label }}{% if req %} *{% endif %}{% endset %}
+							{% include 'label/Label.html.twig' with { for: 'co-' ~ field, children: lbl } %}
+							{% include 'input/Input.html.twig' with { id: 'co-' ~ field, type: type, name: field, value: (v[field] ?? '') ~ '', autocomplete: ac, required: req, class: field in checkout.errors ? 'border-destructive' : '' } %}
+						</div>
+					{% endfor %}
+				</div>
+				<div class="flex flex-col gap-2">
+					{% set addrLbl %}{{ labels.address }} *{% endset %}
+					{% include 'label/Label.html.twig' with { for: 'co-address', children: addrLbl } %}
+					{% include 'textarea/Textarea.html.twig' with { id: 'co-address', name: 'address', value: (v.address ?? '') ~ '', rows: 2, required: true } %}
+				</div>
+				<fieldset class="flex flex-col gap-2">
+					<legend class="mb-2 text-sm font-medium">{{ labels.payment }}</legend>
+					<div class="grid gap-4 md:grid-cols-2">
+						{% for pm in checkout.payments %}
+							<label class="flex cursor-pointer items-center gap-4 rounded-lg border border-border p-4 has-[:checked]:border-primary has-[:checked]:bg-accent">
+								<input type="radio" name="payment" value="{{ pm.id }}"{% if (v.payment ?? 'cod') is same as(pm.id) %} checked{% endif %} class="accent-primary">
+								<span class="text-primary">{{ icon(pm.icon, 'size-5') }}</span>
+								<span class="text-sm font-medium">{{ pm.label }}</span>
+							</label>
+						{% endfor %}
+					</div>
+				</fieldset>
+				<div class="flex flex-col gap-2">
+					{% set notesLbl %}Order notes{% endset %}
+					{% include 'label/Label.html.twig' with { for: 'co-notes', children: notesLbl } %}
+					{% include 'textarea/Textarea.html.twig' with { id: 'co-notes', name: 'notes', value: (v.notes ?? '') ~ '', rows: 3 } %}
+				</div>
+			</div>
+			<div class="flex flex-col gap-4">
+				<ul class="flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm">
+					{% for item in cart.items %}
+						<li class="flex justify-between gap-4"><span>{{ item.title }} × {{ item.qty }}</span><span>{{ item.line_display }}</span></li>
+					{% endfor %}
+				</ul>
+				{% include 'blocks/order-summary.html.twig' with { cart: cart, labels: labels, showCheckout: false } %}
+				{% set place %}{{ icon('check') }}{{ labels.place_order }}{% endset %}
+				{% include 'button/Button.html.twig' with { type: 'submit', size: 'lg', class: 'w-full', children: place } %}
+				<p class="text-xs text-muted-foreground">{{ labels.demo_notice }}</p>
+			</div>
+		</form>
+	{% endif %}
+</section>

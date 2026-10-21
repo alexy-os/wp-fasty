@@ -1,0 +1,823 @@
+{
+    "uri": "/work/type/perf-alpha/",
+    "view": "pages/work",
+    "page": true,
+    "context": {
+        "site": {
+            "title": "QA",
+            "url": "http://127.0.0.1:8099/",
+            "theme_url": "http://127.0.0.1:8099/wp-content/themes/latte",
+            "stylesheet_url": "http://127.0.0.1:8099/wp-content/themes/latte-folio",
+            "lang": "en-US",
+            "description": "",
+            "charset": "UTF-8",
+            "year": "2026",
+            "logo": null
+        },
+        "menu": {
+            "primary": {
+                "items": []
+            },
+            "footer": {
+                "items": []
+            }
+        },
+        "shell": "classic",
+        "sheet": {
+            "trigger": "classic-mobile-sheet-trigger",
+            "panel": "classic-mobile-sheet-panel",
+            "title": "classic-mobile-sheet-title"
+        },
+        "labels": {
+            "featured": "Featured",
+            "latest_articles": "Latest articles",
+            "no_posts": "No posts found.",
+            "previous": "Previous",
+            "next": "Next",
+            "skip_to_content": "Skip to content",
+            "open_menu": "Open menu",
+            "close_menu": "Close menu",
+            "primary_nav": "Primary",
+            "footer_nav": "Footer",
+            "sidebar": "Sidebar",
+            "pagination": "Pagination",
+            "posted_on": "Posted on",
+            "by_author": "By",
+            "categories": "Categories",
+            "tags": "Tags",
+            "previous_post": "Previous post",
+            "next_post": "Next post",
+            "attachment": "Attachment",
+            "pages": "Pages:",
+            "view_project": "View case study",
+            "all_work": "All",
+            "selected_work": "Selected work",
+            "visit_site": "Visit site",
+            "next_project": "Next project",
+            "contact": "Start a project",
+            "no_projects": "Nothing here yet."
+        },
+        "search": {
+            "action": "http://127.0.0.1:8099/",
+            "query": "",
+            "placeholder": "Search…",
+            "submit": "Search",
+            "label": "Search"
+        },
+        "widgets": {
+            "sidebar": "",
+            "footer": ""
+        },
+        "archive": {
+            "title": "Perf alpha",
+            "description": "",
+            "search_query": null,
+            "type": "taxonomy"
+        },
+        "posts": [
+            {
+                "id": 69,
+                "title": "Project 2",
+                "content": "<p>Body of item 2.</p>\n",
+                "slug": "project-2-2",
+                "url": "http://127.0.0.1:8099/work/project/project-2-2/",
+                "excerpt": "Excerpt 2",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2-1.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2-1.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2-1-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2-1-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2-1-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2-1.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Cid",
+                    "url": "http://127.0.0.1:8099/author/perf-cid/"
+                },
+                "post_class": "post-69 project type-project status-publish has-post-thumbnail hentry project_type-perf-alpha project_type-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 19, 2026",
+                    "iso": "2026-10-19T00:20:28+00:00"
+                },
+                "fields": {
+                    "client": "Client 2",
+                    "year": "Year 2",
+                    "role": "Role 2",
+                    "url": "https://example.com/2"
+                },
+                "terms": {
+                    "project_type": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf gamma",
+                            "slug": "perf-gamma",
+                            "url": "http://127.0.0.1:8099/work/type/perf-gamma/"
+                        }
+                    ]
+                },
+                "project": {
+                    "client": {
+                        "label": "Client",
+                        "value": "Client 2"
+                    },
+                    "year": {
+                        "label": "Year",
+                        "value": "Year 2"
+                    },
+                    "role": {
+                        "label": "Role",
+                        "value": "Role 2"
+                    },
+                    "url": {
+                        "label": "Live URL",
+                        "value": "https://example.com/2"
+                    }
+                },
+                "types": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "slug": "perf-gamma",
+                        "url": "http://127.0.0.1:8099/work/type/perf-gamma/"
+                    }
+                ]
+            },
+            {
+                "id": 71,
+                "title": "Project 3",
+                "content": "<p>Body of item 3.</p>\n",
+                "slug": "project-3-2",
+                "url": "http://127.0.0.1:8099/work/project/project-3-2/",
+                "excerpt": "Excerpt 3",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3-1.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3-1.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3-1-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3-1-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3-1-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3-1.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Ann",
+                    "url": "http://127.0.0.1:8099/author/perf-ann/"
+                },
+                "post_class": "post-71 project type-project status-publish has-post-thumbnail hentry project_type-perf-alpha project_type-perf-beta",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 18, 2026",
+                    "iso": "2026-10-18T00:20:28+00:00"
+                },
+                "fields": {
+                    "client": "Client 3",
+                    "year": "Year 3",
+                    "role": "Role 3",
+                    "url": "https://example.com/3"
+                },
+                "terms": {
+                    "project_type": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf beta",
+                            "slug": "perf-beta",
+                            "url": "http://127.0.0.1:8099/work/type/perf-beta/"
+                        }
+                    ]
+                },
+                "project": {
+                    "client": {
+                        "label": "Client",
+                        "value": "Client 3"
+                    },
+                    "year": {
+                        "label": "Year",
+                        "value": "Year 3"
+                    },
+                    "role": {
+                        "label": "Role",
+                        "value": "Role 3"
+                    },
+                    "url": {
+                        "label": "Live URL",
+                        "value": "https://example.com/3"
+                    }
+                },
+                "types": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "slug": "perf-beta",
+                        "url": "http://127.0.0.1:8099/work/type/perf-beta/"
+                    }
+                ]
+            },
+            {
+                "id": 20,
+                "title": "Project 2",
+                "content": "<p>Body of item 2.</p>\n",
+                "slug": "project-2",
+                "url": "http://127.0.0.1:8099/work/project/project-2/",
+                "excerpt": "Excerpt 2",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-2.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Cid",
+                    "url": "http://127.0.0.1:8099/author/perf-cid/"
+                },
+                "post_class": "post-20 project type-project status-publish has-post-thumbnail hentry project_type-perf-alpha project_type-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 17, 2026",
+                    "iso": "2026-10-17T09:37:52+00:00"
+                },
+                "fields": {
+                    "client": "Client 2",
+                    "year": "Year 2",
+                    "role": "Role 2",
+                    "url": "https://example.com/2"
+                },
+                "terms": {
+                    "project_type": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf gamma",
+                            "slug": "perf-gamma",
+                            "url": "http://127.0.0.1:8099/work/type/perf-gamma/"
+                        }
+                    ]
+                },
+                "project": {
+                    "client": {
+                        "label": "Client",
+                        "value": "Client 2"
+                    },
+                    "year": {
+                        "label": "Year",
+                        "value": "Year 2"
+                    },
+                    "role": {
+                        "label": "Role",
+                        "value": "Role 2"
+                    },
+                    "url": {
+                        "label": "Live URL",
+                        "value": "https://example.com/2"
+                    }
+                },
+                "types": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "slug": "perf-gamma",
+                        "url": "http://127.0.0.1:8099/work/type/perf-gamma/"
+                    }
+                ]
+            },
+            {
+                "id": 22,
+                "title": "Project 3",
+                "content": "<p>Body of item 3.</p>\n",
+                "slug": "project-3",
+                "url": "http://127.0.0.1:8099/work/project/project-3/",
+                "excerpt": "Excerpt 3",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-3.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Ann",
+                    "url": "http://127.0.0.1:8099/author/perf-ann/"
+                },
+                "post_class": "post-22 project type-project status-publish has-post-thumbnail hentry project_type-perf-alpha project_type-perf-beta",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 16, 2026",
+                    "iso": "2026-10-16T09:37:52+00:00"
+                },
+                "fields": {
+                    "client": "Client 3",
+                    "year": "Year 3",
+                    "role": "Role 3",
+                    "url": "https://example.com/3"
+                },
+                "terms": {
+                    "project_type": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf beta",
+                            "slug": "perf-beta",
+                            "url": "http://127.0.0.1:8099/work/type/perf-beta/"
+                        }
+                    ]
+                },
+                "project": {
+                    "client": {
+                        "label": "Client",
+                        "value": "Client 3"
+                    },
+                    "year": {
+                        "label": "Year",
+                        "value": "Year 3"
+                    },
+                    "role": {
+                        "label": "Role",
+                        "value": "Role 3"
+                    },
+                    "url": {
+                        "label": "Live URL",
+                        "value": "https://example.com/3"
+                    }
+                },
+                "types": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "slug": "perf-beta",
+                        "url": "http://127.0.0.1:8099/work/type/perf-beta/"
+                    }
+                ]
+            },
+            {
+                "id": 75,
+                "title": "Project 5",
+                "content": "<p>Body of item 5.</p>\n",
+                "slug": "project-5-2",
+                "url": "http://127.0.0.1:8099/work/project/project-5-2/",
+                "excerpt": "Excerpt 5",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5-1.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5-1.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5-1-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5-1-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5-1-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5-1.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Cid",
+                    "url": "http://127.0.0.1:8099/author/perf-cid/"
+                },
+                "post_class": "post-75 project type-project status-publish has-post-thumbnail hentry project_type-perf-alpha project_type-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 16, 2026",
+                    "iso": "2026-10-16T00:20:28+00:00"
+                },
+                "fields": {
+                    "client": "Client 5",
+                    "year": "Year 5",
+                    "role": "Role 5",
+                    "url": "https://example.com/5"
+                },
+                "terms": {
+                    "project_type": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf gamma",
+                            "slug": "perf-gamma",
+                            "url": "http://127.0.0.1:8099/work/type/perf-gamma/"
+                        }
+                    ]
+                },
+                "project": {
+                    "client": {
+                        "label": "Client",
+                        "value": "Client 5"
+                    },
+                    "year": {
+                        "label": "Year",
+                        "value": "Year 5"
+                    },
+                    "role": {
+                        "label": "Role",
+                        "value": "Role 5"
+                    },
+                    "url": {
+                        "label": "Live URL",
+                        "value": "https://example.com/5"
+                    }
+                },
+                "types": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "slug": "perf-gamma",
+                        "url": "http://127.0.0.1:8099/work/type/perf-gamma/"
+                    }
+                ]
+            },
+            {
+                "id": 77,
+                "title": "Project 6",
+                "content": "<p>Body of item 6.</p>\n",
+                "slug": "project-6-2",
+                "url": "http://127.0.0.1:8099/work/project/project-6-2/",
+                "excerpt": "Excerpt 6",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6-1.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6-1.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6-1-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6-1-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6-1-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6-1.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Ann",
+                    "url": "http://127.0.0.1:8099/author/perf-ann/"
+                },
+                "post_class": "post-77 project type-project status-publish has-post-thumbnail hentry project_type-perf-alpha project_type-perf-beta",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 15, 2026",
+                    "iso": "2026-10-15T00:20:28+00:00"
+                },
+                "fields": {
+                    "client": "Client 6",
+                    "year": "Year 6",
+                    "role": "Role 6",
+                    "url": "https://example.com/6"
+                },
+                "terms": {
+                    "project_type": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf beta",
+                            "slug": "perf-beta",
+                            "url": "http://127.0.0.1:8099/work/type/perf-beta/"
+                        }
+                    ]
+                },
+                "project": {
+                    "client": {
+                        "label": "Client",
+                        "value": "Client 6"
+                    },
+                    "year": {
+                        "label": "Year",
+                        "value": "Year 6"
+                    },
+                    "role": {
+                        "label": "Role",
+                        "value": "Role 6"
+                    },
+                    "url": {
+                        "label": "Live URL",
+                        "value": "https://example.com/6"
+                    }
+                },
+                "types": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "slug": "perf-beta",
+                        "url": "http://127.0.0.1:8099/work/type/perf-beta/"
+                    }
+                ]
+            },
+            {
+                "id": 26,
+                "title": "Project 5",
+                "content": "<p>Body of item 5.</p>\n",
+                "slug": "project-5",
+                "url": "http://127.0.0.1:8099/work/project/project-5/",
+                "excerpt": "Excerpt 5",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-5.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Cid",
+                    "url": "http://127.0.0.1:8099/author/perf-cid/"
+                },
+                "post_class": "post-26 project type-project status-publish has-post-thumbnail hentry project_type-perf-alpha project_type-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 14, 2026",
+                    "iso": "2026-10-14T09:37:52+00:00"
+                },
+                "fields": {
+                    "client": "Client 5",
+                    "year": "Year 5",
+                    "role": "Role 5",
+                    "url": "https://example.com/5"
+                },
+                "terms": {
+                    "project_type": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf gamma",
+                            "slug": "perf-gamma",
+                            "url": "http://127.0.0.1:8099/work/type/perf-gamma/"
+                        }
+                    ]
+                },
+                "project": {
+                    "client": {
+                        "label": "Client",
+                        "value": "Client 5"
+                    },
+                    "year": {
+                        "label": "Year",
+                        "value": "Year 5"
+                    },
+                    "role": {
+                        "label": "Role",
+                        "value": "Role 5"
+                    },
+                    "url": {
+                        "label": "Live URL",
+                        "value": "https://example.com/5"
+                    }
+                },
+                "types": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "slug": "perf-gamma",
+                        "url": "http://127.0.0.1:8099/work/type/perf-gamma/"
+                    }
+                ]
+            },
+            {
+                "id": 28,
+                "title": "Project 6",
+                "content": "<p>Body of item 6.</p>\n",
+                "slug": "project-6",
+                "url": "http://127.0.0.1:8099/work/project/project-6/",
+                "excerpt": "Excerpt 6",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/project-6.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Ann",
+                    "url": "http://127.0.0.1:8099/author/perf-ann/"
+                },
+                "post_class": "post-28 project type-project status-publish has-post-thumbnail hentry project_type-perf-alpha project_type-perf-beta",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 13, 2026",
+                    "iso": "2026-10-13T09:37:52+00:00"
+                },
+                "fields": {
+                    "client": "Client 6",
+                    "year": "Year 6",
+                    "role": "Role 6",
+                    "url": "https://example.com/6"
+                },
+                "terms": {
+                    "project_type": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf beta",
+                            "slug": "perf-beta",
+                            "url": "http://127.0.0.1:8099/work/type/perf-beta/"
+                        }
+                    ]
+                },
+                "project": {
+                    "client": {
+                        "label": "Client",
+                        "value": "Client 6"
+                    },
+                    "year": {
+                        "label": "Year",
+                        "value": "Year 6"
+                    },
+                    "role": {
+                        "label": "Role",
+                        "value": "Role 6"
+                    },
+                    "url": {
+                        "label": "Live URL",
+                        "value": "https://example.com/6"
+                    }
+                },
+                "types": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "slug": "perf-beta",
+                        "url": "http://127.0.0.1:8099/work/type/perf-beta/"
+                    }
+                ]
+            }
+        ],
+        "pagination": null,
+        "work": {
+            "url": "http://127.0.0.1:8099/work/",
+            "types": [
+                {
+                    "name": "Perf alpha",
+                    "slug": "perf-alpha",
+                    "url": "http://127.0.0.1:8099/work/type/perf-alpha/"
+                },
+                {
+                    "name": "Perf beta",
+                    "slug": "perf-beta",
+                    "url": "http://127.0.0.1:8099/work/type/perf-beta/"
+                },
+                {
+                    "name": "Perf gamma",
+                    "slug": "perf-gamma",
+                    "url": "http://127.0.0.1:8099/work/type/perf-gamma/"
+                }
+            ],
+            "current": "perf-alpha"
+        },
+        "contact_url": "mailto:&#113;&#97;&#64;&#101;xa&#109;p&#108;e&#46;com"
+    }
+}

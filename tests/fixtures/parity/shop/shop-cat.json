@@ -1,0 +1,778 @@
+{
+    "uri": "/shop/category/perf-alpha/",
+    "view": "pages/shop",
+    "page": true,
+    "context": {
+        "site": {
+            "title": "QA",
+            "url": "http://127.0.0.1:8099/",
+            "theme_url": "http://127.0.0.1:8099/wp-content/themes/latte",
+            "stylesheet_url": "http://127.0.0.1:8099/wp-content/themes/latte-shop",
+            "lang": "en-US",
+            "description": "",
+            "charset": "UTF-8",
+            "year": "2026",
+            "logo": null
+        },
+        "menu": {
+            "primary": {
+                "items": []
+            },
+            "footer": {
+                "items": []
+            }
+        },
+        "shell": "classic",
+        "sheet": {
+            "trigger": "classic-mobile-sheet-trigger",
+            "panel": "classic-mobile-sheet-panel",
+            "title": "classic-mobile-sheet-title"
+        },
+        "labels": {
+            "featured": "Featured",
+            "latest_articles": "Latest articles",
+            "no_posts": "No posts found.",
+            "previous": "Previous",
+            "next": "Next",
+            "skip_to_content": "Skip to content",
+            "open_menu": "Open menu",
+            "close_menu": "Close menu",
+            "primary_nav": "Primary",
+            "footer_nav": "Footer",
+            "sidebar": "Sidebar",
+            "pagination": "Pagination",
+            "posted_on": "Posted on",
+            "by_author": "By",
+            "categories": "Categories",
+            "tags": "Tags",
+            "previous_post": "Previous post",
+            "next_post": "Next post",
+            "attachment": "Attachment",
+            "pages": "Pages:",
+            "add_to_cart": "Add to cart",
+            "buy_now": "Buy now",
+            "cart": "Cart",
+            "checkout": "Checkout",
+            "subtotal": "Subtotal",
+            "shipping": "Shipping",
+            "total": "Total",
+            "qty": "Quantity",
+            "remove": "Remove",
+            "update_cart": "Update cart",
+            "empty_cart": "Your cart is empty.",
+            "continue_shopping": "Continue shopping",
+            "place_order": "Place order",
+            "out_of_stock": "Out of stock",
+            "sale": "Sale",
+            "all_products": "All",
+            "shop_now": "Shop now",
+            "order_received": "Thank you — your order has been received.",
+            "order_number": "Order",
+            "address": "Address",
+            "payment": "Payment",
+            "demo_notice": "Demo store — no real payment is taken.",
+            "no_products": "No products found.",
+            "breadcrumb": "Breadcrumb",
+            "returns": "30-day easy returns",
+            "pay_options": "Pay on delivery or by bank transfer",
+            "free_shipping_over": "Free shipping over $100.00"
+        },
+        "search": {
+            "action": "http://127.0.0.1:8099/",
+            "query": "",
+            "placeholder": "Search…",
+            "submit": "Search",
+            "label": "Search"
+        },
+        "widgets": {
+            "sidebar": "",
+            "footer": ""
+        },
+        "archive": {
+            "title": "Perf alpha",
+            "description": "",
+            "search_query": null,
+            "type": "taxonomy"
+        },
+        "posts": [
+            {
+                "id": 83,
+                "title": "Product 2",
+                "content": "<p>Body of item 2.</p>\n",
+                "slug": "product-2-2",
+                "url": "http://127.0.0.1:8099/product/product-2-2/",
+                "excerpt": "Excerpt 2",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2-1.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2-1.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2-1-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2-1-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2-1-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2-1.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Cid",
+                    "url": "http://127.0.0.1:8099/author/perf-cid/"
+                },
+                "post_class": "post-83 product type-product status-publish has-post-thumbnail hentry product_cat-perf-alpha product_cat-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 19, 2026",
+                    "iso": "2026-10-19T00:20:29+00:00"
+                },
+                "fields": {
+                    "price": "1200",
+                    "sale_price": "",
+                    "sku": "Sku 2",
+                    "stock": "7"
+                },
+                "terms": {
+                    "product_cat": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf gamma",
+                            "slug": "perf-gamma",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                        }
+                    ]
+                },
+                "product": {
+                    "price": "$12.00",
+                    "regular": "",
+                    "on_sale": false,
+                    "sku": "Sku 2",
+                    "stock": 7,
+                    "in_stock": true,
+                    "purchasable": true
+                },
+                "product_cats": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "slug": "perf-gamma",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                    }
+                ]
+            },
+            {
+                "id": 85,
+                "title": "Product 3",
+                "content": "<p>Body of item 3.</p>\n",
+                "slug": "product-3-2",
+                "url": "http://127.0.0.1:8099/product/product-3-2/",
+                "excerpt": "Excerpt 3",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3-1.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3-1.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3-1-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3-1-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3-1-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3-1.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Ann",
+                    "url": "http://127.0.0.1:8099/author/perf-ann/"
+                },
+                "post_class": "post-85 product type-product status-publish has-post-thumbnail hentry product_cat-perf-alpha product_cat-perf-beta",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 18, 2026",
+                    "iso": "2026-10-18T00:20:29+00:00"
+                },
+                "fields": {
+                    "price": "1300",
+                    "sale_price": "903",
+                    "sku": "Sku 3",
+                    "stock": "8"
+                },
+                "terms": {
+                    "product_cat": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf beta",
+                            "slug": "perf-beta",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                        }
+                    ]
+                },
+                "product": {
+                    "price": "$9.03",
+                    "regular": "$13.00",
+                    "on_sale": true,
+                    "sku": "Sku 3",
+                    "stock": 8,
+                    "in_stock": true,
+                    "purchasable": true
+                },
+                "product_cats": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "slug": "perf-beta",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                    }
+                ]
+            },
+            {
+                "id": 36,
+                "title": "Product 2",
+                "content": "<p>Body of item 2.</p>\n",
+                "slug": "product-2",
+                "url": "http://127.0.0.1:8099/product/product-2/",
+                "excerpt": "Excerpt 2",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-2.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Cid",
+                    "url": "http://127.0.0.1:8099/author/perf-cid/"
+                },
+                "post_class": "post-36 product type-product status-publish has-post-thumbnail hentry product_cat-perf-alpha product_cat-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 17, 2026",
+                    "iso": "2026-10-17T09:37:53+00:00"
+                },
+                "fields": {
+                    "price": "1200",
+                    "sale_price": "",
+                    "sku": "Sku 2",
+                    "stock": "7"
+                },
+                "terms": {
+                    "product_cat": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf gamma",
+                            "slug": "perf-gamma",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                        }
+                    ]
+                },
+                "product": {
+                    "price": "$12.00",
+                    "regular": "",
+                    "on_sale": false,
+                    "sku": "Sku 2",
+                    "stock": 7,
+                    "in_stock": true,
+                    "purchasable": true
+                },
+                "product_cats": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "slug": "perf-gamma",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                    }
+                ]
+            },
+            {
+                "id": 38,
+                "title": "Product 3",
+                "content": "<p>Body of item 3.</p>\n",
+                "slug": "product-3",
+                "url": "http://127.0.0.1:8099/product/product-3/",
+                "excerpt": "Excerpt 3",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-3.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Ann",
+                    "url": "http://127.0.0.1:8099/author/perf-ann/"
+                },
+                "post_class": "post-38 product type-product status-publish has-post-thumbnail hentry product_cat-perf-alpha product_cat-perf-beta",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 16, 2026",
+                    "iso": "2026-10-16T09:37:53+00:00"
+                },
+                "fields": {
+                    "price": "1300",
+                    "sale_price": "903",
+                    "sku": "Sku 3",
+                    "stock": "8"
+                },
+                "terms": {
+                    "product_cat": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf beta",
+                            "slug": "perf-beta",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                        }
+                    ]
+                },
+                "product": {
+                    "price": "$9.03",
+                    "regular": "$13.00",
+                    "on_sale": true,
+                    "sku": "Sku 3",
+                    "stock": 8,
+                    "in_stock": true,
+                    "purchasable": true
+                },
+                "product_cats": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "slug": "perf-beta",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                    }
+                ]
+            },
+            {
+                "id": 89,
+                "title": "Product 5",
+                "content": "<p>Body of item 5.</p>\n",
+                "slug": "product-5-2",
+                "url": "http://127.0.0.1:8099/product/product-5-2/",
+                "excerpt": "Excerpt 5",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5-1.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5-1.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5-1-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5-1-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5-1-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5-1.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Cid",
+                    "url": "http://127.0.0.1:8099/author/perf-cid/"
+                },
+                "post_class": "post-89 product type-product status-publish has-post-thumbnail hentry product_cat-perf-alpha product_cat-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 16, 2026",
+                    "iso": "2026-10-16T00:20:29+00:00"
+                },
+                "fields": {
+                    "price": "1500",
+                    "sale_price": "905",
+                    "sku": "Sku 5",
+                    "stock": "10"
+                },
+                "terms": {
+                    "product_cat": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf gamma",
+                            "slug": "perf-gamma",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                        }
+                    ]
+                },
+                "product": {
+                    "price": "$9.05",
+                    "regular": "$15.00",
+                    "on_sale": true,
+                    "sku": "Sku 5",
+                    "stock": 10,
+                    "in_stock": true,
+                    "purchasable": true
+                },
+                "product_cats": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "slug": "perf-gamma",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                    }
+                ]
+            },
+            {
+                "id": 91,
+                "title": "Product 6",
+                "content": "<p>Body of item 6.</p>\n",
+                "slug": "product-6-2",
+                "url": "http://127.0.0.1:8099/product/product-6-2/",
+                "excerpt": "Excerpt 6",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6-1.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6-1.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6-1-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6-1-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6-1-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6-1.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Ann",
+                    "url": "http://127.0.0.1:8099/author/perf-ann/"
+                },
+                "post_class": "post-91 product type-product status-publish has-post-thumbnail hentry product_cat-perf-alpha product_cat-perf-beta",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 15, 2026",
+                    "iso": "2026-10-15T00:20:29+00:00"
+                },
+                "fields": {
+                    "price": "1600",
+                    "sale_price": "",
+                    "sku": "Sku 6",
+                    "stock": "11"
+                },
+                "terms": {
+                    "product_cat": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf beta",
+                            "slug": "perf-beta",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                        }
+                    ]
+                },
+                "product": {
+                    "price": "$16.00",
+                    "regular": "",
+                    "on_sale": false,
+                    "sku": "Sku 6",
+                    "stock": 11,
+                    "in_stock": true,
+                    "purchasable": true
+                },
+                "product_cats": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "slug": "perf-beta",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                    }
+                ]
+            },
+            {
+                "id": 42,
+                "title": "Product 5",
+                "content": "<p>Body of item 5.</p>\n",
+                "slug": "product-5",
+                "url": "http://127.0.0.1:8099/product/product-5/",
+                "excerpt": "Excerpt 5",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-5.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Cid",
+                    "url": "http://127.0.0.1:8099/author/perf-cid/"
+                },
+                "post_class": "post-42 product type-product status-publish has-post-thumbnail hentry product_cat-perf-alpha product_cat-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 14, 2026",
+                    "iso": "2026-10-14T09:37:53+00:00"
+                },
+                "fields": {
+                    "price": "1500",
+                    "sale_price": "905",
+                    "sku": "Sku 5",
+                    "stock": "10"
+                },
+                "terms": {
+                    "product_cat": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf gamma",
+                            "slug": "perf-gamma",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                        }
+                    ]
+                },
+                "product": {
+                    "price": "$9.05",
+                    "regular": "$15.00",
+                    "on_sale": true,
+                    "sku": "Sku 5",
+                    "stock": 10,
+                    "in_stock": true,
+                    "purchasable": true
+                },
+                "product_cats": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "slug": "perf-gamma",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                    }
+                ]
+            },
+            {
+                "id": 44,
+                "title": "Product 6",
+                "content": "<p>Body of item 6.</p>\n",
+                "slug": "product-6",
+                "url": "http://127.0.0.1:8099/product/product-6/",
+                "excerpt": "Excerpt 6",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-6.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "Ann",
+                    "url": "http://127.0.0.1:8099/author/perf-ann/"
+                },
+                "post_class": "post-44 product type-product status-publish has-post-thumbnail hentry product_cat-perf-alpha product_cat-perf-beta",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 13, 2026",
+                    "iso": "2026-10-13T09:37:53+00:00"
+                },
+                "fields": {
+                    "price": "1600",
+                    "sale_price": "",
+                    "sku": "Sku 6",
+                    "stock": "11"
+                },
+                "terms": {
+                    "product_cat": [
+                        {
+                            "name": "Perf alpha",
+                            "slug": "perf-alpha",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                        },
+                        {
+                            "name": "Perf beta",
+                            "slug": "perf-beta",
+                            "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                        }
+                    ]
+                },
+                "product": {
+                    "price": "$16.00",
+                    "regular": "",
+                    "on_sale": false,
+                    "sku": "Sku 6",
+                    "stock": 11,
+                    "in_stock": true,
+                    "purchasable": true
+                },
+                "product_cats": [
+                    {
+                        "name": "Perf alpha",
+                        "slug": "perf-alpha",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "slug": "perf-beta",
+                        "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                    }
+                ]
+            }
+        ],
+        "pagination": null,
+        "shop": {
+            "url": "http://127.0.0.1:8099/shop/",
+            "cart_url": "http://127.0.0.1:8099/cart/",
+            "checkout_url": "http://127.0.0.1:8099/checkout/",
+            "action": "http://127.0.0.1:8099/wp-admin/admin-post.php",
+            "cart_nonce": "c53264c99f",
+            "checkout_nonce": "b42949336f",
+            "count": 0,
+            "notice": null,
+            "categories": [
+                {
+                    "name": "Perf alpha",
+                    "slug": "perf-alpha",
+                    "url": "http://127.0.0.1:8099/shop/category/perf-alpha/"
+                },
+                {
+                    "name": "Perf beta",
+                    "slug": "perf-beta",
+                    "url": "http://127.0.0.1:8099/shop/category/perf-beta/"
+                },
+                {
+                    "name": "Perf gamma",
+                    "slug": "perf-gamma",
+                    "url": "http://127.0.0.1:8099/shop/category/perf-gamma/"
+                }
+            ],
+            "current_cat": "perf-alpha",
+            "free_shipping": "$100.00"
+        }
+    }
+}

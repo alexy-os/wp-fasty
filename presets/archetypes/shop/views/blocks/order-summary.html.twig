@@ -1,0 +1,11 @@
+{# Order totals card (Twig twin of order-summary.latte). Params: cart, labels, showCheckout (default true) #}
+<aside class="flex h-fit flex-col gap-4 rounded-xl border border-border bg-card p-6">
+	<dl class="flex flex-col gap-2 text-sm">
+		<div class="flex justify-between"><dt class="text-muted-foreground">{{ labels.subtotal }}</dt><dd>{{ cart.subtotal_display }}</dd></div>
+		<div class="flex justify-between"><dt class="text-muted-foreground">{{ labels.shipping }}</dt><dd>{{ cart.shipping_display }}</dd></div>
+		<div class="flex justify-between border-t border-border pt-4 text-base font-semibold"><dt>{{ labels.total }}</dt><dd>{{ cart.total_display }}</dd></div>
+	</dl>
+	{% if showCheckout ?? true %}
+		<a href="{{ shop.checkout_url|safe_url }}" class="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90">{{ icon('credit-card') }}{{ labels.checkout }}</a>
+	{% endif %}
+</aside>

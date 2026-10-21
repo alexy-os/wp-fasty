@@ -1,0 +1,27 @@
+{# Latte Folio — work archive with type filter (Twig twin of work.latte). #}
+<section class="container mx-auto px-4 pb-8 pt-16 md:px-6">
+	<h1 class="text-4xl font-bold tracking-tight md:text-5xl">{{ archive.title }}</h1>
+	{% if archive.description ?? false %}
+		<div class="mt-4 max-w-2xl text-muted-foreground">{{ archive.description|raw }}</div>
+	{% endif %}
+	{% if work.types ?? false %}
+		<nav class="mt-8 flex flex-wrap gap-2" aria-label="{{ labels.all_work }}">
+			<a href="{{ work.url|safe_url }}" class="inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline {{ work.current is same as('') ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent' }}"{% if work.current is same as('') %} aria-current="page"{% endif %}>{{ labels.all_work }}</a>
+			{% for type in work.types %}
+				<a href="{{ type.url|safe_url }}" class="inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline {{ work.current is same as(type.slug) ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent' }}"{% if work.current is same as(type.slug) %} aria-current="page"{% endif %}>{{ type.name }}</a>
+			{% endfor %}
+		</nav>
+	{% endif %}
+</section>
+
+<section class="container mx-auto px-4 py-8 md:px-6">
+	{% if not posts %}
+		<p class="py-16 text-center text-muted-foreground">{{ labels.no_projects }}</p>
+	{% else %}
+		<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+			{% for project in posts %}
+				{% include 'blocks/project-card.html.twig' with { project: project, labels: labels } %}
+			{% endfor %}
+		</div>
+	{% endif %}
+</section>

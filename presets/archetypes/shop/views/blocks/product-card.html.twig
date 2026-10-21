@@ -1,0 +1,39 @@
+{# Latte Shop — product card (Twig twin of product-card.latte). Params: product (post view-model), shop, labels #}
+<article class="group flex flex-col overflow-hidden rounded-xl border border-border bg-card">
+	<a href="{{ product.url|safe_url }}" class="relative block overflow-hidden bg-muted no-underline" aria-label="{{ product.title }}">
+		{% if product.featuredImage.url ?? false %}
+			{% include 'image/Image.html.twig' with { src: product.featuredImage.url, alt: product.featuredImage.alt ?? '', srcset: product.featuredImage.srcset ?? '', sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw', class: 'aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105', loading: 'lazy' } %}
+		{% else %}
+			<div class="flex aspect-square items-center justify-center text-muted-foreground">{{ icon('package', 'size-8') }}</div>
+		{% endif %}
+		{% if product.product.on_sale %}
+			<span class="badge absolute left-4 top-4 rounded-full bg-destructive px-2 py-1 text-xs font-semibold text-primary-foreground">{{ labels.sale }}</span>
+		{% endif %}
+	</a>
+	<div class="flex flex-1 flex-col gap-2 p-4">
+		{% if product.product_cats ?? false %}
+			<span class="text-xs uppercase tracking-wide text-muted-foreground">{{ product.product_cats[0].name }}</span>
+		{% endif %}
+		<h3 class="font-semibold leading-tight">
+			<a href="{{ product.url|safe_url }}" class="text-foreground no-underline hover:text-primary">{{ product.title }}</a>
+		</h3>
+		<div class="mt-auto flex items-center justify-between gap-2 pt-2">
+			<p class="flex items-baseline gap-2">
+				<span class="text-lg font-semibold">{{ product.product.price }}</span>
+				{% if product.product.regular %}<s class="text-sm text-muted-foreground">{{ product.product.regular }}</s>{% endif %}
+			</p>
+			{% if product.product.purchasable %}
+				<form method="post" action="{{ shop.action|safe_url }}">
+					<input type="hidden" name="action" value="latte_shop_cart">
+					<input type="hidden" name="op" value="add">
+					<input type="hidden" name="product_id" value="{{ product.id }}">
+					<input type="hidden" name="_wpnonce" value="{{ shop.cart_nonce }}">
+					{% set addIcon %}{{ icon('plus') }}{% endset %}
+					{% include 'button/Button.html.twig' with { type: 'submit', size: 'icon', ariaLabel: labels.add_to_cart ~ ': ' ~ product.title, children: addIcon } %}
+				</form>
+			{% else %}
+				<span class="text-xs text-muted-foreground">{{ labels.out_of_stock }}</span>
+			{% endif %}
+		</div>
+	</div>
+</article>

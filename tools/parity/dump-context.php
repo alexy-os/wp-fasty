@@ -2,6 +2,7 @@
 /**
  * Snapshot one request's view + ContextFactory context as a parity fixture (dev tool, needs a WP site).
  *   wp eval-file tools/parity/dump-context.php <uri> <out.json>
+ *   [front-page=<id>] uses that page as the static front page.
  *   [posts-front] renders the theme front page even when a static page is set.
  * The fixture is frozen data: parity renders it with both engines, no WordPress needed.
  *
@@ -21,6 +22,14 @@ $_SERVER['REQUEST_URI'] = $wpfastyUri;
 $wpfastyQuery = (string) wp_parse_url($wpfastyUri, PHP_URL_QUERY);
 if ($wpfastyQuery !== '') {
     parse_str($wpfastyQuery, $_GET); // phpcs:ignore WordPress.Security.NonceVerification
+}
+foreach ($wpfastyArgs as $wpfastyArg) {
+    if (str_starts_with($wpfastyArg, 'front-page=')) {
+        // Render a given (non-builder) page as the static front page.
+        $wpfastyFront = (int) substr($wpfastyArg, 11);
+        add_filter('pre_option_show_on_front', static fn (): string => 'page');
+        add_filter('pre_option_page_on_front', static fn (): int => $wpfastyFront);
+    }
 }
 if (in_array('posts-front', $wpfastyArgs, true)) {
     // Theme front page (hero + featured grid) instead of a static/builder page.
