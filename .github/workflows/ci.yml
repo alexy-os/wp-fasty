@@ -387,6 +387,66 @@ jobs:
           echo "- Isolated engines: $(wc -l < "$D/sites.txt") sites, each on its own parent with only its engine loaded; $n Latte ↔ Twig pairs DOM-identical: $([ $fail -eq 0 ] && echo ok || echo FAIL)" >> "$GITHUB_STEP_SUMMARY"
           exit $fail
 
+      - name: Mirror isolation — Twig sites with Latte physically absent (incl. a remote Twig registry), Latte sites with Twig absent; negative engine + import tests
+        run: |
+          cd /tmp/wp
+          D="$GITHUB_WORKSPACE/dist"; Q="$GITHUB_WORKSPACE/tools/qa/site-pair.sh"; B=http://127.0.0.1:8080
+          cp "$GITHUB_WORKSPACE/tools/qa/renderer-switch.php" wp-content/mu-plugins/
+          # The registries are served by the same host (static files under the WP root): the import goes through
+          # wp_safe_remote_get exactly as for https://registry.buildy.tw/<runtime>/wpfasty/v<version>/.
+          rm -rf registry && cp -r "$D/registry" registry
+          V=$(bun -e "console.log(require('$D/registry/latte/wpfasty/latest/catalog.json').version)")
+          for e in latte twig; do bun "$GITHUB_WORKSPACE/tools/builder/registry-verify.ts" "$e" "$B/registry/$e/wpfasty/v$V/"; done
+          restart() { # php -S again: its opcache may still hold files of the parent that was moved away
+            old=$(pgrep -f '^php -S 127.0.0.1:8080' || true)
+            pkill -f '^php -S 127.0.0.1:8080' || true
+            for pid in $old; do while kill -0 "$pid" 2>/dev/null; do sleep 0.2; done; done
+            for i in $(seq 1 60); do sleep 0.5; curl -s -o /dev/null "$B/wp-login.php" && break; done
+            pgrep -f '^php -S 127.0.0.1:8080' >/dev/null
+          }
+          engine() { bun -e "console.log(require('$D/$1/site.manifest.json').engine ?? 'latte')"; }
+          ns() { [ "$1" = twig ] && echo Twig || echo Latte; }
+          fail=0
+          for e in latte twig; do
+            o=$([ "$e" = twig ] && echo latte || echo twig); site=$([ "$e" = twig ] && echo latte-press-twig || echo latte-press)
+            echo "::group::$e sites, $o absent"
+            use-builder "$e"
+            mv "wp-content/themes/$o" "/tmp/parent-$o"
+            # Physically absent: no class of the other library anywhere in wp-content, no other-runtime builder source.
+            if grep -rlE --include='*.php' "^namespace $(ns "$o")(\\\\|;)" wp-content | head -3 | grep .; then echo "::error::$o classes present in the $e phase"; fail=1; fi
+            [ ! -d "wp-content/plugins/wpfasty-builder/sources/ui8kit/$o" ] || { echo "::error::builder ships the $o source"; fail=1; }
+            restart
+            for s in $(cat "$D/sites.txt"); do
+              [ "$(engine "$s")" = "$e" ] || continue
+              bash "$Q" fetch . "$B" "$s" "/tmp/mirror/$s" / "/no-such-page/|404" || fail=1
+            done
+            # Remote registry of the site runtime: imports, renders with only this engine loaded.
+            wp theme activate "$site" --quiet
+            wp eval-file "$GITHUB_WORKSPACE/tools/qa/registry-import.php" reg "$B/registry/$e/wpfasty/v$V/" || fail=1
+            out=$(wp eval-file "$GITHUB_WORKSPACE/tools/builder/seed-landing.php" "$GITHUB_WORKSPACE/tools/qa/remote-landing.json" 2>&1) || { echo "$out"; fail=1; }
+            echo "$out"
+            bash "$Q" fetch . "$B" "$site" "/tmp/mirror/remote-$e" /remote-registry/ || fail=1
+            grep -q 'wpfb-page' "/tmp/mirror/remote-$e/_remote_registry__.html" || { echo "::error::remote $e landing has no builder markup"; fail=1; }
+            # Negative imports: the other runtime's registry and a tampered archive are refused.
+            if wp eval-file "$GITHUB_WORKSPACE/tools/qa/registry-import.php" bad "$B/registry/$o/wpfasty/v$V/"; then echo "::error::$o registry imported into a $e site"; fail=1; fi
+            cp -r "registry/$e/wpfasty/v$V" registry/tampered && echo x >> registry/tampered/blocks.zip
+            if wp eval-file "$GITHUB_WORKSPACE/tools/qa/registry-import.php" bad "$B/registry/tampered/"; then echo "::error::tampered $e registry imported"; fail=1; fi
+            rm -rf registry/tampered
+            # Negative engine: forcing the absent engine stops with the explicit error page (no fallback).
+            wp option update wpfasty_qa_renderer "$o" --quiet
+            code=$(curl -s -o /tmp/forced.html -w '%{http_code}' "$B/" || true)
+            m=$(grep -c "Install the $o parent theme" /tmp/forced.html || true)
+            n=$(grep -cE '<b>(Warning|Notice|Deprecated|Fatal error)</b>|critical error' /tmp/forced.html || true)
+            wp option delete wpfasty_qa_renderer --quiet
+            echo "- $site forced to $o ($o absent): HTTP $code, engine error $m, notices $n"
+            [ "$code" = 500 ] && [ "$m" -ge 1 ] && [ "$n" -eq 0 ] || { echo "::error::$site forced to $o: HTTP $code, engine error $m, notices $n"; fail=1; }
+            mv "/tmp/parent-$o" "wp-content/themes/$o"
+            echo "::endgroup::"
+            echo "- Mirror $e (with $o physically absent): sites, remote $e registry v$V import + render, negatives: $([ $fail -eq 0 ] && echo ok || echo FAIL)" >> "$GITHUB_STEP_SUMMARY"
+          done
+          use-builder latte
+          exit $fail
+
       - name: No PHP notices / warnings / deprecations logged
         if: always()
         run: |
