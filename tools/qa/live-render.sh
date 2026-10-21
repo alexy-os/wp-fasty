@@ -14,7 +14,7 @@ for spec in "$@"; do
   IFS='|' read -r path want mode <<<"$spec"; want="${want:-200}"
   for eng in latte twig; do
     wp option update wpfasty_qa_renderer "$eng" --quiet
-    code=$(curl -s -o "/tmp/live-$eng.html" -w '%{http_code}' "$BASE$path" || true)
+    code=$(curl -s --retry 3 --retry-delay 1 --retry-all-errors -o "/tmp/live-$eng.html" -w '%{http_code}' "$BASE$path" || true)
     notices=$(grep -cE '<b>(Warning|Notice|Deprecated|Fatal error)</b>|critical error' "/tmp/live-$eng.html" || true)
     if [ "$code" != "$want" ] || [ "$notices" -ne 0 ]; then
       echo "✗ $THEME $path [$eng]: HTTP $code (want $want), notices $notices"; fail=1
