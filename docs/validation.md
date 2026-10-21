@@ -49,7 +49,7 @@ current child themes: [`manifests/examples/`](../manifests/examples/) (`press`, 
 
 | Section | Content |
 |---------|---------|
-| `manifestVersion`, `engine` | `"0.2"`; `latte` \| `twig` (twig reserved: no `.twig` views ship, so `wporg` must be false) |
+| `manifestVersion`, `engine` | `"0.2"`; `latte` \| `twig`. `twig` ⇒ `output.wporg` false (the wordpress.org parent is the Latte-only zip) and `builder.enabled` false (the builder compiles Latte); the child ships only `.html.twig` views and the package carries the parent Twig build |
 | `archetype` | `press` \| `folio` \| `shop` \| `blank` — child code family (PHP behaviour, view models, views) |
 | `theme` | name, slug, textDomain (= slug), prefix, namespace, description, version, uri, author (default `alexy-os`), requires, testedUpTo, license, tags |
 | `parent` | `preset` (`presets/themes/<id>.json`), `layout` (`classic` \| `app-shell`), `style` |

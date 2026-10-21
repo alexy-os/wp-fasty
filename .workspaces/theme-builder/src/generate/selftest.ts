@@ -53,6 +53,22 @@ try {
       check(`${arch}: php -l on ${php.length} file(s)`, !bad.length, bad.map((f) => relative(dir, f)).join(", "));
     }
   }
+  // engine twig: Twig-only views (one per archetype Latte view), renderer switch in functions.php, still lints.
+  for (const arch of Object.keys(data.examples).sort()) {
+    const src = join(archetypeDir(arch), "views");
+    const latteViews = existsSync(src) ? walk(src).filter((f) => f.endsWith(".latte")).map((f) => relative(src, f)) : [];
+    const { manifest } = buildManifest({ archetype: arch, name: `Twig ${arch} Site`, engine: "twig" }, { ...data, schemaId: data.examples[arch].$schema });
+    const mf = join(tmp, `${arch}-twig.json`);
+    writeFileSync(mf, JSON.stringify(manifest, null, 2));
+    const dir = generate(mf, join(tmp, manifest.theme.slug), { pot: false });
+    const views = existsSync(join(dir, "views")) ? walk(join(dir, "views")).map((f) => relative(join(dir, "views"), f)) : [];
+    check(`${arch} twig: no .latte views`, !views.some((v) => v.endsWith(".latte")), views.filter((v) => v.endsWith(".latte")).join(", "));
+    const missing = latteViews.filter((v) => !views.includes(v.replace(/\.latte$/, ".html.twig")));
+    check(`${arch} twig: a Twig twin for each of ${latteViews.length} archetype view(s)`, !missing.length, missing.join(", "));
+    const fn = readFileSync(join(dir, "functions.php"), "utf8");
+    check(`${arch} twig: functions.php switches wpfasty_renderer`, fn.includes("add_filter('wpfasty_renderer', static fn (): string => 'twig');"));
+    if (hasPhp) check(`${arch} twig: php -l functions.php`, spawnSync("php", ["-l", join(dir, "functions.php")]).status === 0);
+  }
 } finally {
   rmSync(tmp, { recursive: true, force: true });
 }

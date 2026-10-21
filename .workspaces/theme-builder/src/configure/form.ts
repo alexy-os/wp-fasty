@@ -36,6 +36,7 @@ const html = `<!doctype html>
 <form onsubmit="return false">
   <fieldset><legend>Archetype</legend>
     <select id="archetype"></select><p class="info" id="arch-info"></p>
+    <label>Engine <select id="engine"><option value="latte">Latte (default, wordpress.org-ready)</option><option value="twig">Twig (no wordpress.org build, no builder landings)</option></select></label>
   </fieldset>
   <fieldset><legend>Theme</legend>
     <label>Name <input type="text" id="name" value="My Site"></label>

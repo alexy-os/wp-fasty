@@ -75,6 +75,10 @@ final class Front
         if (!is_page()) {
             return $view;
         }
+        // Landings compile to Latte: with another theme renderer (engine twig) the page renders as a normal page.
+        if (self::themeEngine() === null) {
+            return $view;
+        }
         $id = (int) get_queried_object_id();
         $preview = self::isPreview($id);
         if (!$preview && (!Store::has($id) || post_password_required($id))) {

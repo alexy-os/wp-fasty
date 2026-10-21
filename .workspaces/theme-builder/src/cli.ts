@@ -214,7 +214,12 @@ async function buildTheme(id: string): Promise<void> {
   console.log(`  blocks: ${Object.values(preset.templates ?? {}).flat().join(", ") || "(none)"}`);
 }
 
-async function packTheme(id: string): Promise<void> {
+/**
+ * Parent release zip. engine "twig" adds the Twig runtime: twig/twig in the release composer.json and the codegen
+ * Twig primitives under lib/ui8kit-twig/ → dist/<slug>-twig.zip (zip root stays <slug>/). The default (Latte-only)
+ * zip is the wordpress.org build.
+ */
+async function packTheme(id: string, engine: "latte" | "twig" = "latte"): Promise<void> {
   const preset = await loadPreset(id);
   if (preset.kind === "skin" || preset.parent) {
     throw new Error("theme:pack is for parent themes only");
@@ -260,6 +265,20 @@ async function packTheme(id: string): Promise<void> {
   }
 
   // Release composer.json: path repo → bundled lib (dev monorepo keeps ../../.workspaces)
+  if (engine === "twig") {
+    const codegen = join(repoRoot, "packages", "ui8kit-codegen");
+    if (!existsSync(join(codegen, "generated", "ui"))) {
+      throw new Error("Missing packages/ui8kit-codegen/generated — run bun run codegen:verify first");
+    }
+    const tw = join(stagedTheme, "lib", "ui8kit-twig");
+    await cp(join(codegen, "generated", "ui"), join(tw, "generated", "ui"), {
+      recursive: true,
+      filter: (src) => !/\.[a-z]+$/i.test(src) || src.endsWith(".html.twig"),
+    });
+    await mkdir(join(tw, "runtime", "php"), { recursive: true });
+    await copyFile(join(codegen, "runtime", "php", "TwigExtension.php"), join(tw, "runtime", "php", "TwigExtension.php"));
+  }
+
   const releaseComposer = {
     name: `alexy-os/${preset.slug}`,
     description: `${preset.name} — WP FastY theme with vendored UI8Kit Latte primitives`,
@@ -269,6 +288,7 @@ async function packTheme(id: string): Promise<void> {
       php: ">=8.2",
       "latte/latte": "^3.0",
       "ui8kit/latte-primitives": "@dev",
+      ...(engine === "twig" ? { "twig/twig": "^3.14" } : {}),
     },
     repositories: [
       {
@@ -316,7 +336,7 @@ async function packTheme(id: string): Promise<void> {
     );
   }
 
-  const zipPath = join(distRoot, `${preset.slug}.zip`);
+  const zipPath = join(distRoot, engine === "twig" ? `${preset.slug}-twig.zip` : `${preset.slug}.zip`);
   await rm(zipPath, { force: true });
   await writeZipFromDir(stagedTheme, zipPath, preset.slug);
   console.log(`Packed → ${zipPath}`);
@@ -378,7 +398,10 @@ async function main(): Promise<void> {
       return;
     }
     case "pack": {
-      await packTheme(arg ?? "latte");
+      const ei = process.argv.indexOf("--engine");
+      const eng = ei > 0 ? process.argv[ei + 1] : "latte";
+      if (eng !== "latte" && eng !== "twig") throw new Error(`--engine must be latte or twig (got ${eng})`);
+      await packTheme(arg && !arg.startsWith("--") ? arg : "latte", eng);
       return;
     }
     case "new":

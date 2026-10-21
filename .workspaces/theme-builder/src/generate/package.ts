@@ -21,10 +21,11 @@ export function demoSeeds(file: string): string[] {
   return [...new Set(seeds.map((s) => (prefix && !s.startsWith(prefix) ? prefix + s : s)))].sort();
 }
 
-function parentZip(preset: string): string {
-  const zip = join(root, "dist", `${preset}.zip`);
+/** Parent release zip; engine twig uses the Twig build (`theme:pack -- <preset> --engine twig` → <preset>-twig.zip). */
+function parentZip(preset: string, engine = "latte"): string {
+  const zip = join(root, "dist", engine === "twig" ? `${preset}-twig.zip` : `${preset}.zip`);
   if (!existsSync(zip)) {
-    const r = spawnSync("bun", ["run", "theme:pack", "--", preset], { cwd: root, stdio: "inherit" });
+    const r = spawnSync("bun", ["run", "theme:pack", "--", preset, ...(engine === "twig" ? ["--engine", "twig"] : [])], { cwd: root, stdio: "inherit" });
     if (r.status !== 0 || !existsSync(zip)) throw new Error(`theme:pack ${preset} failed`);
   }
   return zip;
@@ -101,7 +102,7 @@ export async function packageSite(manifestPath: string, outArg?: string): Promis
   const add = (name: string) => files.push(name);
 
   const preset = m.parent?.preset ?? "latte";
-  copyFileSync(parentZip(preset), join(out, `${preset}.zip`));
+  copyFileSync(parentZip(preset, m.engine), join(out, `${preset}.zip`));
   add(`${preset}.zip`);
 
   generate(manifestPath, join(stage, slug), { pot: true });

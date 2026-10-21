@@ -30,6 +30,14 @@ rejects("archetype type clash rejected", { archetype: "shop", name: "Clash Shop"
 rejects("taxonomy clash rejected", { archetype: "folio", name: "Clash Folio", postTypes: [{ name: "case_study", labels: { singular: "C", plural: "Cs" }, taxonomies: { project_type: { labels: { singular: "T", plural: "Ts" } } } }] }, "taxonomy \"project_type\" clashes");
 rejects("reserved name rejected", { archetype: "press", name: "Reserved", postTypes: [{ name: "page", labels: { singular: "P", plural: "Ps" } }] }, "reserved platform post type");
 rejects("unknown palette rejected", { archetype: "press", name: "Nope", palette: "rainbow" }, "unknown palette");
+{
+  const { manifest, warnings } = buildManifest({ archetype: "press", name: "Twig Gazette", engine: "twig" }, data);
+  check("engine twig accepted: not wporg, builder off", manifest.engine === "twig" && manifest.output.wporg === false && manifest.builder.enabled === false
+    && warnings.some((w) => w.includes("wporg")), warnings.join("; "));
+}
+rejects("engine twig + wporg rejected", { archetype: "press", name: "Twig Org", engine: "twig", output: { wporg: true } }, "cannot be a wordpress.org build");
+rejects("engine twig + landings rejected", { archetype: "press", name: "Twig Land", engine: "twig", landings: ["tools/builder/landings/press.json"] }, "no builder landings");
+rejects("unknown engine rejected", { archetype: "press", name: "Blade", engine: "blade" }, "must be latte or twig");
 rejects("parent slug rejected", { archetype: "press", name: "Latte" }, "is the parent theme");
 console.log(fail ? `${fail} failed` : "configure self-test OK");
 process.exit(fail ? 1 : 0);

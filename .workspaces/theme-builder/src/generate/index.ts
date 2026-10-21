@@ -20,6 +20,12 @@ function hasWp(): boolean {
   return spawnSync("wp", ["--version"], { encoding: "utf8" }).status === 0;
 }
 
+/** Appended to functions.php of engine-twig children; the parent's Twig build bundles twig/twig + Twig primitives. */
+const TWIG_SWITCH = `
+// Views ship as Twig (site manifest engine: twig): render them with the parent's TwigRenderer.
+add_filter('wpfasty_renderer', static fn (): string => 'twig');
+`;
+
 export function archetypeDir(id: string): string {
   return join(root, "presets/archetypes", id);
 }
@@ -53,6 +59,12 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
   }
   if (arch.inc && existsSync(join(adir, arch.inc))) cpSync(join(adir, arch.inc), join(dir, "inc"), { recursive: true });
   if (arch.views && existsSync(join(adir, arch.views))) cpSync(join(adir, arch.views), join(dir, "views"), { recursive: true });
+  // engine twig: the child ships only its Twig views and switches the parent renderer (ADR-001: `wpfasty_renderer`).
+  if (m.engine === "twig") {
+    if (existsSync(join(dir, "views")))
+      for (const rel of files(join(dir, "views")).filter((r) => r.endsWith(".latte"))) rmSync(join(dir, "views", rel));
+    writeFileSync(join(dir, "functions.php"), readFileSync(join(dir, "functions.php"), "utf8") + TWIG_SWITCH);
+  }
   // Archetype code is copied verbatim but written for its reference theme: retarget its text domain literals.
   if (arch.sourceTextDomain && arch.sourceTextDomain !== m.theme.textDomain)
     for (const sub of ["inc", "views"])

@@ -10,7 +10,7 @@
     "$schema": { "type": "string" },
     "manifestVersion": { "const": "0.2" },
     "engine": {
-      "description": "Template engine of the generated views. Only latte ships today; twig is reserved (renderer exists, no .twig views).",
+      "description": "Template engine of the generated views. latte (default) or twig: the child ships only .html.twig views and switches the parent renderer; the site package carries the parent's Twig build (twig/twig + Twig primitives).",
       "enum": ["latte", "twig"],
       "default": "latte"
     },
@@ -71,9 +71,14 @@
       "then": { "properties": { "output": { "properties": { "typesPlugin": { "const": "companion" } } } } }
     },
     {
-      "description": "twig is reserved until the parent ships .twig views.",
+      "description": "twig sites are not wordpress.org builds (the .org parent is the Latte-only zip) and have no builder landings yet (the builder compiles Latte).",
       "if": { "properties": { "engine": { "const": "twig" } }, "required": ["engine"] },
-      "then": { "properties": { "output": { "properties": { "wporg": { "const": false } } } } }
+      "then": {
+        "properties": {
+          "output": { "properties": { "wporg": { "const": false } } },
+          "builder": { "properties": { "enabled": { "const": false } } }
+        }
+      }
     }
   ],
   "$defs": {

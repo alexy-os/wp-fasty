@@ -6,6 +6,8 @@ export type J = Record<string, any>;
 
 export type Answers = {
   archetype: string;
+  /** Template engine; twig ⇒ not a wordpress.org build and no builder landings (schema rule). */
+  engine?: "latte" | "twig";
   name: string;
   slug?: string;
   prefix?: string;
@@ -124,6 +126,22 @@ export function buildManifest(a: Answers, data: Data): { manifest: J; warnings: 
     for (const f of a.landings) if (!known.includes(f)) problems.push(`landing "${f}" is not one of ${known.join(", ")}`);
     m.builder = { ...m.builder, landings: a.landings.map((file) => ({ file })) };
     if (!a.landings.length) m.builder.enabled = m.builder.enabled && false;
+  }
+  if (a.engine !== undefined) {
+    if (a.engine !== "latte" && a.engine !== "twig") problems.push(`engine "${a.engine}" must be latte or twig`);
+    m.engine = a.engine;
+  }
+  if (m.engine === "twig") {
+    if (a.output?.wporg === true) problems.push("engine twig cannot be a wordpress.org build (output.wporg must be false)");
+    else if (m.output?.wporg !== false) {
+      m.output = { ...m.output, wporg: false };
+      warnings.push("engine twig: output.wporg set to false (the wordpress.org parent is the Latte-only build)");
+    }
+    if (a.landings?.length) problems.push("engine twig has no builder landings yet (landings must be [] or omitted)");
+    else if (m.builder?.enabled) {
+      m.builder = { ...m.builder, enabled: false, landings: [] };
+      warnings.push("engine twig: builder landings disabled (the builder compiles Latte only)");
+    }
   }
   if (problems.length) throw new ConfigureError(problems);
   if (!a.palette && !a.tokens) warnings.push(`brand: kept the ${a.archetype} reference palette`);

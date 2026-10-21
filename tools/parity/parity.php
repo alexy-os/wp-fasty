@@ -40,16 +40,7 @@ if ($twigPrims === null || !class_exists(\Twig\Environment::class)) {
     exit(1);
 }
 
-/** Whitespace collapsed, equivalent entity spellings unified (Latte keeps quotes literal in text, Twig encodes). */
-$normalize = static function (string $html): string {
-    $html = str_replace(['&#039;', '&#39;', '&apos;', '&#34;'], ['&#x27;', '&#x27;', '&#x27;', '&quot;'], $html);
-    $html = (string) preg_replace_callback('/>([^<]*)</', static fn (array $m): string
-        => '>' . str_replace(['&quot;', '&#x27;'], ['"', "'"], $m[1]) . '<', $html);
-    $html = (string) preg_replace('/\s+/', ' ', $html);
-    $html = (string) preg_replace('/>\s+</', '><', $html);
-    $html = (string) preg_replace('/\s+>/', '>', $html);
-    return trim($html);
-};
+$normalize = require __DIR__ . '/normalize.php';
 
 $render = static function (RendererInterface $r, array $fx): string {
     if (empty($fx['page'])) {
@@ -71,11 +62,22 @@ foreach ($wanted as $suite) {
     }
     $files = glob($root . "/tests/fixtures/parity/{$suite}/*.json") ?: [];
     sort($files);
+    $views = array_map(static fn (string $d): string => $root . '/' . $d, $suites[$suite]);
+    // Coverage: the suite's own (first) view root has a Twig twin for every Latte view.
+    $own = $views[0];
+    $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($own, \FilesystemIterator::SKIP_DOTS));
+    foreach ($it as $f) {
+        $path = (string) $f;
+        if (str_ends_with($path, '.latte') && !is_file(substr($path, 0, -6) . '.html.twig')) {
+            $out('✗ ' . $suite . ': no Twig twin for ' . substr($path, strlen($root) + 1));
+            $fail++;
+        }
+    }
     if (!$files) {
-        $out("- {$suite}: no fixtures (skipped)");
+        $out("✗ {$suite}: no fixtures");
+        $fail++;
         continue;
     }
-    $views = array_map(static fn (string $d): string => $root . '/' . $d, $suites[$suite]);
     $latte = new LatteRenderer([...$views, $root . '/.workspaces/ui8kit-latte/ui'], "{$cache}/{$suite}");
     $twig = new TwigRenderer([...$views, $twigPrims], "{$cache}/{$suite}/twig");
     foreach ($files as $file) {
