@@ -261,7 +261,8 @@ jobs:
           wp option update home http://127.0.0.1:8080 --quiet
           wp option update siteurl http://127.0.0.1:8080 --quiet
           # Several workers: a page render may request its own assets / loopback while being served.
-          PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8080 -t /tmp/wp > /tmp/php-server.log 2>&1 &
+          # php 8.3 -S has segfaulted on the runner (core dump, no PHP error): supervise and restart it.
+          ( while true; do PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8080 -t /tmp/wp >> /tmp/php-server.log 2>&1; echo "php -S exited ($?), restarting" >> /tmp/php-server.log; sleep 1; done ) &
           for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8080/wp-login.php && break; sleep 1; done
           mkdir -p /tmp/layouts
           php "$GITHUB_WORKSPACE/tools/builder/layout-manifest.php" > /tmp/layout-manifest.json
@@ -275,7 +276,7 @@ jobs:
               echo "$out"
               id=$(echo "$out" | sed -n 's/^Success: Page \([0-9]*\) .*/\1/p')
               url=$(wp eval "echo get_permalink($id);")
-              code=$(curl -s --retry 3 --retry-all-errors -o /tmp/landing.html -w '%{http_code}' "$url" || true)
+              code=$(curl -s --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/landing.html -w '%{http_code}' "$url" || true)
               notices=$(grep -cE '<b>(Warning|Notice|Deprecated|Fatal error)</b>' /tmp/landing.html || true)
               blocks=$(grep -c 'wpfb-page' /tmp/landing.html || true)
               wp post meta get "$id" _wpfb_layout > "/tmp/layouts/$site-$(basename "$f")"
