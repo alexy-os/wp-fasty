@@ -1,0 +1,37 @@
+{#
+ # Block: hero-centered — UI8Kit Link CTAs (Twig twin of hero-centered.latte).
+ # Context: site, hero
+ #}
+{% set heroInner %}
+	{% set titleHtml %}{{ site.title }}{% endset %}
+	{% include 'title/Title.html.twig' with { as: 1, class: 'text-4xl md:text-5xl font-bold tracking-tight text-foreground', children: titleHtml } %}
+
+	{% if site.description ?? false %}
+		{% set descHtml %}<p class="mt-4 text-lg text-muted-foreground">{{ site.description }}</p>{% endset %}
+		{{ descHtml }}
+	{% endif %}
+
+	{% set actions %}
+		{% set explore %}{{ hero.primary_label ?? 'Explore' }}{% endset %}
+		{% set learn %}{{ hero.secondary_label ?? 'Learn more' }}{% endset %}
+		{% if hero.primary_url ?? false %}
+			{% set primary %}
+				{% include 'link/Link.html.twig' with { href: hero.primary_url, variant: 'default', class: 'inline-flex h-10 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground no-underline hover:opacity-90', children: explore } %}
+			{% endset %}
+			{{ primary }}
+		{% endif %}
+		{% if hero.secondary_url ?? false %}
+			{% set secondary %}
+				{% include 'link/Link.html.twig' with { href: hero.secondary_url, variant: 'muted', class: 'inline-flex h-10 items-center rounded-full border border-input bg-secondary px-4 text-sm font-medium no-underline', children: learn } %}
+			{% endset %}
+			{{ secondary }}
+		{% endif %}
+	{% endset %}
+	{% include 'group/Group.html.twig' with { class: 'mt-8 flex flex-wrap justify-center gap-4', children: actions } %}
+{% endset %}
+
+{% set heroBox %}
+	{% include 'box/Box.html.twig' with { class: 'mx-auto max-w-3xl text-center', children: heroInner } %}
+{% endset %}
+
+{% include 'block/Block.html.twig' with { tag: 'section', class: 'bg-muted py-16 md:py-24', children: heroBox } %}

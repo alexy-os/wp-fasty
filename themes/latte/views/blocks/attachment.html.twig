@@ -1,0 +1,38 @@
+{#
+ # Block: attachment — media attachment singular (Twig twin of attachment.latte).
+ #}
+{% if page %}
+	{% set inner %}
+		{% set titleHtml %}{{ page.title }}{% endset %}
+		{% include 'title/Title.html.twig' with { as: 1, class: 'mb-6 text-3xl font-bold tracking-tight', children: titleHtml } %}
+
+		{% if page.featuredImage.url ?? false %}
+			{% set img %}
+				{% include 'image/Image.html.twig' with {
+					src: page.featuredImage.url,
+					alt: page.featuredImage.alt ?? page.title,
+					width: (page.featuredImage.width ?? '') ~ '',
+					height: (page.featuredImage.height ?? '') ~ '',
+					srcset: page.featuredImage.srcset ?? '',
+					sizes: page.featuredImage.sizes ?? '',
+					class: 'mx-auto max-h-[80vh] w-auto',
+					loading: 'eager'
+				} %}
+			{% endset %}
+			{% include 'box/Box.html.twig' with { class: 'mb-8 overflow-hidden rounded-lg', children: img } %}
+		{% elseif page.attachment_url ?? false %}
+			{% set fileLink %}{{ labels.attachment ?? 'Attachment' }}{% endset %}
+			{% include 'link/Link.html.twig' with { href: page.attachment_url, class: 'text-primary underline', children: fileLink } %}
+		{% endif %}
+
+		{% if page.content ?? false %}
+			{% set body %}<div class="prose max-w-none text-foreground">{{ page.content|raw }}</div>{% endset %}
+			{% include 'box/Box.html.twig' with { children: body } %}
+		{% endif %}
+	{% endset %}
+
+	{% set box %}
+		{% include 'box/Box.html.twig' with { class: 'container mx-auto max-w-3xl px-4 py-12 md:px-6', children: inner } %}
+	{% endset %}
+	{% include 'block/Block.html.twig' with { tag: 'article', class: page.post_class ?? '', children: box } %}
+{% endif %}

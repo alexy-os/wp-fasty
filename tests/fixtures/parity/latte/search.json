@@ -1,0 +1,566 @@
+{
+    "uri": "/?s=post",
+    "view": "pages/search",
+    "page": true,
+    "context": {
+        "site": {
+            "title": "QA",
+            "url": "http://127.0.0.1:8099/",
+            "theme_url": "http://127.0.0.1:8099/wp-content/themes/latte",
+            "stylesheet_url": "http://127.0.0.1:8099/wp-content/themes/latte",
+            "lang": "en-US",
+            "description": "",
+            "charset": "UTF-8",
+            "year": "2026",
+            "logo": null
+        },
+        "menu": {
+            "primary": {
+                "items": []
+            },
+            "footer": {
+                "items": []
+            }
+        },
+        "shell": "classic",
+        "sheet": {
+            "trigger": "classic-mobile-sheet-trigger",
+            "panel": "classic-mobile-sheet-panel",
+            "title": "classic-mobile-sheet-title"
+        },
+        "labels": {
+            "featured": "Featured",
+            "latest_articles": "Latest articles",
+            "no_posts": "No posts found.",
+            "previous": "Previous",
+            "next": "Next",
+            "skip_to_content": "Skip to content",
+            "open_menu": "Open menu",
+            "close_menu": "Close menu",
+            "primary_nav": "Primary",
+            "footer_nav": "Footer",
+            "sidebar": "Sidebar",
+            "pagination": "Pagination",
+            "posted_on": "Posted on",
+            "by_author": "By",
+            "categories": "Categories",
+            "tags": "Tags",
+            "previous_post": "Previous post",
+            "next_post": "Next post",
+            "attachment": "Attachment",
+            "pages": "Pages:"
+        },
+        "search": {
+            "action": "http://127.0.0.1:8099/",
+            "query": "post",
+            "placeholder": "Search…",
+            "submit": "Search",
+            "label": "Search"
+        },
+        "widgets": {
+            "sidebar": "<section id=\"block-2\" class=\"widget widget_block widget_search mb-8\"><form role=\"search\" method=\"get\" action=\"http://127.0.0.1:8099/\" class=\"wp-block-search__button-outside wp-block-search__text-button wp-block-search\" ><label class=\"wp-block-search__label\" for=\"wp-block-search__input-1\" >Search</label><div class=\"wp-block-search__inside-wrapper\" ><input class=\"wp-block-search__input\" id=\"wp-block-search__input-1\" placeholder=\"\" value=\"post\" type=\"search\" name=\"s\" required /><button aria-label=\"Search\" class=\"wp-block-search__button wp-element-button\" type=\"submit\" >Search</button></div></form></section><section id=\"block-3\" class=\"widget widget_block mb-8\"><div class=\"wp-block-group is-layout-flow wp-block-group-is-layout-flow\"><h2 class=\"wp-block-heading\">Recent Posts</h2><ul class=\"wp-block-latest-posts__list wp-block-latest-posts is-layout-flow wp-block-latest-posts-is-layout-flow\"><li><a class=\"wp-block-latest-posts__post-title\" href=\"http://127.0.0.1:8099/hello-world/\">Hello world!</a></li>\n<li><a class=\"wp-block-latest-posts__post-title\" href=\"http://127.0.0.1:8099/post-1/\">Post 1</a></li>\n<li><a class=\"wp-block-latest-posts__post-title\" href=\"http://127.0.0.1:8099/post-2/\">Post 2</a></li>\n<li><a class=\"wp-block-latest-posts__post-title\" href=\"http://127.0.0.1:8099/post-3/\">Post 3</a></li>\n<li><a class=\"wp-block-latest-posts__post-title\" href=\"http://127.0.0.1:8099/post-4/\">Post 4</a></li>\n</ul></div></section><section id=\"block-4\" class=\"widget widget_block mb-8\"><div class=\"wp-block-group is-layout-flow wp-block-group-is-layout-flow\"><h2 class=\"wp-block-heading\">Recent Comments</h2><ol class=\"wp-block-latest-comments\"><li class=\"wp-block-latest-comments__comment\"><article><footer class=\"wp-block-latest-comments__comment-meta\"><a class=\"wp-block-latest-comments__comment-author\" href=\"https://wordpress.org/\">A WordPress Commenter</a> on <a class=\"wp-block-latest-comments__comment-link\" href=\"http://127.0.0.1:8099/hello-world/#comment-1\">Hello world!</a></footer></article></li></ol></div></section><section id=\"block-5\" class=\"widget widget_block mb-8\"><div class=\"wp-block-group is-layout-flow wp-block-group-is-layout-flow\"><h2 class=\"wp-block-heading\">Archives</h2><ul class=\"wp-block-archives-list wp-block-archives\">\t<li><a href='http://127.0.0.1:8099/2026/10/'>October 2026</a></li>\n</ul></div></section><section id=\"block-6\" class=\"widget widget_block mb-8\"><div class=\"wp-block-group is-layout-flow wp-block-group-is-layout-flow\"><h2 class=\"wp-block-heading\">Categories</h2><ul class=\"wp-block-categories-list wp-block-categories-taxonomy-category wp-block-categories\">\t<li class=\"cat-item cat-item-2\"><a href=\"http://127.0.0.1:8099/category/perf-alpha/\">Perf alpha</a>\n</li>\n\t<li class=\"cat-item cat-item-3\"><a href=\"http://127.0.0.1:8099/category/perf-beta/\">Perf beta</a>\n</li>\n\t<li class=\"cat-item cat-item-4\"><a href=\"http://127.0.0.1:8099/category/perf-gamma/\">Perf gamma</a>\n</li>\n\t<li class=\"cat-item cat-item-1\"><a href=\"http://127.0.0.1:8099/category/uncategorized/\">Uncategorized</a>\n</li>\n</ul></div></section>",
+            "footer": ""
+        },
+        "archive": {
+            "title": "Search results for “post”",
+            "description": "",
+            "search_query": "post",
+            "type": "search"
+        },
+        "posts": [
+            {
+                "id": 4,
+                "title": "Post 1",
+                "content": "<p>Body of item 1.</p>\n",
+                "slug": "post-1",
+                "url": "http://127.0.0.1:8099/post-1/",
+                "excerpt": "Excerpt 1",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-1.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-1.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-1-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-1-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-1-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-1.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [
+                    {
+                        "name": "Perf beta",
+                        "url": "http://127.0.0.1:8099/category/perf-beta/",
+                        "slug": "perf-beta"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "url": "http://127.0.0.1:8099/category/perf-gamma/",
+                        "slug": "perf-gamma"
+                    }
+                ],
+                "tags": [
+                    {
+                        "name": "Perf beta",
+                        "url": "http://127.0.0.1:8099/tag/perf-beta/",
+                        "slug": "perf-beta"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "url": "http://127.0.0.1:8099/tag/perf-gamma/",
+                        "slug": "perf-gamma"
+                    }
+                ],
+                "author": {
+                    "name": "Bob",
+                    "url": "http://127.0.0.1:8099/author/perf-bob/"
+                },
+                "post_class": "post-4 post type-post status-publish format-standard has-post-thumbnail hentry category-perf-beta category-perf-gamma tag-perf-beta tag-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 18, 2026",
+                    "iso": "2026-10-18T09:37:51+00:00"
+                }
+            },
+            {
+                "id": 6,
+                "title": "Post 2",
+                "content": "<p>Body of item 2.</p>\n",
+                "slug": "post-2",
+                "url": "http://127.0.0.1:8099/post-2/",
+                "excerpt": "Excerpt 2",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-2.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-2.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-2-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-2-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-2-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-2.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [
+                    {
+                        "name": "Perf alpha",
+                        "url": "http://127.0.0.1:8099/category/perf-alpha/",
+                        "slug": "perf-alpha"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "url": "http://127.0.0.1:8099/category/perf-gamma/",
+                        "slug": "perf-gamma"
+                    }
+                ],
+                "tags": [
+                    {
+                        "name": "Perf alpha",
+                        "url": "http://127.0.0.1:8099/tag/perf-alpha/",
+                        "slug": "perf-alpha"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "url": "http://127.0.0.1:8099/tag/perf-gamma/",
+                        "slug": "perf-gamma"
+                    }
+                ],
+                "author": {
+                    "name": "Cid",
+                    "url": "http://127.0.0.1:8099/author/perf-cid/"
+                },
+                "post_class": "post-6 post type-post status-publish format-standard has-post-thumbnail hentry category-perf-alpha category-perf-gamma tag-perf-alpha tag-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 17, 2026",
+                    "iso": "2026-10-17T09:37:51+00:00"
+                }
+            },
+            {
+                "id": 8,
+                "title": "Post 3",
+                "content": "<p>Body of item 3.</p>\n",
+                "slug": "post-3",
+                "url": "http://127.0.0.1:8099/post-3/",
+                "excerpt": "Excerpt 3",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-3.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-3.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-3-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-3-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-3-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-3.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [
+                    {
+                        "name": "Perf alpha",
+                        "url": "http://127.0.0.1:8099/category/perf-alpha/",
+                        "slug": "perf-alpha"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "url": "http://127.0.0.1:8099/category/perf-beta/",
+                        "slug": "perf-beta"
+                    }
+                ],
+                "tags": [
+                    {
+                        "name": "Perf alpha",
+                        "url": "http://127.0.0.1:8099/tag/perf-alpha/",
+                        "slug": "perf-alpha"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "url": "http://127.0.0.1:8099/tag/perf-beta/",
+                        "slug": "perf-beta"
+                    }
+                ],
+                "author": {
+                    "name": "Ann",
+                    "url": "http://127.0.0.1:8099/author/perf-ann/"
+                },
+                "post_class": "post-8 post type-post status-publish format-standard has-post-thumbnail hentry category-perf-alpha category-perf-beta tag-perf-alpha tag-perf-beta",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 16, 2026",
+                    "iso": "2026-10-16T09:37:51+00:00"
+                }
+            },
+            {
+                "id": 10,
+                "title": "Post 4",
+                "content": "<p>Body of item 4.</p>\n",
+                "slug": "post-4",
+                "url": "http://127.0.0.1:8099/post-4/",
+                "excerpt": "Excerpt 4",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-4.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-4.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-4-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-4-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-4-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-4.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [
+                    {
+                        "name": "Perf beta",
+                        "url": "http://127.0.0.1:8099/category/perf-beta/",
+                        "slug": "perf-beta"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "url": "http://127.0.0.1:8099/category/perf-gamma/",
+                        "slug": "perf-gamma"
+                    }
+                ],
+                "tags": [
+                    {
+                        "name": "Perf beta",
+                        "url": "http://127.0.0.1:8099/tag/perf-beta/",
+                        "slug": "perf-beta"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "url": "http://127.0.0.1:8099/tag/perf-gamma/",
+                        "slug": "perf-gamma"
+                    }
+                ],
+                "author": {
+                    "name": "Bob",
+                    "url": "http://127.0.0.1:8099/author/perf-bob/"
+                },
+                "post_class": "post-10 post type-post status-publish format-standard has-post-thumbnail hentry category-perf-beta category-perf-gamma tag-perf-beta tag-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 15, 2026",
+                    "iso": "2026-10-15T09:37:51+00:00"
+                }
+            },
+            {
+                "id": 12,
+                "title": "Post 5",
+                "content": "<p>Body of item 5.</p>\n",
+                "slug": "post-5",
+                "url": "http://127.0.0.1:8099/post-5/",
+                "excerpt": "Excerpt 5",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-5.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-5.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-5-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-5-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-5-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-5.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [
+                    {
+                        "name": "Perf alpha",
+                        "url": "http://127.0.0.1:8099/category/perf-alpha/",
+                        "slug": "perf-alpha"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "url": "http://127.0.0.1:8099/category/perf-gamma/",
+                        "slug": "perf-gamma"
+                    }
+                ],
+                "tags": [
+                    {
+                        "name": "Perf alpha",
+                        "url": "http://127.0.0.1:8099/tag/perf-alpha/",
+                        "slug": "perf-alpha"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "url": "http://127.0.0.1:8099/tag/perf-gamma/",
+                        "slug": "perf-gamma"
+                    }
+                ],
+                "author": {
+                    "name": "Cid",
+                    "url": "http://127.0.0.1:8099/author/perf-cid/"
+                },
+                "post_class": "post-12 post type-post status-publish format-standard has-post-thumbnail hentry category-perf-alpha category-perf-gamma tag-perf-alpha tag-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 14, 2026",
+                    "iso": "2026-10-14T09:37:51+00:00"
+                }
+            },
+            {
+                "id": 14,
+                "title": "Post 6",
+                "content": "<p>Body of item 6.</p>\n",
+                "slug": "post-6",
+                "url": "http://127.0.0.1:8099/post-6/",
+                "excerpt": "Excerpt 6",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-6.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-6.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-6-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-6-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-6-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-6.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [
+                    {
+                        "name": "Perf alpha",
+                        "url": "http://127.0.0.1:8099/category/perf-alpha/",
+                        "slug": "perf-alpha"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "url": "http://127.0.0.1:8099/category/perf-beta/",
+                        "slug": "perf-beta"
+                    }
+                ],
+                "tags": [
+                    {
+                        "name": "Perf alpha",
+                        "url": "http://127.0.0.1:8099/tag/perf-alpha/",
+                        "slug": "perf-alpha"
+                    },
+                    {
+                        "name": "Perf beta",
+                        "url": "http://127.0.0.1:8099/tag/perf-beta/",
+                        "slug": "perf-beta"
+                    }
+                ],
+                "author": {
+                    "name": "Ann",
+                    "url": "http://127.0.0.1:8099/author/perf-ann/"
+                },
+                "post_class": "post-14 post type-post status-publish format-standard has-post-thumbnail hentry category-perf-alpha category-perf-beta tag-perf-alpha tag-perf-beta",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 13, 2026",
+                    "iso": "2026-10-13T09:37:51+00:00"
+                }
+            },
+            {
+                "id": 16,
+                "title": "Post 7",
+                "content": "<p>Body of item 7.</p>\n",
+                "slug": "post-7",
+                "url": "http://127.0.0.1:8099/post-7/",
+                "excerpt": "Excerpt 7",
+                "featuredImage": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-7.jpg",
+                    "width": "320",
+                    "height": "240",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-7.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-7-300x225.jpg 300w",
+                    "sizes": "(max-width: 320px) 100vw, 320px"
+                },
+                "thumbnail": {
+                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-7-300x225.jpg",
+                    "width": "300",
+                    "height": "225",
+                    "alt": "",
+                    "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/post-7-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/post-7.jpg 320w",
+                    "sizes": "(max-width: 300px) 100vw, 300px"
+                },
+                "categories": [
+                    {
+                        "name": "Perf beta",
+                        "url": "http://127.0.0.1:8099/category/perf-beta/",
+                        "slug": "perf-beta"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "url": "http://127.0.0.1:8099/category/perf-gamma/",
+                        "slug": "perf-gamma"
+                    }
+                ],
+                "tags": [
+                    {
+                        "name": "Perf beta",
+                        "url": "http://127.0.0.1:8099/tag/perf-beta/",
+                        "slug": "perf-beta"
+                    },
+                    {
+                        "name": "Perf gamma",
+                        "url": "http://127.0.0.1:8099/tag/perf-gamma/",
+                        "slug": "perf-gamma"
+                    }
+                ],
+                "author": {
+                    "name": "Bob",
+                    "url": "http://127.0.0.1:8099/author/perf-bob/"
+                },
+                "post_class": "post-16 post type-post status-publish format-standard has-post-thumbnail hentry category-perf-beta category-perf-gamma tag-perf-beta tag-perf-gamma",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 12, 2026",
+                    "iso": "2026-10-12T09:37:51+00:00"
+                }
+            },
+            {
+                "id": 1,
+                "title": "Hello world!",
+                "content": "\n<p class=\"wp-block-paragraph\">Welcome to WordPress. This is your first post. Edit or delete it, then start writing!</p>\n",
+                "slug": "hello-world",
+                "url": "http://127.0.0.1:8099/hello-world/",
+                "excerpt": "Welcome to WordPress. This is your first post. Edit or delete it, then start writing!",
+                "featuredImage": null,
+                "thumbnail": null,
+                "categories": [
+                    {
+                        "name": "Uncategorized",
+                        "url": "http://127.0.0.1:8099/category/uncategorized/",
+                        "slug": "uncategorized"
+                    }
+                ],
+                "tags": [],
+                "author": {
+                    "name": "admin",
+                    "url": "http://127.0.0.1:8099/author/admin/"
+                },
+                "post_class": "post-1 post type-post status-publish format-standard hentry category-uncategorized",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 19, 2026",
+                    "iso": "2026-10-19T09:37:49+00:00"
+                }
+            },
+            {
+                "id": 2,
+                "title": "Sample Page",
+                "content": "\n<p class=\"wp-block-paragraph\">This is an example page. It&#8217;s different from a blog post because it will stay in one place and will show up in your site navigation (in most themes). Most people start with an About page that introduces them to potential site visitors. It might say something like this:</p>\n\n\n\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\">\n\n<p class=\"wp-block-paragraph\">Hi there! I&#8217;m a bike messenger by day, aspiring actor by night, and this is my website. I live in Los Angeles, have a great dog named Jack, and I like pi&#241;a coladas. (And gettin&#8217; caught in the rain.)</p>\n\n</blockquote>\n\n\n\n<p class=\"wp-block-paragraph\">&#8230;or something like this:</p>\n\n\n\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\">\n\n<p class=\"wp-block-paragraph\">The XYZ Doohickey Company was founded in 1971, and has been providing quality doohickeys to the public ever since. Located in Gotham City, XYZ employs over 2,000 people and does all kinds of awesome things for the Gotham community.</p>\n\n</blockquote>\n\n\n\n<p class=\"wp-block-paragraph\">As a new WordPress user, you should go to <a href=\"http://127.0.0.1:8099/wp-admin/\">your dashboard</a> to delete this page and create new pages for your content. Have fun!</p>\n",
+                "slug": "sample-page",
+                "url": "http://127.0.0.1:8099/sample-page/",
+                "excerpt": "This is an example page. It's different from a blog post because it will stay in one place and will show up in your site navigation (in most themes). Most people start with an About page that introduces them to…",
+                "featuredImage": null,
+                "thumbnail": null,
+                "categories": [],
+                "tags": [],
+                "author": {
+                    "name": "admin",
+                    "url": "http://127.0.0.1:8099/author/admin/"
+                },
+                "post_class": "post-2 page type-page status-publish hentry",
+                "link_pages": "",
+                "prev": null,
+                "next": null,
+                "mime_type": "",
+                "is_attachment": false,
+                "date": {
+                    "display": "October 19, 2026",
+                    "iso": "2026-10-19T09:37:49+00:00"
+                }
+            }
+        ],
+        "pagination": null
+    }
+}

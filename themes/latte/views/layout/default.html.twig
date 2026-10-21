@@ -1,0 +1,42 @@
+{#
+ # Document shell — raw HTML allowed here only. DOCTYPE is printed by includes/render.php. Twig twin of default.latte.
+ # Context: site, content, menu, shell, labels
+ #}
+<html {{ language_attributes() }}>
+<head>
+	<meta charset="{{ site.charset ?? 'UTF-8' }}">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{{ wp_head() }}
+</head>
+<body {{ body_class('font-sans bg-background antialiased') }}>
+	{{ wp_body_open() }}
+	{% if (shell ?? 'classic') == 'app-shell' %}
+		{% include 'layout/app-shell.html.twig' %}
+	{% else %}
+		{% include 'layout/parts/header.html.twig' %}
+
+		{% if widgets.sidebar ?? false %}
+			<div class="container mx-auto flex flex-col gap-8 px-4 md:flex-row md:px-6">
+				<main id="content" class="site-content min-w-0 flex-1">
+					{{ do_action('before_content') }}
+					{{ content|raw }}
+					{{ do_action('after_content') }}
+				</main>
+				<aside class="w-full shrink-0 py-12 md:w-64" aria-label="{{ labels.sidebar }}">
+					{{ widgets.sidebar|raw }}
+				</aside>
+			</div>
+		{% else %}
+			<main id="content" class="site-content">
+				{{ do_action('before_content') }}
+				{{ content|raw }}
+				{{ do_action('after_content') }}
+			</main>
+		{% endif %}
+
+		{% include 'layout/parts/footer.html.twig' %}
+	{% endif %}
+
+	{{ wp_footer() }}
+</body>
+</html>

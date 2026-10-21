@@ -1,0 +1,15 @@
+{#
+ # Block: archive-header (Twig twin of archive-header.latte)
+ # Context: archive
+ #}
+{% set inner %}
+	{% set titleHtml %}{{ archive.title }}{% endset %}
+	{% include 'title/Title.html.twig' with { as: 1, class: 'text-3xl font-bold tracking-tight', children: titleHtml } %}
+	{% if archive.description %}
+		<div class="mt-4 max-w-3xl text-muted-foreground">{{ archive.description|raw }}</div>
+	{% endif %}
+{% endset %}
+{% set box %}
+	{% include 'box/Box.html.twig' with { class: 'container mx-auto px-4 py-12 md:px-6', children: inner } %}
+{% endset %}
+{% include 'block/Block.html.twig' with { tag: 'header', class: 'bg-muted', children: box } %}

@@ -60,6 +60,18 @@ final class RendererTest extends TestCase
         );
     }
 
+    public function testTwigSafeUrlMatchesLatteUrlCheck(): void
+    {
+        foreach (['https://a.test/x?y=1', '/rel', '#frag', '?q=1', 'mailto:a@b.c', 'page'] as $ok) {
+            self::assertSame($ok, TwigRenderer::safeUrl($ok));
+            self::assertSame($ok, \Latte\Essential\Filters::checkUrl($ok));
+        }
+        foreach (['javascript:alert(1)', 'data:text/html,x', 'vbscript:x'] as $bad) {
+            self::assertSame('', TwigRenderer::safeUrl($bad));
+            self::assertSame('', \Latte\Essential\Filters::checkUrl($bad));
+        }
+    }
+
     public function testFactoryPicksEngine(): void
     {
         $r = RendererFactory::create('latte', [$this->views()], ['latte' => [dirname(__DIR__) . '/.workspaces/ui8kit-latte/ui']], $this->cache);

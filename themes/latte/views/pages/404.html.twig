@@ -1,0 +1,26 @@
+{# 404 — not found (Twig twin of 404.latte) #}
+{% set inner %}
+	{% set codeHtml %}{{ error.code }}{% endset %}
+	{% include 'title/Title.html.twig' with { as: 1, class: 'text-5xl font-bold tracking-tight', children: codeHtml } %}
+
+	{% set titleHtml %}{{ error.title }}{% endset %}
+	{% include 'title/Title.html.twig' with { as: 2, class: 'mt-4 text-2xl font-semibold tracking-tight', children: titleHtml } %}
+
+	<p class="mt-4 max-w-xl text-muted-foreground">{{ error.message }}</p>
+
+	<div class="mt-8 max-w-md">
+		{% include 'blocks/search-form.html.twig' %}
+	</div>
+
+	{% set ctaLabel %}{{ error.home_label }}{% endset %}
+	{% set cta %}
+		{% include 'link/Link.html.twig' with { href: error.home_url, variant: 'default', size: 'lg', class: 'font-medium', children: ctaLabel } %}
+	{% endset %}
+	<div class="mt-8">
+		{{ cta }}
+	</div>
+{% endset %}
+{% set box %}
+	{% include 'box/Box.html.twig' with { class: 'container mx-auto px-4 py-20 md:px-6', children: inner } %}
+{% endset %}
+{% include 'block/Block.html.twig' with { tag: 'section', class: 'min-h-[50vh]', children: box } %}

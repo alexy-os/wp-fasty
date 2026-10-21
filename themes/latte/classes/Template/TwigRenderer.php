@@ -89,8 +89,55 @@ final class TwigRenderer implements RendererInterface
             static fn (string $name, string $class = 'size-4', string $label = ''): Markup
                 => new Markup(Icons::svg($name, $class, $label), 'UTF-8')
         ));
+        $this->twig->addFilter(new TwigFilter('safe_url', [self::class, 'safeUrl']));
+        $this->registerWordPressHooks();
         $this->twig->addFunction(new TwigFunction('t', static fn (string $text, string $domain = 'latte'): string
             => function_exists('__') ? __($text, $domain) : $text)); // phpcs:ignore WordPress.WP.I18n
+    }
+
+    /**
+     * Same contract as Latte's automatic URL check in href/src/action: only http(s)/ftp, mailto/tel/sms,
+     * relative and fragment URLs pass; anything else (javascript:, data:…) becomes ''.
+     */
+    public static function safeUrl(mixed $url): string
+    {
+        $url = (string) $url;
+        return preg_match('~^(?:(?:https?|ftp)://[^@]+(?:/.*)?|(?:mailto|tel|sms):.+|[/?#].*|[^:]+)$~Di', $url) === 1
+            ? $url
+            : '';
+    }
+
+    /**
+     * Twig twins of the Latte WordPress tags ({wp_head}, {body_class 'x'}, {do_action 'x'} …): the WP function
+     * echoes, the Twig function returns that output as HTML.
+     */
+    private function registerWordPressHooks(): void
+    {
+        $echoing = [
+            'wp_head' => static fn () => wp_head(),
+            'wp_footer' => static fn () => wp_footer(),
+            'wp_body_open' => static fn () => function_exists('wp_body_open') ? wp_body_open() : null,
+            'language_attributes' => static fn () => language_attributes(),
+            'body_class' => static fn (string|array $class = '') => body_class($class),
+            'do_action' => static fn (string $hook, mixed ...$args) => do_action($hook, ...$args),
+        ];
+        foreach ($echoing as $name => $fn) {
+            $this->twig->addFunction(new TwigFunction(
+                $name,
+                static function (mixed ...$args) use ($fn): string {
+                    ob_start();
+                    $fn(...$args);
+                    return (string) ob_get_clean();
+                },
+                ['is_safe' => ['html']]
+            ));
+        }
+        $this->twig->addFunction(new TwigFunction(
+            'apply_filters',
+            static fn (string $hook, mixed $value, mixed ...$args): string
+                => (string) apply_filters($hook, $value, ...$args),
+            ['is_safe' => ['html']]
+        ));
     }
 
     private function withExtension(string $view): string

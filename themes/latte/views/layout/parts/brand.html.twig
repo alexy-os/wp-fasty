@@ -1,0 +1,17 @@
+{#
+ # Site brand — logo image or title text. Twig twin of brand.latte.
+ #}
+<a href="{{ site.url|safe_url }}" class="inline-flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary">
+	{% if site.logo.url ?? false %}
+		{% include 'image/Image.html.twig' with {
+			src: site.logo.url,
+			alt: site.logo.alt ?? site.title,
+			width: (site.logo.width ?? '') ~ '',
+			height: (site.logo.height ?? '') ~ '',
+			class: 'h-8 w-auto',
+			loading: 'eager'
+		} %}
+	{% else %}
+		{{ site.title }}
+	{% endif %}
+</a>

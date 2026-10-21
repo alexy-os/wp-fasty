@@ -1,0 +1,54 @@
+{#
+ # Block: featured-grid — UI8Kit Card + Image primitives (Twig twin of featured-grid.latte).
+ # Context: posts[], labels
+ #}
+{% if posts is defined and posts|length > 0 %}
+	{% set cards %}
+		{% for post in posts %}
+			{% set cardBody %}
+				{% if post.thumbnail.url ?? false %}
+					{% set thumb %}
+						{% include 'image/Image.html.twig' with {
+							src: post.thumbnail.url,
+							alt: post.thumbnail.alt ?? '',
+							width: (post.thumbnail.width ?? '') ~ '',
+							height: (post.thumbnail.height ?? '') ~ '',
+							srcset: post.thumbnail.srcset ?? '',
+							sizes: post.thumbnail.sizes ?? '',
+							class: 'aspect-video w-full object-cover',
+							loading: 'lazy'
+						} %}
+					{% endset %}
+					{% include 'link/Link.html.twig' with { href: post.url, class: 'block overflow-hidden', children: thumb } %}
+				{% endif %}
+				{% set postTitle %}{{ post.title }}{% endset %}
+				{% set cardTitle %}
+					{% include 'link/Link.html.twig' with { href: post.url, class: 'no-underline hover:text-primary', children: postTitle } %}
+				{% endset %}
+				{% set headerInner %}
+					{% include 'card/CardTitle.html.twig' with { class: 'text-xl', children: cardTitle } %}
+				{% endset %}
+				{% include 'card/CardHeader.html.twig' with { children: headerInner } %}
+
+				{% if post.excerpt ?? false %}
+					{% set excerptHtml %}<p class="text-sm text-muted-foreground">{{ post.excerpt }}</p>{% endset %}
+					{% include 'card/CardContent.html.twig' with { children: excerptHtml } %}
+				{% endif %}
+			{% endset %}
+			{% include 'card/Card.html.twig' with { class: 'overflow-hidden', children: cardBody } %}
+		{% endfor %}
+	{% endset %}
+
+	{% set sectionInner %}
+		{% set heading %}{{ labels.featured ?? 'Featured' }}{% endset %}
+		{% include 'title/Title.html.twig' with { as: 2, class: 'mb-2 text-center text-3xl font-bold tracking-tight', children: heading } %}
+		<p class="mb-10 text-center text-muted-foreground">{{ labels.latest_articles ?? 'Latest articles' }}</p>
+		{% include 'grid/Grid.html.twig' with { class: 'grid gap-6 md:grid-cols-2 lg:grid-cols-3', children: cards } %}
+	{% endset %}
+
+	{% set sectionBox %}
+		{% include 'box/Box.html.twig' with { class: 'container mx-auto px-4 md:px-6', children: sectionInner } %}
+	{% endset %}
+
+	{% include 'block/Block.html.twig' with { tag: 'section', class: 'bg-card py-16', children: sectionBox } %}
+{% endif %}

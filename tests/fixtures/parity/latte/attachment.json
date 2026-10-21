@@ -1,0 +1,103 @@
+{
+    "uri": "/?attachment_id=35",
+    "view": "pages/attachment",
+    "page": true,
+    "context": {
+        "site": {
+            "title": "QA",
+            "url": "http://127.0.0.1:8099/",
+            "theme_url": "http://127.0.0.1:8099/wp-content/themes/latte",
+            "stylesheet_url": "http://127.0.0.1:8099/wp-content/themes/latte",
+            "lang": "en-US",
+            "description": "",
+            "charset": "UTF-8",
+            "year": "2026",
+            "logo": null
+        },
+        "menu": {
+            "primary": {
+                "items": []
+            },
+            "footer": {
+                "items": []
+            }
+        },
+        "shell": "classic",
+        "sheet": {
+            "trigger": "classic-mobile-sheet-trigger",
+            "panel": "classic-mobile-sheet-panel",
+            "title": "classic-mobile-sheet-title"
+        },
+        "labels": {
+            "featured": "Featured",
+            "latest_articles": "Latest articles",
+            "no_posts": "No posts found.",
+            "previous": "Previous",
+            "next": "Next",
+            "skip_to_content": "Skip to content",
+            "open_menu": "Open menu",
+            "close_menu": "Close menu",
+            "primary_nav": "Primary",
+            "footer_nav": "Footer",
+            "sidebar": "Sidebar",
+            "pagination": "Pagination",
+            "posted_on": "Posted on",
+            "by_author": "By",
+            "categories": "Categories",
+            "tags": "Tags",
+            "previous_post": "Previous post",
+            "next_post": "Next post",
+            "attachment": "Attachment",
+            "pages": "Pages:"
+        },
+        "search": {
+            "action": "http://127.0.0.1:8099/",
+            "query": "",
+            "placeholder": "Search…",
+            "submit": "Search",
+            "label": "Search"
+        },
+        "widgets": {
+            "sidebar": "<section id=\"block-2\" class=\"widget widget_block widget_search mb-8\"><form role=\"search\" method=\"get\" action=\"http://127.0.0.1:8099/\" class=\"wp-block-search__button-outside wp-block-search__text-button wp-block-search\" ><label class=\"wp-block-search__label\" for=\"wp-block-search__input-1\" >Search</label><div class=\"wp-block-search__inside-wrapper\" ><input class=\"wp-block-search__input\" id=\"wp-block-search__input-1\" placeholder=\"\" value=\"\" type=\"search\" name=\"s\" required /><button aria-label=\"Search\" class=\"wp-block-search__button wp-element-button\" type=\"submit\" >Search</button></div></form></section><section id=\"block-3\" class=\"widget widget_block mb-8\"><div class=\"wp-block-group is-layout-flow wp-block-group-is-layout-flow\"><h2 class=\"wp-block-heading\">Recent Posts</h2><ul class=\"wp-block-latest-posts__list wp-block-latest-posts is-layout-flow wp-block-latest-posts-is-layout-flow\"><li><a class=\"wp-block-latest-posts__post-title\" href=\"http://127.0.0.1:8099/hello-world/\">Hello world!</a></li>\n<li><a class=\"wp-block-latest-posts__post-title\" href=\"http://127.0.0.1:8099/post-1/\">Post 1</a></li>\n<li><a class=\"wp-block-latest-posts__post-title\" href=\"http://127.0.0.1:8099/post-2/\">Post 2</a></li>\n<li><a class=\"wp-block-latest-posts__post-title\" href=\"http://127.0.0.1:8099/post-3/\">Post 3</a></li>\n<li><a class=\"wp-block-latest-posts__post-title\" href=\"http://127.0.0.1:8099/post-4/\">Post 4</a></li>\n</ul></div></section><section id=\"block-4\" class=\"widget widget_block mb-8\"><div class=\"wp-block-group is-layout-flow wp-block-group-is-layout-flow\"><h2 class=\"wp-block-heading\">Recent Comments</h2><ol class=\"wp-block-latest-comments\"><li class=\"wp-block-latest-comments__comment\"><article><footer class=\"wp-block-latest-comments__comment-meta\"><a class=\"wp-block-latest-comments__comment-author\" href=\"https://wordpress.org/\">A WordPress Commenter</a> on <a class=\"wp-block-latest-comments__comment-link\" href=\"http://127.0.0.1:8099/hello-world/#comment-1\">Hello world!</a></footer></article></li></ol></div></section><section id=\"block-5\" class=\"widget widget_block mb-8\"><div class=\"wp-block-group is-layout-flow wp-block-group-is-layout-flow\"><h2 class=\"wp-block-heading\">Archives</h2><ul class=\"wp-block-archives-list wp-block-archives\">\t<li><a href='http://127.0.0.1:8099/2026/10/'>October 2026</a></li>\n</ul></div></section><section id=\"block-6\" class=\"widget widget_block mb-8\"><div class=\"wp-block-group is-layout-flow wp-block-group-is-layout-flow\"><h2 class=\"wp-block-heading\">Categories</h2><ul class=\"wp-block-categories-list wp-block-categories-taxonomy-category wp-block-categories\">\t<li class=\"cat-item cat-item-2\"><a href=\"http://127.0.0.1:8099/category/perf-alpha/\">Perf alpha</a>\n</li>\n\t<li class=\"cat-item cat-item-3\"><a href=\"http://127.0.0.1:8099/category/perf-beta/\">Perf beta</a>\n</li>\n\t<li class=\"cat-item cat-item-4\"><a href=\"http://127.0.0.1:8099/category/perf-gamma/\">Perf gamma</a>\n</li>\n\t<li class=\"cat-item cat-item-1\"><a href=\"http://127.0.0.1:8099/category/uncategorized/\">Uncategorized</a>\n</li>\n</ul></div></section>",
+            "footer": ""
+        },
+        "page": {
+            "id": 35,
+            "title": "product-1",
+            "content": "<p class=\"attachment\"><a href='http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1.jpg'><img loading=\"lazy\" decoding=\"async\" width=\"300\" height=\"225\" src=\"http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1-300x225.jpg\" class=\"attachment-medium size-medium\" alt=\"\" srcset=\"http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1-300x225.jpg 300w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1.jpg 320w\" sizes=\"auto, (max-width: 300px) 100vw, 300px\" /></a></p>\n",
+            "slug": "product-1-2",
+            "url": "http://127.0.0.1:8099/product-1-2/",
+            "excerpt": "",
+            "featuredImage": {
+                "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1.jpg",
+                "width": "320",
+                "height": "240",
+                "alt": "",
+                "srcset": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1.jpg 320w, http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1-300x225.jpg 300w",
+                "sizes": "(max-width: 320px) 100vw, 320px"
+            },
+            "thumbnail": null,
+            "categories": [],
+            "tags": [],
+            "author": null,
+            "post_class": "post-35 attachment type-attachment status-inherit hentry",
+            "link_pages": "",
+            "prev": null,
+            "next": null,
+            "mime_type": "image/jpeg",
+            "is_attachment": true,
+            "date": {
+                "display": "October 19, 2026",
+                "iso": "2026-10-19T09:37:53+00:00"
+            },
+            "attachment_url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/product-1.jpg"
+        },
+        "hero": {
+            "primary_label": "Explore",
+            "primary_url": "http://127.0.0.1:8099/blog/",
+            "secondary_label": "Learn more",
+            "secondary_url": "http://127.0.0.1:8099/"
+        },
+        "comments": ""
+    }
+}

@@ -1,0 +1,49 @@
+{#
+ # Block: post-list (Twig twin of post-list.latte)
+ # Context: posts[], pagination, labels
+ #}
+{% set list %}
+	{% if not posts %}
+		<p class="py-16 text-center text-muted-foreground">{{ labels.no_posts ?? 'No posts found.' }}</p>
+	{% else %}
+		{% set cards %}
+			{% for post in posts %}
+				{% set body %}
+					{% set postTitle %}{{ post.title }}{% endset %}
+					{% set t %}{% include 'link/Link.html.twig' with { href: post.url, class: 'no-underline hover:text-primary', children: postTitle } %}{% endset %}
+					{% set h %}{% include 'card/CardTitle.html.twig' with { children: t } %}{% endset %}
+					{% include 'card/CardHeader.html.twig' with { children: h } %}
+					{% if post.excerpt ?? false %}
+						{% set ex %}<p class="text-sm text-muted-foreground">{{ post.excerpt }}</p>{% endset %}
+						{% include 'card/CardContent.html.twig' with { children: ex } %}
+					{% endif %}
+					{% if post.date.display ?? false %}
+						{% set ft %}<time datetime="{{ post.date.iso ?? '' }}" class="text-xs text-muted-foreground">{{ post.date.display }}</time>{% endset %}
+						{% include 'card/CardFooter.html.twig' with { children: ft } %}
+					{% endif %}
+				{% endset %}
+				{% include 'card/Card.html.twig' with { class: post.post_class ?? '', children: body } %}
+			{% endfor %}
+		{% endset %}
+		{% include 'stack/Stack.html.twig' with { class: 'gap-6', children: cards } %}
+	{% endif %}
+
+	{% if pagination ?? false %}
+		<nav class="mt-10 flex justify-center gap-4" aria-label="{{ labels.pagination ?? 'Pagination' }}">
+			{% if pagination.prev_url %}
+				{% set prevL %}{{ labels.previous ?? 'Previous' }}{% endset %}
+				{% include 'link/Link.html.twig' with { href: pagination.prev_url, class: 'text-sm text-primary', children: prevL } %}
+			{% endif %}
+			<span class="text-sm text-muted-foreground">{{ pagination.current }} / {{ pagination.total }}</span>
+			{% if pagination.next_url %}
+				{% set nextL %}{{ labels.next ?? 'Next' }}{% endset %}
+				{% include 'link/Link.html.twig' with { href: pagination.next_url, class: 'text-sm text-primary', children: nextL } %}
+			{% endif %}
+		</nav>
+	{% endif %}
+{% endset %}
+
+{% set box %}
+	{% include 'box/Box.html.twig' with { class: 'container mx-auto px-4 py-12 md:px-6', children: list } %}
+{% endset %}
+{% include 'block/Block.html.twig' with { tag: 'section', children: box } %}

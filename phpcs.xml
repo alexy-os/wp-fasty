@@ -9,6 +9,7 @@
     <file>themes/latte-shop</file>
     <file>plugins/wpfasty-types</file>
     <file>plugins/wpfasty-builder</file>
+    <file>tools/parity</file>
     <arg name="extensions" value="php"/>
 
     <!-- Exclude directories and files -->

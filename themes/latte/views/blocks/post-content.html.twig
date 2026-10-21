@@ -1,0 +1,91 @@
+{#
+ # Block: post / page content (Twig twin of post-content.latte)
+ # Context: page, labels
+ #}
+{% if page %}
+	{% set meta %}
+		{% if (page.date.display ?? false) or (page.author ?? false) or (page.categories ?? false) %}
+			{% set metaBits %}
+				{% if page.date.display ?? false %}
+					<span>{{ labels.posted_on }} <time datetime="{{ page.date.iso ?? '' }}">{{ page.date.display }}</time></span>
+				{% endif %}
+				{% if page.author.name ?? false %}
+					{% set authorName %}{{ page.author.name }}{% endset %}
+					<span>{{ labels.by_author }}
+						{% include 'link/Link.html.twig' with { href: page.author.url, class: 'underline-offset-2 hover:underline', children: authorName } %}
+					</span>
+				{% endif %}
+				{% if page.categories ?? false %}
+					<span>{{ labels.categories }}:
+						{% for cat in page.categories %}
+							{% set catName %}{{ cat.name }}{% endset %}
+							{% include 'link/Link.html.twig' with { href: cat.url, class: 'underline-offset-2 hover:underline', children: catName } %}{% if not loop.last %}, {% endif %}
+						{% endfor %}
+					</span>
+				{% endif %}
+			{% endset %}
+			{% include 'group/Group.html.twig' with { class: 'mb-6 flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground', children: metaBits } %}
+		{% endif %}
+	{% endset %}
+
+	{% set inner %}
+		{% set titleHtml %}{{ page.title }}{% endset %}
+		{% include 'title/Title.html.twig' with { as: 1, class: 'mb-6 text-3xl font-bold tracking-tight md:text-4xl', children: titleHtml } %}
+
+		{{ meta }}
+
+		{% if page.featuredImage.url ?? false %}
+			{% set img %}
+				{% include 'image/Image.html.twig' with {
+					src: page.featuredImage.url,
+					alt: page.featuredImage.alt ?? '',
+					width: (page.featuredImage.width ?? '') ~ '',
+					height: (page.featuredImage.height ?? '') ~ '',
+					srcset: page.featuredImage.srcset ?? '',
+					sizes: page.featuredImage.sizes ?? '',
+					class: 'w-full',
+					loading: 'eager'
+				} %}
+			{% endset %}
+			{% include 'box/Box.html.twig' with { class: 'mb-8 overflow-hidden rounded-lg', children: img } %}
+		{% endif %}
+
+		{% set body %}<div class="prose max-w-none text-foreground">{{ page.content|raw }}</div>{% endset %}
+		{% include 'box/Box.html.twig' with { children: body } %}
+
+		{% if page.link_pages ?? false %}
+			{{ page.link_pages|raw }}
+		{% endif %}
+
+		{% if page.tags ?? false %}
+			{% set tagBits %}
+				<span class="text-sm text-muted-foreground">{{ labels.tags }}:</span>
+				{% for tag in page.tags %}
+					{% set tagName %}{{ tag.name }}{% endset %}
+					{% set tagLink %}{% include 'link/Link.html.twig' with { href: tag.url, class: 'no-underline', children: tagName } %}{% endset %}
+					{% include 'badge/Badge.html.twig' with { variant: 'secondary', class: 'mr-1', children: tagLink } %}
+				{% endfor %}
+			{% endset %}
+			{% include 'group/Group.html.twig' with { class: 'mt-8 flex flex-wrap items-center gap-2', children: tagBits } %}
+		{% endif %}
+
+		{% if (page.prev ?? false) or (page.next ?? false) %}
+			{% set navBits %}
+				{% if page.prev.url ?? false %}
+					{% set prevLabel %}{{ labels.previous_post }}: {{ page.prev.title }}{% endset %}
+					{% include 'link/Link.html.twig' with { href: page.prev.url, class: 'text-sm text-primary', children: prevLabel } %}
+				{% endif %}
+				{% if page.next.url ?? false %}
+					{% set nextLabel %}{{ labels.next_post }}: {{ page.next.title }}{% endset %}
+					{% include 'link/Link.html.twig' with { href: page.next.url, class: 'text-sm text-primary', children: nextLabel } %}
+				{% endif %}
+			{% endset %}
+			{% include 'group/Group.html.twig' with { class: 'mt-10 flex flex-wrap justify-between gap-4 border-t border-border pt-8', children: navBits } %}
+		{% endif %}
+	{% endset %}
+
+	{% set box %}
+		{% include 'box/Box.html.twig' with { class: 'container mx-auto max-w-3xl px-4 py-12 md:px-6', children: inner } %}
+	{% endset %}
+	{% include 'block/Block.html.twig' with { tag: 'article', class: page.post_class ?? '', children: box } %}
+{% endif %}

@@ -1,0 +1,24 @@
+{#
+ # App-shell header — sheet trigger (mobile) + brand. Twig twin of app-header.latte.
+ #}
+<header class="site-header flex h-16 items-center justify-between border-b border-border bg-background px-4 md:px-6">
+	<div class="flex items-center gap-4">
+		<button
+			type="button"
+			id="{{ sheet.trigger }}"
+			class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden"
+			data-ui8kit-dialog-open="true"
+			data-ui8kit-dialog-target="{{ sheet.panel }}"
+			aria-controls="{{ sheet.panel }}"
+			aria-haspopup="dialog"
+			aria-expanded="false"
+			aria-label="{{ labels.open_menu }}"
+		>
+			{{ icon('menu', 'size-5') }}
+		</button>
+		<span class="text-sm font-medium text-muted-foreground md:hidden">{{ site.title }}</span>
+	</div>
+	<div class="hidden md:block">
+		{% include 'blocks/search-form.html.twig' %}
+	</div>
+</header>

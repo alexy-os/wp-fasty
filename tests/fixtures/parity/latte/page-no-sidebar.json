@@ -1,0 +1,138 @@
+{
+    "uri": "(derived from page.json: no sidebar, menus)",
+    "view": "pages/page",
+    "page": true,
+    "context": {
+        "site": {
+            "title": "QA",
+            "url": "http://127.0.0.1:8099/",
+            "theme_url": "http://127.0.0.1:8099/wp-content/themes/latte",
+            "stylesheet_url": "http://127.0.0.1:8099/wp-content/themes/latte",
+            "lang": "en-US",
+            "description": "",
+            "charset": "UTF-8",
+            "year": "2026",
+            "logo": null
+        },
+        "menu": {
+            "primary": {
+                "items": [
+                    {
+                        "title": "Home",
+                        "url": "http://127.0.0.1:8099/",
+                        "current": true,
+                        "children": []
+                    },
+                    {
+                        "title": "Blog & <News>",
+                        "url": "http://127.0.0.1:8099/blog/",
+                        "current": false,
+                        "children": [
+                            {
+                                "title": "Perf alpha",
+                                "url": "http://127.0.0.1:8099/category/perf-alpha/",
+                                "current": false,
+                                "children": [
+                                    {
+                                        "title": "Deep \"quoted\"",
+                                        "url": "http://127.0.0.1:8099/deep/",
+                                        "current": true,
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "title": "About",
+                        "url": "http://127.0.0.1:8099/sample-page/",
+                        "current": false,
+                        "children": []
+                    }
+                ]
+            },
+            "footer": {
+                "items": [
+                    {
+                        "title": "Privacy",
+                        "url": "http://127.0.0.1:8099/privacy-policy/",
+                        "current": false,
+                        "children": []
+                    }
+                ]
+            }
+        },
+        "shell": "classic",
+        "sheet": {
+            "trigger": "classic-mobile-sheet-trigger",
+            "panel": "classic-mobile-sheet-panel",
+            "title": "classic-mobile-sheet-title"
+        },
+        "labels": {
+            "featured": "Featured",
+            "latest_articles": "Latest articles",
+            "no_posts": "No posts found.",
+            "previous": "Previous",
+            "next": "Next",
+            "skip_to_content": "Skip to content",
+            "open_menu": "Open menu",
+            "close_menu": "Close menu",
+            "primary_nav": "Primary",
+            "footer_nav": "Footer",
+            "sidebar": "Sidebar",
+            "pagination": "Pagination",
+            "posted_on": "Posted on",
+            "by_author": "By",
+            "categories": "Categories",
+            "tags": "Tags",
+            "previous_post": "Previous post",
+            "next_post": "Next post",
+            "attachment": "Attachment",
+            "pages": "Pages:"
+        },
+        "search": {
+            "action": "http://127.0.0.1:8099/",
+            "query": "",
+            "placeholder": "Search…",
+            "submit": "Search",
+            "label": "Search"
+        },
+        "widgets": {
+            "sidebar": "",
+            "footer": ""
+        },
+        "page": {
+            "id": 2,
+            "title": "Sample Page",
+            "content": "\n<p class=\"wp-block-paragraph\">This is an example page. It&#8217;s different from a blog post because it will stay in one place and will show up in your site navigation (in most themes). Most people start with an About page that introduces them to potential site visitors. It might say something like this:</p>\n\n\n\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\">\n\n<p class=\"wp-block-paragraph\">Hi there! I&#8217;m a bike messenger by day, aspiring actor by night, and this is my website. I live in Los Angeles, have a great dog named Jack, and I like pi&#241;a coladas. (And gettin&#8217; caught in the rain.)</p>\n\n</blockquote>\n\n\n\n<p class=\"wp-block-paragraph\">&#8230;or something like this:</p>\n\n\n\n<blockquote class=\"wp-block-quote is-layout-flow wp-block-quote-is-layout-flow\">\n\n<p class=\"wp-block-paragraph\">The XYZ Doohickey Company was founded in 1971, and has been providing quality doohickeys to the public ever since. Located in Gotham City, XYZ employs over 2,000 people and does all kinds of awesome things for the Gotham community.</p>\n\n</blockquote>\n\n\n\n<p class=\"wp-block-paragraph\">As a new WordPress user, you should go to <a href=\"http://127.0.0.1:8099/wp-admin/\">your dashboard</a> to delete this page and create new pages for your content. Have fun!</p>\n",
+            "slug": "sample-page",
+            "url": "http://127.0.0.1:8099/sample-page/",
+            "excerpt": "This is an example page. It's different from a blog post because it will stay in one place and will show up in your site navigation (in most themes). Most people start with an About page that introduces them to…",
+            "featuredImage": null,
+            "thumbnail": null,
+            "categories": [],
+            "tags": [],
+            "author": {
+                "name": "admin",
+                "url": "http://127.0.0.1:8099/author/admin/"
+            },
+            "post_class": "post-2 page type-page status-publish hentry",
+            "link_pages": "",
+            "prev": null,
+            "next": null,
+            "mime_type": "",
+            "is_attachment": false,
+            "date": {
+                "display": "October 19, 2026",
+                "iso": "2026-10-19T09:37:49+00:00"
+            }
+        },
+        "hero": {
+            "primary_label": "Explore",
+            "primary_url": "http://127.0.0.1:8099/blog/",
+            "secondary_label": "Learn more",
+            "secondary_url": "http://127.0.0.1:8099/"
+        },
+        "comments": ""
+    }
+}

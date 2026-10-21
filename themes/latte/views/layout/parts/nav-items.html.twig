@@ -1,0 +1,19 @@
+{#
+ # Recursive nav items — expects items list with optional children. Twig twin of nav-items.latte.
+ #}
+<ul class="{{ listClass ?? 'flex flex-col gap-2' }}">
+	{% for item in items %}
+		<li>
+			<a
+				href="{{ item.url|safe_url }}"
+				class="{{ linkClass ?? 'block rounded-md px-4 py-2 text-sm font-medium text-muted-foreground no-underline hover:bg-accent hover:text-foreground' }}{% if item.current %} bg-accent text-foreground{% endif %}"
+				{% if item.current %}aria-current="page"{% endif %}
+			>
+				{{ item.title }}
+			</a>
+			{% if item.children ?? false %}
+				{% include 'layout/parts/nav-items.html.twig' with { items: item.children, listClass: 'ml-4 mt-2 flex flex-col gap-2', linkClass: linkClass ?? null } %}
+			{% endif %}
+		</li>
+	{% endfor %}
+</ul>

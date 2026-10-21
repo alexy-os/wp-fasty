@@ -27,6 +27,8 @@ for (const pattern of ["themes/*/views/**/*.latte", "themes/*/views/**/*.twig", 
       if (palette.test(line)) errors.push(`${where} palette color class — use token classes (bg-primary, text-muted-foreground…)`);
       // UI8Kit primitives print `children` with |noescape — pass captured (escaped) HTML, never raw data.
       if (rel.endsWith(".latte") && /children:\s*\(string\)\s*\$\w+\[/.test(line)) errors.push(`${where} raw data passed as children (XSS) — wrap in {capture}`);
+      // Latte checks URLs in href/src/action automatically; Twig views must do it explicitly.
+      if (rel.endsWith(".twig") && /\b(?:href|src|action)="\{\{(?![^}]*\|safe_url)/.test(line)) errors.push(`${where} URL attribute without |safe_url`);
       if (rel.endsWith(".twig") && /children:\s*[\w]+(?:\.|\[)/.test(line)) errors.push(`${where} raw data passed as children (XSS) — wrap in {% set %}…{% endset %}`);
       if (/\.(latte|twig)$/.test(rel) && halfStep.test(line)) errors.push(`${where} half spacing step — use the 8px grid`);
       if (/\.(latte|twig)$/.test(rel) && arbitraryPx.test(line)) errors.push(`${where} arbitrary px value — use scale/tokens`);

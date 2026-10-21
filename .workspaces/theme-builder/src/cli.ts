@@ -69,6 +69,12 @@ function pageViewSource(blocks: string[], comment: string): string {
   return lines.join("\n") + "\n";
 }
 
+/** Twig twin of a generated page view (same blocks, `.html.twig` names; Twig include passes the context like Latte). */
+function pageViewSourceTwig(blocks: string[], comment: string): string {
+  const lines = [`{# ${comment} #}`, ...blocks.map((b) => `{% include 'blocks/${b.replace(/^blocks\//, "")}.html.twig' %}`)];
+  return lines.join("\n") + "\n";
+}
+
 async function syncBlocks(themeDir: string): Promise<string[]> {
   const blocksDir = join(presetsRoot, "blocks");
   const outDir = join(themeDir, "views", "blocks");
@@ -77,7 +83,7 @@ async function syncBlocks(themeDir: string): Promise<string[]> {
   if (!existsSync(blocksDir)) return copied;
 
   for (const name of await readdir(blocksDir)) {
-    if (!name.endsWith(".latte")) continue;
+    if (!name.endsWith(".latte") && !name.endsWith(".html.twig")) continue;
     await copyFile(join(blocksDir, name), join(outDir, name));
     copied.push(name);
   }
@@ -108,6 +114,7 @@ async function emitPageViews(preset: ThemePreset, themeDir: string): Promise<voi
     if (!blocks || blocks.length === 0) continue;
     const body = pageViewSource(blocks, `${template} — generated from presets/themes/${preset.id}.json`);
     await writeFile(file, body);
+    await writeFile(join(pagesDir, `${template}.html.twig`), pageViewSourceTwig(blocks, `${template} — generated from presets/themes/${preset.id}.json`));
   }
 
   // Keep hand-authored utility pages if present (404/search are not in templates map).

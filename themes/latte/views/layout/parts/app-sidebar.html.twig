@@ -1,0 +1,18 @@
+{#
+ # Desktop sidebar — hidden on small screens. Twig twin of app-sidebar.latte.
+ #}
+<aside class="hidden w-64 shrink-0 flex-col border-r border-border bg-card md:flex" aria-label="{{ labels.sidebar }}">
+	<div class="flex h-16 items-center border-b border-border px-4">
+		{% include 'layout/parts/brand.html.twig' %}
+	</div>
+	<nav class="flex-1 overflow-y-auto px-4 py-4" aria-label="{{ labels.primary_nav }}">
+		{% if menu.primary.items ?? false %}
+			{% include 'layout/parts/nav-items.html.twig' with { items: menu.primary.items } %}
+		{% endif %}
+	</nav>
+	{% if widgets.sidebar ?? false %}
+		<div class="border-t border-border px-4 py-4 text-sm">
+			{{ widgets.sidebar|raw }}
+		</div>
+	{% endif %}
+</aside>
