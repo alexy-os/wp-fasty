@@ -1,0 +1,122 @@
+name: Published registries
+
+# Optional, network-dependent check (never blocks CI): after a green CI run on main, the builder registries built from
+# source in that run (artifact dist/registry) must be byte-identical to the published
+# https://registry.buildy.tw/<latte|twig>/wpfasty/{v<version>,latest}/, and a real WordPress must import and render them
+# from that URL. Also daily and on demand. Network errors are retried; a mismatch fails this workflow only.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: registry-published
+  cancel-in-progress: true
+
+env:
+  PHP_VERSION: "8.3"
+  WP_VERSION: "7.1.3"
+  REGISTRY: https://registry.buildy.tw
+
+jobs:
+  published:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: wp
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup PHP + WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          tools: wp-cli
+          extensions: mysqli, gd
+          coverage: none
+
+      - name: Build artifact of the CI run (registries built from source, packaged sites)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          id="${{ github.event.workflow_run.id }}"
+          [ -n "$id" ] || id=$(gh run list -R "$GITHUB_REPOSITORY" -w CI -b main -s success -L 1 --json databaseId -q '.[0].databaseId')
+          echo "CI run $id"
+          gh run download "$id" -R "$GITHUB_REPOSITORY" -n dist -D dist
+          ls dist/registry/*/wpfasty
+
+      - name: Published bytes = built from source (sha256, bytes; v<version> and latest, both runtimes)
+        run: |
+          get() { curl -sSfL --retry 5 --retry-delay 5 --retry-all-errors -o "$2" "$1"; }
+          fail=0
+          for rt in latte twig; do
+            for d in dist/registry/$rt/wpfasty/*/; do
+              v=$(basename "$d")
+              for f in catalog.json blocks.zip; do
+                u="$REGISTRY/$rt/wpfasty/$v/$f"
+                get "$u" /tmp/pub || { echo "::error::$u unreachable"; fail=1; continue; }
+                a=$(sha256sum < "$d$f" | cut -c1-64); b=$(sha256sum < /tmp/pub | cut -c1-64)
+                echo "$u: built $(stat -c %s "$d$f") B $a, published $(stat -c %s /tmp/pub) B $b"
+                [ "$a" = "$b" ] || { echo "::error::$u differs from the registry built from source"; fail=1; }
+              done
+              bun tools/builder/registry-verify.ts "$rt" "$REGISTRY/$rt/wpfasty/$v/" || fail=1
+            done
+          done
+          exit $fail
+
+      - name: WordPress imports the published registry of its runtime (latte-shop on latte.zip, latte-shop-twig on twig.zip)
+        run: |
+          mkdir -p /tmp/wp && cd /tmp/wp
+          curl -sSfL --retry 5 --retry-all-errors -o /tmp/wp.tar.gz "https://wordpress.org/wordpress-${WP_VERSION}.tar.gz"
+          tar -xzf /tmp/wp.tar.gz --strip-components=1
+          wp config create --dbname=wp --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check
+          wp config set WP_DEBUG true --raw && wp config set WP_DEBUG_LOG "'/tmp/wp-debug.log'" --raw
+          wp core install --url=http://127.0.0.1:8080 --title=Registry --admin_user=admin --admin_password=admin --admin_email=ci@example.com --skip-email
+          mkdir -p wp-content/mu-plugins
+          cp "$GITHUB_WORKSPACE/tools/qa/offline.php" "$GITHUB_WORKSPACE/tools/qa/engine-marker.php" wp-content/mu-plugins/
+          D="$GITHUB_WORKSPACE/dist"
+          unzip -q "$D/latte.zip" -d wp-content/themes/ && unzip -q "$D/twig.zip" -d wp-content/themes/
+          for s in latte-shop latte-shop-twig; do unzip -q "$D/$s/$s.zip" -d wp-content/themes/; done
+          unzip -q "$D/latte-shop/wpfasty-types.zip" -d wp-content/plugins/
+          wp rewrite structure '/%postname%/' --hard
+          nohup php -S 127.0.0.1:8080 -t /tmp/wp > /tmp/php-server.log 2>&1 &
+          for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8080/wp-login.php && break; sleep 1; done
+          V=$(bun -e "console.log(require('$D/registry/latte/wpfasty/latest/catalog.json').version)")
+          fail=0
+          for e in latte twig; do
+            o=$([ "$e" = twig ] && echo latte || echo twig); site=$([ "$e" = twig ] && echo latte-shop-twig || echo latte-shop)
+            rm -rf wp-content/plugins/wpfasty-builder && unzip -q "$D/$site/wpfasty-builder.zip" -d wp-content/plugins/
+            wp plugin activate wpfasty-types wpfasty-builder --quiet
+            wp theme activate "$site" --quiet
+            for u in "$REGISTRY/$e/wpfasty/v$V/" "$REGISTRY/$e/wpfasty/latest/"; do
+              ok=0; for i in 1 2 3; do wp eval-file "$GITHUB_WORKSPACE/tools/qa/registry-import.php" reg "$u" && { ok=1; break; }; sleep 10; done
+              [ $ok = 1 ] || { echo "::error::$site: import of $u failed"; fail=1; }
+            done
+            if wp eval-file "$GITHUB_WORKSPACE/tools/qa/registry-import.php" bad "$REGISTRY/$o/wpfasty/v$V/"; then echo "::error::$site imported the $o registry"; fail=1; fi
+            wp eval-file "$GITHUB_WORKSPACE/tools/builder/seed-landing.php" "$GITHUB_WORKSPACE/tools/qa/remote-landing.json" || fail=1
+            bash "$GITHUB_WORKSPACE/tools/qa/site-pair.sh" fetch . http://127.0.0.1:8080 "$site" "/tmp/pub-$e" /remote-registry/ || fail=1
+            n=$(grep -c 'wpfb-block' "/tmp/pub-$e/_remote_registry__.html" || true)
+            echo "- $site ($e): imported $REGISTRY/$e/wpfasty/v$V/ and latest/, rendered $n blocks, $o registry refused" | tee -a "$GITHUB_STEP_SUMMARY"
+            [ "$n" -gt 0 ] || { echo "::error::$site: remote landing rendered no blocks"; fail=1; }
+          done
+          if [ -s /tmp/wp-debug.log ]; then echo "::error::PHP messages logged"; cat /tmp/wp-debug.log; fail=1; fi
+          exit $fail

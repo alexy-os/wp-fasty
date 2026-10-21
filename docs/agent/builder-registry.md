@@ -18,6 +18,12 @@ Published: v1.0.0 (ui8kit/site `236f670`, source `builder-registry/`, checked by
 `bun run registry:verify <runtime> https://registry.buildy.tw/<runtime>/wpfasty/v1.0.0/`. New versions:
 `WPFASTY=<wp-fasty checkout> bun run registry:wpfasty --version x.y.z` in ui8kit/site, then commit and push.
 
+Workflow `Published registries` (`.github/workflows/registry-published.yml`, separate from CI, never blocks it; after
+each green CI run on main, daily and on demand) compares the published `v<version>/` and `latest/` byte for byte
+(sha256, size) with `dist/registry` built from source in that CI run, runs `registry:verify` on the URLs, and imports
+both published registries into a real WordPress (latte-shop on latte.zip, latte-shop-twig on twig.zip): import from
+`https://registry.buildy.tw/…`, render with only the site engine loaded, other runtime refused. Network calls retry.
+
 ## Files
 
 - `catalog.json` — the builder catalog (blocks, variants, props, bindings, collections) with:
