@@ -35,11 +35,7 @@ function answers(): J {
   const extra = val("postTypes");
   if (extra) a.postTypes = JSON.parse(extra);
   a.output = { wporg: checked("wporg"), includeDemo: checked("includeDemo"), playground: checked("playground") };
-  if (val("engine") === "twig") {
-    // Twig sites: no builder landings yet (see schema allOf rule).
-    a.engine = "twig";
-    a.landings = [];
-  }
+  if (val("engine") === "twig") a.engine = "twig";
   return a;
 }
 

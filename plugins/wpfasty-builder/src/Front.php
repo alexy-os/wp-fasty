@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace WPFastyBuilder;
 
 /**
- * Front end: a page with a published layout renders its compiled template through the theme Latte pipeline
+ * Front end: a page with a published layout renders its compiled template through the theme pipeline, Latte or
+ * Twig (whichever `wpfasty_renderer` picked)
  * (`wpfasty_view_roots`, `wpfasty_resolve_view`, `wpfasty_context`). The only builder asset on the front end
  * is the block stylesheet; there is no builder script.
  */
@@ -14,6 +15,7 @@ final class Front
     private static ?int $page = null;
     private static bool $preview = false;
     private static ?BlockRenderer $renderer = null;
+    private static bool $twigAttached = false;
 
     public static function register(): void
     {
@@ -75,8 +77,8 @@ final class Front
         if (!is_page()) {
             return $view;
         }
-        // Landings compile to Latte: with another theme renderer (engine twig) the page renders as a normal page.
-        if (self::themeEngine() === null) {
+        // Landings compile to Latte and Twig; an unknown theme renderer renders the page as a normal page.
+        if (self::themeRenderer() === null) {
             return $view;
         }
         $id = (int) get_queried_object_id();
@@ -147,14 +149,24 @@ final class Front
         }
     }
 
-    /** registers wpfb_block() on the theme Latte engine */
+    /** registers wpfb_block() on the theme engine (Latte function or Twig function, same callable) */
     public static function attach(): void
     {
-        $engine = self::themeEngine();
-        if ($engine === null || isset($engine->getFunctions()['wpfb_block'])) {
+        $engine = self::themeRenderer();
+        if ($engine instanceof \Latte\Engine) {
+            if (!isset($engine->getFunctions()['wpfb_block'])) {
+                $engine->addFunction('wpfb_block', [self::class, 'block']);
+            }
             return;
         }
-        $engine->addFunction('wpfb_block', [self::class, 'block']);
+        if ($engine instanceof \Twig\Environment && !self::$twigAttached) {
+            self::$twigAttached = true;
+            // A callback, not addFunction(): it works after the Twig extensions are initialized.
+            $engine->registerUndefinedFunctionCallback(static fn (string $name): \Twig\TwigFunction|false
+                => $name === 'wpfb_block'
+                    ? new \Twig\TwigFunction('wpfb_block', [self::class, 'block'], ['is_safe' => ['html']])
+                    : false);
+        }
     }
 
     /** @param array<string, mixed> $props */
@@ -164,7 +176,8 @@ final class Front
         return self::$renderer->render($source, $template, Links::walk($props));
     }
 
-    public static function themeEngine(): ?\Latte\Engine
+    /** the theme's Latte engine or Twig environment, null without a known WP FastY renderer */
+    public static function themeRenderer(): \Latte\Engine|\Twig\Environment|null
     {
         if (!class_exists('\WPFasty\Core\Application')) {
             return null;
@@ -174,6 +187,9 @@ final class Front
         } catch (\Throwable) {
             return null;
         }
-        return is_object($renderer) && method_exists($renderer, 'latte') ? $renderer->latte() : null;
+        if (is_object($renderer) && method_exists($renderer, 'latte')) {
+            return $renderer->latte();
+        }
+        return is_object($renderer) && method_exists($renderer, 'twig') ? $renderer->twig() : null;
     }
 }

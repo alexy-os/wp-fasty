@@ -69,15 +69,6 @@
         "properties": { "output": { "required": ["wporg"], "properties": { "wporg": { "const": true } } } }
       },
       "then": { "properties": { "output": { "properties": { "typesPlugin": { "const": "companion" } } } } }
-    },
-    {
-      "description": "twig sites have no builder landings yet (the builder compiles Latte).",
-      "if": { "properties": { "engine": { "const": "twig" } }, "required": ["engine"] },
-      "then": {
-        "properties": {
-          "builder": { "properties": { "enabled": { "const": false } } }
-        }
-      }
     }
   ],
   "$defs": {

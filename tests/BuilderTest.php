@@ -131,6 +131,45 @@ final class BuilderTest extends TestCase
         $this->assertSame($value, json_decode($out, true));
     }
 
+    public function testTwigCompileRendersTheSameHtmlAsLatte(): void
+    {
+        [$entry] = Layout::normalize(['blocks' => [
+            ['id' => 'intro', 'block' => 'pagehead', 'variant' => 'start', 'props' => ['title' => "It's <Builder> \\ page"]],
+            ['id' => 'news', 'block' => 'posts', 'variant' => 'grid', 'bindings' => ['posts' => ['source' => 'posts']]],
+            ['id' => 'gone', 'block' => 'nope', 'variant' => 'x'],
+        ]], 'ui8kit', self::catalog(), ['posts'], self::base());
+        $latte = Compiler::compile($entry, self::catalog());
+        $twig = Compiler::compile($entry, self::catalog(), 'twig');
+        $this->assertStringStartsWith(Compiler::marker($entry, 'twig'), $twig);
+        $this->assertStringContainsString("{{ wpfb_block('ui8kit', 'blocks/post-grid.latte'", $twig);
+        $this->assertStringContainsString("wpfb['news']['posts'] ?? []", $twig);
+        $post = ['id' => 'post-1', 'title' => 'A "real" post', 'excerpt' => 'E', 'category' => 'News', 'author' => 'Ann',
+            'date' => 'Oct 1, 2026', 'minutes' => 2, 'icon' => 'file-text', 'href' => 'https://example.test/a/', 'image' => 'https://example.test/a.jpg'];
+        $renderer = new BlockRenderer(['ui8kit' => new LocalSource('ui8kit', self::SRC, '', false)], null);
+        $fn = static fn (string $s, string $t, array $p): string => $renderer->render($s, $t, $p);
+        $ctx = ['wpfb' => ['news' => ['posts' => [$post]]]];
+        $l = new Engine();
+        $l->setLoader(new StringLoader(['page' => $latte]));
+        $l->addFunction('wpfb_block', $fn);
+        $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $twig]), ['autoescape' => 'html']);
+        $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false
+            => $n === 'wpfb_block' ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
+        $strip = static fn (string $h): string => trim((string) preg_replace(['/\{[*#].*?[*#]\}\s*/s', '/>\s+</'], ['', '><'], $h));
+        $a = $strip($l->renderToString('page', $ctx));
+        $this->assertStringContainsString('A &quot;real&quot; post', $a);
+        $this->assertSame($a, $strip($env->render('page', $ctx)));
+        $this->assertSame($strip($l->renderToString('page', [])), $strip($env->render('page', [])));
+    }
+
+    public function testTwigLiteralRoundTripsJson(): void
+    {
+        $value = ['a' => [1, 2.5, true, null, "q'\\"], 'b' => [], 'c' => ['x' => ['y' => 'z']], 'd' => -3];
+        $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader([
+            'x' => '{{ ' . Compiler::literal($value, [], [], true) . '|json_encode|raw }}',
+        ]));
+        $this->assertSame($value, json_decode($env->render('x'), true));
+    }
+
     public function testCompiledTemplateRendersBoundData(): void
     {
         [$entry] = Layout::normalize(['blocks' => [

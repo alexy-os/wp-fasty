@@ -31,12 +31,13 @@ rejects("taxonomy clash rejected", { archetype: "folio", name: "Clash Folio", po
 rejects("reserved name rejected", { archetype: "press", name: "Reserved", postTypes: [{ name: "page", labels: { singular: "P", plural: "Ps" } }] }, "reserved platform post type");
 rejects("unknown palette rejected", { archetype: "press", name: "Nope", palette: "rainbow" }, "unknown palette");
 {
-  const { manifest, warnings } = buildManifest({ archetype: "press", name: "Twig Gazette", engine: "twig" }, data);
-  check("engine twig accepted: wporg kept, builder off", manifest.engine === "twig" && manifest.output.wporg !== false && manifest.builder.enabled === false
-    && warnings.some((w) => w.includes("builder")), warnings.join("; "));
+  const { manifest } = buildManifest({ archetype: "press", name: "Twig Gazette", engine: "twig" }, data);
+  const latte = buildManifest({ archetype: "press", name: "Twig Gazette" }, data).manifest;
+  check("engine twig = latte manifest except engine (builder, wporg, landings kept)", manifest.engine === "twig"
+    && JSON.stringify({ ...manifest, engine: undefined }) === JSON.stringify({ ...latte, engine: undefined }));
 }
 check("engine twig + wporg accepted", buildManifest({ archetype: "press", name: "Twig Org", engine: "twig", output: { wporg: true } }, data).manifest.output.wporg === true);
-rejects("engine twig + landings rejected", { archetype: "press", name: "Twig Land", engine: "twig", landings: ["tools/builder/landings/press.json"] }, "no builder landings");
+check("engine twig + landings accepted", buildManifest({ archetype: "press", name: "Twig Land", engine: "twig", landings: ["tools/builder/landings/press.json"] }, data).manifest.builder.landings.length === 1);
 rejects("unknown engine rejected", { archetype: "press", name: "Blade", engine: "blade" }, "must be latte or twig");
 rejects("parent slug rejected", { archetype: "press", name: "Latte" }, "is the parent theme");
 console.log(fail ? `${fail} failed` : "configure self-test OK");

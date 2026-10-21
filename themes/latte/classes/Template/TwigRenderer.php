@@ -39,6 +39,8 @@ final class TwigRenderer implements RendererInterface
 
         $this->twig = new Environment(new FilesystemLoader($this->roots), [
             'cache' => $cacheDir,
+            // Like Latte's auto refresh: a changed view (theme update, builder save) recompiles.
+            'auto_reload' => true,
             'autoescape' => 'html',
             'strict_variables' => false,
         ]);

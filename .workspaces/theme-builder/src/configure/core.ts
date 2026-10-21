@@ -6,7 +6,7 @@ export type J = Record<string, any>;
 
 export type Answers = {
   archetype: string;
-  /** Template engine; twig ⇒ no builder landings yet (schema rule). */
+  /** Template engine: latte (default) or twig — equal options, same design, builder and wordpress.org output. */
   engine?: "latte" | "twig";
   name: string;
   slug?: string;
@@ -130,13 +130,6 @@ export function buildManifest(a: Answers, data: Data): { manifest: J; warnings: 
   if (a.engine !== undefined) {
     if (a.engine !== "latte" && a.engine !== "twig") problems.push(`engine "${a.engine}" must be latte or twig`);
     m.engine = a.engine;
-  }
-  if (m.engine === "twig") {
-    if (a.landings?.length) problems.push("engine twig has no builder landings yet (landings must be [] or omitted)");
-    else if (m.builder?.enabled) {
-      m.builder = { ...m.builder, enabled: false, landings: [] };
-      warnings.push("engine twig: builder landings disabled (the builder compiles Latte only)");
-    }
   }
   if (problems.length) throw new ConfigureError(problems);
   if (!a.palette && !a.tokens) warnings.push(`brand: kept the ${a.archetype} reference palette`);

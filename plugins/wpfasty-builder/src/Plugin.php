@@ -24,9 +24,11 @@ final class Plugin
         });
         add_action('before_delete_post', static function (int $id): void {
             foreach ([true, false] as $preview) {
-                $file = Store::viewsDir() . '/' . Store::view($id, $preview) . '.latte';
-                if (is_file($file)) {
-                    wp_delete_file($file);
+                foreach (Compiler::ENGINES as $ext) {
+                    $file = Store::viewsDir() . '/' . Store::view($id, $preview) . $ext;
+                    if (is_file($file)) {
+                        wp_delete_file($file);
+                    }
                 }
             }
         });

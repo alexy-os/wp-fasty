@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace WPFastyBuilder;
 
 /**
- * Where layouts live: the draft and the published entry in post meta (JSON), the compiled Latte templates in
- * uploads/wpfasty-builder/views/builder/{page,preview}-<id>.latte. A missing template is compiled on demand,
+ * Where layouts live: the draft and the published entry in post meta (JSON), the compiled templates in
+ * uploads/wpfasty-builder/views/builder/{page,preview}-<id>.latte and their Twig twins (.html.twig), always both,
+ * so switching the theme renderer never meets a missing or stale landing. A missing template is compiled on demand,
  * so a database copy (or a WordPress Playground import) renders without a save.
  */
 final class Store
@@ -61,23 +62,22 @@ final class Store
     public static function compile(int $pageId, array $entry, bool $preview): ?string
     {
         $view = self::view($pageId, $preview);
-        $file = self::viewsDir() . '/' . $view . '.latte';
-        if (is_file($file) && str_starts_with(
-            (string) file_get_contents($file, false, null, 0, 64),
-            '{* wpfb:' . Compiler::hash($entry) . ' *}',
-        )) {
-            return $view;
-        }
-        $catalog = Sources::catalog((string) ($entry['metadata']['source']['value'] ?? ''));
-        if ($catalog === null) {
-            return null;
-        }
-        $latte = Compiler::compile($entry, $catalog);
-        if (!is_file($file) || (string) file_get_contents($file) !== $latte) {
+        $catalog = null;
+        foreach (Compiler::ENGINES as $engine => $ext) {
+            $file = self::viewsDir() . '/' . $view . $ext;
+            $marker = Compiler::marker($entry, $engine);
+            if (is_file($file) && str_starts_with((string) file_get_contents($file, false, null, 0, 64), $marker)) {
+                continue;
+            }
+            $catalog ??= Sources::catalog((string) ($entry['metadata']['source']['value'] ?? ''));
+            if ($catalog === null) {
+                return null;
+            }
+            $tpl = Compiler::compile($entry, $catalog, $engine);
             if (!is_dir(dirname($file)) && !wp_mkdir_p(dirname($file))) {
                 return null;
             }
-            file_put_contents($file, $latte);
+            file_put_contents($file, $tpl);
         }
         return $view;
     }

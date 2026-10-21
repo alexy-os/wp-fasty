@@ -3,7 +3,7 @@
 # renderer forced to latte and to twig (mu-plugin tools/qa/renderer-switch.php, option wpfasty_qa_renderer),
 # require the expected HTTP code, no PHP notices, Twig really used, and identical normalized HTML.
 #   tools/qa/live-render.sh <wp-dir> <base-url> <theme> <path>[|code[|nocompare]] …
-# nocompare: builder landings (Latte-only by design) render as a normal page under Twig, so only code/notices count.
+# nocompare: only code/notices count (e.g. a page whose output is engine-dependent by design; none today).
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 WP="$1"; BASE="$2"; THEME="$3"; shift 3

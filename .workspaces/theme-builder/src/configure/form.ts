@@ -36,7 +36,7 @@ const html = `<!doctype html>
 <form onsubmit="return false">
   <fieldset><legend>Archetype</legend>
     <select id="archetype"></select><p class="info" id="arch-info"></p>
-    <label>Engine <select id="engine"><option value="latte">Latte (default)</option><option value="twig">Twig (no builder landings yet)</option></select></label>
+    <label>Engine <select id="engine"><option value="latte">Latte (default)</option><option value="twig">Twig (same design and features)</option></select></label>
   </fieldset>
   <fieldset><legend>Theme</legend>
     <label>Name <input type="text" id="name" value="My Site"></label>
