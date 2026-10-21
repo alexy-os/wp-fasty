@@ -276,9 +276,9 @@ jobs:
           cd /tmp/wp
           wp option update home http://127.0.0.1:8080 --quiet
           wp option update siteurl http://127.0.0.1:8080 --quiet
-          # Several workers: a page render may request its own assets / loopback while being served.
-          # php 8.3 -S has segfaulted on the runner (core dump, no PHP error): supervise and restart it.
-          ( while true; do PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8080 -t /tmp/wp >> /tmp/php-server.log 2>&1; echo "php -S exited ($?), restarting" >> /tmp/php-server.log; sleep 1; done ) &
+          # Single process: php 8.3 -S with PHP_CLI_SERVER_WORKERS segfaulted intermittently on the runner (core dump,
+          # no PHP error). Page renders need no loopback; wp-cron's non-blocking spawn just times out. Supervised anyway.
+          nohup bash -c 'while true; do php -S 127.0.0.1:8080 -t /tmp/wp >> /tmp/php-server.log 2>&1; echo "php -S exited ($?), restarting" >> /tmp/php-server.log; sleep 1; done' > /dev/null 2>&1 &
           for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8080/wp-login.php && break; sleep 1; done
           mkdir -p /tmp/layouts
           php "$GITHUB_WORKSPACE/tools/builder/layout-manifest.php" > /tmp/layout-manifest.json
