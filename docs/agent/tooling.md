@@ -10,6 +10,9 @@ job `wordpress` (WP 7.1.3 + MariaDB: Theme Check 20260901 on the unpacked zip an
 | `bun run ui:primitives` | runs ui8kit/codegen (`packages/ui8kit-codegen`) → Latte primitives in `.workspaces/ui8kit-latte` | yes |
 | `bun run ui:install` | copies primitives into `themes/latte/views/ui` | yes |
 | `bun run codegen:verify` | codegen typecheck + generation (also produces `generated/ui/**/*.html.twig`) | yes |
+| `bun run parity` | `tools/parity/parity.php`: renders every fixture (`tests/fixtures/parity/<suite>/*.json`) with Latte and Twig, compares normalized HTML; also fails if a `.latte` view has no `.html.twig` twin | yes |
+| `bun run theme:pack -- latte --engine twig` | Twig parent build `dist/latte-twig.zip` (twig/twig vendored); used by `engine: twig` sites, not for wordpress.org | – |
+| `tools/qa/live-render.sh <wp> <url> <theme> <path>[\|code[\|nocompare]]…` | live Latte vs Twig render on a running WP (needs `tools/qa/renderer-switch.php` mu-plugin) | yes (wordpress job) |
 | `bun run theme:build -- latte` | builds views from `presets/themes/latte.json` (skips empty templates) | yes |
 | `bun run manifest:validate [file] [--repo]` | `tools/manifest/validate.ts`: site manifest v0.2 — ajv schema, semantic rules (text domain, capability fields, archetype types, landing blocks/variants/sources), and parity with `themes/<slug>` (style.css, tokens, views, `types/*.php`); no file = all `manifests/examples/*.json` with parity | yes |
 | `bun run theme:generate <manifest> [--out dir] [--no-pot]` | manifest + `presets/archetypes/<id>/` → child theme (default `dist/generated/<slug>`); validates the manifest first | – |

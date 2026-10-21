@@ -76,7 +76,7 @@ optional Customizer token block (**postponed**). Token names stay shadcn-compati
 ## 6. Implementation status (2026-10-16, branch `improved`)
 | Item | Status |
 |---|---|
-| RendererInterface + LatteRenderer + TwigRenderer, `wpfasty_renderer`, `wpfasty_view_roots` | done (8aa29db); Twig↔Latte identical DOM for Button tested; Twig theme *views* not written yet |
+| RendererInterface + LatteRenderer + TwigRenderer, `wpfasty_renderer`, `wpfasty_view_roots` | done (8aa29db); Twig↔Latte identical DOM for Button tested; Twig views for parent + press/folio/shop written (K6.2–K6.3), parity fixtures + live CI check (K6.5); `engine: twig` → `latte-twig` parent build, not wporg-eligible (K6.4) |
 | types modules + Registry (DI `types.registry`) | done (891c48f); data part moved to plugin `wpfasty-types` (e175b8a) |
 | folio `project`, shop `product`/`shop_order` migrated; purchasable capability | done (db37f6a, dc56371); HTML output byte-identical before/after |
 | folio/shop dedupe (archive title/prefix, term filter, latest posts, full-width support) | done (6f93ce9) |
