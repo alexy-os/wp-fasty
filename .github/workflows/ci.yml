@@ -120,6 +120,22 @@ jobs:
           unzip -p dist/twig.zip twig/classes/Template/Engines.php | grep -q "BUILT = \['twig'\]"
           unzip -p dist/latte.zip latte/classes/Template/Engines.php | grep -q "BUILT = \['latte'\]"
 
+      - name: Builder registries — one per runtime (wpfasty-catalog@2), reproducible, immutable versions, verify rules
+        run: |
+          bun run registry:build dist/registry
+          # Rebuild: same bytes (deterministic zip), so the existing immutable v<version>/ is accepted.
+          bun run registry:build dist/registry
+          V=$(bun -e "console.log(require('./plugins/wpfasty-builder/sources/ui8kit/latte/catalog.json').version)")
+          # Negative: a registry never verifies as the other runtime; a tampered archive fails its sha256.
+          ! bun run registry:verify twig "dist/registry/latte/wpfasty/v$V"
+          ! bun run registry:verify latte "dist/registry/twig/wpfasty/v$V"
+          cp -r "dist/registry/latte/wpfasty/v$V" /tmp/tampered && echo x >> /tmp/tampered/blocks.zip
+          ! bun run registry:verify latte /tmp/tampered
+          # Immutable: different content under an existing version is refused.
+          cp -r dist/registry /tmp/registry-imm && echo x >> "/tmp/registry-imm/twig/wpfasty/v$V/blocks.zip"
+          ! bun run registry:build /tmp/registry-imm
+          { echo "### Builder registries (v$V)"; for f in dist/registry/*/wpfasty/v*/catalog.json; do echo "- \`$f\` sha256 $(bun -e "console.log(require('./$f').archive.sha256)")"; done; } >> "$GITHUB_STEP_SUMMARY"
+
       - name: MCP server smoke (stdio; all five tools, writes only to dist/)
         run: bun run mcp:smoke
 
@@ -150,6 +166,7 @@ jobs:
           path: |
             dist/latte.zip
             dist/twig.zip
+            dist/registry/
             dist/sites.txt
             dist/*/*.zip
             dist/*/*.json

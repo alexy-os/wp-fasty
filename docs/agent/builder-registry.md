@@ -40,4 +40,10 @@ newest version. Sites should import a pinned URL.
 
 `bun tools/builder/export-ui8kit.ts` writes `plugins/wpfasty-builder/sources/ui8kit/{latte,twig}/catalog.json` from
 codegen-x; `bun tools/builder/pack-source.ts <runtime> <out>` writes `<out>/catalog.json` + `<out>/blocks.zip` for one
-runtime (`ui8kit/site`: `bun run registry:wpfasty` publishes both into `r/<runtime>/wpfasty/`).
+runtime. `bun run registry:build <out> [--version x.y.z]` writes both registries as
+`<out>/<runtime>/wpfasty/{v<version>,latest}/` (refuses to change an existing `v<version>/`; the zip is deterministic, so a
+rebuild of the same source is accepted) and verifies them; `bun run registry:verify <runtime> <dir|url>` applies the
+import rules to a directory or a published URL (format, runtime, semver, sha256/bytes, only that runtime's templates, no
+PHP, every variant template present). CI builds `dist/registry/` (artifact), rebuilds it, and checks the negatives
+(other runtime, tampered archive, changed immutable version). `ui8kit/site` publishes the built tree under
+`r/<runtime>/wpfasty/`.
