@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace WPFasty\Hooks;
 
+use WPFasty\Template\EngineUnavailable;
+use WPFasty\Template\Engines;
 use WPFasty\Theme\PrimitivesLocator;
 
 final class ThemeHooks extends AbstractHooks
@@ -92,7 +94,21 @@ final class ThemeHooks extends AbstractHooks
             return;
         }
 
-        if (PrimitivesLocator::resolve() !== null) {
+        $engine = Engines::requested();
+        if (is_string($engine) && !Engines::available($engine)) {
+            echo '<div class="notice notice-error"><p>' . esc_html(EngineUnavailable::for($engine)->getMessage())
+                . '</p></div>';
+            return;
+        }
+        if ($engine === 'twig') {
+            if (PrimitivesLocator::resolveTwig() === null) {
+                echo '<div class="notice notice-error"><p>';
+                echo esc_html__('WP FastY theme: UI8Kit Twig primitives not found (lib/ui8kit-twig).', 'latte');
+                echo '</p></div>';
+            }
+            return;
+        }
+        if (!is_string($engine) || PrimitivesLocator::resolve() !== null) {
             return;
         }
 

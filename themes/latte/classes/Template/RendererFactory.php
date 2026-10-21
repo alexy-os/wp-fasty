@@ -1,6 +1,7 @@
 <?php
 /**
- * Picks the renderer (filter `wpfasty_renderer`) and builds the root chain.
+ * Picks the renderer (filter `wpfasty_renderer`, default Engines::DEFAULT) and builds the root chain; an engine the
+ * build lacks throws EngineUnavailable.
  *
  * @package Latte
  */
@@ -26,16 +27,15 @@ final class RendererFactory
             return $engine;
         }
         $engine = strtolower($engine);
-        // Twig without twig/twig or its primitives (e.g. the Latte-only parent build): fall back to Latte, so a
-        // site whose child asks for Twig keeps rendering — children ship both view sets.
-        if ($engine === 'twig' && (!class_exists(\Twig\Environment::class) || empty($primitives['twig']))) {
-            $engine = 'latte';
+        // Isolated runtimes (ADR-001, K7): an engine this build lacks (library or primitives) is an error, never
+        // rendered by the other engine.
+        if (!Engines::available($engine) || empty($primitives[$engine])) {
+            throw EngineUnavailable::for($engine);
         }
-        $chain = array_merge($roots, (array) ($primitives[$engine] ?? []));
+        $chain = array_merge($roots, (array) $primitives[$engine]);
 
-        return match ($engine) {
-            'twig' => new TwigRenderer($chain, rtrim($cacheDir, '/\\') . '/twig'),
-            default => new LatteRenderer($chain, $cacheDir),
-        };
+        return $engine === 'twig'
+            ? new TwigRenderer($chain, rtrim($cacheDir, '/\\') . '/twig')
+            : new LatteRenderer($chain, $cacheDir);
     }
 }

@@ -317,17 +317,19 @@ jobs:
           done
           exit $fail
 
-      - name: Live Latte ↔ Twig render incl. builder landings (latte-twig parent, renderer forced per request, N+1 guard under Twig)
+      - name: Live Latte ↔ Twig render incl. builder landings (latte-twig parent, renderer forced per request, N+1 guard under Twig); twig children on latte.zip fail without fallback
         run: |
           cd /tmp/wp
           D="$GITHUB_WORKSPACE/dist"
-          # Backward compat: a twig child on the Latte-only parent (latte.zip) falls back to Latte and still renders.
+          # No fallback (K7): a twig child on the Latte-only parent (latte.zip) stops with an explicit error page —
+          # it is never rendered by Latte instead.
           for s in $(grep -e '-twig$' -e '^twig-' "$D/sites.txt" | grep -v -e '-latte$'); do
             wp theme activate "$s" --quiet
-            code=$(curl -s -o /tmp/fallback.html -w '%{http_code}' "http://127.0.0.1:8080/?s=a" || true)
-            n=$(grep -cE '<b>(Warning|Notice|Deprecated|Fatal error)</b>|critical error' /tmp/fallback.html || true)
-            echo "- $s on latte.zip (Twig unavailable → Latte): HTTP $code, notices $n"
-            [ "$code" = 200 ] && [ "$n" -eq 0 ] || { echo "::error::$s on latte.zip: HTTP $code, notices $n"; exit 1; }
+            code=$(curl -s -o /tmp/nofallback.html -w '%{http_code}' "http://127.0.0.1:8080/?s=a" || true)
+            n=$(grep -cE '<b>(Warning|Notice|Deprecated|Fatal error)</b>|critical error' /tmp/nofallback.html || true)
+            m=$(grep -c 'Install the twig parent theme' /tmp/nofallback.html || true)
+            echo "- $s on latte.zip (no Twig, no fallback): HTTP $code, engine error $m, notices $n"
+            [ "$code" = 500 ] && [ "$m" -ge 1 ] && [ "$n" -eq 0 ] || { echo "::error::$s on latte.zip: HTTP $code, engine error $m, notices $n"; exit 1; }
           done
           rm -rf wp-content/themes/latte && unzip -q "$D/latte-twig.zip" -d wp-content/themes/
           test -f wp-content/themes/latte/vendor/twig/twig/src/Environment.php

@@ -21,12 +21,11 @@ function hasWp(): boolean {
 }
 
 /**
- * Appended to functions.php of engine-twig children. Children of both engines ship both view sets (.latte and
- * .html.twig twins, identical HTML), so the engine is only the default renderer: the parent's Twig build
- * (latte-twig.zip) renders Twig; a Latte-only parent falls back to Latte (RendererFactory).
+ * Appended to functions.php of engine-twig children: the site renders with Twig, chosen at site creation (ADR-001,
+ * K7: isolated runtimes). On a parent build without Twig the theme stops with an error — it never falls back to Latte.
  */
 const TWIG_SWITCH = `
-// Site manifest engine: twig — default renderer of this site (views ship as Latte and Twig twins).
+// Site manifest engine: twig — this site renders with Twig only (no Latte fallback).
 add_filter('wpfasty_renderer', static fn (): string => 'twig', 5);
 `;
 
@@ -63,7 +62,7 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
   }
   if (arch.inc && existsSync(join(adir, arch.inc))) cpSync(join(adir, arch.inc), join(dir, "inc"), { recursive: true });
   if (arch.views && existsSync(join(adir, arch.views))) cpSync(join(adir, arch.views), join(dir, "views"), { recursive: true });
-  // engine twig: the child ships only its Twig views and switches the parent renderer (ADR-001: `wpfasty_renderer`).
+  // engine twig: the site's renderer is Twig (ADR-001: `wpfasty_renderer`); there is no Latte fallback.
   if (m.engine === "twig") {
     writeFileSync(join(dir, "functions.php"), readFileSync(join(dir, "functions.php"), "utf8") + TWIG_SWITCH);
   }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use WPFasty\Template\LatteRenderer;
+use WPFasty\Template\EngineUnavailable;
+use WPFasty\Template\Engines;
 use WPFasty\Template\RendererFactory;
 use WPFasty\Template\TwigRenderer;
 use WPFasty\Theme\PrimitivesLocator;
@@ -94,10 +96,26 @@ final class RendererTest extends TestCase
         }
     }
 
-    public function testTwigFallsBackToLatteWithoutTwigPrimitives(): void
+    public function testNoFallbackBetweenEngines(): void
     {
-        $r = RendererFactory::create('twig', [$this->views()], ['latte' => [dirname(__DIR__) . '/.workspaces/ui8kit-latte/ui'], 'twig' => []], $this->cache);
-        self::assertInstanceOf(LatteRenderer::class, $r);
+        // Isolated runtimes (K7): an engine without its primitives (or library) is an error, never the other engine.
+        $latte = ['latte' => [dirname(__DIR__) . '/.workspaces/ui8kit-latte/ui'], 'twig' => []];
+        try {
+            RendererFactory::create('twig', [$this->views()], $latte, $this->cache);
+            self::fail('twig without Twig primitives must not render');
+        } catch (EngineUnavailable $e) {
+            self::assertStringContainsString('twig', $e->getMessage());
+        }
+        $this->expectException(EngineUnavailable::class);
+        RendererFactory::create('latte', [$this->views()], ['latte' => [], 'twig' => ['x']], $this->cache);
+    }
+
+    public function testUnknownEngineIsUnavailable(): void
+    {
+        self::assertFalse(Engines::available('blade'));
+        self::assertSame(['latte', 'twig'], Engines::BUILT, 'the repo parent ships both; release builds rewrite this');
+        $this->expectException(EngineUnavailable::class);
+        RendererFactory::create('blade', [], ['blade' => ['x']], $this->cache);
     }
 
     public function testFactoryPicksEngine(): void
