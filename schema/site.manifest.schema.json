@@ -71,11 +71,10 @@
       "then": { "properties": { "output": { "properties": { "typesPlugin": { "const": "companion" } } } } }
     },
     {
-      "description": "twig sites are not wordpress.org builds (the .org parent is the Latte-only zip) and have no builder landings yet (the builder compiles Latte).",
+      "description": "twig sites have no builder landings yet (the builder compiles Latte).",
       "if": { "properties": { "engine": { "const": "twig" } }, "required": ["engine"] },
       "then": {
         "properties": {
-          "output": { "properties": { "wporg": { "const": false } } },
           "builder": { "properties": { "enabled": { "const": false } } }
         }
       }

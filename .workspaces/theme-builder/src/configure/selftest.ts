@@ -32,10 +32,10 @@ rejects("reserved name rejected", { archetype: "press", name: "Reserved", postTy
 rejects("unknown palette rejected", { archetype: "press", name: "Nope", palette: "rainbow" }, "unknown palette");
 {
   const { manifest, warnings } = buildManifest({ archetype: "press", name: "Twig Gazette", engine: "twig" }, data);
-  check("engine twig accepted: not wporg, builder off", manifest.engine === "twig" && manifest.output.wporg === false && manifest.builder.enabled === false
-    && warnings.some((w) => w.includes("wporg")), warnings.join("; "));
+  check("engine twig accepted: wporg kept, builder off", manifest.engine === "twig" && manifest.output.wporg !== false && manifest.builder.enabled === false
+    && warnings.some((w) => w.includes("builder")), warnings.join("; "));
 }
-rejects("engine twig + wporg rejected", { archetype: "press", name: "Twig Org", engine: "twig", output: { wporg: true } }, "cannot be a wordpress.org build");
+check("engine twig + wporg accepted", buildManifest({ archetype: "press", name: "Twig Org", engine: "twig", output: { wporg: true } }, data).manifest.output.wporg === true);
 rejects("engine twig + landings rejected", { archetype: "press", name: "Twig Land", engine: "twig", landings: ["tools/builder/landings/press.json"] }, "no builder landings");
 rejects("unknown engine rejected", { archetype: "press", name: "Blade", engine: "blade" }, "must be latte or twig");
 rejects("parent slug rejected", { archetype: "press", name: "Latte" }, "is the parent theme");

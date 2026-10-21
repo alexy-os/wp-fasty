@@ -277,6 +277,16 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte"): Promis
     });
     await mkdir(join(tw, "runtime", "php"), { recursive: true });
     await copyFile(join(codegen, "runtime", "php", "TwigExtension.php"), join(tw, "runtime", "php", "TwigExtension.php"));
+    // wordpress.org: credit every bundled library (Twig BSD-3-Clause, Symfony polyfills MIT — GPL-compatible).
+    const readme = join(stagedTheme, "readme.txt");
+    const txt = await readFile(readme, "utf8");
+    const credits = [
+      "* Twig template engine (bundled in vendor/twig/twig) — BSD-3-Clause — https://twig.symfony.com/",
+      "* Symfony polyfills / deprecation-contracts (bundled in vendor/symfony, Twig dependencies) — MIT — https://symfony.com/",
+      "* UI8Kit Twig primitives (bundled in lib/ui8kit-twig) — MIT — https://github.com/alexy-os/wp-fasty",
+    ].join("\n");
+    if (!txt.includes("== Resources ==")) throw new Error("readme.txt has no == Resources == section");
+    await writeFile(readme, txt.replace("== Resources ==\n", `== Resources ==\n\n${credits}\n`).replace(/\n\n\n/g, "\n\n"));
   }
 
   const releaseComposer = {

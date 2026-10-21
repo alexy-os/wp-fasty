@@ -107,8 +107,12 @@ jobs:
       - name: PHPCS (errors and warnings fail the build; themes + wpfasty-types + wpfasty-builder)
         run: composer phpcs
 
-      - name: Pack theme zip
-        run: bun run theme:pack -- latte
+      - name: Pack theme zips (latte.zip; Twig build latte-twig.zip — same theme, bundled twig/twig)
+        run: |
+          bun run theme:pack -- latte
+          bun run theme:pack -- latte --engine twig
+          unzip -l dist/latte-twig.zip | grep -q 'latte/vendor/twig/twig/LICENSE'
+          unzip -p dist/latte-twig.zip latte/readme.txt | grep -q 'Twig template engine'
 
       - name: MCP server smoke (stdio; all five tools, writes only to dist/)
         run: bun run mcp:smoke
@@ -127,6 +131,7 @@ jobs:
           name: dist
           path: |
             dist/latte.zip
+            dist/latte-twig.zip
             dist/sites.txt
             dist/*/*.zip
             dist/*/*.json
@@ -235,6 +240,15 @@ jobs:
               fail=1
             fi
           done
+          # Twig parent build (same slug): swap it in, check, swap the Latte build back.
+          mv wp-content/themes/latte /tmp/latte-parent && unzip -q "$GITHUB_WORKSPACE/dist/latte-twig.zip" -d wp-content/themes/
+          code=0; PAGER=cat wp theme-check run latte > /tmp/tc-latte-twig.txt 2>&1 || code=$?
+          r=$(grep -c '^REQUIRED' /tmp/tc-latte-twig.txt || true); w=$(grep -c '^WARNING' /tmp/tc-latte-twig.txt || true)
+          rec=$(grep -c '^RECOMMENDED' /tmp/tc-latte-twig.txt || true)
+          echo "::group::latte-twig.zip — exit $code, REQUIRED $r, WARNING $w, RECOMMENDED $rec"; cat /tmp/tc-latte-twig.txt; echo "::endgroup::"
+          echo "| latte-twig.zip | $r | $w | $rec |" >> /tmp/tc-summary.md
+          if [ "$r" -ne 0 ] || [ "$code" -ne 0 ]; then echo "::error::Theme Check latte-twig.zip: REQUIRED=$r exit=$code"; fail=1; fi
+          rm -rf wp-content/themes/latte && mv /tmp/latte-parent wp-content/themes/latte
           { echo "### Theme Check ${THEME_CHECK_VERSION} (WP ${WP_VERSION})"; echo "| theme | REQUIRED | WARNING | RECOMMENDED |"; echo "|---|---|---|---|"; cat /tmp/tc-summary.md; } >> "$GITHUB_STEP_SUMMARY"
           exit $fail
 
@@ -305,8 +319,7 @@ jobs:
         run: |
           cd /tmp/wp
           D="$GITHUB_WORKSPACE/dist"
-          # The Twig parent build ships inside the twig engine site package (dist/twig-gazette/latte.zip).
-          rm -rf wp-content/themes/latte && unzip -q "$D/twig-gazette/latte.zip" -d wp-content/themes/
+          rm -rf wp-content/themes/latte && unzip -q "$D/latte-twig.zip" -d wp-content/themes/
           test -f wp-content/themes/latte/vendor/twig/twig/src/Environment.php
           mkdir -p wp-content/mu-plugins && cp "$GITHUB_WORKSPACE/tools/qa/renderer-switch.php" wp-content/mu-plugins/
           L="$GITHUB_WORKSPACE/tools/qa/live-render.sh"; B=http://127.0.0.1:8080

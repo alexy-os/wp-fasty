@@ -6,7 +6,7 @@ export type J = Record<string, any>;
 
 export type Answers = {
   archetype: string;
-  /** Template engine; twig ⇒ not a wordpress.org build and no builder landings (schema rule). */
+  /** Template engine; twig ⇒ no builder landings yet (schema rule). */
   engine?: "latte" | "twig";
   name: string;
   slug?: string;
@@ -132,11 +132,6 @@ export function buildManifest(a: Answers, data: Data): { manifest: J; warnings: 
     m.engine = a.engine;
   }
   if (m.engine === "twig") {
-    if (a.output?.wporg === true) problems.push("engine twig cannot be a wordpress.org build (output.wporg must be false)");
-    else if (m.output?.wporg !== false) {
-      m.output = { ...m.output, wporg: false };
-      warnings.push("engine twig: output.wporg set to false (the wordpress.org parent is the Latte-only build)");
-    }
     if (a.landings?.length) problems.push("engine twig has no builder landings yet (landings must be [] or omitted)");
     else if (m.builder?.enabled) {
       m.builder = { ...m.builder, enabled: false, landings: [] };
