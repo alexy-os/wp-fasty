@@ -59,6 +59,8 @@ server.registerTool("list_archetypes", {
     })),
     palettes: Object.values(d.palettes).map((p: J) => ({ id: p.id, label: p.label, description: p.description })),
     fieldTypes: ["string", "text", "url", "email", "integer", "number", "money", "boolean", "date"],
+    // Equal options: same design, builder landings and wordpress.org output; twig packages the latte-twig parent.
+    engines: ["latte", "twig"],
   };
 }));
 

@@ -23,6 +23,7 @@ if (JSON.stringify(tools) !== JSON.stringify(want)) fail++;
 await call("list_archetypes", {});
 await call("describe_schema", { section: "output" });
 await call("validate_manifest", { manifest: JSON.parse(readFileSync(join(root, "manifests/examples/press.json"), "utf8")) });
+await call("validate_manifest", { answers: { archetype: "press", name: "Twig Smoke", engine: "twig", landings: ["tools/builder/landings/press.json"], output: { wporg: true } } });
 await call("validate_manifest", { answers: { archetype: "press", name: "Bad", tokens: { light: { background: "#fff000", foreground: "#ffffff" } } } }, true);
 await call("validate_manifest", { manifest: { theme: { slug: "../../etc" } } }, true);
 await call("generate_site", { answers: { archetype: "press", name: "MCP Smoke" }, pot: false });

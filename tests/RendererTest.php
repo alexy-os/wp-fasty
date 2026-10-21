@@ -72,6 +72,34 @@ final class RendererTest extends TestCase
         }
     }
 
+    public function testBothEnginesShareTheHelperVocabulary(): void
+    {
+        $twig = $this->twig()->twig();
+        $latte = $this->latte()->latte();
+        foreach (\WPFasty\Template\ViewHelpers::FILTERS as $f) {
+            self::assertNotFalse($twig->getFilter($f), "twig filter $f");
+            self::assertArrayHasKey($f, $latte->getFilters(), "latte filter $f");
+        }
+        foreach (\WPFasty\Template\ViewHelpers::FUNCTIONS as $fn) {
+            self::assertNotFalse($twig->getFunction($fn), "twig function $fn");
+        }
+        self::assertArrayHasKey('icon', $latte->getFunctions());
+        self::assertArrayHasKey('t', $latte->getFunctions());
+        foreach (['https://a.test/?a=1&b=<2>', 'javascript:alert(1)'] as $url) {
+            $ctx = ['url' => $url, 'html' => '<b>ok</b><script>x</script>'];
+            self::assertSame(
+                self::normalize($this->latte()->render('helpers', $ctx)),
+                self::normalize($this->twig()->render('helpers', $ctx))
+            );
+        }
+    }
+
+    public function testTwigFallsBackToLatteWithoutTwigPrimitives(): void
+    {
+        $r = RendererFactory::create('twig', [$this->views()], ['latte' => [dirname(__DIR__) . '/.workspaces/ui8kit-latte/ui'], 'twig' => []], $this->cache);
+        self::assertInstanceOf(LatteRenderer::class, $r);
+    }
+
     public function testFactoryPicksEngine(): void
     {
         $r = RendererFactory::create('latte', [$this->views()], ['latte' => [dirname(__DIR__) . '/.workspaces/ui8kit-latte/ui']], $this->cache);

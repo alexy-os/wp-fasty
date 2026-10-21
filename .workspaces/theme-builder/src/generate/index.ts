@@ -20,10 +20,14 @@ function hasWp(): boolean {
   return spawnSync("wp", ["--version"], { encoding: "utf8" }).status === 0;
 }
 
-/** Appended to functions.php of engine-twig children; the parent's Twig build bundles twig/twig + Twig primitives. */
+/**
+ * Appended to functions.php of engine-twig children. Children of both engines ship both view sets (.latte and
+ * .html.twig twins, identical HTML), so the engine is only the default renderer: the parent's Twig build
+ * (latte-twig.zip) renders Twig; a Latte-only parent falls back to Latte (RendererFactory).
+ */
 const TWIG_SWITCH = `
-// Views ship as Twig (site manifest engine: twig): render them with the parent's TwigRenderer.
-add_filter('wpfasty_renderer', static fn (): string => 'twig');
+// Site manifest engine: twig — default renderer of this site (views ship as Latte and Twig twins).
+add_filter('wpfasty_renderer', static fn (): string => 'twig', 5);
 `;
 
 export function archetypeDir(id: string): string {
@@ -61,8 +65,6 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
   if (arch.views && existsSync(join(adir, arch.views))) cpSync(join(adir, arch.views), join(dir, "views"), { recursive: true });
   // engine twig: the child ships only its Twig views and switches the parent renderer (ADR-001: `wpfasty_renderer`).
   if (m.engine === "twig") {
-    if (existsSync(join(dir, "views")))
-      for (const rel of files(join(dir, "views")).filter((r) => r.endsWith(".latte"))) rmSync(join(dir, "views", rel));
     writeFileSync(join(dir, "functions.php"), readFileSync(join(dir, "functions.php"), "utf8") + TWIG_SWITCH);
   }
   // Archetype code is copied verbatim but written for its reference theme: retarget its text domain literals.

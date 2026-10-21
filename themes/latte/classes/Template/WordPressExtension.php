@@ -36,6 +36,22 @@ final class WordPressExtension extends Extension
             // {icon('shopping-cart', 'size-4')} — inline Lucide SVG, attributes escaped.
             'icon' => static fn (string $name, string $class = 'size-4', string $label = ''): \Latte\Runtime\Html
                 => new \Latte\Runtime\Html(Icons::svg($name, $class, $label)),
+            't' => [ViewHelpers::class, 't'],
+        ];
+    }
+
+    /**
+     * Same filters as TwigRenderer (ViewHelpers::FILTERS). safe_url is explicit here; Latte also checks
+     * href/src/action automatically.
+     *
+     * @return array<string, callable>
+     */
+    public function getFilters(): array
+    {
+        return [
+            'esc_url' => [ViewHelpers::class, 'escUrl'],
+            'kses' => static fn (mixed $v): \Latte\Runtime\Html => new \Latte\Runtime\Html(ViewHelpers::kses($v)),
+            'safe_url' => [ViewHelpers::class, 'safeUrl'],
         ];
     }
 

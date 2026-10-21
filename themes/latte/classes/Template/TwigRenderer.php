@@ -78,35 +78,22 @@ final class TwigRenderer implements RendererInterface
     /** Shared filters/functions of the thin-view subset (ADR-001 §2). */
     private function registerCommonSubset(): void
     {
-        $this->twig->addFilter(new TwigFilter('esc_url', static fn (mixed $v): string
-            => function_exists('esc_url') ? esc_url((string) $v) : htmlspecialchars((string) $v, ENT_QUOTES)));
-        $this->twig->addFilter(new TwigFilter(
-            'kses',
-            static fn (mixed $v): string
-                => function_exists('wp_kses_post') ? wp_kses_post((string) $v) : strip_tags((string) $v),
-            ['is_safe' => ['html']]
-        ));
+        $this->twig->addFilter(new TwigFilter('esc_url', [ViewHelpers::class, 'escUrl']));
+        $this->twig->addFilter(new TwigFilter('kses', [ViewHelpers::class, 'kses'], ['is_safe' => ['html']]));
         $this->twig->addFunction(new TwigFunction(
             'icon',
             static fn (string $name, string $class = 'size-4', string $label = ''): Markup
                 => new Markup(Icons::svg($name, $class, $label), 'UTF-8')
         ));
-        $this->twig->addFilter(new TwigFilter('safe_url', [self::class, 'safeUrl']));
+        $this->twig->addFilter(new TwigFilter('safe_url', [ViewHelpers::class, 'safeUrl']));
         $this->registerWordPressHooks();
-        $this->twig->addFunction(new TwigFunction('t', static fn (string $text, string $domain = 'latte'): string
-            => function_exists('__') ? __($text, $domain) : $text)); // phpcs:ignore WordPress.WP.I18n
+        $this->twig->addFunction(new TwigFunction('t', [ViewHelpers::class, 't']));
     }
 
-    /**
-     * Same contract as Latte's automatic URL check in href/src/action: only http(s)/ftp, mailto/tel/sms,
-     * relative and fragment URLs pass; anything else (javascript:, data:…) becomes ''.
-     */
+    /** @deprecated kept for callers of K6.2; use ViewHelpers::safeUrl() */
     public static function safeUrl(mixed $url): string
     {
-        $url = (string) $url;
-        return preg_match('~^(?:(?:https?|ftp)://[^@]+(?:/.*)?|(?:mailto|tel|sms):.+|[/?#].*|[^:]+)$~Di', $url) === 1
-            ? $url
-            : '';
+        return ViewHelpers::safeUrl($url);
     }
 
     /**

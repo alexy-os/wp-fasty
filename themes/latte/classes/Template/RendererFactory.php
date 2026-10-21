@@ -26,6 +26,11 @@ final class RendererFactory
             return $engine;
         }
         $engine = strtolower($engine);
+        // Twig without twig/twig or its primitives (e.g. the Latte-only parent build): fall back to Latte, so a
+        // site whose child asks for Twig keeps rendering — children ship both view sets.
+        if ($engine === 'twig' && (!class_exists(\Twig\Environment::class) || empty($primitives['twig']))) {
+            $engine = 'latte';
+        }
         $chain = array_merge($roots, (array) ($primitives[$engine] ?? []));
 
         return match ($engine) {

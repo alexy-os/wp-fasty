@@ -14,7 +14,7 @@ bun run mcp:smoke           # starts the server and calls every tool
 
 | Tool | Input | Result |
 |---|---|---|
-| `list_archetypes` | – | archetypes (reference theme, required post types, landings), palette presets, field types |
+| `list_archetypes` | – | archetypes (reference theme, required post types, landings), palette presets, field types, engines (`latte`, `twig`) |
 | `describe_schema` | `section?` (`postType`, `brand`, `output`, …) | site manifest v0.2 JSON Schema, whole or one part |
 | `validate_manifest` | `answers` **or** `manifest` | schema + semantic rules; writes `dist/manifests/<slug>.json` |
 | `generate_site` | `answers` or `manifest`, `pot?` | child theme in `dist/generated/<slug>/` |
@@ -31,6 +31,9 @@ bun run mcp:smoke           # starts the server and calls every tool
                   "fields": { "starts_on": { "type": "date", "label": "Starts on" } } }]
 }
 ```
+
+`engine` is `latte` (default) or `twig`: equal options (same design, builder landings, wordpress.org output); a twig
+package ships the `latte-twig` parent build.
 
 Brand is a fixed `palette` id, or free `tokens` (`light`, optional `dark`, `radius`, `fonts`) that must pass
 WCAG AA (4.5:1) on every text/surface pair. Extra post types are added on top of the archetype's own; name and

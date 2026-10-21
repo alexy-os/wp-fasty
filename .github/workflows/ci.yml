@@ -122,7 +122,9 @@ jobs:
           for t in press folio shop; do bun run theme:package "manifests/examples/$t.json"; done
           # Configurator fixtures: answers → manifest (validated) → package.
           for a in manifests/answers/*.json; do bun run theme:new-site --answers "$a" --package; done
-          ls -d dist/*/ | grep -v -e generated -e manifests | xargs -n1 basename > dist/sites.txt
+          # Engine matrix: every fixture in the other engine + Twig twins of the reference archetypes.
+          for a in $(bun tools/matrix/engine-variants.ts); do bun run theme:new-site --answers "$a" --package; done
+          ls -d dist/*/ | grep -v -e generated -e manifests -e answers-matrix | xargs -n1 basename > dist/sites.txt
           { echo "### Packages"; echo "| file | bytes |"; echo "|---|---|"
             for f in dist/latte.zip $(sed 's#^#dist/#; s#$#/*#' dist/sites.txt); do echo "| \`$f\` | $(stat -c %s "$f") |"; done; } >> "$GITHUB_STEP_SUMMARY"
 
@@ -319,6 +321,14 @@ jobs:
         run: |
           cd /tmp/wp
           D="$GITHUB_WORKSPACE/dist"
+          # Backward compat: a twig child on the Latte-only parent (latte.zip) falls back to Latte and still renders.
+          for s in $(grep -e '-twig$' -e '^twig-' "$D/sites.txt" | grep -v -e '-latte$'); do
+            wp theme activate "$s" --quiet
+            code=$(curl -s -o /tmp/fallback.html -w '%{http_code}' "http://127.0.0.1:8080/?s=a" || true)
+            n=$(grep -cE '<b>(Warning|Notice|Deprecated|Fatal error)</b>|critical error' /tmp/fallback.html || true)
+            echo "- $s on latte.zip (Twig unavailable → Latte): HTTP $code, notices $n"
+            [ "$code" = 200 ] && [ "$n" -eq 0 ] || { echo "::error::$s on latte.zip: HTTP $code, notices $n"; exit 1; }
+          done
           rm -rf wp-content/themes/latte && unzip -q "$D/latte-twig.zip" -d wp-content/themes/
           test -f wp-content/themes/latte/vendor/twig/twig/src/Environment.php
           mkdir -p wp-content/mu-plugins && cp "$GITHUB_WORKSPACE/tools/qa/renderer-switch.php" wp-content/mu-plugins/
@@ -328,7 +338,11 @@ jobs:
           bash "$L" . "$B" latte-press "$(url latte-press post)" "/?s=post" "/no-such-page/|404" / /subscribe/ || fail=1
           bash "$L" . "$B" latte-folio "$(url latte-folio project)" /work/ "/no-such-page/|404" / /services/ || fail=1
           bash "$L" . "$B" latte-shop "$(url latte-shop product)" /shop/ /cart/ /checkout/ "/no-such-page/|404" / /sale/ || fail=1
-          bash "$L" . "$B" twig-gazette "$(url twig-gazette post)" "/no-such-page/|404" || fail=1
+          # Engine matrix: every packaged site (both engines of each fixture) renders identically with latte and twig.
+          for s in $(grep -v '^latte-' "$D/sites.txt"); do
+            bash "$L" . "$B" "$s" / "/?s=a" "/no-such-page/|404" || fail=1
+          done
+          bash "$L" . "$B" twig-gazette "$(url twig-gazette post)" || fail=1
           G="$GITHUB_WORKSPACE/tools/perf"
           wp option update wpfasty_qa_renderer twig --quiet
           for p in "latte-press post" "latte-folio project" "latte-shop product"; do

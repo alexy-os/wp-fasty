@@ -53,7 +53,7 @@ try {
       check(`${arch}: php -l on ${php.length} file(s)`, !bad.length, bad.map((f) => relative(dir, f)).join(", "));
     }
   }
-  // engine twig: Twig-only views (one per archetype Latte view), renderer switch in functions.php, still lints.
+  // engine twig = engine latte + the default-renderer switch: same files (both view sets), only functions.php differs.
   for (const arch of Object.keys(data.examples).sort()) {
     const src = join(archetypeDir(arch), "views");
     const latteViews = existsSync(src) ? walk(src).filter((f) => f.endsWith(".latte")).map((f) => relative(src, f)) : [];
@@ -62,11 +62,20 @@ try {
     writeFileSync(mf, JSON.stringify(manifest, null, 2));
     const dir = generate(mf, join(tmp, manifest.theme.slug), { pot: false });
     const views = existsSync(join(dir, "views")) ? walk(join(dir, "views")).map((f) => relative(join(dir, "views"), f)) : [];
-    check(`${arch} twig: no .latte views`, !views.some((v) => v.endsWith(".latte")), views.filter((v) => v.endsWith(".latte")).join(", "));
-    const missing = latteViews.filter((v) => !views.includes(v.replace(/\.latte$/, ".html.twig")));
-    check(`${arch} twig: a Twig twin for each of ${latteViews.length} archetype view(s)`, !missing.length, missing.join(", "));
+    const missing = latteViews.filter((v) => !views.includes(v) || !views.includes(v.replace(/\.latte$/, ".html.twig")));
+    check(`${arch} twig: Latte view + Twig twin for each of ${latteViews.length} archetype view(s)`, !missing.length, missing.join(", "));
     const fn = readFileSync(join(dir, "functions.php"), "utf8");
-    check(`${arch} twig: functions.php switches wpfasty_renderer`, fn.includes("add_filter('wpfasty_renderer', static fn (): string => 'twig');"));
+    check(`${arch} twig: functions.php switches wpfasty_renderer`, fn.includes("add_filter('wpfasty_renderer', static fn (): string => 'twig', 5);"));
+    {
+      const lm = join(tmp, `${arch}-latte.json`);
+      const latteM = buildManifest({ archetype: arch, name: `Twig ${arch} Site` }, { ...data, schemaId: data.examples[arch].$schema }).manifest;
+      writeFileSync(lm, JSON.stringify(latteM, null, 2));
+      const ldir = generate(lm, join(tmp, `latte-${manifest.theme.slug}`), { pot: false });
+      const list = (d: string) => walk(d).map((f) => relative(d, f)).sort();
+      const diff = [...new Set([...list(dir), ...list(ldir)])].filter((r) => r !== "functions.php"
+        && (!existsSync(join(dir, r)) || !existsSync(join(ldir, r)) || readFileSync(join(dir, r), "utf8") !== readFileSync(join(ldir, r), "utf8")));
+      check(`${arch} twig: same files as the latte child except functions.php`, !diff.length, diff.join(", "));
+    }
     if (hasPhp) check(`${arch} twig: php -l functions.php`, spawnSync("php", ["-l", join(dir, "functions.php")]).status === 0);
   }
 } finally {
