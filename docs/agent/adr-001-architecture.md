@@ -33,21 +33,25 @@ Allowed: include/embed with params, block, if/else, for, variable print, filters
 `icon`, `t` (i18n) and the WordPress hook tags/functions. Both engines register exactly this vocabulary from
 `WPFasty\Template\ViewHelpers` (`ViewHelpers::FILTERS` / `FUNCTIONS`, kept in sync by `RendererTest`).
 
-**Engines are equal options (K6.7–K6.10).** Every view ships as a Latte file and its Twig twin with identical
-normalized HTML (`bun run parity`, incl. builder landings); a site's `engine` only picks the default renderer
-(`wpfasty_renderer`, priority 5 in the child's functions.php). Parent builds: `latte.zip` (Latte) and
-`latte-twig.zip` (+ bundled twig/twig, BSD-3-Clause, credited in readme.txt) — both wordpress.org-eligible, both
-Theme-Checked in CI. Without twig/twig the renderer falls back to Latte, so any child renders on either parent.
-The builder compiles each landing to `builder/page-<id>.latte` and `.html.twig` from one entry. **Blocks are
-engine-native (K6.11–K6.13):** the plugin ships the codegen-x ui8kit block package in both engines, generated from one
-source commit (`sources/ui8kit/{latte,twig}`, never hand-edited; variants only in `*.variants.json`); under Twig blocks
-render with Twig (`blocks/<name>.html.twig`, remote sources sandboxed, optional `twig.zip`), under Latte with Latte;
-engines are created lazily, so a Twig site needs no Latte library at all (CI removes latte/latte + UI8Kit Latte from
-`latte-twig` and re-renders every Twig site and landing; the Twig build bundles the engine-agnostic
-UI8Kit runtime `Rt`/`Classes` in `lib/ui8kit-twig/runtime/php`). Block/landing parity uses the codegen-x DOM contract
-(text trimmed, attributes/classes sorted, comments dropped; whitespace between inline elements is not compared).
-A remote source without a Twig package falls back to its Latte templates (needs Latte).
-**Completion criterion of K6:** parity — fixture parity, builder parity and live WP parity (CI engine matrix) green.
+**Engines are isolated runtimes (K7, supersedes the fallbacks of K6.9/K6.12).** A site picks its engine once, at
+creation (`engine` in the site manifest); there is no live engine switch. Latte and Twig never require, load or fall
+back to each other:
+- Parent builds: `latte.zip` (slug `latte`, Latte only: latte/latte + UI8Kit Latte, `.latte` views) and `twig.zip`
+  (slug `twig`, Twig only: twig/twig + UI8Kit Twig, `.html.twig` views). A child's `Template:` is its engine's parent;
+  a packaged child ships only its engine's views. The renderer of a build is fixed (`WPFasty\Template\Engines`);
+  asking for an engine the build lacks is an error (admin notice; no rendering through the other engine).
+- Builder: `wpfasty-builder` ships per engine (bundled ui8kit source of that runtime only), compiles a landing only
+  in the site engine, and renders blocks only from that runtime's registry. A block missing there renders nothing on
+  the front end, blocks saving in the editor and shows an admin notice — never the other runtime's template.
+- Remote block sources are **two independent registries**, one per runtime (`docs/agent/builder-registry.md`):
+  `https://registry.buildy.tw/<runtime>/wpfasty/` (latest) and `…/wpfasty/v<semver>/` (immutable), each
+  `catalog.json` (`wpfasty-catalog@2`, `runtime`) + `blocks.zip`. Importing a registry of the other runtime fails.
+- The repo keeps one source for both: `themes/latte` holds both view sets and both renderers (dev/QA only; builds
+  strip the other engine), codegen-x generates both block packages from one commit. **Parity** (fixtures, blocks,
+  builder landings, live pages of a Latte site vs its Twig twin) stays a quality check that both runtimes produce the
+  same DOM (codegen-x DOM contract: text trimmed, attributes/classes sorted, comments dropped) — it is not a
+  runtime mechanism.
+**Completion criterion of K6** (history): parity — fixture parity, builder parity and live WP parity (CI engine matrix) green.
 Not allowed in views: PHP function calls, queries, `|noescape` on context data except HTML-marked fields.
 Slots = `embed` (Latte `{embed}` / Twig `{% embed %}`).
 
