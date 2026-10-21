@@ -47,9 +47,16 @@ final class PrimitivesLocator
         ];
         foreach ($candidates as $dir) {
             if (is_dir($dir)) {
-                $twigExtension = dirname($dir, 2) . '/runtime/php/TwigExtension.php';
-                if (!class_exists(\UI8Kit\TwigExtension::class) && is_file($twigExtension)) {
-                    require_once $twigExtension;
+                $runtime = dirname($dir, 2) . '/runtime/php/';
+                if (!class_exists(\UI8Kit\TwigExtension::class) && is_file($runtime . 'TwigExtension.php')) {
+                    require_once $runtime . 'TwigExtension.php';
+                }
+                // The bindings' runtime (UI8Kit\Rt, UI8Kit\Classes) is bundled next to them, so Twig works without
+                // the Latte package; no autoload probe here (its classmap may name files a Twig-only build lacks).
+                foreach (['Rt' => \UI8Kit\Rt::class, 'Classes' => \UI8Kit\Classes::class] as $file => $class) {
+                    if (!class_exists($class, false) && is_file($runtime . $file . '.php')) {
+                        require_once $runtime . $file . '.php';
+                    }
                 }
                 return $dir;
             }

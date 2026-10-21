@@ -277,6 +277,9 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte"): Promis
     });
     await mkdir(join(tw, "runtime", "php"), { recursive: true });
     await copyFile(join(codegen, "runtime", "php", "TwigExtension.php"), join(tw, "runtime", "php", "TwigExtension.php"));
+    // Engine-agnostic UI8Kit runtime used by the Twig bindings — bundled so a Twig site needs no Latte package.
+    await copyFile(join(codegen, "runtime", "php", "Rt.php"), join(tw, "runtime", "php", "Rt.php"));
+    await copyFile(join(codegen, "generated", "php", "UI8Kit", "Classes.php"), join(tw, "runtime", "php", "Classes.php"));
     // wordpress.org: credit every bundled library (Twig BSD-3-Clause, Symfony polyfills MIT — GPL-compatible).
     const readme = join(stagedTheme, "readme.txt");
     const txt = await readFile(readme, "utf8");
