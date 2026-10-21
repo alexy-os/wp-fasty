@@ -29,7 +29,18 @@ WP query → Context builders (PHP, engine-agnostic, return plain data, NO escap
   already HTML (post content, `wp_kses_post` archive description) are marked as HTML in the context and printed raw.
 
 ## 2. Thin views — common subset (must translate 1:1 between Latte and Twig)
-Allowed: include/embed with params, block, if/else, for, variable print, filters `esc_url`, `kses`, `icon`, `t` (i18n).
+Allowed: include/embed with params, block, if/else, for, variable print, filters `esc_url`, `kses`, `safe_url`, functions
+`icon`, `t` (i18n) and the WordPress hook tags/functions. Both engines register exactly this vocabulary from
+`WPFasty\Template\ViewHelpers` (`ViewHelpers::FILTERS` / `FUNCTIONS`, kept in sync by `RendererTest`).
+
+**Engines are equal options (K6.7–K6.10).** Every view ships as a Latte file and its Twig twin with identical
+normalized HTML (`bun run parity`, incl. builder landings); a site's `engine` only picks the default renderer
+(`wpfasty_renderer`, priority 5 in the child's functions.php). Parent builds: `latte.zip` (Latte) and
+`latte-twig.zip` (+ bundled twig/twig, BSD-3-Clause, credited in readme.txt) — both wordpress.org-eligible, both
+Theme-Checked in CI. Without twig/twig the renderer falls back to Latte, so any child renders on either parent.
+The builder compiles each landing to `builder/page-<id>.latte` and `.html.twig` from one entry; block markup comes
+from the plugin's single ui8kit block renderer in both engines (one source of block HTML).
+**Completion criterion of K6:** parity — fixture parity, builder parity and live WP parity (CI engine matrix) green.
 Not allowed in views: PHP function calls, queries, `|noescape` on context data except HTML-marked fields.
 Slots = `embed` (Latte `{embed}` / Twig `{% embed %}`).
 
@@ -76,7 +87,7 @@ optional Customizer token block (**postponed**). Token names stay shadcn-compati
 ## 6. Implementation status (2026-10-16, branch `improved`)
 | Item | Status |
 |---|---|
-| RendererInterface + LatteRenderer + TwigRenderer, `wpfasty_renderer`, `wpfasty_view_roots` | done (8aa29db); Twig↔Latte identical DOM for Button tested; Twig views for parent + press/folio/shop written (K6.2–K6.3), parity fixtures + live CI check (K6.5); `engine: twig` → `latte-twig` parent build (bundled twig/twig, credited in readme.txt), wordpress.org-eligible like Latte (K6.7) |
+| RendererInterface + LatteRenderer + TwigRenderer, `wpfasty_renderer`, `wpfasty_view_roots` | done (8aa29db); Twig↔Latte identical DOM for Button tested; Twig views for parent + press/folio/shop written (K6.2–K6.3), parity fixtures + live CI check (K6.5); `engine: twig` → `latte-twig` parent build, wordpress.org-eligible like Latte (K6.7); builder Latte+Twig (K6.8); shared helpers, both view sets in every child, Twig→Latte fallback, CI engine matrix (K6.9) |
 | types modules + Registry (DI `types.registry`) | done (891c48f); data part moved to plugin `wpfasty-types` (e175b8a) |
 | folio `project`, shop `product`/`shop_order` migrated; purchasable capability | done (db37f6a, dc56371); HTML output byte-identical before/after |
 | folio/shop dedupe (archive title/prefix, term filter, latest posts, full-width support) | done (6f93ce9) |
