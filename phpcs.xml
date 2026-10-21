@@ -10,6 +10,7 @@
     <file>plugins/wpfasty-types</file>
     <file>plugins/wpfasty-builder</file>
     <file>tools/parity</file>
+    <file>tools/qa</file>
     <arg name="extensions" value="php"/>
 
     <!-- Exclude directories and files -->

@@ -299,6 +299,32 @@ jobs:
           done
           exit $fail
 
+      - name: Live Latte ↔ Twig render (latte-twig parent, renderer forced per request, N+1 guard under Twig)
+        run: |
+          cd /tmp/wp
+          D="$GITHUB_WORKSPACE/dist"
+          # The Twig parent build ships inside the twig engine site package (dist/twig-gazette/latte.zip).
+          rm -rf wp-content/themes/latte && unzip -q "$D/twig-gazette/latte.zip" -d wp-content/themes/
+          test -f wp-content/themes/latte/vendor/twig/twig/src/Environment.php
+          mkdir -p wp-content/mu-plugins && cp "$GITHUB_WORKSPACE/tools/qa/renderer-switch.php" wp-content/mu-plugins/
+          L="$GITHUB_WORKSPACE/tools/qa/live-render.sh"; B=http://127.0.0.1:8080
+          url() { wp theme activate "$1" --quiet; wp post list --post_type="$2" --posts_per_page=1 --field=url | sed "s#^$B##"; }
+          fail=0
+          bash "$L" . "$B" latte-press "$(url latte-press post)" "/?s=post" "/no-such-page/|404" "/|200|nocompare" || fail=1
+          bash "$L" . "$B" latte-folio "$(url latte-folio project)" /work/ "/no-such-page/|404" "/|200|nocompare" || fail=1
+          bash "$L" . "$B" latte-shop "$(url latte-shop product)" /shop/ /cart/ /checkout/ "/no-such-page/|404" "/|200|nocompare" || fail=1
+          bash "$L" . "$B" twig-gazette "$(url twig-gazette post)" "/no-such-page/|404" || fail=1
+          G="$GITHUB_WORKSPACE/tools/perf"
+          wp option update wpfasty_qa_renderer twig --quiet
+          for p in "latte-press post" "latte-folio project" "latte-shop product"; do
+            set -- $p; wp theme activate "$1" --quiet
+            out=$(wp eval-file "$G/queries.php" "$2" 2 6 2>&1) || fail=1
+            echo "$out"; echo "$out" | grep -q '^Warning:' && fail=1
+            echo "- Twig N+1 $1: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
+          done
+          wp option delete wpfasty_qa_renderer --quiet
+          exit $fail
+
       - name: No PHP notices / warnings / deprecations logged
         if: always()
         run: |
