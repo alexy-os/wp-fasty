@@ -6,9 +6,9 @@ namespace WPFastyBuilder;
 
 /**
  * Where layouts live: the draft and the published entry in post meta (JSON), the compiled templates in
- * uploads/wpfasty-builder/views/builder/{page,preview}-<id>.latte and their Twig twins (.html.twig), always both,
- * so switching the theme renderer never meets a missing or stale landing. A missing template is compiled on demand,
- * so a database copy (or a WordPress Playground import) renders without a save.
+ * uploads/wpfasty-builder/views/builder/{page,preview}-<id>.latte or .html.twig — the site engine's runtime only
+ * (Plugin::engine()). A missing template is compiled on demand, so a database copy (or a WordPress Playground import)
+ * renders without a save.
  */
 final class Store
 {
@@ -63,7 +63,12 @@ final class Store
     {
         $view = self::view($pageId, $preview);
         $catalog = null;
-        foreach (Compiler::ENGINES as $engine => $ext) {
+        $engine = Plugin::engine();
+        if ($engine === null) {
+            return null;
+        }
+        // The site engine only (ADR-001: isolated runtimes; the engine is chosen at site creation).
+        foreach ([$engine => Compiler::ENGINES[$engine]] as $engine => $ext) {
             $file = self::viewsDir() . '/' . $view . $ext;
             $marker = Compiler::marker($entry, $engine);
             if (is_file($file) && str_starts_with((string) file_get_contents($file, false, null, 0, 64), $marker)) {

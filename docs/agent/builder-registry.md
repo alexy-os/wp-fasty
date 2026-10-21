@@ -39,5 +39,5 @@ newest version. Sites should import a pinned URL.
 ## Build
 
 `bun tools/builder/export-ui8kit.ts` writes `plugins/wpfasty-builder/sources/ui8kit/{latte,twig}/catalog.json` from
-codegen-x; `tools/builder/pack-source.sh <runtime> <out>` writes `<out>/catalog.json` + `<out>/blocks.zip` for one
+codegen-x; `bun tools/builder/pack-source.ts <runtime> <out>` writes `<out>/catalog.json` + `<out>/blocks.zip` for one
 runtime (`ui8kit/site`: `bun run registry:wpfasty` publishes both into `r/<runtime>/wpfasty/`).

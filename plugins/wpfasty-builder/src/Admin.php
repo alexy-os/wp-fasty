@@ -21,6 +21,7 @@ final class Admin
         add_action('admin_enqueue_scripts', [self::class, 'enqueue']);
         add_filter('page_row_actions', [self::class, 'rowAction'], 10, 2);
         add_action('admin_post_wpfb_import', [self::class, 'handleImport']);
+        add_action('admin_notices', [self::class, 'problems']);
     }
 
     public static function menu(): void
@@ -174,6 +175,17 @@ final class Admin
         echo '</tbody></table></div>';
     }
 
+    /** blocks that cannot render in the site runtime — never rendered through the other engine instead */
+    public static function problems(): void
+    {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        foreach (Sources::problems() as $msg) {
+            echo '<div class="notice notice-error"><p>' . esc_html($msg) . '</p></div>';
+        }
+    }
+
     public static function sourcesScreen(): void
     {
         if (!current_user_can('manage_options')) {
@@ -203,7 +215,13 @@ final class Admin
         }
         echo '</tbody></table>';
         echo '<h2>' . esc_html__('Import a remote source', 'wpfasty-builder') . '</h2>';
-        echo '<p>' . esc_html__('The URL must serve catalog.json and latte.zip.', 'wpfasty-builder') . ' '
+        echo '<p>' . esc_html(sprintf(
+            // phpcs:disable Generic.Files.LineLength.TooLong -- a translatable literal must stay one string.
+            /* translators: %1$s: site engine (latte or twig) */
+            __('The URL must be a %1$s block registry (catalog.json + blocks.zip), e.g. https://registry.buildy.tw/%1$s/wpfasty/v1.0.0/.', 'wpfasty-builder'),
+            // phpcs:enable Generic.Files.LineLength.TooLong
+            (string) Plugin::engine(),
+        )) . ' '
             . esc_html__('Remote templates compile through an allowlist of tags and functions.', 'wpfasty-builder')
             . '</p>';
         echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';

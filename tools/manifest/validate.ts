@@ -20,7 +20,7 @@ addFormats(ajv);
 const validateManifest = ajv.compile(schema);
 const validateLanding = ajv.compile({ $ref: `${schema.$id}#/$defs/landing` });
 
-const catalog = json(join(root, "plugins/wpfasty-builder/sources/ui8kit/catalog.json"));
+const catalog = json(join(root, "plugins/wpfasty-builder/sources/ui8kit/latte/catalog.json"));
 const variants = new Map<string, Set<string>>(
   catalog.blocks.map((b: J) => [b.id, new Set((b.variants ?? []).map((v: J) => v.id))]),
 );

@@ -7,13 +7,13 @@ namespace WPFastyBuilder;
 use WPFastyBuilder\Source\SourceInterface;
 
 /**
- * Renders one block template of a source with its props ($p), in the engine of the template name:
+ * Renders one block template of a source with its props ($p), in the runtime of the template name:
  * blocks/<name>.latte on a Latte engine of its own (the codegen-x ui_* functions are registered there), and
- * blocks/<name>.html.twig on a Twig environment over the source's generated Twig package (same specs, same DOM).
- * Each engine is created only when a template of that engine is rendered, so a Twig site needs no Latte library
- * (and a Latte site no Twig). The PHP runtimes always come from the bundled ui8kit source; templates of remote
- * sources render sandboxed: Latte through TemplateGuard, Twig through Twig's SandboxExtension with the same
- * allowlist idea (the tags, filters and functions the generated templates use).
+ * blocks/<name>.html.twig on a Twig environment over the source's Twig package. A source serves ONE runtime
+ * (SourceInterface::runtime()); a template of the other runtime, or one missing from the source, renders nothing and
+ * is reported (action `wpfasty_builder_missing_block`) — never through the other engine (ADR-001, K7). Each engine is
+ * created only when a template of its runtime renders. The PHP runtimes come from the plugin build of that runtime;
+ * templates of remote sources render sandboxed: Latte through TemplateGuard, Twig through Twig's SandboxExtension.
  */
 final class BlockRenderer
 {
@@ -63,44 +63,48 @@ final class BlockRenderer
         return true;
     }
 
-    /** blocks/<name>.latte → blocks/<name>.html.twig */
-    public static function twigName(string $template): string
-    {
-        return str_ends_with($template, '.latte') ? substr($template, 0, -6) . self::TWIG_EXT : $template;
-    }
-
     /** @param array<string, mixed> $props */
     public function render(string $source, string $template, array $props): string
     {
-        $twig = str_ends_with($template, self::TWIG_EXT);
-        $latteName = $twig ? substr($template, 0, -strlen(self::TWIG_EXT)) . '.latte' : $template;
-        if (preg_match(Catalog::TEMPLATE, $latteName) !== 1) {
+        if (preg_match(Catalog::TEMPLATE, $template) !== 1) {
+            return '';
+        }
+        $runtime = str_ends_with($template, self::TWIG_EXT) ? 'twig' : 'latte';
+        $src = $this->sources[$source] ?? null;
+        if ($src === null || $src->runtime() !== $runtime || !is_file($src->templateRoot() . '/' . $template)) {
+            self::missing($source, $template);
             return '';
         }
         try {
-            if ($twig) {
-                $env = $this->twig($source);
-                if ($env !== null) {
-                    return $env->render($template, ['p' => $props]);
-                }
-                // A source without a Twig package: its Latte template, when Latte is available.
+            $engine = $runtime === 'twig' ? $this->twig($source) : $this->engine($source);
+            if ($engine === null) {
+                self::missing($source, $template);
+                return '';
             }
-            $engine = $this->engine($source);
-            return $engine !== null ? $engine->renderToString($latteName, ['p' => $props]) : '';
+            return $engine instanceof \Twig\Environment
+                ? $engine->render($template, ['p' => $props])
+                : $engine->renderToString($template, ['p' => $props]);
         } catch (\Throwable $e) {
             $msg = function_exists('current_user_can') && current_user_can('edit_pages') ? $e->getMessage() : '';
             return '<!-- wpfasty-builder: ' . htmlspecialchars($template . ' ' . $msg, ENT_QUOTES) . ' -->';
         }
     }
 
-    /** the Latte engine of a source, null without Latte or without templates */
+    private static function missing(string $source, string $template): void
+    {
+        if (function_exists('do_action')) {
+            do_action('wpfasty_builder_missing_block', $source, $template);
+        }
+    }
+
+    /** the Latte engine of a Latte source, null without latte/latte, the plugin's Latte runtime or a Latte source */
     public function engine(string $source): ?\Latte\Engine
     {
         if (isset($this->engines[$source])) {
             return $this->engines[$source];
         }
         $src = $this->sources[$source] ?? null;
-        if ($src === null || !is_dir($src->templateRoot() . '/blocks')) {
+        if ($src === null || $src->runtime() !== 'latte' || !is_dir($src->templateRoot() . '/blocks')) {
             return null;
         }
         self::loadRuntime();
@@ -115,15 +119,15 @@ final class BlockRenderer
         return $this->engines[$source] = $engine;
     }
 
-    /** the Twig environment of a source's generated Twig package, null without twig/twig or without the package */
+    /** the Twig environment of a Twig source, null without twig/twig, the plugin's Twig runtime or a Twig source */
     public function twig(string $source): ?\Twig\Environment
     {
         if (array_key_exists($source, $this->twigs)) {
             return $this->twigs[$source];
         }
         $src = $this->sources[$source] ?? null;
-        $root = $src?->twigRoot();
-        if ($src === null || $root === null || !self::loadTwigRuntime()) {
+        $root = $src?->templateRoot();
+        if ($src === null || $src->runtime() !== 'twig' || !is_dir($root . '/blocks') || !self::loadTwigRuntime()) {
             return $this->twigs[$source] = null;
         }
         $tmp = $this->cache($source . '/twig');

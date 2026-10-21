@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace WPFastyBuilder\Source;
 
-/** A source in a folder: <dir>/catalog.json, <dir>/latte/{blocks,ui} and optionally <dir>/twig/{blocks,ui}. */
+use WPFastyBuilder\Catalog;
+
+/**
+ * A source in a folder of one runtime: <dir>/catalog.json and <dir>/{blocks,ui} (e.g. sources/ui8kit/twig). A
+ * format-1 catalog is read as the format-2 catalog of $runtime (Catalog::forRuntime).
+ */
 final class LocalSource implements SourceInterface
 {
     /** @var array<string, mixed>|null */
@@ -13,8 +18,10 @@ final class LocalSource implements SourceInterface
     public function __construct(
         private readonly string $id,
         private readonly string $dir,
+        private readonly string $runtime,
         private readonly string $label = '',
         private readonly bool $sandboxed = false,
+        private readonly ?string $catalogFile = null,
     ) {
     }
 
@@ -28,25 +35,27 @@ final class LocalSource implements SourceInterface
         return $this->label !== '' ? $this->label : (string) ($this->catalog()['label'] ?? $this->id);
     }
 
+    public function runtime(): string
+    {
+        return $this->runtime;
+    }
+
     public function catalog(): array
     {
         if ($this->catalog === null) {
-            $file = $this->dir . '/catalog.json';
+            $file = $this->catalogFile ?? $this->dir . '/catalog.json';
             $raw = is_file($file) ? (string) file_get_contents($file) : '';
             $data = $raw !== '' ? json_decode($raw, true) : null;
-            $this->catalog = is_array($data) ? $data : ['blocks' => [], 'collections' => []];
+            $data = is_array($data) ? Catalog::forRuntime($data, $this->runtime) : null;
+            $ok = $data !== null && Catalog::runtimeOf($data) === $this->runtime;
+            $this->catalog = $ok ? $data : ['runtime' => $this->runtime, 'blocks' => [], 'collections' => []];
         }
         return $this->catalog;
     }
 
     public function templateRoot(): string
     {
-        return $this->dir . '/latte';
-    }
-
-    public function twigRoot(): ?string
-    {
-        return is_dir($this->dir . '/twig/blocks') ? $this->dir . '/twig' : null;
+        return $this->dir;
     }
 
     public function sandboxed(): bool

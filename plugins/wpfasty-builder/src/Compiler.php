@@ -42,7 +42,10 @@ final class Compiler
         ];
         foreach (Layout::blocks($entry) as $b) {
             $variant = $catalog->variant((string) $b['block'], (string) $b['variant']);
-            if ($variant === null || preg_match(Catalog::TEMPLATE, (string) ($variant['template'] ?? '')) !== 1) {
+            $template = (string) ($variant['template'] ?? '');
+            // Only templates of the page's own runtime: a catalog of the other runtime is never substituted.
+            $own = str_ends_with($template, self::ENGINES[$engine] ?? '-');
+            if ($variant === null || preg_match(Catalog::TEMPLATE, $template) !== 1 || !$own) {
                 $lines[] = $open . ' skipped: unknown block ' . self::comment($b['block'] . '/' . $b['variant']) . ' '
                     . $close;
                 continue;
@@ -55,9 +58,7 @@ final class Compiler
                 Layout::set($props, explode('.', (string) $path), null);
             }
             $lines[] = '<div class="wpfb-block" data-wpfb-block="' . self::attr((string) $b['id']) . '">';
-            $template = (string) $variant['template'];
-            $call = 'wpfb_block(' . self::str($source) . ', '
-                . self::str($twig ? BlockRenderer::twigName($template) : $template) . ', '
+            $call = 'wpfb_block(' . self::str($source) . ', ' . self::str($template) . ', '
                 . self::literal($props, [], $exprs, $twig) . ')';
             $lines[] = $twig ? '{{ ' . $call . '|raw }}' : '{=' . $call . '|noescape}';
             $lines[] = '</div>';

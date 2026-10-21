@@ -1,15 +1,17 @@
 /**
  * Exports the ui8kit block library of codegen-x (branch contract-v04) as a wpfasty-builder source:
- *   plugins/wpfasty-builder/sources/ui8kit/catalog.json   blocks, variants, props, bindings, collections
- *   plugins/wpfasty-builder/sources/ui8kit/latte/         the generated Latte package (blocks/, ui/, php/)
- *   plugins/wpfasty-builder/sources/ui8kit/twig/          the generated Twig package of the same commit (blocks/, ui/, php/):
- *                                                         same specs, same DOM (tools/parity suite blocks)
+ *   plugins/wpfasty-builder/sources/ui8kit/latte/   catalog.json (wpfasty-catalog@2, runtime latte) + the generated Latte
+ *                                                   package (blocks/, ui/, php/)
+ *   plugins/wpfasty-builder/sources/ui8kit/twig/    catalog.json (runtime twig) + the generated Twig package of the same
+ *                                                   commit: same specs, same DOM (tools/parity suite blocks)
  * Usage: bun tools/builder/export-ui8kit.ts [--cgx /path/to/codegen-x/ui8kit]
- * The catalog shape is the source contract of the builder: a remote registry serves the same catalog.json + latte.zip.
+ * Each runtime folder is self-contained; a registry serves one of them (tools/builder/pack-source.ts,
+ * docs/agent/builder-registry.md). Runtimes never reference each other.
  */
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { join, resolve } from "node:path";
+import { runtimeCatalog } from "./catalog-v2.ts";
 
 const arg = (n: string, d: string) => { const i = process.argv.indexOf(n); return i > 0 ? process.argv[i + 1]! : d; };
 const CGX = resolve(arg("--cgx", process.env.CGX_DIR ?? "/workspace/cgx-ui8kit"));
@@ -106,15 +108,9 @@ for (const s of plan.inputs.screens.filter((x: any) => x.composed && String(x.va
 }
 
 const catalog = {
-  $schema: "https://github.com/alexy-os/wp-fasty/plugins/wpfasty-builder/catalog@1",
   id: "ui8kit",
   label: "ui8kit blocks (codegen-x)",
-  version: 1,
   source: { repo: "codegen-x/ui8kit", branch: git("rev-parse --abbrev-ref HEAD"), commit: git("rev-parse HEAD") },
-  templates: "latte",
-  // Template names stay blocks/<name>.latte (the contract); a source with a twig/ package also renders
-  // blocks/<name>.html.twig of the same name under the Twig renderer.
-  engines: ["latte", "twig"],
   contract: "Codex v0.4: bound data are entries mapped by `fields` (dotted paths, pipes |date |ago |ago-days |ago-short); money = integer minor units + currency",
   blocks,
   collections,
@@ -130,6 +126,6 @@ for (const d of ["blocks", "ui", "php"]) cpSync(join(TWIG, d), join(OUT, "twig",
 cpSync(join(TWIG, "README.md"), join(OUT, "twig", "README.md"));
 mkdirSync(join(OUT, "styles"), { recursive: true });
 for (const f of ["theme.css", "kit.css"]) cpSync(join(CGX, "packages/react/ui/src/styles", f), join(OUT, "styles", f));
-writeFileSync(join(OUT, "catalog.json"), JSON.stringify(catalog) + "\n");
-const size = readFileSync(join(OUT, "catalog.json")).length;
+for (const r of ["latte", "twig"] as const) writeFileSync(join(OUT, r, "catalog.json"), JSON.stringify(runtimeCatalog(catalog, r)) + "\n");
+const size = readFileSync(join(OUT, "latte", "catalog.json")).length;
 console.log(`${blocks.length} blocks, ${blocks.reduce((n, b) => n + b.variants.length, 0)} variants, ${collections.length} collections; catalog ${(size / 1024).toFixed(0)} KB`);

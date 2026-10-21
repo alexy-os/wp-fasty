@@ -84,9 +84,16 @@ $builder = static function () use ($root, $suites, $twigPrims, $cache, $render, 
     // Blocks render from the generated Latte / Twig packages: compared as DOM trees like suite blocks.
     $normalize = require __DIR__ . '/normalize-dom.php';
     $src = $root . '/plugins/wpfasty-builder/sources/ui8kit';
-    $catalog = new Catalog((new LocalSource('ui8kit', $src))->catalog());
-    $blocks = new \WPFastyBuilder\BlockRenderer(['ui8kit' => new LocalSource('ui8kit', $src, '', false)], null);
-    $fn = static fn (string $s, string $t, array $p): string => $blocks->render($s, $t, $p);
+    // One catalog and one block renderer per runtime (isolated runtimes; the Twig page never sees a Latte source).
+    $catalogs = [];
+    $fns = [];
+    foreach (['latte', 'twig'] as $rt) {
+        $one = new LocalSource('ui8kit', "{$src}/{$rt}", $rt);
+        $catalogs[$rt] = new Catalog($one->catalog());
+        $r = new \WPFastyBuilder\BlockRenderer(['ui8kit' => $one], null);
+        $fns[$rt] = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
+    }
+    $catalog = $catalogs['latte'];
     $contexts = ['press' => 'latte/page', 'folio' => 'folio/front', 'shop' => 'shop/front'];
     $files = glob($root . '/tools/builder/landings/*.json') ?: [];
     sort($files);
@@ -105,7 +112,17 @@ $builder = static function () use ($root, $suites, $twigPrims, $cache, $render, 
         $dir = "{$cache}/builder-views/{$i}";
         @mkdir($dir . '/builder', 0775, true);
         foreach (Compiler::ENGINES as $engine => $ext) {
-            file_put_contents("{$dir}/builder/page{$ext}", Compiler::compile($entry, $catalog, $engine));
+            file_put_contents("{$dir}/builder/page{$ext}", Compiler::compile($entry, $catalogs[$engine], $engine));
+        }
+        $calls = array_map(
+            static fn (string $ext): int
+                => substr_count((string) file_get_contents("{$dir}/builder/page{$ext}"), 'wpfb_block('),
+            Compiler::ENGINES,
+        );
+        if ($calls['latte'] !== $calls['twig'] || $calls['latte'] === 0) {
+            $out("✗ {$name}: compiled blocks latte {$calls['latte']} ≠ twig {$calls['twig']}");
+            $fail++;
+            continue;
         }
         // Bound paths get the catalog sample records of that path (what the editor previews).
         $wpfb = [];
@@ -127,10 +144,10 @@ $builder = static function () use ($root, $suites, $twigPrims, $cache, $render, 
         $own = $suites[$arch] ?? $suites['latte'];
         $roots = [$dir, ...array_map(static fn (string $d): string => $root . '/' . $d, $own)];
         $latte = new LatteRenderer([...$roots, $root . '/.workspaces/ui8kit-latte/ui'], "{$cache}/builder/{$i}");
-        $latte->latte()->addFunction('wpfb_block', $fn);
+        $latte->latte()->addFunction('wpfb_block', $fns['latte']);
         $twig = new TwigRenderer([...$roots, $twigPrims], "{$cache}/builder/{$i}/twig");
         $twig->twig()->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false
-            => $n === 'wpfb_block' ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
+            => $n === 'wpfb_block' ? new \Twig\TwigFunction($n, $fns['twig'], ['is_safe' => ['html']]) : false);
         $fx = ['view' => 'builder/page', 'context' => $ctx, 'page' => true];
         try {
             $rawA = $render($latte, $fx);
@@ -175,8 +192,15 @@ $blocksSuite = static function () use ($root, $out): int {
         require_once "{$src}/twig/php/{$f}.php";
     }
     $dom = require __DIR__ . '/normalize-dom.php';
-    $catalog = json_decode((string) file_get_contents($src . '/catalog.json'), true, 512, JSON_THROW_ON_ERROR);
-    $latte = new \WPFastyBuilder\BlockRenderer(['ui8kit' => new LocalSource('ui8kit', $src, '', false)], null);
+    $catalog = json_decode((string) file_get_contents($src . '/latte/catalog.json'), true, 512, JSON_THROW_ON_ERROR);
+    $twigCatalog = json_decode((string) file_get_contents($src . '/twig/catalog.json'), true, 512, JSON_THROW_ON_ERROR);
+    $twigTemplates = [];
+    foreach ((array) $twigCatalog['blocks'] as $b) {
+        foreach ((array) $b['variants'] as $v) {
+            $twigTemplates["{$b['id']}/{$v['id']}"] = (string) $v['template'];
+        }
+    }
+    $latte = new \WPFastyBuilder\BlockRenderer(['ui8kit' => new LocalSource('ui8kit', $src . '/latte', 'latte')], null);
     $twig = \UI8Kit\Twig\Extension::environment($src . '/twig');
     $fail = 0;
     $n = 0;
@@ -189,7 +213,9 @@ $blocksSuite = static function () use ($root, $out): int {
             $tpl = (string) $v['template'];
             try {
                 $a = $dom($latte->render('ui8kit', $tpl, (array) $v['props']));
-                $twigTpl = (string) preg_replace('/\.latte$/', '.html.twig', $tpl);
+                // the twig catalog's own template of the same block/variant (one catalog per runtime)
+                $twigTpl = $twigTemplates["{$b['id']}/{$v['id']}"]
+                    ?? throw new \RuntimeException('not in the twig catalog');
                 $t = $dom($twig->render($twigTpl, ['p' => (array) $v['props']]));
             } catch (\Throwable $e) {
                 $out("✗ {$name}: " . get_class($e) . ': ' . $e->getMessage());
