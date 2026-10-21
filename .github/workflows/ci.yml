@@ -331,6 +331,10 @@ jobs:
           done
           rm -rf wp-content/themes/latte && unzip -q "$D/latte-twig.zip" -d wp-content/themes/
           test -f wp-content/themes/latte/vendor/twig/twig/src/Environment.php
+          # Restart php -S (the supervisor brings it back): its opcache may still hold the Latte-only parent's
+          # composer autoload files, which the swap replaced at the same paths.
+          pkill -f 'php -S 127.0.0.1:8080' || true
+          for i in $(seq 1 30); do sleep 1; curl -s -o /dev/null http://127.0.0.1:8080/wp-login.php && break; done
           mkdir -p wp-content/mu-plugins && cp "$GITHUB_WORKSPACE/tools/qa/renderer-switch.php" wp-content/mu-plugins/
           L="$GITHUB_WORKSPACE/tools/qa/live-render.sh"; B=http://127.0.0.1:8080
           url() { wp theme activate "$1" --quiet; wp post list --post_type="$2" --posts_per_page=1 --field=url | sed "s#^$B##"; }
