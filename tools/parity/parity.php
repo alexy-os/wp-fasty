@@ -14,6 +14,11 @@
  * Latte and to Twig (Compiler), bound paths filled with the catalog sample records, and rendered as a full page of
  * its archetype (child roots + the compiled view root) with both renderers.
  *
+ * Suite `blocks`: every block and every variant of the builder source catalog
+ * (plugins/wpfasty-builder/sources/ui8kit/catalog.json — its sample props are the fixtures) rendered from the
+ * generated Latte package and the generated Twig package; compared as DOM trees (tools/parity/normalize-dom.php,
+ * the codegen-x parity contract: text trimmed, attributes and class tokens sorted).
+ *
  * @package Latte
  */
 
@@ -46,6 +51,7 @@ $suites = [
     'folio' => ['themes/latte-folio/views', 'themes/latte/views'],
     'shop' => ['themes/latte-shop/views', 'themes/latte/views'],
     'builder' => [],
+    'blocks' => [],
 ];
 $out = static function (string $line): void {
     fwrite(STDOUT, $line . "\n");
@@ -148,7 +154,77 @@ $builder = static function () use ($root, $suites, $twigPrims, $cache, $render, 
     return $fail;
 };
 
+/** Every block × variant of the builder source: generated Latte vs generated Twig package, DOM-equal. */
+$blocksSuite = static function () use ($root, $out): int {
+    $src = $root . '/plugins/wpfasty-builder/sources/ui8kit';
+    if (!is_dir($src . '/twig/blocks')) {
+        $out('✗ blocks: no Twig package in ' . substr($src, strlen($root) + 1) . '/twig');
+        return 1;
+    }
+    foreach (['CnMerge', 'Runtime', 'Extension'] as $f) {
+        require_once "{$src}/twig/php/{$f}.php";
+    }
+    $dom = require __DIR__ . '/normalize-dom.php';
+    $catalog = json_decode((string) file_get_contents($src . '/catalog.json'), true, 512, JSON_THROW_ON_ERROR);
+    $latte = new \WPFastyBuilder\BlockRenderer(['ui8kit' => new LocalSource('ui8kit', $src, '', false)], null);
+    $twig = \UI8Kit\Twig\Extension::environment($src . '/twig');
+    $fail = 0;
+    $n = 0;
+    $blocks = 0;
+    foreach ((array) $catalog['blocks'] as $b) {
+        $blocks++;
+        foreach ((array) $b['variants'] as $v) {
+            $n++;
+            $name = "blocks/{$b['id']}/{$v['id']}";
+            $tpl = (string) $v['template'];
+            try {
+                $a = $dom($latte->render('ui8kit', $tpl, (array) $v['props']));
+                $twigTpl = (string) preg_replace('/\.latte$/', '.html.twig', $tpl);
+                $t = $dom($twig->render($twigTpl, ['p' => (array) $v['props']]));
+            } catch (\Throwable $e) {
+                $out("✗ {$name}: " . get_class($e) . ': ' . $e->getMessage());
+                $fail++;
+                continue;
+            }
+            if ($a !== '' && $a === $t && !str_contains($a, 'wpfasty-builder:')) {
+                continue;
+            }
+            $fail++;
+            $j = 0;
+            while ($j < min(strlen($a), strlen($t)) && $a[$j] === $t[$j]) {
+                $j++;
+            }
+            $out("✗ {$name} ({$tpl}): differs at byte {$j}");
+            $out('  latte: …' . substr($a, max(0, $j - 80), 200));
+            $out('  twig:  …' . substr($t, max(0, $j - 80), 200));
+        }
+    }
+    // Coverage: every generated Latte template (blocks and ui parts) has its Twig twin.
+    $dir = new \RecursiveDirectoryIterator($src . '/latte', \FilesystemIterator::SKIP_DOTS);
+    $it = new \RecursiveIteratorIterator($dir);
+    $templates = 0;
+    foreach ($it as $f) {
+        $rel = substr((string) $f, strlen($src . '/latte/'));
+        if (!str_ends_with($rel, '.latte') || str_starts_with($rel, 'php/')) {
+            continue;
+        }
+        $templates++;
+        if (!is_file($src . '/twig/' . substr($rel, 0, -6) . '.html.twig')) {
+            $out("✗ blocks: no Twig twin for {$rel}");
+            $fail++;
+        }
+    }
+    $out($fail
+        ? "✗ blocks: {$fail} problem(s) in {$n} variants / {$templates} templates"
+        : "✓ blocks: {$blocks} blocks, {$n} variants DOM-identical; {$templates} Latte templates all have a Twig twin");
+    return $fail;
+};
+
 foreach ($wanted as $suite) {
+    if ($suite === 'blocks') {
+        $fail += $blocksSuite();
+        continue;
+    }
     if (!isset($suites[$suite])) {
         $out("✗ unknown suite {$suite} (have: " . implode(', ', array_keys($suites)) . ')');
         $fail++;

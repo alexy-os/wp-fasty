@@ -2,6 +2,8 @@
  * Exports the ui8kit block library of codegen-x (branch contract-v04) as a wpfasty-builder source:
  *   plugins/wpfasty-builder/sources/ui8kit/catalog.json   blocks, variants, props, bindings, collections
  *   plugins/wpfasty-builder/sources/ui8kit/latte/         the generated Latte package (blocks/, ui/, php/)
+ *   plugins/wpfasty-builder/sources/ui8kit/twig/          the generated Twig package of the same commit (blocks/, ui/, php/):
+ *                                                         same specs, same DOM (tools/parity suite blocks)
  * Usage: bun tools/builder/export-ui8kit.ts [--cgx /path/to/codegen-x/ui8kit]
  * The catalog shape is the source contract of the builder: a remote registry serves the same catalog.json + latte.zip.
  */
@@ -13,7 +15,9 @@ const arg = (n: string, d: string) => { const i = process.argv.indexOf(n); retur
 const CGX = resolve(arg("--cgx", process.env.CGX_DIR ?? "/workspace/cgx-ui8kit"));
 const OUT = resolve(import.meta.dir, "../../plugins/wpfasty-builder/sources/ui8kit");
 const LATTE = join(CGX, "packages/latte/ui");
+const TWIG = join(CGX, "packages/twig/ui");
 if (!existsSync(join(LATTE, "blocks"))) throw new Error(`no generated Latte package at ${LATTE}`);
+if (!existsSync(join(TWIG, "blocks"))) throw new Error(`no generated Twig package at ${TWIG}`);
 
 const { planBuild } = await import(join(CGX, "xgen/generator/src/index.ts"));
 const screens = await import(join(CGX, "xgen/screens/src/index.ts"));
@@ -108,6 +112,9 @@ const catalog = {
   version: 1,
   source: { repo: "codegen-x/ui8kit", branch: git("rev-parse --abbrev-ref HEAD"), commit: git("rev-parse HEAD") },
   templates: "latte",
+  // Template names stay blocks/<name>.latte (the contract); a source with a twig/ package also renders
+  // blocks/<name>.html.twig of the same name under the Twig renderer.
+  engines: ["latte", "twig"],
   contract: "Codex v0.4: bound data are entries mapped by `fields` (dotted paths, pipes |date |ago |ago-days |ago-short); money = integer minor units + currency",
   blocks,
   collections,
@@ -117,6 +124,10 @@ rmSync(join(OUT, "latte"), { recursive: true, force: true });
 mkdirSync(join(OUT, "latte"), { recursive: true });
 for (const d of ["blocks", "ui", "php"]) cpSync(join(LATTE, d), join(OUT, "latte", d), { recursive: true });
 cpSync(join(LATTE, "README.md"), join(OUT, "latte", "README.md"));
+rmSync(join(OUT, "twig"), { recursive: true, force: true });
+mkdirSync(join(OUT, "twig"), { recursive: true });
+for (const d of ["blocks", "ui", "php"]) cpSync(join(TWIG, d), join(OUT, "twig", d), { recursive: true });
+cpSync(join(TWIG, "README.md"), join(OUT, "twig", "README.md"));
 mkdirSync(join(OUT, "styles"), { recursive: true });
 for (const f of ["theme.css", "kit.css"]) cpSync(join(CGX, "packages/react/ui/src/styles", f), join(OUT, "styles", f));
 writeFileSync(join(OUT, "catalog.json"), JSON.stringify(catalog) + "\n");
