@@ -214,10 +214,32 @@ async function buildTheme(id: string): Promise<void> {
   console.log(`  blocks: ${Object.values(preset.templates ?? {}).flat().join(", ") || "(none)"}`);
 }
 
+/** Files of the other engine that a single-engine parent build must not ship (ADR-001, K7: isolated runtimes). */
+const OTHER_ENGINE: Record<"latte" | "twig", (rel: string) => boolean> = {
+  // latte.zip: no Twig views, no Twig renderer
+  latte: (rel) => rel.endsWith(".html.twig") || rel === "classes/Template/TwigRenderer.php",
+  // twig.zip: no Latte views, no Latte renderer / loader / extension
+  twig: (rel) =>
+    rel.endsWith(".latte") ||
+    ["LatteRenderer", "LatteEngine", "MultiRootLoader", "WordPressExtension"].some((c) => rel === `classes/Template/${c}.php`),
+};
+
+/** walk a directory (relative paths, files only) */
+async function filesOf(dir: string, base = dir): Promise<string[]> {
+  const out: string[] = [];
+  for (const e of await readdir(dir, { withFileTypes: true })) {
+    const p = join(dir, e.name);
+    if (e.isDirectory()) out.push(...(await filesOf(p, base)));
+    else out.push(relative(base, p).split("\\").join("/"));
+  }
+  return out;
+}
+
 /**
- * Parent release zip. engine "twig" adds the Twig runtime: twig/twig in the release composer.json and the codegen
- * Twig primitives under lib/ui8kit-twig/ → dist/<slug>-twig.zip (zip root stays <slug>/). The default (Latte-only)
- * zip is the wordpress.org build.
+ * Parent release zip of ONE engine (ADR-001, K7). engine "latte" → dist/<slug>.zip (Latte only: latte/latte + UI8Kit
+ * Latte primitives in lib/ui8kit-latte, .latte views); engine "twig" → dist/twig.zip, theme slug `twig` (Twig only:
+ * twig/twig + UI8Kit Twig primitives in lib/ui8kit-twig, .html.twig views, text domain `twig`). Neither build contains
+ * the other engine's library, primitives, renderer or views; `WPFasty\Template\Engines` names the build's engine.
  */
 async function packTheme(id: string, engine: "latte" | "twig" = "latte"): Promise<void> {
   const preset = await loadPreset(id);
@@ -229,43 +251,56 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte"): Promis
   if (!existsSync(themeDir)) {
     throw new Error(`Theme not found: themes/${preset.slug}`);
   }
-  if (!existsSync(join(primitivesRoot, "ui")) || !existsSync(join(primitivesRoot, "php"))) {
+  if (engine === "latte" && (!existsSync(join(primitivesRoot, "ui")) || !existsSync(join(primitivesRoot, "php")))) {
     throw new Error("Missing .workspaces/ui8kit-latte — run bun run ui:primitives first");
   }
+  const slug = engine === "twig" ? "twig" : preset.slug;
 
   await mkdir(distRoot, { recursive: true });
-  const stage = join(distRoot, `.stage-${preset.slug}`);
+  const stage = join(distRoot, `.stage-${slug}`);
   await rm(stage, { recursive: true, force: true });
   await mkdir(stage, { recursive: true });
 
-  const stagedTheme = join(stage, preset.slug);
+  const stagedTheme = join(stage, slug);
   await cp(themeDir, stagedTheme, {
     recursive: true,
     filter: (src) => {
-      const rel = relative(themeDir, src);
+      const rel = relative(themeDir, src).split("\\").join("/");
       if (rel.includes("node_modules")) return false;
       if (rel.includes("~cache")) return false;
       if (rel.startsWith("vendor" + "/") || rel === "vendor") return false;
       if (rel.startsWith("tests" + "/") || rel === "tests") return false;
       if (rel.endsWith(".theme-build.json")) return false;
+      if (OTHER_ENGINE[engine](rel)) return false;
       return true;
     },
   });
 
-  // Bundle primitives inside the theme for stock WP hosts (no monorepo path).
-  const bundled = join(stagedTheme, "lib", "ui8kit-latte");
-  await mkdir(bundled, { recursive: true });
-  await cp(join(primitivesRoot, "ui"), join(bundled, "ui"), { recursive: true });
-  await cp(join(primitivesRoot, "php", "UI8Kit"), join(bundled, "php", "UI8Kit"), {
-    recursive: true,
-  });
-  await copyFile(join(primitivesRoot, "composer.json"), join(bundled, "composer.json"));
-  if (existsSync(join(primitivesRoot, "manifest.json"))) {
-    await copyFile(join(primitivesRoot, "manifest.json"), join(bundled, "manifest.json"));
-  }
+  // The build's engine (and default renderer): classes/Template/Engines.php.
+  const enginesFile = join(stagedTheme, "classes", "Template", "Engines.php");
+  const enginesSrc = await readFile(enginesFile, "utf8");
+  const enginesOut = enginesSrc
+    .replace(/public const BUILT = \[[^\]]*\];/, `public const BUILT = ['${engine}'];`)
+    .replace(/public const DEFAULT = '[a-z]+';/, `public const DEFAULT = '${engine}';`);
+  if (enginesOut === enginesSrc) throw new Error("Engines.php: BUILT/DEFAULT not found");
+  await writeFile(enginesFile, enginesOut);
 
-  // Release composer.json: path repo → bundled lib (dev monorepo keeps ../../.workspaces)
-  if (engine === "twig") {
+  const require: Record<string, string> = { php: ">=8.2" };
+  let repositories: unknown[] = [];
+  if (engine === "latte") {
+    // Bundle primitives inside the theme for stock WP hosts (no monorepo path).
+    const bundled = join(stagedTheme, "lib", "ui8kit-latte");
+    await mkdir(bundled, { recursive: true });
+    await cp(join(primitivesRoot, "ui"), join(bundled, "ui"), { recursive: true });
+    await cp(join(primitivesRoot, "php", "UI8Kit"), join(bundled, "php", "UI8Kit"), { recursive: true });
+    await copyFile(join(primitivesRoot, "composer.json"), join(bundled, "composer.json"));
+    if (existsSync(join(primitivesRoot, "manifest.json"))) {
+      await copyFile(join(primitivesRoot, "manifest.json"), join(bundled, "manifest.json"));
+    }
+    require["latte/latte"] = "^3.0";
+    require["ui8kit/latte-primitives"] = "@dev";
+    repositories = [{ type: "path", url: "lib/ui8kit-latte", options: { symlink: false } }];
+  } else {
     const codegen = join(repoRoot, "packages", "ui8kit-codegen");
     if (!existsSync(join(codegen, "generated", "ui"))) {
       throw new Error("Missing packages/ui8kit-codegen/generated — run bun run codegen:verify first");
@@ -277,39 +312,64 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte"): Promis
     });
     await mkdir(join(tw, "runtime", "php"), { recursive: true });
     await copyFile(join(codegen, "runtime", "php", "TwigExtension.php"), join(tw, "runtime", "php", "TwigExtension.php"));
-    // Engine-agnostic UI8Kit runtime used by the Twig bindings — bundled so a Twig site needs no Latte package.
+    // Engine-agnostic UI8Kit runtime used by the Twig bindings (the Latte package is not shipped).
     await copyFile(join(codegen, "runtime", "php", "Rt.php"), join(tw, "runtime", "php", "Rt.php"));
     await copyFile(join(codegen, "generated", "php", "UI8Kit", "Classes.php"), join(tw, "runtime", "php", "Classes.php"));
+    require["twig/twig"] = "^3.14";
+
+    // Theme identity `twig`: style.css / readme.txt names, text domain of every translatable literal.
+    for (const f of await filesOf(stagedTheme)) {
+      const p = join(stagedTheme, f);
+      if (f.endsWith(".php")) {
+        const src = await readFile(p, "utf8");
+        const out = src
+          .replace(/'latte'(\s*,?\s*\))/g, "'twig'$1") // last argument of __(), esc_html__(), … and defaults like = 'latte')
+          .replace("load_theme_textdomain('latte',", "load_theme_textdomain('twig',")
+          .replace("$domain !== 'latte'", "$domain !== 'twig'")
+          .replace(/Latte theme:/g, "Twig theme:")
+          .replace(/themes\/latte\b/g, "themes/twig");
+        // starter content / notices name the theme
+        const named = f === "classes/Hooks/ThemeHooks.php" ? out.replace(/\bLatte\b/g, "Twig") : out;
+        if (named !== src) await writeFile(p, named);
+      }
+    }
+    const style = join(stagedTheme, "style.css");
+    await writeFile(style, (await readFile(style, "utf8"))
+      .replace(/^Theme Name: .*$/m, "Theme Name: Twig")
+      .replace(/^Text Domain: .*$/m, "Text Domain: twig")
+      .replace(/^Description: .*$/m, "Description: Clean WP FastY Twig theme — UI8Kit Codegen primitives, DI context, classic shell."));
     // wordpress.org: credit every bundled library (Twig BSD-3-Clause, Symfony polyfills MIT — GPL-compatible).
     const readme = join(stagedTheme, "readme.txt");
-    const txt = await readFile(readme, "utf8");
+    let txt = (await readFile(readme, "utf8"))
+      .split("\n")
+      .filter((l) => !/^\* (Latte template engine|UI8Kit Latte primitives)/.test(l))
+      .join("\n")
+      .replace(/Latte/g, "Twig")
+      .replace(/ui8kit-latte/g, "ui8kit-twig")
+      .replace(/themes\/latte/g, "themes/twig");
     const credits = [
       "* Twig template engine (bundled in vendor/twig/twig) — BSD-3-Clause — https://twig.symfony.com/",
       "* Symfony polyfills / deprecation-contracts (bundled in vendor/symfony, Twig dependencies) — MIT — https://symfony.com/",
       "* UI8Kit Twig primitives (bundled in lib/ui8kit-twig) — MIT — https://github.com/alexy-os/wp-fasty",
     ].join("\n");
     if (!txt.includes("== Resources ==")) throw new Error("readme.txt has no == Resources == section");
-    await writeFile(readme, txt.replace("== Resources ==\n", `== Resources ==\n\n${credits}\n`).replace(/\n\n\n/g, "\n\n"));
+    txt = txt.replace("== Resources ==\n", `== Resources ==\n\n${credits}\n`).replace(/\n\n\n/g, "\n\n");
+    await writeFile(readme, txt);
+    // Translation template of the `twig` text domain.
+    await rm(join(stagedTheme, "languages", "latte.pot"), { force: true });
+    const pot = spawnSync("wp", ["i18n", "make-pot", stagedTheme, join(stagedTheme, "languages", "twig.pot"), "--domain=twig",
+      "--exclude=vendor,lib,~cache,node_modules", "--quiet",
+      `--headers=${JSON.stringify({ "Report-Msgid-Bugs-To": "https://wordpress.org/support/theme/twig" })}`], { encoding: "utf8" });
+    if (pot.status !== 0) throw new Error(`wp i18n make-pot failed (wp-cli is needed for the twig build): ${pot.stderr}`);
   }
 
   const releaseComposer = {
-    name: `alexy-os/${preset.slug}`,
-    description: `${preset.name} — WP FastY theme with vendored UI8Kit Latte primitives`,
+    name: `alexy-os/${slug}`,
+    description: `${engine === "twig" ? "Twig" : preset.name} — WP FastY theme with vendored UI8Kit ${engine === "twig" ? "Twig" : "Latte"} primitives`,
     type: "wordpress-theme",
     license: "GPL-2.0-or-later",
-    require: {
-      php: ">=8.2",
-      "latte/latte": "^3.0",
-      "ui8kit/latte-primitives": "@dev",
-      ...(engine === "twig" ? { "twig/twig": "^3.14" } : {}),
-    },
-    repositories: [
-      {
-        type: "path",
-        url: "lib/ui8kit-latte",
-        options: { symlink: false },
-      },
-    ],
+    require,
+    ...(repositories.length ? { repositories } : {}),
     autoload: {
       "psr-4": {
         "WPFasty\\": "classes/",
@@ -323,35 +383,31 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte"): Promis
       platform: { php: "8.2" },
     },
   };
-  await writeFile(
-    join(stagedTheme, "composer.json"),
-    JSON.stringify(releaseComposer, null, 2) + "\n"
-  );
+  await writeFile(join(stagedTheme, "composer.json"), JSON.stringify(releaseComposer, null, 2) + "\n");
   // Drop monorepo lock so release path-repo resolves cleanly.
   await rm(join(stagedTheme, "composer.lock"), { force: true });
 
   const composerCmd = resolveComposer(repoRoot);
   const composer = spawnSync(
     composerCmd[0],
-    [
-      ...composerCmd.slice(1),
-      "update",
-      "--no-dev",
-      "--optimize-autoloader",
-      "--working-dir",
-      stagedTheme,
-    ],
+    [...composerCmd.slice(1), "update", "--no-dev", "--optimize-autoloader", "--working-dir", stagedTheme],
     { stdio: "inherit", cwd: repoRoot, shell: process.platform === "win32" }
   );
   if (composer.status !== 0) {
-    throw new Error(
-      "composer update failed in staged theme — install Composer or place composer.phar at repo root"
-    );
+    throw new Error("composer update failed in staged theme — install Composer or place composer.phar at repo root");
   }
 
-  const zipPath = join(distRoot, engine === "twig" ? `${preset.slug}-twig.zip` : `${preset.slug}.zip`);
+  // Isolation guard: nothing of the other engine may be in the build.
+  const leaked = (await filesOf(stagedTheme)).filter((f) =>
+    engine === "twig"
+      ? f.startsWith("vendor/latte/") || f.startsWith("lib/ui8kit-latte/") || f.startsWith("vendor/ui8kit/") || f.endsWith(".latte")
+      : f.startsWith("vendor/twig/") || f.startsWith("lib/ui8kit-twig/") || f.endsWith(".html.twig")
+  );
+  if (leaked.length) throw new Error(`${slug}.zip would ship the other engine: ${leaked.slice(0, 5).join(", ")}`);
+
+  const zipPath = join(distRoot, `${slug}.zip`);
   await rm(zipPath, { force: true });
-  await writeZipFromDir(stagedTheme, zipPath, preset.slug);
+  await writeZipFromDir(stagedTheme, zipPath, slug);
   console.log(`Packed → ${zipPath}`);
 
   await rm(stage, { recursive: true, force: true });

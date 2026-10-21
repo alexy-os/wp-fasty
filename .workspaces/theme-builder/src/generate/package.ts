@@ -1,14 +1,15 @@
 // theme:package — manifest → installable release set in dist/<slug>/:
-//   latte.zip (parent, reused from theme:pack), <slug>.zip (generated child), wpfasty-types.zip (typesPlugin=companion),
-//   wpfasty-builder.zip (builder.enabled), demo.zip (output.includeDemo), blueprint.json + <slug>-playground.zip
+//   latte.zip or twig.zip (the parent of the site engine, reused from theme:pack), <slug>.zip (generated child, only
+//   the site engine's views), wpfasty-types.zip (typesPlugin=companion), wpfasty-builder.zip (builder.enabled; the
+//   site engine's build — only that runtime's bundled blocks), demo.zip (output.includeDemo), blueprint.json + <slug>-playground.zip
 //   (output.playground; a Playground blueprint bundle — every resource is `bundled`, no external URLs).
 import { spawnSync } from "node:child_process";
-import { copyFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { copyFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { writeZipFromDir } from "../zip";
 import { archetypeDir, generate } from "./index";
-import type { J } from "./emit";
+import { parentSlug, type J } from "./emit";
 
 const root = resolve(dirname(new URL(import.meta.url).pathname), "../../../..");
 const json = (p: string): J => JSON.parse(readFileSync(p, "utf8"));
@@ -21,9 +22,9 @@ export function demoSeeds(file: string): string[] {
   return [...new Set(seeds.map((s) => (prefix && !s.startsWith(prefix) ? prefix + s : s)))].sort();
 }
 
-/** Parent release zip; engine twig uses the Twig build (`theme:pack -- <preset> --engine twig` → <preset>-twig.zip). */
+/** Parent release zip of the engine (ADR-001, K7): latte → dist/<preset>.zip, twig → dist/twig.zip (`--engine twig`). */
 function parentZip(preset: string, engine = "latte"): string {
-  const zip = join(root, "dist", engine === "twig" ? `${preset}-twig.zip` : `${preset}.zip`);
+  const zip = join(root, "dist", engine === "twig" ? "twig.zip" : `${preset}.zip`);
   if (!existsSync(zip)) {
     const r = spawnSync("bun", ["run", "theme:pack", "--", preset, ...(engine === "twig" ? ["--engine", "twig"] : [])], { cwd: root, stdio: "inherit" });
     if (r.status !== 0 || !existsSync(zip)) throw new Error(`theme:pack ${preset} failed`);
@@ -61,7 +62,7 @@ function blueprint(m: J, arch: J, files: { child: string; types: boolean; builde
   const bundled = (p: string) => ({ resource: "bundled", path: `/${p}` });
   const steps: J[] = [
     { step: "login", username: "admin" },
-    { step: "installTheme", themeData: bundled(`${m.parent?.preset ?? "latte"}.zip`), options: { activate: false } },
+    { step: "installTheme", themeData: bundled(`${parentSlug(m)}.zip`), options: { activate: false } },
     { step: "installTheme", themeData: bundled(files.child), options: { activate: true } },
   ];
   if (files.types) steps.push({ step: "installPlugin", pluginData: bundled("wpfasty-types.zip"), options: { activate: true } });
@@ -89,6 +90,10 @@ function blueprint(m: J, arch: J, files: { child: string; types: boolean; builde
   };
 }
 
+function walk(dir: string): string[] {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]));
+}
+
 export async function packageSite(manifestPath: string, outArg?: string): Promise<{ dir: string; files: string[] }> {
   const m = json(resolve(manifestPath));
   const slug = m.theme.slug;
@@ -102,10 +107,15 @@ export async function packageSite(manifestPath: string, outArg?: string): Promis
   const add = (name: string) => files.push(name);
 
   const preset = m.parent?.preset ?? "latte";
-  copyFileSync(parentZip(preset, m.engine), join(out, `${preset}.zip`));
-  add(`${preset}.zip`);
+  const parent = parentSlug(m);
+  const engine = m.engine === "twig" ? "twig" : "latte";
+  copyFileSync(parentZip(preset, engine), join(out, `${parent}.zip`));
+  add(`${parent}.zip`);
 
   generate(manifestPath, join(stage, slug), { pot: true });
+  // A release child ships only its engine's views (the repo children keep both: parity source).
+  const other = engine === "twig" ? ".latte" : ".html.twig";
+  for (const f of walk(join(stage, slug))) if (f.endsWith(other)) rmSync(f);
   await writeZipFromDir(join(stage, slug), join(out, `${slug}.zip`), slug);
   add(`${slug}.zip`);
 
@@ -116,7 +126,10 @@ export async function packageSite(manifestPath: string, outArg?: string): Promis
   }
   const builder = m.builder?.enabled === true;
   if (builder) {
-    await writeZipFromDir(join(root, "plugins/wpfasty-builder"), join(out, "wpfasty-builder.zip"), "wpfasty-builder", ["wpfasty-builder/editor/*"]);
+    // The site engine's plugin build: the other runtime's bundled source is left out (ADR-001, K7).
+    const otherRuntime = engine === "twig" ? "latte" : "twig";
+    await writeZipFromDir(join(root, "plugins/wpfasty-builder"), join(out, "wpfasty-builder.zip"), "wpfasty-builder",
+      ["wpfasty-builder/editor/*", `wpfasty-builder/sources/ui8kit/${otherRuntime}/*`]);
     add("wpfasty-builder.zip");
   }
   const demo = o.includeDemo === true;

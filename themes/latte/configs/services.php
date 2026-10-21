@@ -35,7 +35,7 @@ return function (Container $container): void {
             'twig' => $engine === 'twig' ? array_filter([PrimitivesLocator::resolveTwig($templateDir)]) : [],
         ];
         $roots = (array) apply_filters('wpfasty_view_roots', $roots, is_string($engine) ? $engine : 'custom');
-        if ($engine === 'latte' && Engines::available('latte') && $primitives['latte'] !== []) {
+        if ($engine === 'latte' && Engines::available($engine) && $primitives['latte'] !== []) {
             // Legacy filter: receives the full Latte chain (views + primitives).
             $chain = (array) apply_filters('wpfasty_latte_roots', array_merge($roots, $primitives['latte']));
             return new LatteRenderer($chain, $templateDir . '/~cache');

@@ -49,7 +49,7 @@ current child themes: [`manifests/examples/`](../manifests/examples/) (`press`, 
 
 | Section | Content |
 |---------|---------|
-| `manifestVersion`, `engine` | `"0.2"`; `latte` \| `twig`. `twig` is an equal option: same rules, builder landings and wordpress.org output as `latte` (parent `latte-twig.zip`: bundled twig/twig, credited in readme.txt) (the builder compiles Latte); the child ships only `.html.twig` views and the package carries the parent Twig build |
+| `manifestVersion`, `engine` | `"0.2"`; `latte` \| `twig`. `twig` is an equal option: same rules, builder landings and wordpress.org output as `latte` (parent `twig.zip`: only Twig — bundled twig/twig, credited in readme.txt, no Latte file); the child (`Template: twig`) ships only `.html.twig` views, the builder plugin only its Twig runtime, and the package carries twig.zip. A `latte` site gets latte.zip and no Twig file. No fallback between engines (ADR-001, K7) |
 | `archetype` | `press` \| `folio` \| `shop` \| `blank` — child code family (PHP behaviour, view models, views) |
 | `theme` | name, slug, textDomain (= slug), prefix, namespace, description, version, uri, author (default `alexy-os`), requires, testedUpTo, license, tags |
 | `parent` | `preset` (`presets/themes/<id>.json`), `layout` (`classic` \| `app-shell`), `style` |

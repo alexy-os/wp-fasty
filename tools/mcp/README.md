@@ -33,7 +33,7 @@ bun run mcp:smoke           # starts the server and calls every tool
 ```
 
 `engine` is `latte` (default) or `twig`: equal options (same design, builder landings, wordpress.org output); a twig
-package ships the `latte-twig` parent build.
+package ships the `twig` parent (twig.zip, no Latte), a latte package the `latte` parent (no Twig).
 
 Brand is a fixed `palette` id, or free `tokens` (`light`, optional `dark`, `radius`, `fonts`) that must pass
 WCAG AA (4.5:1) on every text/surface pair. Extra post types are added on top of the archetype's own; name and

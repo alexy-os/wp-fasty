@@ -1,7 +1,7 @@
 /**
- * Engine matrix: for every configurator fixture (manifests/answers/*.json) and every example archetype, writes the
- * answers of the other engine (latte ↔ twig) to dist/answers-matrix/, so CI packages, Theme-Checks and smoke-renders
- * every site in both engines.
+ * Engine matrix: for every configurator fixture (manifests/answers/*.json) writes the answers of the other engine
+ * (latte ↔ twig), and for every example site its Twig twin manifest (manifest-<slug>-twig.json), to dist/answers-matrix/,
+ * so CI packages, Theme-Checks and renders every site in both engines (each on its own engine's parent).
  *   bun tools/matrix/engine-variants.ts   → prints the written files
  */
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -21,13 +21,16 @@ for (const file of readdirSync(join(root, "manifests/answers")).filter((f) => f.
   const other = a.engine === "twig" ? "latte" : "twig";
   put(`${file.replace(/\.json$/, "")}-${other}.json`, { ...a, name: `${a.name} ${other === "twig" ? "Twig" : "Latte"}`, engine: other });
 }
-// Reference archetypes (latte-press/folio/shop are Latte): their Twig twins with the example landings.
+// Reference sites (latte-press/folio/shop, Latte): their Twig twins as full site manifests — same archetype, brand,
+// prefix, demo and builder landings; only the engine and the theme identity differ (<slug>-twig). CI packages them with
+// theme:package and compares every page of the pair live (Latte site on latte.zip vs Twig site on twig.zip).
 for (const file of readdirSync(join(root, "manifests/examples")).filter((f) => f.endsWith(".json")).sort()) {
   const m = JSON.parse(readFileSync(join(root, "manifests/examples", file), "utf8"));
-  const arch = file.replace(/\.json$/, "");
-  put(`example-${arch}-twig.json`, {
-    archetype: arch, name: `Reference ${arch[0].toUpperCase()}${arch.slice(1)} Twig`, engine: "twig",
-    landings: (m.builder?.landings ?? []).map((l: { file: string }) => l.file),
+  const slug = `${m.theme.slug}-twig`;
+  put(`manifest-${slug}.json`, {
+    ...m,
+    engine: "twig",
+    theme: { ...m.theme, name: `${m.theme.name} Twig`, slug, textDomain: slug, namespace: `${m.theme.namespace}Twig` },
   });
 }
 console.log(written.map((f) => f.slice(root.length + 1)).join("\n"));

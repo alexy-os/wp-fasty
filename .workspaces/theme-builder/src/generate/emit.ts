@@ -47,13 +47,21 @@ export function styleCss(m: J, body: string): string {
     ["Requires at least", v.requires.platform],
     ["Tested up to", v.testedUpTo],
     ["Requires PHP", v.requires.php],
-    ["Template", m.parent?.preset ?? "latte"],
+    ["Template", parentSlug(m)],
     ["License", "GNU General Public License v2 or later"],
     ["License URI", "https://www.gnu.org/licenses/gpl-2.0.html"],
     ["Text Domain", t.textDomain],
     ["Tags", (t.tags ?? []).join(", ")],
   ];
   return `/*\n${header.map(([k, val]) => `${k}: ${val}`).join("\n")}\n*/\n${body ? `\n${body}` : ""}`;
+}
+
+/**
+ * The parent theme a child runs on: the engine's own parent build (ADR-001, K7: isolated runtimes) — `twig` for
+ * engine twig (twig.zip), the preset (`latte`, latte.zip) otherwise.
+ */
+export function parentSlug(m: J): string {
+  return m.engine === "twig" ? "twig" : (m.parent?.preset ?? "latte");
 }
 
 export function tokensCss(m: J, palette: string): string {

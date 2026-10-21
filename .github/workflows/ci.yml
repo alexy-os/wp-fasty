@@ -107,12 +107,18 @@ jobs:
       - name: PHPCS (errors and warnings fail the build; themes + wpfasty-types + wpfasty-builder)
         run: composer phpcs
 
-      - name: Pack theme zips (latte.zip; Twig build latte-twig.zip — same theme, bundled twig/twig)
+      - name: Pack parent zips (isolated engines — latte.zip ships only Latte, twig.zip only Twig)
         run: |
           bun run theme:pack -- latte
           bun run theme:pack -- latte --engine twig
-          unzip -l dist/latte-twig.zip | grep -q 'latte/vendor/twig/twig/LICENSE'
-          unzip -p dist/latte-twig.zip latte/readme.txt | grep -q 'Twig template engine'
+          L=$(unzip -Z1 dist/latte.zip); T=$(unzip -Z1 dist/twig.zip)
+          echo "$L" | grep -q '^latte/vendor/latte/latte/'
+          echo "$T" | grep -q '^twig/vendor/twig/twig/LICENSE'
+          ! echo "$L" | grep -iE 'vendor/twig|\.html\.twig$|TwigRenderer|ui8kit-twig'
+          ! echo "$T" | grep -iE 'vendor/latte|\.latte$|LatteRenderer|LatteEngine|ui8kit-latte|latte-primitives'
+          unzip -p dist/twig.zip twig/style.css | grep -q '^Text Domain: twig'
+          unzip -p dist/twig.zip twig/classes/Template/Engines.php | grep -q "BUILT = \['twig'\]"
+          unzip -p dist/latte.zip latte/classes/Template/Engines.php | grep -q "BUILT = \['latte'\]"
 
       - name: MCP server smoke (stdio; all five tools, writes only to dist/)
         run: bun run mcp:smoke
@@ -122,18 +128,28 @@ jobs:
           for t in press folio shop; do bun run theme:package "manifests/examples/$t.json"; done
           # Configurator fixtures: answers → manifest (validated) → package.
           for a in manifests/answers/*.json; do bun run theme:new-site --answers "$a" --package; done
-          # Engine matrix: every fixture in the other engine + Twig twins of the reference archetypes.
-          for a in $(bun tools/matrix/engine-variants.ts); do bun run theme:new-site --answers "$a" --package; done
+          # Engine matrix: every fixture in the other engine + Twig twin manifests of the example sites.
+          for a in $(bun tools/matrix/engine-variants.ts); do
+            case "$a" in */manifest-*) bun run theme:package "$a" ;; *) bun run theme:new-site --answers "$a" --package ;; esac
+          done
           ls -d dist/*/ | grep -v -e generated -e manifests -e answers-matrix | xargs -n1 basename > dist/sites.txt
+          # Every site ships only its engine: the parent of that engine, its views, its builder runtime.
+          for s in $(cat dist/sites.txt); do
+            e=$(bun -e "console.log(require('./dist/$s/site.manifest.json').engine ?? 'latte')"); o=$([ "$e" = twig ] && echo latte || echo twig)
+            test -f "dist/$s/$e.zip"; test ! -f "dist/$s/$o.zip"
+            unzip -p "dist/$s/$s.zip" "$s/style.css" | grep -q "^Template: $e\$"
+            ! unzip -Z1 "dist/$s/$s.zip" | grep -E "$([ "$e" = twig ] && echo '\.latte$' || echo '\.html\.twig$')"
+            [ ! -f "dist/$s/wpfasty-builder.zip" ] || ! unzip -Z1 "dist/$s/wpfasty-builder.zip" | grep -q "sources/ui8kit/$o/"
+          done
           { echo "### Packages"; echo "| file | bytes |"; echo "|---|---|"
-            for f in dist/latte.zip $(sed 's#^#dist/#; s#$#/*#' dist/sites.txt); do echo "| \`$f\` | $(stat -c %s "$f") |"; done; } >> "$GITHUB_STEP_SUMMARY"
+            for f in dist/latte.zip dist/twig.zip $(sed 's#^#dist/#; s#$#/*#' dist/sites.txt); do echo "| \`$f\` | $(stat -c %s "$f") |"; done; } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
         with:
           name: dist
           path: |
             dist/latte.zip
-            dist/latte-twig.zip
+            dist/twig.zip
             dist/sites.txt
             dist/*/*.zip
             dist/*/*.json
@@ -205,17 +221,18 @@ jobs:
           mkdir -p wp-content/mu-plugins && cp "$GITHUB_WORKSPACE/tools/qa/offline.php" wp-content/mu-plugins/
           wp core install --url=http://localhost --title=CI --admin_user=admin --admin_password=admin \
             --admin_email=ci@example.com --skip-email
-          # Everything under test comes from the theme:package zips (dist artifact), not from repo folders.
+          # Everything under test comes from the theme:package zips (dist artifact), not from repo folders. Both parents
+          # are installed side by side (latte, twig): every site runs on its own engine's parent (ADR-001, K7).
           D="$GITHUB_WORKSPACE/dist"
           unzip -q "$D/latte.zip" -d wp-content/themes/
-          for t in latte-press latte-folio latte-shop; do
-            unzip -q "$D/$t/$t.zip" -d wp-content/themes/
-            mkdir -p "/tmp/demo-$t" && unzip -q "$D/$t/demo.zip" -d "/tmp/demo-$t"
-          done
+          unzip -q "$D/twig.zip" -d wp-content/themes/
+          for s in $(cat "$D/sites.txt"); do unzip -q "$D/$s/$s.zip" -d wp-content/themes/; done
+          for t in latte-press latte-folio latte-shop; do mkdir -p "/tmp/demo-$t" && unzip -q "$D/$t/demo.zip" -d "/tmp/demo-$t"; done
           unzip -q "$D/latte-shop/wpfasty-types.zip" -d wp-content/plugins/
-          unzip -q "$D/latte-shop/wpfasty-builder.zip" -d wp-content/plugins/
-          # Configurator fixtures (answers → package): child themes only, for Theme Check.
-          for s in $(grep -v '^latte-' "$D/sites.txt"); do unzip -q "$D/$s/$s.zip" -d wp-content/themes/; done
+          # The builder plugin build of the site engine; steps swap it with tools/qa/use-builder (latte|twig).
+          mkdir -p /tmp/builder && cp "$D/latte-shop/wpfasty-builder.zip" /tmp/builder/latte.zip && cp "$D/latte-shop-twig/wpfasty-builder.zip" /tmp/builder/twig.zip
+          printf '#!/bin/sh\nrm -rf /tmp/wp/wp-content/plugins/wpfasty-builder && unzip -q "/tmp/builder/$1.zip" -d /tmp/wp/wp-content/plugins/\n' | sudo tee /usr/local/bin/use-builder > /dev/null
+          sudo chmod +x /usr/local/bin/use-builder && use-builder latte
           # latte-skin has no site manifest yet: still from the repo.
           rsync -a --exclude '~cache' "$GITHUB_WORKSPACE/themes/latte-skin" wp-content/themes/
           unzip -q /tmp/wp-dl/tc.zip -d wp-content/plugins/
@@ -223,11 +240,11 @@ jobs:
           wp rewrite structure '/%postname%/' --hard
           wp theme list --fields=name,version,status
 
-      - name: Theme Check — no REQUIRED issues (parent + packaged children incl. configurator fixtures, latte-skin from repo)
+      - name: Theme Check — no REQUIRED issues (latte.zip, twig.zip, every packaged site, latte-skin from repo)
         run: |
           cd /tmp/wp
           fail=0
-          for t in latte latte-press latte-folio latte-shop latte-skin $(grep -v '^latte-' "$GITHUB_WORKSPACE/dist/sites.txt"); do
+          for t in latte twig latte-skin $(cat "$GITHUB_WORKSPACE/dist/sites.txt"); do
             code=0
             PAGER=cat wp theme-check run "$t" > "/tmp/tc-$t.txt" 2>&1 || code=$?
             r=$(grep -c '^REQUIRED' "/tmp/tc-$t.txt" || true)
@@ -242,19 +259,10 @@ jobs:
               fail=1
             fi
           done
-          # Twig parent build (same slug): swap it in, check, swap the Latte build back.
-          mv wp-content/themes/latte /tmp/latte-parent && unzip -q "$GITHUB_WORKSPACE/dist/latte-twig.zip" -d wp-content/themes/
-          code=0; PAGER=cat wp theme-check run latte > /tmp/tc-latte-twig.txt 2>&1 || code=$?
-          r=$(grep -c '^REQUIRED' /tmp/tc-latte-twig.txt || true); w=$(grep -c '^WARNING' /tmp/tc-latte-twig.txt || true)
-          rec=$(grep -c '^RECOMMENDED' /tmp/tc-latte-twig.txt || true)
-          echo "::group::latte-twig.zip — exit $code, REQUIRED $r, WARNING $w, RECOMMENDED $rec"; cat /tmp/tc-latte-twig.txt; echo "::endgroup::"
-          echo "| latte-twig.zip | $r | $w | $rec |" >> /tmp/tc-summary.md
-          if [ "$r" -ne 0 ] || [ "$code" -ne 0 ]; then echo "::error::Theme Check latte-twig.zip: REQUIRED=$r exit=$code"; fail=1; fi
-          rm -rf wp-content/themes/latte && mv /tmp/latte-parent wp-content/themes/latte
           { echo "### Theme Check ${THEME_CHECK_VERSION} (WP ${WP_VERSION})"; echo "| theme | REQUIRED | WARNING | RECOMMENDED |"; echo "|---|---|---|---|"; cat /tmp/tc-summary.md; } >> "$GITHUB_STEP_SUMMARY"
           exit $fail
 
-      - name: N+1 guard — seeded items with thumbnails, terms, typed meta, several authors (2 vs 6)
+      - name: N+1 guard under both engines — Latte sites and their Twig twins (2 vs 6 items)
         run: |
           cd /tmp/wp
           echo "### N+1 guard (queries for 2 vs 6 items)" >> "$GITHUB_STEP_SUMMARY"
@@ -266,12 +274,18 @@ jobs:
             out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/queries.php" "$2" 2 6 2>&1) || { echo "$out"; exit 1; }
             echo "$out"
             # A comparison that could not run (too few posts) is a failure in CI, not a pass.
-            if echo "$out" | grep -q '^Warning:'; then echo "::error::N+1 guard for $2 did not compare"; exit 1; fi
+            if echo "$out" | grep -q '^Warning:'; then echo "::error::N+1 guard for $1 $2 did not compare"; exit 1; fi
             echo "$out" | head -1 | sed -E 's/^[a-z_]+: [0-9]+ posts → ([0-9]+) queries; [0-9]+ posts → ([0-9]+) queries \(list only, no widgets: ([0-9]+) → ([0-9]+)\)$/| '"$1"' | '"$2"' | \1 | \2 | \3 → \4 |/' >> "$GITHUB_STEP_SUMMARY"
           }
+          use-builder latte
           guard latte-press post
           guard latte-folio project
           guard latte-shop product
+          use-builder twig
+          guard latte-press-twig post
+          guard latte-folio-twig project
+          guard latte-shop-twig product
+          use-builder latte
 
       - name: Builder — seed landings, smoke-render (200, no PHP notices), validate layouts with @ui8kit/contract
         run: |
@@ -294,6 +308,7 @@ jobs:
               echo "$out"
               id=$(echo "$out" | sed -n 's/^Success: Page \([0-9]*\) .*/\1/p')
               url=$(wp eval "echo get_permalink($id);")
+              echo "${url#http://127.0.0.1:8080}" >> "/tmp/landings-$site.txt"
               code=$(curl -s --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/landing.html -w '%{http_code}' "$url" || true)
               notices=$(grep -cE '<b>(Warning|Notice|Deprecated|Fatal error)</b>' /tmp/landing.html || true)
               blocks=$(grep -c 'wpfb-page' /tmp/landing.html || true)
@@ -317,85 +332,43 @@ jobs:
           done
           exit $fail
 
-      - name: Live Latte ↔ Twig render incl. builder landings (latte-twig parent, renderer forced per request, N+1 guard under Twig); twig children on latte.zip fail without fallback
+      - name: Isolated engines — every site on its own parent (only its engine loaded), parity of Latte ↔ Twig twins incl. builder landings
         run: |
           cd /tmp/wp
-          D="$GITHUB_WORKSPACE/dist"
-          # No fallback (K7): a twig child on the Latte-only parent (latte.zip) stops with an explicit error page —
-          # it is never rendered by Latte instead.
-          for s in $(grep -e '-twig$' -e '^twig-' "$D/sites.txt" | grep -v -e '-latte$'); do
-            wp theme activate "$s" --quiet
-            code=$(curl -s -o /tmp/nofallback.html -w '%{http_code}' "http://127.0.0.1:8080/?s=a" || true)
-            n=$(grep -cE '<b>(Warning|Notice|Deprecated|Fatal error)</b>|critical error' /tmp/nofallback.html || true)
-            m=$(grep -c 'Install the twig parent theme' /tmp/nofallback.html || true)
-            echo "- $s on latte.zip (no Twig, no fallback): HTTP $code, engine error $m, notices $n"
-            [ "$code" = 500 ] && [ "$m" -ge 1 ] && [ "$n" -eq 0 ] || { echo "::error::$s on latte.zip: HTTP $code, engine error $m, notices $n"; exit 1; }
-          done
-          rm -rf wp-content/themes/latte && unzip -q "$D/latte-twig.zip" -d wp-content/themes/
-          test -f wp-content/themes/latte/vendor/twig/twig/src/Environment.php
-          # Restart php -S (the supervisor brings it back): its opcache may still hold the Latte-only parent's
-          # composer autoload files, which the swap replaced at the same paths.
-          old=$(pgrep -f '^php -S 127.0.0.1:8080' || true)
-          pkill -f '^php -S 127.0.0.1:8080' || true   # the php process only, not the bash supervisor
-          for pid in $old; do while kill -0 "$pid" 2>/dev/null; do sleep 0.2; done; done
-          for i in $(seq 1 60); do sleep 0.5; curl -s -o /dev/null http://127.0.0.1:8080/wp-login.php && break; done
-          pgrep -f '^php -S 127.0.0.1:8080' >/dev/null
-          mkdir -p wp-content/mu-plugins && cp "$GITHUB_WORKSPACE/tools/qa/renderer-switch.php" wp-content/mu-plugins/
-          L="$GITHUB_WORKSPACE/tools/qa/live-render.sh"; B=http://127.0.0.1:8080
+          D="$GITHUB_WORKSPACE/dist"; Q="$GITHUB_WORKSPACE/tools/qa/site-pair.sh"; B=http://127.0.0.1:8080
+          mkdir -p wp-content/mu-plugins && cp "$GITHUB_WORKSPACE/tools/qa/engine-marker.php" wp-content/mu-plugins/
           url() { wp theme activate "$1" --quiet; wp post list --post_type="$2" --posts_per_page=1 --field=url | sed "s#^$B##"; }
-          fail=0
-          bash "$L" . "$B" latte-press "$(url latte-press post)" "/?s=post" "/no-such-page/|404" / /subscribe/ || fail=1
-          bash "$L" . "$B" latte-folio "$(url latte-folio project)" /work/ "/no-such-page/|404" / /services/ || fail=1
-          bash "$L" . "$B" latte-shop "$(url latte-shop product)" /shop/ /cart/ /checkout/ "/no-such-page/|404" / /sale/ || fail=1
-          # Engine matrix: every packaged site (both engines of each fixture) renders identically with latte and twig.
-          for s in $(grep -v '^latte-' "$D/sites.txt"); do
-            bash "$L" . "$B" "$s" / "/?s=a" "/no-such-page/|404" || fail=1
-          done
-          bash "$L" . "$B" twig-gazette "$(url twig-gazette post)" || fail=1
-          G="$GITHUB_WORKSPACE/tools/perf"
-          wp option update wpfasty_qa_renderer twig --quiet
-          for p in "latte-press post" "latte-folio project" "latte-shop product"; do
-            set -- $p; wp theme activate "$1" --quiet
-            out=$(wp eval-file "$G/queries.php" "$2" 2 6 2>&1) || fail=1
-            echo "$out"; echo "$out" | grep -q '^Warning:' && fail=1
-            echo "- Twig N+1 $1: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
-          done
-          wp option delete wpfasty_qa_renderer --quiet
-          exit $fail
-
-      - name: Twig site without the Latte library (latte-twig parent with latte/latte + UI8Kit Latte removed; pages + builder landings)
-        run: |
-          cd /tmp/wp
-          D="$GITHUB_WORKSPACE/dist"; N="$GITHUB_WORKSPACE/tools/qa/no-latte.sh"; B=http://127.0.0.1:8080
-          cp "$GITHUB_WORKSPACE/tools/qa/no-latte.php" wp-content/mu-plugins/
-          url() { wp theme activate "$1" --quiet; wp post list --post_type="$2" --posts_per_page=1 --field=url | sed "s#^$B##"; }
-          restart() {
-            old=$(pgrep -f '^php -S 127.0.0.1:8080' || true)
-            pkill -f '^php -S 127.0.0.1:8080' || true
-            for pid in $old; do while kill -0 "$pid" 2>/dev/null; do sleep 0.2; done; done
-            for i in $(seq 1 60); do sleep 0.5; curl -s -o /dev/null http://127.0.0.1:8080/wp-login.php && break; done
-            pgrep -f '^php -S 127.0.0.1:8080' >/dev/null
-          }
           P=$(url latte-press post); F=$(url latte-folio project); S=$(url latte-shop product)
-          T=$(grep -e '-twig$' -e '^twig-' "$D/sites.txt" | grep -v -e '-latte$')
-          run() {
-            fail=0
-            bash "$N" "$1" . "$B" latte-press "$P" "/?s=post" "/no-such-page/|404" / /subscribe/ || fail=1
-            bash "$N" "$1" . "$B" latte-folio "$F" /work/ / /services/ || fail=1
-            bash "$N" "$1" . "$B" latte-shop "$S" /shop/ /cart/ /checkout/ / /sale/ || fail=1
-            for s in $T; do bash "$N" "$1" . "$B" "$s" / "/?s=a" "/no-such-page/|404" || fail=1; done
-            return $fail
+          paths() { # site → paths
+            case "$1" in
+              latte-press|latte-press-twig) echo "$P /?s=post /no-such-page/|404 /subscribe/ $(cat /tmp/landings-press.txt)" ;;
+              latte-folio|latte-folio-twig) echo "$F /work/ /no-such-page/|404 /services/ $(cat /tmp/landings-folio.txt)" ;;
+              latte-shop|latte-shop-twig) echo "$S /shop/ /cart/ /checkout/ /no-such-page/|404 /sale/ $(cat /tmp/landings-shop.txt)" ;;
+              *) echo "/ /?s=a /no-such-page/|404" ;;
+            esac
           }
-          echo "::group::Twig render with Latte installed (reference; no Latte class may load)"; run ref; r=$?; echo "::endgroup::"
-          [ $r -eq 0 ] || exit 1
-          L=wp-content/themes/latte
-          rm -rf "$L/vendor/latte" "$L/vendor/ui8kit/latte-primitives" "$L/lib/ui8kit-latte"
-          ! ls "$L"/vendor/latte "$L"/lib/ui8kit-latte 2>/dev/null
-          php -r 'require "'"$L"'/vendor/autoload.php"; exit(class_exists("Latte\\Engine") ? 1 : 0);' 2>/dev/null
-          restart
-          echo "::group::Twig render with Latte absent"; run check; r=$?; echo "::endgroup::"
-          echo "- Twig without Latte library (pages + builder landings, $(echo $T | wc -w) twig sites + 3 latte sites): $([ $r -eq 0 ] && echo ok || echo FAIL)" >> "$GITHUB_STEP_SUMMARY"
-          exit $r
+          engine() { bun -e "console.log(require('$D/$1/site.manifest.json').engine ?? 'latte')"; }
+          fail=0
+          for e in latte twig; do
+            use-builder "$e"
+            for s in $(cat "$D/sites.txt"); do
+              [ "$(engine "$s")" = "$e" ] || continue
+              echo "::group::$s ($e)"; bash "$Q" fetch . "$B" "$s" "/tmp/pair/$s" $(paths "$s") || fail=1; echo "::endgroup::"
+            done
+          done
+          use-builder latte
+          # Parity (quality check): every site against its twin in the other engine, Latte side first.
+          n=0
+          for s in $(cat "$D/sites.txt"); do
+            [ "$(engine "$s")" = latte ] || continue
+            for t in "$s-twig" "${s%-latte}"; do
+              [ "$t" != "$s" ] && grep -qx "$t" "$D/sites.txt" && [ "$(engine "$t")" = twig ] || continue
+              echo "::group::parity $s ↔ $t"; bash "$Q" compare "/tmp/pair/$s" "$s" "/tmp/pair/$t" "$t" || fail=1; echo "::endgroup::"
+              n=$((n + 1))
+            done
+          done
+          echo "- Isolated engines: $(wc -l < "$D/sites.txt") sites, each on its own parent with only its engine loaded; $n Latte ↔ Twig pairs DOM-identical: $([ $fail -eq 0 ] && echo ok || echo FAIL)" >> "$GITHUB_STEP_SUMMARY"
+          exit $fail
 
       - name: No PHP notices / warnings / deprecations logged
         if: always()
