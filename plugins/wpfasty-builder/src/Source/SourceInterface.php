@@ -25,6 +25,9 @@ interface SourceInterface
     /** absolute path of the folder with blocks/ and ui/ templates */
     public function templateRoot(): string;
 
-    /** true when the templates come from outside this plugin and must render in the Latte sandbox */
+    /** absolute path of the generated Twig package (blocks/, ui/ as .html.twig), null when the source has none */
+    public function twigRoot(): ?string;
+
+    /** true when the templates come from outside this plugin and must render sandboxed (Latte guard / Twig sandbox) */
     public function sandboxed(): bool;
 }

@@ -9,14 +9,15 @@ use WPFastyBuilder\Catalog;
 use ZipArchive;
 
 /**
- * A source published at a URL: <url>/catalog.json and <url>/latte.zip (the latte/ folder of a local source, zipped).
- * import() downloads both into a local folder; after that it reads like a LocalSource. Only .latte, .json and .md
- * files are extracted, and the templates always render in the Latte sandbox (see BlockRenderer).
+ * A source published at a URL: <url>/catalog.json, <url>/latte.zip (the latte/ folder of a local source, zipped) and
+ * optionally <url>/twig.zip (its twig/ folder). import() downloads them into a local folder; after that it reads like
+ * a LocalSource. Only .latte / .twig, .json and .md files are extracted, and the templates always render sandboxed
+ * (see BlockRenderer).
  */
 final class RemoteSource implements SourceInterface
 {
     private const MAX_BYTES = 20 * 1024 * 1024;
-    private const ALLOWED = ['latte', 'json', 'md'];
+    private const ALLOWED = ['latte', 'twig', 'json', 'md'];
 
     private LocalSource $local;
 
@@ -48,6 +49,11 @@ final class RemoteSource implements SourceInterface
     public function templateRoot(): string
     {
         return $this->local->templateRoot();
+    }
+
+    public function twigRoot(): ?string
+    {
+        return $this->local->twigRoot();
     }
 
     public function sandboxed(): bool
@@ -96,6 +102,18 @@ final class RemoteSource implements SourceInterface
             self::rmrf($tmp);
             throw new RuntimeException('latte.zip has no blocks/ folder');
         }
+        // Optional Twig package: a registry without twig.zip still imports (Latte sites unaffected).
+        try {
+            $twig = ($this->fetch)($base . '/twig.zip');
+        } catch (\Throwable) {
+            $twig = '';
+        }
+        if ($twig !== '' && strlen($twig) <= self::MAX_BYTES) {
+            mkdir($tmp . '/twig', 0775, true);
+            file_put_contents($tmp . '/twig.zip', $twig);
+            self::extract($tmp . '/twig.zip', $tmp . '/twig', 'twig');
+            unlink($tmp . '/twig.zip');
+        }
         file_put_contents($tmp . '/catalog.json', $raw);
         self::rmrf($this->dir);
         rename($tmp, $this->dir);
@@ -107,21 +125,22 @@ final class RemoteSource implements SourceInterface
     }
 
     /** extracts only safe relative paths with allowed extensions */
-    public static function extract(string $zipFile, string $to): void
+    public static function extract(string $zipFile, string $to, string $kind = 'latte'): void
     {
         $zip = new ZipArchive();
         if ($zip->open($zipFile) !== true) {
-            throw new RuntimeException('latte.zip is not a zip archive');
+            throw new RuntimeException($kind . '.zip is not a zip archive');
         }
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $name = (string) $zip->getNameIndex($i);
-            $name = preg_replace('#^latte/#', '', str_replace('\\', '/', $name)) ?? '';
+            $name = preg_replace('#^' . $kind . '/#', '', str_replace('\\', '/', $name)) ?? '';
             if ($name === '' || str_ends_with($name, '/')) {
                 continue;
             }
             $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
             $safe = preg_match('#^[A-Za-z0-9_\-]+(/[A-Za-z0-9_\-.]+)*$#', $name) === 1 && !str_contains($name, '..');
-            if (!$safe || !in_array($ext, self::ALLOWED, true)) {
+            $own = $kind === 'twig' ? $ext !== 'latte' : $ext !== 'twig';
+            if (!$safe || !$own || !in_array($ext, self::ALLOWED, true)) {
                 continue;
             }
             $target = $to . '/' . $name;

@@ -8,7 +8,8 @@ namespace WPFastyBuilder;
  * Turns a layout entry into a plain page template — Latte (one {=wpfb_block(...)} call per block, props as a Latte
  * array literal) or its Twig twin ({{ wpfb_block(...)|raw }}, props as a Twig hash) from the same entry. Bound
  * paths are not literal: they read wpfb[<block id>][<path>], which the plugin fills from WordPress data through
- * the `wpfasty_context` filter. Both engines call the same wpfb_block(), so the block markup is identical.
+ * the `wpfasty_context` filter. The Latte page names blocks/<name>.latte, the Twig page blocks/<name>.html.twig:
+ * BlockRenderer renders each with its own engine from the source's generated Latte / Twig package (same DOM).
  */
 final class Compiler
 {
@@ -54,7 +55,9 @@ final class Compiler
                 Layout::set($props, explode('.', (string) $path), null);
             }
             $lines[] = '<div class="wpfb-block" data-wpfb-block="' . self::attr((string) $b['id']) . '">';
-            $call = 'wpfb_block(' . self::str($source) . ', ' . self::str((string) $variant['template']) . ', '
+            $template = (string) $variant['template'];
+            $call = 'wpfb_block(' . self::str($source) . ', '
+                . self::str($twig ? BlockRenderer::twigName($template) : $template) . ', '
                 . self::literal($props, [], $exprs, $twig) . ')';
             $lines[] = $twig ? '{{ ' . $call . '|raw }}' : '{=' . $call . '|noescape}';
             $lines[] = '</div>';

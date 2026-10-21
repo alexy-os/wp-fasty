@@ -12,7 +12,8 @@
  *
  * Suite `builder`: every landing of tools/builder/landings/*.json is normalized and compiled by wpfasty-builder to
  * Latte and to Twig (Compiler), bound paths filled with the catalog sample records, and rendered as a full page of
- * its archetype (child roots + the compiled view root) with both renderers.
+ * its archetype (child roots + the compiled view root) with both renderers — Latte page + Latte blocks vs Twig page
+ * + Twig blocks; compared as DOM trees (normalize-dom.php).
  *
  * Suite `blocks`: every block and every variant of the builder source catalog
  * (plugins/wpfasty-builder/sources/ui8kit/catalog.json — its sample props are the fixtures) rendered from the
@@ -78,8 +79,10 @@ $wanted = array_slice($argv, 1) ?: array_keys($suites);
 $fail = 0;
 $cache = sys_get_temp_dir() . '/wpfasty-parity-' . getmypid();
 /** Builder landings: compiled Latte + Twig page of each landing, rendered in its archetype. */
-$builder = static function () use ($root, $suites, $twigPrims, $cache, $render, $normalize, $out): int {
+$builder = static function () use ($root, $suites, $twigPrims, $cache, $render, $out): int {
     $fail = 0;
+    // Blocks render from the generated Latte / Twig packages: compared as DOM trees like suite blocks.
+    $normalize = require __DIR__ . '/normalize-dom.php';
     $src = $root . '/plugins/wpfasty-builder/sources/ui8kit';
     $catalog = new Catalog((new LocalSource('ui8kit', $src))->catalog());
     $blocks = new \WPFastyBuilder\BlockRenderer(['ui8kit' => new LocalSource('ui8kit', $src, '', false)], null);
@@ -130,15 +133,22 @@ $builder = static function () use ($root, $suites, $twigPrims, $cache, $render, 
             => $n === 'wpfb_block' ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
         $fx = ['view' => 'builder/page', 'context' => $ctx, 'page' => true];
         try {
-            $a = $normalize($render($latte, $fx));
-            $b = $normalize($render($twig, $fx));
+            $rawA = $render($latte, $fx);
+            $rawB = $render($twig, $fx);
+            // a block that failed to render leaves an HTML comment (dropped by the DOM normalizer): fail on it
+            $at = strpos($rawA . $rawB, '<!-- wpfasty-builder');
+            if ($at !== false) {
+                throw new \RuntimeException('a block did not render: ' . substr($rawA . $rawB, $at, 160));
+            }
+            $a = $normalize($rawA);
+            $b = $normalize($rawB);
         } catch (\Throwable $e) {
             $out("✗ {$name}: " . get_class($e) . ': ' . $e->getMessage());
             $fail++;
             continue;
         }
         $n = substr_count($a, 'wpfb-block"');
-        if ($a === $b && $n > 0 && !str_contains($a, '<!-- wpfasty-builder')) {
+        if ($a === $b && $n > 0) {
             $out("✓ {$name}: compiled landing ({$n} blocks) + layout/default identical (" . strlen($a) . ' B)');
             continue;
         }

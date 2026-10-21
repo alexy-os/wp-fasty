@@ -14,9 +14,13 @@ declare(strict_types=1);
 return static function (string $html): string {
     $doc = new \DOMDocument();
     $prev = libxml_use_internal_errors(true);
+    // A whole page (doctype / <html>) is parsed as a document, a fragment inside a wrapper element.
+    $page = preg_match('/^\s*(<!doctype|<html)/i', $html) === 1;
     $doc->loadHTML(
-        '<?xml encoding="UTF-8"><div id="wpfasty-parity-root">' . $html . '</div>',
-        LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING,
+        $page
+            ? '<?xml encoding="UTF-8">' . preg_replace('/^\s*<!doctype[^>]*>/i', '', $html)
+            : '<?xml encoding="UTF-8"><div id="wpfasty-parity-root">' . $html . '</div>',
+        ($page ? 0 : LIBXML_HTML_NOIMPLIED) | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING,
     );
     libxml_clear_errors();
     libxml_use_internal_errors($prev);
@@ -24,7 +28,7 @@ return static function (string $html): string {
         if ($n instanceof \DOMText) {
             return trim((string) preg_replace('/\s+/u', ' ', $n->data));
         }
-        if (!$n instanceof \DOMElement) {
+        if ($n instanceof \DOMComment || !$n instanceof \DOMElement) {
             return '';
         }
         $attrs = [];
@@ -48,6 +52,9 @@ return static function (string $html): string {
         }
         return '<' . $n->tagName . implode('', $attrs) . '>' . $kids . '</' . $n->tagName . '>';
     };
+    if ($page) {
+        return $doc->documentElement !== null ? $walk($doc->documentElement) : '';
+    }
     $root = $doc->getElementById('wpfasty-parity-root');
     $out = '';
     foreach ($root?->childNodes ?? [] as $c) {

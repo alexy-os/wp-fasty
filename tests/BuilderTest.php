@@ -141,7 +141,7 @@ final class BuilderTest extends TestCase
         $latte = Compiler::compile($entry, self::catalog());
         $twig = Compiler::compile($entry, self::catalog(), 'twig');
         $this->assertStringStartsWith(Compiler::marker($entry, 'twig'), $twig);
-        $this->assertStringContainsString("{{ wpfb_block('ui8kit', 'blocks/post-grid.latte'", $twig);
+        $this->assertStringContainsString("{{ wpfb_block('ui8kit', 'blocks/post-grid.html.twig'", $twig);
         $this->assertStringContainsString("wpfb['news']['posts'] ?? []", $twig);
         $post = ['id' => 'post-1', 'title' => 'A "real" post', 'excerpt' => 'E', 'category' => 'News', 'author' => 'Ann',
             'date' => 'Oct 1, 2026', 'minutes' => 2, 'icon' => 'file-text', 'href' => 'https://example.test/a/', 'image' => 'https://example.test/a.jpg'];
@@ -154,11 +154,66 @@ final class BuilderTest extends TestCase
         $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $twig]), ['autoescape' => 'html']);
         $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false
             => $n === 'wpfb_block' ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
-        $strip = static fn (string $h): string => trim((string) preg_replace(['/\{[*#].*?[*#]\}\s*/s', '/>\s+</'], ['', '><'], $h));
+        $strip = require dirname(__DIR__) . '/tools/parity/normalize-dom.php';
         $a = $strip($l->renderToString('page', $ctx));
         $this->assertStringContainsString('A &quot;real&quot; post', $a);
         $this->assertSame($a, $strip($env->render('page', $ctx)));
         $this->assertSame($strip($l->renderToString('page', [])), $strip($env->render('page', [])));
+    }
+
+    public function testTwigBlocksNeedNoLatteAndMatchLatteBlocks(): void
+    {
+        $dom = require dirname(__DIR__) . '/tools/parity/normalize-dom.php';
+        $r = new BlockRenderer(['ui8kit' => new LocalSource('ui8kit', self::SRC, '', false)], null);
+        $props = (array) self::catalog()->variant('pagehead', 'start')['props'];
+        $props['title'] = 'Hi <b> & "q"';
+        $html = $r->render('ui8kit', 'blocks/page-intro.html.twig', $props);
+        $this->assertStringContainsString('Hi &lt;b&gt; &amp;', $html);
+        $this->assertSame($dom($r->render('ui8kit', 'blocks/page-intro.latte', $props)), $dom($html));
+        $this->assertSame('', $r->render('ui8kit', '../x.html.twig', []));
+        // A source without a Twig package renders its Latte template under a Twig page.
+        $dir = sys_get_temp_dir() . '/wpfb-notwig-' . getmypid();
+        @mkdir($dir . '/latte/blocks', 0777, true);
+        file_put_contents($dir . '/latte/blocks/x.latte', '<p>{$p[\'t\']}</p>');
+        $this->assertSame('<p>ok</p>', (new BlockRenderer(['n' => new LocalSource('n', $dir)], null))->render('n', 'blocks/x.html.twig', ['t' => 'ok']));
+    }
+
+    public function testTwigSandboxRejectsUnsafeTemplates(): void
+    {
+        $dir = sys_get_temp_dir() . '/wpfb-twig-guard-' . getmypid();
+        @mkdir($dir . '/latte/blocks', 0777, true);
+        @mkdir($dir . '/twig/blocks', 0777, true);
+        $cases = [
+            "{{ constant('PHP_VERSION') }}" => false, '{% do 1 %}' => false, "{{ ['id']|map(c => c)|join }}" => false,
+            '{% macro m() %}{% endmacro %}' => false, "{{ source('blocks/x.html.twig') }}" => false,
+            "{{ ui_text('<b>') }}" => true, "{% set a = 1 %}{% if a %}{{ include('blocks/y.html.twig', {p: p}) }}{% endif %}" => true,
+        ];
+        file_put_contents($dir . '/twig/blocks/y.html.twig', 'y');
+        $i = 0;
+        foreach ($cases as $tpl => $ok) {
+            // one file per case: Twig names compiled classes by template path, not by content
+            $name = 'blocks/x' . ++$i . '.html.twig';
+            file_put_contents($dir . '/twig/' . $name, $tpl);
+            $html = (new BlockRenderer(['e' => new LocalSource('e', $dir, '', true)], null))->render('e', $name, []);
+            $this->assertSame($ok, !str_starts_with($html, '<!-- wpfasty-builder'), $tpl . ' → ' . $html);
+        }
+    }
+
+    public function testRemoteTwigZipExtractsOnlyTwigTemplates(): void
+    {
+        $dir = sys_get_temp_dir() . '/wpfb-twigzip-' . getmypid();
+        @mkdir($dir, 0777, true);
+        $zipFile = $dir . '/twig.zip';
+        $zip = new \ZipArchive();
+        $zip->open($zipFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        $zip->addFromString('twig/blocks/hero.html.twig', '<h1>{{ p.title }}</h1>');
+        $zip->addFromString('blocks/evil.latte', '{php}');
+        $zip->addFromString('blocks/x.php', '<?php');
+        $zip->close();
+        RemoteSource::extract($zipFile, $dir . '/twig', 'twig');
+        $this->assertFileExists($dir . '/twig/blocks/hero.html.twig');
+        $this->assertFileDoesNotExist($dir . '/twig/blocks/evil.latte');
+        $this->assertFileDoesNotExist($dir . '/twig/blocks/x.php');
     }
 
     public function testTwigLiteralRoundTripsJson(): void

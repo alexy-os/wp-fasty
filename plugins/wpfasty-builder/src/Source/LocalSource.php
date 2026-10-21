@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WPFastyBuilder\Source;
 
-/** A source in a folder: <dir>/catalog.json and <dir>/latte/{blocks,ui}. */
+/** A source in a folder: <dir>/catalog.json, <dir>/latte/{blocks,ui} and optionally <dir>/twig/{blocks,ui}. */
 final class LocalSource implements SourceInterface
 {
     /** @var array<string, mixed>|null */
@@ -42,6 +42,11 @@ final class LocalSource implements SourceInterface
     public function templateRoot(): string
     {
         return $this->dir . '/latte';
+    }
+
+    public function twigRoot(): ?string
+    {
+        return is_dir($this->dir . '/twig/blocks') ? $this->dir . '/twig' : null;
     }
 
     public function sandboxed(): bool

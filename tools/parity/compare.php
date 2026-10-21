@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Live parity: compare two rendered HTML files (Latte vs Twig response of the same URL) after normalization.
+ * Live parity: compare two rendered HTML files (Latte vs Twig response of the same URL) after normalization; when
+ * the strict normalization differs, the DOM contract decides (builder landings).
  *   php tools/parity/compare.php latte.html twig.html   → exit 1 and the first difference when they differ
  *
  * @package Latte
@@ -19,6 +20,15 @@ $a = $normalize((string) file_get_contents($fileA));
 $b = $normalize((string) file_get_contents($fileB));
 if ($a === $b) {
     fwrite(STDOUT, 'identical (' . strlen($a) . " B)\n");
+    exit(0);
+}
+// Builder blocks come from the generated Latte / Twig packages, which differ only in template whitespace around text:
+// fall back to the DOM contract of the block parity (tools/parity/normalize-dom.php).
+$dom = require __DIR__ . '/normalize-dom.php';
+$da = $dom((string) file_get_contents($fileA));
+$db = $dom((string) file_get_contents($fileB));
+if ($da === $db) {
+    fwrite(STDOUT, 'DOM-identical (' . strlen($da) . " B; text whitespace differs)\n");
     exit(0);
 }
 $i = 0;
