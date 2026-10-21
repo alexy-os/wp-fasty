@@ -135,10 +135,13 @@ jobs:
           ! bun run registry:verify twig "dist/registry/latte/wpfasty/v$V"
           ! bun run registry:verify latte "dist/registry/twig/wpfasty/v$V"
           cp -r "dist/registry/latte/wpfasty/v$V" /tmp/tampered && echo x >> /tmp/tampered/blocks.zip
-          ! bun run registry:verify latte /tmp/tampered
+          # Expected failures are captured (no stray error annotations) and must fail for the stated reason.
+          out=$(bun run registry:verify latte /tmp/tampered 2>&1) && { echo "::error::tampered registry verified"; exit 1; }
+          grep -q "≠ archive.sha256" <<<"$out" || { echo "$out"; exit 1; }
           # Immutable: different content under an existing version is refused.
           cp -r dist/registry /tmp/registry-imm && echo x >> "/tmp/registry-imm/twig/wpfasty/v$V/blocks.zip"
-          ! bun run registry:build /tmp/registry-imm
+          out=$(bun run registry:build /tmp/registry-imm 2>&1) && { echo "::error::changed content accepted under an existing version"; exit 1; }
+          grep -q "versions are immutable" <<<"$out" || { echo "$out"; exit 1; }
           { echo "### Builder registries (v$V)"; for f in dist/registry/*/wpfasty/v*/catalog.json; do echo "- \`$f\` sha256 $(bun -e "console.log(require('./$f').archive.sha256)")"; done; } >> "$GITHUB_STEP_SUMMARY"
 
       - name: MCP server smoke (stdio; all five tools, writes only to dist/)

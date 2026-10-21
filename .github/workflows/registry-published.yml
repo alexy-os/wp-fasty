@@ -18,12 +18,17 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PHP_VERSION: "8.3"
   WP_VERSION: "7.1.3"
   REGISTRY: https://registry.buildy.tw
 
 jobs:
   published:
+    name: published (PHP ${{ matrix.php }})
+    strategy:
+      fail-fast: false
+      matrix:
+        # Same matrix as CI: 8.2 = release minimum, 8.5 = FrankenPHP runtime. Each leg checks its own CI artifact.
+        php: ["8.2", "8.5"]
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -49,7 +54,7 @@ jobs:
       - name: Setup PHP + WP-CLI
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version: ${{ matrix.php }}
           tools: wp-cli
           extensions: mysqli, gd
           coverage: none
@@ -61,7 +66,7 @@ jobs:
           id="${{ github.event.workflow_run.id }}"
           [ -n "$id" ] || id=$(gh run list -R "$GITHUB_REPOSITORY" -w CI -b main -s success -L 1 --json databaseId -q '.[0].databaseId')
           echo "CI run $id"
-          gh run download "$id" -R "$GITHUB_REPOSITORY" -n dist -D dist
+          gh run download "$id" -R "$GITHUB_REPOSITORY" -n "dist-php${{ matrix.php }}" -D dist
           ls dist/registry/*/wpfasty
 
       - name: Published bytes = built from source (sha256, bytes; v<version> and latest, both runtimes)
@@ -118,5 +123,7 @@ jobs:
             echo "- $site ($e): imported $REGISTRY/$e/wpfasty/v$V/ and latest/, rendered $n blocks, $o registry refused" | tee -a "$GITHUB_STEP_SUMMARY"
             [ "$n" -gt 0 ] || { echo "::error::$site: remote landing rendered no blocks"; fail=1; }
           done
+          # WP-CLI's own phar (third-party tool) emits PHP 8.5 deprecations: reported, not gated (same rule as CI).
+          if [ -f /tmp/wp-debug.log ]; then grep -v 'phar://[^ ]*/wp-cli/vendor/' /tmp/wp-debug.log > /tmp/wp-debug.own.log || true; mv /tmp/wp-debug.own.log /tmp/wp-debug.log; fi
           if [ -s /tmp/wp-debug.log ]; then echo "::error::PHP messages logged"; cat /tmp/wp-debug.log; fail=1; fi
           exit $fail
