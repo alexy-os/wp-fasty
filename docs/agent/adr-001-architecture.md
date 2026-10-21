@@ -38,8 +38,15 @@ normalized HTML (`bun run parity`, incl. builder landings); a site's `engine` on
 (`wpfasty_renderer`, priority 5 in the child's functions.php). Parent builds: `latte.zip` (Latte) and
 `latte-twig.zip` (+ bundled twig/twig, BSD-3-Clause, credited in readme.txt) — both wordpress.org-eligible, both
 Theme-Checked in CI. Without twig/twig the renderer falls back to Latte, so any child renders on either parent.
-The builder compiles each landing to `builder/page-<id>.latte` and `.html.twig` from one entry; block markup comes
-from the plugin's single ui8kit block renderer in both engines (one source of block HTML).
+The builder compiles each landing to `builder/page-<id>.latte` and `.html.twig` from one entry. **Blocks are
+engine-native (K6.11–K6.13):** the plugin ships the codegen-x ui8kit block package in both engines, generated from one
+source commit (`sources/ui8kit/{latte,twig}`, never hand-edited; variants only in `*.variants.json`); under Twig blocks
+render with Twig (`blocks/<name>.html.twig`, remote sources sandboxed, optional `twig.zip`), under Latte with Latte;
+engines are created lazily, so a Twig site needs no Latte library at all (CI removes latte/latte + UI8Kit Latte from
+`latte-twig` and re-renders every Twig site and landing; the Twig build bundles the engine-agnostic
+UI8Kit runtime `Rt`/`Classes` in `lib/ui8kit-twig/runtime/php`). Block/landing parity uses the codegen-x DOM contract
+(text trimmed, attributes/classes sorted, comments dropped; whitespace between inline elements is not compared).
+A remote source without a Twig package falls back to its Latte templates (needs Latte).
 **Completion criterion of K6:** parity — fixture parity, builder parity and live WP parity (CI engine matrix) green.
 Not allowed in views: PHP function calls, queries, `|noescape` on context data except HTML-marked fields.
 Slots = `embed` (Latte `{embed}` / Twig `{% embed %}`).
