@@ -20,6 +20,7 @@
     <exclude-pattern>themes/latte/~cache/*</exclude-pattern>
     <!-- UI8Kit 3 primitives installed by npx ui8kit@3 add all (third-party, verified by `ui8kit check`, never edited) -->
     <exclude-pattern>themes/latte/ui8kit/*</exclude-pattern>
+    <exclude-pattern>themes/latte/twig/ui8kit/*</exclude-pattern>
     <exclude-pattern>.workspaces/*</exclude-pattern>
     <exclude-pattern>packages/*</exclude-pattern>
     <exclude-pattern>plugins/wpfasty-builder/sources/*</exclude-pattern>

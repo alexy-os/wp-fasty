@@ -1,0 +1,90 @@
+---
+description: UI8Kit primitives (Twig (PHP)) — how to build markup with the kit in ui8kit/ui
+globs: ui8kit/**/*.twig
+alwaysApply: false
+---
+
+# UI8Kit primitives — Twig (PHP)
+
+Primitives live in `ui8kit/ui` (one folder per primitive, generated code: do not edit by hand).
+Import them from there: Composer package `generated/twig` (namespace `UI8Kit\Twig`): register `new \UI8Kit\Twig\TwigExtension()` and add `ui8kit/ui/ui` to the loader, then `{% include 'button/Button.html.twig' with { ariaLabel: 'Save', children: html } only %}` (one template per part: `<brick>/<Part>.html.twig`). Props are variables (`tag`, `class`, `ariaLabel`, `htmlFor`), extra attributes go in `attrs` (caller wins). `children` is trusted HTML printed with `|raw` — never pass user input (XSS); render it with Twig first (`{% set html %}…{% endset %}`). There is no asChild: for a custom root use `ui8kit_classes('buttonClasses', { class: 'px-4' })`.
+
+## 1. Use a primitive instead of raw HTML
+
+Where a primitive exists for an element, use the primitive, never the raw tag:
+
+| Primitive | Renders |
+| --- | --- |
+| `Box` | `<div>`, `<section>`, `<article>`, `<aside>`, `<header>`, `<footer>`, … (via `tag`) |
+| `Text` | `<p>`, `<span>`, `<h1>`, `<h2>`, `<h3>`, `<h4>`, … (via `tag`) |
+| `Button` | `<a>`, `<button>` |
+| `Link` | `<a>` |
+| `Label` | `<label>` |
+| `Form` | `<form>` |
+| `Input` | `<input>` |
+| `Textarea` | `<textarea>` |
+| `Select` | `<select>` |
+| `SelectOption` | `<option>` |
+| `SelectOptGroup` | `<optgroup>` |
+| `Checkbox` | `<input>` |
+| `Radio` | `<input>` |
+| `Switch` | `<button>` |
+| `Image` | `<img>` |
+| `Picture` | `<picture>` |
+| `Source` | `<source>` |
+| `Icon` | `<span>` |
+| `Dialog` | `<dialog>` |
+| `Disclosure` | `<details>` |
+| `Summary` | `<summary>` |
+| `Meter` | `<meter>` |
+| `Progress` | `<progress>` |
+| `Separator` | `<hr>` |
+
+Raw HTML is fine only for elements no primitive covers.
+
+## 2. `tag` accepts only real HTML5 tags
+
+`Box` and `Text` choose their element with `tag`. Pass only a real HTML5 tag from the allowed list
+(never a component name, custom element or made-up tag):
+
+- `Box`: `div`, `section`, `article`, `aside`, `header`, `footer`, `main`, `nav`, `figure`, `search`, `ul`, `ol`, `li`, `dl`, `dt`, `dd`, `fieldset`, `table`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`, `caption`, `colgroup`, `col`
+- `Text`: `p`, `span`, `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `blockquote`, `figcaption`, `pre`, `code`, `small`, `strong`, `em`, `time`, `legend`
+
+## 3. Static ARIA via props
+
+Set ARIA through the primitive's typed props (e.g. `aria-label`, `aria-pressed`, `aria-expanded`, `aria-controls`), as static values.
+Do not hand-write `role`/`aria-*` that a primitive already renders (`Icon` sets `aria-hidden`
+or `role="img"` + `aria-label` from `label`; `Switch` sets `role="switch"`).
+
+## 4. Colors only via shadcn token classes
+
+Style with token utility classes only: `bg-background`, `text-foreground`, `bg-primary`,
+`text-primary-foreground`, `bg-secondary`, `bg-muted`, `text-muted-foreground`, `bg-accent`,
+`bg-destructive`, `border-border`, `border-input`, `ring-ring`, `bg-card`, `bg-popover`, …
+No palette colors (`bg-blue-500`), no hex/rgb/hsl values, no arbitrary color classes (`bg-[#fff]`),
+no inline `style` colors.
+
+## 5. Spacing: 8 + 4 rule
+
+- Spacing (padding, margin, gap, space-*) uses the 8px step: Tailwind `2, 4, 6, 8, 10, 12, 16, …`
+  (`p-2` = 8px, `gap-4` = 16px).
+- The 4px step (`1`, e.g. `px-1`, `gap-1`) is allowed only inside controls (button, input,
+  select, checkbox, badge-like inline control content).
+- No half-steps (`p-0.5`, `p-1.5`, `p-2.5`, …), no odd steps (`p-3`, `p-5`, `p-7`), no arbitrary
+  px values (`p-[13px]`, `mt-[7px]`).
+
+## 6. Icons: Lucide inside `Icon`
+
+Use Lucide icons (inline Lucide SVG markup (copy the `<svg>` from lucide.dev) passed as `children`) as the child of the `Icon` primitive; size via `Icon` `size`
+(`xs`, `sm`, `md`, `lg`, `xl`). Give `label` when the icon carries meaning; omit it for
+decorative icons.
+
+```twig
+{% set label %}{% include 'text/Text.html.twig' with { tag: 'h2', class: 'text-foreground', children: 'Title' } only %}{% endset %}
+{% include 'box/Box.html.twig' with { tag: 'section', class: 'flex flex-col gap-4 p-4 bg-card text-card-foreground', children: label } only %}
+<a href="/save" class="{{ ui8kit_classes('buttonClasses', { class: 'px-4' }) }}">Save</a>
+```
+
+## Checks
+
+Review-only: verify the rules above when reviewing changes; there is no automated command for them.

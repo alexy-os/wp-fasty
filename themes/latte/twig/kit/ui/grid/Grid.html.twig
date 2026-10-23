@@ -1,0 +1,3 @@
+{# WP FastY kit — Grid: composition over UI8Kit 3 Box + presets/components/grid.json (Twig twin of kit/ui). #}
+{% set kitClass = class|default('') %}
+{% include 'box/Box.html.twig' with { class: 'grid-cols-' in kitClass ? kit('grid', {'cols': 'none'}, kitClass) : kit('grid', {'cols': cols|default('')}, kitClass), attrs: attrs|default({}), children: children|default('') } only %}

@@ -58,8 +58,8 @@ $out = static function (string $line): void {
     fwrite(STDOUT, $line . "\n");
 };
 
-$twigPrims = PrimitivesLocator::resolveTwig($root . '/themes/latte');
-if ($twigPrims === null || !class_exists(\Twig\Environment::class)) {
+$twigPrims = PrimitivesLocator::twigRoots($root . '/themes/latte');
+if ($twigPrims === [] || !class_exists(\Twig\Environment::class)) {
     fwrite(STDERR, "✗ Twig primitives or twig/twig missing (bun run codegen:verify; composer install)\n");
     exit(1);
 }
@@ -156,7 +156,7 @@ $builder = static function () use (
         $roots = [$dir, ...array_map(static fn (string $d): string => $root . '/' . $d, $own)];
         $latte = new LatteRenderer([...$roots, ...$lattePrims], "{$cache}/builder/{$i}");
         $latte->latte()->addFunction('wpfb_block', $fns['latte']);
-        $twig = new TwigRenderer([...$roots, $twigPrims], "{$cache}/builder/{$i}/twig");
+        $twig = new TwigRenderer([...$roots, ...$twigPrims], "{$cache}/builder/{$i}/twig");
         $twig->twig()->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false
             => $n === 'wpfb_block' ? new \Twig\TwigFunction($n, $fns['twig'], ['is_safe' => ['html']]) : false);
         $fx = ['view' => 'builder/page', 'context' => $ctx, 'page' => true];
@@ -204,6 +204,10 @@ $blocksSuite = static function () use ($root, $out): int {
         return 1;
     }
     foreach (['CnMerge', 'Runtime', 'Extension'] as $f) {
+        // the theme's UI8Kit 3 Twig runtime already declares UI8Kit\Twig\CnMerge (same as the builder runtime)
+        if ($f === 'CnMerge' && class_exists(\UI8Kit\Twig\CnMerge::class)) {
+            continue;
+        }
         require_once "{$src}/twig/php/{$f}.php";
     }
     $dom = require __DIR__ . '/normalize-dom.php';
@@ -304,7 +308,7 @@ foreach ($wanted as $suite) {
         continue;
     }
     $latte = new LatteRenderer([...$views, ...$lattePrims], "{$cache}/{$suite}");
-    $twig = new TwigRenderer([...$views, $twigPrims], "{$cache}/{$suite}/twig");
+    $twig = new TwigRenderer([...$views, ...$twigPrims], "{$cache}/{$suite}/twig");
     foreach ($files as $file) {
         $fx = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
         $name = $suite . '/' . basename($file, '.json');

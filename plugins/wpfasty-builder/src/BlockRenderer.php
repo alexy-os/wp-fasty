@@ -60,6 +60,10 @@ final class BlockRenderer
         }
         $php = dirname(__DIR__) . '/sources/ui8kit/twig/php';
         foreach (['CnMerge', 'Runtime', 'Extension'] as $f) {
+            // UI8Kit 3 Twig runtime of the theme (PSR-4 UI8Kit\Twig\) ships UI8Kit\Twig\CnMerge: prefer it.
+            if ($f === 'CnMerge' && class_exists('\\UI8Kit\\Twig\\CnMerge')) {
+                continue;
+            }
             if (!is_file("$php/$f.php")) {
                 return false;
             }

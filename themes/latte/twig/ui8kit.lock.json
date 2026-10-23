@@ -1,0 +1,225 @@
+{
+  "lockVersion": 2,
+  "cli": "3.2.1",
+  "items": {
+    "npm:@ui8kit/registry|twig|box": {
+      "name": "box",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/box/Box.html.twig": "4c830b628ed256582360a799ec0de4dae77330cb2b0b900f68d7dde706fe4ba9"
+      }
+    },
+    "npm:@ui8kit/registry|twig|button": {
+      "name": "button",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/button/Button.html.twig": "91c5f9b2fdfa2d35faa636293473cb8154d3a7db25647ad3b7d0f9319ead6d5b"
+      }
+    },
+    "npm:@ui8kit/registry|twig|checkbox": {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/checkbox/Checkbox.html.twig": "65a96dd065bc6763590ecb236cee20e381bcfe3252dfab6ab0e732e2c572ccbf"
+      }
+    },
+    "npm:@ui8kit/registry|twig|dialog": {
+      "name": "dialog",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/dialog/Dialog.html.twig": "e8635a1e34171486130049c630c951e52259c2a068e853f8680afaef3f8b633f"
+      }
+    },
+    "npm:@ui8kit/registry|twig|disclosure": {
+      "name": "disclosure",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/disclosure/Disclosure.html.twig": "a916f5c5d429950f02b338bb0ff0db34ab29148ba7772857cc3e1758f2a0b875",
+        "ui8kit/ui/disclosure/Summary.html.twig": "9afee341d97544b3e5aa58db8e11e9c1d8c41cb42a723524d257d9c9a5fe5f25"
+      }
+    },
+    "npm:@ui8kit/registry|twig|form": {
+      "name": "form",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/form/Form.html.twig": "7f439781ea1f6d27f2e7a9276db85fe458308bff370a3cd7454c2ca6ac429a1c"
+      }
+    },
+    "npm:@ui8kit/registry|twig|icon": {
+      "name": "icon",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/icon/Icon.html.twig": "ffe7f2c302a65ee97b7dc00c1c03f2c234fde002279403dbbbbbce56c2a4977c"
+      }
+    },
+    "npm:@ui8kit/registry|twig|image": {
+      "name": "image",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/image/Image.html.twig": "21185cf21e7377faf4e5a9c0c554c14440bf3d637da57412bb9d37240b76e373",
+        "ui8kit/ui/image/Picture.html.twig": "cd2654b4c6bb2f011fd16a3118fb6af0c7d112065a7af521c3c42e0676944f77",
+        "ui8kit/ui/image/Source.html.twig": "94a0d9ee78d29393fbe480bf9f5da770fdb20841d9014c3f1a99abbe434ed033"
+      }
+    },
+    "npm:@ui8kit/registry|twig|input": {
+      "name": "input",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/input/Input.html.twig": "37c77693dddfb9c8fec68aff9242aa41a79f9211cd22791218ab8059954b01f6"
+      }
+    },
+    "npm:@ui8kit/registry|twig|label": {
+      "name": "label",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/label/Label.html.twig": "873469abd2e983aa067e5f61a85b569f21f94c5078615ab1ad4449e5a9467427"
+      }
+    },
+    "npm:@ui8kit/registry|twig|link": {
+      "name": "link",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/link/Link.html.twig": "9d2dc92bd13eb73f391c73757cd0319fecc9885917f848de35955953a85d30e7"
+      }
+    },
+    "npm:@ui8kit/registry|twig|meter": {
+      "name": "meter",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/meter/Meter.html.twig": "138857f5aad0b13f518d1a8c28b2544d48dc2475908e47134afbf180041c9a83"
+      }
+    },
+    "npm:@ui8kit/registry|twig|progress": {
+      "name": "progress",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/progress/Progress.html.twig": "fa9c610846ea581ea61853fd95eb778ca9431da5b04017487d0a791ce1eb51a4"
+      }
+    },
+    "npm:@ui8kit/registry|twig|radio": {
+      "name": "radio",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/radio/Radio.html.twig": "56d0c2504dfb90b9f152f28f98bb3f1927e81c5c8305ae25c825167efe2b2fe2"
+      }
+    },
+    "npm:@ui8kit/registry|twig|rules": {
+      "name": "rules",
+      "type": "registry:rules",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        ".cursor/rules/ui8kit-primitives.mdc": "cd703095f052e086f81112858a5631b1a0c25aed1712274f02f78720c6a74778"
+      }
+    },
+    "npm:@ui8kit/registry|twig|select": {
+      "name": "select",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/select/Select.html.twig": "4ea2893b708ff2a52bfc54e2e812a9bf8af8cd2c458fbbbb266225911db38746",
+        "ui8kit/ui/select/SelectOptGroup.html.twig": "dfaa7521e9c9b47701bc4c093e00a87391fbab9ccbfa0c364765e9493f7aa507",
+        "ui8kit/ui/select/SelectOption.html.twig": "a7dd6970b6833f774b3afd9320c9427ca3afc67193a6ae58b14332a9966e5240"
+      }
+    },
+    "npm:@ui8kit/registry|twig|separator": {
+      "name": "separator",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/separator/Separator.html.twig": "96f9ac56e7ab31c6575f65a4e3baedf78078f0987e3405cc32426dab4f388d3c"
+      }
+    },
+    "npm:@ui8kit/registry|twig|switch": {
+      "name": "switch",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/switch/Switch.html.twig": "4e24e8ef61467ae19b238372bc6972a5cb152e1edf6a502b4e2c8159b4156565"
+      }
+    },
+    "npm:@ui8kit/registry|twig|text": {
+      "name": "text",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/text/Text.html.twig": "d633480f0a2da07ec4a515383b863c227d8c56ffd8d428416244e8a8f772304d"
+      }
+    },
+    "npm:@ui8kit/registry|twig|textarea": {
+      "name": "textarea",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/ui/textarea/Textarea.html.twig": "eb7ef3b700527b3c74951b788530ae765b066cb22b6b543cec78e29ebf00b33f"
+      }
+    },
+    "npm:@ui8kit/registry|twig|utils": {
+      "name": "utils",
+      "type": "registry:utils",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/twig",
+      "version": "3.2.0",
+      "runtime": "twig",
+      "files": {
+        "ui8kit/runtime/Classes.php": "bdf2ef2a333181fd9449d2a64a8a01d1ae4a7fc9c780bc7ccb6ca3ceffce1458",
+        "ui8kit/runtime/CnMerge.php": "68d70f963aff8c5da0fadd805e7da5b7ed1f1a73ad0f779b96593241d4584492",
+        "ui8kit/runtime/Rt.php": "3ea6488d159fe93de6281a3d84401a3e2fa1d51178a43eb72ef42d23489045f9",
+        "ui8kit/runtime/Tags.php": "38af97fbff832a0abd44d56fc741b06c9125dfc9868d32858c025119fdad1618",
+        "ui8kit/runtime/TwigExtension.php": "ddf4793238f9f655dc0e00241f450cf3c79d4e1e28d688ffd7aa0c4d1e5c17c1"
+      }
+    }
+  }
+}

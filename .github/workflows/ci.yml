@@ -83,7 +83,7 @@ jobs:
 
       - name: UI8Kit 3 primitives of themes/latte match ui8kit.lock.json; kit presets up to date
         run: |
-          (cd themes/latte && npx --yes ui8kit@3 check)
+          (cd themes/latte && npx --yes ui8kit@3 check) && (cd themes/latte/twig && npx --yes ui8kit@3 check)
           php tools/ui8kit3/presets.php --check
 
       - name: Composer audit (theme)
@@ -125,7 +125,9 @@ jobs:
           echo "$L" | grep -q '^latte/vendor/latte/latte/'
           echo "$T" | grep -q '^twig/vendor/twig/twig/LICENSE'
           ! echo "$L" | grep -iE 'vendor/twig|\.html\.twig$|TwigRenderer|ui8kit-twig'
-          ! echo "$T" | grep -iE 'vendor/latte|\.latte$|LatteRenderer|LatteEngine|ui8kit-latte|latte-primitives|^twig/ui8kit/|^twig/kit/'
+          ! echo "$T" | grep -iE 'vendor/latte|\.latte$|LatteRenderer|LatteEngine|ui8kit-latte|latte-primitives|^twig/ui8kit/|^twig/kit/ui/'
+          echo "$T" | grep -q '^twig/twig/ui8kit/runtime/TwigExtension.php' && echo "$T" | grep -q '^twig/kit/presets.json' && echo "$T" | grep -q '^twig/classes/Template/Kit.php'
+          ! echo "$L" | grep -q '^latte/twig/'
           echo "$L" | grep -q '^latte/ui8kit/runtime/Classes.php' && echo "$L" | grep -q '^latte/kit/presets.json'
           ! echo "$L$T" | grep -E '/\.cursor/|ui8kit\.(lock|config)\.json'
           unzip -p dist/twig.zip twig/style.css | grep -q '^Text Domain: twig'

@@ -8,7 +8,7 @@
 			<div><a href="{{ shop.url|safe_url }}" class="inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90">{{ icon('shopping-bag') }}{{ labels.shop_now }}</a></div>
 		</div>
 		{% if page.featuredImage.url ?? false %}
-			{% include 'image/Image.html.twig' with { src: page.featuredImage.url, alt: page.featuredImage.alt ?? '', class: 'aspect-[4/3] w-full rounded-xl object-cover', loading: 'eager' } %}
+			{% include 'image/Image.html.twig' with { src: page.featuredImage.url, alt: page.featuredImage.alt ?? '', class: kit('image', {}, 'aspect-[4/3] w-full rounded-xl object-cover'), loading: 'eager', decoding: 'async' } %}
 		{% endif %}
 	</div>
 </section>

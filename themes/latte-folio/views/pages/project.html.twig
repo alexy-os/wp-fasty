@@ -37,7 +37,7 @@
 
 	{% if page.featuredImage.url ?? false %}
 		<div class="container mx-auto px-4 md:px-6">
-			{% include 'image/Image.html.twig' with { src: page.featuredImage.url, alt: page.featuredImage.alt ?? '', srcset: page.featuredImage.srcset ?? '', sizes: '100vw', class: 'aspect-[16/9] w-full rounded-2xl border border-border object-cover', loading: 'eager' } %}
+			{% include 'image/Image.html.twig' with { src: page.featuredImage.url, alt: page.featuredImage.alt ?? '', sizes: '100vw', class: kit('image', {}, 'aspect-[16/9] w-full rounded-2xl border border-border object-cover'), loading: 'eager', srcSet: page.featuredImage.srcset ?? '', decoding: 'async' } %}
 		</div>
 	{% endif %}
 

@@ -19,7 +19,8 @@
   "autoload": {
     "psr-4": {
       "WPFasty\\": "classes/",
-      "UI8Kit\\Latte\\": "ui8kit/runtime/"
+      "UI8Kit\\Latte\\": "ui8kit/runtime/",
+      "UI8Kit\\Twig\\": "twig/ui8kit/runtime/"
     }
   },
   "minimum-stability": "dev",

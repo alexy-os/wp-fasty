@@ -101,7 +101,7 @@ final class ThemeHooks extends AbstractHooks
             return;
         }
         if ($engine === 'twig') {
-            if (PrimitivesLocator::resolveTwig() === null) {
+            if (PrimitivesLocator::twigRoots() === []) {
                 echo '<div class="notice notice-error"><p>';
                 echo esc_html__('WP FastY theme: UI8Kit Twig primitives not found (lib/ui8kit-twig).', 'latte');
                 echo '</p></div>';

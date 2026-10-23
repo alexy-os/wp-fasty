@@ -1,0 +1,2 @@
+{# WP FastY kit — Alert: composition over UI8Kit 3 Box + presets/components/alert.json (Twig twin of kit/ui). #}
+{% include 'box/Box.html.twig' with { class: kit('alert', {'variant': variant|default('')}, class|default('')), attrs: {'role': role|default('') == 'alert' ? 'alert' : 'status', 'aria-live': ariaLive|default('') ?: 'polite'}|merge(attrs|default({})), children: children|default('') } only %}

@@ -13,17 +13,18 @@
 							alt: post.thumbnail.alt ?? '',
 							width: (post.thumbnail.width ?? '') ~ '',
 							height: (post.thumbnail.height ?? '') ~ '',
-							srcset: post.thumbnail.srcset ?? '',
 							sizes: post.thumbnail.sizes ?? '',
-							class: 'aspect-video w-full object-cover',
-							loading: 'lazy'
+							class: kit('image', {}, 'aspect-video w-full object-cover'),
+							loading: 'lazy',
+							srcSet: post.thumbnail.srcset ?? '',
+							decoding: 'async'
 						} %}
 					{% endset %}
-					{% include 'link/Link.html.twig' with { href: post.url, class: 'block overflow-hidden', children: thumb } %}
+					{% include 'link/Link.html.twig' with { href: post.url, class: kit('link', {}, 'block overflow-hidden'), children: thumb } %}
 				{% endif %}
 				{% set postTitle %}{{ post.title }}{% endset %}
 				{% set cardTitle %}
-					{% include 'link/Link.html.twig' with { href: post.url, class: 'no-underline hover:text-primary', children: postTitle } %}
+					{% include 'link/Link.html.twig' with { href: post.url, class: kit('link', {}, 'no-underline hover:text-primary'), children: postTitle } %}
 				{% endset %}
 				{% set headerInner %}
 					{% include 'card/CardTitle.html.twig' with { class: 'text-xl', children: cardTitle } %}

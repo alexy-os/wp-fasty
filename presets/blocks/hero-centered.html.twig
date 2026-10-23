@@ -16,13 +16,13 @@
 		{% set learn %}{{ hero.secondary_label ?? 'Learn more' }}{% endset %}
 		{% if hero.primary_url ?? false %}
 			{% set primary %}
-				{% include 'link/Link.html.twig' with { href: hero.primary_url, variant: 'default', class: 'inline-flex h-10 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground no-underline hover:opacity-90', children: explore } %}
+				{% include 'link/Link.html.twig' with { href: hero.primary_url, class: kit('link', {'variant': 'default'}, 'inline-flex h-10 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground no-underline hover:opacity-90'), children: explore } %}
 			{% endset %}
 			{{ primary }}
 		{% endif %}
 		{% if hero.secondary_url ?? false %}
 			{% set secondary %}
-				{% include 'link/Link.html.twig' with { href: hero.secondary_url, variant: 'muted', class: 'inline-flex h-10 items-center rounded-full border border-input bg-secondary px-4 text-sm font-medium no-underline', children: learn } %}
+				{% include 'link/Link.html.twig' with { href: hero.secondary_url, class: kit('link', {'variant': 'muted'}, 'inline-flex h-10 items-center rounded-full border border-input bg-secondary px-4 text-sm font-medium no-underline'), children: learn } %}
 			{% endset %}
 			{{ secondary }}
 		{% endif %}

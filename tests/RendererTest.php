@@ -31,11 +31,11 @@ final class RendererTest extends TestCase
 
     private function twig(): TwigRenderer
     {
-        $prims = PrimitivesLocator::resolveTwig(dirname(__DIR__) . '/themes/latte');
-        if ($prims === null || !class_exists(\Twig\Environment::class)) {
-            $this->markTestSkipped('Twig primitives not generated (run bun run codegen:verify)');
+        $prims = PrimitivesLocator::twigRoots(dirname(__DIR__) . '/themes/latte');
+        if ($prims === [] || !class_exists(\Twig\Environment::class)) {
+            $this->markTestSkipped('Twig primitives not installed (themes/latte/twig: npx ui8kit@3 add --all)');
         }
-        return new TwigRenderer([$this->views(), $prims], $this->cache . '/twig');
+        return new TwigRenderer([$this->views(), ...$prims], $this->cache . '/twig');
     }
 
     private static function normalize(string $html): string

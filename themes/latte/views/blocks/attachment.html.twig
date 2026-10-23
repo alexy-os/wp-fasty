@@ -13,16 +13,17 @@
 					alt: page.featuredImage.alt ?? page.title,
 					width: (page.featuredImage.width ?? '') ~ '',
 					height: (page.featuredImage.height ?? '') ~ '',
-					srcset: page.featuredImage.srcset ?? '',
 					sizes: page.featuredImage.sizes ?? '',
-					class: 'mx-auto max-h-[80vh] w-auto',
-					loading: 'eager'
+					class: kit('image', {}, 'mx-auto max-h-[80vh] w-auto'),
+					loading: 'eager',
+					srcSet: page.featuredImage.srcset ?? '',
+					decoding: 'async'
 				} %}
 			{% endset %}
 			{% include 'box/Box.html.twig' with { class: 'mb-8 overflow-hidden rounded-lg', children: img } %}
 		{% elseif page.attachment_url ?? false %}
 			{% set fileLink %}{{ labels.attachment ?? 'Attachment' }}{% endset %}
-			{% include 'link/Link.html.twig' with { href: page.attachment_url, class: 'text-primary underline', children: fileLink } %}
+			{% include 'link/Link.html.twig' with { href: page.attachment_url, class: kit('link', {}, 'text-primary underline'), children: fileLink } %}
 		{% endif %}
 
 		{% if page.content ?? false %}

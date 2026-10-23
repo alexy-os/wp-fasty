@@ -10,7 +10,7 @@
 			{% for post in posts %}
 				{% set body %}
 					{% set postTitle %}{{ post.title }}{% endset %}
-					{% set t %}{% include 'link/Link.html.twig' with { href: post.url, class: 'no-underline hover:text-primary', children: postTitle } %}{% endset %}
+					{% set t %}{% include 'link/Link.html.twig' with { href: post.url, class: kit('link', {}, 'no-underline hover:text-primary'), children: postTitle } %}{% endset %}
 					{% set h %}{% include 'card/CardTitle.html.twig' with { children: t } %}{% endset %}
 					{% include 'card/CardHeader.html.twig' with { children: h } %}
 					{% if post.excerpt ?? false %}
@@ -32,12 +32,12 @@
 		<nav class="mt-10 flex justify-center gap-4" aria-label="{{ labels.pagination ?? 'Pagination' }}">
 			{% if pagination.prev_url %}
 				{% set prevL %}{{ labels.previous ?? 'Previous' }}{% endset %}
-				{% include 'link/Link.html.twig' with { href: pagination.prev_url, class: 'text-sm text-primary', children: prevL } %}
+				{% include 'link/Link.html.twig' with { href: pagination.prev_url, class: kit('link', {}, 'text-sm text-primary'), children: prevL } %}
 			{% endif %}
 			<span class="text-sm text-muted-foreground">{{ pagination.current }} / {{ pagination.total }}</span>
 			{% if pagination.next_url %}
 				{% set nextL %}{{ labels.next ?? 'Next' }}{% endset %}
-				{% include 'link/Link.html.twig' with { href: pagination.next_url, class: 'text-sm text-primary', children: nextL } %}
+				{% include 'link/Link.html.twig' with { href: pagination.next_url, class: kit('link', {}, 'text-sm text-primary'), children: nextL } %}
 			{% endif %}
 		</nav>
 	{% endif %}

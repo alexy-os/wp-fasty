@@ -11,9 +11,9 @@
 				<article class="{{ post.post_class ?? '' }} grid gap-6 border-b border-border pb-8 md:grid-cols-[240px_1fr]">
 					{% if post.thumbnail.url is not empty %}
 						{% set thumb %}
-							{% include 'image/Image.html.twig' with { src: post.thumbnail.url, alt: post.thumbnail.alt ?? '', srcset: post.thumbnail.srcset ?? '', sizes: '(min-width: 768px) 240px, 100vw', class: 'aspect-[4/3] w-full rounded-lg object-cover', loading: 'lazy' } %}
+							{% include 'image/Image.html.twig' with { src: post.thumbnail.url, alt: post.thumbnail.alt ?? '', sizes: '(min-width: 768px) 240px, 100vw', class: kit('image', {}, 'aspect-[4/3] w-full rounded-lg object-cover'), loading: 'lazy', srcSet: post.thumbnail.srcset ?? '', decoding: 'async' } %}
 						{% endset %}
-						{% include 'link/Link.html.twig' with { href: post.url, class: 'block', children: thumb } %}
+						{% include 'link/Link.html.twig' with { href: post.url, class: kit('link', {}, 'block'), children: thumb } %}
 					{% else %}
 						<div class="hidden md:block"></div>
 					{% endif %}

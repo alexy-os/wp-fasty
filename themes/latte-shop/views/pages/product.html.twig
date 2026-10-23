@@ -12,7 +12,7 @@
 	<div class="grid gap-8 md:grid-cols-2 md:gap-16">
 		<div class="overflow-hidden rounded-2xl border border-border bg-muted">
 			{% if page.featuredImage.url ?? false %}
-				{% include 'image/Image.html.twig' with { src: page.featuredImage.url, alt: page.featuredImage.alt ?? '', srcset: page.featuredImage.srcset ?? '', sizes: '(min-width: 768px) 50vw, 100vw', class: 'aspect-square h-full w-full object-cover', loading: 'eager' } %}
+				{% include 'image/Image.html.twig' with { src: page.featuredImage.url, alt: page.featuredImage.alt ?? '', sizes: '(min-width: 768px) 50vw, 100vw', class: kit('image', {}, 'aspect-square h-full w-full object-cover'), loading: 'eager', srcSet: page.featuredImage.srcset ?? '', decoding: 'async' } %}
 			{% else %}
 				<div class="flex aspect-square items-center justify-center text-muted-foreground">{{ icon('package', 'size-8') }}</div>
 			{% endif %}
@@ -36,14 +36,14 @@
 					<input type="hidden" name="_wpnonce" value="{{ shop.cart_nonce }}">
 					<div class="flex flex-col gap-2">
 						{% set qtyLabel %}{{ labels.qty }}{% endset %}
-						{% include 'label/Label.html.twig' with { for: 'qty', children: qtyLabel } %}
-						<div class="w-24">{% include 'input/Input.html.twig' with { id: 'qty', type: 'number', name: 'qty', value: '1', min: '1', max: (page.product.stock ?? 99) ~ '', required: true } %}</div>
+						{% include 'label/Label.html.twig' with { htmlFor: 'qty', class: kit('label', {}), children: qtyLabel } %}
+						<div class="w-24">{% include 'input/Input.html.twig' with { id: 'qty', type: 'number', name: 'qty', value: '1', min: '1', max: (page.product.stock ?? 99) ~ '', required: true, class: kit('input', {}) } %}</div>
 					</div>
 					<div class="flex flex-wrap gap-4">
 						{% set addLabel %}{{ icon('shopping-cart') }}{{ labels.add_to_cart }}{% endset %}
-						{% include 'button/Button.html.twig' with { type: 'submit', size: 'lg', children: addLabel } %}
+						{% include 'button/Button.html.twig' with { type: 'submit', class: kit('button', {'size': 'lg'}), children: addLabel } %}
 						{% set buyLabel %}{{ labels.buy_now }}{% endset %}
-						{% include 'button/Button.html.twig' with { type: 'submit', size: 'lg', variant: 'outline', attrs: { name: 'buy_now', value: '1' }, children: buyLabel } %}
+						{% include 'button/Button.html.twig' with { type: 'submit', attrs: { name: 'buy_now', value: '1' }, class: kit('button', {'variant': 'outline', 'size': 'lg'}), children: buyLabel } %}
 					</div>
 					{% if page.product.stock is not null %}
 						<p class="text-sm text-muted-foreground">{{ page.product.stock }} in stock</p>

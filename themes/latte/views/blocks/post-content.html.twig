@@ -12,14 +12,14 @@
 				{% if page.author.name ?? false %}
 					{% set authorName %}{{ page.author.name }}{% endset %}
 					<span>{{ labels.by_author }}
-						{% include 'link/Link.html.twig' with { href: page.author.url, class: 'underline-offset-2 hover:underline', children: authorName } %}
+						{% include 'link/Link.html.twig' with { href: page.author.url, class: kit('link', {}, 'underline-offset-2 hover:underline'), children: authorName } %}
 					</span>
 				{% endif %}
 				{% if page.categories ?? false %}
 					<span>{{ labels.categories }}:
 						{% for cat in page.categories %}
 							{% set catName %}{{ cat.name }}{% endset %}
-							{% include 'link/Link.html.twig' with { href: cat.url, class: 'underline-offset-2 hover:underline', children: catName } %}{% if not loop.last %}, {% endif %}
+							{% include 'link/Link.html.twig' with { href: cat.url, class: kit('link', {}, 'underline-offset-2 hover:underline'), children: catName } %}{% if not loop.last %}, {% endif %}
 						{% endfor %}
 					</span>
 				{% endif %}
@@ -41,10 +41,11 @@
 					alt: page.featuredImage.alt ?? '',
 					width: (page.featuredImage.width ?? '') ~ '',
 					height: (page.featuredImage.height ?? '') ~ '',
-					srcset: page.featuredImage.srcset ?? '',
 					sizes: page.featuredImage.sizes ?? '',
-					class: 'w-full',
-					loading: 'eager'
+					class: kit('image', {}, 'w-full'),
+					loading: 'eager',
+					srcSet: page.featuredImage.srcset ?? '',
+					decoding: 'async'
 				} %}
 			{% endset %}
 			{% include 'box/Box.html.twig' with { class: 'mb-8 overflow-hidden rounded-lg', children: img } %}
@@ -62,7 +63,7 @@
 				<span class="text-sm text-muted-foreground">{{ labels.tags }}:</span>
 				{% for tag in page.tags %}
 					{% set tagName %}{{ tag.name }}{% endset %}
-					{% set tagLink %}{% include 'link/Link.html.twig' with { href: tag.url, class: 'no-underline', children: tagName } %}{% endset %}
+					{% set tagLink %}{% include 'link/Link.html.twig' with { href: tag.url, class: kit('link', {}, 'no-underline'), children: tagName } %}{% endset %}
 					{% include 'badge/Badge.html.twig' with { variant: 'secondary', class: 'mr-1', children: tagLink } %}
 				{% endfor %}
 			{% endset %}
@@ -73,11 +74,11 @@
 			{% set navBits %}
 				{% if page.prev.url ?? false %}
 					{% set prevLabel %}{{ labels.previous_post }}: {{ page.prev.title }}{% endset %}
-					{% include 'link/Link.html.twig' with { href: page.prev.url, class: 'text-sm text-primary', children: prevLabel } %}
+					{% include 'link/Link.html.twig' with { href: page.prev.url, class: kit('link', {}, 'text-sm text-primary'), children: prevLabel } %}
 				{% endif %}
 				{% if page.next.url ?? false %}
 					{% set nextLabel %}{{ labels.next_post }}: {{ page.next.title }}{% endset %}
-					{% include 'link/Link.html.twig' with { href: page.next.url, class: 'text-sm text-primary', children: nextLabel } %}
+					{% include 'link/Link.html.twig' with { href: page.next.url, class: kit('link', {}, 'text-sm text-primary'), children: nextLabel } %}
 				{% endif %}
 			{% endset %}
 			{% include 'group/Group.html.twig' with { class: 'mt-10 flex flex-wrap justify-between gap-4 border-t border-border pt-8', children: navBits } %}

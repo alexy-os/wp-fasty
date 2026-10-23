@@ -37,15 +37,15 @@
 						{% set field = f[0] %}{% set label = f[1] %}{% set type = f[2] %}{% set ac = f[3] %}{% set req = f[4] %}
 						<div class="flex flex-col gap-2">
 							{% set lbl %}{{ label }}{% if req %} *{% endif %}{% endset %}
-							{% include 'label/Label.html.twig' with { for: 'co-' ~ field, children: lbl } %}
-							{% include 'input/Input.html.twig' with { id: 'co-' ~ field, type: type, name: field, value: (v[field] ?? '') ~ '', autocomplete: ac, required: req, class: field in checkout.errors ? 'border-destructive' : '' } %}
+							{% include 'label/Label.html.twig' with { htmlFor: 'co-' ~ field, class: kit('label', {}), children: lbl } %}
+							{% include 'input/Input.html.twig' with { id: 'co-' ~ field, type: type, name: field, value: (v[field] ?? '') ~ '', required: req, class: kit('input', {}, field in checkout.errors ? 'border-destructive' : ''), attrs: {'autocomplete': (ac) ?: null} } %}
 						</div>
 					{% endfor %}
 				</div>
 				<div class="flex flex-col gap-2">
 					{% set addrLbl %}{{ labels.address }} *{% endset %}
-					{% include 'label/Label.html.twig' with { for: 'co-address', children: addrLbl } %}
-					{% include 'textarea/Textarea.html.twig' with { id: 'co-address', name: 'address', value: (v.address ?? '') ~ '', rows: 2, required: true } %}
+					{% include 'label/Label.html.twig' with { htmlFor: 'co-address', class: kit('label', {}), children: addrLbl } %}
+					{% include 'textarea/Textarea.html.twig' with { id: 'co-address', name: 'address', value: (v.address ?? '') ~ '', rows: '2', required: true, class: kit('textarea', {}) } %}
 				</div>
 				<fieldset class="flex flex-col gap-2">
 					<legend class="mb-2 text-sm font-medium">{{ labels.payment }}</legend>
@@ -61,8 +61,8 @@
 				</fieldset>
 				<div class="flex flex-col gap-2">
 					{% set notesLbl %}Order notes{% endset %}
-					{% include 'label/Label.html.twig' with { for: 'co-notes', children: notesLbl } %}
-					{% include 'textarea/Textarea.html.twig' with { id: 'co-notes', name: 'notes', value: (v.notes ?? '') ~ '', rows: 3 } %}
+					{% include 'label/Label.html.twig' with { htmlFor: 'co-notes', class: kit('label', {}), children: notesLbl } %}
+					{% include 'textarea/Textarea.html.twig' with { id: 'co-notes', name: 'notes', value: (v.notes ?? '') ~ '', rows: '3', class: kit('textarea', {}) } %}
 				</div>
 			</div>
 			<div class="flex flex-col gap-4">
@@ -73,7 +73,7 @@
 				</ul>
 				{% include 'blocks/order-summary.html.twig' with { cart: cart, labels: labels, showCheckout: false } %}
 				{% set place %}{{ icon('check') }}{{ labels.place_order }}{% endset %}
-				{% include 'button/Button.html.twig' with { type: 'submit', size: 'lg', class: 'w-full', children: place } %}
+				{% include 'button/Button.html.twig' with { type: 'submit', class: kit('button', {'size': 'lg'}, 'w-full'), children: place } %}
 				<p class="text-xs text-muted-foreground">{{ labels.demo_notice }}</p>
 			</div>
 		</form>

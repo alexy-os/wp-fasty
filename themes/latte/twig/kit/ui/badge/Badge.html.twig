@@ -1,0 +1,2 @@
+{# WP FastY kit — Badge: composition over UI8Kit 3 Box + presets/components/badge.json (Twig twin of kit/ui). #}
+{% include 'box/Box.html.twig' with { class: kit('badge', {'variant': variant|default(''), 'size': size|default('')}, class|default('')), attrs: attrs|default({}), children: children|default('') } only %}

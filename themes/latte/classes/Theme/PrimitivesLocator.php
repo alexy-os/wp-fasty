@@ -40,6 +40,24 @@ final class PrimitivesLocator
         return $legacy === null ? [] : [$legacy];
     }
 
+    /**
+     * Twig root chain: our kit compositions (`twig/kit/ui`) before the UI8Kit 3 Twig primitives (`twig/ui8kit/ui`,
+     * `npx ui8kit@3 add --all` in `twig/`, PSR-4 `UI8Kit\\Twig\\` → `twig/ui8kit/runtime/`). Without a UI8Kit 3
+     * install: the legacy codegen Twig directory.
+     *
+     * @return list<string>
+     */
+    public static function twigRoots(?string $themeDir = null): array
+    {
+        $themeDir ??= get_template_directory();
+        if (is_dir($themeDir . '/twig/ui8kit/ui') && is_dir($themeDir . '/twig/kit/ui')) {
+            return [$themeDir . '/twig/kit/ui', $themeDir . '/twig/ui8kit/ui'];
+        }
+        $legacy = self::resolveTwig($themeDir);
+
+        return $legacy === null ? [] : [$legacy];
+    }
+
     /** @return list<string> */
     public static function candidates(string $themeDir): array
     {

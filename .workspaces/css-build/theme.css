@@ -11,6 +11,8 @@
    the kit presets (themes/latte/kit/presets.json) and the views. */
 @source not "../../themes/latte/ui8kit/runtime/**";
 @source not "../../themes/latte/.cursor/**";
+@source not "../../themes/latte/twig/ui8kit/runtime/**";
+@source not "../../themes/latte/twig/.cursor/**";
 
 @custom-variant dark (&:is(.dark *));
 

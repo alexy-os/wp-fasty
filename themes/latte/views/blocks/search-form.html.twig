@@ -9,11 +9,11 @@
 		id: 'latte-search-field',
 		value: search.query ?? '',
 		placeholder: search.placeholder ?? '',
-		ariaLabel: search.label ?? '',
-		class: 'w-full'
+		class: kit('input', {}, 'w-full'),
+		attrs: {'aria-label': (search.label ?? '') ?: null}
 	} %}
 	{% set submitLabel %}{{ search.submit }}{% endset %}
-	{% include 'button/Button.html.twig' with { type: 'submit', variant: 'default', size: 'default', children: submitLabel } %}
+	{% include 'button/Button.html.twig' with { type: 'submit', class: kit('button', {'variant': 'default', 'size': 'default'}), children: submitLabel } %}
 {% endset %}
 <form role="search" method="get" action="{{ search.action|safe_url }}" class="flex w-full max-w-md items-center gap-2">
 	{{ fields }}
