@@ -111,8 +111,8 @@ jobs:
       - name: UI8Kit gates (vendored codegen-x ui-gates @8d12906) — source 0, builder blocks HTML/ARIA 0, theme within budget
         run: |
           bun install --cwd tools/ui-gates --frozen-lockfile
-          bash tools/qa/ui-gates.sh
-          { echo "### UI8Kit gates"; echo "theme html: $(tail -1 dist/gates/theme-html.txt)"; } >> "$GITHUB_STEP_SUMMARY"
+          OUT="$RUNNER_TEMP/gates" bash tools/qa/ui-gates.sh
+          { echo "### UI8Kit gates"; echo "theme html: $(tail -1 "$RUNNER_TEMP/gates/theme-html.txt")"; } >> "$GITHUB_STEP_SUMMARY"
 
       - name: PHPCS (errors and warnings fail the build; themes + wpfasty-types + wpfasty-builder)
         run: composer phpcs

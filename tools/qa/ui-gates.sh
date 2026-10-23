@@ -8,7 +8,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 G="node tools/ui-gates/bin/ui-gates.mjs"
-OUT=${OUT:-dist/gates}
+OUT=${OUT:-${TMPDIR:-/tmp}/wpfasty-gates}  # not under dist/ (dist/*/ are site packages)
 THEME_HTML_BUDGET=${THEME_HTML_BUDGET:-212}
 mkdir -p "$OUT"
 $G source themes/latte/views presets/blocks presets/archetypes themes/latte-press/views themes/latte-folio/views \
