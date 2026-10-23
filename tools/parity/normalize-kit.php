@@ -16,6 +16,10 @@ declare(strict_types=1);
 return static function (string $html): string {
     static $dom = null;
     $dom ??= require __DIR__ . '/normalize-dom.php';
+    $runtime = dirname(__DIR__, 2) . '/themes/latte/ui8kit/runtime/CnMerge.php';
+    if (!class_exists(\UI8Kit\Latte\CnMerge::class) && is_file($runtime)) {
+        require_once $runtime;
+    }
     if (!class_exists(\UI8Kit\Latte\CnMerge::class)) {
         throw new \RuntimeException('UI8Kit 3 runtime missing: npx ui8kit@3 add --all; composer dump-autoload');
     }
