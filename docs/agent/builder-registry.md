@@ -18,6 +18,12 @@ Published: v1.0.0 (ui8kit/site `236f670`, source `builder-registry/`, checked by
 `bun run registry:verify <runtime> https://registry.buildy.tw/<runtime>/wpfasty/v1.0.0/`. New versions:
 `WPFASTY=<wp-fasty checkout> bun run registry:wpfasty --version x.y.z` in ui8kit/site, then commit and push.
 
+v2.0.0 (source catalogs here, **not published yet**): bricks are adapters over UI8Kit 3 primitives (`ui_prim`), so a
+v2.0.0 registry needs a builder plugin with `WPFastyBuilder\Primitives`; v1.0.0 sources keep rendering on it. Built and
+verified locally with `bun run registry:build <out>` + `registry:verify`; `latte` blocks.zip sha256
+`ea9940b3db72c62055c0c1f26f4f10b1ba55da216963779ca36e61c501aed8d4`, `twig` `1b33e87f49b236ed5af788b14f2c1fed5eac64053293f4ef56727320411f35d0`.
+Until the owner publishes v2.0.0 (and `latest`), the `Published registries` workflow reports a mismatch (it never blocks CI).
+
 Workflow `Published registries` (`.github/workflows/registry-published.yml`, separate from CI, never blocks it; after
 each green CI run on main, daily and on demand) compares the published `v<version>/` and `latest/` byte for byte
 (sha256, size) with `dist/registry` built from source in that CI run, runs `registry:verify` on the URLs, and imports
