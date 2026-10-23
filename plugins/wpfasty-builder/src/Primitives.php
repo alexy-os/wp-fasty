@@ -18,10 +18,12 @@ final class Primitives
     /** primitive id → template (relative to `ui8kit/ui`, without the engine extension) */
     public const MAP = [
         'box' => 'box/Box', 'text' => 'text/Text', 'button' => 'button/Button', 'link' => 'link/Link',
-        'input' => 'input/Input', 'checkbox' => 'checkbox/Checkbox', 'radio' => 'radio/Radio', 'switch' => 'switch/Switch',
+        'input' => 'input/Input', 'checkbox' => 'checkbox/Checkbox', 'radio' => 'radio/Radio',
+        'switch' => 'switch/Switch',
         'textarea' => 'textarea/Textarea', 'select' => 'select/Select', 'option' => 'select/SelectOption',
         'optgroup' => 'select/SelectOptGroup', 'label' => 'label/Label', 'image' => 'image/Image',
-        'picture' => 'image/Picture', 'source' => 'image/Source', 'form' => 'form/Form', 'separator' => 'separator/Separator',
+        'picture' => 'image/Picture', 'source' => 'image/Source', 'form' => 'form/Form',
+        'separator' => 'separator/Separator',
         'disclosure' => 'disclosure/Disclosure', 'summary' => 'disclosure/Summary', 'dialog' => 'dialog/Dialog',
         'progress' => 'progress/Progress', 'meter' => 'meter/Meter',
     ];
@@ -52,7 +54,8 @@ final class Primitives
     }
 
     /**
-     * Renders a primitive. `$args`: the primitive's parameters (`class`, `tag`, `href`, `value`, …), `attrs` (attribute
+     * Renders a primitive. `$args`: the primitive's parameters (`class`, `tag`, `href`, `value`, …), `attrs`
+     * (attribute
      * map, null/false dropped) and `extra` (the brick's free `Attrs`, printed after the brick's own attributes).
      *
      * @param array<string, mixed> $args
@@ -85,7 +88,8 @@ final class Primitives
             return '';
         }
         if (self::$twig === null) {
-            self::$twig = new \Twig\Environment(new \Twig\Loader\FilesystemLoader(self::dir('twig') . '/ui'), ['autoescape' => 'html']);
+            $loader = new \Twig\Loader\FilesystemLoader(self::dir('twig') . '/ui');
+            self::$twig = new \Twig\Environment($loader, ['autoescape' => 'html']);
             self::$twig->addExtension(new \UI8Kit\Twig\TwigExtension());
         }
         return self::$twig->render(self::MAP[$name] . '.html.twig', self::params($args));
@@ -118,14 +122,19 @@ final class Primitives
                 if ($v === null || $v === false || array_key_exists((string) $k, $attrs)) {
                     continue;
                 }
-                $attrs[(string) $k] = $v === true ? true : (is_scalar($v) || $v instanceof \Stringable ? (string) $v : '');
+                $attrs[(string) $k] = $v === true ? true : self::str($v);
             }
         }
         unset($args['attrs'], $args['extra']);
         $out = ['attrs' => $attrs];
         foreach ($args as $k => $v) {
-            $out[(string) $k] = is_bool($v) ? $v : (is_scalar($v) || $v instanceof \Stringable || $v === null ? (string) $v : $v);
+            $out[(string) $k] = is_bool($v) || is_array($v) ? $v : self::str($v);
         }
         return $out;
+    }
+
+    private static function str(mixed $v): string
+    {
+        return is_scalar($v) || $v instanceof \Stringable ? (string) $v : '';
     }
 }
