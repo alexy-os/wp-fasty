@@ -2,18 +2,4 @@
     Source: xgen/specs/ui/switch.json
     Switch: Switch renders input[type=checkbox] with switch role attrs.
     Props (p): Size (string), Class (string), Name (string), Value (string), Checked (bool), Disabled (bool), Required (bool), ID (string), TabIndex (string), AriaLabel (string), Attrs (attrs). *}
-<input
-  {if ui_is_set_str(($p['ID'] ?? ''))} id="{=($p['ID'] ?? '')}"{/if}
-  type="checkbox"
-  {if ui_is_set_str(($p['Name'] ?? ''))} name="{=($p['Name'] ?? '')}"{/if}
-  {if ui_is_set_str(($p['Value'] ?? ''))} value="{=($p['Value'] ?? '')}"{/if}
-  class="{=ui_compose('ui/switch/switch.variants.json', ['size' => ($p['Size'] ?? '')], [($p['Class'] ?? '')])}"
-  {if ($p['Checked'] ?? false)} checked{/if}
-  {if ($p['Disabled'] ?? false)} disabled{/if}
-  {if ($p['Required'] ?? false)} required{/if}
-  {if ui_is_set_str(($p['TabIndex'] ?? ''))} tabindex="{=($p['TabIndex'] ?? '')}"{/if}
-  {if ui_is_set_str(($p['AriaLabel'] ?? ''))} aria-label="{=($p['AriaLabel'] ?? '')}"{/if}
-  role="switch"
-  aria-checked="{=ui_bool_str(($p['Checked'] ?? false))}"
-  {=ui_attr_html(($p['Attrs'] ?? []))|noescape}
->
+{=ui_prim('input', ['class' => (ui_compose('ui/switch/switch.variants.json', ['size' => ($p['Size'] ?? '')], [($p['Class'] ?? '')])), 'attrs' => ['id' => ((ui_is_set_str(($p['ID'] ?? '')))) ? (($p['ID'] ?? '')) : null, 'type' => 'checkbox', 'name' => ((ui_is_set_str(($p['Name'] ?? '')))) ? (($p['Name'] ?? '')) : null, 'value' => ((ui_is_set_str(($p['Value'] ?? '')))) ? (($p['Value'] ?? '')) : null, 'checked' => ((($p['Checked'] ?? false))) ? true : null, 'disabled' => ((($p['Disabled'] ?? false))) ? true : null, 'required' => ((($p['Required'] ?? false))) ? true : null, 'tabindex' => ((ui_is_set_str(($p['TabIndex'] ?? '')))) ? (($p['TabIndex'] ?? '')) : null, 'aria-label' => ((ui_is_set_str(($p['AriaLabel'] ?? '')))) ? (($p['AriaLabel'] ?? '')) : null, 'role' => 'switch', 'aria-checked' => (ui_bool_str(($p['Checked'] ?? false)))], 'extra' => ($p['Attrs'] ?? [])])|noescape}

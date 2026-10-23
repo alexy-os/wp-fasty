@@ -129,7 +129,8 @@ export async function packageSite(manifestPath: string, outArg?: string): Promis
     // The site engine's plugin build: the other runtime's bundled source is left out (ADR-001, K7).
     const otherRuntime = engine === "twig" ? "latte" : "twig";
     await writeZipFromDir(join(root, "plugins/wpfasty-builder"), join(out, "wpfasty-builder.zip"), "wpfasty-builder",
-      ["wpfasty-builder/editor/*", `wpfasty-builder/sources/ui8kit/${otherRuntime}/*`]);
+      ["wpfasty-builder/editor/*", `wpfasty-builder/sources/ui8kit/${otherRuntime}/*`, `wpfasty-builder/primitives/${otherRuntime}/*`,
+       "wpfasty-builder/primitives/*/ui8kit.lock.json", "wpfasty-builder/primitives/*/ui8kit.config.json"]);
     add("wpfasty-builder.zip");
   }
   const demo = o.includeDemo === true;

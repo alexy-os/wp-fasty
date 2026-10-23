@@ -73,7 +73,7 @@ jobs:
 
       - name: UI8Kit 3 primitives of themes/latte match ui8kit.lock.json; kit presets up to date
         run: |
-          (cd themes/latte && npx --yes ui8kit@3 check) && (cd themes/latte/twig && npx --yes ui8kit@3 check)
+          (cd themes/latte && npx --yes ui8kit@3 check) && (cd themes/latte/twig && npx --yes ui8kit@3 check) && (cd plugins/wpfasty-builder/primitives/latte && npx --yes ui8kit@3 check) && (cd plugins/wpfasty-builder/primitives/twig && npx --yes ui8kit@3 check)
           php tools/ui8kit3/presets.php --check
 
       - name: Composer install (theme)
@@ -165,7 +165,7 @@ jobs:
             test -f "dist/$s/$e.zip"; test ! -f "dist/$s/$o.zip"
             unzip -p "dist/$s/$s.zip" "$s/style.css" | grep -q "^Template: $e\$"
             ! unzip -Z1 "dist/$s/$s.zip" | grep -E "$([ "$e" = twig ] && echo '\.latte$' || echo '\.html\.twig$')"
-            [ ! -f "dist/$s/wpfasty-builder.zip" ] || ! unzip -Z1 "dist/$s/wpfasty-builder.zip" | grep -q "sources/ui8kit/$o/"
+            [ ! -f "dist/$s/wpfasty-builder.zip" ] || ! unzip -Z1 "dist/$s/wpfasty-builder.zip" | grep -qE "sources/ui8kit/$o/|primitives/$o/"
           done
           { echo "### Packages"; echo "| file | bytes |"; echo "|---|---|"
             for f in dist/latte.zip dist/twig.zip $(sed 's#^#dist/#; s#$#/*#' dist/sites.txt); do echo "| \`$f\` | $(stat -c %s "$f") |"; done; } >> "$GITHUB_STEP_SUMMARY"

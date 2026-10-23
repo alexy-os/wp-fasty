@@ -2,10 +2,4 @@
     Source: xgen/specs/ui/separator.json
     Separator: Separator renders hr with optional decorative semantics.
     Props (p): Variant (string), Orientation (string), Class (string), Decorative (bool), Attrs (attrs). *}
-<hr
-  class="{=ui_compose('ui/separator/separator.variants.json', ['orientation' => ($p['Orientation'] ?? ''), 'variant' => ($p['Variant'] ?? '')], [($p['Class'] ?? '')])}"
-  {if ($p['Decorative'] ?? false)} role="presentation"{/if}
-  {if ($p['Decorative'] ?? false)} aria-hidden="true"{/if}
-  {if ui_eq(($p['Orientation'] ?? ''), 'vertical')} aria-orientation="vertical"{/if}
-  {=ui_attr_html(($p['Attrs'] ?? []))|noescape}
->
+{=ui_prim('separator', ['class' => (ui_compose('ui/separator/separator.variants.json', ['orientation' => ($p['Orientation'] ?? ''), 'variant' => ($p['Variant'] ?? '')], [($p['Class'] ?? '')])), 'attrs' => ['role' => ((($p['Decorative'] ?? false))) ? 'presentation' : null, 'aria-hidden' => ((($p['Decorative'] ?? false))) ? 'true' : null, 'aria-orientation' => ((ui_eq(($p['Orientation'] ?? ''), 'vertical'))) ? 'vertical' : null], 'extra' => ($p['Attrs'] ?? [])])|noescape}

@@ -2,4 +2,4 @@
     Source: xgen/specs/ui/card.json
     CardContent: CardContent renders the padded main body slot.
     Props (p): Class (string), Attrs (attrs); children: markup. -#}
-<div class="{{ ui_cn([(p.Class ?? '')]) }}"{{ ui_attr_html((p.Attrs ?? {})) }}>{{ (children ?? '')|raw }}</div>
+{%- set c_ad1 -%}{{ (children ?? '')|raw }}{%- endset -%}{{ ui_prim('box', {'tag': 'div', 'class': (ui_cn([(p.Class ?? '')])), 'children': c_ad1, 'attrs': {}, 'extra': (p.Attrs ?? {})}) }}

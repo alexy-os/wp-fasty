@@ -2,10 +2,4 @@
     Source: xgen/specs/ui/controls.json
     Progress: Progress renders a native progress element.
     Props (p): Variant (string), Size (string), ID (string), Class (string), Value (string), Max (string), Attrs (attrs); children: markup. *}
-<progress
-  {if ui_is_set_str(($p['ID'] ?? ''))} id="{=($p['ID'] ?? '')}"{/if}
-  class="{=ui_compose('ui/form/progress.variants.json', ['size' => ($p['Size'] ?? ''), 'variant' => ($p['Variant'] ?? '')], [($p['Class'] ?? '')])}"
-  {if ui_is_set_str(($p['Value'] ?? ''))} value="{=($p['Value'] ?? '')}"{/if}
-  {if ui_is_set_str(($p['Max'] ?? ''))} max="{=($p['Max'] ?? '')}"{/if}
-  {=ui_attr_html(($p['Attrs'] ?? []))|noescape}
->{=($children ?? '')|noescape}</progress>
+{capture $c_ad1}{=($children ?? '')|noescape}{/capture}{=ui_prim('progress', ['class' => (ui_compose('ui/form/progress.variants.json', ['size' => ($p['Size'] ?? ''), 'variant' => ($p['Variant'] ?? '')], [($p['Class'] ?? '')])), 'children' => $c_ad1, 'attrs' => ['id' => ((ui_is_set_str(($p['ID'] ?? '')))) ? (($p['ID'] ?? '')) : null, 'value' => ((ui_is_set_str(($p['Value'] ?? '')))) ? (($p['Value'] ?? '')) : null, 'max' => ((ui_is_set_str(($p['Max'] ?? '')))) ? (($p['Max'] ?? '')) : null], 'extra' => ($p['Attrs'] ?? [])])|noescape}

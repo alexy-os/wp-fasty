@@ -2,14 +2,4 @@
     Source: xgen/specs/ui/controls.json
     Meter: Meter renders a native meter.
     Props (p): Variant (string), Size (string), ID (string), Class (string), Value (string), Min (string), Max (string), Low (string), High (string), Optimum (string), Attrs (attrs); children: markup. -#}
-<meter
-  {%- if ui_is_set_str((p.ID ?? '')) %} id="{{ (p.ID ?? '') }}"{%- endif %}
-  class="{{ ui_compose('ui/form/meter.variants.json', {'size': (p.Size ?? ''), 'variant': (p.Variant ?? '')}, [(p.Class ?? '')]) }}"
-  {%- if ui_is_set_str((p.Value ?? '')) %} value="{{ (p.Value ?? '') }}"{%- endif %}
-  {%- if ui_is_set_str((p.Min ?? '')) %} min="{{ (p.Min ?? '') }}"{%- endif %}
-  {%- if ui_is_set_str((p.Max ?? '')) %} max="{{ (p.Max ?? '') }}"{%- endif %}
-  {%- if ui_is_set_str((p.Low ?? '')) %} low="{{ (p.Low ?? '') }}"{%- endif %}
-  {%- if ui_is_set_str((p.High ?? '')) %} high="{{ (p.High ?? '') }}"{%- endif %}
-  {%- if ui_is_set_str((p.Optimum ?? '')) %} optimum="{{ (p.Optimum ?? '') }}"{%- endif %}
-  {{ ui_attr_html((p.Attrs ?? {})) }}
->{{ (children ?? '')|raw }}</meter>
+{%- set c_ad1 -%}{{ (children ?? '')|raw }}{%- endset -%}{{ ui_prim('meter', {'class': (ui_compose('ui/form/meter.variants.json', {'size': (p.Size ?? ''), 'variant': (p.Variant ?? '')}, [(p.Class ?? '')])), 'children': c_ad1, 'attrs': {'id': ((ui_is_set_str((p.ID ?? '')))) ? ((p.ID ?? '')) : null, 'value': ((ui_is_set_str((p.Value ?? '')))) ? ((p.Value ?? '')) : null, 'min': ((ui_is_set_str((p.Min ?? '')))) ? ((p.Min ?? '')) : null, 'max': ((ui_is_set_str((p.Max ?? '')))) ? ((p.Max ?? '')) : null, 'low': ((ui_is_set_str((p.Low ?? '')))) ? ((p.Low ?? '')) : null, 'high': ((ui_is_set_str((p.High ?? '')))) ? ((p.High ?? '')) : null, 'optimum': ((ui_is_set_str((p.Optimum ?? '')))) ? ((p.Optimum ?? '')) : null}, 'extra': (p.Attrs ?? {})}) }}

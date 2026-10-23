@@ -203,12 +203,9 @@ $blocksSuite = static function () use ($root, $out): int {
         $out('✗ blocks: no Twig package in ' . substr($src, strlen($root) + 1) . '/twig');
         return 1;
     }
-    foreach (['CnMerge', 'Runtime', 'Extension'] as $f) {
-        // the theme's UI8Kit 3 Twig runtime already declares UI8Kit\Twig\CnMerge (same as the builder runtime)
-        if ($f === 'CnMerge' && class_exists(\UI8Kit\Twig\CnMerge::class)) {
-            continue;
-        }
-        require_once "{$src}/twig/php/{$f}.php";
+    if (!\WPFastyBuilder\BlockRenderer::loadTwigRuntime()) {
+        $out('✗ blocks: Twig runtime of the builder (primitives/twig, sources/ui8kit/twig/php) missing');
+        return 1;
     }
     $dom = require __DIR__ . '/normalize-dom.php';
     $catalog = json_decode((string) file_get_contents($src . '/latte/catalog.json'), true, 512, JSON_THROW_ON_ERROR);
@@ -221,6 +218,7 @@ $blocksSuite = static function () use ($root, $out): int {
     }
     $latte = new \WPFastyBuilder\BlockRenderer(['ui8kit' => new LocalSource('ui8kit', $src . '/latte', 'latte')], null);
     $twig = \UI8Kit\Twig\Extension::environment($src . '/twig');
+    \WPFastyBuilder\BlockRenderer::addPrimitives($twig);
     $fail = 0;
     $n = 0;
     $blocks = 0;

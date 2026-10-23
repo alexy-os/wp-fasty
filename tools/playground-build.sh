@@ -22,7 +22,7 @@ rm -f "$OUT/wpfasty-types.zip"
 
 # Page builder (wp-admin only; the editor sources and node_modules stay out, the built assets go in).
 rm -f "$OUT/wpfasty-builder.zip"
-(cd plugins && zip -qr "$OUT/wpfasty-builder.zip" wpfasty-builder -x "wpfasty-builder/editor/*")
+(cd plugins && zip -qr "$OUT/wpfasty-builder.zip" wpfasty-builder -x "wpfasty-builder/editor/*" "wpfasty-builder/primitives/*/ui8kit.lock.json" "wpfasty-builder/primitives/*/ui8kit.config.json")
 
 STAGE="$(mktemp -d)"
 mkdir -p "$STAGE/wpfasty-demo/images"

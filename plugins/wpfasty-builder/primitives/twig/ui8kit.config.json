@@ -1,0 +1,23 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/@ui8kit/registry@3/schema/schema.json",
+  "contractVersion": "2.0.0",
+  "framework": "twig",
+  "runtime": "twig",
+  "typescript": false,
+  "globalCss": "ui8kit/app.css",
+  "dir": "ui8kit",
+  "aliases": {
+    "@": "./ui8kit",
+    "@/lib": "./ui8kit/lib",
+    "@/utils": "./ui8kit/utils",
+    "@/components": "./ui8kit/components",
+    "@/ui": "./ui8kit/ui",
+    "@/blocks": "./ui8kit/blocks",
+    "@/layouts": "./ui8kit/layouts",
+    "@/variants": "./ui8kit/variants",
+    "@/widgets": "./ui8kit/widgets"
+  },
+  "registry": "@ui8kit",
+  "registryVersion": "3.2.0",
+  "importStyle": "alias"
+}

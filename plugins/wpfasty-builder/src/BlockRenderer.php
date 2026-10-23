@@ -36,13 +36,12 @@ final class BlockRenderer
         if (class_exists('\UI8Kit\Latte\Extension', false) || !class_exists('\Latte\Engine')) {
             return;
         }
+        // UI8Kit 3 runtime of the plugin first: its CnMerge is the class merge of the generated runtime too
+        if (!Primitives::loadRuntime('latte')) {
+            return;
+        }
         $php = dirname(__DIR__) . '/sources/ui8kit/latte/php';
-        foreach (['CnMerge', 'Runtime', 'Extension'] as $f) {
-            // UI8Kit 3 (theme `ui8kit/runtime`, PSR-4 UI8Kit\Latte\) ships UI8Kit\Latte\CnMerge: prefer it (autoload),
-            // so the theme never runs on the legacy merge that drops ring-ring next to ring-offset.
-            if (class_exists('\\UI8Kit\\Latte\\' . $f, $f === 'CnMerge')) {
-                continue;
-            }
+        foreach (['Runtime', 'Extension'] as $f) {
             if (is_file("$php/$f.php")) {
                 require_once "$php/$f.php";
             }
@@ -58,12 +57,11 @@ final class BlockRenderer
         if (!class_exists('\Twig\Environment')) {
             return false;
         }
+        if (!Primitives::loadRuntime('twig')) {
+            return false;
+        }
         $php = dirname(__DIR__) . '/sources/ui8kit/twig/php';
-        foreach (['CnMerge', 'Runtime', 'Extension'] as $f) {
-            // UI8Kit 3 Twig runtime of the theme (PSR-4 UI8Kit\Twig\) ships UI8Kit\Twig\CnMerge: prefer it.
-            if ($f === 'CnMerge' && class_exists('\\UI8Kit\\Twig\\CnMerge')) {
-                continue;
-            }
+        foreach (['Runtime', 'Extension'] as $f) {
             if (!is_file("$php/$f.php")) {
                 return false;
             }
@@ -122,6 +120,9 @@ final class BlockRenderer
         }
         $tmp = $this->cache($source);
         $engine = \UI8Kit\Latte\Extension::engine($src->templateRoot(), $tmp);
+        // bricks are adapters over the plugin's UI8Kit 3 primitives (rendered on a trusted engine, see Primitives)
+        $engine->addFunction('ui_prim', static fn (string $name, array $args = []): \Latte\Runtime\Html
+            => new \Latte\Runtime\Html(Primitives::latte($name, $args)));
         if ($src->sandboxed()) {
             $engine->addExtension(self::guard($engine));
         }
@@ -141,6 +142,7 @@ final class BlockRenderer
         }
         $tmp = $this->cache($source . '/twig');
         $env = \UI8Kit\Twig\Extension::environment($root, ['cache' => $tmp ?? false, 'auto_reload' => true]);
+        self::addPrimitives($env);
         if ($src->sandboxed()) {
             $env->addExtension(self::sandbox($env));
         }
@@ -161,7 +163,7 @@ final class BlockRenderer
     /** Twig sandbox (global): only the tags, filters and functions of the generated templates; no methods/properties */
     public static function sandbox(\Twig\Environment $env): \Twig\Extension\SandboxExtension
     {
-        $fns = ['include'];
+        $fns = ['include', 'ui_prim'];
         foreach ($env->getExtension(\UI8Kit\Twig\Extension::class)->getFunctions() as $f) {
             $fns[] = $f->getName();
         }
@@ -173,6 +175,16 @@ final class BlockRenderer
             $fns,
         );
         return new \Twig\Extension\SandboxExtension($policy, true);
+    }
+
+    /** `ui_prim()` of the Twig bricks: renders a UI8Kit 3 Twig primitive of the plugin (see Primitives) */
+    public static function addPrimitives(\Twig\Environment $env): void
+    {
+        $env->addFunction(new \Twig\TwigFunction(
+            'ui_prim',
+            static fn (string $name, array $args = []): string => Primitives::twig($name, $args),
+            ['is_safe' => ['html']],
+        ));
     }
 
     private function cache(string $sub): ?string

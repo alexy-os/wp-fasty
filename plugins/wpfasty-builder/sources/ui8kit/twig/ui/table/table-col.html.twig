@@ -2,8 +2,4 @@
     Source: xgen/specs/ui/table.json
     TableCol: TableCol renders a single col definition.
     Props (p): Class (string), Span (int), Attrs (attrs). -#}
-<col
-  class="{{ ui_cn([(p.Class ?? '')]) }}"
-  {%- if ((p.Span ?? 0) > 0) %} span="{{ ui_s((p.Span ?? 0)) }}"{%- endif %}
-  {{ ui_attr_html((p.Attrs ?? {})) }}
->
+{{ ui_prim('box', {'tag': 'col', 'class': (ui_cn([(p.Class ?? '')])), 'attrs': {'span': ((((p.Span ?? 0) > 0))) ? (ui_s((p.Span ?? 0))) : null}, 'extra': (p.Attrs ?? {})}) }}

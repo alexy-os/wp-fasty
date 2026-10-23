@@ -8,6 +8,8 @@
 - Engines are isolated: no Twig in latte.zip, no Latte in twig.zip (CI greps enforce it).
 - Checks before commit: `bun run test`, `vendor/bin/phpcs`, `bun run lint:design`, `bun run parity`, `php tools/ui8kit3/presets.php --check`,
   `npx ui8kit@3 check` (both dirs), `bun run theme:pack -- latte` and `-- latte --engine twig`.
-- The builder plugin blocks (`plugins/wpfasty-builder/sources/ui8kit`) are still xgen-generated with their own runtime (not yet v3).
+- Builder plugin: UI8Kit 3 primitives in `plugins/wpfasty-builder/primitives/{latte,twig}` (`npx ui8kit@3 check` there);
+  the bricks `sources/ui8kit/<engine>/ui/**` are adapters calling `ui_prim('<primitive>', {...})` (WPFastyBuilder\Primitives,
+  trusted engine, so sandboxed remote sources need no primitive templates). Blocks stay xgen-generated (`blocks/**`).
 - Registries: build and verify locally; never overwrite a published version or `latest` on registry.buildy.tw.
 - Rules: `.cursor/rules/` (see `ui8kit3.mdc`).

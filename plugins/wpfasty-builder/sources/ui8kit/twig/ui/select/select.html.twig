@@ -2,22 +2,9 @@
     Source: xgen/specs/ui/select.json
     Select: Select renders option children from the Options list plus manual children.
     Props (p): Variant (string), Size (string), Class (string), Name (string), Value (string), Disabled (bool), Required (bool), Options (SelectOptionItem[]), ID (string), Role (string), TabIndex (string), AriaLabel (string), Attrs (attrs); children: markup. -#}
-<select
-  {%- if ui_is_set_str((p.ID ?? '')) %} id="{{ (p.ID ?? '') }}"{%- endif %}
-  {%- if ui_is_set_str((p.Name ?? '')) %} name="{{ (p.Name ?? '') }}"{%- endif %}
-  class="{{ ui_compose('ui/select/select.variants.json', {'size': (p.Size ?? ''), 'variant': (p.Variant ?? '')}, [(p.Class ?? '')]) }}"
-  {%- if (p.Disabled ?? false) %} disabled{%- endif %}
-  {%- if (p.Required ?? false) %} required{%- endif %}
-  {%- if ui_is_set_str((p.Role ?? '')) %} role="{{ (p.Role ?? '') }}"{%- endif %}
-  {%- if ui_is_set_str((p.TabIndex ?? '')) %} tabindex="{{ (p.TabIndex ?? '') }}"{%- endif %}
-  {%- if ui_is_set_str((p.AriaLabel ?? '')) %} aria-label="{{ (p.AriaLabel ?? '') }}"{%- endif %}
-  {{ ui_attr_html((p.Attrs ?? {})) }}
->
+{%- set c_ad2 -%}
   {%- for item in (p.Options ?? []) %}
-    <option
-      value="{{ ui_field(item, 'Value', '') }}"
-      {%- if ui_eq(ui_field(item, 'Value', ''), (p.Value ?? '')) %} selected{%- endif %}
-    >{{ ui_field(item, 'Label', '') }}</option>
+    {%- set c_ad1 -%}{{ ui_field(item, 'Label', '') }}{%- endset -%}{{ ui_prim('option', {'value': (ui_field(item, 'Value', '')), 'children': c_ad1, 'attrs': {'selected': ((ui_eq(ui_field(item, 'Value', ''), (p.Value ?? '')))) ? true : null}}) }}
   {%- endfor %}
   {{ (children ?? '')|raw }}
-</select>
+{%- endset -%}{{ ui_prim('select', {'class': (ui_compose('ui/select/select.variants.json', {'size': (p.Size ?? ''), 'variant': (p.Variant ?? '')}, [(p.Class ?? '')])), 'children': c_ad2, 'attrs': {'id': ((ui_is_set_str((p.ID ?? '')))) ? ((p.ID ?? '')) : null, 'name': ((ui_is_set_str((p.Name ?? '')))) ? ((p.Name ?? '')) : null, 'disabled': (((p.Disabled ?? false))) ? true : null, 'required': (((p.Required ?? false))) ? true : null, 'role': ((ui_is_set_str((p.Role ?? '')))) ? ((p.Role ?? '')) : null, 'tabindex': ((ui_is_set_str((p.TabIndex ?? '')))) ? ((p.TabIndex ?? '')) : null, 'aria-label': ((ui_is_set_str((p.AriaLabel ?? '')))) ? ((p.AriaLabel ?? '')) : null}, 'extra': (p.Attrs ?? {})}) }}

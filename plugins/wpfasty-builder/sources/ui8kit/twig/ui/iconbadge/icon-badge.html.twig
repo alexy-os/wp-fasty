@@ -2,7 +2,4 @@
     Source: xgen/specs/ui/iconbadge.json
     IconBadge: IconBadge renders children as the badge content.
     Props (p): Variant (string), Size (string), Class (string), Attrs (attrs); children: markup. -#}
-<span
-  class="{{ ui_compose('ui/iconbadge/iconbadge.variants.json', {'variant': (p.Variant ?? ''), 'size': (p.Size ?? '')}, [(p.Class ?? '')]) }}"
-  {{ ui_attr_html((p.Attrs ?? {})) }}
->{{ (children ?? '')|raw }}</span>
+{%- set c_ad1 -%}{{ (children ?? '')|raw }}{%- endset -%}{{ ui_prim('text', {'tag': 'span', 'class': (ui_compose('ui/iconbadge/iconbadge.variants.json', {'variant': (p.Variant ?? ''), 'size': (p.Size ?? '')}, [(p.Class ?? '')])), 'children': c_ad1, 'attrs': {}, 'extra': (p.Attrs ?? {})}) }}

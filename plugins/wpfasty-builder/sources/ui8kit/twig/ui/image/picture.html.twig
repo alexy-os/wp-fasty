@@ -2,4 +2,4 @@
     Source: xgen/specs/ui/image.json
     Picture: Picture renders a responsive image wrapper.
     Props (p): Class (string), Attrs (attrs); children: markup. -#}
-<picture class="{{ ui_cn([(p.Class ?? '')]) }}"{{ ui_attr_html((p.Attrs ?? {})) }}>{{ (children ?? '')|raw }}</picture>
+{%- set c_ad1 -%}{{ (children ?? '')|raw }}{%- endset -%}{{ ui_prim('picture', {'class': (ui_cn([(p.Class ?? '')])), 'children': c_ad1, 'attrs': {}, 'extra': (p.Attrs ?? {})}) }}

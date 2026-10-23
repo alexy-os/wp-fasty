@@ -3,7 +3,4 @@
     Stack: Stack renders a vertical flex container.
     Props (p): Gap (string), Align (string), Justify (string), Class (string), Tag (string), Attrs (attrs); children: markup. -#}
 {%- set tag1 = ui_resolve_tag((p.Tag ?? ''), 'div', ['div', 'ul', 'ol']) -%}
-<{{ tag1 }}
-  class="{{ ui_compose('ui/stack/stack.variants.json', {'gap': (p.Gap ?? ''), 'align': (p.Align ?? ''), 'justify': (p.Justify ?? '')}, [(p.Class ?? '')]) }}"
-  {{ ui_attr_html((p.Attrs ?? {})) }}
->{{ (children ?? '')|raw }}</{{ tag1 }}>
+{%- set c_ad1 -%}{{ (children ?? '')|raw }}{%- endset -%}{{ ui_prim('auto', {'tag': tag1, 'class': (ui_compose('ui/stack/stack.variants.json', {'gap': (p.Gap ?? ''), 'align': (p.Align ?? ''), 'justify': (p.Justify ?? '')}, [(p.Class ?? '')])), 'children': c_ad1, 'attrs': {}, 'extra': (p.Attrs ?? {})}) }}

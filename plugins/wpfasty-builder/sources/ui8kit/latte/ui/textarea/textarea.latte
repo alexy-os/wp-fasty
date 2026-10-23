@@ -2,16 +2,4 @@
     Source: xgen/specs/ui/textarea.json
     Textarea: Textarea renders a styled multi-line form control.
     Props (p): Variant (string), Size (string), Class (string), Name (string), Value (string), Placeholder (string), Rows (int), Disabled (bool), Required (bool), ID (string), Role (string), TabIndex (string), AriaLabel (string), Attrs (attrs). *}
-<textarea
-  {if ui_is_set_str(($p['ID'] ?? ''))} id="{=($p['ID'] ?? '')}"{/if}
-  {if ui_is_set_str(($p['Name'] ?? ''))} name="{=($p['Name'] ?? '')}"{/if}
-  class="{=ui_compose('ui/textarea/textarea.variants.json', ['size' => ($p['Size'] ?? ''), 'variant' => ($p['Variant'] ?? '')], [($p['Class'] ?? '')])}"
-  rows="{=((($p['Rows'] ?? 0) > 0) ? ui_s(($p['Rows'] ?? 0)) : '4')}"
-  {if ui_is_set_str(($p['Placeholder'] ?? ''))} placeholder="{=($p['Placeholder'] ?? '')}"{/if}
-  {if ($p['Disabled'] ?? false)} disabled{/if}
-  {if ($p['Required'] ?? false)} required{/if}
-  {if ui_is_set_str(($p['Role'] ?? ''))} role="{=($p['Role'] ?? '')}"{/if}
-  {if ui_is_set_str(($p['TabIndex'] ?? ''))} tabindex="{=($p['TabIndex'] ?? '')}"{/if}
-  {if ui_is_set_str(($p['AriaLabel'] ?? ''))} aria-label="{=($p['AriaLabel'] ?? '')}"{/if}
-  {=ui_attr_html(($p['Attrs'] ?? []))|noescape}
->{=($p['Value'] ?? '')}</textarea>
+{=ui_prim('textarea', ['class' => (ui_compose('ui/textarea/textarea.variants.json', ['size' => ($p['Size'] ?? ''), 'variant' => ($p['Variant'] ?? '')], [($p['Class'] ?? '')])), 'value' => ($p['Value'] ?? ''), 'attrs' => ['id' => ((ui_is_set_str(($p['ID'] ?? '')))) ? (($p['ID'] ?? '')) : null, 'name' => ((ui_is_set_str(($p['Name'] ?? '')))) ? (($p['Name'] ?? '')) : null, 'rows' => (((($p['Rows'] ?? 0) > 0) ? ui_s(($p['Rows'] ?? 0)) : '4')), 'placeholder' => ((ui_is_set_str(($p['Placeholder'] ?? '')))) ? (($p['Placeholder'] ?? '')) : null, 'disabled' => ((($p['Disabled'] ?? false))) ? true : null, 'required' => ((($p['Required'] ?? false))) ? true : null, 'role' => ((ui_is_set_str(($p['Role'] ?? '')))) ? (($p['Role'] ?? '')) : null, 'tabindex' => ((ui_is_set_str(($p['TabIndex'] ?? '')))) ? (($p['TabIndex'] ?? '')) : null, 'aria-label' => ((ui_is_set_str(($p['AriaLabel'] ?? '')))) ? (($p['AriaLabel'] ?? '')) : null], 'extra' => ($p['Attrs'] ?? [])])|noescape}

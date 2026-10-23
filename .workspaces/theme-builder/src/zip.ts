@@ -29,8 +29,14 @@ export async function writeZipFromDir(
   });
   if (zip.status === 0) return;
 
+  // Same exclusions as `zip -x` (a `*` matches across `/`).
+  const rx = exclude.map((g) => new RegExp("^" + g.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*") + "$"));
   const { entries } = await collectFiles(sourceDir);
-  await writeStoreZip(entries, sourceDir, zipPath, rootName);
+  const kept = entries.filter((f) => {
+    const rel = rootName + "/" + relative(sourceDir, f).replace(/\\/g, "/");
+    return !rx.some((r) => r.test(rel));
+  });
+  await writeStoreZip(kept, sourceDir, zipPath, rootName);
 }
 
 async function collectFiles(

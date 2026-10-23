@@ -2,7 +2,4 @@
     Source: xgen/specs/ui/form.json
     FormDescription: FormDescription renders muted helper copy below a control.
     Props (p): Class (string), Attrs (attrs); children: markup. -#}
-<p
-  class="{{ ui_compose('ui/form/form-description.variants.json', {}, [(p.Class ?? '')]) }}"
-  {{ ui_attr_html((p.Attrs ?? {})) }}
->{{ (children ?? '')|raw }}</p>
+{%- set c_ad1 -%}{{ (children ?? '')|raw }}{%- endset -%}{{ ui_prim('text', {'tag': 'p', 'class': (ui_compose('ui/form/form-description.variants.json', {}, [(p.Class ?? '')])), 'children': c_ad1, 'attrs': {}, 'extra': (p.Attrs ?? {})}) }}

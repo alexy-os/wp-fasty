@@ -2,14 +2,7 @@
     Source: xgen/specs/ui/disclosure.json
     Summary: Summary renders native summary, followed by a Lucide chevron-down indicator that turns over when the details open (CSS only: group-open:rotate-180 on the Disclosure group).
     Props (p): Variant (string), Class (string), Attrs (attrs); children: markup. *}
-<summary
-  class="{=ui_compose('ui/disclosure/summary.variants.json', ['variant' => ($p['Variant'] ?? '')], [($p['Class'] ?? '')])}"
-  {=ui_attr_html(($p['Attrs'] ?? []))|noescape}
->
+{capture $c_ad2}
   {=($children ?? '')|noescape}
-  <span
-    class="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180"
-    aria-hidden="true"
-    data-slot="summary-indicator"
-  ></span>
-</summary>
+  {capture $c_ad1}{/capture}{=ui_prim('text', ['tag' => 'span', 'class' => 'size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180', 'children' => $c_ad1, 'attrs' => ['aria-hidden' => 'true', 'data-slot' => 'summary-indicator']])|noescape}
+{/capture}{=ui_prim('summary', ['class' => (ui_compose('ui/disclosure/summary.variants.json', ['variant' => ($p['Variant'] ?? '')], [($p['Class'] ?? '')])), 'children' => $c_ad2, 'attrs' => [], 'extra' => ($p['Attrs'] ?? [])])|noescape}

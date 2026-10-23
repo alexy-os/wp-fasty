@@ -2,4 +2,4 @@
     Source: xgen/specs/ui/image.json
     Picture: Picture renders a responsive image wrapper.
     Props (p): Class (string), Attrs (attrs); children: markup. *}
-<picture class="{=ui_cn([($p['Class'] ?? '')])}"{=ui_attr_html(($p['Attrs'] ?? []))|noescape}>{=($children ?? '')|noescape}</picture>
+{capture $c_ad1}{=($children ?? '')|noescape}{/capture}{=ui_prim('picture', ['class' => (ui_cn([($p['Class'] ?? '')])), 'children' => $c_ad1, 'attrs' => [], 'extra' => ($p['Attrs'] ?? [])])|noescape}

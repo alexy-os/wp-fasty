@@ -2,9 +2,4 @@
     Source: xgen/specs/ui/skeleton.json
     Skeleton: Skeleton renders a decorative placeholder.
     Props (p): Shape (string), Class (string), Attrs (attrs). *}
-<div
-  class="{=ui_compose('ui/skeleton/skeleton.variants.json', ['shape' => ($p['Shape'] ?? '')], [($p['Class'] ?? '')])}"
-  aria-hidden="true"
-  data-slot="skeleton"
-  {=ui_attr_html(($p['Attrs'] ?? []))|noescape}
-></div>
+{capture $c_ad1}{/capture}{=ui_prim('box', ['tag' => 'div', 'class' => (ui_compose('ui/skeleton/skeleton.variants.json', ['shape' => ($p['Shape'] ?? '')], [($p['Class'] ?? '')])), 'children' => $c_ad1, 'attrs' => ['aria-hidden' => 'true', 'data-slot' => 'skeleton'], 'extra' => ($p['Attrs'] ?? [])])|noescape}
