@@ -23,7 +23,7 @@
 								<span class="text-sm text-muted-foreground">{$item['unit_display']}</span>
 							</div>
 							<label class="sr-only" for="qty-{$item['id']}">{$labels['qty']}</label>
-							<div class="w-20 shrink-0">{include 'input/Input.latte', id: 'qty-' . $item['id'], type: 'number', name: 'qtys[' . $item['id'] . ']', value: (string) $item['qty'], min: '0', max: '99'}</div>
+							<div class="w-20 shrink-0">{include 'input/Input.latte', id: 'qty-' . $item['id'], type: 'number', name: 'qtys[' . $item['id'] . ']', value: (string) $item['qty'], min: '0', max: '99', class: kit('input', [])}</div>
 							<span class="w-24 text-right font-semibold">{$item['line_display']}</span>
 							<button type="submit" form="remove-{$item['id']}" class="inline-flex size-10 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-destructive" aria-label="{$labels['remove']}: {$item['title']}">{icon('trash-2')}</button>
 						</li>
@@ -32,7 +32,7 @@
 				<div class="flex flex-wrap justify-between gap-4">
 					<a href="{$shop['url']}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{icon('arrow-left')}{$labels['continue_shopping']}</a>
 					{capture $upd}{icon('rotate-ccw')}{$labels['update_cart']}{/capture}
-					{include 'button/Button.latte', type: 'submit', variant: 'outline', children: (string) $upd}
+					{include 'button/Button.latte', type: 'submit', class: kit('button', ['variant' => 'outline']), children: (string) $upd}
 				</div>
 			</form>
 			{foreach $cart['items'] as $item}

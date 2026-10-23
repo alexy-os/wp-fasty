@@ -12,7 +12,7 @@
 	<div class="grid gap-8 md:grid-cols-2 md:gap-16">
 		<div class="overflow-hidden rounded-2xl border border-border bg-muted">
 			{if !empty($page['featuredImage']['url'])}
-				{include 'image/Image.latte', src: $page['featuredImage']['url'], alt: $page['featuredImage']['alt'] ?? '', srcset: $page['featuredImage']['srcset'] ?? '', sizes: '(min-width: 768px) 50vw, 100vw', class: 'aspect-square h-full w-full object-cover', loading: 'eager'}
+				{include 'image/Image.latte', src: $page['featuredImage']['url'], alt: $page['featuredImage']['alt'] ?? '', sizes: '(min-width: 768px) 50vw, 100vw', class: kit('image', [], 'aspect-square h-full w-full object-cover'), loading: 'eager', srcSet: $page['featuredImage']['srcset'] ?? '', decoding: 'async'}
 			{else}
 				<div class="flex aspect-square items-center justify-center text-muted-foreground">{icon('package', 'size-8')}</div>
 			{/if}
@@ -36,14 +36,14 @@
 					<input type="hidden" name="_wpnonce" value="{$shop['cart_nonce']}">
 					<div class="flex flex-col gap-2">
 						{capture $qtyLabel}{$labels['qty']}{/capture}
-						{include 'label/Label.latte', for: 'qty', children: (string) $qtyLabel}
-						<div class="w-24">{include 'input/Input.latte', id: 'qty', type: 'number', name: 'qty', value: '1', min: '1', max: (string) ($page['product']['stock'] ?? 99), required: true}</div>
+						{include 'label/Label.latte', htmlFor: 'qty', class: kit('label', []), children: (string) $qtyLabel}
+						<div class="w-24">{include 'input/Input.latte', id: 'qty', type: 'number', name: 'qty', value: '1', min: '1', max: (string) ($page['product']['stock'] ?? 99), required: true, class: kit('input', [])}</div>
 					</div>
 					<div class="flex flex-wrap gap-4">
 						{capture $addLabel}{icon('shopping-cart')}{$labels['add_to_cart']}{/capture}
-						{include 'button/Button.latte', type: 'submit', size: 'lg', children: (string) $addLabel}
+						{include 'button/Button.latte', type: 'submit', class: kit('button', ['size' => 'lg']), children: (string) $addLabel}
 						{capture $buyLabel}{$labels['buy_now']}{/capture}
-						{include 'button/Button.latte', type: 'submit', size: 'lg', variant: 'outline', attrs: ['name' => 'buy_now', 'value' => '1'], children: (string) $buyLabel}
+						{include 'button/Button.latte', type: 'submit', attrs: ['name' => 'buy_now', 'value' => '1'], class: kit('button', ['variant' => 'outline', 'size' => 'lg']), children: (string) $buyLabel}
 					</div>
 					{if $page['product']['stock'] !== null}
 						<p class="text-sm text-muted-foreground">{$page['product']['stock']} in stock</p>

@@ -1,0 +1,8 @@
+{* WP FastY kit — Stack: composition over UI8Kit 3 Box + presets/components/stack.json (legacy xgen API kept for views). *}
+{parameters
+  string $class = '',
+  string $tag = '',
+  array $attrs = [],
+  string $children = '',
+}
+{include 'box/Box.latte', tag: in_array($tag, ['div', 'ul', 'ol'], true) ? $tag : 'div', class: kit('stack', [], $class), attrs: $attrs, children: $children}

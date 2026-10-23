@@ -1,0 +1,88 @@
+---
+description: UI8Kit primitives (Latte (PHP)) — how to build markup with the kit in ui8kit/ui
+globs: ui8kit/**/*.latte
+alwaysApply: false
+---
+
+# UI8Kit primitives — Latte (PHP)
+
+Primitives live in `ui8kit/ui` (one folder per primitive, generated code: do not edit by hand).
+Import them from there: Composer package `generated/latte` (namespace `UI8Kit\Latte`): point the loader at `ui8kit/ui/ui`, then `{include 'button/Button.latte', ariaLabel: 'Save', children: $html}` (one template per part: `<brick>/<Part>.latte`, typed `{parameters}`). Props are parameters (`$tag`, `$class`, `$ariaLabel`, `$htmlFor`), extra attributes go in `$attrs` (caller wins). `$children` is trusted HTML printed with `|noescape` — never pass user input (XSS); capture Latte markup with `{capture $html}…{/capture}`. There is no asChild: for a custom root use `{\UI8Kit\Latte\Classes::buttonClasses(['class' => 'px-4'])}`.
+
+## 1. Use a primitive instead of raw HTML
+
+Where a primitive exists for an element, use the primitive, never the raw tag:
+
+| Primitive | Renders |
+| --- | --- |
+| `Box` | `<div>`, `<section>`, `<article>`, `<aside>`, `<header>`, `<footer>`, … (via `tag`) |
+| `Text` | `<p>`, `<span>`, `<h1>`, `<h2>`, `<h3>`, `<h4>`, … (via `tag`) |
+| `Button` | `<a>`, `<button>` |
+| `Link` | `<a>` |
+| `Label` | `<label>` |
+| `Input` | `<input>` |
+| `Textarea` | `<textarea>` |
+| `Select` | `<select>` |
+| `SelectOption` | `<option>` |
+| `SelectOptGroup` | `<optgroup>` |
+| `Checkbox` | `<input>` |
+| `Radio` | `<input>` |
+| `Switch` | `<button>` |
+| `Image` | `<img>` |
+| `Picture` | `<picture>` |
+| `Source` | `<source>` |
+| `Icon` | `<span>` |
+| `Dialog` | `<dialog>` |
+| `Disclosure` | `<details>` |
+| `Summary` | `<summary>` |
+| `Meter` | `<meter>` |
+| `Progress` | `<progress>` |
+
+Raw HTML is fine only for elements no primitive covers.
+
+## 2. `tag` accepts only real HTML5 tags
+
+`Box` and `Text` choose their element with `tag`. Pass only a real HTML5 tag from the allowed list
+(never a component name, custom element or made-up tag):
+
+- `Box`: `div`, `section`, `article`, `aside`, `header`, `footer`, `main`, `nav`, `figure`, `search`, `ul`, `ol`, `li`, `dl`, `dt`, `dd`, `fieldset`, `form`, `table`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`, `caption`, `colgroup`, `col`
+- `Text`: `p`, `span`, `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `blockquote`, `figcaption`, `pre`, `code`, `small`, `strong`, `em`, `time`, `legend`
+
+## 3. Static ARIA via props
+
+Set ARIA through the primitive's typed props (e.g. `aria-label`, `aria-pressed`, `aria-expanded`, `aria-controls`), as static values.
+Do not hand-write `role`/`aria-*` that a primitive already renders (`Icon` sets `aria-hidden`
+or `role="img"` + `aria-label` from `label`; `Switch` sets `role="switch"`).
+
+## 4. Colors only via shadcn token classes
+
+Style with token utility classes only: `bg-background`, `text-foreground`, `bg-primary`,
+`text-primary-foreground`, `bg-secondary`, `bg-muted`, `text-muted-foreground`, `bg-accent`,
+`bg-destructive`, `border-border`, `border-input`, `ring-ring`, `bg-card`, `bg-popover`, …
+No palette colors (`bg-blue-500`), no hex/rgb/hsl values, no arbitrary color classes (`bg-[#fff]`),
+no inline `style` colors.
+
+## 5. Spacing: 8 + 4 rule
+
+- Spacing (padding, margin, gap, space-*) uses the 8px step: Tailwind `2, 4, 6, 8, 10, 12, 16, …`
+  (`p-2` = 8px, `gap-4` = 16px).
+- The 4px step (`1`, e.g. `px-1`, `gap-1`) is allowed only inside controls (button, input,
+  select, checkbox, badge-like inline control content).
+- No half-steps (`p-0.5`, `p-1.5`, `p-2.5`, …), no odd steps (`p-3`, `p-5`, `p-7`), no arbitrary
+  px values (`p-[13px]`, `mt-[7px]`).
+
+## 6. Icons: Lucide inside `Icon`
+
+Use Lucide icons (inline Lucide SVG markup (copy the `<svg>` from lucide.dev) passed as `$children`) as the child of the `Icon` primitive; size via `Icon` `size`
+(`xs`, `sm`, `md`, `lg`, `xl`). Give `label` when the icon carries meaning; omit it for
+decorative icons.
+
+```latte
+{capture $title}{include 'text/Text.latte', tag: 'h2', class: 'text-foreground', children: 'Title'}{/capture}
+{include 'box/Box.latte', tag: 'section', class: 'flex flex-col gap-4 p-4 bg-card text-card-foreground', children: (string) $title}
+<a href="/save" class="{=\UI8Kit\Latte\Classes::buttonClasses(['class' => 'px-4'])}">Save</a>
+```
+
+## Checks
+
+Review-only: verify the rules above when reviewing changes; there is no automated command for them.

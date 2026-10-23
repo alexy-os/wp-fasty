@@ -64,7 +64,9 @@ if ($twigPrims === null || !class_exists(\Twig\Environment::class)) {
     exit(1);
 }
 
-$normalize = require __DIR__ . '/normalize.php';
+// UI8Kit 3 pilot: Latte views render UI8Kit 3 primitives + kit presets, Twig the legacy line (see normalize-kit.php).
+$normalize = require __DIR__ . '/normalize-kit.php';
+$lattePrims = PrimitivesLocator::latteRoots($root . '/themes/latte');
 
 $render = static function (RendererInterface $r, array $fx): string {
     if (empty($fx['page'])) {
@@ -79,10 +81,11 @@ $wanted = array_slice($argv, 1) ?: array_keys($suites);
 $fail = 0;
 $cache = sys_get_temp_dir() . '/wpfasty-parity-' . getmypid();
 /** Builder landings: compiled Latte + Twig page of each landing, rendered in its archetype. */
-$builder = static function () use ($root, $suites, $twigPrims, $cache, $render, $out): int {
+$builder = static function () use ($root, $suites, $twigPrims, $lattePrims, $cache, $render, $out): int {
     $fail = 0;
-    // Blocks render from the generated Latte / Twig packages: compared as DOM trees like suite blocks.
-    $normalize = require __DIR__ . '/normalize-dom.php';
+    // Blocks render from the generated Latte / Twig packages: compared as DOM trees like suite blocks (class lists
+    // canonicalized with the UI8Kit 3 merge: the layout around them is on UI8Kit 3, see normalize-kit.php).
+    $normalize = require __DIR__ . '/normalize-kit.php';
     $src = $root . '/plugins/wpfasty-builder/sources/ui8kit';
     // One catalog and one block renderer per runtime (isolated runtimes; the Twig page never sees a Latte source).
     $catalogs = [];
@@ -143,7 +146,7 @@ $builder = static function () use ($root, $suites, $twigPrims, $cache, $render, 
         $ctx['widgets']['sidebar'] = '';
         $own = $suites[$arch] ?? $suites['latte'];
         $roots = [$dir, ...array_map(static fn (string $d): string => $root . '/' . $d, $own)];
-        $latte = new LatteRenderer([...$roots, $root . '/.workspaces/ui8kit-latte/ui'], "{$cache}/builder/{$i}");
+        $latte = new LatteRenderer([...$roots, ...$lattePrims], "{$cache}/builder/{$i}");
         $latte->latte()->addFunction('wpfb_block', $fns['latte']);
         $twig = new TwigRenderer([...$roots, $twigPrims], "{$cache}/builder/{$i}/twig");
         $twig->twig()->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false
@@ -288,7 +291,7 @@ foreach ($wanted as $suite) {
         $fail++;
         continue;
     }
-    $latte = new LatteRenderer([...$views, $root . '/.workspaces/ui8kit-latte/ui'], "{$cache}/{$suite}");
+    $latte = new LatteRenderer([...$views, ...$lattePrims], "{$cache}/{$suite}");
     $twig = new TwigRenderer([...$views, $twigPrims], "{$cache}/{$suite}/twig");
     foreach ($files as $file) {
         $fx = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);

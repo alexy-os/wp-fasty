@@ -4,7 +4,7 @@
 <article class="group flex flex-col gap-4">
 	<a href="{$project['url']}" class="block overflow-hidden rounded-xl border border-border bg-card no-underline" aria-label="{$project['title']}">
 		{if !empty($project['featuredImage']['url'])}
-			{include 'image/Image.latte', src: $project['featuredImage']['url'], alt: $project['featuredImage']['alt'] ?? '', srcset: $project['featuredImage']['srcset'] ?? '', sizes: '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw', class: 'aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105', loading: 'lazy'}
+			{include 'image/Image.latte', src: $project['featuredImage']['url'], alt: $project['featuredImage']['alt'] ?? '', sizes: '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw', class: kit('image', [], 'aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105'), loading: 'lazy', srcSet: $project['featuredImage']['srcset'] ?? '', decoding: 'async'}
 		{else}
 			<div class="flex aspect-[4/3] items-center justify-center text-muted-foreground">{icon('image', 'size-8')}</div>
 		{/if}

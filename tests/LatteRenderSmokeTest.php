@@ -34,7 +34,7 @@ final class LatteRenderSmokeTest extends TestCase
         $theme = dirname(__DIR__) . '/themes/latte';
         $roots = [
             $theme . '/views',
-            dirname(__DIR__) . '/.workspaces/ui8kit-latte/ui',
+            ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__) . '/themes/latte'),
         ];
         $latte = new Engine();
         $latte->setTempDirectory($this->cacheDir);
@@ -232,7 +232,7 @@ final class LatteRenderSmokeTest extends TestCase
         $roots = [
             $skin . '/views',
             $theme . '/views',
-            dirname(__DIR__) . '/.workspaces/ui8kit-latte/ui',
+            ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__) . '/themes/latte'),
         ];
         $latte = new Engine();
         $latte->setTempDirectory($this->cacheDir);

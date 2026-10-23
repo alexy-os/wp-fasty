@@ -13,16 +13,17 @@
 					alt: $page['featuredImage']['alt'] ?? $page['title'],
 					width: (string) ($page['featuredImage']['width'] ?? ''),
 					height: (string) ($page['featuredImage']['height'] ?? ''),
-					srcset: $page['featuredImage']['srcset'] ?? '',
 					sizes: $page['featuredImage']['sizes'] ?? '',
-					class: 'mx-auto max-h-[80vh] w-auto',
-					loading: 'eager'
+					class: kit('image', [], 'mx-auto max-h-[80vh] w-auto'),
+					loading: 'eager',
+					srcSet: $page['featuredImage']['srcset'] ?? '',
+					decoding: 'async'
 				}
 			{/capture}
 			{include 'box/Box.latte', class: 'mb-8 overflow-hidden rounded-lg', children: (string) $img}
 		{elseif !empty($page['attachment_url'])}
 			{capture $fileLink}{$labels['attachment'] ?? 'Attachment'}{/capture}
-			{include 'link/Link.latte', href: $page['attachment_url'], class: 'text-primary underline', children: (string) $fileLink}
+			{include 'link/Link.latte', href: $page['attachment_url'], class: kit('link', [], 'text-primary underline'), children: (string) $fileLink}
 		{/if}
 
 		{if !empty($page['content'])}

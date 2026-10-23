@@ -12,14 +12,14 @@
 				{if !empty($page['author']['name'])}
 					{capture $authorName}{$page['author']['name']}{/capture}
 					<span>{$labels['by_author']}
-						{include 'link/Link.latte', href: $page['author']['url'], class: 'underline-offset-2 hover:underline', children: (string) $authorName}
+						{include 'link/Link.latte', href: $page['author']['url'], class: kit('link', [], 'underline-offset-2 hover:underline'), children: (string) $authorName}
 					</span>
 				{/if}
 				{if !empty($page['categories'])}
 					<span>{$labels['categories']}:
 						{foreach $page['categories'] as $cat}
 							{capture $catName}{$cat['name']}{/capture}
-							{include 'link/Link.latte', href: $cat['url'], class: 'underline-offset-2 hover:underline', children: (string) $catName}{if !$iterator->last}, {/if}
+							{include 'link/Link.latte', href: $cat['url'], class: kit('link', [], 'underline-offset-2 hover:underline'), children: (string) $catName}{if !$iterator->last}, {/if}
 						{/foreach}
 					</span>
 				{/if}
@@ -41,10 +41,11 @@
 					alt: $page['featuredImage']['alt'] ?? '',
 					width: (string) ($page['featuredImage']['width'] ?? ''),
 					height: (string) ($page['featuredImage']['height'] ?? ''),
-					srcset: $page['featuredImage']['srcset'] ?? '',
 					sizes: $page['featuredImage']['sizes'] ?? '',
-					class: 'w-full',
-					loading: 'eager'
+					class: kit('image', [], 'w-full'),
+					loading: 'eager',
+					srcSet: $page['featuredImage']['srcset'] ?? '',
+					decoding: 'async'
 				}
 			{/capture}
 			{include 'box/Box.latte', class: 'mb-8 overflow-hidden rounded-lg', children: (string) $img}
@@ -62,7 +63,7 @@
 				<span class="text-sm text-muted-foreground">{$labels['tags']}:</span>
 				{foreach $page['tags'] as $tag}
 					{capture $tagName}{$tag['name']}{/capture}
-					{capture $tagLink}{include 'link/Link.latte', href: $tag['url'], class: 'no-underline', children: (string) $tagName}{/capture}
+					{capture $tagLink}{include 'link/Link.latte', href: $tag['url'], class: kit('link', [], 'no-underline'), children: (string) $tagName}{/capture}
 					{include 'badge/Badge.latte', variant: 'secondary', class: 'mr-1', children: (string) $tagLink}
 				{/foreach}
 			{/capture}
@@ -73,11 +74,11 @@
 			{capture $navBits}
 				{if !empty($page['prev']['url'])}
 					{capture $prevLabel}{$labels['previous_post']}: {$page['prev']['title']}{/capture}
-					{include 'link/Link.latte', href: $page['prev']['url'], class: 'text-sm text-primary', children: (string) $prevLabel}
+					{include 'link/Link.latte', href: $page['prev']['url'], class: kit('link', [], 'text-sm text-primary'), children: (string) $prevLabel}
 				{/if}
 				{if !empty($page['next']['url'])}
 					{capture $nextLabel}{$labels['next_post']}: {$page['next']['title']}{/capture}
-					{include 'link/Link.latte', href: $page['next']['url'], class: 'text-sm text-primary', children: (string) $nextLabel}
+					{include 'link/Link.latte', href: $page['next']['url'], class: kit('link', [], 'text-sm text-primary'), children: (string) $nextLabel}
 				{/if}
 			{/capture}
 			{include 'group/Group.latte', class: 'mt-10 flex flex-wrap justify-between gap-4 border-t border-border pt-8', children: (string) $navBits}

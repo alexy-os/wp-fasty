@@ -13,17 +13,18 @@
 							alt: $post['thumbnail']['alt'] ?? '',
 							width: (string) ($post['thumbnail']['width'] ?? ''),
 							height: (string) ($post['thumbnail']['height'] ?? ''),
-							srcset: $post['thumbnail']['srcset'] ?? '',
 							sizes: $post['thumbnail']['sizes'] ?? '',
-							class: 'aspect-video w-full object-cover',
-							loading: 'lazy'
+							class: kit('image', [], 'aspect-video w-full object-cover'),
+							loading: 'lazy',
+							srcSet: $post['thumbnail']['srcset'] ?? '',
+							decoding: 'async'
 						}
 					{/capture}
-					{include 'link/Link.latte', href: $post['url'], class: 'block overflow-hidden', children: (string) $thumb}
+					{include 'link/Link.latte', href: $post['url'], class: kit('link', [], 'block overflow-hidden'), children: (string) $thumb}
 				{/if}
 				{capture $postTitle}{$post['title']}{/capture}
 				{capture $cardTitle}
-					{include 'link/Link.latte', href: $post['url'], class: 'no-underline hover:text-primary', children: (string) $postTitle}
+					{include 'link/Link.latte', href: $post['url'], class: kit('link', [], 'no-underline hover:text-primary'), children: (string) $postTitle}
 				{/capture}
 				{capture $headerInner}
 					{include 'card/CardTitle.latte', class: 'text-xl', children: (string) $cardTitle}

@@ -14,7 +14,7 @@
 
 	{capture $ctaLabel}{$error['home_label']}{/capture}
 	{capture $cta}
-		{include 'link/Link.latte', href: $error['home_url'], variant: 'default', size: 'lg', class: 'font-medium', children: (string) $ctaLabel}
+		{include 'link/Link.latte', href: $error['home_url'], class: kit('link', ['variant' => 'default', 'size' => 'lg'], 'font-medium'), children: (string) $ctaLabel}
 	{/capture}
 	<div class="mt-8">
 		{$cta|noescape}

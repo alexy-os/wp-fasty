@@ -16,13 +16,13 @@
 		{capture $learn}{$hero['secondary_label'] ?? 'Learn more'}{/capture}
 		{if !empty($hero['primary_url'])}
 			{capture $primary}
-				{include 'link/Link.latte', href: $hero['primary_url'], variant: 'default', class: 'inline-flex h-10 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground no-underline', children: (string) $explore}
+				{include 'link/Link.latte', href: $hero['primary_url'], class: kit('link', ['variant' => 'default'], 'inline-flex h-10 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground no-underline'), children: (string) $explore}
 			{/capture}
 			{$primary|noescape}
 		{/if}
 		{if !empty($hero['secondary_url'])}
 			{capture $secondary}
-				{include 'link/Link.latte', href: $hero['secondary_url'], variant: 'muted', class: 'inline-flex h-10 items-center rounded-full border border-input bg-secondary px-4 text-sm font-medium no-underline', children: (string) $learn}
+				{include 'link/Link.latte', href: $hero['secondary_url'], class: kit('link', ['variant' => 'muted'], 'inline-flex h-10 items-center rounded-full border border-input bg-secondary px-4 text-sm font-medium no-underline'), children: (string) $learn}
 			{/capture}
 			{$secondary|noescape}
 		{/if}

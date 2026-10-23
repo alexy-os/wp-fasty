@@ -2,7 +2,7 @@
 
 Clean WordPress parent theme for the wp-fasty monorepo.
 
-- **UI:** UI8Kit Codegen Latte primitives (`.workspaces/ui8kit-latte`)
+- **UI:** UI8Kit 3 Latte primitives installed by the CLI (`npx ui8kit@3 add --all` → `ui8kit/ui`, PSR-4 `UI8Kit\Latte\` → `ui8kit/runtime/`, pinned in `ui8kit.lock.json`, verify with `npx ui8kit@3 check`) + our kit (`kit/ui` middle layer over Box/Text, classes from `presets/components` via `kit()`); legacy `.workspaces/ui8kit-latte` stays as fallback until removal
 - **PHP:** slim DI (`Application` → `Container` → services)
 - **Data:** `ContextFactory` only — no WP queries in Latte
 - **Views:** layout grammar + `{include 'button/Button.latte', …}`
@@ -48,7 +48,7 @@ A child theme can restyle and override Latte views **without** `composer.json` o
 | Filter `wpfasty_context` | Hand-edit UI8Kit primitives |
 | Filter `wpfasty_latte_roots` | Run `composer install` |
 
-Loader order: **child views → parent views → UI8Kit `ui/`**.
+Loader order: **child views → parent views → kit `kit/ui` → UI8Kit 3 `ui8kit/ui`**.
 
 Example skin: [`themes/latte-skin/`](../latte-skin/). Full contract: [`.project/constructor/child-skins.md`](../../.project/constructor/child-skins.md).
 

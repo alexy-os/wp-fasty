@@ -1,0 +1,10 @@
+{* WP FastY kit — Grid: composition over UI8Kit 3 Box + presets/components/grid.json (legacy xgen API kept for views). *}
+{parameters
+  string $class = '',
+  string $cols = '',
+  array $attrs = [],
+  string $children = '',
+}
+{* cols preset is skipped when the caller already sets grid-cols-* (legacy rule) *}
+{var $kitClass = str_contains($class, 'grid-cols-') ? kit('grid', ['cols' => 'none'], $class) : kit('grid', ['cols' => $cols], $class)}
+{include 'box/Box.latte', class: $kitClass, attrs: $attrs, children: $children}

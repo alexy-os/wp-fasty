@@ -1,0 +1,8 @@
+{* WP FastY kit — Title: composition over UI8Kit 3 Text + presets/components/title.json (legacy xgen API kept for views). *}
+{parameters
+  string $class = '',
+  int $as = 0,
+  array $attrs = [],
+  string $children = '',
+}
+{include 'text/Text.latte', tag: 'h' . (in_array($as, [1, 3, 4, 5, 6], true) ? $as : 2), class: kit('title', [], $class), attrs: $attrs, children: $children}

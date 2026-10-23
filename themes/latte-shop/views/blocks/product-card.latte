@@ -2,7 +2,7 @@
 <article class="group flex flex-col overflow-hidden rounded-xl border border-border bg-card">
 	<a href="{$product['url']}" class="relative block overflow-hidden bg-muted no-underline" aria-label="{$product['title']}">
 		{if !empty($product['featuredImage']['url'])}
-			{include 'image/Image.latte', src: $product['featuredImage']['url'], alt: $product['featuredImage']['alt'] ?? '', srcset: $product['featuredImage']['srcset'] ?? '', sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw', class: 'aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105', loading: 'lazy'}
+			{include 'image/Image.latte', src: $product['featuredImage']['url'], alt: $product['featuredImage']['alt'] ?? '', sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw', class: kit('image', [], 'aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105'), loading: 'lazy', srcSet: $product['featuredImage']['srcset'] ?? '', decoding: 'async'}
 		{else}
 			<div class="flex aspect-square items-center justify-center text-muted-foreground">{icon('package', 'size-8')}</div>
 		{/if}
@@ -29,7 +29,7 @@
 					<input type="hidden" name="product_id" value="{$product['id']}">
 					<input type="hidden" name="_wpnonce" value="{$shop['cart_nonce']}">
 					{capture $addIcon}{icon('plus')}{/capture}
-					{include 'button/Button.latte', type: 'submit', size: 'icon', ariaLabel: $labels['add_to_cart'] . ': ' . $product['title'], children: (string) $addIcon}
+					{include 'button/Button.latte', type: 'submit', ariaLabel: $labels['add_to_cart'] . ': ' . $product['title'], class: kit('button', ['size' => 'icon']), children: (string) $addIcon}
 				</form>
 			{else}
 				<span class="text-xs text-muted-foreground">{$labels['out_of_stock']}</span>

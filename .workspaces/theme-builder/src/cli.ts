@@ -221,11 +221,17 @@ async function buildTheme(id: string): Promise<void> {
 const OTHER_ENGINE: Record<"latte" | "twig", (rel: string) => boolean> = {
   // latte.zip: no Twig views, no Twig renderer
   latte: (rel) => rel.endsWith(".html.twig") || rel === "classes/Template/TwigRenderer.php",
-  // twig.zip: no Latte views, no Latte renderer / loader / extension
+  // twig.zip: no Latte views, no Latte renderer / loader / extension, no UI8Kit 3 Latte primitives / kit layer
   twig: (rel) =>
     rel.endsWith(".latte") ||
-    ["LatteRenderer", "LatteEngine", "MultiRootLoader", "WordPressExtension"].some((c) => rel === `classes/Template/${c}.php`),
+    UI8KIT3_LATTE.some((d) => rel === d || rel.startsWith(d + "/")) ||
+    ["LatteRenderer", "LatteEngine", "MultiRootLoader", "WordPressExtension", "Kit"].some((c) => rel === `classes/Template/${c}.php`),
 };
+
+/** UI8Kit 3 Latte install of themes/latte (`npx ui8kit@3 add --all`) and our kit layer over it (Latte only). */
+const UI8KIT3_LATTE = ["ui8kit", "kit"];
+/** ui8kit CLI metadata: kept in the repo (`npx ui8kit@3 check`), never shipped (.cursor is a hidden dir for Theme Check). */
+const UI8KIT3_DEV = [".cursor", "ui8kit.lock.json", "ui8kit.config.json"];
 
 /** walk a directory (relative paths, files only) */
 async function filesOf(dir: string, base = dir): Promise<string[]> {
@@ -274,6 +280,7 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
       if (rel.startsWith("vendor" + "/") || rel === "vendor") return false;
       if (rel.startsWith("tests" + "/") || rel === "tests") return false;
       if (rel.endsWith(".theme-build.json")) return false;
+      if (UI8KIT3_DEV.some((d) => rel === d || rel.startsWith(d + "/"))) return false;
       if (OTHER_ENGINE[engine](rel)) return false;
       return true;
     },
@@ -376,6 +383,8 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
     autoload: {
       "psr-4": {
         "WPFasty\\": "classes/",
+        // UI8Kit 3 runtime installed by the ui8kit CLI (Latte build only)
+        ...(engine === "latte" && existsSync(join(stagedTheme, "ui8kit", "runtime")) ? { "UI8Kit\\Latte\\": "ui8kit/runtime/" } : {}),
       },
     },
     "minimum-stability": "dev",
@@ -430,6 +439,7 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
   const leaked = (await filesOf(stagedTheme)).filter((f) =>
     engine === "twig"
       ? f.startsWith("vendor/latte/") || f.startsWith("lib/ui8kit-latte/") || f.startsWith("vendor/ui8kit/") || f.endsWith(".latte")
+        || UI8KIT3_LATTE.some((d) => f.startsWith(d + "/"))
       : f.startsWith("vendor/twig/") || f.startsWith("lib/ui8kit-twig/") || f.endsWith(".html.twig")
   );
   if (leaked.length) throw new Error(`${slug}.zip would ship the other engine: ${leaked.slice(0, 5).join(", ")}`);

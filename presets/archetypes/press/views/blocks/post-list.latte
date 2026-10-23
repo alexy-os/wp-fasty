@@ -11,9 +11,9 @@
 				<article class="{$post['post_class'] ?? ''} grid gap-6 border-b border-border pb-8 md:grid-cols-[240px_1fr]">
 					{if !empty($post['thumbnail']['url'])}
 						{capture $thumb}
-							{include 'image/Image.latte', src: $post['thumbnail']['url'], alt: $post['thumbnail']['alt'] ?? '', srcset: $post['thumbnail']['srcset'] ?? '', sizes: '(min-width: 768px) 240px, 100vw', class: 'aspect-[4/3] w-full rounded-lg object-cover', loading: 'lazy'}
+							{include 'image/Image.latte', src: $post['thumbnail']['url'], alt: $post['thumbnail']['alt'] ?? '', sizes: '(min-width: 768px) 240px, 100vw', class: kit('image', [], 'aspect-[4/3] w-full rounded-lg object-cover'), loading: 'lazy', srcSet: $post['thumbnail']['srcset'] ?? '', decoding: 'async'}
 						{/capture}
-						{include 'link/Link.latte', href: $post['url'], class: 'block', children: (string) $thumb}
+						{include 'link/Link.latte', href: $post['url'], class: kit('link', [], 'block'), children: (string) $thumb}
 					{else}
 						<div class="hidden md:block"></div>
 					{/if}

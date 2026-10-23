@@ -37,6 +37,9 @@ final class WordPressExtension extends Extension
             'icon' => static fn (string $name, string $class = 'size-4', string $label = ''): \Latte\Runtime\Html
                 => new \Latte\Runtime\Html(Icons::svg($name, $class, $label)),
             't' => [ViewHelpers::class, 't'],
+            // Kit presets over the unstyled UI8Kit 3 primitives:
+            // class: kit('button', ['variant' => 'default'], 'mt-4').
+            'kit' => [Kit::class, 'classes'],
         ];
     }
 

@@ -1,0 +1,8 @@
+{* WP FastY kit — Group: composition over UI8Kit 3 Box + presets/components/group.json (legacy xgen API kept for views). *}
+{parameters
+  string $class = '',
+  string $tag = '',
+  array $attrs = [],
+  string $children = '',
+}
+{include 'box/Box.latte', tag: in_array($tag, ['div', 'fieldset', 'dl'], true) ? $tag : 'div', class: kit('group', [], $class), attrs: $attrs, children: $children}

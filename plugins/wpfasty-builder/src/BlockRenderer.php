@@ -38,6 +38,10 @@ final class BlockRenderer
         }
         $php = dirname(__DIR__) . '/sources/ui8kit/latte/php';
         foreach (['CnMerge', 'Runtime', 'Extension'] as $f) {
+            // UI8Kit 3 (theme `ui8kit/runtime`, PSR-4 UI8Kit\Latte\) ships the same UI8Kit\Latte\CnMerge: reuse it.
+            if (class_exists('\\UI8Kit\\Latte\\' . $f, false)) {
+                continue;
+            }
             if (is_file("$php/$f.php")) {
                 require_once "$php/$f.php";
             }

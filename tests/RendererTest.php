@@ -26,7 +26,7 @@ final class RendererTest extends TestCase
 
     private function latte(): LatteRenderer
     {
-        return new LatteRenderer([$this->views(), dirname(__DIR__) . '/.workspaces/ui8kit-latte/ui'], $this->cache);
+        return new LatteRenderer([$this->views(), ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__) . '/themes/latte')], $this->cache);
     }
 
     private function twig(): TwigRenderer
@@ -56,10 +56,9 @@ final class RendererTest extends TestCase
     {
         $twig = $this->twig();
         $ctx = ['title' => '<b>'];
-        self::assertSame(
-            self::normalize($this->latte()->render('probe', $ctx)),
-            self::normalize($twig->render('probe', $ctx))
-        );
+        // UI8Kit 3 pilot: Latte on UI8Kit 3 + kit presets, Twig on the legacy line — same DOM after the class merge.
+        $dom = require dirname(__DIR__) . '/tools/parity/normalize-kit.php';
+        self::assertSame($dom($this->latte()->render('probe', $ctx)), $dom($twig->render('probe', $ctx)));
     }
 
     public function testTwigSafeUrlMatchesLatteUrlCheck(): void
@@ -99,7 +98,7 @@ final class RendererTest extends TestCase
     public function testNoFallbackBetweenEngines(): void
     {
         // Isolated runtimes (K7): an engine without its primitives (or library) is an error, never the other engine.
-        $latte = ['latte' => [dirname(__DIR__) . '/.workspaces/ui8kit-latte/ui'], 'twig' => []];
+        $latte = ['latte' => [...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__) . '/themes/latte')], 'twig' => []];
         try {
             RendererFactory::create('twig', [$this->views()], $latte, $this->cache);
             self::fail('twig without Twig primitives must not render');
@@ -120,7 +119,7 @@ final class RendererTest extends TestCase
 
     public function testFactoryPicksEngine(): void
     {
-        $r = RendererFactory::create('latte', [$this->views()], ['latte' => [dirname(__DIR__) . '/.workspaces/ui8kit-latte/ui']], $this->cache);
+        $r = RendererFactory::create('latte', [$this->views()], ['latte' => [...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__) . '/themes/latte')]], $this->cache);
         self::assertInstanceOf(LatteRenderer::class, $r);
         self::assertSame($r, RendererFactory::create($r, [], [], $this->cache));
     }

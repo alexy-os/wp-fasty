@@ -8,8 +8,9 @@
 			alt: $site['logo']['alt'] ?? $site['title'],
 			width: (string) ($site['logo']['width'] ?? ''),
 			height: (string) ($site['logo']['height'] ?? ''),
-			class: 'h-8 w-auto',
-			loading: 'eager'
+			class: kit('image', [], 'h-8 w-auto'),
+			loading: 'eager',
+			decoding: 'async'
 		}
 	{else}
 		{$site['title']}

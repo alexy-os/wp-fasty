@@ -20,7 +20,7 @@ final class AppShellSmokeTest extends TestCase
         $latte->setStrictTypes(true);
         $latte->setLoader(new MultiRootLoader([
             $theme . '/views',
-            dirname(__DIR__) . '/.workspaces/ui8kit-latte/ui',
+            ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__) . '/themes/latte'),
         ]));
         $latte->addExtension(new WordPressExtension());
 

@@ -1,0 +1,10 @@
+{* WP FastY kit — Block: composition over UI8Kit 3 Box + presets/components/block.json (legacy xgen API kept for views). *}
+{parameters
+  string $id = '',
+  string $class = '',
+  string $tag = '',
+  array $attrs = [],
+  string $children = '',
+}
+{var $kitTag = in_array($tag, ['div', 'section', 'article', 'aside', 'header', 'footer', 'main', 'nav', 'figure', 'search'], true) ? $tag : 'div'}
+{include 'box/Box.latte', tag: $kitTag, class: kit('block', [], $class), attrs: ['id' => $id === '' ? null : $id, ...$attrs], children: $children}

@@ -31,7 +31,7 @@ return function (Container $container): void {
         $engine = Engines::requested();
         // Only the requested engine's primitives are located (a build never loads the other runtime).
         $primitives = [
-            'latte' => $engine === 'latte' ? array_filter([PrimitivesLocator::resolve($templateDir)]) : [],
+            'latte' => $engine === 'latte' ? PrimitivesLocator::latteRoots($templateDir) : [],
             'twig' => $engine === 'twig' ? array_filter([PrimitivesLocator::resolveTwig($templateDir)]) : [],
         ];
         $roots = (array) apply_filters('wpfasty_view_roots', $roots, is_string($engine) ? $engine : 'custom');
