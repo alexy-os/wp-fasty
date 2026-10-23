@@ -11,7 +11,7 @@ namespace UI8Kit\Latte;
 final class Tags
 {
     public const GROUPS = [
-        'Box' => ['div', 'section', 'article', 'aside', 'header', 'footer', 'main', 'nav', 'figure', 'search', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'fieldset', 'form', 'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'caption', 'colgroup', 'col'],
+        'Box' => ['div', 'section', 'article', 'aside', 'header', 'footer', 'main', 'nav', 'figure', 'search', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'fieldset', 'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'caption', 'colgroup', 'col'],
         'Text' => ['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'figcaption', 'pre', 'code', 'small', 'strong', 'em', 'time', 'legend'],
     ];
 }

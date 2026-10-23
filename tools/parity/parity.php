@@ -64,8 +64,8 @@ if ($twigPrims === null || !class_exists(\Twig\Environment::class)) {
     exit(1);
 }
 
-// UI8Kit 3 pilot: Latte views render UI8Kit 3 primitives + kit presets, Twig the legacy line (see normalize-kit.php).
-$normalize = require __DIR__ . '/normalize-kit.php';
+$normalize = require __DIR__ . '/normalize.php';
+$compareClasses = require __DIR__ . '/compare-classes.php';
 $lattePrims = PrimitivesLocator::latteRoots($root . '/themes/latte');
 
 $render = static function (RendererInterface $r, array $fx): string {
@@ -81,11 +81,19 @@ $wanted = array_slice($argv, 1) ?: array_keys($suites);
 $fail = 0;
 $cache = sys_get_temp_dir() . '/wpfasty-parity-' . getmypid();
 /** Builder landings: compiled Latte + Twig page of each landing, rendered in its archetype. */
-$builder = static function () use ($root, $suites, $twigPrims, $lattePrims, $cache, $render, $out): int {
+$builder = static function () use (
+    $root,
+    $suites,
+    $twigPrims,
+    $lattePrims,
+    $cache,
+    $render,
+    $out,
+    $compareClasses
+): int {
     $fail = 0;
-    // Blocks render from the generated Latte / Twig packages: compared as DOM trees like suite blocks (class lists
-    // canonicalized with the UI8Kit 3 merge: the layout around them is on UI8Kit 3, see normalize-kit.php).
-    $normalize = require __DIR__ . '/normalize-kit.php';
+    // Blocks render from the generated Latte / Twig packages: compared as DOM trees like suite blocks.
+    $normalize = require __DIR__ . '/normalize-dom.php';
     $src = $root . '/plugins/wpfasty-builder/sources/ui8kit';
     // One catalog and one block renderer per runtime (isolated runtimes; the Twig page never sees a Latte source).
     $catalogs = [];
@@ -170,6 +178,10 @@ $builder = static function () use ($root, $suites, $twigPrims, $lattePrims, $cac
         $n = substr_count($a, 'wpfb-block"');
         if ($a === $b && $n > 0) {
             $out("✓ {$name}: compiled landing ({$n} blocks) + layout/default identical (" . strlen($a) . ' B)');
+            continue;
+        }
+        if ($n > 0 && ($why = $compareClasses($rawA, $rawB)) === null) {
+            $out("✓ {$name}: compiled landing ({$n} blocks) + layout/default same DOM (pilot class rule)");
             continue;
         }
         $fail++;
@@ -303,8 +315,10 @@ foreach ($wanted as $suite) {
             continue;
         }
         try {
-            $a = $normalize($render($latte, $fx));
-            $b = $normalize($render($twig, $fx));
+            $rawA = $render($latte, $fx);
+            $rawB = $render($twig, $fx);
+            $a = $normalize($rawA);
+            $b = $normalize($rawB);
         } catch (\Throwable $e) {
             $out("✗ {$name}: " . get_class($e) . ': ' . $e->getMessage());
             $fail++;
@@ -314,6 +328,15 @@ foreach ($wanted as $suite) {
             $out("✓ {$name}: {$kind} identical (" . strlen($a) . ' B)');
             continue;
         }
+        // UI8Kit 3 pilot (themes/latte on UI8Kit 3, Twig legacy): strict DOM, class lists per compare-classes.php.
+        $why = $compareClasses($rawA, $rawB);
+        if ($why === null) {
+            $out("✓ {$name}: {$kind} same DOM; class lists differ only by the UI8Kit 3 merge (pilot rule)");
+            continue;
+        }
+        $fail++;
+        $out("✗ {$name}: {$why}");
+        continue;
         $fail++;
         $i = 0;
         $max = min(strlen($a), strlen($b));

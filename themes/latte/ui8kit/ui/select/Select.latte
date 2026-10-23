@@ -24,15 +24,8 @@
   'aria-invalid' => \UI8Kit\Latte\Rt::orNull($ariaInvalid),
   'aria-describedby' => \UI8Kit\Latte\Rt::orNull($ariaDescribedBy),
   ...$attrs,
-]">
-  {foreach $options as $item}
-    <option n:attr="[
-      'value' => ($item['value'] ?? ''),
-      'selected' => (($item['value'] ?? '') === $value),
-      'disabled' => ($item['disabled'] ?? false),
-    ]">
-      {=($item['label'] ?? '')}
-    </option>
-  {/foreach}
-  {$children|noescape}
-</select>
+]">{foreach $options as $item}<option n:attr="[
+  'value' => ($item['value'] ?? ''),
+  'selected' => (($item['value'] ?? '') === $value),
+  'disabled' => ($item['disabled'] ?? false),
+]">{=($item['label'] ?? '')}</option>{/foreach}{$children|noescape}</select>

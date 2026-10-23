@@ -86,6 +86,16 @@ final class Classes
     }
 
     /**
+     * Form classes without rendering — the asChild replacement for custom roots.
+     *
+     * @param array{class?: string, id?: string, name?: string, action?: string, method?: string, encType?: string, noValidate?: bool, autoComplete?: string, target?: string, ariaLabel?: string, ariaLabelledBy?: string, ariaDescribedBy?: string} $p
+     */
+    public static function formClasses(array $p = []): string
+    {
+        return Rt::cn([($p['class'] ?? '')]);
+    }
+
+    /**
      * Input classes without rendering — the asChild replacement for custom roots.
      *
      * @param array{class?: string, type?: string, id?: string, name?: string, value?: string, placeholder?: string, min?: string, max?: string, step?: string, required?: bool, disabled?: bool, readOnly?: bool, ariaInvalid?: string, ariaDescribedBy?: string} $p
@@ -221,6 +231,16 @@ final class Classes
      * @param array{class?: string, value?: string, max?: string, ariaLabel?: string} $p
      */
     public static function progressClasses(array $p = []): string
+    {
+        return Rt::cn([($p['class'] ?? '')]);
+    }
+
+    /**
+     * Separator classes without rendering — the asChild replacement for custom roots.
+     *
+     * @param array{class?: string, orientation?: string, decorative?: bool} $p
+     */
+    public static function separatorClasses(array $p = []): string
     {
         return Rt::cn([($p['class'] ?? '')]);
     }

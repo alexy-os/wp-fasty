@@ -31,14 +31,14 @@ if ($da === $db) {
     fwrite(STDOUT, 'DOM-identical (' . strlen($da) . " B; text whitespace differs)\n");
     exit(0);
 }
-// UI8Kit 3 pilot: the Latte parent renders UI8Kit 3 primitives + kit presets, the Twig parent the legacy line —
-// same tree once class lists are canonicalized with the UI8Kit 3 merge (tools/parity/normalize-kit.php).
-$kit = require __DIR__ . '/normalize-kit.php';
-$ka = $kit((string) file_get_contents($fileA));
-if ($ka === $kit((string) file_get_contents($fileB))) {
-    fwrite(STDOUT, 'DOM-identical after the UI8Kit 3 class merge (' . strlen($ka) . " B)\n");
+// UI8Kit 3 pilot: Latte parent on UI8Kit 3, Twig parent legacy — strict DOM, class lists per compare-classes.php.
+$compareClasses = require __DIR__ . '/compare-classes.php';
+$why = $compareClasses((string) file_get_contents($fileA), (string) file_get_contents($fileB));
+if ($why === null) {
+    fwrite(STDOUT, "same DOM; class lists differ only by the UI8Kit 3 merge (duplicates / known overrides)\n");
     exit(0);
 }
+fwrite(STDOUT, $why . "\n");
 $i = 0;
 $max = min(strlen($a), strlen($b));
 while ($i < $max && $a[$i] === $b[$i]) {

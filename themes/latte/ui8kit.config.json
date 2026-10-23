@@ -11,12 +11,13 @@
     "@/lib": "./ui8kit/lib",
     "@/utils": "./ui8kit/utils",
     "@/components": "./ui8kit/components",
-    "@/ui": "./ui8kit/components/ui",
+    "@/ui": "./ui8kit/ui",
     "@/blocks": "./ui8kit/blocks",
     "@/layouts": "./ui8kit/layouts",
     "@/variants": "./ui8kit/variants",
     "@/widgets": "./ui8kit/widgets"
   },
   "registry": "@ui8kit",
+  "registryVersion": "3.2.0",
   "importStyle": "alias"
 }

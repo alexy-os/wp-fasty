@@ -1,203 +1,223 @@
 {
   "lockVersion": 2,
-  "cli": "3.2.0",
+  "cli": "3.2.1",
   "items": {
     "npm:@ui8kit/registry|latte|box": {
       "name": "box",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/box/Box.latte": "4a163dc11fbbfbb63755e0955dab5fba2d90b8404109544a1977df53ac232a6c"
+        "ui8kit/ui/box/Box.latte": "26486941704b7c17375309f24d021e95d3478f17241dfa35b057a24e0ceb700f"
       }
     },
     "npm:@ui8kit/registry|latte|button": {
       "name": "button",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/button/Button.latte": "4cc5e02dc227b14f3c28b385c9c99acb3224a1c4c946d786c0b94ccf6a2dc83d"
+        "ui8kit/ui/button/Button.latte": "eb20d68df7982f4e1c86eeeebb7ee4971fa20a149682085e62b2d6b143cf3aee"
       }
     },
     "npm:@ui8kit/registry|latte|checkbox": {
       "name": "checkbox",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/checkbox/Checkbox.latte": "d751ff4062fc8915baf6cc6f245767c1a5d2a944f140f687b8611b61a59b6199"
+        "ui8kit/ui/checkbox/Checkbox.latte": "f9e17a06678d56fa63db26f771ce9f0a3a31646941561361835805b26b36c539"
       }
     },
     "npm:@ui8kit/registry|latte|dialog": {
       "name": "dialog",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/dialog/Dialog.latte": "41f996500936555b5e3991fa887f964f3f5207acceba205279a35a432ac7e8d6"
+        "ui8kit/ui/dialog/Dialog.latte": "9725696e7cd7c05c5c8bcdb66130d2735a86d96bf5e47a4ad01c9f392a1b7b7f"
       }
     },
     "npm:@ui8kit/registry|latte|disclosure": {
       "name": "disclosure",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/disclosure/Disclosure.latte": "32a7ed87442f518399eb9552c58345e8c99f884d4f7f534b6ae230b1362cc3a0",
-        "ui8kit/ui/disclosure/Summary.latte": "18435f202f0b0917af2f06f922a8170ec9ee111b504b971bcd3430e50957a9f4"
+        "ui8kit/ui/disclosure/Disclosure.latte": "5eeae7026c710d51e0fab1764486be1e265ae92b0f242a329143bf3d0e2bdb65",
+        "ui8kit/ui/disclosure/Summary.latte": "d7a9dbfb23816fd5ab7689b7b9576d6ff30f1f0f830ba53ea85e3bdefedf16d5"
+      }
+    },
+    "npm:@ui8kit/registry|latte|form": {
+      "name": "form",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
+      "runtime": "latte",
+      "files": {
+        "ui8kit/ui/form/Form.latte": "f14fdf5ec1e7eba3ee09f6b0ae241ba871482d282f54ba5a0957f3ec390bd7ea"
       }
     },
     "npm:@ui8kit/registry|latte|icon": {
       "name": "icon",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/icon/Icon.latte": "8f2de6136dc1f63342e37fd976a42834775ad83e4b7775ecac0e8563e7ac6821"
+        "ui8kit/ui/icon/Icon.latte": "9169313bc30a4103413e4bd727ec000238a083fbbda970b8e796d117e516e0e9"
       }
     },
     "npm:@ui8kit/registry|latte|image": {
       "name": "image",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/image/Image.latte": "42158446bf30e065d4f38e8b71150a7e30b0b8476e03162a589e7b0f7b73bcd5",
-        "ui8kit/ui/image/Picture.latte": "c6c668635fe98203737ca2711631067f24474e27516090175882595602e1d7e5",
-        "ui8kit/ui/image/Source.latte": "30eb9a3742572351d14812e868001439b275116c72141729782248d48b4915de"
+        "ui8kit/ui/image/Image.latte": "9b994f142e4360a0d0e097410f1aca2f1d1121a88eaa36515eafb64a039942f0",
+        "ui8kit/ui/image/Picture.latte": "e916b86f9888ebe597bd3cf93c552945c53fa960da20730876b57f827a9732e5",
+        "ui8kit/ui/image/Source.latte": "2c5c52dc8aa4ba6ad8de956a3ece529e180e9d765775c79d6f8f0a4c0e4dd700"
       }
     },
     "npm:@ui8kit/registry|latte|input": {
       "name": "input",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/input/Input.latte": "563d0419ac13e06c2dec02731ff14a90afe45dc5fd606d421a6473dbb70f5534"
+        "ui8kit/ui/input/Input.latte": "3e8a1034c698ad5bcac7e4971959459a13bf2344a6bda4ad834762f188fceb3e"
       }
     },
     "npm:@ui8kit/registry|latte|label": {
       "name": "label",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/label/Label.latte": "130d0aca83a5bbfcb4c1f41d07bff337275e9f84ef7b76a82c651a149ef05ae7"
+        "ui8kit/ui/label/Label.latte": "1d3fa0ce35c73c470e9d953f1dc9efcdb798aafd47972a93e7c81592dcd32e55"
       }
     },
     "npm:@ui8kit/registry|latte|link": {
       "name": "link",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/link/Link.latte": "49d9cce0b39c0ecb5ca6c36e88566122cc6f93a3bf3c7454af7457350dc29241"
+        "ui8kit/ui/link/Link.latte": "cd93390feeb3a68c73bb13af3790adc48d2d7c1ed9623e55f993a42cec3a7403"
       }
     },
     "npm:@ui8kit/registry|latte|meter": {
       "name": "meter",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/meter/Meter.latte": "28f6953d469d825551c3c6335ba69aee1315e36fe9e0d9145e0bad11d18fff18"
+        "ui8kit/ui/meter/Meter.latte": "4b7538aea353aa05ecf5abe63e9cbe9b7085ffb48777565f32af74a4138232ed"
       }
     },
     "npm:@ui8kit/registry|latte|progress": {
       "name": "progress",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/progress/Progress.latte": "98af0981d70ac93061d0981da757358e9cea95a5cfd7587c912a676c7cda5ad3"
+        "ui8kit/ui/progress/Progress.latte": "6703376d9eceea880b7e0cce6076573952154df08ef1abeb93d31b137c640481"
       }
     },
     "npm:@ui8kit/registry|latte|radio": {
       "name": "radio",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/radio/Radio.latte": "13ae2e5f49109333da38ce4b7e49a685fa74baedebe26a6300f69af622608f85"
+        "ui8kit/ui/radio/Radio.latte": "e52889894dee2876d0f1c2ac73691903ce3a424704f709ce4afb601f3bd12d37"
       }
     },
     "npm:@ui8kit/registry|latte|rules": {
       "name": "rules",
       "type": "registry:rules",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        ".cursor/rules/ui8kit-primitives.mdc": "4af355f49831c5c3b209374b808464f82254e00a7441bcdc490d4579594793aa"
+        ".cursor/rules/ui8kit-primitives.mdc": "9a2dbf433dbade537b00164b277dc6758287a3736c7f38d6c87d90ad58210578"
       }
     },
     "npm:@ui8kit/registry|latte|select": {
       "name": "select",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/select/Select.latte": "a22dbe2838ca0d8e91723c925de4a8d7811a6c2319f0d4583ef4481430aa8c0c",
-        "ui8kit/ui/select/SelectOptGroup.latte": "1f33e15f1ddc90d0ad00f9175eb01670ded29c3b71b82ada026e40747893ab12",
-        "ui8kit/ui/select/SelectOption.latte": "2b1e77d61461bc36074e8241dea0d7a0e0794cef75a1aacfac9671ee30ce4dfd"
+        "ui8kit/ui/select/Select.latte": "746dc7a579c1632a9cb03c48ed2301f85d68e5d9cdb9d0540125773788dd5f19",
+        "ui8kit/ui/select/SelectOptGroup.latte": "fd6e2eb51c0d493c03ef07213d8e74cdd0f18ea04c8bc41a47ad9f627bfa62eb",
+        "ui8kit/ui/select/SelectOption.latte": "2d07ea9b0321beeda85a4517dd35fb95162cdb94ec23e0a15ba4584bce165096"
+      }
+    },
+    "npm:@ui8kit/registry|latte|separator": {
+      "name": "separator",
+      "type": "registry:ui",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
+      "runtime": "latte",
+      "files": {
+        "ui8kit/ui/separator/Separator.latte": "17149a60843a65882ba782db009738771d307df10e622c204684655ade12d6ac"
       }
     },
     "npm:@ui8kit/registry|latte|switch": {
       "name": "switch",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/switch/Switch.latte": "a77dac5d8975a0531eb028b8d3d0ddbfc99c6642088fe52cbfec5436a8ebce47"
+        "ui8kit/ui/switch/Switch.latte": "1b45e36f8627552ef36df4f12bd57d3da2e33418b818f7183fcfa98ef2328426"
       }
     },
     "npm:@ui8kit/registry|latte|text": {
       "name": "text",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/text/Text.latte": "bf0f48c05ff15197395189ad68d2d783f7878e11482e15f7627dd7ce12a0891d"
+        "ui8kit/ui/text/Text.latte": "3e47afabe2b9092eb54ebee48694b1c4ec345944837e995edcba45920bc4ac3a"
       }
     },
     "npm:@ui8kit/registry|latte|textarea": {
       "name": "textarea",
       "type": "registry:ui",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/ui/textarea/Textarea.latte": "a28b71c48cf94c7ea2b7539a4f6273f888b63db2979a2dd264c2b5183c00088f"
+        "ui8kit/ui/textarea/Textarea.latte": "3f193b489bdc227b09ade6d441b9eb5397047fd0d6cdd1683f050c33ba0b4278"
       }
     },
     "npm:@ui8kit/registry|latte|utils": {
       "name": "utils",
       "type": "registry:utils",
-      "source": "https://unpkg.com/@ui8kit/registry@3/r/latte",
-      "version": "3.1.0",
+      "source": "https://unpkg.com/@ui8kit/registry@3.2.0/r/latte",
+      "version": "3.2.0",
       "runtime": "latte",
       "files": {
-        "ui8kit/runtime/Classes.php": "fe7f7483feb0ac72074aaf05177ba83f2dd229a5280fa467ec13c87502637192",
-        "ui8kit/runtime/CnMerge.php": "56895345b95cb96e1eb566da9cfe93e821205de91e04b19e62b63ef826b41e7c",
+        "ui8kit/runtime/Classes.php": "9bf0ca734ed0d20054e9e57f5354cde3af27eb5f239b8dd3a6068e4239085ea7",
+        "ui8kit/runtime/CnMerge.php": "424b21815da1d4f736beae3ae98a8cbc63d13b5064fc451c019ed39848ad2a59",
         "ui8kit/runtime/Rt.php": "0406c005b0efd2ae84ea15bbc11bbffdf9990eab9cf09fdbc9743def352ef0d1",
-        "ui8kit/runtime/Tags.php": "3de38c81c4442eabda888c99c268f9189d51fc7b6ea2dde1372830e3d309f066"
+        "ui8kit/runtime/Tags.php": "9e31d0a90c6c22c48ff7e7e1a7d7fb3a51ddc2c21d5bf1e03ae63b595bc7a8e1"
       }
     }
   }

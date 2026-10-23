@@ -90,6 +90,10 @@ final class CnMerge
             case 'isolate': case 'isolation-auto':
                 return ['isolation'];
         }
+        // ring-offset-N (width) and ring-offset-<color> are their own groups
+        if (str_starts_with($core, 'ring-offset-')) {
+            return [self::isNumber(substr($core, 12)) ? 'ring-offset-width' : 'ring-offset-color'];
+        }
         foreach (['inset-ring', 'ring'] as $kind) {
             if ($core === $kind) {
                 return [$kind . '-width'];

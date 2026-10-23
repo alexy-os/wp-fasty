@@ -56,9 +56,9 @@ final class RendererTest extends TestCase
     {
         $twig = $this->twig();
         $ctx = ['title' => '<b>'];
-        // UI8Kit 3 pilot: Latte on UI8Kit 3 + kit presets, Twig on the legacy line — same DOM after the class merge.
-        $dom = require dirname(__DIR__) . '/tools/parity/normalize-kit.php';
-        self::assertSame($dom($this->latte()->render('probe', $ctx)), $dom($twig->render('probe', $ctx)));
+        // UI8Kit 3 pilot: strict DOM; class lists may only lose duplicates (tools/parity/compare-classes.php).
+        $compare = require dirname(__DIR__) . '/tools/parity/compare-classes.php';
+        self::assertNull($compare($this->latte()->render('probe', $ctx), $twig->render('probe', $ctx)));
     }
 
     public function testTwigSafeUrlMatchesLatteUrlCheck(): void

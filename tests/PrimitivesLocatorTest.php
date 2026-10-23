@@ -49,11 +49,14 @@ final class PrimitivesLocatorTest extends TestCase
         $tpl = $cache . '/kit-probe';
         @mkdir($tpl, 0775, true);
         file_put_contents($tpl . '/probe.latte', "{include 'block/Block.latte', tag: 'section', id: 'x', class: 'py-8', children: 'Hi'}"
-            . "{include 'title/Title.latte', as: 1, children: 'T'}{include 'badge/Badge.latte', variant: 'secondary', children: 'B'}");
+            . "{include 'title/Title.latte', as: 1, children: 'T'}{include 'badge/Badge.latte', variant: 'secondary', children: 'B'}"
+            . "{include 'textarea/Textarea.latte', value: \"  a\\nb\", class: kit('textarea')}");
         $r2 = new LatteRenderer([$tpl, ...PrimitivesLocator::latteRoots($this->theme())], $cache . '/c');
         $html = (string) preg_replace('/\s+/', ' ', $r2->render('probe'));
-        $this->assertStringContainsString('<section class="py-8" id="x"> Hi </section>', $html);
-        $this->assertStringContainsString('<h1> T </h1>', $html);
+        $this->assertStringContainsString('<section class="py-8" id="x">Hi</section>', $html);
+        $this->assertStringContainsString('<h1>T</h1>', $html);
         $this->assertStringContainsString('bg-secondary text-secondary-foreground', $html);
+        $this->assertStringContainsString('focus:ring-ring focus:ring-offset-2', $html, 'cn keeps ring-ring (3.2.0)');
+        $this->assertMatchesRegularExpression("/<textarea[^>]*>  a\nb<\/textarea>/", $r2->render('probe'), 'exact value');
     }
 }
