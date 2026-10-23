@@ -2,6 +2,7 @@
  # Block: search-form — GET search only (no PII storage). Twig twin of search-form.latte.
  #}
 {% set sid = searchId ?? 'latte-search-field' %}
+{% set slabel = searchLabel ?? (labels.search_site ?? search.label) %}
 {% set fields %}
 	{% set c_ui1 %}{{ search.label }}{% endset %}{% include 'label/Label.html.twig' with {'class': 'sr-only', 'children': c_ui1, 'attrs': {'for': sid}} only %}
 	{% include 'input/Input.html.twig' with {
@@ -17,4 +18,4 @@
 {% endset %}
 {% set c_ui2 %}
 	{{ fields }}
-{% endset %}{% include 'form/Form.html.twig' with {'action': (((search.action|safe_url)))|default(''), 'class': 'flex w-full max-w-md items-center gap-2', 'children': c_ui2, 'attrs': {'role': 'search', 'method': 'get'}} only %}
+{% endset %}{% include 'form/Form.html.twig' with {'action': (((search.action|safe_url)))|default(''), 'class': 'flex w-full max-w-md items-center gap-2', 'children': c_ui2, 'attrs': {'role': 'search', 'method': 'get', 'aria-label': slabel}} only %}

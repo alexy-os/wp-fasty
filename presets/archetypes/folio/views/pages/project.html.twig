@@ -27,7 +27,8 @@
 					{% endfor %}
 					{% if page.project.url.value ?? false %}
 						{% set c_ui10 %}
-							{% set c_ui9 %}{{ labels.visit_site }}{{ icon('external-link') }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((page.project.url.value|safe_url)))|default(''), 'class': 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui9, 'attrs': {'rel': 'noopener', 'target': '_blank'}} only %}
+							{% set c_uiDt %}{{ page.project.url.label ?? labels.visit_site }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dt', 'class': 'sr-only', 'children': c_uiDt, 'attrs': {}} only %}
+							{% set c_uiDd %}{% set c_ui9 %}{{ labels.visit_site }}{{ icon('external-link') }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((page.project.url.value|safe_url)))|default(''), 'class': 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui9, 'attrs': {'rel': 'noopener', 'target': '_blank'}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dd', 'class': '', 'children': c_uiDd, 'attrs': {}} only %}
 						{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'col-span-2', 'children': c_ui10, 'attrs': {}} only %}
 					{% endif %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dl', 'class': 'grid grid-cols-2 gap-6 self-end rounded-xl border border-border bg-card p-6', 'children': c_ui11, 'attrs': {}} only %}

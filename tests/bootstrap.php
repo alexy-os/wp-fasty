@@ -233,9 +233,18 @@ if (!function_exists('is_singular')) {
         return in_array($type, $types, true);
     }
 }
+if (!function_exists('get_the_title')) {
+    function get_the_title(int $post = 0): string
+    {
+        return (string) ($GLOBALS['wp_test_titles'][$post] ?? '');
+    }
+}
 if (!function_exists('wp_head')) {
     function wp_head(): void
     {
+        // Mirrors core `_wp_render_title_tag()` (theme declares title-tag support) so renders are full documents.
+        $title = (string) ($GLOBALS['wp_test_flags']['document_title'] ?? get_bloginfo('name'));
+        echo '<title>' . htmlspecialchars($title !== '' ? $title : 'WordPress', ENT_QUOTES) . '</title>' . "\n";
     }
 }
 if (!function_exists('wp_footer')) {

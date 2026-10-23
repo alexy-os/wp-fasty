@@ -13,9 +13,9 @@
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex h-16 items-center justify-between border-b border-border px-4', 'children': c_ui3, 'attrs': {}} only %}
 			{% set c_ui4 %}
 				{% include 'layout/parts/nav-items.html.twig' with { items: menu.primary.items } %}
-			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'flex-1 overflow-y-auto px-4 py-4', 'children': c_ui4, 'attrs': {'aria-label': (labels.primary_nav)}} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'flex-1 overflow-y-auto px-4 py-4', 'children': c_ui4, 'attrs': {'aria-label': (labels.mobile_nav ?? labels.primary_nav)}} only %}
 			{% set c_ui5 %}
-				{% include 'blocks/search-form.html.twig' with {searchId: 'latte-search-field-sheet'} %}
+				{% include 'blocks/search-form.html.twig' with {searchId: 'latte-search-field-sheet', searchLabel: labels.search_mobile ?? null} %}
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'border-t border-border p-4', 'children': c_ui5, 'attrs': {}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-card shadow-lg', 'children': c_ui6, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'fixed inset-0 z-50 md:hidden', 'children': c_ui7, 'attrs': {'id': (sheet.panel), 'role': 'dialog', 'aria-modal': 'true', 'aria-labelledby': (sheet.title), 'data-ui8kit': 'sheet', 'data-ui8kit-dialog': 'true', 'behavior': 'ui8kit', 'data-state': 'closed', 'hidden': true}} only %}

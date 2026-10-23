@@ -17,6 +17,43 @@ final class ThemeHooks extends AbstractHooks
         // Direct add_action so static checks (Theme Check) see the widgets_init hook.
         add_action('widgets_init', [$this, 'sidebars']);
         $this->addAction('admin_notices', 'primitivesNotice');
+        // Accessible core markup: labelled widget search landmark, double-quoted archive/attachment links.
+        add_filter('render_block_core/search', [$this, 'labelSearchBlock']);
+        add_filter('get_archives_link', [$this, 'quoteHref']);
+        add_filter('wp_get_attachment_link', [$this, 'attachmentLink'], 10, 2);
+    }
+
+    public function labelSearchBlock(string $html): string
+    {
+        if (str_contains($html, 'aria-label=') || !str_contains($html, 'role="search"')) {
+            return $html;
+        }
+
+        return (string) preg_replace(
+            '/<form role="search"/',
+            '<form role="search" aria-label="' . esc_attr__('Sidebar search', 'latte') . '"',
+            $html,
+            1
+        );
+    }
+
+    public function quoteHref(string $html): string
+    {
+        return (string) preg_replace("/href='([^'\"]*)'/", 'href="$1"', $html);
+    }
+
+    public function attachmentLink(string $html, mixed $id = 0): string
+    {
+        $html = $this->quoteHref($html);
+        if (str_contains($html, 'aria-label=') || !preg_match('/<a [^>]*>\s*<img/', $html)) {
+            return $html;
+        }
+        $title = trim(wp_strip_all_tags(get_the_title((int) $id)));
+        if ($title === '') {
+            return $html;
+        }
+
+        return (string) preg_replace('/<a /', '<a aria-label="' . esc_attr($title) . '" ', $html, 1);
     }
 
     public function setup(): void

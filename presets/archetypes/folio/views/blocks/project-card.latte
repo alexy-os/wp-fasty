@@ -13,7 +13,7 @@
 		{capture $c_ui6}
 			{capture $c_ui4}
 				{capture $c_ui3}{$project['title']}{/capture}{include 'link/Link.latte', href: ((($project['url'])|checkUrl)) ?? '', class: 'text-foreground no-underline hover:text-primary', children: (string) $c_ui3, attrs: []}
-			{/capture}{include 'text/Text.latte', tag: 'h3', class: 'text-lg font-semibold leading-tight', children: (string) $c_ui4, attrs: []}
+			{/capture}{include 'text/Text.latte', tag: ($headingTag ?? 'h3'), class: 'text-lg font-semibold leading-tight', children: (string) $c_ui4, attrs: []}
 			{if !empty($project['types'])}
 				{capture $c_ui5}
 					{foreach $project['types'] as $type}

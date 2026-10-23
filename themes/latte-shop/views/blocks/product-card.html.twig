@@ -16,7 +16,7 @@
 		{% endif %}
 		{% set c_ui6 %}
 			{% set c_ui5 %}{{ product.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((product.url|safe_url)))|default(''), 'class': 'text-foreground no-underline hover:text-primary', 'children': c_ui5, 'attrs': {}} only %}
-		{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h3', 'class': 'font-semibold leading-tight', 'children': c_ui6, 'attrs': {}} only %}
+		{% endset %}{% include 'text/Text.html.twig' with {'tag': (headingTag ?? 'h3'), 'class': 'font-semibold leading-tight', 'children': c_ui6, 'attrs': {}} only %}
 		{% set c_ui11 %}
 			{% set c_ui8 %}
 				{% set c_ui7 %}{{ product.product.price }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-lg font-semibold', 'children': c_ui7, 'attrs': {}} only %}

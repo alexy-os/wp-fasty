@@ -108,7 +108,7 @@ jobs:
         run: bun run parity
 
 
-      - name: UI8Kit gates (vendored codegen-x ui-gates @8d12906) — source 0, builder blocks HTML/ARIA 0, theme within budget
+      - name: UI8Kit gates (vendored codegen-x ui-gates @8d12906) — source 0, builder blocks HTML/ARIA 0, theme renders HTML/ARIA 0
         run: |
           bun install --cwd tools/ui-gates --frozen-lockfile
           OUT="$RUNNER_TEMP/gates" bash tools/qa/ui-gates.sh

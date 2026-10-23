@@ -27,7 +27,8 @@
 					{/foreach}
 					{if !empty($page['project']['url']['value'])}
 						{capture $c_ui10}
-							{capture $c_ui9}{$labels['visit_site']}{icon('external-link')}{/capture}{include 'link/Link.latte', href: ((($page['project']['url']['value'])|checkUrl)) ?? '', class: 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui9, attrs: ['rel' => 'noopener', 'target' => '_blank']}
+							{capture $c_uiDt}{$page['project']['url']['label'] ?? $labels['visit_site']}{/capture}{include 'box/Box.latte', tag: 'dt', class: 'sr-only', children: (string) $c_uiDt, attrs: []}
+							{capture $c_uiDd}{capture $c_ui9}{$labels['visit_site']}{icon('external-link')}{/capture}{include 'link/Link.latte', href: ((($page['project']['url']['value'])|checkUrl)) ?? '', class: 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui9, attrs: ['rel' => 'noopener', 'target' => '_blank']}{/capture}{include 'box/Box.latte', tag: 'dd', class: '', children: (string) $c_uiDd, attrs: []}
 						{/capture}{include 'box/Box.latte', tag: 'div', class: 'col-span-2', children: (string) $c_ui10, attrs: []}
 					{/if}
 				{/capture}{include 'box/Box.latte', tag: 'dl', class: 'grid grid-cols-2 gap-6 self-end rounded-xl border border-border bg-card p-6', children: (string) $c_ui11, attrs: []}

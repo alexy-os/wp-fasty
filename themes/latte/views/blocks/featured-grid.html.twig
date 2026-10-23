@@ -20,7 +20,7 @@
 							decoding: 'async'
 						} %}
 					{% endset %}
-					{% include 'link/Link.html.twig' with { href: post.url, class: kit('link', {}, 'block overflow-hidden'), children: thumb } %}
+					{% include 'link/Link.html.twig' with { href: post.url, class: kit('link', {}, 'block overflow-hidden'), ariaLabel: post.title ~ "", children: thumb } %}
 				{% endif %}
 				{% set postTitle %}{{ post.title }}{% endset %}
 				{% set cardTitle %}

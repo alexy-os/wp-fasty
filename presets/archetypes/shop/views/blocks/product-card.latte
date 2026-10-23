@@ -16,7 +16,7 @@
 		{/if}
 		{capture $c_ui6}
 			{capture $c_ui5}{$product['title']}{/capture}{include 'link/Link.latte', href: ((($product['url'])|checkUrl)) ?? '', class: 'text-foreground no-underline hover:text-primary', children: (string) $c_ui5, attrs: []}
-		{/capture}{include 'text/Text.latte', tag: 'h3', class: 'font-semibold leading-tight', children: (string) $c_ui6, attrs: []}
+		{/capture}{include 'text/Text.latte', tag: ($headingTag ?? 'h3'), class: 'font-semibold leading-tight', children: (string) $c_ui6, attrs: []}
 		{capture $c_ui11}
 			{capture $c_ui8}
 				{capture $c_ui7}{$product['product']['price']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-lg font-semibold', children: (string) $c_ui7, attrs: []}

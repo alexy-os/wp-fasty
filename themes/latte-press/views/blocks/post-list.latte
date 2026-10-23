@@ -13,7 +13,7 @@
 						{capture $thumb}
 							{include 'image/Image.latte', src: $post['thumbnail']['url'], alt: $post['thumbnail']['alt'] ?? '', sizes: '(min-width: 768px) 240px, 100vw', class: kit('image', [], 'aspect-[4/3] w-full rounded-lg object-cover'), loading: 'lazy', srcSet: $post['thumbnail']['srcset'] ?? '', decoding: 'async'}
 						{/capture}
-						{include 'link/Link.latte', href: $post['url'], class: kit('link', [], 'block'), children: (string) $thumb}
+						{include 'link/Link.latte', href: $post['url'], class: kit('link', [], 'block'), ariaLabel: (string) $post["title"], children: (string) $thumb}
 					{else}
 						{include 'box/Box.latte', tag: 'div', class: 'hidden md:block', attrs: []}
 					{/if}

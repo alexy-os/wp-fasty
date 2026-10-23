@@ -20,7 +20,7 @@
 	{else}
 		{capture $c_ui8}
 			{foreach $posts as $project}
-				{include 'blocks/project-card.latte', project: $project, labels: $labels}
+				{include 'blocks/project-card.latte', project: $project, labels: $labels, headingTag: 'h2'}
 			{/foreach}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-8 md:grid-cols-2 lg:grid-cols-3', children: (string) $c_ui8, attrs: []}
 	{/if}

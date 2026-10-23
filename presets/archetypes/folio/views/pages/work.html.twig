@@ -20,7 +20,7 @@
 	{% else %}
 		{% set c_ui8 %}
 			{% for project in posts %}
-				{% include 'blocks/project-card.html.twig' with { project: project, labels: labels } %}
+				{% include 'blocks/project-card.html.twig' with { project: project, labels: labels, headingTag: 'h2' } %}
 			{% endfor %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-8 md:grid-cols-2 lg:grid-cols-3', 'children': c_ui8, 'attrs': {}} only %}
 	{% endif %}

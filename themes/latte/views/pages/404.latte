@@ -9,7 +9,7 @@
 	{capture $c_ui1}{$error['message']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'mt-4 max-w-xl text-muted-foreground', children: (string) $c_ui1, attrs: []}
 
 	{capture $c_ui2}
-		{include 'blocks/search-form.latte', searchId: 'latte-search-field-404'}
+		{include 'blocks/search-form.latte', searchId: 'latte-search-field-404', searchLabel: $labels['search_404'] ?? null}
 	{/capture}{include 'box/Box.latte', tag: 'div', class: 'mt-8 max-w-md', children: (string) $c_ui2, attrs: []}
 
 	{capture $ctaLabel}{$error['home_label']}{/capture}

@@ -20,7 +20,7 @@
 							decoding: 'async'
 						}
 					{/capture}
-					{include 'link/Link.latte', href: $post['url'], class: kit('link', [], 'block overflow-hidden'), children: (string) $thumb}
+					{include 'link/Link.latte', href: $post['url'], class: kit('link', [], 'block overflow-hidden'), ariaLabel: (string) $post["title"], children: (string) $thumb}
 				{/if}
 				{capture $postTitle}{$post['title']}{/capture}
 				{capture $cardTitle}

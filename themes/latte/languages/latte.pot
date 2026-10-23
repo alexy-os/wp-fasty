@@ -9,14 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-19T09:04:46+00:00\n"
+"POT-Creation-Date: 2026-10-23T22:29:19+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: latte\n"
 
 #. Theme Name of the theme
 #: style.css
-#: classes/Hooks/ThemeHooks.php:182
+#: classes/Hooks/ThemeHooks.php:235
 msgid "Latte"
 msgstr ""
 
@@ -100,142 +100,170 @@ msgid "Close menu"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:211
-#: classes/Hooks/ThemeHooks.php:58
-#: classes/Hooks/ThemeHooks.php:114
+#: classes/Hooks/ThemeHooks.php:97
+#: classes/Hooks/ThemeHooks.php:167
 msgid "Primary"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:212
-#: classes/Hooks/ThemeHooks.php:59
-#: classes/Hooks/ThemeHooks.php:76
-#: classes/Hooks/ThemeHooks.php:122
-msgid "Footer"
+msgid "Mobile menu"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:213
-#: classes/Hooks/ThemeHooks.php:66
-msgid "Sidebar"
+msgid "Site search"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:214
-msgid "Pagination"
+msgid "Mobile menu search"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:215
-msgid "Posted on"
+msgid "Search again"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:216
-msgid "By"
+#: classes/Hooks/ThemeHooks.php:98
+#: classes/Hooks/ThemeHooks.php:115
+#: classes/Hooks/ThemeHooks.php:175
+msgid "Footer"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:217
-msgid "Categories"
+#: classes/Hooks/ThemeHooks.php:105
+msgid "Sidebar"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:218
-msgid "Tags"
+msgid "Pagination"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:219
-msgid "Previous post"
+msgid "Posted on"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:220
-msgid "Next post"
+msgid "By"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:221
-msgid "Attachment"
+msgid "Categories"
 msgstr ""
 
 #: classes/Data/ContextFactory.php:222
-#: classes/Data/ContextFactory.php:366
+msgid "Tags"
+msgstr ""
+
+#: classes/Data/ContextFactory.php:223
+msgid "Previous post"
+msgstr ""
+
+#: classes/Data/ContextFactory.php:224
+msgid "Next post"
+msgstr ""
+
+#: classes/Data/ContextFactory.php:225
+msgid "Attachment"
+msgstr ""
+
+#: classes/Data/ContextFactory.php:226
+#: classes/Data/ContextFactory.php:370
 msgid "Pages:"
 msgstr ""
 
-#: classes/Data/ContextFactory.php:263
+#: classes/Data/ContextFactory.php:267
 msgid "Explore"
 msgstr ""
 
-#: classes/Data/ContextFactory.php:265
+#: classes/Data/ContextFactory.php:269
 msgid "Learn more"
 msgstr ""
 
-#: classes/Data/ContextFactory.php:365
+#: classes/Data/ContextFactory.php:369
 msgid "Pages"
 msgstr ""
 
 #. translators: %d: number of comments
-#: classes/Data/ContextFactory.php:436
+#: classes/Data/ContextFactory.php:440
 #, php-format
 msgid "%d comment"
 msgid_plural "%d comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: classes/Hooks/ThemeHooks.php:68
+#: classes/Hooks/ThemeHooks.php:34
+msgid "Sidebar search"
+msgstr ""
+
+#: classes/Hooks/ThemeHooks.php:107
 msgid "Widgets in the content sidebar."
 msgstr ""
 
-#: classes/Hooks/ThemeHooks.php:78
+#: classes/Hooks/ThemeHooks.php:117
 msgid "Widgets in the site footer."
 msgstr ""
 
-#: classes/Hooks/ThemeHooks.php:100
-msgid "Latte theme: UI8Kit Latte primitives not found. From the monorepo root run bun run ui:primitives, then composer install in themes/latte."
-msgstr ""
-
-#: classes/Hooks/ThemeHooks.php:132
-msgid "Home"
-msgstr ""
-
-#: classes/Hooks/ThemeHooks.php:133
-msgid "Welcome to Latte — a clean WordPress theme built on UI8Kit Latte primitives."
-msgstr ""
-
-#: classes/Hooks/ThemeHooks.php:140
-msgid "About"
-msgstr ""
-
-#: classes/Hooks/ThemeHooks.php:141
-msgid "This is an example About page. Edit it in the admin to introduce your site."
-msgstr ""
-
-#: classes/Hooks/ThemeHooks.php:148
-msgid "Blog"
-msgstr ""
-
-#: classes/Hooks/ThemeHooks.php:152
-msgid "Hello Latte"
+#: classes/Hooks/ThemeHooks.php:143
+msgid "WP FastY theme: UI8Kit Twig primitives not found (twig/ui8kit)."
 msgstr ""
 
 #: classes/Hooks/ThemeHooks.php:153
+msgid "Latte theme: UI8Kit Latte primitives not found. Run npx ui8kit@3 add --all in themes/latte, then composer install."
+msgstr ""
+
+#: classes/Hooks/ThemeHooks.php:185
+msgid "Home"
+msgstr ""
+
+#: classes/Hooks/ThemeHooks.php:186
+msgid "Welcome to Latte — a clean WordPress theme built on UI8Kit Latte primitives."
+msgstr ""
+
+#: classes/Hooks/ThemeHooks.php:193
+msgid "About"
+msgstr ""
+
+#: classes/Hooks/ThemeHooks.php:194
+msgid "This is an example About page. Edit it in the admin to introduce your site."
+msgstr ""
+
+#: classes/Hooks/ThemeHooks.php:201
+msgid "Blog"
+msgstr ""
+
+#: classes/Hooks/ThemeHooks.php:205
+msgid "Hello Latte"
+msgstr ""
+
+#: classes/Hooks/ThemeHooks.php:206
 msgid "This is your first sample post. Replace it with your own content."
 msgstr ""
 
-#: classes/Hooks/ThemeHooks.php:161
+#: classes/Hooks/ThemeHooks.php:214
 msgid "Design with primitives"
 msgstr ""
 
-#: classes/Hooks/ThemeHooks.php:162
+#: classes/Hooks/ThemeHooks.php:215
 msgid "Compose pages from UI8Kit blocks — Button, Card, Stack, and more."
 msgstr ""
 
-#: classes/Hooks/ThemeHooks.php:170
+#: classes/Hooks/ThemeHooks.php:223
 msgid "Server-rendered and fast"
 msgstr ""
 
-#: classes/Hooks/ThemeHooks.php:171
+#: classes/Hooks/ThemeHooks.php:224
 msgid "Latte templates stay free of WordPress queries; context is built in PHP."
 msgstr ""
 
-#: classes/Hooks/ThemeHooks.php:183
+#: classes/Hooks/ThemeHooks.php:236
 msgid "Clean Latte theme for WordPress"
 msgstr ""
 
+#: configs/services.php:55
+msgid "Theme engine unavailable"
+msgstr ""
+
 #: functions.php:20
-msgid "Latte theme: run composer install in themes/latte (and bun run ui:primitives from the monorepo root)."
+msgid "Latte theme: run composer install in themes/latte."
 msgstr ""
 
 #: theme.json

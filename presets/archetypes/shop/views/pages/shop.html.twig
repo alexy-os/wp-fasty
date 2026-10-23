@@ -18,7 +18,7 @@
 	{% else %}
 		{% set c_ui8 %}
 			{% for product in posts %}
-				{% include 'blocks/product-card.html.twig' with { product: product, shop: shop, labels: labels } %}
+				{% include 'blocks/product-card.html.twig' with { product: product, shop: shop, labels: labels, headingTag: 'h2' } %}
 			{% endfor %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4', 'children': c_ui8, 'attrs': {}} only %}
 		{% if pagination ?? false %}
