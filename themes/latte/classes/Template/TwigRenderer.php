@@ -47,8 +47,6 @@ final class TwigRenderer implements RendererInterface
         if (class_exists(\UI8Kit\Twig\TwigExtension::class)) {
             // UI8Kit 3 (twig/ui8kit/runtime): ui8kit_attrs, ui8kit_classes, …; classes of our kit via kit().
             $this->twig->addExtension(new \UI8Kit\Twig\TwigExtension());
-        } elseif (class_exists(\UI8Kit\TwigExtension::class)) {
-            $this->twig->addExtension(new \UI8Kit\TwigExtension());
         }
         $this->twig->addFunction(new TwigFunction('kit', [Kit::class, 'classes']));
         $this->registerCommonSubset();

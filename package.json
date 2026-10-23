@@ -15,14 +15,11 @@
     ".workspaces/css-build"
   ],
   "scripts": {
-    "ui:primitives": "bun tools/generate-primitives.ts",
-    "ui:install": "bash tools/ui-install.sh",
     "theme:build": "bun run --cwd .workspaces/theme-builder build",
     "theme:pack": "bun run --cwd .workspaces/theme-builder pack",
     "theme:new": "bun run --cwd .workspaces/theme-builder new",
     "theme:cache": "rm -rf themes/*/~cache",
-    "codegen:verify": "bun run --cwd packages/ui8kit-codegen verify",
-    "verify": "bun run ui:primitives && bun run theme:build -- latte && bun run lint:design && bun run css:build && bun run test",
+    "verify": "bun run theme:build -- latte && bun run lint:design && bun run css:build && bun run test",
     "test": "bash tools/composer.sh test",
     "phpcs": "bash tools/composer.sh phpcs",
     "composer": "bash tools/composer.sh",

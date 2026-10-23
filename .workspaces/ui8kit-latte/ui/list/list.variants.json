@@ -1,8 +1,0 @@
-{
-  "$schema": "../../schemas/variants.schema.json",
-  "base": "",
-  "byKey": {},
-  "defaults": {},
-  "id": "ui.list",
-  "keys": []
-}

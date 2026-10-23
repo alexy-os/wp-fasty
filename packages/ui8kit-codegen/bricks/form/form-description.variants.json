@@ -1,8 +1,0 @@
-{
-  "$schema": "../../schemas/variants.schema.json",
-  "base": "text-xs text-muted-foreground",
-  "byKey": {},
-  "defaults": {},
-  "id": "ui.form.description",
-  "keys": []
-}

@@ -60,7 +60,7 @@ $out = static function (string $line): void {
 
 $twigPrims = PrimitivesLocator::twigRoots($root . '/themes/latte');
 if ($twigPrims === [] || !class_exists(\Twig\Environment::class)) {
-    fwrite(STDERR, "✗ Twig primitives or twig/twig missing (bun run codegen:verify; composer install)\n");
+    fwrite(STDERR, "✗ Twig primitives or twig/twig missing (npx ui8kit@3 add --all in twig/; composer install)\n");
     exit(1);
 }
 

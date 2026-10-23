@@ -1,20 +1,16 @@
 {
   "name": "alexy-os/latte",
-  "description": "Latte — clean WP FastY theme with UI8Kit Codegen primitives",
+  "description": "Latte — clean WP FastY theme with UI8Kit 3 primitives",
   "type": "wordpress-theme",
   "license": "GPL-2.0-or-later",
-  "authors": [{ "name": "alexy-os" }],
-  "repositories": [
+  "authors": [
     {
-      "type": "path",
-      "url": "../../.workspaces/ui8kit-latte",
-      "options": { "symlink": false }
+      "name": "alexy-os"
     }
   ],
   "require": {
     "php": ">=8.2",
-    "latte/latte": "^3.0",
-    "ui8kit/latte-primitives": "@dev"
+    "latte/latte": "^3.0"
   },
   "autoload": {
     "psr-4": {
@@ -28,6 +24,8 @@
   "config": {
     "optimize-autoloader": true,
     "sort-packages": true,
-    "platform": { "php": "8.2" }
+    "platform": {
+      "php": "8.2"
+    }
   }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "22c738fe50f2b46413f2e54623cbac3e",
+    "content-hash": "1af0d617883266f2b4f908e6bdba2613",
     "packages": [
         {
             "name": "latte/latte",
@@ -96,41 +96,12 @@
                 "source": "https://github.com/nette/latte/tree/v3.1.6"
             },
             "time": "2026-07-27T14:32:10+00:00"
-        },
-        {
-            "name": "ui8kit/latte-primitives",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "../../.workspaces/ui8kit-latte",
-                "reference": "66d8637b2b0a00f668d5ccdf954c12e123ec5077"
-            },
-            "require": {
-                "latte/latte": "^3.0",
-                "php": ">=8.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "UI8Kit\\": "php/UI8Kit/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "Generated UI8Kit Latte primitives. Do not edit — regenerate via @ui8kit/codegen.",
-            "transport-options": {
-                "symlink": false,
-                "relative": true
-            }
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "ui8kit/latte-primitives": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

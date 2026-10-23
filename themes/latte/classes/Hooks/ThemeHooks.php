@@ -103,7 +103,7 @@ final class ThemeHooks extends AbstractHooks
         if ($engine === 'twig') {
             if (PrimitivesLocator::twigRoots() === []) {
                 echo '<div class="notice notice-error"><p>';
-                echo esc_html__('WP FastY theme: UI8Kit Twig primitives not found (lib/ui8kit-twig).', 'latte');
+                echo esc_html__('WP FastY theme: UI8Kit Twig primitives not found (twig/ui8kit).', 'latte');
                 echo '</p></div>';
             }
             return;
@@ -115,7 +115,7 @@ final class ThemeHooks extends AbstractHooks
         echo '<div class="notice notice-error"><p>';
         echo esc_html__(
             // phpcs:ignore Generic.Files.LineLength.TooLong -- a translatable literal must stay one string (msgid).
-            'Latte theme: UI8Kit Latte primitives not found. From the monorepo root run bun run ui:primitives, then composer install in themes/latte.',
+            'Latte theme: UI8Kit Latte primitives not found. Run npx ui8kit@3 add --all in themes/latte, then composer install.',
             'latte'
         );
         echo '</p></div>';

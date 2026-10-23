@@ -18,7 +18,7 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
     add_action('admin_notices', static function (): void {
         echo '<div class="notice notice-error"><p>';
         echo esc_html__(
-            'Latte theme: run composer install in themes/latte (and bun run ui:primitives from the monorepo root).',
+            'Latte theme: run composer install in themes/latte.',
             'latte'
         );
         echo '</p></div>';

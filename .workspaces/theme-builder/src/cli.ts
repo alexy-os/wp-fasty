@@ -176,12 +176,6 @@ async function buildTheme(id: string): Promise<void> {
   const preset = await loadPreset(id);
   const out = join(themesRoot, preset.slug);
 
-  if (!existsSync(join(primitivesRoot, "manifest.json"))) {
-    console.warn(
-      "Warning: .workspaces/ui8kit-latte missing — run `bun run ui:primitives` first."
-    );
-  }
-
   if (preset.kind === "skin" || preset.parent) {
     await scaffoldSkin(preset);
   } else if (!existsSync(out)) {
@@ -260,8 +254,11 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
   if (!existsSync(themeDir)) {
     throw new Error(`Theme not found: themes/${preset.slug}`);
   }
-  if (engine === "latte" && (!existsSync(join(primitivesRoot, "ui")) || !existsSync(join(primitivesRoot, "php")))) {
-    throw new Error("Missing .workspaces/ui8kit-latte — run bun run ui:primitives first");
+  if (engine === "latte" && !existsSync(join(themeDir, "ui8kit", "ui"))) {
+    throw new Error("Missing themes/latte/ui8kit — run npx ui8kit@3 add --all in themes/latte");
+  }
+  if (engine === "twig" && !existsSync(join(themeDir, "twig", "ui8kit", "ui"))) {
+    throw new Error("Missing themes/latte/twig/ui8kit — run npx ui8kit@3 add --all in themes/latte/twig");
   }
   const slug = engine === "twig" ? "twig" : preset.slug;
 
@@ -298,33 +295,8 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
   const require: Record<string, string> = { php: ">=8.2" };
   let repositories: unknown[] = [];
   if (engine === "latte") {
-    // Bundle primitives inside the theme for stock WP hosts (no monorepo path).
-    const bundled = join(stagedTheme, "lib", "ui8kit-latte");
-    await mkdir(bundled, { recursive: true });
-    await cp(join(primitivesRoot, "ui"), join(bundled, "ui"), { recursive: true });
-    await cp(join(primitivesRoot, "php", "UI8Kit"), join(bundled, "php", "UI8Kit"), { recursive: true });
-    await copyFile(join(primitivesRoot, "composer.json"), join(bundled, "composer.json"));
-    if (existsSync(join(primitivesRoot, "manifest.json"))) {
-      await copyFile(join(primitivesRoot, "manifest.json"), join(bundled, "manifest.json"));
-    }
     require["latte/latte"] = "^3.0";
-    require["ui8kit/latte-primitives"] = "@dev";
-    repositories = [{ type: "path", url: "lib/ui8kit-latte", options: { symlink: false } }];
   } else {
-    const codegen = join(repoRoot, "packages", "ui8kit-codegen");
-    if (!existsSync(join(codegen, "generated", "ui"))) {
-      throw new Error("Missing packages/ui8kit-codegen/generated — run bun run codegen:verify first");
-    }
-    const tw = join(stagedTheme, "lib", "ui8kit-twig");
-    await cp(join(codegen, "generated", "ui"), join(tw, "generated", "ui"), {
-      recursive: true,
-      filter: (src) => !/\.[a-z]+$/i.test(src) || src.endsWith(".html.twig"),
-    });
-    await mkdir(join(tw, "runtime", "php"), { recursive: true });
-    await copyFile(join(codegen, "runtime", "php", "TwigExtension.php"), join(tw, "runtime", "php", "TwigExtension.php"));
-    // Engine-agnostic UI8Kit runtime used by the Twig bindings (the Latte package is not shipped).
-    await copyFile(join(codegen, "runtime", "php", "Rt.php"), join(tw, "runtime", "php", "Rt.php"));
-    await copyFile(join(codegen, "generated", "php", "UI8Kit", "Classes.php"), join(tw, "runtime", "php", "Classes.php"));
     require["twig/twig"] = "^3.14";
 
     // Theme identity `twig`: style.css / readme.txt names, text domain of every translatable literal.
@@ -360,7 +332,7 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
     const credits = [
       "* Twig template engine (bundled in vendor/twig/twig) — BSD-3-Clause — https://twig.symfony.com/",
       "* Symfony polyfills / deprecation-contracts (bundled in vendor/symfony, Twig dependencies) — MIT — https://symfony.com/",
-      "* UI8Kit Twig primitives (bundled in lib/ui8kit-twig) — MIT — https://github.com/alexy-os/wp-fasty",
+      "* UI8Kit 3 Twig primitives (twig/ui8kit) — MIT — https://github.com/alexy-os/wp-fasty",
     ].join("\n");
     if (!txt.includes("== Resources ==")) throw new Error("readme.txt has no == Resources == section");
     txt = txt.replace("== Resources ==\n", `== Resources ==\n\n${credits}\n`).replace(/\n\n\n/g, "\n\n");

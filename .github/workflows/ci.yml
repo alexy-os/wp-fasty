@@ -71,16 +71,6 @@ jobs:
           bun run configure:form
           git diff --exit-code -- configurator
 
-      - name: Codegen verify (Latte + Twig primitives)
-        run: |
-          bun install --cwd packages/ui8kit-codegen
-          bun run codegen:verify
-
-      - name: Generate UI8Kit Latte primitives
-        run: |
-          bun run ui:primitives
-          bun run ui:install
-
       - name: UI8Kit 3 primitives of themes/latte match ui8kit.lock.json; kit presets up to date
         run: |
           (cd themes/latte && npx --yes ui8kit@3 check) && (cd themes/latte/twig && npx --yes ui8kit@3 check)

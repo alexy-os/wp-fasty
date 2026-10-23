@@ -1,8 +1,0 @@
-{
-  "$schema": "../../schemas/variants.schema.json",
-  "base": "flex flex-col items-start justify-start",
-  "byKey": {},
-  "defaults": {},
-  "id": "ui.stack",
-  "keys": []
-}
