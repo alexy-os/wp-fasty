@@ -76,6 +76,9 @@ jobs:
           (cd themes/latte && npx --yes ui8kit@3 check) && (cd themes/latte/twig && npx --yes ui8kit@3 check)
           php tools/ui8kit3/presets.php --check
 
+      - name: Composer install (theme)
+        run: composer install --no-interaction --no-progress --working-dir=themes/latte
+
       - name: Composer audit (theme)
         run: composer audit --no-interaction --working-dir=themes/latte
 
