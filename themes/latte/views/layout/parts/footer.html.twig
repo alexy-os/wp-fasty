@@ -1,26 +1,26 @@
 {#
  # Site footer — menu, widgets, copyright. Twig twin of footer.latte.
  #}
-<footer class="site-footer mt-16 border-t border-border bg-card py-10">
-	<div class="container mx-auto space-y-8 px-4 md:px-6">
+{% set c_ui5 %}
+	{% set c_ui4 %}
 		{% if menu.footer.items ?? false %}
-			<nav aria-label="{{ labels.footer_nav }}">
+			{% set c_ui1 %}
 				{% include 'layout/parts/nav-items.html.twig' with {
 					items: menu.footer.items,
 					listClass: 'flex flex-wrap gap-4',
 					linkClass: 'text-sm text-muted-foreground no-underline hover:text-foreground'
 				} %}
-			</nav>
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'children': c_ui1, 'attrs': {'aria-label': (labels.footer_nav)}} only %}
 		{% endif %}
 
 		{% if widgets.footer ?? false %}
-			<div class="grid gap-6 md:grid-cols-3 text-sm text-muted-foreground">
+			{% set c_ui2 %}
 				{{ widgets.footer|raw }}
-			</div>
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-6 md:grid-cols-3 text-sm text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}
 		{% endif %}
 
-		<p class="text-sm text-muted-foreground">
+		{% set c_ui3 %}
 			&copy; {{ site.year }} {{ site.title }}
-		</p>
-	</div>
-</footer>
+		{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-sm text-muted-foreground', 'children': c_ui3, 'attrs': {}} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'container mx-auto space-y-8 px-4 md:px-6', 'children': c_ui4, 'attrs': {}} only %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'footer', 'class': 'site-footer mt-16 border-t border-border bg-card py-10', 'children': c_ui5, 'attrs': {}} only %}

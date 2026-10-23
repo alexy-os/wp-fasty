@@ -1,29 +1,29 @@
 {#
  # Folio — project card (Twig twin of project-card.latte). Params: project (post view-model), labels
  #}
-<article class="group flex flex-col gap-4">
-	<a href="{{ project.url|safe_url }}" class="block overflow-hidden rounded-xl border border-border bg-card no-underline" aria-label="{{ project.title }}">
+{% set c_ui9 %}
+	{% set c_ui2 %}
 		{% if project.featuredImage.url ?? false %}
 			{% include 'image/Image.html.twig' with { src: project.featuredImage.url, alt: project.featuredImage.alt ?? '', sizes: '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw', class: kit('image', {}, 'aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105'), loading: 'lazy', srcSet: project.featuredImage.srcset ?? '', decoding: 'async' } %}
 		{% else %}
-			<div class="flex aspect-[4/3] items-center justify-center text-muted-foreground">{{ icon('image', 'size-8') }}</div>
+			{% set c_ui1 %}{{ icon('image', 'size-8') }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex aspect-[4/3] items-center justify-center text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}
 		{% endif %}
-	</a>
-	<div class="flex items-start justify-between gap-4">
-		<div class="flex flex-col gap-2">
-			<h3 class="text-lg font-semibold leading-tight">
-				<a href="{{ project.url|safe_url }}" class="text-foreground no-underline hover:text-primary">{{ project.title }}</a>
-			</h3>
+	{% endset %}{% include 'link/Link.html.twig' with {'href': (((project.url|safe_url)))|default(''), 'class': 'block overflow-hidden rounded-xl border border-border bg-card no-underline', 'children': c_ui2, 'attrs': {'aria-label': (project.title)}} only %}
+	{% set c_ui8 %}
+		{% set c_ui6 %}
+			{% set c_ui4 %}
+				{% set c_ui3 %}{{ project.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((project.url|safe_url)))|default(''), 'class': 'text-foreground no-underline hover:text-primary', 'children': c_ui3, 'attrs': {}} only %}
+			{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h3', 'class': 'text-lg font-semibold leading-tight', 'children': c_ui4, 'attrs': {}} only %}
 			{% if project.types ?? false %}
-				<div class="flex flex-wrap gap-2">
+				{% set c_ui5 %}
 					{% for type in project.types %}
 						{% set typeName %}{{ type.name }}{% endset %}{% include 'badge/Badge.html.twig' with { variant: 'secondary', children: typeName } %}
 					{% endfor %}
-				</div>
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-wrap gap-2', 'children': c_ui5, 'attrs': {}} only %}
 			{% endif %}
-		</div>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui6, 'attrs': {}} only %}
 		{% if project.project.year.value ?? false %}
-			<span class="text-sm text-muted-foreground">{{ project.project.year.value }}</span>
+			{% set c_ui7 %}{{ project.project.year.value }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui7, 'attrs': {}} only %}
 		{% endif %}
-	</div>
-</article>
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-start justify-between gap-4', 'children': c_ui8, 'attrs': {}} only %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'article', 'class': 'group flex flex-col gap-4', 'children': c_ui9, 'attrs': {}} only %}

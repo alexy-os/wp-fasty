@@ -6,7 +6,7 @@
 	{% set titleHtml %}{{ archive.title }}{% endset %}
 	{% include 'title/Title.html.twig' with { as: 1, class: 'text-3xl font-bold tracking-tight', children: titleHtml } %}
 	{% if archive.description %}
-		<div class="mt-4 max-w-3xl text-muted-foreground">{{ archive.description|raw }}</div>
+		{% set c_ui1 %}{{ archive.description|raw }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mt-4 max-w-3xl text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}
 	{% endif %}
 {% endset %}
 {% set box %}

@@ -1,67 +1,67 @@
 {** Latte Shop — single product. *}
 {include 'blocks/notice.latte'}
 {if $page}
-<article class="{$page['post_class'] ?? ''} container mx-auto px-4 py-12 md:px-6">
-	<nav class="mb-8 flex items-center gap-2 text-sm text-muted-foreground" aria-label="{$labels['breadcrumb']}">
-		<a href="{$shop['url']}" class="text-muted-foreground no-underline hover:text-foreground">{$labels['all_products']}</a>
+{capture $c_ui24}
+	{capture $c_ui3}
+		{capture $c_ui1}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: ((($shop['url'])|checkUrl)) ?? '', class: 'text-muted-foreground no-underline hover:text-foreground', children: (string) $c_ui1, attrs: []}
 		{if !empty($page['product_cats'])}
 			{icon('chevron-right')}
-			<a href="{$page['product_cats'][0]['url']}" class="text-muted-foreground no-underline hover:text-foreground">{$page['product_cats'][0]['name']}</a>
+			{capture $c_ui2}{$page['product_cats'][0]['name']}{/capture}{include 'link/Link.latte', href: ((($page['product_cats'][0]['url'])|checkUrl)) ?? '', class: 'text-muted-foreground no-underline hover:text-foreground', children: (string) $c_ui2, attrs: []}
 		{/if}
-	</nav>
-	<div class="grid gap-8 md:grid-cols-2 md:gap-16">
-		<div class="overflow-hidden rounded-2xl border border-border bg-muted">
+	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mb-8 flex items-center gap-2 text-sm text-muted-foreground', children: (string) $c_ui3, attrs: ['aria-label' => ($labels['breadcrumb'])]}
+	{capture $c_ui23}
+		{capture $c_ui5}
 			{if !empty($page['featuredImage']['url'])}
 				{include 'image/Image.latte', src: $page['featuredImage']['url'], alt: $page['featuredImage']['alt'] ?? '', sizes: '(min-width: 768px) 50vw, 100vw', class: kit('image', [], 'aspect-square h-full w-full object-cover'), loading: 'eager', srcSet: $page['featuredImage']['srcset'] ?? '', decoding: 'async'}
 			{else}
-				<div class="flex aspect-square items-center justify-center text-muted-foreground">{icon('package', 'size-8')}</div>
+				{capture $c_ui4}{icon('package', 'size-8')}{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex aspect-square items-center justify-center text-muted-foreground', children: (string) $c_ui4, attrs: []}
 			{/if}
-		</div>
-		<div class="flex flex-col gap-6">
-			<div class="flex flex-col gap-4">
-				<h1 class="text-3xl font-bold tracking-tight md:text-4xl">{$page['title']}</h1>
-				<div class="flex items-baseline gap-4">
-					<span class="text-3xl font-semibold">{$page['product']['price']}</span>
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'overflow-hidden rounded-2xl border border-border bg-muted', children: (string) $c_ui5, attrs: []}
+		{capture $c_ui22}
+			{capture $c_ui11}
+				{capture $c_ui6}{$page['title']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'text-3xl font-bold tracking-tight md:text-4xl', children: (string) $c_ui6, attrs: []}
+				{capture $c_ui9}
+					{capture $c_ui7}{$page['product']['price']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-3xl font-semibold', children: (string) $c_ui7, attrs: []}
 					{if $page['product']['regular']}<s class="text-lg text-muted-foreground">{$page['product']['regular']}</s>{/if}
-					{if $page['product']['on_sale']}<span class="badge rounded-full bg-destructive px-2 py-1 text-xs font-semibold text-primary-foreground">{$labels['sale']}</span>{/if}
-				</div>
-				{if !empty($page['excerpt'])}<p class="text-muted-foreground">{$page['excerpt']}</p>{/if}
-			</div>
+					{if $page['product']['on_sale']}{capture $c_ui8}{$labels['sale']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'badge rounded-full bg-destructive px-2 py-1 text-xs font-semibold text-primary-foreground', children: (string) $c_ui8, attrs: []}{/if}
+				{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex items-baseline gap-4', children: (string) $c_ui9, attrs: []}
+				{if !empty($page['excerpt'])}{capture $c_ui10}{$page['excerpt']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_ui10, attrs: []}{/if}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4', children: (string) $c_ui11, attrs: []}
 
 			{if $page['product']['purchasable']}
-				<form method="post" action="{$shop['action']}" class="flex flex-col gap-4 rounded-xl border border-border bg-card p-6">
-					<input type="hidden" name="action" value="latte_shop_cart">
-					<input type="hidden" name="op" value="add">
-					<input type="hidden" name="product_id" value="{$page['id']}">
-					<input type="hidden" name="_wpnonce" value="{$shop['cart_nonce']}">
-					<div class="flex flex-col gap-2">
+				{capture $c_ui16}
+					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => 'latte_shop_cart']}
+					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'op', 'value' => 'add']}
+					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'product_id', 'value' => ($page['id'])]}
+					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['cart_nonce'])]}
+					{capture $c_ui13}
 						{capture $qtyLabel}{$labels['qty']}{/capture}
 						{include 'label/Label.latte', htmlFor: 'qty', class: kit('label', []), children: (string) $qtyLabel}
-						<div class="w-24">{include 'input/Input.latte', id: 'qty', type: 'number', name: 'qty', value: '1', min: '1', max: (string) ($page['product']['stock'] ?? 99), required: true, class: kit('input', [])}</div>
-					</div>
-					<div class="flex flex-wrap gap-4">
+						{capture $c_ui12}{include 'input/Input.latte', id: 'qty', type: 'number', name: 'qty', value: '1', min: '1', max: (string) ($page['product']['stock'] ?? 99), required: true, class: kit('input', [])}{/capture}{include 'box/Box.latte', tag: 'div', class: 'w-24', children: (string) $c_ui12, attrs: []}
+					{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui13, attrs: []}
+					{capture $c_ui14}
 						{capture $addLabel}{icon('shopping-cart')}{$labels['add_to_cart']}{/capture}
 						{include 'button/Button.latte', type: 'submit', class: kit('button', ['size' => 'lg']), children: (string) $addLabel}
 						{capture $buyLabel}{$labels['buy_now']}{/capture}
 						{include 'button/Button.latte', type: 'submit', attrs: ['name' => 'buy_now', 'value' => '1'], class: kit('button', ['variant' => 'outline', 'size' => 'lg']), children: (string) $buyLabel}
-					</div>
+					{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-wrap gap-4', children: (string) $c_ui14, attrs: []}
 					{if $page['product']['stock'] !== null}
-						<p class="text-sm text-muted-foreground">{$page['product']['stock']} in stock</p>
+						{capture $c_ui15}{$page['product']['stock']} in stock{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $c_ui15, attrs: []}
 					{/if}
-				</form>
+				{/capture}{include 'form/Form.latte', action: ((($shop['action'])|checkUrl)) ?? '', class: 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $c_ui16, attrs: ['method' => 'post']}
 			{else}
 				{capture $oos}{$labels['out_of_stock']}{/capture}
 				{include 'alert/Alert.latte', variant: 'destructive', class: 'px-4 py-2', children: (string) $oos}
 			{/if}
 
-			<ul class="flex flex-col gap-2 text-sm text-muted-foreground">
-				<li class="flex items-center gap-2">{icon('truck')}{$labels['free_shipping_over']}</li>
-				<li class="flex items-center gap-2">{icon('rotate-ccw')}30-day returns</li>
-				{if !empty($page['product']['sku'])}<li class="flex items-center gap-2">{icon('tag')}SKU: {$page['product']['sku']}</li>{/if}
-			</ul>
+			{capture $c_ui20}
+				{capture $c_ui17}{icon('truck')}{$labels['free_shipping_over']}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex items-center gap-2', children: (string) $c_ui17, attrs: []}
+				{capture $c_ui18}{icon('rotate-ccw')}30-day returns{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex items-center gap-2', children: (string) $c_ui18, attrs: []}
+				{if !empty($page['product']['sku'])}{capture $c_ui19}{icon('tag')}SKU: {$page['product']['sku']}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex items-center gap-2', children: (string) $c_ui19, attrs: []}{/if}
+			{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2 text-sm text-muted-foreground', children: (string) $c_ui20, attrs: []}
 
-			<div class="prose max-w-none border-t border-border pt-6">{$page['content']|noescape}</div>
-		</div>
-	</div>
-</article>
+			{capture $c_ui21}{$page['content']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none border-t border-border pt-6', children: (string) $c_ui21, attrs: []}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-6', children: (string) $c_ui22, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-8 md:grid-cols-2 md:gap-16', children: (string) $c_ui23, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'article', class: (($page['post_class'] ?? '') . ' container mx-auto px-4 py-12 md:px-6'), children: (string) $c_ui24, attrs: []}
 {/if}

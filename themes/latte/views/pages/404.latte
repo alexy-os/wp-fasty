@@ -6,19 +6,19 @@
 	{capture $titleHtml}{$error['title']}{/capture}
 	{include 'title/Title.latte', as: 2, class: 'mt-4 text-2xl font-semibold tracking-tight', children: (string) $titleHtml}
 
-	<p class="mt-4 max-w-xl text-muted-foreground">{$error['message']}</p>
+	{capture $c_ui1}{$error['message']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'mt-4 max-w-xl text-muted-foreground', children: (string) $c_ui1, attrs: []}
 
-	<div class="mt-8 max-w-md">
-		{include 'blocks/search-form.latte'}
-	</div>
+	{capture $c_ui2}
+		{include 'blocks/search-form.latte', searchId: 'latte-search-field-404'}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'mt-8 max-w-md', children: (string) $c_ui2, attrs: []}
 
 	{capture $ctaLabel}{$error['home_label']}{/capture}
 	{capture $cta}
 		{include 'link/Link.latte', href: $error['home_url'], class: kit('link', ['variant' => 'default', 'size' => 'lg'], 'font-medium'), children: (string) $ctaLabel}
 	{/capture}
-	<div class="mt-8">
+	{capture $c_ui3}
 		{$cta|noescape}
-	</div>
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'mt-8', children: (string) $c_ui3, attrs: []}
 {/capture}
 {capture $box}
 	{include 'box/Box.latte', class: 'container mx-auto px-4 py-20 md:px-6', children: (string) $inner}

@@ -7,7 +7,7 @@
 	{include 'title/Title.latte', as: 1, class: 'text-4xl md:text-6xl font-bold tracking-tight text-primary', children: (string) $titleHtml}
 
 	{if !empty($site['description'])}
-		{capture $descHtml}<p class="mt-4 text-lg text-muted-foreground">{$site['description']}</p>{/capture}
+		{capture $descHtml}{capture $c_ui1}{$site['description']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'mt-4 text-lg text-muted-foreground', children: (string) $c_ui1, attrs: []}{/capture}
 		{$descHtml|noescape}
 	{/if}
 

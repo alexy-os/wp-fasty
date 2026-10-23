@@ -1,18 +1,18 @@
 {#
  # App-shell body chrome — used when context shell === app-shell. Twig twin of app-shell.latte.
  #}
-<a class="skip-link screen-reader-text" href="#content">{{ labels.skip_to_content }}</a>
+{% set c_ui1 %}{{ labels.skip_to_content }}{% endset %}{% include 'link/Link.html.twig' with {'class': 'skip-link screen-reader-text', 'href': '#content', 'children': c_ui1, 'attrs': {}} only %}
 {% include 'layout/parts/mobile-sheet.html.twig' %}
 
-<div class="flex min-h-screen items-stretch">
+{% set c_ui4 %}
 	{% include 'layout/parts/app-sidebar.html.twig' %}
-	<div class="flex min-w-0 flex-1 flex-col">
+	{% set c_ui3 %}
 		{% include 'layout/parts/app-header.html.twig' %}
-		<main id="content" class="site-content flex-1">
+		{% set c_ui2 %}
 			{{ do_action('before_content') }}
 			{{ content|raw }}
 			{{ do_action('after_content') }}
-		</main>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'main', 'class': 'site-content flex-1', 'children': c_ui2, 'attrs': {'id': 'content'}} only %}
 		{% include 'layout/parts/footer.html.twig' %}
-	</div>
-</div>
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex min-w-0 flex-1 flex-col', 'children': c_ui3, 'attrs': {}} only %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex min-h-screen items-stretch', 'children': c_ui4, 'attrs': {}} only %}

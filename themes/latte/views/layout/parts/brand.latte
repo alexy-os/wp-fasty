@@ -1,7 +1,7 @@
 {**
  * Site brand — logo image or title text.
  *}
-<a href="{$site['url']}" class="inline-flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary">
+{capture $c_ui1}
 	{if !empty($site['logo']['url'])}
 		{include 'image/Image.latte',
 			src: $site['logo']['url'],
@@ -15,4 +15,4 @@
 	{else}
 		{$site['title']}
 	{/if}
-</a>
+{/capture}{include 'link/Link.latte', href: ((($site['url'])|checkUrl)) ?? '', class: 'inline-flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary', children: (string) $c_ui1, attrs: []}

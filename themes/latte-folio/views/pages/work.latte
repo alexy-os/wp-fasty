@@ -1,27 +1,27 @@
 {** Latte Folio — work archive with type filter. *}
-<section class="container mx-auto px-4 pb-8 pt-16 md:px-6">
-	<h1 class="text-4xl font-bold tracking-tight md:text-5xl">{$archive['title']}</h1>
+{capture $c_ui6}
+	{capture $c_ui1}{$archive['title']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'text-4xl font-bold tracking-tight md:text-5xl', children: (string) $c_ui1, attrs: []}
 	{if !empty($archive['description'])}
-		<div class="mt-4 max-w-2xl text-muted-foreground">{$archive['description']|noescape}</div>
+		{capture $c_ui2}{$archive['description']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'mt-4 max-w-2xl text-muted-foreground', children: (string) $c_ui2, attrs: []}
 	{/if}
 	{if !empty($work['types'])}
-		<nav class="mt-8 flex flex-wrap gap-2" aria-label="{$labels['all_work']}">
-			<a href="{$work['url']}" n:class="'inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $work['current'] === '' ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent'" aria-current="{$work['current'] === '' ? 'page' : null}">{$labels['all_work']}</a>
+		{capture $c_ui5}
+			{capture $c_ui3}{$labels['all_work']}{/capture}{include 'link/Link.latte', href: ((($work['url'])|checkUrl)) ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $work['current'] === '' ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent'])), children: (string) $c_ui3, attrs: ['aria-current' => ($work['current'] === '' ? 'page' : null)]}
 			{foreach $work['types'] as $type}
-				<a href="{$type['url']}" n:class="'inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $work['current'] === $type['slug'] ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent'" aria-current="{$work['current'] === $type['slug'] ? 'page' : null}">{$type['name']}</a>
+				{capture $c_ui4}{$type['name']}{/capture}{include 'link/Link.latte', href: ((($type['url'])|checkUrl)) ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $work['current'] === $type['slug'] ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent'])), children: (string) $c_ui4, attrs: ['aria-current' => ($work['current'] === $type['slug'] ? 'page' : null)]}
 			{/foreach}
-		</nav>
+		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-8 flex flex-wrap gap-2', children: (string) $c_ui5, attrs: ['aria-label' => ($labels['all_work'])]}
 	{/if}
-</section>
+{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 pb-8 pt-16 md:px-6', children: (string) $c_ui6, attrs: []}
 
-<section class="container mx-auto px-4 py-8 md:px-6">
+{capture $c_ui9}
 	{if empty($posts)}
-		<p class="py-16 text-center text-muted-foreground">{$labels['no_projects']}</p>
+		{capture $c_ui7}{$labels['no_projects']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'py-16 text-center text-muted-foreground', children: (string) $c_ui7, attrs: []}
 	{else}
-		<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+		{capture $c_ui8}
 			{foreach $posts as $project}
 				{include 'blocks/project-card.latte', project: $project, labels: $labels}
 			{/foreach}
-		</div>
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-8 md:grid-cols-2 lg:grid-cols-3', children: (string) $c_ui8, attrs: []}
 	{/if}
-</section>
+{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 py-8 md:px-6', children: (string) $c_ui9, attrs: []}

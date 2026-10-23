@@ -27,7 +27,7 @@
 		{/if}
 
 		{if !empty($page['content'])}
-			{capture $body}<div class="prose max-w-none text-foreground">{$page['content']|noescape}</div>{/capture}
+			{capture $body}{capture $c_ui1}{$page['content']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none text-foreground', children: (string) $c_ui1, attrs: []}{/capture}
 			{include 'box/Box.latte', children: (string) $body}
 		{/if}
 	{/capture}

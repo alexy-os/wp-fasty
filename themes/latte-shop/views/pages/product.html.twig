@@ -1,67 +1,67 @@
 {# Latte Shop — single product (Twig twin of product.latte). #}
 {% include 'blocks/notice.html.twig' %}
 {% if page %}
-<article class="{{ page.post_class ?? '' }} container mx-auto px-4 py-12 md:px-6">
-	<nav class="mb-8 flex items-center gap-2 text-sm text-muted-foreground" aria-label="{{ labels.breadcrumb }}">
-		<a href="{{ shop.url|safe_url }}" class="text-muted-foreground no-underline hover:text-foreground">{{ labels.all_products }}</a>
+{% set c_ui24 %}
+	{% set c_ui3 %}
+		{% set c_ui1 %}{{ labels.all_products }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': 'text-muted-foreground no-underline hover:text-foreground', 'children': c_ui1, 'attrs': {}} only %}
 		{% if page.product_cats ?? false %}
 			{{ icon('chevron-right') }}
-			<a href="{{ page.product_cats[0].url|safe_url }}" class="text-muted-foreground no-underline hover:text-foreground">{{ page.product_cats[0].name }}</a>
+			{% set c_ui2 %}{{ page.product_cats[0].name }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((page.product_cats[0].url|safe_url)))|default(''), 'class': 'text-muted-foreground no-underline hover:text-foreground', 'children': c_ui2, 'attrs': {}} only %}
 		{% endif %}
-	</nav>
-	<div class="grid gap-8 md:grid-cols-2 md:gap-16">
-		<div class="overflow-hidden rounded-2xl border border-border bg-muted">
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mb-8 flex items-center gap-2 text-sm text-muted-foreground', 'children': c_ui3, 'attrs': {'aria-label': (labels.breadcrumb)}} only %}
+	{% set c_ui23 %}
+		{% set c_ui5 %}
 			{% if page.featuredImage.url ?? false %}
 				{% include 'image/Image.html.twig' with { src: page.featuredImage.url, alt: page.featuredImage.alt ?? '', sizes: '(min-width: 768px) 50vw, 100vw', class: kit('image', {}, 'aspect-square h-full w-full object-cover'), loading: 'eager', srcSet: page.featuredImage.srcset ?? '', decoding: 'async' } %}
 			{% else %}
-				<div class="flex aspect-square items-center justify-center text-muted-foreground">{{ icon('package', 'size-8') }}</div>
+				{% set c_ui4 %}{{ icon('package', 'size-8') }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex aspect-square items-center justify-center text-muted-foreground', 'children': c_ui4, 'attrs': {}} only %}
 			{% endif %}
-		</div>
-		<div class="flex flex-col gap-6">
-			<div class="flex flex-col gap-4">
-				<h1 class="text-3xl font-bold tracking-tight md:text-4xl">{{ page.title }}</h1>
-				<div class="flex items-baseline gap-4">
-					<span class="text-3xl font-semibold">{{ page.product.price }}</span>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'overflow-hidden rounded-2xl border border-border bg-muted', 'children': c_ui5, 'attrs': {}} only %}
+		{% set c_ui22 %}
+			{% set c_ui11 %}
+				{% set c_ui6 %}{{ page.title }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'text-3xl font-bold tracking-tight md:text-4xl', 'children': c_ui6, 'attrs': {}} only %}
+				{% set c_ui9 %}
+					{% set c_ui7 %}{{ page.product.price }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-3xl font-semibold', 'children': c_ui7, 'attrs': {}} only %}
 					{% if page.product.regular %}<s class="text-lg text-muted-foreground">{{ page.product.regular }}</s>{% endif %}
-					{% if page.product.on_sale %}<span class="badge rounded-full bg-destructive px-2 py-1 text-xs font-semibold text-primary-foreground">{{ labels.sale }}</span>{% endif %}
-				</div>
-				{% if page.excerpt ?? false %}<p class="text-muted-foreground">{{ page.excerpt }}</p>{% endif %}
-			</div>
+					{% if page.product.on_sale %}{% set c_ui8 %}{{ labels.sale }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'badge rounded-full bg-destructive px-2 py-1 text-xs font-semibold text-primary-foreground', 'children': c_ui8, 'attrs': {}} only %}{% endif %}
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-baseline gap-4', 'children': c_ui9, 'attrs': {}} only %}
+				{% if page.excerpt ?? false %}{% set c_ui10 %}{{ page.excerpt }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}{% endif %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-4', 'children': c_ui11, 'attrs': {}} only %}
 
 			{% if page.product.purchasable %}
-				<form method="post" action="{{ shop.action|safe_url }}" class="flex flex-col gap-4 rounded-xl border border-border bg-card p-6">
-					<input type="hidden" name="action" value="latte_shop_cart">
-					<input type="hidden" name="op" value="add">
-					<input type="hidden" name="product_id" value="{{ page.id }}">
-					<input type="hidden" name="_wpnonce" value="{{ shop.cart_nonce }}">
-					<div class="flex flex-col gap-2">
+				{% set c_ui16 %}
+					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': 'latte_shop_cart'}} only %}
+					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'op', 'value': 'add'}} only %}
+					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'product_id', 'value': (page.id)}} only %}
+					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop.cart_nonce)}} only %}
+					{% set c_ui13 %}
 						{% set qtyLabel %}{{ labels.qty }}{% endset %}
 						{% include 'label/Label.html.twig' with { htmlFor: 'qty', class: kit('label', {}), children: qtyLabel } %}
-						<div class="w-24">{% include 'input/Input.html.twig' with { id: 'qty', type: 'number', name: 'qty', value: '1', min: '1', max: (page.product.stock ?? 99) ~ '', required: true, class: kit('input', {}) } %}</div>
-					</div>
-					<div class="flex flex-wrap gap-4">
+						{% set c_ui12 %}{% include 'input/Input.html.twig' with { id: 'qty', type: 'number', name: 'qty', value: '1', min: '1', max: (page.product.stock ?? 99) ~ '', required: true, class: kit('input', {}) } %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'w-24', 'children': c_ui12, 'attrs': {}} only %}
+					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui13, 'attrs': {}} only %}
+					{% set c_ui14 %}
 						{% set addLabel %}{{ icon('shopping-cart') }}{{ labels.add_to_cart }}{% endset %}
 						{% include 'button/Button.html.twig' with { type: 'submit', class: kit('button', {'size': 'lg'}), children: addLabel } %}
 						{% set buyLabel %}{{ labels.buy_now }}{% endset %}
 						{% include 'button/Button.html.twig' with { type: 'submit', attrs: { name: 'buy_now', value: '1' }, class: kit('button', {'variant': 'outline', 'size': 'lg'}), children: buyLabel } %}
-					</div>
+					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-wrap gap-4', 'children': c_ui14, 'attrs': {}} only %}
 					{% if page.product.stock is not null %}
-						<p class="text-sm text-muted-foreground">{{ page.product.stock }} in stock</p>
+						{% set c_ui15 %}{{ page.product.stock }} in stock{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-sm text-muted-foreground', 'children': c_ui15, 'attrs': {}} only %}
 					{% endif %}
-				</form>
+				{% endset %}{% include 'form/Form.html.twig' with {'action': (((shop.action|safe_url)))|default(''), 'class': 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', 'children': c_ui16, 'attrs': {'method': 'post'}} only %}
 			{% else %}
 				{% set oos %}{{ labels.out_of_stock }}{% endset %}
 				{% include 'alert/Alert.html.twig' with { variant: 'destructive', class: 'px-4 py-2', children: oos } %}
 			{% endif %}
 
-			<ul class="flex flex-col gap-2 text-sm text-muted-foreground">
-				<li class="flex items-center gap-2">{{ icon('truck') }}{{ labels.free_shipping_over }}</li>
-				<li class="flex items-center gap-2">{{ icon('rotate-ccw') }}30-day returns</li>
-				{% if page.product.sku ?? false %}<li class="flex items-center gap-2">{{ icon('tag') }}SKU: {{ page.product.sku }}</li>{% endif %}
-			</ul>
+			{% set c_ui20 %}
+				{% set c_ui17 %}{{ icon('truck') }}{{ labels.free_shipping_over }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex items-center gap-2', 'children': c_ui17, 'attrs': {}} only %}
+				{% set c_ui18 %}{{ icon('rotate-ccw') }}30-day returns{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex items-center gap-2', 'children': c_ui18, 'attrs': {}} only %}
+				{% if page.product.sku ?? false %}{% set c_ui19 %}{{ icon('tag') }}SKU: {{ page.product.sku }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex items-center gap-2', 'children': c_ui19, 'attrs': {}} only %}{% endif %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col gap-2 text-sm text-muted-foreground', 'children': c_ui20, 'attrs': {}} only %}
 
-			<div class="prose max-w-none border-t border-border pt-6">{{ page.content|raw }}</div>
-		</div>
-	</div>
-</article>
+			{% set c_ui21 %}{{ page.content|raw }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none border-t border-border pt-6', 'children': c_ui21, 'attrs': {}} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-6', 'children': c_ui22, 'attrs': {}} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-8 md:grid-cols-2 md:gap-16', 'children': c_ui23, 'attrs': {}} only %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'article', 'class': ((page.post_class ?? '') ~ ' container mx-auto px-4 py-12 md:px-6'), 'children': c_ui24, 'attrs': {}} only %}
 {% endif %}

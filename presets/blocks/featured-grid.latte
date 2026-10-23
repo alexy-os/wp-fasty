@@ -32,7 +32,7 @@
 				{include 'card/CardHeader.latte', children: (string) $headerInner}
 
 				{if !empty($post['excerpt'])}
-					{capture $excerptHtml}<p class="text-sm text-muted-foreground">{$post['excerpt']}</p>{/capture}
+					{capture $excerptHtml}{capture $c_ui1}{$post['excerpt']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $c_ui1, attrs: []}{/capture}
 					{include 'card/CardContent.latte', children: (string) $excerptHtml}
 				{/if}
 			{/capture}
@@ -43,7 +43,7 @@
 	{capture $sectionInner}
 		{capture $heading}{$labels['featured'] ?? 'Featured'}{/capture}
 		{include 'title/Title.latte', as: 2, class: 'mb-2 text-center text-3xl font-bold tracking-tight', children: (string) $heading}
-		<p class="mb-10 text-center text-muted-foreground">{$labels['latest_articles'] ?? 'Latest articles'}</p>
+		{capture $c_ui2}{$labels['latest_articles'] ?? 'Latest articles'}{/capture}{include 'text/Text.latte', tag: 'p', class: 'mb-10 text-center text-muted-foreground', children: (string) $c_ui2, attrs: []}
 		{include 'grid/Grid.latte', class: 'grid gap-6 md:grid-cols-2 lg:grid-cols-3', children: (string) $cards}
 	{/capture}
 

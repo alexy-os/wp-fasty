@@ -1,32 +1,32 @@
 {# Latte Shop — catalog archive with category filter (Twig twin of shop.latte). #}
 {% include 'blocks/notice.html.twig' %}
-<section class="container mx-auto px-4 pb-8 pt-16 md:px-6">
-	<h1 class="text-3xl font-bold tracking-tight md:text-4xl">{{ archive.title }}</h1>
-	{% if archive.description ?? false %}<div class="mt-4 max-w-2xl text-muted-foreground">{{ archive.description|raw }}</div>{% endif %}
+{% set c_ui6 %}
+	{% set c_ui1 %}{{ archive.title }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'text-3xl font-bold tracking-tight md:text-4xl', 'children': c_ui1, 'attrs': {}} only %}
+	{% if archive.description ?? false %}{% set c_ui2 %}{{ archive.description|raw }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mt-4 max-w-2xl text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}{% endif %}
 	{% if shop.categories ?? false %}
-		<nav class="mt-8 flex flex-wrap gap-2" aria-label="{{ labels.all_products }}">
-			<a href="{{ shop.url|safe_url }}" class="inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline {{ shop.current_cat is same as('') ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent' }}">{{ labels.all_products }}</a>
+		{% set c_ui5 %}
+			{% set c_ui3 %}{{ labels.all_products }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': ('inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline ' ~ (shop.current_cat is same as('') ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent')), 'children': c_ui3, 'attrs': {}} only %}
 			{% for cat in shop.categories %}
-				<a href="{{ cat.url|safe_url }}" class="inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline {{ shop.current_cat is same as(cat.slug) ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent' }}">{{ cat.name }}</a>
+				{% set c_ui4 %}{{ cat.name }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((cat.url|safe_url)))|default(''), 'class': ('inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline ' ~ (shop.current_cat is same as(cat.slug) ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent')), 'children': c_ui4, 'attrs': {}} only %}
 			{% endfor %}
-		</nav>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mt-8 flex flex-wrap gap-2', 'children': c_ui5, 'attrs': {'aria-label': (labels.all_products)}} only %}
 	{% endif %}
-</section>
-<section class="container mx-auto px-4 pb-16 md:px-6">
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 pb-8 pt-16 md:px-6', 'children': c_ui6, 'attrs': {}} only %}
+{% set c_ui13 %}
 	{% if not posts %}
-		<p class="py-16 text-center text-muted-foreground">{{ labels.no_products }}</p>
+		{% set c_ui7 %}{{ labels.no_products }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'py-16 text-center text-muted-foreground', 'children': c_ui7, 'attrs': {}} only %}
 	{% else %}
-		<div class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+		{% set c_ui8 %}
 			{% for product in posts %}
 				{% include 'blocks/product-card.html.twig' with { product: product, shop: shop, labels: labels } %}
 			{% endfor %}
-		</div>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4', 'children': c_ui8, 'attrs': {}} only %}
 		{% if pagination ?? false %}
-			<nav class="mt-10 flex items-center justify-center gap-4" aria-label="{{ labels.pagination ?? 'Pagination' }}">
-				{% if pagination.prev_url %}<a href="{{ pagination.prev_url|safe_url }}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{{ icon('arrow-left') }}{{ labels.previous }}</a>{% endif %}
-				<span class="text-sm text-muted-foreground">{{ pagination.current }} / {{ pagination.total }}</span>
-				{% if pagination.next_url %}<a href="{{ pagination.next_url|safe_url }}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{{ labels.next }}{{ icon('arrow-right') }}</a>{% endif %}
-			</nav>
+			{% set c_ui12 %}
+				{% if pagination.prev_url %}{% set c_ui9 %}{{ icon('arrow-left') }}{{ labels.previous }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((pagination.prev_url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui9, 'attrs': {}} only %}{% endif %}
+				{% set c_ui10 %}{{ pagination.current }} / {{ pagination.total }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}
+				{% if pagination.next_url %}{% set c_ui11 %}{{ labels.next }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((pagination.next_url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui11, 'attrs': {}} only %}{% endif %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mt-10 flex items-center justify-center gap-4', 'children': c_ui12, 'attrs': {'aria-label': (labels.pagination ?? 'Pagination')}} only %}
 		{% endif %}
 	{% endif %}
-</section>
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 pb-16 md:px-6', 'children': c_ui13, 'attrs': {}} only %}

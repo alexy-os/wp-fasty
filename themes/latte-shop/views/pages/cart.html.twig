@@ -1,49 +1,49 @@
 {# Latte Shop — cart (Twig twin of cart.latte). #}
 {% include 'blocks/notice.html.twig' %}
-<section class="container mx-auto px-4 py-12 md:px-6">
-	<h1 class="mb-8 text-3xl font-bold tracking-tight">{{ labels.cart }}</h1>
+{% set c_ui21 %}
+	{% set c_ui1 %}{{ labels.cart }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'mb-8 text-3xl font-bold tracking-tight', 'children': c_ui1, 'attrs': {}} only %}
 	{% if not cart.items %}
-		<div class="flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center">
-			<span class="text-muted-foreground">{{ icon('shopping-cart', 'size-8') }}</span>
-			<p class="text-muted-foreground">{{ labels.empty_cart }}</p>
-			<a href="{{ shop.url|safe_url }}" class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline">{{ labels.continue_shopping }}</a>
-		</div>
+		{% set c_ui5 %}
+			{% set c_ui2 %}{{ icon('shopping-cart', 'size-8') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}
+			{% set c_ui3 %}{{ labels.empty_cart }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui3, 'attrs': {}} only %}
+			{% set c_ui4 %}{{ labels.continue_shopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui4, 'attrs': {}} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center', 'children': c_ui5, 'attrs': {}} only %}
 	{% else %}
-		<div class="grid gap-8 lg:grid-cols-[1fr_360px]">
-			<form method="post" action="{{ shop.action|safe_url }}" class="flex flex-col gap-4">
-				<input type="hidden" name="action" value="latte_shop_cart">
-				<input type="hidden" name="op" value="update">
-				<input type="hidden" name="_wpnonce" value="{{ shop.cart_nonce }}">
-				<ul class="flex flex-col divide-y divide-border rounded-xl border border-border bg-card">
+		{% set c_ui20 %}
+			{% set c_ui18 %}
+				{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': 'latte_shop_cart'}} only %}
+				{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'op', 'value': 'update'}} only %}
+				{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop.cart_nonce)}} only %}
+				{% set c_ui15 %}
 					{% for item in cart.items %}
-						<li class="flex items-center gap-4 p-4">
-							{% if item.image %}<img src="{{ item.image|safe_url }}" alt="" class="size-16 rounded-lg object-cover" loading="lazy">{% else %}<span class="flex size-16 items-center justify-center rounded-lg bg-muted text-muted-foreground">{{ icon('package') }}</span>{% endif %}
-							<div class="flex min-w-0 flex-1 flex-col gap-2">
-								<a href="{{ item.url|safe_url }}" class="font-medium text-foreground no-underline hover:text-primary">{{ item.title }}</a>
-								<span class="text-sm text-muted-foreground">{{ item.unit_display }}</span>
-							</div>
-							<label class="sr-only" for="qty-{{ item.id }}">{{ labels.qty }}</label>
-							<div class="w-20 shrink-0">{% include 'input/Input.html.twig' with { id: 'qty-' ~ item.id, type: 'number', name: 'qtys[' ~ item.id ~ ']', value: item.qty ~ '', min: '0', max: '99', class: kit('input', {}) } %}</div>
-							<span class="w-24 text-right font-semibold">{{ item.line_display }}</span>
-							<button type="submit" form="remove-{{ item.id }}" class="inline-flex size-10 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-destructive" aria-label="{{ labels.remove }}: {{ item.title }}">{{ icon('trash-2') }}</button>
-						</li>
+						{% set c_ui14 %}
+							{% if item.image %}{% include 'image/Image.html.twig' with {'src': (((item.image|safe_url)))|default(''), 'class': 'size-16 rounded-lg object-cover', 'attrs': {'alt': '', 'loading': 'lazy'}} only %}{% else %}{% set c_ui6 %}{{ icon('package') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'flex size-16 items-center justify-center rounded-lg bg-muted text-muted-foreground', 'children': c_ui6, 'attrs': {}} only %}{% endif %}
+							{% set c_ui9 %}
+								{% set c_ui7 %}{{ item.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((item.url|safe_url)))|default(''), 'class': 'font-medium text-foreground no-underline hover:text-primary', 'children': c_ui7, 'attrs': {}} only %}
+								{% set c_ui8 %}{{ item.unit_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui8, 'attrs': {}} only %}
+							{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex min-w-0 flex-1 flex-col gap-2', 'children': c_ui9, 'attrs': {}} only %}
+							{% set c_ui10 %}{{ labels.qty }}{% endset %}{% include 'label/Label.html.twig' with {'class': 'sr-only', 'children': c_ui10, 'attrs': {'for': ('qty-' ~ (item.id))}} only %}
+							{% set c_ui11 %}{% include 'input/Input.html.twig' with { id: 'qty-' ~ item.id, type: 'number', name: 'qtys[' ~ item.id ~ ']', value: item.qty ~ '', min: '0', max: '99', class: kit('input', {}) } %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'w-20 shrink-0', 'children': c_ui11, 'attrs': {}} only %}
+							{% set c_ui12 %}{{ item.line_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'w-24 text-right font-semibold', 'children': c_ui12, 'attrs': {}} only %}
+							{% set c_ui13 %}{{ icon('trash-2') }}{% endset %}{% include 'button/Button.html.twig' with {'class': 'inline-flex size-10 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-destructive', 'children': c_ui13, 'attrs': {'type': 'submit', 'form': ('remove-' ~ (item.id)), 'aria-label': ((labels.remove) ~ ': ' ~ (item.title))}} only %}
+						{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex items-center gap-4 p-4', 'children': c_ui14, 'attrs': {}} only %}
 					{% endfor %}
-				</ul>
-				<div class="flex flex-wrap justify-between gap-4">
-					<a href="{{ shop.url|safe_url }}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{{ icon('arrow-left') }}{{ labels.continue_shopping }}</a>
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', 'children': c_ui15, 'attrs': {}} only %}
+				{% set c_ui17 %}
+					{% set c_ui16 %}{{ icon('arrow-left') }}{{ labels.continue_shopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui16, 'attrs': {}} only %}
 					{% set upd %}{{ icon('rotate-ccw') }}{{ labels.update_cart }}{% endset %}
 					{% include 'button/Button.html.twig' with { type: 'submit', class: kit('button', {'variant': 'outline'}), children: upd } %}
-				</div>
-			</form>
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-wrap justify-between gap-4', 'children': c_ui17, 'attrs': {}} only %}
+			{% endset %}{% include 'form/Form.html.twig' with {'action': (((shop.action|safe_url)))|default(''), 'class': 'flex flex-col gap-4', 'children': c_ui18, 'attrs': {'method': 'post'}} only %}
 			{% for item in cart.items %}
-				<form id="remove-{{ item.id }}" method="post" action="{{ shop.action|safe_url }}" hidden>
-					<input type="hidden" name="action" value="latte_shop_cart">
-					<input type="hidden" name="op" value="remove">
-					<input type="hidden" name="product_id" value="{{ item.id }}">
-					<input type="hidden" name="_wpnonce" value="{{ shop.cart_nonce }}">
-				</form>
+				{% set c_ui19 %}
+					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': 'latte_shop_cart'}} only %}
+					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'op', 'value': 'remove'}} only %}
+					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'product_id', 'value': (item.id)}} only %}
+					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop.cart_nonce)}} only %}
+				{% endset %}{% include 'form/Form.html.twig' with {'action': (((shop.action|safe_url)))|default(''), 'children': c_ui19, 'attrs': {'id': ('remove-' ~ (item.id)), 'method': 'post', 'hidden': true}} only %}
 			{% endfor %}
 			{% include 'blocks/order-summary.html.twig' with { cart: cart, labels: labels } %}
-		</div>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-8 lg:grid-cols-[1fr_360px]', 'children': c_ui20, 'attrs': {}} only %}
 	{% endif %}
-</section>
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 py-12 md:px-6', 'children': c_ui21, 'attrs': {}} only %}

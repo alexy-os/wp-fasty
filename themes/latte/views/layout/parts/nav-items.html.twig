@@ -1,19 +1,15 @@
 {#
  # Recursive nav items — expects items list with optional children. Twig twin of nav-items.latte.
  #}
-<ul class="{{ listClass ?? 'flex flex-col gap-2' }}">
+{% set c_ui3 %}
 	{% for item in items %}
-		<li>
-			<a
-				href="{{ item.url|safe_url }}"
-				class="{{ linkClass ?? 'block rounded-md px-4 py-2 text-sm font-medium text-muted-foreground no-underline hover:bg-accent hover:text-foreground' }}{% if item.current %} bg-accent text-foreground{% endif %}"
-				{% if item.current %}aria-current="page"{% endif %}
-			>
+		{% set c_ui2 %}
+			{% set c_ui1 %}
 				{{ item.title }}
-			</a>
+			{% endset %}{% include 'link/Link.html.twig' with {'href': (((item.url|safe_url)))|default(''), 'class': ((linkClass ?? 'block rounded-md px-4 py-2 text-sm font-medium text-muted-foreground no-underline hover:bg-accent hover:text-foreground') ~ (item.current ? ' bg-accent text-foreground' : '')), 'children': c_ui1, 'attrs': {'aria-current': ((item.current)) ? 'page' : null}} only %}
 			{% if item.children ?? false %}
 				{% include 'layout/parts/nav-items.html.twig' with { items: item.children, listClass: 'ml-4 mt-2 flex flex-col gap-2', linkClass: linkClass ?? null } %}
 			{% endif %}
-		</li>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'children': c_ui2, 'attrs': {}} only %}
 	{% endfor %}
-</ul>
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': (listClass ?? 'flex flex-col gap-2'), 'children': c_ui3, 'attrs': {}} only %}

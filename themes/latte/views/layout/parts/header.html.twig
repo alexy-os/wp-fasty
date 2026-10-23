@@ -1,46 +1,36 @@
 {#
  # Site header — classic top nav + mobile sheet trigger. Twig twin of header.latte.
  #}
-<a class="skip-link screen-reader-text" href="#content">{{ labels.skip_to_content }}</a>
+{% set c_ui1 %}{{ labels.skip_to_content }}{% endset %}{% include 'link/Link.html.twig' with {'class': 'skip-link screen-reader-text', 'href': '#content', 'children': c_ui1, 'attrs': {}} only %}
 
-<header class="site-header border-b border-border bg-background">
-	<div class="container mx-auto flex h-16 items-center justify-between gap-4 px-4 md:px-6">
-		<div class="flex items-center gap-4">
+{% set c_ui8 %}
+	{% set c_ui7 %}
+		{% set c_ui3 %}
 			{% if menu.primary.items ?? false %}
-				<button
-					type="button"
-					id="{{ sheet.trigger }}"
-					class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden"
-					data-ui8kit-dialog-open="true"
-					data-ui8kit-dialog-target="{{ sheet.panel }}"
-					aria-controls="{{ sheet.panel }}"
-					aria-haspopup="dialog"
-					aria-expanded="false"
-					aria-label="{{ labels.open_menu }}"
-				>
+				{% set c_ui2 %}
 					{{ icon('menu', 'size-5') }}
-				</button>
+				{% endset %}{% include 'button/Button.html.twig' with {'class': 'inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden', 'children': c_ui2, 'attrs': {'type': 'button', 'id': (sheet.trigger), 'data-ui8kit-dialog-open': 'true', 'data-ui8kit-dialog-target': (sheet.panel), 'aria-controls': (sheet.panel), 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'aria-label': (labels.open_menu)}} only %}
 			{% endif %}
 			{% include 'layout/parts/brand.html.twig' %}
-		</div>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-center gap-4', 'children': c_ui3, 'attrs': {}} only %}
 
 		{% if menu.primary.items ?? false %}
-			<nav class="hidden md:block" aria-label="{{ labels.primary_nav }}">
+			{% set c_ui4 %}
 				{% include 'layout/parts/nav-items.html.twig' with {
 					items: menu.primary.items,
 					listClass: 'flex items-center gap-6',
 					linkClass: 'text-sm font-medium text-muted-foreground no-underline hover:text-foreground'
 				} %}
-			</nav>
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'hidden md:block', 'children': c_ui4, 'attrs': {'aria-label': (labels.primary_nav)}} only %}
 		{% endif %}
 
-		<div class="flex items-center gap-4">
-			<div class="hidden md:block">
+		{% set c_ui6 %}
+			{% set c_ui5 %}
 				{% include 'blocks/search-form.html.twig' %}
-			</div>
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'hidden md:block', 'children': c_ui5, 'attrs': {}} only %}
 			{% include 'layout/parts/header-actions.html.twig' %}
-		</div>
-	</div>
-</header>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-center gap-4', 'children': c_ui6, 'attrs': {}} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'container mx-auto flex h-16 items-center justify-between gap-4 px-4 md:px-6', 'children': c_ui7, 'attrs': {}} only %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'header', 'class': 'site-header border-b border-border bg-background', 'children': c_ui8, 'attrs': {}} only %}
 
 {% include 'layout/parts/mobile-sheet.html.twig' %}

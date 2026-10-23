@@ -1,60 +1,60 @@
 {** Latte Folio — project case study. *}
 {if $page}
-<article class="{$page['post_class'] ?? ''}">
-	<header class="container mx-auto px-4 pb-8 pt-16 md:px-6">
-		<a href="{$work['url']}" class="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground no-underline hover:text-foreground">{icon('arrow-left')}{$labels['all_work']}</a>
-		<div class="grid gap-8 lg:grid-cols-[2fr_1fr]">
-			<div class="flex flex-col gap-4">
+{capture $c_ui17}
+	{capture $c_ui13}
+		{capture $c_ui1}{icon('arrow-left')}{$labels['all_work']}{/capture}{include 'link/Link.latte', href: ((($work['url'])|checkUrl)) ?? '', class: 'mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground no-underline hover:text-foreground', children: (string) $c_ui1, attrs: []}
+		{capture $c_ui12}
+			{capture $c_ui5}
 				{if !empty($page['types'])}
-					<div class="flex flex-wrap gap-2">
+					{capture $c_ui2}
 						{foreach $page['types'] as $type}
 							{capture $typeName}{$type['name']}{/capture}{include 'badge/Badge.latte', variant: 'secondary', children: (string) $typeName}
 						{/foreach}
-					</div>
+					{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-wrap gap-2', children: (string) $c_ui2, attrs: []}
 				{/if}
-				<h1 class="text-4xl font-bold leading-tight tracking-tight md:text-5xl">{$page['title']}</h1>
-				{if !empty($page['excerpt'])}<p class="text-lg text-muted-foreground">{$page['excerpt']}</p>{/if}
-			</div>
+				{capture $c_ui3}{$page['title']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'text-4xl font-bold leading-tight tracking-tight md:text-5xl', children: (string) $c_ui3, attrs: []}
+				{if !empty($page['excerpt'])}{capture $c_ui4}{$page['excerpt']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-lg text-muted-foreground', children: (string) $c_ui4, attrs: []}{/if}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4', children: (string) $c_ui5, attrs: []}
 			{if !empty($page['project'])}
-				<dl class="grid grid-cols-2 gap-6 self-end rounded-xl border border-border bg-card p-6">
+				{capture $c_ui11}
 					{foreach $page['project'] as $key => $meta}
 						{if $key !== 'url'}
-							<div class="flex flex-col gap-2">
-								<dt class="text-xs uppercase tracking-wide text-muted-foreground">{$meta['label']}</dt>
-								<dd class="font-medium">{$meta['value']}</dd>
-							</div>
+							{capture $c_ui8}
+								{capture $c_ui6}{$meta['label']}{/capture}{include 'box/Box.latte', tag: 'dt', class: 'text-xs uppercase tracking-wide text-muted-foreground', children: (string) $c_ui6, attrs: []}
+								{capture $c_ui7}{$meta['value']}{/capture}{include 'box/Box.latte', tag: 'dd', class: 'font-medium', children: (string) $c_ui7, attrs: []}
+							{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui8, attrs: []}
 						{/if}
 					{/foreach}
 					{if !empty($page['project']['url']['value'])}
-						<div class="col-span-2">
-							<a href="{$page['project']['url']['value']}" class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline" rel="noopener" target="_blank">{$labels['visit_site']}{icon('external-link')}</a>
-						</div>
+						{capture $c_ui10}
+							{capture $c_ui9}{$labels['visit_site']}{icon('external-link')}{/capture}{include 'link/Link.latte', href: ((($page['project']['url']['value'])|checkUrl)) ?? '', class: 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui9, attrs: ['rel' => 'noopener', 'target' => '_blank']}
+						{/capture}{include 'box/Box.latte', tag: 'div', class: 'col-span-2', children: (string) $c_ui10, attrs: []}
 					{/if}
-				</dl>
+				{/capture}{include 'box/Box.latte', tag: 'dl', class: 'grid grid-cols-2 gap-6 self-end rounded-xl border border-border bg-card p-6', children: (string) $c_ui11, attrs: []}
 			{/if}
-		</div>
-	</header>
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-8 lg:grid-cols-[2fr_1fr]', children: (string) $c_ui12, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'header', class: 'container mx-auto px-4 pb-8 pt-16 md:px-6', children: (string) $c_ui13, attrs: []}
 
 	{if !empty($page['featuredImage']['url'])}
-		<div class="container mx-auto px-4 md:px-6">
+		{capture $c_ui14}
 			{include 'image/Image.latte', src: $page['featuredImage']['url'], alt: $page['featuredImage']['alt'] ?? '', sizes: '100vw', class: kit('image', [], 'aspect-[16/9] w-full rounded-2xl border border-border object-cover'), loading: 'eager', srcSet: $page['featuredImage']['srcset'] ?? '', decoding: 'async'}
-		</div>
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'container mx-auto px-4 md:px-6', children: (string) $c_ui14, attrs: []}
 	{/if}
 
-	<div class="container mx-auto max-w-3xl px-4 py-16 md:px-6">
-		<div class="prose max-w-none">{$page['content']|noescape}</div>
-	</div>
-</article>
+	{capture $c_ui16}
+		{capture $c_ui15}{$page['content']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none', children: (string) $c_ui15, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'container mx-auto max-w-3xl px-4 py-16 md:px-6', children: (string) $c_ui16, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'article', class: ($page['post_class'] ?? ''), children: (string) $c_ui17, attrs: []}
 
 {if !empty($next_project)}
-	<section class="container mx-auto px-4 pb-16 md:px-6">
-		<a href="{$next_project['url']}" class="group flex items-center justify-between gap-6 rounded-2xl border border-border bg-card p-8 no-underline hover:border-primary">
-			<div class="flex flex-col gap-2">
-				<span class="text-sm text-muted-foreground">{$labels['next_project']}</span>
-				<span class="text-2xl font-semibold text-foreground">{$next_project['title']}</span>
-			</div>
-			<span class="text-primary">{icon('arrow-right', 'size-8')}</span>
-		</a>
-	</section>
+	{capture $c_ui23}
+		{capture $c_ui22}
+			{capture $c_ui20}
+				{capture $c_ui18}{$labels['next_project']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui18, attrs: []}
+				{capture $c_ui19}{$next_project['title']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-2xl font-semibold text-foreground', children: (string) $c_ui19, attrs: []}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui20, attrs: []}
+			{capture $c_ui21}{icon('arrow-right', 'size-8')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-primary', children: (string) $c_ui21, attrs: []}
+		{/capture}{include 'link/Link.latte', href: ((($next_project['url'])|checkUrl)) ?? '', class: 'group flex items-center justify-between gap-6 rounded-2xl border border-border bg-card p-8 no-underline hover:border-primary', children: (string) $c_ui22, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 pb-16 md:px-6', children: (string) $c_ui23, attrs: []}
 {/if}
 {/if}

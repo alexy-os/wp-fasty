@@ -1,24 +1,14 @@
 {#
  # App-shell header — sheet trigger (mobile) + brand. Twig twin of app-header.latte.
  #}
-<header class="site-header flex h-16 items-center justify-between border-b border-border bg-background px-4 md:px-6">
-	<div class="flex items-center gap-4">
-		<button
-			type="button"
-			id="{{ sheet.trigger }}"
-			class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden"
-			data-ui8kit-dialog-open="true"
-			data-ui8kit-dialog-target="{{ sheet.panel }}"
-			aria-controls="{{ sheet.panel }}"
-			aria-haspopup="dialog"
-			aria-expanded="false"
-			aria-label="{{ labels.open_menu }}"
-		>
+{% set c_ui5 %}
+	{% set c_ui3 %}
+		{% set c_ui1 %}
 			{{ icon('menu', 'size-5') }}
-		</button>
-		<span class="text-sm font-medium text-muted-foreground md:hidden">{{ site.title }}</span>
-	</div>
-	<div class="hidden md:block">
+		{% endset %}{% include 'button/Button.html.twig' with {'class': 'inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden', 'children': c_ui1, 'attrs': {'type': 'button', 'id': (sheet.trigger), 'data-ui8kit-dialog-open': 'true', 'data-ui8kit-dialog-target': (sheet.panel), 'aria-controls': (sheet.panel), 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'aria-label': (labels.open_menu)}} only %}
+		{% set c_ui2 %}{{ site.title }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm font-medium text-muted-foreground md:hidden', 'children': c_ui2, 'attrs': {}} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-center gap-4', 'children': c_ui3, 'attrs': {}} only %}
+	{% set c_ui4 %}
 		{% include 'blocks/search-form.html.twig' %}
-	</div>
-</header>
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'hidden md:block', 'children': c_ui4, 'attrs': {}} only %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'header', 'class': 'site-header flex h-16 items-center justify-between border-b border-border bg-background px-4 md:px-6', 'children': c_ui5, 'attrs': {}} only %}

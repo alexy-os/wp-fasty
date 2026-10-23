@@ -1,19 +1,15 @@
 {**
  * Recursive nav items — expects $items list with optional children.
  *}
-<ul class="{$listClass ?? 'flex flex-col gap-2'}">
+{capture $c_ui3}
 	{foreach $items as $item}
-		<li>
-			<a
-				href="{$item['url']}"
-				class="{$linkClass ?? 'block rounded-md px-4 py-2 text-sm font-medium text-muted-foreground no-underline hover:bg-accent hover:text-foreground'}{if $item['current']} bg-accent text-foreground{/if}"
-				{if $item['current']}aria-current="page"{/if}
-			>
+		{capture $c_ui2}
+			{capture $c_ui1}
 				{$item['title']}
-			</a>
+			{/capture}{include 'link/Link.latte', href: ((($item['url'])|checkUrl)) ?? '', class: (($linkClass ?? 'block rounded-md px-4 py-2 text-sm font-medium text-muted-foreground no-underline hover:bg-accent hover:text-foreground') . ($item['current'] ? ' bg-accent text-foreground' : '')), children: (string) $c_ui1, attrs: ['aria-current' => (($item['current'])) ? 'page' : null]}
 			{if !empty($item['children'])}
 				{include 'nav-items.latte', items: $item['children'], listClass: 'ml-4 mt-2 flex flex-col gap-2', linkClass: $linkClass ?? null}
 			{/if}
-		</li>
+		{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $c_ui2, attrs: []}
 	{/foreach}
-</ul>
+{/capture}{include 'box/Box.latte', tag: 'ul', class: ($listClass ?? 'flex flex-col gap-2'), children: (string) $c_ui3, attrs: []}

@@ -16,22 +16,22 @@
 		{include 'layout/parts/header.latte'}
 
 		{if !empty($widgets['sidebar'])}
-			<div class="container mx-auto flex flex-col gap-8 px-4 md:flex-row md:px-6">
-				<main id="content" class="site-content min-w-0 flex-1">
+			{capture $c_ui3}
+				{capture $c_ui1}
 					{do_action 'before_content'}
 					{$content|noescape}
 					{do_action 'after_content'}
-				</main>
-				<aside class="w-full shrink-0 py-12 md:w-64" aria-label="{$labels['sidebar']}">
+				{/capture}{include 'box/Box.latte', tag: 'main', class: 'site-content min-w-0 flex-1', children: (string) $c_ui1, attrs: ['id' => 'content']}
+				{capture $c_ui2}
 					{$widgets['sidebar']|noescape}
-				</aside>
-			</div>
+				{/capture}{include 'box/Box.latte', tag: 'aside', class: 'w-full shrink-0 py-12 md:w-64', children: (string) $c_ui2, attrs: ['aria-label' => ($labels['sidebar'])]}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'container mx-auto flex flex-col gap-8 px-4 md:flex-row md:px-6', children: (string) $c_ui3, attrs: []}
 		{else}
-			<main id="content" class="site-content">
+			{capture $c_ui4}
 				{do_action 'before_content'}
 				{$content|noescape}
 				{do_action 'after_content'}
-			</main>
+			{/capture}{include 'box/Box.latte', tag: 'main', class: 'site-content', children: (string) $c_ui4, attrs: ['id' => 'content']}
 		{/if}
 
 		{include 'layout/parts/footer.latte'}

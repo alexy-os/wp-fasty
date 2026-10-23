@@ -1,60 +1,60 @@
 {# Latte Folio — project case study (Twig twin of project.latte). #}
 {% if page %}
-<article class="{{ page.post_class ?? '' }}">
-	<header class="container mx-auto px-4 pb-8 pt-16 md:px-6">
-		<a href="{{ work.url|safe_url }}" class="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground no-underline hover:text-foreground">{{ icon('arrow-left') }}{{ labels.all_work }}</a>
-		<div class="grid gap-8 lg:grid-cols-[2fr_1fr]">
-			<div class="flex flex-col gap-4">
+{% set c_ui17 %}
+	{% set c_ui13 %}
+		{% set c_ui1 %}{{ icon('arrow-left') }}{{ labels.all_work }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((work.url|safe_url)))|default(''), 'class': 'mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground no-underline hover:text-foreground', 'children': c_ui1, 'attrs': {}} only %}
+		{% set c_ui12 %}
+			{% set c_ui5 %}
 				{% if page.types ?? false %}
-					<div class="flex flex-wrap gap-2">
+					{% set c_ui2 %}
 						{% for type in page.types %}
 							{% set typeName %}{{ type.name }}{% endset %}{% include 'badge/Badge.html.twig' with { variant: 'secondary', children: typeName } %}
 						{% endfor %}
-					</div>
+					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-wrap gap-2', 'children': c_ui2, 'attrs': {}} only %}
 				{% endif %}
-				<h1 class="text-4xl font-bold leading-tight tracking-tight md:text-5xl">{{ page.title }}</h1>
-				{% if page.excerpt ?? false %}<p class="text-lg text-muted-foreground">{{ page.excerpt }}</p>{% endif %}
-			</div>
+				{% set c_ui3 %}{{ page.title }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'text-4xl font-bold leading-tight tracking-tight md:text-5xl', 'children': c_ui3, 'attrs': {}} only %}
+				{% if page.excerpt ?? false %}{% set c_ui4 %}{{ page.excerpt }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-lg text-muted-foreground', 'children': c_ui4, 'attrs': {}} only %}{% endif %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-4', 'children': c_ui5, 'attrs': {}} only %}
 			{% if page.project ?? false %}
-				<dl class="grid grid-cols-2 gap-6 self-end rounded-xl border border-border bg-card p-6">
+				{% set c_ui11 %}
 					{% for key, meta in page.project %}
 						{% if key is not same as('url') %}
-							<div class="flex flex-col gap-2">
-								<dt class="text-xs uppercase tracking-wide text-muted-foreground">{{ meta.label }}</dt>
-								<dd class="font-medium">{{ meta.value }}</dd>
-							</div>
+							{% set c_ui8 %}
+								{% set c_ui6 %}{{ meta.label }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dt', 'class': 'text-xs uppercase tracking-wide text-muted-foreground', 'children': c_ui6, 'attrs': {}} only %}
+								{% set c_ui7 %}{{ meta.value }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dd', 'class': 'font-medium', 'children': c_ui7, 'attrs': {}} only %}
+							{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui8, 'attrs': {}} only %}
 						{% endif %}
 					{% endfor %}
 					{% if page.project.url.value ?? false %}
-						<div class="col-span-2">
-							<a href="{{ page.project.url.value|safe_url }}" class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline" rel="noopener" target="_blank">{{ labels.visit_site }}{{ icon('external-link') }}</a>
-						</div>
+						{% set c_ui10 %}
+							{% set c_ui9 %}{{ labels.visit_site }}{{ icon('external-link') }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((page.project.url.value|safe_url)))|default(''), 'class': 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui9, 'attrs': {'rel': 'noopener', 'target': '_blank'}} only %}
+						{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'col-span-2', 'children': c_ui10, 'attrs': {}} only %}
 					{% endif %}
-				</dl>
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dl', 'class': 'grid grid-cols-2 gap-6 self-end rounded-xl border border-border bg-card p-6', 'children': c_ui11, 'attrs': {}} only %}
 			{% endif %}
-		</div>
-	</header>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-8 lg:grid-cols-[2fr_1fr]', 'children': c_ui12, 'attrs': {}} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'header', 'class': 'container mx-auto px-4 pb-8 pt-16 md:px-6', 'children': c_ui13, 'attrs': {}} only %}
 
 	{% if page.featuredImage.url ?? false %}
-		<div class="container mx-auto px-4 md:px-6">
+		{% set c_ui14 %}
 			{% include 'image/Image.html.twig' with { src: page.featuredImage.url, alt: page.featuredImage.alt ?? '', sizes: '100vw', class: kit('image', {}, 'aspect-[16/9] w-full rounded-2xl border border-border object-cover'), loading: 'eager', srcSet: page.featuredImage.srcset ?? '', decoding: 'async' } %}
-		</div>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'container mx-auto px-4 md:px-6', 'children': c_ui14, 'attrs': {}} only %}
 	{% endif %}
 
-	<div class="container mx-auto max-w-3xl px-4 py-16 md:px-6">
-		<div class="prose max-w-none">{{ page.content|raw }}</div>
-	</div>
-</article>
+	{% set c_ui16 %}
+		{% set c_ui15 %}{{ page.content|raw }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none', 'children': c_ui15, 'attrs': {}} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'container mx-auto max-w-3xl px-4 py-16 md:px-6', 'children': c_ui16, 'attrs': {}} only %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'article', 'class': (page.post_class ?? ''), 'children': c_ui17, 'attrs': {}} only %}
 
 {% if next_project ?? false %}
-	<section class="container mx-auto px-4 pb-16 md:px-6">
-		<a href="{{ next_project.url|safe_url }}" class="group flex items-center justify-between gap-6 rounded-2xl border border-border bg-card p-8 no-underline hover:border-primary">
-			<div class="flex flex-col gap-2">
-				<span class="text-sm text-muted-foreground">{{ labels.next_project }}</span>
-				<span class="text-2xl font-semibold text-foreground">{{ next_project.title }}</span>
-			</div>
-			<span class="text-primary">{{ icon('arrow-right', 'size-8') }}</span>
-		</a>
-	</section>
+	{% set c_ui23 %}
+		{% set c_ui22 %}
+			{% set c_ui20 %}
+				{% set c_ui18 %}{{ labels.next_project }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui18, 'attrs': {}} only %}
+				{% set c_ui19 %}{{ next_project.title }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-2xl font-semibold text-foreground', 'children': c_ui19, 'attrs': {}} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui20, 'attrs': {}} only %}
+			{% set c_ui21 %}{{ icon('arrow-right', 'size-8') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-primary', 'children': c_ui21, 'attrs': {}} only %}
+		{% endset %}{% include 'link/Link.html.twig' with {'href': (((next_project.url|safe_url)))|default(''), 'class': 'group flex items-center justify-between gap-6 rounded-2xl border border-border bg-card p-8 no-underline hover:border-primary', 'children': c_ui22, 'attrs': {}} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 pb-16 md:px-6', 'children': c_ui23, 'attrs': {}} only %}
 {% endif %}
 {% endif %}

@@ -1,18 +1,18 @@
 {**
  * App-shell body chrome — used when context shell === app-shell.
  *}
-<a class="skip-link screen-reader-text" href="#content">{$labels['skip_to_content']}</a>
+{capture $c_ui1}{$labels['skip_to_content']}{/capture}{include 'link/Link.latte', class: 'skip-link screen-reader-text', href: '#content', children: (string) $c_ui1, attrs: []}
 {include 'layout/parts/mobile-sheet.latte'}
 
-<div class="flex min-h-screen items-stretch">
+{capture $c_ui4}
 	{include 'layout/parts/app-sidebar.latte'}
-	<div class="flex min-w-0 flex-1 flex-col">
+	{capture $c_ui3}
 		{include 'layout/parts/app-header.latte'}
-		<main id="content" class="site-content flex-1">
+		{capture $c_ui2}
 			{do_action 'before_content'}
 			{$content|noescape}
 			{do_action 'after_content'}
-		</main>
+		{/capture}{include 'box/Box.latte', tag: 'main', class: 'site-content flex-1', children: (string) $c_ui2, attrs: ['id' => 'content']}
 		{include 'layout/parts/footer.latte'}
-	</div>
-</div>
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex min-w-0 flex-1 flex-col', children: (string) $c_ui3, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex min-h-screen items-stretch', children: (string) $c_ui4, attrs: []}

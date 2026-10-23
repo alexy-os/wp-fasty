@@ -27,7 +27,7 @@
 		{% endif %}
 
 		{% if page.content ?? false %}
-			{% set body %}<div class="prose max-w-none text-foreground">{{ page.content|raw }}</div>{% endset %}
+			{% set body %}{% set c_ui1 %}{{ page.content|raw }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none text-foreground', 'children': c_ui1, 'attrs': {}} only %}{% endset %}
 			{% include 'box/Box.html.twig' with { children: body } %}
 		{% endif %}
 	{% endset %}

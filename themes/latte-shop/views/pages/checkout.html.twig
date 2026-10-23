@@ -1,81 +1,81 @@
 {# Latte Shop — checkout form, or order confirmation when ?order&key match (Twig twin of checkout.latte). #}
-<section class="container mx-auto px-4 py-12 md:px-6">
+{% set c_ui41 %}
 	{% if order ?? false %}
-		<div class="mx-auto flex max-w-2xl flex-col gap-6">
-			<div class="flex flex-col items-center gap-4 text-center">
-				<span class="text-primary">{{ icon('circle-check', 'size-12') }}</span>
-				<h1 class="text-3xl font-bold tracking-tight">{{ labels.order_received }}</h1>
-				<p class="text-muted-foreground">{{ labels.order_number }} #{{ order.id }} · {{ order.email }}</p>
-			</div>
-			<ul class="flex flex-col divide-y divide-border rounded-xl border border-border bg-card">
+		{% set c_ui16 %}
+			{% set c_ui4 %}
+				{% set c_ui1 %}{{ icon('circle-check', 'size-12') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-primary', 'children': c_ui1, 'attrs': {}} only %}
+				{% set c_ui2 %}{{ labels.order_received }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'text-3xl font-bold tracking-tight', 'children': c_ui2, 'attrs': {}} only %}
+				{% set c_ui3 %}{{ labels.order_number }} #{{ order.id }} · {{ order.email }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui3, 'attrs': {}} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col items-center gap-4 text-center', 'children': c_ui4, 'attrs': {}} only %}
+			{% set c_ui14 %}
 				{% for item in order.items %}
-					<li class="flex justify-between gap-4 p-4"><span>{{ item.title }} × {{ item.qty }}</span><span class="font-semibold">{{ item.line_display }}</span></li>
+					{% set c_ui7 %}{% set c_ui5 %}{{ item.title }} × {{ item.qty }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui5, 'attrs': {}} only %}{% set c_ui6 %}{{ item.line_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'font-semibold', 'children': c_ui6, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4', 'children': c_ui7, 'attrs': {}} only %}
 				{% endfor %}
-				<li class="flex justify-between gap-4 p-4 text-sm text-muted-foreground"><span>{{ labels.shipping }}</span><span>{{ order.shipping_display }}</span></li>
-				<li class="flex justify-between gap-4 p-4 text-lg font-semibold"><span>{{ labels.total }}</span><span>{{ order.total_display }}</span></li>
-			</ul>
-			<a href="{{ shop.url|safe_url }}" class="mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline">{{ labels.continue_shopping }}</a>
-		</div>
+				{% set c_ui10 %}{% set c_ui8 %}{{ labels.shipping }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui8, 'attrs': {}} only %}{% set c_ui9 %}{{ order.shipping_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui9, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4 text-sm text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}
+				{% set c_ui13 %}{% set c_ui11 %}{{ labels.total }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui11, 'attrs': {}} only %}{% set c_ui12 %}{{ order.total_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui12, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4 text-lg font-semibold', 'children': c_ui13, 'attrs': {}} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', 'children': c_ui14, 'attrs': {}} only %}
+			{% set c_ui15 %}{{ labels.continue_shopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': 'mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui15, 'attrs': {}} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mx-auto flex max-w-2xl flex-col gap-6', 'children': c_ui16, 'attrs': {}} only %}
 	{% elseif not cart.items %}
-		<div class="flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center">
-			<p class="text-muted-foreground">{{ labels.empty_cart }}</p>
-			<a href="{{ shop.url|safe_url }}" class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline">{{ labels.continue_shopping }}</a>
-		</div>
+		{% set c_ui19 %}
+			{% set c_ui17 %}{{ labels.empty_cart }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui17, 'attrs': {}} only %}
+			{% set c_ui18 %}{{ labels.continue_shopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui18, 'attrs': {}} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center', 'children': c_ui19, 'attrs': {}} only %}
 	{% else %}
-		<h1 class="mb-8 text-3xl font-bold tracking-tight">{{ labels.checkout }}</h1>
+		{% set c_ui20 %}{{ labels.checkout }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'mb-8 text-3xl font-bold tracking-tight', 'children': c_ui20, 'attrs': {}} only %}
 		{% if checkout.errors ?? false %}
-			{% set errText %}<span class="inline-flex items-center gap-2">{{ icon('x') }}Please check: {{ checkout.errors|join(', ') }}</span>{% endset %}
-			<div class="mb-6">{% include 'alert/Alert.html.twig' with { variant: 'destructive', role: 'alert', class: 'px-4 py-2', children: errText } %}</div>
+			{% set errText %}{% set c_ui21 %}{{ icon('x') }}Please check: {{ checkout.errors|join(', ') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex items-center gap-2', 'children': c_ui21, 'attrs': {}} only %}{% endset %}
+			{% set c_ui22 %}{% include 'alert/Alert.html.twig' with { variant: 'destructive', role: 'alert', class: 'px-4 py-2', children: errText } %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mb-6', 'children': c_ui22, 'attrs': {}} only %}
 		{% endif %}
 		{% set v = checkout.values %}
-		<form method="post" action="{{ shop.action|safe_url }}" class="grid gap-8 lg:grid-cols-[1fr_360px]" novalidate>
-			<input type="hidden" name="action" value="latte_shop_checkout">
-			<input type="hidden" name="_wpnonce" value="{{ shop.checkout_nonce }}">
-			<div class="flex flex-col gap-6 rounded-xl border border-border bg-card p-6">
-				<div class="grid gap-4 md:grid-cols-2">
+		{% set c_ui40 %}
+			{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': 'latte_shop_checkout'}} only %}
+			{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop.checkout_nonce)}} only %}
+			{% set c_ui33 %}
+				{% set c_ui24 %}
 					{% for f in checkout.fields %}
 						{% set field = f[0] %}{% set label = f[1] %}{% set type = f[2] %}{% set ac = f[3] %}{% set req = f[4] %}
-						<div class="flex flex-col gap-2">
+						{% set c_ui23 %}
 							{% set lbl %}{{ label }}{% if req %} *{% endif %}{% endset %}
 							{% include 'label/Label.html.twig' with { htmlFor: 'co-' ~ field, class: kit('label', {}), children: lbl } %}
 							{% include 'input/Input.html.twig' with { id: 'co-' ~ field, type: type, name: field, value: (v[field] ?? '') ~ '', required: req, class: kit('input', {}, field in checkout.errors ? 'border-destructive' : ''), attrs: {'autocomplete': (ac) ?: null} } %}
-						</div>
+						{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui23, 'attrs': {}} only %}
 					{% endfor %}
-				</div>
-				<div class="flex flex-col gap-2">
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-4 md:grid-cols-2', 'children': c_ui24, 'attrs': {}} only %}
+				{% set c_ui25 %}
 					{% set addrLbl %}{{ labels.address }} *{% endset %}
 					{% include 'label/Label.html.twig' with { htmlFor: 'co-address', class: kit('label', {}), children: addrLbl } %}
 					{% include 'textarea/Textarea.html.twig' with { id: 'co-address', name: 'address', value: (v.address ?? '') ~ '', rows: '2', required: true, class: kit('textarea', {}) } %}
-				</div>
-				<fieldset class="flex flex-col gap-2">
-					<legend class="mb-2 text-sm font-medium">{{ labels.payment }}</legend>
-					<div class="grid gap-4 md:grid-cols-2">
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui25, 'attrs': {}} only %}
+				{% set c_ui31 %}
+					{% set c_ui26 %}{{ labels.payment }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'legend', 'class': 'mb-2 text-sm font-medium', 'children': c_ui26, 'attrs': {}} only %}
+					{% set c_ui30 %}
 						{% for pm in checkout.payments %}
-							<label class="flex cursor-pointer items-center gap-4 rounded-lg border border-border p-4 has-[:checked]:border-primary has-[:checked]:bg-accent">
-								<input type="radio" name="payment" value="{{ pm.id }}"{% if (v.payment ?? 'cod') is same as(pm.id) %} checked{% endif %} class="accent-primary">
-								<span class="text-primary">{{ icon(pm.icon, 'size-5') }}</span>
-								<span class="text-sm font-medium">{{ pm.label }}</span>
-							</label>
+							{% set c_ui29 %}
+								{% include 'input/Input.html.twig' with {'class': 'accent-primary', 'attrs': {'type': 'radio', 'name': 'payment', 'value': (pm.id), 'checked': (((v.payment ?? 'cod') is same as(pm.id))) ? true : null}} only %}
+								{% set c_ui27 %}{{ icon(pm.icon, 'size-5') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-primary', 'children': c_ui27, 'attrs': {}} only %}
+								{% set c_ui28 %}{{ pm.label }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm font-medium', 'children': c_ui28, 'attrs': {}} only %}
+							{% endset %}{% include 'label/Label.html.twig' with {'class': 'flex cursor-pointer items-center gap-4 rounded-lg border border-border p-4 has-[:checked]:border-primary has-[:checked]:bg-accent', 'children': c_ui29, 'attrs': {}} only %}
 						{% endfor %}
-					</div>
-				</fieldset>
-				<div class="flex flex-col gap-2">
+					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-4 md:grid-cols-2', 'children': c_ui30, 'attrs': {}} only %}
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'fieldset', 'class': 'flex flex-col gap-2', 'children': c_ui31, 'attrs': {}} only %}
+				{% set c_ui32 %}
 					{% set notesLbl %}Order notes{% endset %}
 					{% include 'label/Label.html.twig' with { htmlFor: 'co-notes', class: kit('label', {}), children: notesLbl } %}
 					{% include 'textarea/Textarea.html.twig' with { id: 'co-notes', name: 'notes', value: (v.notes ?? '') ~ '', rows: '3', class: kit('textarea', {}) } %}
-				</div>
-			</div>
-			<div class="flex flex-col gap-4">
-				<ul class="flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm">
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui32, 'attrs': {}} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-6 rounded-xl border border-border bg-card p-6', 'children': c_ui33, 'attrs': {}} only %}
+			{% set c_ui39 %}
+				{% set c_ui37 %}
 					{% for item in cart.items %}
-						<li class="flex justify-between gap-4"><span>{{ item.title }} × {{ item.qty }}</span><span>{{ item.line_display }}</span></li>
+						{% set c_ui36 %}{% set c_ui34 %}{{ item.title }} × {{ item.qty }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui34, 'attrs': {}} only %}{% set c_ui35 %}{{ item.line_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui35, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4', 'children': c_ui36, 'attrs': {}} only %}
 					{% endfor %}
-				</ul>
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm', 'children': c_ui37, 'attrs': {}} only %}
 				{% include 'blocks/order-summary.html.twig' with { cart: cart, labels: labels, showCheckout: false } %}
 				{% set place %}{{ icon('check') }}{{ labels.place_order }}{% endset %}
 				{% include 'button/Button.html.twig' with { type: 'submit', class: kit('button', {'size': 'lg'}, 'w-full'), children: place } %}
-				<p class="text-xs text-muted-foreground">{{ labels.demo_notice }}</p>
-			</div>
-		</form>
+				{% set c_ui38 %}{{ labels.demo_notice }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-xs text-muted-foreground', 'children': c_ui38, 'attrs': {}} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-4', 'children': c_ui39, 'attrs': {}} only %}
+		{% endset %}{% include 'form/Form.html.twig' with {'action': (((shop.action|safe_url)))|default(''), 'class': 'grid gap-8 lg:grid-cols-[1fr_360px]', 'children': c_ui40, 'attrs': {'method': 'post', 'novalidate': true}} only %}
 	{% endif %}
-</section>
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 py-12 md:px-6', 'children': c_ui41, 'attrs': {}} only %}

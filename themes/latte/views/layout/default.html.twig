@@ -16,22 +16,22 @@
 		{% include 'layout/parts/header.html.twig' %}
 
 		{% if widgets.sidebar ?? false %}
-			<div class="container mx-auto flex flex-col gap-8 px-4 md:flex-row md:px-6">
-				<main id="content" class="site-content min-w-0 flex-1">
+			{% set c_ui3 %}
+				{% set c_ui1 %}
 					{{ do_action('before_content') }}
 					{{ content|raw }}
 					{{ do_action('after_content') }}
-				</main>
-				<aside class="w-full shrink-0 py-12 md:w-64" aria-label="{{ labels.sidebar }}">
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'main', 'class': 'site-content min-w-0 flex-1', 'children': c_ui1, 'attrs': {'id': 'content'}} only %}
+				{% set c_ui2 %}
 					{{ widgets.sidebar|raw }}
-				</aside>
-			</div>
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'aside', 'class': 'w-full shrink-0 py-12 md:w-64', 'children': c_ui2, 'attrs': {'aria-label': (labels.sidebar)}} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'container mx-auto flex flex-col gap-8 px-4 md:flex-row md:px-6', 'children': c_ui3, 'attrs': {}} only %}
 		{% else %}
-			<main id="content" class="site-content">
+			{% set c_ui4 %}
 				{{ do_action('before_content') }}
 				{{ content|raw }}
 				{{ do_action('after_content') }}
-			</main>
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'main', 'class': 'site-content', 'children': c_ui4, 'attrs': {'id': 'content'}} only %}
 		{% endif %}
 
 		{% include 'layout/parts/footer.html.twig' %}

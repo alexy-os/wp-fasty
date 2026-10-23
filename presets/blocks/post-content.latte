@@ -7,21 +7,21 @@
 		{if !empty($page['date']['display']) || !empty($page['author']) || !empty($page['categories'])}
 			{capture $metaBits}
 				{if !empty($page['date']['display'])}
-					<span>{$labels['posted_on']} <time datetime="{$page['date']['iso'] ?? ''}">{$page['date']['display']}</time></span>
+					{capture $c_ui2}{$labels['posted_on']} {capture $c_ui1}{$page['date']['display']}{/capture}{include 'text/Text.latte', tag: 'time', children: (string) $c_ui1, attrs: ['datetime' => ($page['date']['iso'] ?? '')]}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui2, attrs: []}
 				{/if}
 				{if !empty($page['author']['name'])}
 					{capture $authorName}{$page['author']['name']}{/capture}
-					<span>{$labels['by_author']}
+					{capture $c_ui3}{$labels['by_author']}
 						{include 'link/Link.latte', href: $page['author']['url'], class: kit('link', [], 'underline-offset-2 hover:underline'), children: (string) $authorName}
-					</span>
+					{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui3, attrs: []}
 				{/if}
 				{if !empty($page['categories'])}
-					<span>{$labels['categories']}:
+					{capture $c_ui4}{$labels['categories']}:
 						{foreach $page['categories'] as $cat}
 							{capture $catName}{$cat['name']}{/capture}
 							{include 'link/Link.latte', href: $cat['url'], class: kit('link', [], 'underline-offset-2 hover:underline'), children: (string) $catName}{if !$iterator->last}, {/if}
 						{/foreach}
-					</span>
+					{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui4, attrs: []}
 				{/if}
 			{/capture}
 			{include 'group/Group.latte', class: 'mb-6 flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground', children: (string) $metaBits}
@@ -51,7 +51,7 @@
 			{include 'box/Box.latte', class: 'mb-8 overflow-hidden rounded-lg', children: (string) $img}
 		{/if}
 
-		{capture $body}<div class="prose max-w-none text-foreground">{$page['content']|noescape}</div>{/capture}
+		{capture $body}{capture $c_ui5}{$page['content']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none text-foreground', children: (string) $c_ui5, attrs: []}{/capture}
 		{include 'box/Box.latte', children: (string) $body}
 
 		{if !empty($page['link_pages'])}
@@ -60,7 +60,7 @@
 
 		{if !empty($page['tags'])}
 			{capture $tagBits}
-				<span class="text-sm text-muted-foreground">{$labels['tags']}:</span>
+				{capture $c_ui6}{$labels['tags']}:{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui6, attrs: []}
 				{foreach $page['tags'] as $tag}
 					{capture $tagName}{$tag['name']}{/capture}
 					{capture $tagLink}{include 'link/Link.latte', href: $tag['url'], class: kit('link', [], 'no-underline'), children: (string) $tagName}{/capture}

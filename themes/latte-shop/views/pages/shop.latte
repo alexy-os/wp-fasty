@@ -1,32 +1,32 @@
 {** Latte Shop — catalog archive with category filter. *}
 {include 'blocks/notice.latte'}
-<section class="container mx-auto px-4 pb-8 pt-16 md:px-6">
-	<h1 class="text-3xl font-bold tracking-tight md:text-4xl">{$archive['title']}</h1>
-	{if !empty($archive['description'])}<div class="mt-4 max-w-2xl text-muted-foreground">{$archive['description']|noescape}</div>{/if}
+{capture $c_ui6}
+	{capture $c_ui1}{$archive['title']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'text-3xl font-bold tracking-tight md:text-4xl', children: (string) $c_ui1, attrs: []}
+	{if !empty($archive['description'])}{capture $c_ui2}{$archive['description']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'mt-4 max-w-2xl text-muted-foreground', children: (string) $c_ui2, attrs: []}{/if}
 	{if !empty($shop['categories'])}
-		<nav class="mt-8 flex flex-wrap gap-2" aria-label="{$labels['all_products']}">
-			<a href="{$shop['url']}" n:class="'inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $shop['current_cat'] === '' ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent'">{$labels['all_products']}</a>
+		{capture $c_ui5}
+			{capture $c_ui3}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: ((($shop['url'])|checkUrl)) ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $shop['current_cat'] === '' ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent'])), children: (string) $c_ui3, attrs: []}
 			{foreach $shop['categories'] as $cat}
-				<a href="{$cat['url']}" n:class="'inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $shop['current_cat'] === $cat['slug'] ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent'">{$cat['name']}</a>
+				{capture $c_ui4}{$cat['name']}{/capture}{include 'link/Link.latte', href: ((($cat['url'])|checkUrl)) ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $shop['current_cat'] === $cat['slug'] ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent'])), children: (string) $c_ui4, attrs: []}
 			{/foreach}
-		</nav>
+		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-8 flex flex-wrap gap-2', children: (string) $c_ui5, attrs: ['aria-label' => ($labels['all_products'])]}
 	{/if}
-</section>
-<section class="container mx-auto px-4 pb-16 md:px-6">
+{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 pb-8 pt-16 md:px-6', children: (string) $c_ui6, attrs: []}
+{capture $c_ui13}
 	{if empty($posts)}
-		<p class="py-16 text-center text-muted-foreground">{$labels['no_products']}</p>
+		{capture $c_ui7}{$labels['no_products']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'py-16 text-center text-muted-foreground', children: (string) $c_ui7, attrs: []}
 	{else}
-		<div class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+		{capture $c_ui8}
 			{foreach $posts as $product}
 				{include 'blocks/product-card.latte', product: $product, shop: $shop, labels: $labels}
 			{/foreach}
-		</div>
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4', children: (string) $c_ui8, attrs: []}
 		{if !empty($pagination)}
-			<nav class="mt-10 flex items-center justify-center gap-4" aria-label="{$labels['pagination'] ?? 'Pagination'}">
-				{if $pagination['prev_url']}<a href="{$pagination['prev_url']}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{icon('arrow-left')}{$labels['previous']}</a>{/if}
-				<span class="text-sm text-muted-foreground">{$pagination['current']} / {$pagination['total']}</span>
-				{if $pagination['next_url']}<a href="{$pagination['next_url']}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{$labels['next']}{icon('arrow-right')}</a>{/if}
-			</nav>
+			{capture $c_ui12}
+				{if $pagination['prev_url']}{capture $c_ui9}{icon('arrow-left')}{$labels['previous']}{/capture}{include 'link/Link.latte', href: ((($pagination['prev_url'])|checkUrl)) ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui9, attrs: []}{/if}
+				{capture $c_ui10}{$pagination['current']} / {$pagination['total']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui10, attrs: []}
+				{if $pagination['next_url']}{capture $c_ui11}{$labels['next']}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: ((($pagination['next_url'])|checkUrl)) ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui11, attrs: []}{/if}
+			{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-10 flex items-center justify-center gap-4', children: (string) $c_ui12, attrs: ['aria-label' => ($labels['pagination'] ?? 'Pagination')]}
 		{/if}
 	{/if}
-</section>
+{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 pb-16 md:px-6', children: (string) $c_ui13, attrs: []}

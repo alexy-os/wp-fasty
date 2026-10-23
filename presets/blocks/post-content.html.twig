@@ -7,21 +7,21 @@
 		{% if (page.date.display ?? false) or (page.author ?? false) or (page.categories ?? false) %}
 			{% set metaBits %}
 				{% if page.date.display ?? false %}
-					<span>{{ labels.posted_on }} <time datetime="{{ page.date.iso ?? '' }}">{{ page.date.display }}</time></span>
+					{% set c_ui2 %}{{ labels.posted_on }} {% set c_ui1 %}{{ page.date.display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'time', 'children': c_ui1, 'attrs': {'datetime': (page.date.iso ?? '')}} only %}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui2, 'attrs': {}} only %}
 				{% endif %}
 				{% if page.author.name ?? false %}
 					{% set authorName %}{{ page.author.name }}{% endset %}
-					<span>{{ labels.by_author }}
+					{% set c_ui3 %}{{ labels.by_author }}
 						{% include 'link/Link.html.twig' with { href: page.author.url, class: kit('link', {}, 'underline-offset-2 hover:underline'), children: authorName } %}
-					</span>
+					{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui3, 'attrs': {}} only %}
 				{% endif %}
 				{% if page.categories ?? false %}
-					<span>{{ labels.categories }}:
+					{% set c_ui4 %}{{ labels.categories }}:
 						{% for cat in page.categories %}
 							{% set catName %}{{ cat.name }}{% endset %}
 							{% include 'link/Link.html.twig' with { href: cat.url, class: kit('link', {}, 'underline-offset-2 hover:underline'), children: catName } %}{% if not loop.last %}, {% endif %}
 						{% endfor %}
-					</span>
+					{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui4, 'attrs': {}} only %}
 				{% endif %}
 			{% endset %}
 			{% include 'group/Group.html.twig' with { class: 'mb-6 flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground', children: metaBits } %}
@@ -51,7 +51,7 @@
 			{% include 'box/Box.html.twig' with { class: 'mb-8 overflow-hidden rounded-lg', children: img } %}
 		{% endif %}
 
-		{% set body %}<div class="prose max-w-none text-foreground">{{ page.content|raw }}</div>{% endset %}
+		{% set body %}{% set c_ui5 %}{{ page.content|raw }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none text-foreground', 'children': c_ui5, 'attrs': {}} only %}{% endset %}
 		{% include 'box/Box.html.twig' with { children: body } %}
 
 		{% if page.link_pages ?? false %}
@@ -60,7 +60,7 @@
 
 		{% if page.tags ?? false %}
 			{% set tagBits %}
-				<span class="text-sm text-muted-foreground">{{ labels.tags }}:</span>
+				{% set c_ui6 %}{{ labels.tags }}:{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui6, 'attrs': {}} only %}
 				{% for tag in page.tags %}
 					{% set tagName %}{{ tag.name }}{% endset %}
 					{% set tagLink %}{% include 'link/Link.html.twig' with { href: tag.url, class: kit('link', {}, 'no-underline'), children: tagName } %}{% endset %}

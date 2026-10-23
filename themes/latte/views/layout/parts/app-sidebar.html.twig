@@ -1,18 +1,18 @@
 {#
  # Desktop sidebar — hidden on small screens. Twig twin of app-sidebar.latte.
  #}
-<aside class="hidden w-64 shrink-0 flex-col border-r border-border bg-card md:flex" aria-label="{{ labels.sidebar }}">
-	<div class="flex h-16 items-center border-b border-border px-4">
+{% set c_ui4 %}
+	{% set c_ui1 %}
 		{% include 'layout/parts/brand.html.twig' %}
-	</div>
-	<nav class="flex-1 overflow-y-auto px-4 py-4" aria-label="{{ labels.primary_nav }}">
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex h-16 items-center border-b border-border px-4', 'children': c_ui1, 'attrs': {}} only %}
+	{% set c_ui2 %}
 		{% if menu.primary.items ?? false %}
 			{% include 'layout/parts/nav-items.html.twig' with { items: menu.primary.items } %}
 		{% endif %}
-	</nav>
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'flex-1 overflow-y-auto px-4 py-4', 'children': c_ui2, 'attrs': {'aria-label': (labels.primary_nav)}} only %}
 	{% if widgets.sidebar ?? false %}
-		<div class="border-t border-border px-4 py-4 text-sm">
+		{% set c_ui3 %}
 			{{ widgets.sidebar|raw }}
-		</div>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'border-t border-border px-4 py-4 text-sm', 'children': c_ui3, 'attrs': {}} only %}
 	{% endif %}
-</aside>
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'aside', 'class': 'hidden w-64 shrink-0 flex-col border-r border-border bg-card md:flex', 'children': c_ui4, 'attrs': {'aria-label': (labels.sidebar)}} only %}

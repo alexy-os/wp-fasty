@@ -1,80 +1,80 @@
 {** Latte Shop — checkout form, or order confirmation when ?order&key match. *}
-<section class="container mx-auto px-4 py-12 md:px-6">
+{capture $c_ui41}
 	{if !empty($order)}
-		<div class="mx-auto flex max-w-2xl flex-col gap-6">
-			<div class="flex flex-col items-center gap-4 text-center">
-				<span class="text-primary">{icon('circle-check', 'size-12')}</span>
-				<h1 class="text-3xl font-bold tracking-tight">{$labels['order_received']}</h1>
-				<p class="text-muted-foreground">{$labels['order_number']} #{$order['id']} · {$order['email']}</p>
-			</div>
-			<ul class="flex flex-col divide-y divide-border rounded-xl border border-border bg-card">
+		{capture $c_ui16}
+			{capture $c_ui4}
+				{capture $c_ui1}{icon('circle-check', 'size-12')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-primary', children: (string) $c_ui1, attrs: []}
+				{capture $c_ui2}{$labels['order_received']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'text-3xl font-bold tracking-tight', children: (string) $c_ui2, attrs: []}
+				{capture $c_ui3}{$labels['order_number']} #{$order['id']} · {$order['email']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_ui3, attrs: []}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col items-center gap-4 text-center', children: (string) $c_ui4, attrs: []}
+			{capture $c_ui14}
 				{foreach $order['items'] as $item}
-					<li class="flex justify-between gap-4 p-4"><span>{$item['title']} × {$item['qty']}</span><span class="font-semibold">{$item['line_display']}</span></li>
+					{capture $c_ui7}{capture $c_ui5}{$item['title']} × {$item['qty']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui5, attrs: []}{capture $c_ui6}{$item['line_display']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'font-semibold', children: (string) $c_ui6, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4 p-4', children: (string) $c_ui7, attrs: []}
 				{/foreach}
-				<li class="flex justify-between gap-4 p-4 text-sm text-muted-foreground"><span>{$labels['shipping']}</span><span>{$order['shipping_display']}</span></li>
-				<li class="flex justify-between gap-4 p-4 text-lg font-semibold"><span>{$labels['total']}</span><span>{$order['total_display']}</span></li>
-			</ul>
-			<a href="{$shop['url']}" class="mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline">{$labels['continue_shopping']}</a>
-		</div>
+				{capture $c_ui10}{capture $c_ui8}{$labels['shipping']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui8, attrs: []}{capture $c_ui9}{$order['shipping_display']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui9, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4 p-4 text-sm text-muted-foreground', children: (string) $c_ui10, attrs: []}
+				{capture $c_ui13}{capture $c_ui11}{$labels['total']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui11, attrs: []}{capture $c_ui12}{$order['total_display']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui12, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4 p-4 text-lg font-semibold', children: (string) $c_ui13, attrs: []}
+			{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', children: (string) $c_ui14, attrs: []}
+			{capture $c_ui15}{$labels['continue_shopping']}{/capture}{include 'link/Link.latte', href: ((($shop['url'])|checkUrl)) ?? '', class: 'mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui15, attrs: []}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mx-auto flex max-w-2xl flex-col gap-6', children: (string) $c_ui16, attrs: []}
 	{elseif empty($cart['items'])}
-		<div class="flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center">
-			<p class="text-muted-foreground">{$labels['empty_cart']}</p>
-			<a href="{$shop['url']}" class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline">{$labels['continue_shopping']}</a>
-		</div>
+		{capture $c_ui19}
+			{capture $c_ui17}{$labels['empty_cart']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_ui17, attrs: []}
+			{capture $c_ui18}{$labels['continue_shopping']}{/capture}{include 'link/Link.latte', href: ((($shop['url'])|checkUrl)) ?? '', class: 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui18, attrs: []}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center', children: (string) $c_ui19, attrs: []}
 	{else}
-		<h1 class="mb-8 text-3xl font-bold tracking-tight">{$labels['checkout']}</h1>
+		{capture $c_ui20}{$labels['checkout']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'mb-8 text-3xl font-bold tracking-tight', children: (string) $c_ui20, attrs: []}
 		{if !empty($checkout['errors'])}
-			{capture $errText}<span class="inline-flex items-center gap-2">{icon('x')}Please check: {implode(', ', $checkout['errors'])}</span>{/capture}
-			<div class="mb-6">{include 'alert/Alert.latte', variant: 'destructive', role: 'alert', class: 'px-4 py-2', children: (string) $errText}</div>
+			{capture $errText}{capture $c_ui21}{icon('x')}Please check: {implode(', ', $checkout['errors'])}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex items-center gap-2', children: (string) $c_ui21, attrs: []}{/capture}
+			{capture $c_ui22}{include 'alert/Alert.latte', variant: 'destructive', role: 'alert', class: 'px-4 py-2', children: (string) $errText}{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-6', children: (string) $c_ui22, attrs: []}
 		{/if}
 		{var $v = $checkout['values']}
-		<form method="post" action="{$shop['action']}" class="grid gap-8 lg:grid-cols-[1fr_360px]" novalidate>
-			<input type="hidden" name="action" value="latte_shop_checkout">
-			<input type="hidden" name="_wpnonce" value="{$shop['checkout_nonce']}">
-			<div class="flex flex-col gap-6 rounded-xl border border-border bg-card p-6">
-				<div class="grid gap-4 md:grid-cols-2">
+		{capture $c_ui40}
+			{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => 'latte_shop_checkout']}
+			{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['checkout_nonce'])]}
+			{capture $c_ui33}
+				{capture $c_ui24}
 					{foreach $checkout['fields'] as [$field, $label, $type, $ac, $req]}
-						<div class="flex flex-col gap-2">
+						{capture $c_ui23}
 							{capture $lbl}{$label}{if $req} *{/if}{/capture}
 							{include 'label/Label.latte', htmlFor: 'co-' . $field, class: kit('label', []), children: (string) $lbl}
 							{include 'input/Input.latte', id: 'co-' . $field, type: $type, name: $field, value: (string) ($v[$field] ?? ''), required: $req, class: kit('input', [], in_array($field, $checkout['errors'], true) ? 'border-destructive' : ''), attrs: ['autocomplete' => $ac ?: null]}
-						</div>
+						{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui23, attrs: []}
 					{/foreach}
-				</div>
-				<div class="flex flex-col gap-2">
+				{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-4 md:grid-cols-2', children: (string) $c_ui24, attrs: []}
+				{capture $c_ui25}
 					{capture $addrLbl}{$labels['address']} *{/capture}
 					{include 'label/Label.latte', htmlFor: 'co-address', class: kit('label', []), children: (string) $addrLbl}
 					{include 'textarea/Textarea.latte', id: 'co-address', name: 'address', value: (string) ($v['address'] ?? ''), rows: '2', required: true, class: kit('textarea', [])}
-				</div>
-				<fieldset class="flex flex-col gap-2">
-					<legend class="mb-2 text-sm font-medium">{$labels['payment']}</legend>
-					<div class="grid gap-4 md:grid-cols-2">
+				{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui25, attrs: []}
+				{capture $c_ui31}
+					{capture $c_ui26}{$labels['payment']}{/capture}{include 'text/Text.latte', tag: 'legend', class: 'mb-2 text-sm font-medium', children: (string) $c_ui26, attrs: []}
+					{capture $c_ui30}
 						{foreach $checkout['payments'] as $pm}
-							<label class="flex cursor-pointer items-center gap-4 rounded-lg border border-border p-4 has-[:checked]:border-primary has-[:checked]:bg-accent">
-								<input type="radio" name="payment" value="{$pm['id']}" checked="{($v['payment'] ?? 'cod') === $pm['id']}" class="accent-primary">
-								<span class="text-primary">{icon($pm['icon'], 'size-5')}</span>
-								<span class="text-sm font-medium">{$pm['label']}</span>
-							</label>
+							{capture $c_ui29}
+								{include 'input/Input.latte', class: 'accent-primary', attrs: ['type' => 'radio', 'name' => 'payment', 'value' => $pm['id'], 'checked' => (($v['payment'] ?? 'cod') === $pm['id']) ? true : null]}
+								{capture $c_ui27}{icon($pm['icon'], 'size-5')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-primary', children: (string) $c_ui27, attrs: []}
+								{capture $c_ui28}{$pm['label']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm font-medium', children: (string) $c_ui28, attrs: []}
+							{/capture}{include 'label/Label.latte', class: 'flex cursor-pointer items-center gap-4 rounded-lg border border-border p-4 has-[:checked]:border-primary has-[:checked]:bg-accent', children: (string) $c_ui29, attrs: []}
 						{/foreach}
-					</div>
-				</fieldset>
-				<div class="flex flex-col gap-2">
+					{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-4 md:grid-cols-2', children: (string) $c_ui30, attrs: []}
+				{/capture}{include 'box/Box.latte', tag: 'fieldset', class: 'flex flex-col gap-2', children: (string) $c_ui31, attrs: []}
+				{capture $c_ui32}
 					{capture $notesLbl}Order notes{/capture}
 					{include 'label/Label.latte', htmlFor: 'co-notes', class: kit('label', []), children: (string) $notesLbl}
 					{include 'textarea/Textarea.latte', id: 'co-notes', name: 'notes', value: (string) ($v['notes'] ?? ''), rows: '3', class: kit('textarea', [])}
-				</div>
-			</div>
-			<div class="flex flex-col gap-4">
-				<ul class="flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm">
+				{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui32, attrs: []}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-6 rounded-xl border border-border bg-card p-6', children: (string) $c_ui33, attrs: []}
+			{capture $c_ui39}
+				{capture $c_ui37}
 					{foreach $cart['items'] as $item}
-						<li class="flex justify-between gap-4"><span>{$item['title']} × {$item['qty']}</span><span>{$item['line_display']}</span></li>
+						{capture $c_ui36}{capture $c_ui34}{$item['title']} × {$item['qty']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui34, attrs: []}{capture $c_ui35}{$item['line_display']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui35, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4', children: (string) $c_ui36, attrs: []}
 					{/foreach}
-				</ul>
+				{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm', children: (string) $c_ui37, attrs: []}
 				{include 'blocks/order-summary.latte', cart: $cart, labels: $labels, showCheckout: false}
 				{capture $place}{icon('check')}{$labels['place_order']}{/capture}
 				{include 'button/Button.latte', type: 'submit', class: kit('button', ['size' => 'lg'], 'w-full'), children: (string) $place}
-				<p class="text-xs text-muted-foreground">{$labels['demo_notice']}</p>
-			</div>
-		</form>
+				{capture $c_ui38}{$labels['demo_notice']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-xs text-muted-foreground', children: (string) $c_ui38, attrs: []}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4', children: (string) $c_ui39, attrs: []}
+		{/capture}{include 'form/Form.latte', action: ((($shop['action'])|checkUrl)) ?? '', class: 'grid gap-8 lg:grid-cols-[1fr_360px]', children: (string) $c_ui40, attrs: ['method' => 'post', 'novalidate' => true]}
 	{/if}
-</section>
+{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 py-12 md:px-6', children: (string) $c_ui41, attrs: []}

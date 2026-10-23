@@ -4,59 +4,59 @@
  #}
 {% set list %}
 	{% if posts is empty %}
-		<p class="py-16 text-center text-muted-foreground">{{ labels.no_posts ?? 'No posts found.' }}</p>
+		{% set c_ui1 %}{{ labels.no_posts ?? 'No posts found.' }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'py-16 text-center text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}
 	{% else %}
 		{% set items %}
 			{% for post in posts %}
-				<article class="{{ post.post_class ?? '' }} grid gap-6 border-b border-border pb-8 md:grid-cols-[240px_1fr]">
+				{% set c_ui13 %}
 					{% if post.thumbnail.url is not empty %}
 						{% set thumb %}
 							{% include 'image/Image.html.twig' with { src: post.thumbnail.url, alt: post.thumbnail.alt ?? '', sizes: '(min-width: 768px) 240px, 100vw', class: kit('image', {}, 'aspect-[4/3] w-full rounded-lg object-cover'), loading: 'lazy', srcSet: post.thumbnail.srcset ?? '', decoding: 'async' } %}
 						{% endset %}
 						{% include 'link/Link.html.twig' with { href: post.url, class: kit('link', {}, 'block'), children: thumb } %}
 					{% else %}
-						<div class="hidden md:block"></div>
+						{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'hidden md:block', 'attrs': {}} only %}
 					{% endif %}
-					<div class="flex flex-col gap-2">
+					{% set c_ui12 %}
 						{% if post.categories is not empty %}
-							<div class="flex flex-wrap gap-2">
+							{% set c_ui3 %}
 								{% for cat in post.categories %}
-									<a href="{{ cat.url|safe_url }}" class="text-xs font-semibold uppercase tracking-wide text-primary no-underline">{{ cat.name }}</a>
+									{% set c_ui2 %}{{ cat.name }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((cat.url|safe_url)))|default(''), 'class': 'text-xs font-semibold uppercase tracking-wide text-primary no-underline', 'children': c_ui2, 'attrs': {}} only %}
 								{% endfor %}
-							</div>
+							{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-wrap gap-2', 'children': c_ui3, 'attrs': {}} only %}
 						{% endif %}
-						<h2 class="text-2xl font-semibold leading-tight">
-							<a href="{{ post.url|safe_url }}" class="text-foreground no-underline hover:text-primary">{{ post.title }}</a>
-						</h2>
-						<div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+						{% set c_ui5 %}
+							{% set c_ui4 %}{{ post.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((post.url|safe_url)))|default(''), 'class': 'text-foreground no-underline hover:text-primary', 'children': c_ui4, 'attrs': {}} only %}
+						{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'text-2xl font-semibold leading-tight', 'children': c_ui5, 'attrs': {}} only %}
+						{% set c_ui9 %}
 							{% if post.date.display is not empty %}
-								<span class="inline-flex items-center gap-2">{{ icon('calendar') }}<time datetime="{{ post.date.iso ?? '' }}">{{ post.date.display }}</time></span>
+								{% set c_ui7 %}{{ icon('calendar') }}{% set c_ui6 %}{{ post.date.display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'time', 'children': c_ui6, 'attrs': {'datetime': (post.date.iso ?? '')}} only %}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex items-center gap-2', 'children': c_ui7, 'attrs': {}} only %}
 							{% endif %}
 							{% if post.author.name is not empty %}
-								<span class="inline-flex items-center gap-2">{{ icon('user') }}{{ post.author.name }}</span>
+								{% set c_ui8 %}{{ icon('user') }}{{ post.author.name }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex items-center gap-2', 'children': c_ui8, 'attrs': {}} only %}
 							{% endif %}
-						</div>
+						{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-wrap items-center gap-4 text-sm text-muted-foreground', 'children': c_ui9, 'attrs': {}} only %}
 						{% if post.excerpt is not empty %}
-							<p class="text-muted-foreground">{{ post.excerpt }}</p>
+							{% set c_ui10 %}{{ post.excerpt }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}
 						{% endif %}
-						<a href="{{ post.url|safe_url }}" class="inline-flex items-center gap-2 text-sm font-medium text-primary no-underline">{{ labels.read_more ?? 'Read more' }}{{ icon('arrow-right') }}</a>
-					</div>
-				</article>
+						{% set c_ui11 %}{{ labels.read_more ?? 'Read more' }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((post.url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm font-medium text-primary no-underline', 'children': c_ui11, 'attrs': {}} only %}
+					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui12, 'attrs': {}} only %}
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'article', 'class': ((post.post_class ?? '') ~ ' grid gap-6 border-b border-border pb-8 md:grid-cols-[240px_1fr]'), 'children': c_ui13, 'attrs': {}} only %}
 			{% endfor %}
 		{% endset %}
 		{% include 'stack/Stack.html.twig' with { class: 'gap-8', children: items } %}
 	{% endif %}
 
 	{% if pagination is not empty %}
-		<nav class="mt-10 flex items-center justify-center gap-4" aria-label="{{ labels.pagination ?? 'Pagination' }}">
+		{% set c_ui17 %}
 			{% if pagination.prev_url %}
-				<a href="{{ pagination.prev_url|safe_url }}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{{ icon('arrow-left') }}{{ labels.previous ?? 'Previous' }}</a>
+				{% set c_ui14 %}{{ icon('arrow-left') }}{{ labels.previous ?? 'Previous' }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((pagination.prev_url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui14, 'attrs': {}} only %}
 			{% endif %}
-			<span class="text-sm text-muted-foreground">{{ pagination.current }} / {{ pagination.total }}</span>
+			{% set c_ui15 %}{{ pagination.current }} / {{ pagination.total }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui15, 'attrs': {}} only %}
 			{% if pagination.next_url %}
-				<a href="{{ pagination.next_url|safe_url }}" class="inline-flex items-center gap-2 text-sm text-primary no-underline">{{ labels.next ?? 'Next' }}{{ icon('arrow-right') }}</a>
+				{% set c_ui16 %}{{ labels.next ?? 'Next' }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((pagination.next_url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui16, 'attrs': {}} only %}
 			{% endif %}
-		</nav>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mt-10 flex items-center justify-center gap-4', 'children': c_ui17, 'attrs': {'aria-label': (labels.pagination ?? 'Pagination')}} only %}
 	{% endif %}
 {% endset %}
 

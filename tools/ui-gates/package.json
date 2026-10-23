@@ -1,0 +1,14 @@
+{
+  "name": "@codegen-x/ui-gates",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Portable UI8Kit gates: (1) source rule: no raw HTML tag where a UI8Kit primitive exists, Box/Text tag only from the HTML5 allowlist, in tsx/jsx, svelte, vue, templ, twig, latte, jinja2; (2) rendered HTML: html-validate (HTML5, content model, no interactive in interactive) and axe-core in jsdom (ARIA, landmarks, labels).",
+  "bin": { "ui-gates": "bin/ui-gates.mjs" },
+  "exports": { ".": "./src/index.mjs", "./source": "./src/source.mjs", "./html": "./src/html.mjs" },
+  "dependencies": {
+    "axe-core": "^4.10.3",
+    "html-validate": "^11.16.2",
+    "jsdom": "^26.1.0"
+  }
+}

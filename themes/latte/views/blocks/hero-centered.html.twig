@@ -7,7 +7,7 @@
 	{% include 'title/Title.html.twig' with { as: 1, class: 'text-4xl md:text-5xl font-bold tracking-tight text-foreground', children: titleHtml } %}
 
 	{% if site.description ?? false %}
-		{% set descHtml %}<p class="mt-4 text-lg text-muted-foreground">{{ site.description }}</p>{% endset %}
+		{% set descHtml %}{% set c_ui1 %}{{ site.description }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'mt-4 text-lg text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}{% endset %}
 		{{ descHtml }}
 	{% endif %}
 

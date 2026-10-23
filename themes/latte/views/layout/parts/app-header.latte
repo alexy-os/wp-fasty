@@ -1,24 +1,14 @@
 {**
  * App-shell header — sheet trigger (mobile) + brand.
  *}
-<header class="site-header flex h-16 items-center justify-between border-b border-border bg-background px-4 md:px-6">
-	<div class="flex items-center gap-4">
-		<button
-			type="button"
-			id="{$sheet['trigger']}"
-			class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden"
-			data-ui8kit-dialog-open="true"
-			data-ui8kit-dialog-target="{$sheet['panel']}"
-			aria-controls="{$sheet['panel']}"
-			aria-haspopup="dialog"
-			aria-expanded="false"
-			aria-label="{$labels['open_menu']}"
-		>
+{capture $c_ui5}
+	{capture $c_ui3}
+		{capture $c_ui1}
 			{icon('menu', 'size-5')}
-		</button>
-		<span class="text-sm font-medium text-muted-foreground md:hidden">{$site['title']}</span>
-	</div>
-	<div class="hidden md:block">
+		{/capture}{include 'button/Button.latte', class: 'inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden', children: (string) $c_ui1, attrs: ['type' => 'button', 'id' => ($sheet['trigger']), 'data-ui8kit-dialog-open' => 'true', 'data-ui8kit-dialog-target' => ($sheet['panel']), 'aria-controls' => ($sheet['panel']), 'aria-haspopup' => 'dialog', 'aria-expanded' => 'false', 'aria-label' => ($labels['open_menu'])]}
+		{capture $c_ui2}{$site['title']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm font-medium text-muted-foreground md:hidden', children: (string) $c_ui2, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex items-center gap-4', children: (string) $c_ui3, attrs: []}
+	{capture $c_ui4}
 		{include 'blocks/search-form.latte'}
-	</div>
-</header>
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'hidden md:block', children: (string) $c_ui4, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'header', class: 'site-header flex h-16 items-center justify-between border-b border-border bg-background px-4 md:px-6', children: (string) $c_ui5, attrs: []}

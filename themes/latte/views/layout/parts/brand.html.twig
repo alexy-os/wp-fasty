@@ -1,7 +1,7 @@
 {#
  # Site brand — logo image or title text. Twig twin of brand.latte.
  #}
-<a href="{{ site.url|safe_url }}" class="inline-flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary">
+{% set c_ui1 %}
 	{% if site.logo.url ?? false %}
 		{% include 'image/Image.html.twig' with {
 			src: site.logo.url,
@@ -15,4 +15,4 @@
 	{% else %}
 		{{ site.title }}
 	{% endif %}
-</a>
+{% endset %}{% include 'link/Link.html.twig' with {'href': (((site.url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary', 'children': c_ui1, 'attrs': {}} only %}

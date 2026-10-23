@@ -1,46 +1,36 @@
 {**
  * Site header — classic top nav + mobile sheet trigger.
  *}
-<a class="skip-link screen-reader-text" href="#content">{$labels['skip_to_content']}</a>
+{capture $c_ui1}{$labels['skip_to_content']}{/capture}{include 'link/Link.latte', class: 'skip-link screen-reader-text', href: '#content', children: (string) $c_ui1, attrs: []}
 
-<header class="site-header border-b border-border bg-background">
-	<div class="container mx-auto flex h-16 items-center justify-between gap-4 px-4 md:px-6">
-		<div class="flex items-center gap-4">
+{capture $c_ui8}
+	{capture $c_ui7}
+		{capture $c_ui3}
 			{if !empty($menu['primary']['items'])}
-				<button
-					type="button"
-					id="{$sheet['trigger']}"
-					class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden"
-					data-ui8kit-dialog-open="true"
-					data-ui8kit-dialog-target="{$sheet['panel']}"
-					aria-controls="{$sheet['panel']}"
-					aria-haspopup="dialog"
-					aria-expanded="false"
-					aria-label="{$labels['open_menu']}"
-				>
+				{capture $c_ui2}
 					{icon('menu', 'size-5')}
-				</button>
+				{/capture}{include 'button/Button.latte', class: 'inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden', children: (string) $c_ui2, attrs: ['type' => 'button', 'id' => ($sheet['trigger']), 'data-ui8kit-dialog-open' => 'true', 'data-ui8kit-dialog-target' => ($sheet['panel']), 'aria-controls' => ($sheet['panel']), 'aria-haspopup' => 'dialog', 'aria-expanded' => 'false', 'aria-label' => ($labels['open_menu'])]}
 			{/if}
 			{include 'brand.latte'}
-		</div>
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex items-center gap-4', children: (string) $c_ui3, attrs: []}
 
 		{if !empty($menu['primary']['items'])}
-			<nav class="hidden md:block" aria-label="{$labels['primary_nav']}">
+			{capture $c_ui4}
 				{include 'nav-items.latte',
 					items: $menu['primary']['items'],
 					listClass: 'flex items-center gap-6',
 					linkClass: 'text-sm font-medium text-muted-foreground no-underline hover:text-foreground'
 				}
-			</nav>
+			{/capture}{include 'box/Box.latte', tag: 'nav', class: 'hidden md:block', children: (string) $c_ui4, attrs: ['aria-label' => ($labels['primary_nav'])]}
 		{/if}
 
-		<div class="flex items-center gap-4">
-			<div class="hidden md:block">
+		{capture $c_ui6}
+			{capture $c_ui5}
 				{include 'blocks/search-form.latte'}
-			</div>
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'hidden md:block', children: (string) $c_ui5, attrs: []}
 			{include 'header-actions.latte'}
-		</div>
-	</div>
-</header>
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex items-center gap-4', children: (string) $c_ui6, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'container mx-auto flex h-16 items-center justify-between gap-4 px-4 md:px-6', children: (string) $c_ui7, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'header', class: 'site-header border-b border-border bg-background', children: (string) $c_ui8, attrs: []}
 
 {include 'mobile-sheet.latte'}

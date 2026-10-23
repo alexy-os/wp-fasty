@@ -4,7 +4,7 @@
  *}
 {capture $list}
 	{if empty($posts)}
-		<p class="py-16 text-center text-muted-foreground">{$labels['no_posts'] ?? 'No posts found.'}</p>
+		{capture $c_ui1}{$labels['no_posts'] ?? 'No posts found.'}{/capture}{include 'text/Text.latte', tag: 'p', class: 'py-16 text-center text-muted-foreground', children: (string) $c_ui1, attrs: []}
 	{else}
 		{capture $cards}
 			{foreach $posts as $post}
@@ -14,11 +14,11 @@
 					{capture $h}{include 'card/CardTitle.latte', children: (string) $t}{/capture}
 					{include 'card/CardHeader.latte', children: (string) $h}
 					{if !empty($post['excerpt'])}
-						{capture $ex}<p class="text-sm text-muted-foreground">{$post['excerpt']}</p>{/capture}
+						{capture $ex}{capture $c_ui2}{$post['excerpt']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $c_ui2, attrs: []}{/capture}
 						{include 'card/CardContent.latte', children: (string) $ex}
 					{/if}
 					{if !empty($post['date']['display'])}
-						{capture $ft}<time datetime="{$post['date']['iso'] ?? ''}" class="text-xs text-muted-foreground">{$post['date']['display']}</time>{/capture}
+						{capture $ft}{capture $c_ui3}{$post['date']['display']}{/capture}{include 'text/Text.latte', tag: 'time', class: 'text-xs text-muted-foreground', children: (string) $c_ui3, attrs: ['datetime' => ($post['date']['iso'] ?? '')]}{/capture}
 						{include 'card/CardFooter.latte', children: (string) $ft}
 					{/if}
 				{/capture}
@@ -29,17 +29,17 @@
 	{/if}
 
 	{if !empty($pagination)}
-		<nav class="mt-10 flex justify-center gap-4" aria-label="{$labels['pagination'] ?? 'Pagination'}">
+		{capture $c_ui5}
 			{if $pagination['prev_url']}
 				{capture $prevL}{$labels['previous'] ?? 'Previous'}{/capture}
 				{include 'link/Link.latte', href: $pagination['prev_url'], class: kit('link', [], 'text-sm text-primary'), children: (string) $prevL}
 			{/if}
-			<span class="text-sm text-muted-foreground">{$pagination['current']} / {$pagination['total']}</span>
+			{capture $c_ui4}{$pagination['current']} / {$pagination['total']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui4, attrs: []}
 			{if $pagination['next_url']}
 				{capture $nextL}{$labels['next'] ?? 'Next'}{/capture}
 				{include 'link/Link.latte', href: $pagination['next_url'], class: kit('link', [], 'text-sm text-primary'), children: (string) $nextL}
 			{/if}
-		</nav>
+		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-10 flex justify-center gap-4', children: (string) $c_ui5, attrs: ['aria-label' => ($labels['pagination'] ?? 'Pagination')]}
 	{/if}
 {/capture}
 

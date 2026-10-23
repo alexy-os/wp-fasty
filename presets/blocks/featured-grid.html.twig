@@ -32,7 +32,7 @@
 				{% include 'card/CardHeader.html.twig' with { children: headerInner } %}
 
 				{% if post.excerpt ?? false %}
-					{% set excerptHtml %}<p class="text-sm text-muted-foreground">{{ post.excerpt }}</p>{% endset %}
+					{% set excerptHtml %}{% set c_ui1 %}{{ post.excerpt }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-sm text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}{% endset %}
 					{% include 'card/CardContent.html.twig' with { children: excerptHtml } %}
 				{% endif %}
 			{% endset %}
@@ -43,7 +43,7 @@
 	{% set sectionInner %}
 		{% set heading %}{{ labels.featured ?? 'Featured' }}{% endset %}
 		{% include 'title/Title.html.twig' with { as: 2, class: 'mb-2 text-center text-3xl font-bold tracking-tight', children: heading } %}
-		<p class="mb-10 text-center text-muted-foreground">{{ labels.latest_articles ?? 'Latest articles' }}</p>
+		{% set c_ui2 %}{{ labels.latest_articles ?? 'Latest articles' }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'mb-10 text-center text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}
 		{% include 'grid/Grid.html.twig' with { class: 'grid gap-6 md:grid-cols-2 lg:grid-cols-3', children: cards } %}
 	{% endset %}
 

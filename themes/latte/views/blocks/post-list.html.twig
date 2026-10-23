@@ -4,7 +4,7 @@
  #}
 {% set list %}
 	{% if not posts %}
-		<p class="py-16 text-center text-muted-foreground">{{ labels.no_posts ?? 'No posts found.' }}</p>
+		{% set c_ui1 %}{{ labels.no_posts ?? 'No posts found.' }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'py-16 text-center text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}
 	{% else %}
 		{% set cards %}
 			{% for post in posts %}
@@ -14,11 +14,11 @@
 					{% set h %}{% include 'card/CardTitle.html.twig' with { children: t } %}{% endset %}
 					{% include 'card/CardHeader.html.twig' with { children: h } %}
 					{% if post.excerpt ?? false %}
-						{% set ex %}<p class="text-sm text-muted-foreground">{{ post.excerpt }}</p>{% endset %}
+						{% set ex %}{% set c_ui2 %}{{ post.excerpt }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-sm text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}{% endset %}
 						{% include 'card/CardContent.html.twig' with { children: ex } %}
 					{% endif %}
 					{% if post.date.display ?? false %}
-						{% set ft %}<time datetime="{{ post.date.iso ?? '' }}" class="text-xs text-muted-foreground">{{ post.date.display }}</time>{% endset %}
+						{% set ft %}{% set c_ui3 %}{{ post.date.display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'time', 'class': 'text-xs text-muted-foreground', 'children': c_ui3, 'attrs': {'datetime': (post.date.iso ?? '')}} only %}{% endset %}
 						{% include 'card/CardFooter.html.twig' with { children: ft } %}
 					{% endif %}
 				{% endset %}
@@ -29,17 +29,17 @@
 	{% endif %}
 
 	{% if pagination ?? false %}
-		<nav class="mt-10 flex justify-center gap-4" aria-label="{{ labels.pagination ?? 'Pagination' }}">
+		{% set c_ui5 %}
 			{% if pagination.prev_url %}
 				{% set prevL %}{{ labels.previous ?? 'Previous' }}{% endset %}
 				{% include 'link/Link.html.twig' with { href: pagination.prev_url, class: kit('link', {}, 'text-sm text-primary'), children: prevL } %}
 			{% endif %}
-			<span class="text-sm text-muted-foreground">{{ pagination.current }} / {{ pagination.total }}</span>
+			{% set c_ui4 %}{{ pagination.current }} / {{ pagination.total }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui4, 'attrs': {}} only %}
 			{% if pagination.next_url %}
 				{% set nextL %}{{ labels.next ?? 'Next' }}{% endset %}
 				{% include 'link/Link.html.twig' with { href: pagination.next_url, class: kit('link', {}, 'text-sm text-primary'), children: nextL } %}
 			{% endif %}
-		</nav>
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mt-10 flex justify-center gap-4', 'children': c_ui5, 'attrs': {'aria-label': (labels.pagination ?? 'Pagination')}} only %}
 	{% endif %}
 {% endset %}
 

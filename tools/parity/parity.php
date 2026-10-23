@@ -319,6 +319,12 @@ foreach ($wanted as $suite) {
         try {
             $rawA = $render($latte, $fx);
             $rawB = $render($twig, $fx);
+            // PARITY_DUMP=<dir>: keep the renders (before/after snapshots, ui-gates html cases)
+            if (($dumpDir = getenv('PARITY_DUMP')) !== false && $dumpDir !== '') {
+                @mkdir("{$dumpDir}/{$suite}", 0775, true);
+                file_put_contents("{$dumpDir}/{$name}.latte.html", $rawA);
+                file_put_contents("{$dumpDir}/{$name}.twig.html", $rawB);
+            }
             $a = $normalize($rawA);
             $b = $normalize($rawB);
         } catch (\Throwable $e) {

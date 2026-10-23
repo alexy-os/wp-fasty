@@ -1,26 +1,26 @@
 {**
  * Site footer — menu, widgets, copyright.
  *}
-<footer class="site-footer mt-16 border-t border-border bg-card py-10">
-	<div class="container mx-auto space-y-8 px-4 md:px-6">
+{capture $c_ui5}
+	{capture $c_ui4}
 		{if !empty($menu['footer']['items'])}
-			<nav aria-label="{$labels['footer_nav']}">
+			{capture $c_ui1}
 				{include 'nav-items.latte',
 					items: $menu['footer']['items'],
 					listClass: 'flex flex-wrap gap-4',
 					linkClass: 'text-sm text-muted-foreground no-underline hover:text-foreground'
 				}
-			</nav>
+			{/capture}{include 'box/Box.latte', tag: 'nav', children: (string) $c_ui1, attrs: ['aria-label' => ($labels['footer_nav'])]}
 		{/if}
 
 		{if !empty($widgets['footer'])}
-			<div class="grid gap-6 md:grid-cols-3 text-sm text-muted-foreground">
+			{capture $c_ui2}
 				{$widgets['footer']|noescape}
-			</div>
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-6 md:grid-cols-3 text-sm text-muted-foreground', children: (string) $c_ui2, attrs: []}
 		{/if}
 
-		<p class="text-sm text-muted-foreground">
+		{capture $c_ui3}
 			&copy; {$site['year']} {$site['title']}
-		</p>
-	</div>
-</footer>
+		{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $c_ui3, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'container mx-auto space-y-8 px-4 md:px-6', children: (string) $c_ui4, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'footer', class: 'site-footer mt-16 border-t border-border bg-card py-10', children: (string) $c_ui5, attrs: []}
