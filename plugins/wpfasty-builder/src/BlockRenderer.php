@@ -38,8 +38,9 @@ final class BlockRenderer
         }
         $php = dirname(__DIR__) . '/sources/ui8kit/latte/php';
         foreach (['CnMerge', 'Runtime', 'Extension'] as $f) {
-            // UI8Kit 3 (theme `ui8kit/runtime`, PSR-4 UI8Kit\Latte\) ships the same UI8Kit\Latte\CnMerge: reuse it.
-            if (class_exists('\\UI8Kit\\Latte\\' . $f, false)) {
+            // UI8Kit 3 (theme `ui8kit/runtime`, PSR-4 UI8Kit\Latte\) ships UI8Kit\Latte\CnMerge: prefer it (autoload),
+            // so the theme never runs on the legacy merge that drops ring-ring next to ring-offset.
+            if (class_exists('\\UI8Kit\\Latte\\' . $f, $f === 'CnMerge')) {
                 continue;
             }
             if (is_file("$php/$f.php")) {
