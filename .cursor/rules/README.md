@@ -19,3 +19,4 @@ Agent enforcement for this monorepo. Human docs: [`docs/`](../docs/).
 |------|------|
 | [`docs/`](../docs/) | Human SSOT |
 | [`.project/`](../.project/) | Theme constructor KB |
+- `ui8kit3.mdc` — UI8Kit 3 primitives, kit presets, Latte/Twig middle layer (always applied)

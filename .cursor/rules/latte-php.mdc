@@ -15,7 +15,7 @@ Full docs: [`docs/latte-primitives.md`](../../docs/latte-primitives.md), [`docs/
 {include 'button/Button.latte', variant: 'default', children: (string) $label}
 ```
 
-Loader roots: theme `views/` + `ui8kit-latte/ui`.
+Loader roots: theme `views/` → `kit/ui` → `ui8kit/ui` (UI8Kit 3; see `ui8kit3.mdc`).
 
 ## Skipped Latte parts (use `Classes::*`)
 

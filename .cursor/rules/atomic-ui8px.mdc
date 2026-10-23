@@ -24,4 +24,4 @@ Full doc: [`docs/atomic-ui8px.md`](../../docs/atomic-ui8px.md)
 - `unstyled` escape hatch — add a named variant
 - Second semantic-CSS extraction (`data-slot` → `.button-primary`)
 
-After brick/recipe changes: `bun run ui:primitives`
+After recipe changes: `php tools/ui8kit3/presets.php` (kit presets); primitives update via `npx ui8kit@3 add --all --force`

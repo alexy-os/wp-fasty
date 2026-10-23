@@ -5,21 +5,27 @@ catalog of layout / block / style presets.
 
 > Repository: [alexy-os/wp-fasty](https://github.com/alexy-os/wp-fasty)
 
-## Architecture (three layers)
+## Architecture (UI8Kit 3)
 
 ```
-packages/ui8kit-codegen/      # git submodule → ui8kit/codegen (SOURCE)
-        ↓  bun run ui:primitives
-.workspaces/ui8kit-latte/     # Layer 1: Latte primitives + UI8Kit PHP
-presets/                      # Layer 2: layouts × blocks × styles
-themes/<slug>/                # Layer 3: WordPress theme instances
+themes/latte/ui8kit/          # UI8Kit 3 Latte primitives (npx ui8kit@3, registry 3.2.0) — unstyled, never hand-edit
+themes/latte/twig/ui8kit/     # UI8Kit 3 Twig primitives (npx ui8kit@3 --framework twig) — never hand-edit
+themes/latte/kit/presets.json # our classes: variant/size recipes (generated from presets/components/*.json)
+themes/latte/kit/ui/          # Latte middle layer: Block, Title, Card*, Badge, Alert … (legacy prop API → v3 + kit())
+themes/latte/twig/kit/ui/     # the same compositions for Twig
+presets/                      # layouts × blocks × styles
+themes/<slug>/                # WordPress theme instances (latte + press/folio/shop/skin children)
 ```
 
 | Layer | What | Edit? |
 |-------|------|-------|
-| Primitives | `Button.latte`, `Classes.php` | No — regenerate from codegen |
-| Presets | `presets/blocks/*.latte`, `styles/*.css` | Yes |
-| Theme | `themes/latte` | Yes (views + PHP runtime) |
+| Primitives | `ui8kit/ui/**`, `twig/ui8kit/ui/**`, runtimes | No: `npx ui8kit@3 add --all --force`, then `npx ui8kit@3 check` |
+| Kit | `presets/components/*.json` → `kit/presets.json`, `kit/ui`, `twig/kit/ui` | Yes: `php tools/ui8kit3/presets.php` |
+| Presets / theme | `presets/blocks`, `themes/latte/views` | Yes |
+
+Classes come from `kit('button', {variant: 'outline', size: 'sm'}, extra)` (Latte `{kit(...)}`, Twig `kit(...)`), and are passed to
+primitives through `class`. Latte and Twig stay isolated: `latte.zip` ships no `twig/`, `twig.zip` ships no `ui8kit/` and `kit/ui/`.
+The legacy codegen bundle (`packages/ui8kit-codegen`, `.workspaces/ui8kit-latte`) is still in the tree as a fallback until the deletion commit.
 
 ## Quick start
 
@@ -95,16 +101,18 @@ wpfasty/
 **Three WhalY:** zero redundant code · zero wasteful work · PageSpeed 100 goal.  
 See [docs/principles.md](docs/principles.md) and [docs/manifesto.md](docs/manifesto.md).
 
-## UI8Kit primitives
-
-Generated Latte parts (60/63). Skipped: `Breadcrumb`, `Select`, `Icon` —
-use `UI8Kit\Classes::*` helpers. Details in the codegen docs
-(`docs/php-complex-parts.md` in the submodule).
+## UI8Kit primitives (v3)
 
 ```latte
-{capture $label}Explore{/capture}
-{include 'button/Button.latte', variant: 'default', children: (string) $label}
+{include 'button/Button.latte', class: kit('button', ['variant' => 'outline', 'size' => 'sm']), children: 'Go'}
 ```
+
+```twig
+{% include 'button/Button.html.twig' with { class: kit('button', {'variant': 'outline', 'size': 'sm'}), children: 'Go' } only %}
+```
+
+Update: `cd themes/latte && npx ui8kit@3 add --all --force && npx ui8kit@3 check` (and the same in `themes/latte/twig`).
+Parity: `bun run parity` (Latte ↔ Twig, DOM + class token sets, `tools/parity/compare-classes.php`).
 
 ## License
 

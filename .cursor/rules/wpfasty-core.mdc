@@ -5,7 +5,7 @@ alwaysApply: true
 
 # WP FastY — core
 
-Monorepo: WordPress **theme generator** on UI8Kit Codegen Latte primitives.
+Monorepo: WordPress **theme generator** on UI8Kit 3 primitives (Latte + Twig, see `ui8kit3.mdc`); the codegen bundle below is legacy, kept until the deletion commit.
 
 ## Layers
 
