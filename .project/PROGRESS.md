@@ -3,7 +3,7 @@
 **Purpose:** Single handoff document for agents (including Cursor browser).  
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
-**Last updated:** 2026-10-19 (Cycles I–J from git log 2026-10-16..17; Cycle K: K1 site manifest v0.2, K2/K3 generator + round-trip for press, folio, shop)  
+**Last updated:** 2026-10-24 (Cycle L: builder editor on the Puck model — live block render, typed fields, overlay, undo/redo)
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
 **Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
@@ -333,6 +333,18 @@ A Parent correctness ✓
 | K7.6 | CI mirror isolation: other parent physically absent, remote own-runtime registry import + render over HTTP; negatives (other runtime, tampered archive, forced absent engine → 500) | `b0a2c76`, CI `39590986557` | [x] |
 | K7.7 | Published https://registry.buildy.tw/{latte,twig}/wpfasty/{v1.0.0,latest}/ from ui8kit/site (`builder-registry/`, registry:validate); verified over HTTPS with registry-verify.ts | ui8kit/site `236f670` | [x] |
 | K7.8 | Docs, ADR-001 status, PROGRESS | K7.8 commit | [x] |
+
+### Cycle L — Builder editor on the Puck model (2026-10-24)
+
+**Target:** an editor as convenient as Puck (typed fields, live canvas, overlay, history) without React. Details: `plugins/wpfasty-builder/README.md`.
+
+| Stage | Task | Evidence | Done |
+|-------|------|----------|------|
+| L1 | `POST /wpfasty-builder/v1/render-block` (`Fragment`, `Compiler::blockProps`); the editor swaps the edited block's HTML in the preview, structural changes without reload. `tools/builder/render-block-check.php`: 474/474 variants × Latte and Twig equal to the full-page block (offline in CI, `--live` on Playground: 0 diffs). Edit → visible: 2257 → 778 ms (median, Playground wasm) | `5a06564` | [x] |
+| L2 | Typed fields from the catalog (`editor/src/fields/`, `schema.ts` + bun tests); catalog `records` generated from codegen-x specs (`tools/builder/catalog-records.ts`, blocks.zip unchanged); tokens + design lint for the editor; Lucide icons | `8707ae8` | [x] |
+| L3 | Selection overlay over the iframe (hover, selected, label, toolbar, drag grip, drop line); no in-page selection styles | `a4c6c40` | [x] |
+| L4 | `EditorStore` ($state) + undo/redo (50 JSON snapshots, typing coalesced), shortcuts and buttons | `1eea3f8` | [x] |
+| L5 | Nesting (slots): design only — README "Next step" | README | [ ] |
 
 ---
 

@@ -67,6 +67,12 @@ rm -rf "$STAGE"
 ls -la "$OUT"/*.zip
 
 # Inline-blueprint preview URLs (playground/urls.txt).
-for t in press folio shop shop-twig; do
-  printf '%s https://playground.wordpress.net/#%s\n' "$t" "$(php -r 'echo rawurlencode(json_encode(json_decode(file_get_contents($argv[1])), JSON_UNESCAPED_SLASHES));' "$OUT/$t.json")"
-done > "$OUT/urls.txt"
+# <site>-builder: the same blueprint opening the builder's page list in wp-admin (the blueprint logs in).
+{
+  for t in press folio shop shop-twig; do
+    printf '%s https://playground.wordpress.net/#%s\n' "$t" "$(php -r 'echo rawurlencode(json_encode(json_decode(file_get_contents($argv[1])), JSON_UNESCAPED_SLASHES));' "$OUT/$t.json")"
+  done
+  for t in shop shop-twig; do
+    printf '%s-builder https://playground.wordpress.net/#%s\n' "$t" "$(php -r '$b = json_decode(file_get_contents($argv[1])); $b->landingPage = "/wp-admin/edit.php?post_type=page&page=wpfasty-builder"; echo rawurlencode(json_encode($b, JSON_UNESCAPED_SLASHES));' "$OUT/$t.json")"
+  done
+} > "$OUT/urls.txt"
