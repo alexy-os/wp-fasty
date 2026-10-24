@@ -461,19 +461,21 @@
       <strong>{config.title || "Untitled page"}</strong>
       <span class="wpfb-muted">{published ? "published layout" : "not published"}</span>
     </div>
-    <div class="wpfb-status" role="status" aria-live="polite">
-      {#if status === "loading"}Loading…{:else if status === "saving"}Saving draft…{:else if status === "error"}<span class="wpfb-error">{message}</span>{:else}{message}{/if}
-      {#if renderMs !== null && status !== "error"}<span class="wpfb-muted"> · block updated in {renderMs} ms</span>{/if}
-    </div>
-    <div class="wpfb-actions">
+    <div class="wpfb-bar-mid">
       <div class="wpfb-history" role="group" aria-label="History">
         <button type="button" class="wpfb-icon" title="Undo (Ctrl+Z)" aria-label="Undo" aria-keyshortcuts="Control+Z Meta+Z" disabled={!store.canUndo} onclick={undo}><Icon icon={Undo2} /></button>
         <button type="button" class="wpfb-icon" title="Redo (Ctrl+Shift+Z)" aria-label="Redo" aria-keyshortcuts="Control+Shift+Z Meta+Shift+Z Control+Y" disabled={!store.canRedo} onclick={redo}><Icon icon={Redo2} /></button>
+      </div>
+      <div class="wpfb-status" role="status" aria-live="polite" title={status === "error" || status === "saved" ? message : undefined}>
+        {#if status === "loading"}Loading…{:else if status === "saving"}Saving draft…{:else if status === "error"}<span class="wpfb-error">{message}</span>{:else}{message}{/if}
+        {#if renderMs !== null && status !== "error"}<span class="wpfb-muted"> · block updated in {renderMs} ms</span>{/if}
       </div>
       <div class="wpfb-seg" role="group" aria-label="Preview width">
         <button type="button" class:is-on={device === "desktop"} aria-pressed={device === "desktop"} onclick={() => (device = "desktop")}><Icon icon={Monitor} /> Desktop</button>
         <button type="button" class:is-on={device === "mobile"} aria-pressed={device === "mobile"} onclick={() => (device = "mobile")}><Icon icon={Smartphone} /> Mobile</button>
       </div>
+    </div>
+    <div class="wpfb-actions">
       <a class="button" href={config.permalink} target="_blank" rel="noopener">View page</a>
       <button type="button" class="button" onclick={() => save(false)}>Save draft</button>
       {#if config.canPublish}<button type="button" class="button button-primary" onclick={() => save(true)}>Publish</button>{/if}
@@ -482,36 +484,43 @@
 
   <div class="wpfb-main">
     <aside class="wpfb-palette" aria-label="Blocks">
-      <label class="wpfb-field">
-        <span>Collection</span>
-        <select value={collection} onchange={(e) => switchCollection(e.currentTarget.value)}>
+      <div class="wpfb-section">
+        <label class="wpfb-heading" for="wpfb-collection">Collection</label>
+        <select id="wpfb-collection" class="wpfb-search" value={collection} onchange={(e) => switchCollection(e.currentTarget.value)}>
           <option value="">All blocks</option>
           {#each catalog?.collections ?? [] as c (c.id)}
             <option value={c.id}>{c.type === "template" ? "Template: " : ""}{c.label} ({c.blocks})</option>
           {/each}
         </select>
-      </label>
+      </div>
       {#if catalog?.collection?.pages?.length}
-        <div class="wpfb-pages">
-          <p class="wpfb-muted">Template pages</p>
-          {#each catalog.collection.pages as page (page.id)}
-            <button type="button" class="button button-small" onclick={() => usePage(page)}>{human(page.id)}</button>
-          {/each}
+        <div class="wpfb-section">
+          <h2 class="wpfb-heading">Template pages</h2>
+          <div class="wpfb-chips">
+            {#each catalog.collection.pages as page (page.id)}
+              <button type="button" class="wpfb-chip" title={human(page.id)} onclick={() => usePage(page)}>{human(page.id)}</button>
+            {/each}
+          </div>
         </div>
       {/if}
-      <input class="wpfb-search" type="search" placeholder="Search blocks" bind:value={search} aria-label="Search blocks" />
-      <ul class="wpfb-blocks">
+      <div class="wpfb-section">
+        <h2 class="wpfb-heading">Blocks</h2>
+        <input class="wpfb-search" type="search" placeholder="Search blocks" bind:value={search} aria-label="Search blocks" />
+        <ul class="wpfb-list">
         {#each filtered as b (b.id)}
           <li>
-            <button type="button" class="wpfb-block-head" aria-expanded={openBlock === b.id} onclick={() => (openBlock = openBlock === b.id ? null : b.id)}>
-              <span>{b.title}</span><span class="wpfb-muted">{b.variants.length}</span>
-            </button>
+            <div class="wpfb-li" class:is-open={openBlock === b.id}>
+              <button type="button" class="wpfb-li-main" aria-expanded={openBlock === b.id} onclick={() => (openBlock = openBlock === b.id ? null : b.id)}>
+                <span>{b.title}</span><span class="wpfb-muted">{b.variants.length}</span>
+              </button>
+            </div>
             {#if openBlock === b.id}
+              <div class="wpfb-sub">
               <p class="wpfb-docs">{b.docs}</p>
-              <ul class="wpfb-variants">
+              <ul class="wpfb-chips is-two">
                 {#each b.variants as v (v.id)}
                   <li>
-                    <button type="button" class="wpfb-variant" title="Drag onto the page or click to add"
+                    <button type="button" class="wpfb-chip is-drag" title="Drag onto the page or click to add"
                       onpointerdown={(e) => pointerDown(e, { kind: "new", block: b.id, variant: v.id, label: `${b.title} · ${human(v.id)}` })}
                       onclick={() => { if (!drag) add(b.id, v.id, store.selected ? currentIndex + 1 : store.items.length); }}>
                       {human(v.id)}
@@ -519,10 +528,12 @@
                   </li>
                 {/each}
               </ul>
+              </div>
             {/if}
           </li>
         {/each}
-      </ul>
+        </ul>
+      </div>
     </aside>
 
     <section class="wpfb-canvas" aria-label="Preview">
@@ -544,17 +555,17 @@
     </section>
 
     <aside class="wpfb-inspector" aria-label="Structure and properties">
-      <h2>Structure</h2>
-      <ol class="wpfb-structure" bind:this={list} onmouseleave={() => (store.hovered = null)}>
+      <h2 class="wpfb-heading">Structure</h2>
+      <ol class="wpfb-list wpfb-structure" bind:this={list} onmouseleave={() => (store.hovered = null)}>
         {#each store.items as it, i (it.id)}
           {#if dropIn === "list" && dropAt === i}<li class="wpfb-drop" aria-hidden="true"></li>{/if}
-          <li data-index={i} class:is-selected={store.selected === it.id} class:is-hover={store.hovered === it.id} onmouseenter={() => (store.hovered = it.id)}>
-            <button type="button" class="wpfb-handle" aria-label="Drag {titleOf(it)} to reorder"
+          <li data-index={i} class="wpfb-li" class:is-selected={store.selected === it.id} class:is-hover={store.hovered === it.id} onmouseenter={() => (store.hovered = it.id)}>
+            <button type="button" class="wpfb-icon wpfb-handle" aria-label="Drag {titleOf(it)} to reorder"
               onpointerdown={(e) => pointerDown(e, { kind: "move", from: i, label: titleOf(it) })}><Icon icon={GripVertical} /></button>
-            <button type="button" class="wpfb-item" aria-current={store.selected === it.id} title="Alt+↑ / Alt+↓ to move"
+            <button type="button" class="wpfb-li-main wpfb-item" aria-current={store.selected === it.id} title="Alt+↑ / Alt+↓ to move"
               onclick={() => select(it.id, true)}
               onkeydown={(e) => { if (e.altKey && e.key === "ArrowUp") { e.preventDefault(); move(i, i - 1); } if (e.altKey && e.key === "ArrowDown") { e.preventDefault(); move(i, i + 2); } }}>
-              {titleOf(it)} <span class="wpfb-muted">{human(it.variant)}</span>
+              <span>{titleOf(it)} <span class="wpfb-muted">{human(it.variant)}</span></span>
             </button>
             <button type="button" class="wpfb-icon" aria-label="Move up" disabled={i === 0} onclick={() => move(i, i - 1)}><Icon icon={ChevronUp} /></button>
             <button type="button" class="wpfb-icon" aria-label="Move down" disabled={i === store.items.length - 1} onclick={() => move(i, i + 2)}><Icon icon={ChevronDown} /></button>
@@ -565,7 +576,7 @@
 
       {#if current && currentBlock}
         <div class="wpfb-props" onfocusout={() => store.seal()}>
-          <div class="wpfb-props-head">
+          <div class="wpfb-heading wpfb-props-head">
             <h2>{currentBlock.title}</h2>
             <div class="wpfb-tools" role="toolbar" aria-label="Block">
               <button type="button" class="wpfb-icon" title="Duplicate" aria-label="Duplicate" onclick={() => duplicate(current.id)}><Icon icon={Copy} /></button>

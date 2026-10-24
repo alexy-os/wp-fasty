@@ -1,7 +1,7 @@
 <script lang="ts">
   import Icon from "../Icon.svelte";
   import { Trash2, Plus } from "../icons";
-      import type { Json, Obj } from "../types";
+  import type { Json, Obj } from "../types";
   import type { Field } from "./schema";
   import type { FieldCtx, OnChange } from "./context";
   import { isObj } from "../util";
@@ -23,5 +23,5 @@
       <button type="button" class="wpfb-icon wpfb-danger" aria-label="Remove {k}" onclick={() => put(rows.filter((_, j) => j !== i))}><Icon icon={Trash2} size={16} /></button>
     </div>
   {/each}
-  <button type="button" class="button button-small wpfb-add" onclick={() => put([...rows, [`key${rows.length + 1}`, ""]])}><Icon icon={Plus} size={16} /> Add entry</button>
+  <button type="button" class="button wpfb-add" onclick={() => put([...rows, [`key${rows.length + 1}`, ""]])}><Icon icon={Plus} size={16} /> Add entry</button>
 </fieldset>

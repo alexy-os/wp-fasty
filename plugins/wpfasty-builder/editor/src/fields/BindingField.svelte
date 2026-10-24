@@ -1,7 +1,7 @@
 <script lang="ts">
   import Icon from "../Icon.svelte";
   import { Database } from "../icons";
-    import type { Json } from "../types";
+  import type { Json } from "../types";
   import type { Field } from "./schema";
   import { fid, type FieldCtx, type OnChange } from "./context";
   import { registry } from "./registry";

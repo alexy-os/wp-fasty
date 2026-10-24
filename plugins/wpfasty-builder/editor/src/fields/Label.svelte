@@ -1,7 +1,7 @@
 <script lang="ts">
   import Icon from "../Icon.svelte";
   import { RotateCcw } from "../icons";
-    import type { FieldCtx, OnChange } from "./context";
+  import type { FieldCtx, OnChange } from "./context";
   import { fid } from "./context";
 
   let { label, path, ctx, onchange, tag = "label" }: { label: string; path: string[]; ctx: FieldCtx; onchange: OnChange; tag?: "label" | "span" } = $props();

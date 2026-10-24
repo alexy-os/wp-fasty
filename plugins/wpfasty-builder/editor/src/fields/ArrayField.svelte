@@ -1,7 +1,7 @@
 <script lang="ts">
   import Icon from "../Icon.svelte";
   import { ChevronUp, ChevronDown, Copy, Trash2, Plus } from "../icons";
-            import type { Json, Obj } from "../types";
+  import type { Json, Obj } from "../types";
   import type { Field } from "./schema";
   import { plain, type FieldCtx, type OnChange } from "./context";
   import { clone, isObj, setPath } from "../util";
@@ -52,12 +52,12 @@
 {#if f}
   <fieldset class="wpfb-group wpfb-array">
     <legend><Label label={f.label} {path} {ctx} {onchange} tag="span" /> <span class="wpfb-muted">{list.length}</span></legend>
-    <ol class="wpfb-items">
+    <ol class="wpfb-list">
       {#each list as item, i (i)}
-        <li class:is-open={open === i}>
-          <div class="wpfb-item-head">
-            <button type="button" class="wpfb-item-title" aria-expanded={open === i} onclick={() => (open = open === i ? null : i)}>
-              {f.summary(item, i)}
+        <li>
+          <div class="wpfb-li wpfb-item-head" class:is-open={open === i}>
+            <button type="button" class="wpfb-li-main wpfb-item-title" aria-expanded={open === i} onclick={() => (open = open === i ? null : i)}>
+              <span>{f.summary(item, i)}</span>
             </button>
             <button type="button" class="wpfb-icon" aria-label="Move up" disabled={i === 0} onclick={() => move(i, i - 1)}><Icon icon={ChevronUp} size={16} /></button>
             <button type="button" class="wpfb-icon" aria-label="Move down" disabled={i === list.length - 1} onclick={() => move(i, i + 1)}><Icon icon={ChevronDown} size={16} /></button>
@@ -65,7 +65,7 @@
             <button type="button" class="wpfb-icon wpfb-danger" aria-label="Remove" onclick={() => remove(i)}><Icon icon={Trash2} size={16} /></button>
           </div>
           {#if open === i}
-            <div class="wpfb-item-body">
+            <div class="wpfb-sub wpfb-item-body">
               {#if f.item.type === "object"}
                 {#each Object.entries(f.arrayFields) as [k, sub] (k)}
                   <FieldRenderer field={sub} path={[...path, String(i), k]} value={isObj(item) ? item[k] : undefined}
@@ -79,6 +79,6 @@
         </li>
       {/each}
     </ol>
-    <button type="button" class="button button-small wpfb-add" onclick={add}><Icon icon={Plus} size={16} /> Add {f.summary(null, list.length).replace(/ \d+$/, "").toLowerCase()}</button>
+    <button type="button" class="button wpfb-add" onclick={add}><Icon icon={Plus} size={16} /> Add {f.summary(null, list.length).replace(/ \d+$/, "").toLowerCase()}</button>
   </fieldset>
 {/if}
