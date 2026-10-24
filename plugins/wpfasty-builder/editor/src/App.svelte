@@ -26,6 +26,9 @@
   let reloadKey = $state(0);
   let scrollY = 0;
   let timer: ReturnType<typeof setTimeout> | undefined;
+  /** the preview must reload after the next save (it does not show the saved layout yet) */
+  let reloadAfterSave = false;
+  let renderMs = $state<number | null>(null);
 
   const blocks = $derived(new Map((catalog?.blocks ?? []).map((b) => [b.id, b])));
   const filtered = $derived(
@@ -63,11 +66,77 @@
     message = (e as Error).message;
   }
 
-  /** a change: save the draft after a short pause, then reload the preview */
-  function changed() {
+  /**
+   * A change: the preview updates in place (one block re-rendered by POST /render-block, or the block wrappers
+   * re-ordered), and the draft is saved after a short pause. `ids`: blocks whose HTML changed; none for a pure
+   * re-order or removal. When the preview cannot be patched (no builder page in it yet) it reloads after the save.
+   */
+  function changed(ids: string[] = [], reload = false) {
+    const fresh = reload ? null : syncPreview();
+    if (fresh === null) reloadAfterSave = true;
+    else ids.filter((id) => !fresh.includes(id)).forEach(renderBlock);
     status = "saving";
     clearTimeout(timer);
     timer = setTimeout(() => save(false), 600);
+  }
+
+  const renderSeq = new Map<string, number>();
+
+  /** re-renders one block of the preview in place; the latest request per block wins */
+  async function renderBlock(id: string) {
+    const it = items.find((i) => i.id === id);
+    if (!it) return;
+    const n = (renderSeq.get(id) ?? 0) + 1;
+    renderSeq.set(id, n);
+    const t = performance.now();
+    try {
+      const res = await client.renderBlock(source, clone(it));
+      if (renderSeq.get(id) !== n) return;
+      const el = wrapper(id);
+      if (!el) {
+        reloadAfterSave = true;
+        return;
+      }
+      el.innerHTML = res.html;
+      renderMs = Math.round(performance.now() - t);
+      mark();
+    } catch {
+      reloadAfterSave = true;
+    }
+  }
+
+  function wrapper(id: string): HTMLElement | null {
+    return frame?.contentDocument?.querySelector<HTMLElement>(`[data-wpfb-block="${CSS.escape(id)}"]`) ?? null;
+  }
+
+  /**
+   * Puts the block wrappers of the preview in the order of the layout: removed blocks go, new blocks get an empty
+   * wrapper (filled by renderBlock). Returns the ids of the new wrappers; null when the preview has no builder page
+   * to patch.
+   */
+  function syncPreview(): string[] | null {
+    const doc = frame?.contentDocument;
+    const page = doc?.querySelector<HTMLElement>(".wpfb-page");
+    if (!doc || !page) return null;
+    const fresh: string[] = [];
+    const have = new Map([...page.querySelectorAll<HTMLElement>(":scope > [data-wpfb-block]")].map((el) => [el.dataset.wpfbBlock ?? "", el]));
+    let prev: Element | null = null;
+    for (const it of items) {
+      let el = have.get(it.id);
+      have.delete(it.id);
+      if (!el) {
+        el = doc.createElement("div");
+        el.className = "wpfb-block";
+        el.dataset.wpfbBlock = it.id;
+        fresh.push(it.id);
+        renderBlock(it.id);
+      }
+      const next: Element | null = prev ? prev.nextElementSibling : page.firstElementChild;
+      if (next !== el) page.insertBefore(el, next);
+      prev = el;
+    }
+    have.forEach((el) => el.remove());
+    return fresh;
   }
 
   async function save(publish: boolean) {
@@ -80,15 +149,19 @@
       const warn = res.issues.filter((i) => !i.code.startsWith("core."));
       message = warn.length ? warn.map((i) => i.message).join("; ") : publish ? "Published." : "Draft saved.";
       status = "saved";
-      scrollY = frame?.contentWindow?.scrollY ?? 0;
-      reloadKey++;
+      if (reloadAfterSave) {
+        reloadAfterSave = false;
+        scrollY = frame?.contentWindow?.scrollY ?? 0;
+        reloadKey++;
+      }
     } catch (e) {
       fail(e);
     }
   }
 
-  function add(block: string, variant: string, at = items.length) {
-    const item: Item = { id: newId(items, block), block, variant, props: {}, bindings: {} };
+  /** a new block; lists bind to WordPress data by default when a source fits the kind */
+  function makeItem(block: string, variant: string, taken: Item[]): Item {
+    const item: Item = { id: newId(taken, block), block, variant, props: {}, bindings: {} };
     const b = blocks.get(block);
     // bind lists to WordPress data by default when a source fits the kind
     for (const bind of b?.variants.find((v) => v.id === variant)?.bindings ?? []) {
@@ -96,9 +169,14 @@
       const src = catalog?.dataSources.find((d) => d.kinds.includes(kind) && (kind !== "post" || d.id === "posts") && (kind !== "product" || d.id === "products"));
       if (src && ["post", "product", "project", "category", "topic"].includes(kind)) item.bindings[bind.path.join(".")] = { source: src.id, limit: 6 };
     }
+    return item;
+  }
+
+  function add(block: string, variant: string, at = items.length) {
+    const item = makeItem(block, variant, items);
     items = [...items.slice(0, at), item, ...items.slice(at)];
     selected = item.id;
-    changed();
+    changed([item.id]);
   }
 
   function move(from: number, to: number) {
@@ -122,14 +200,14 @@
     const copy = { ...clone(items[i]), id: newId(items, items[i].block) };
     items = [...items.slice(0, i + 1), copy, ...items.slice(i + 1)];
     selected = copy.id;
-    changed();
+    changed([copy.id]);
   }
 
   function update(fn: (it: Item) => Item) {
     if (!current) return;
     const id = current.id;
     items = items.map((it) => (it.id === id ? fn(clone(it)) : it));
-    changed();
+    changed([id]);
   }
 
   function setProp(path: string[], value: Json | undefined) {
@@ -142,13 +220,11 @@
 
   function usePage(page: NonNullable<Catalog["collection"]>["pages"] extends (infer P)[] | undefined ? P : never) {
     if (items.length && !confirm("Replace the blocks of this page with the template page?")) return;
-    items = [];
-    for (const b of page.blocks) {
-      add(b.block, b.variant);
-      items = items.map((it, i) => (i === items.length - 1 ? { ...it, props: clone(b.props) } : it));
-    }
+    const next: Item[] = [];
+    for (const b of page.blocks) next.push({ ...makeItem(b.block, b.variant, next), props: clone(b.props) });
+    items = next;
     selected = null;
-    changed();
+    changed([], true);
   }
 
   async function switchCollection(id: string) {
@@ -264,6 +340,7 @@
     </div>
     <div class="wpfb-status" role="status" aria-live="polite">
       {#if status === "loading"}Loading…{:else if status === "saving"}Saving draft…{:else if status === "error"}<span class="wpfb-error">{message}</span>{:else}{message}{/if}
+      {#if renderMs !== null && status !== "error"}<span class="wpfb-muted"> · block updated in {renderMs} ms</span>{/if}
     </div>
     <div class="wpfb-actions">
       <div class="wpfb-seg" role="group" aria-label="Preview width">

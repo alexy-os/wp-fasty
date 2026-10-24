@@ -50,12 +50,11 @@ final class Compiler
                     . $close;
                 continue;
             }
-            $props = self::readLabel(Layout::merge((array) $variant['props'], $b['props']), $b);
+            $props = self::blockProps($variant, $b);
             $exprs = [];
             foreach (array_keys($b['bindings']) as $path) {
                 $exprs[(string) $path] = ($twig ? 'wpfb[' : '$wpfb[') . self::str((string) $b['id']) . ']['
                     . self::str((string) $path) . '] ?? []';
-                Layout::set($props, explode('.', (string) $path), null);
             }
             $lines[] = '<div class="wpfb-block" data-wpfb-block="' . self::attr((string) $b['id']) . '">';
             $call = 'wpfb_block(' . self::str($source) . ', ' . self::str($template) . ', '
@@ -65,6 +64,23 @@ final class Compiler
         }
         $lines[] = '</div>';
         return implode("\n", $lines) . "\n";
+    }
+
+    /**
+     * The props a block renders with: the variant sample props, the block's overrides on top, the kind-aware read
+     * label; every bound path is null (the page fills it from wpfb[<block id>][<path>], Fragment from the data).
+     *
+     * @param array<string, mixed> $variant
+     * @param array<string, mixed> $b       a block of Layout::blocks()
+     * @return array<string, mixed>
+     */
+    public static function blockProps(array $variant, array $b): array
+    {
+        $props = self::readLabel(Layout::merge((array) ($variant['props'] ?? []), (array) $b['props']), $b);
+        foreach (array_keys((array) $b['bindings']) as $path) {
+            Layout::set($props, explode('.', (string) $path), null);
+        }
+        return $props;
     }
 
     /**

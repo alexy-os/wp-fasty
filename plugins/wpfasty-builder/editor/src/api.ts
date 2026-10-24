@@ -15,6 +15,12 @@ export function api(cfg: Config) {
     return body as T;
   }
   return {
+    /** one block's HTML, as the page template renders it (POST /render-block) */
+    renderBlock: (source: string, item: Item) =>
+      call<{ id: string; html: string; issues: Issue[] }>("/render-block", {
+        method: "POST",
+        body: JSON.stringify({ source, page: cfg.page, id: item.id, block: item.block, variant: item.variant, props: item.props, bindings: item.bindings }),
+      }),
     catalog: (source: string, collection: string) =>
       call<Catalog>(`/catalog?source=${encodeURIComponent(source)}&collection=${encodeURIComponent(collection)}`),
     layout: () => call<{ layout: Obj | null; published: boolean; previewUrl: string; permalink: string }>(`/layout/${cfg.page}`),

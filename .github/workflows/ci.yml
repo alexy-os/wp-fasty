@@ -107,6 +107,9 @@ jobs:
       - name: Latte ↔ Twig parity (all suites, fixture contexts and full pages, normalized HTML)
         run: bun run parity
 
+      - name: Builder render-block — every variant rendered alone (POST /render-block) = the block in the compiled page, Latte and Twig
+        run: php tools/builder/render-block-check.php
+
 
       - name: UI8Kit gates (vendored codegen-x ui-gates @8d12906) — source 0, builder blocks HTML/ARIA 0, theme renders HTML/ARIA 0
         run: |

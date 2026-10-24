@@ -15,6 +15,9 @@ use WP_REST_Response;
  *   GET  /layout/<page>                 edit_page    draft entry, issues, preview URL
  *   POST /layout/<page>                 edit_page    save the draft; publish=true also needs publish_pages
  *   POST /sources                       manage_options  import a remote source {id, url}
+ *   POST /render-block                  edit_pages (edit_page with `page`)  one block's HTML for the live preview:
+ *        {source?, page?, id?, block, variant, props?, bindings?} → {id, html, issues}; same sanitizing, props and
+ *        bound data as the page template (Fragment), rendered by the site engine's BlockRenderer
  */
 final class Rest
 {
@@ -43,6 +46,14 @@ final class Rest
         register_rest_route(self::NS, '/layout/(?P<id>\d+)', [
             ['methods' => 'GET', 'callback' => [self::class, 'getLayout'], 'permission_callback' => $page],
             ['methods' => 'POST', 'callback' => [self::class, 'saveLayout'], 'permission_callback' => $page],
+        ]);
+        register_rest_route(self::NS, '/render-block', [
+            'methods' => 'POST',
+            'callback' => [self::class, 'renderBlock'],
+            'permission_callback' => static function (WP_REST_Request $r): bool {
+                $page = (int) $r->get_param('page');
+                return $page > 0 ? current_user_can('edit_page', $page) : current_user_can('edit_pages');
+            },
         ]);
         register_rest_route(self::NS, '/sources', [
             'methods' => 'POST',
@@ -104,6 +115,36 @@ final class Rest
             'published' => Store::has($id),
             'previewUrl' => Front::previewUrl($id),
         ]);
+    }
+
+    public static function renderBlock(WP_REST_Request $r): WP_REST_Response|WP_Error
+    {
+        $body = $r->get_json_params();
+        $body = is_array($body) ? $body : [];
+        $source = sanitize_key((string) ($body['source'] ?? 'ui8kit'));
+        $catalog = Sources::catalog($source);
+        if ($catalog === null) {
+            return new WP_Error('wpfb_source', __('Unknown source.', 'wpfasty-builder'), ['status' => 404]);
+        }
+        $input = [
+            'id' => $body['id'] ?? null,
+            'block' => $body['block'] ?? null,
+            'variant' => $body['variant'] ?? null,
+            'props' => is_array($body['props'] ?? null) ? $body['props'] : [],
+            'bindings' => is_array($body['bindings'] ?? null) ? $body['bindings'] : [],
+        ];
+        $out = Fragment::render(
+            $catalog,
+            $source,
+            $input,
+            array_keys(DataSources::all()),
+            [DataSources::class, 'resolve'],
+            static fn (string $template, array $props): string => Front::block($source, $template, $props),
+        );
+        if ($out === null) {
+            return new WP_Error('wpfb_block', __('Unknown block or variant.', 'wpfasty-builder'), ['status' => 400]);
+        }
+        return new WP_REST_Response($out);
     }
 
     public static function importSource(WP_REST_Request $r): WP_REST_Response|WP_Error
