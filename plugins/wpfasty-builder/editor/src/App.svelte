@@ -5,7 +5,8 @@
   import { bindableOf, blockConfig } from "./fields/schema";
   import Icon from "./Icon.svelte";
   import Overlay from "./Overlay.svelte";
-  import { Braces, ChevronDown, ChevronUp, Copy, GripVertical, Monitor, RotateCcw, Smartphone, Trash2 } from "./icons";
+  import { EditorStore } from "./store.svelte";
+  import { Braces, ChevronDown, ChevronUp, Copy, GripVertical, Monitor, Redo2, RotateCcw, Smartphone, Trash2, Undo2 } from "./icons";
   import { api } from "./api";
   import type { Binding, Box, Catalog, Config, Item, Json, Obj, RecordField } from "./types";
   import { clone, getPath, human, isObj, kindOf, merge, newId, setPath } from "./util";
@@ -16,9 +17,7 @@
   const client = api(config);
 
   let catalog = $state<Catalog | null>(null);
-  let items = $state<Item[]>([]);
-  let selected = $state<string | null>(null);
-  let hovered = $state<string | null>(null);
+  const store = new EditorStore();
   let source = $state(config.source || "ui8kit");
   let collection = $state(config.collection || "");
   let previewUrl = $state("");
@@ -43,8 +42,8 @@
   const filtered = $derived(
     (catalog?.blocks ?? []).filter((b) => !search || `${b.title} ${b.id} ${b.group}`.toLowerCase().includes(search.toLowerCase())),
   );
-  const current = $derived(items.find((i) => i.id === selected) ?? null);
-  const currentIndex = $derived(items.findIndex((i) => i.id === selected));
+  const current = $derived(store.current);
+  const currentIndex = $derived(store.index);
   const currentBlock = $derived(current ? blocks.get(current.block) ?? null : null);
   const currentVariant = $derived(currentBlock?.variants.find((v) => v.id === current?.variant) ?? null);
   const currentProps = $derived(current && currentVariant ? merge(currentVariant.props, current.props) : {});
@@ -80,7 +79,7 @@
       const meta = (layout.layout?.metadata ?? {}) as Obj;
       const saved = (getPath(meta, ["blocks", "value"]) ?? []) as unknown as Item[];
       if (!config.source && typeof getPath(meta, ["source", "value"]) === "string") source = getPath(meta, ["source", "value"]) as string;
-      items = saved.map((b) => ({ ...b, props: isObj(b.props) ? b.props : {}, bindings: isObj(b.bindings) ? b.bindings : {} }));
+      store.load(saved.map((b) => ({ ...b, props: isObj(b.props) ? b.props : {}, bindings: isObj(b.bindings) ? b.bindings : {} })));
       previewUrl = layout.previewUrl;
       published = layout.published;
       await loadCatalog();
@@ -104,18 +103,28 @@
   /**
    * The one way the layout changes: `next` replaces the blocks; `ids` are the blocks whose HTML changed. The preview
    * updates in place (those blocks re-rendered by POST /render-block, wrappers re-ordered) and the draft is saved
-   * after a short pause; `reload` (bulk replace) reloads the preview after the save instead.
+   * after a short pause; `reload` (bulk replace) reloads the preview after the save instead. Each commit is one
+   * undo step; commits with the same `key` within a second (typing in one field) are one step.
    */
-  function commit(next: Item[], ids: string[] = [], reload = false) {
-    items = next;
+  function commit(next: Item[], ids: string[] = [], reload = false, key: string | null = null) {
+    store.commit(next, key);
     changed(ids, reload);
+  }
+
+  function undo() {
+    const ids = store.undo();
+    if (ids) changed(ids);
+  }
+
+  function redo() {
+    const ids = store.redo();
+    if (ids) changed(ids);
   }
 
   function changed(ids: string[] = [], reload = false) {
     const fresh = reload ? null : syncPreview();
     if (fresh === null) reloadAfterSave = true;
     else ids.filter((id) => !fresh.includes(id)).forEach(renderBlock);
-    if (selected && !items.some((i) => i.id === selected)) selected = null;
     status = "saving";
     clearTimeout(timer);
     timer = setTimeout(() => save(false), 600);
@@ -126,7 +135,7 @@
 
   /** re-renders one block of the preview in place; the latest request per block wins */
   async function renderBlock(id: string) {
-    const it = items.find((i) => i.id === id);
+    const it = store.items.find((i) => i.id === id);
     if (!it) return;
     const n = (renderSeq.get(id) ?? 0) + 1;
     renderSeq.set(id, n);
@@ -164,7 +173,7 @@
     const fresh: string[] = [];
     const have = new Map([...page.querySelectorAll<HTMLElement>(":scope > [data-wpfb-block]")].map((el) => [el.dataset.wpfbBlock ?? "", el]));
     let prev: Element | null = null;
-    for (const it of items) {
+    for (const it of store.items) {
       let el = have.get(it.id);
       have.delete(it.id);
       if (!el) {
@@ -186,7 +195,7 @@
     clearTimeout(timer);
     status = "saving";
     try {
-      const res = await client.save(source, collection, clone(items), publish);
+      const res = await client.save(source, collection, clone(store.items), publish);
       published = res.published;
       previewUrl = res.previewUrl;
       const warn = res.issues.filter((i) => !i.code.startsWith("core."));
@@ -215,42 +224,42 @@
     return item;
   }
 
-  function add(block: string, variant: string, at = items.length) {
-    const item = makeItem(block, variant, items);
-    commit([...items.slice(0, at), item, ...items.slice(at)], [item.id]);
+  function add(block: string, variant: string, at = store.items.length) {
+    const item = makeItem(block, variant, store.items);
+    commit([...store.items.slice(0, at), item, ...store.items.slice(at)], [item.id]);
     select(item.id, true);
   }
 
   /** moves the block at `from` to the insertion point `to` (an index of the list before the move) */
   function move(from: number, to: number) {
-    if (from < 0 || from === to || from + 1 === to || to < 0 || to > items.length) return;
-    const next = [...items];
+    if (from < 0 || from === to || from + 1 === to || to < 0 || to > store.items.length) return;
+    const next = [...store.items];
     const [it] = next.splice(from, 1);
     next.splice(to > from ? to - 1 : to, 0, it);
     commit(next);
-    if (it.id === selected) requestAnimationFrame(() => reveal(it.id));
+    if (it.id === store.selected) requestAnimationFrame(() => reveal(it.id));
   }
 
   function remove(id: string) {
-    commit(items.filter((i) => i.id !== id));
+    commit(store.items.filter((i) => i.id !== id));
   }
 
   function duplicate(id: string) {
-    const i = items.findIndex((x) => x.id === id);
+    const i = store.items.findIndex((x) => x.id === id);
     if (i < 0) return;
-    const copy = { ...clone(items[i]), id: newId(items, items[i].block) };
-    commit([...items.slice(0, i + 1), copy, ...items.slice(i + 1)], [copy.id]);
+    const copy = { ...clone(store.items[i]), id: newId(store.items, store.items[i].block) };
+    commit([...store.items.slice(0, i + 1), copy, ...store.items.slice(i + 1)], [copy.id]);
     select(copy.id, true);
   }
 
-  function update(fn: (it: Item) => Item) {
+  function update(fn: (it: Item) => Item, key: string | null = null) {
     if (!current) return;
     const id = current.id;
-    commit(items.map((it) => (it.id === id ? fn(clone(it)) : it)), [id]);
+    commit(store.items.map((it) => (it.id === id ? fn(clone(it)) : it)), [id], false, key && `${id}:${key}`);
   }
 
   function setProp(path: string[], value: Json | undefined) {
-    update((it) => ({ ...it, props: setPath(it.props, path, value) }));
+    update((it) => ({ ...it, props: setPath(it.props, path, value) }), `prop:${path.join(".")}`);
   }
 
   function setBinding(path: string, b: Binding | null) {
@@ -274,10 +283,10 @@
   }
 
   function usePage(page: NonNullable<Catalog["collection"]>["pages"] extends (infer P)[] | undefined ? P : never) {
-    if (items.length && !confirm("Replace the blocks of this page with the template page?")) return;
+    if (store.items.length && !confirm("Replace the blocks of this page with the template page?")) return;
     const next: Item[] = [];
     for (const b of page.blocks) next.push({ ...makeItem(b.block, b.variant, next), props: clone(b.props) });
-    selected = null;
+    store.selected = null;
     commit(next, [], true);
   }
 
@@ -291,7 +300,7 @@
   }
 
   function select(id: string | null, scroll = false) {
-    selected = id;
+    store.selected = id;
     advancedError = "";
     if (scroll && id) requestAnimationFrame(() => reveal(id));
   }
@@ -305,8 +314,22 @@
     if (r.top < 0 || r.top > win.innerHeight - 48) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  /** text controls keep their own (native) undo while focused; everywhere else Ctrl/Cmd+Z undoes the layout */
+  const typing = (t: EventTarget | null) =>
+    t instanceof Element && !!t.closest("textarea, select, [contenteditable], input:not([type=checkbox], [type=radio], [type=button], [type=range])");
+
   function keydown(e: KeyboardEvent) {
-    if (e.key === "Escape" && selected && !(e.target instanceof HTMLElement && e.target.closest("input, textarea, select"))) select(null);
+    const mod = e.ctrlKey || e.metaKey;
+    if (mod && !e.altKey && !typing(e.target)) {
+      const k = e.key.toLowerCase();
+      if (k === "z" || k === "y") {
+        e.preventDefault();
+        if (k === "y" || e.shiftKey) redo();
+        else undo();
+        return;
+      }
+    }
+    if (e.key === "Escape" && store.selected && !(e.target instanceof HTMLElement && e.target.closest("input, textarea, select"))) select(null);
   }
 
   // ---- drag and drop (pointer events, no library): palette → list/preview, list handle or overlay grip → list/preview
@@ -362,7 +385,7 @@
     if (frame && inside(frame.getBoundingClientRect())) {
       dropIn = "frame";
       const top = frame.getBoundingClientRect().top;
-      return indexBy(items.map((it) => {
+      return indexBy(store.items.map((it) => {
         const r = wrapper(it.id)?.getBoundingClientRect();
         return r ? { top: r.top + top, bottom: r.bottom + top } : { top: -1, bottom: -1 };
       }), y);
@@ -394,17 +417,17 @@
   }
 
   function measure() {
-    selBox = boxOf(selected);
-    hoverBox = drag || hovered === selected ? null : boxOf(hovered);
+    selBox = boxOf(store.selected);
+    hoverBox = drag || store.hovered === store.selected ? null : boxOf(store.hovered);
     if (drag && dropIn === "frame" && dropAt !== null) {
-      const at = items[dropAt] ? boxOf(items[dropAt].id) : boxOf(items[items.length - 1]?.id ?? null);
-      dropY = at ? (items[dropAt] ? at.top : at.top + at.height) : 0;
+      const at = store.items[dropAt] ? boxOf(store.items[dropAt].id) : boxOf(store.items[store.items.length - 1]?.id ?? null);
+      dropY = at ? (store.items[dropAt] ? at.top : at.top + at.height) : 0;
     } else dropY = null;
   }
 
   $effect(() => {
-    void selected;
-    void hovered;
+    void store.selected;
+    void store.hovered;
     void device;
     schedule();
   });
@@ -420,9 +443,9 @@
     }, true);
     doc.addEventListener("submit", (e) => e.preventDefault(), true);
     doc.addEventListener("mouseover", (e) => {
-      hovered = (e.target as HTMLElement).closest?.("[data-wpfb-block]")?.getAttribute("data-wpfb-block") ?? null;
+      store.hovered = (e.target as HTMLElement).closest?.("[data-wpfb-block]")?.getAttribute("data-wpfb-block") ?? null;
     });
-    doc.documentElement.addEventListener("mouseleave", () => (hovered = null));
+    doc.documentElement.addEventListener("mouseleave", () => (store.hovered = null));
     doc.addEventListener("keydown", keydown);
     win.addEventListener("scroll", schedule, { passive: true });
     win.addEventListener("resize", schedule);
@@ -443,6 +466,10 @@
       {#if renderMs !== null && status !== "error"}<span class="wpfb-muted"> · block updated in {renderMs} ms</span>{/if}
     </div>
     <div class="wpfb-actions">
+      <div class="wpfb-history" role="group" aria-label="History">
+        <button type="button" class="wpfb-icon" title="Undo (Ctrl+Z)" aria-label="Undo" aria-keyshortcuts="Control+Z Meta+Z" disabled={!store.canUndo} onclick={undo}><Icon icon={Undo2} /></button>
+        <button type="button" class="wpfb-icon" title="Redo (Ctrl+Shift+Z)" aria-label="Redo" aria-keyshortcuts="Control+Shift+Z Meta+Shift+Z Control+Y" disabled={!store.canRedo} onclick={redo}><Icon icon={Redo2} /></button>
+      </div>
       <div class="wpfb-seg" role="group" aria-label="Preview width">
         <button type="button" class:is-on={device === "desktop"} aria-pressed={device === "desktop"} onclick={() => (device = "desktop")}><Icon icon={Monitor} /> Desktop</button>
         <button type="button" class:is-on={device === "mobile"} aria-pressed={device === "mobile"} onclick={() => (device = "mobile")}><Icon icon={Smartphone} /> Mobile</button>
@@ -486,7 +513,7 @@
                   <li>
                     <button type="button" class="wpfb-variant" title="Drag onto the page or click to add"
                       onpointerdown={(e) => pointerDown(e, { kind: "new", block: b.id, variant: v.id, label: `${b.title} · ${human(v.id)}` })}
-                      onclick={() => { if (!drag) add(b.id, v.id, selected ? currentIndex + 1 : items.length); }}>
+                      onclick={() => { if (!drag) add(b.id, v.id, store.selected ? currentIndex + 1 : store.items.length); }}>
                       {human(v.id)}
                     </button>
                   </li>
@@ -505,39 +532,39 @@
             <iframe bind:this={frame} src={frameSrc} title="Page preview" onload={framed}></iframe>
           {/key}
           <Overlay hover={hoverBox} selected={selBox} drop={dropY} label={current ? `${titleOf(current)} · ${human(current.variant)}` : ""}
-            first={currentIndex <= 0} last={currentIndex === items.length - 1}
+            first={currentIndex <= 0} last={currentIndex === store.items.length - 1}
             onup={() => move(currentIndex, currentIndex - 1)} ondown={() => move(currentIndex, currentIndex + 2)}
             onduplicate={() => current && duplicate(current.id)} onremove={() => current && remove(current.id)}
             ondragstart={(e) => current && pointerDown(e, { kind: "move", from: currentIndex, label: titleOf(current) })} />
         </div>
       {/if}
-      {#if items.length === 0 && status !== "loading"}
+      {#if store.items.length === 0 && status !== "loading"}
         <p class="wpfb-empty">Drag a block from the left, or pick a template page.</p>
       {/if}
     </section>
 
     <aside class="wpfb-inspector" aria-label="Structure and properties">
       <h2>Structure</h2>
-      <ol class="wpfb-structure" bind:this={list} onmouseleave={() => (hovered = null)}>
-        {#each items as it, i (it.id)}
+      <ol class="wpfb-structure" bind:this={list} onmouseleave={() => (store.hovered = null)}>
+        {#each store.items as it, i (it.id)}
           {#if dropIn === "list" && dropAt === i}<li class="wpfb-drop" aria-hidden="true"></li>{/if}
-          <li data-index={i} class:is-selected={selected === it.id} class:is-hover={hovered === it.id} onmouseenter={() => (hovered = it.id)}>
+          <li data-index={i} class:is-selected={store.selected === it.id} class:is-hover={store.hovered === it.id} onmouseenter={() => (store.hovered = it.id)}>
             <button type="button" class="wpfb-handle" aria-label="Drag {titleOf(it)} to reorder"
               onpointerdown={(e) => pointerDown(e, { kind: "move", from: i, label: titleOf(it) })}><Icon icon={GripVertical} /></button>
-            <button type="button" class="wpfb-item" aria-current={selected === it.id} title="Alt+↑ / Alt+↓ to move"
+            <button type="button" class="wpfb-item" aria-current={store.selected === it.id} title="Alt+↑ / Alt+↓ to move"
               onclick={() => select(it.id, true)}
               onkeydown={(e) => { if (e.altKey && e.key === "ArrowUp") { e.preventDefault(); move(i, i - 1); } if (e.altKey && e.key === "ArrowDown") { e.preventDefault(); move(i, i + 2); } }}>
               {titleOf(it)} <span class="wpfb-muted">{human(it.variant)}</span>
             </button>
             <button type="button" class="wpfb-icon" aria-label="Move up" disabled={i === 0} onclick={() => move(i, i - 1)}><Icon icon={ChevronUp} /></button>
-            <button type="button" class="wpfb-icon" aria-label="Move down" disabled={i === items.length - 1} onclick={() => move(i, i + 2)}><Icon icon={ChevronDown} /></button>
+            <button type="button" class="wpfb-icon" aria-label="Move down" disabled={i === store.items.length - 1} onclick={() => move(i, i + 2)}><Icon icon={ChevronDown} /></button>
           </li>
         {/each}
-        {#if dropIn === "list" && dropAt === items.length}<li class="wpfb-drop" aria-hidden="true"></li>{/if}
+        {#if dropIn === "list" && dropAt === store.items.length}<li class="wpfb-drop" aria-hidden="true"></li>{/if}
       </ol>
 
       {#if current && currentBlock}
-        <div class="wpfb-props">
+        <div class="wpfb-props" onfocusout={() => store.seal()}>
           <div class="wpfb-props-head">
             <h2>{currentBlock.title}</h2>
             <div class="wpfb-tools" role="toolbar" aria-label="Block">
