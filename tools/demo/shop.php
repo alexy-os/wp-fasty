@@ -3,7 +3,13 @@
 require __DIR__ . '/common.php';
 
 wpfasty_demo_cleanup_defaults();
-update_option('blogname', 'Latte Shop');
+// The active shop child (latte-shop or a generated twin such as latte-shop-twig): its name and its Front class.
+$theme = wp_get_theme();
+$front = str_replace(' ', '', (string) $theme->get('Name')) . '\\Front';
+if (!class_exists($front)) {
+    $front = 'LatteShop\\Front';
+}
+update_option('blogname', (string) $theme->get('Name'));
 update_option('blogdescription', 'Everyday goods, simply made');
 
 $cats = [];
@@ -48,11 +54,11 @@ foreach ($products as [$slug, $title, $cat, $price, $sale, $sku, $stock, $img]) 
     }
 }
 
-LatteShop\Front::ensurePages();
+$front::ensurePages();
 $home = wpfasty_demo_post('home', [
     'post_type' => 'page',
     'post_title' => 'Everyday goods, simply made.',
-    'post_excerpt' => 'Small-batch kitchen and home essentials. A WooCommerce-free demo store built on Latte + UI8Kit.',
+    'post_excerpt' => 'Small-batch kitchen and home essentials. A WooCommerce-free demo store built on ' . ucfirst(get_template()) . ' + UI8Kit.',
     'post_content' => '',
 ]);
 $hero = wpfasty_demo_image('shop-hero-table', 1200, 900);
@@ -64,7 +70,7 @@ update_option('page_on_front', $home);
 $about = wpfasty_demo_post('about', ['post_type' => 'page', 'post_title' => 'About', 'post_content' => wpfasty_demo_lorem(2, false)]);
 
 wpfasty_demo_menu('Primary', 'primary', [['Shop', get_post_type_archive_link('product')], ['Kitchen', get_term_link($cats['Kitchen'])], ['Home', get_term_link($cats['Home'])], ['About', get_permalink($about)]]);
-wpfasty_demo_menu('Footer', 'footer', [['Shop', get_post_type_archive_link('product')], ['Cart', LatteShop\Front::pageUrl('cart')], ['About', get_permalink($about)]]);
+wpfasty_demo_menu('Footer', 'footer', [['Shop', get_post_type_archive_link('product')], ['Cart', $front::pageUrl('cart')], ['About', get_permalink($about)]]);
 flush_rewrite_rules();
 
-wpfasty_demo_log('Latte Shop demo content ready.');
+wpfasty_demo_log($theme->get('Name') . ' demo content ready.');

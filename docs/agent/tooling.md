@@ -40,7 +40,7 @@ job `wordpress` (WP 7.1.3 + MariaDB: Theme Check 20260901 on the unpacked zip an
 | Theme Check | see [wporg-theme-review.md](wporg-theme-review.md#running-theme-check-locally-verified) | – (needs WP) |
 
 ## Previews
-`playground/{press,folio,shop}.json` blueprints; zips are published base64 in the secret gist
+`playground/{press,folio,shop,shop-twig}.json` blueprints (`shop-twig`: Twig twin of latte-shop on `twig.zip`); zips are published base64 in the secret gist
 `alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc`; links in `playground/urls.txt`. See `playground/README.md`.
 
 ## Theme Check

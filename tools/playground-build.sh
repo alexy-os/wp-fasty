@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Build WordPress Playground preview artifacts into playground/:
 #   latte.zip (parent, vendored), latte-press.zip, latte-folio.zip, latte-shop.zip, wpfasty-types.zip,
-#   wpfasty-builder.zip, demo.zip (seeders, images, builder landings)
+#   wpfasty-builder.zip, demo.zip (seeders, images, builder landings);
+#   Twig shop: twig.zip (Twig parent, no Latte), latte-shop-twig.zip (generated Twig twin of latte-shop, only .html.twig
+#   views), wpfasty-builder-twig.zip (Twig runtime only)
 # Blueprints (playground/*.json) install them straight from the `improved` branch.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -10,6 +12,10 @@ cd "$ROOT"
 
 bun run theme:pack -- latte >/dev/null 2>&1
 cp dist/latte.zip "$OUT/latte.zip"
+bun run theme:pack -- latte --engine twig >/dev/null 2>&1
+cp dist/twig.zip "$OUT/twig.zip"
+# Files on disk that git does not track (stale build leftovers) never go into a preview zip.
+untracked() { git ls-files --others --exclude-standard -- "$1" | sed "s#^$1/##"; }
 
 for t in latte-press latte-folio latte-shop; do
   rm -f "$OUT/$t.zip"
@@ -22,7 +28,19 @@ rm -f "$OUT/wpfasty-types.zip"
 
 # Page builder (wp-admin only; the editor sources and node_modules stay out, the built assets go in).
 rm -f "$OUT/wpfasty-builder.zip"
-(cd plugins && zip -qr "$OUT/wpfasty-builder.zip" wpfasty-builder -x "wpfasty-builder/editor/*" "wpfasty-builder/primitives/*/ui8kit.lock.json" "wpfasty-builder/primitives/*/ui8kit.config.json")
+BUILDER_X=("wpfasty-builder/editor/*" "wpfasty-builder/primitives/*/ui8kit.lock.json" "wpfasty-builder/primitives/*/ui8kit.config.json")
+while read -r f; do [ -n "$f" ] && BUILDER_X+=("$f"); done < <(untracked plugins)
+(cd plugins && zip -qr "$OUT/wpfasty-builder.zip" wpfasty-builder -x "${BUILDER_X[@]}")
+# Twig build of the builder: the Latte runtime's bundled source and primitives stay out (ADR-001, K7).
+rm -f "$OUT/wpfasty-builder-twig.zip"
+(cd plugins && zip -qr "$OUT/wpfasty-builder-twig.zip" wpfasty-builder -x "${BUILDER_X[@]}" "wpfasty-builder/sources/ui8kit/latte/*" "wpfasty-builder/primitives/latte/*")
+
+# Twig twin of latte-shop (tools/matrix/engine-variants.ts → theme:package): child zip with Template: twig.
+bun tools/matrix/engine-variants.ts >/dev/null
+TWIN="$(mktemp -d)"
+bun run theme:package dist/answers-matrix/manifest-latte-shop-twig.json --out "$TWIN" >/dev/null
+cp "$TWIN/latte-shop-twig.zip" "$OUT/latte-shop-twig.zip"
+rm -rf "$TWIN"
 
 STAGE="$(mktemp -d)"
 mkdir -p "$STAGE/wpfasty-demo/images"
@@ -49,6 +67,6 @@ rm -rf "$STAGE"
 ls -la "$OUT"/*.zip
 
 # Inline-blueprint preview URLs (playground/urls.txt).
-for t in press folio shop; do
+for t in press folio shop shop-twig; do
   printf '%s https://playground.wordpress.net/#%s\n' "$t" "$(php -r 'echo rawurlencode(json_encode(json_decode(file_get_contents($argv[1])), JSON_UNESCAPED_SLASHES));' "$OUT/$t.json")"
 done > "$OUT/urls.txt"
