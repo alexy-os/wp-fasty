@@ -22,3 +22,5 @@ export interface Catalog {
   dataSources: DataSource[]; meta: Obj; collection: Collection | null; blocks: BlockSpec[];
 }
 export interface Issue { code: string; path: string; message: string }
+/** a rectangle in preview viewport coordinates (= overlay coordinates) */
+export interface Box { top: number; left: number; width: number; height: number }

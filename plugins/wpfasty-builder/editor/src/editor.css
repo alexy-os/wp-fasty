@@ -89,3 +89,21 @@
 .wpfb-props { margin-top: 16px; border-top: 1px solid var(--wpfb-line); padding-top: 16px; }
 .wpfb-props-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 8px; }
 .wpfb-ghost { position: fixed; z-index: 100000; pointer-events: none; background: var(--wpfb-accent); color: var(--wpfb-on-accent); padding: 4px 8px; border-radius: var(--wpfb-radius); font-size: 12px; }
+
+/* selection overlay over the preview (drawn here, nothing is injected into the page) */
+.wpfb-overlay { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; }
+.wpfb-box { position: absolute; box-sizing: border-box; pointer-events: none; }
+.wpfb-box.is-hover { border: 1px dashed var(--wpfb-accent); }
+.wpfb-box.is-selected { border: 2px solid var(--wpfb-accent); }
+.wpfb-tag { position: absolute; height: 32px; line-height: 32px; padding: 0 8px; background: var(--wpfb-accent); color: var(--wpfb-on-accent); font-size: 12px; font-weight: 600; border-radius: var(--wpfb-radius) var(--wpfb-radius) 0 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; box-sizing: border-box; }
+.wpfb-tag.is-inside, .wpfb-toolbar.is-inside { border-radius: 0 0 var(--wpfb-radius) var(--wpfb-radius); }
+.wpfb-toolbar { position: absolute; transform: translateX(-100%); display: flex; height: 32px; background: var(--wpfb-text); border-radius: var(--wpfb-radius) var(--wpfb-radius) 0 0; pointer-events: auto; box-shadow: var(--wpfb-shadow); }
+.wpfb-tool { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 0; background: none; color: var(--wpfb-on-accent); cursor: pointer; }
+.wpfb-tool:hover:not(:disabled) { background: var(--wpfb-accent); }
+.wpfb-tool:disabled { opacity: 0.4; cursor: default; }
+.wpfb-tool.wpfb-grip { cursor: grab; touch-action: none; }
+.wpfb-dropline { position: absolute; left: 0; right: 0; height: 2px; background: var(--wpfb-accent); box-shadow: 0 0 0 1px var(--wpfb-surface); }
+.wpfb-tools { display: flex; gap: 0; }
+.wpfb-icon.is-on { color: var(--wpfb-accent); background: var(--wpfb-accent-soft); }
+.wpfb-seg button { display: inline-flex; align-items: center; gap: 4px; }
+.wpfb-svg { flex: none; display: block; }
