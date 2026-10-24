@@ -1,5 +1,7 @@
 import { mount } from "svelte";
 import App from "./App.svelte";
+import "./tokens.css";
+import "./editor.css";
 import type { Config } from "./types";
 
 declare global {

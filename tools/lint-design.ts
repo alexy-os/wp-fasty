@@ -5,6 +5,7 @@
  *  - security: raw array values must not be passed as primitive `children`
  *  - layout spacing on an 8px grid: odd spacing steps (1,3,5,7… = 4px multiples) are allowed
  *    only on control lines (button/input/select/label/badge/textarea/option).
+ *  - the builder editor chrome (plugins/wpfasty-builder/editor/src): the same colour and grid rules on its CSS.
  */
 import { Glob } from "bun";
 
@@ -36,6 +37,31 @@ for (const pattern of ["themes/*/views/**/*.latte", "themes/*/views/**/*.twig", 
     });
   }
 }
+// Builder editor chrome (plugins/wpfasty-builder/editor/src): colours only via var(--wpfb-*) tokens (tokens.css holds
+// the raw values), spacing on the 8px grid; 4px steps only in control rules (buttons, inputs, labels, chips, toolbars).
+const editorSpacing = /(?:^|[;{\s])(padding|margin|gap|row-gap|column-gap|inset|top|right|bottom|left)(?:-[a-z]+)?\s*:\s*([^;}]+)/g;
+const editorControl = /(button|input|select|textarea|label|legend|option|seg|icon|handle|reset|variant|ghost|check|field|toolbar|tool|item-head|item-title|map-row|drop|chip|badge|tab|summary)/i;
+for (const pattern of ["plugins/wpfasty-builder/editor/src/**/*.css", "plugins/wpfasty-builder/editor/src/**/*.svelte"]) {
+  for await (const rel of new Glob(pattern).scan(root)) {
+    if (rel.endsWith("/tokens.css")) continue;
+    let text = await Bun.file(root + rel).text();
+    if (rel.endsWith(".svelte")) text = (text.match(/<style[^>]*>[\s\S]*?<\/style>/g) ?? []).join("\n");
+    text.split("\n").forEach((line, i) => {
+      const where = `${rel}:${i + 1}`;
+      if (rawColor.test(line.replace(/var\(--[^)]*\)/g, ""))) errors.push(`${where} raw color — use a var(--wpfb-*) token (editor/src/tokens.css)`);
+      const selector = line.includes("{") ? line.slice(0, line.indexOf("{")) : "";
+      for (const m of line.matchAll(editorSpacing)) {
+        for (const px of m[2]!.matchAll(/(-?\d+(?:\.\d+)?)px/g)) {
+          const n = Math.abs(Number(px[1]));
+          if (n === 0) continue;
+          if (n % 4 !== 0) errors.push(`${where} ${m[1]} ${px[0]} — off the 4px grid`);
+          else if (n % 8 !== 0 && !editorControl.test(selector)) errors.push(`${where} ${m[1]} ${px[0]} outside a control — use the 8px grid`);
+        }
+      }
+    });
+  }
+}
+
 if (errors.length) {
   console.error(errors.join("\n"));
   console.error(`\n${errors.length} design-policy violation(s)`);

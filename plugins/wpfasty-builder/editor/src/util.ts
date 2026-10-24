@@ -1,4 +1,4 @@
-import type { BlockSpec, Item, Json, Obj, PropSpec } from "./types";
+import type { BlockSpec, Item, Json, Obj } from "./types";
 
 export const isObj = (v: unknown): v is Obj => typeof v === "object" && v !== null && !Array.isArray(v);
 export const clone = <T>(v: T): T => JSON.parse(JSON.stringify(v));
@@ -27,13 +27,6 @@ export function getPath(o: Json | undefined, path: string[]): Json | undefined {
   let cur: Json | undefined = o;
   for (const k of path) cur = isObj(cur) ? cur[k] : undefined;
   return cur;
-}
-
-/** "a" | "b" -> ["a", "b"]; null when the type is not a union of string literals */
-export function enumOf(type: PropSpec["type"]): string[] | null {
-  const ts = typeof type === "string" ? type : type.ts ?? "";
-  const m = ts.match(/^\s*"[^"]*"(\s*\|\s*"[^"]*")+\s*$/);
-  return m ? [...ts.matchAll(/"([^"]*)"/g)].map((x) => x[1]) : null;
 }
 
 export function kindOf(block: BlockSpec, data: string): string {

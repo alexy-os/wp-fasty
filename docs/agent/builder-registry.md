@@ -23,6 +23,9 @@ v2.0.0 registry needs a builder plugin with `WPFastyBuilder\Primitives`; v1.0.0 
 verified locally with `bun run registry:build <out>` + `registry:verify`; `latte` blocks.zip sha256
 `ea9940b3db72c62055c0c1f26f4f10b1ba55da216963779ca36e61c501aed8d4`, `twig` `1b33e87f49b236ed5af788b14f2c1fed5eac64053293f4ef56727320411f35d0`.
 Until the owner publishes v2.0.0 (and `latest`), the `Published registries` workflow reports a mismatch (it never blocks CI).
+Before publication the v2.0.0 catalogs gained `records` (the field lists of the record types the props name, from the
+codegen-x specs of `source.commit`, `bun tools/builder/catalog-records.ts`; the editor builds typed fields from them);
+blocks.zip and its sha256 are unchanged.
 
 Workflow `Published registries` (`.github/workflows/registry-published.yml`, separate from CI, never blocks it; after
 each green CI run on main, daily and on demand) compares the published `v<version>/` and `latest/` byte for byte
@@ -37,6 +40,8 @@ both published registries into a real WordPress (latte-shop on latte.zip, latte-
   - `"runtime": "latte" | "twig"`, `"templates"` = the same value
   - `"version"`: semver of the registry (= directory name without `v`)
   - `"source": {repo, commit}` — the codegen-x commit both runtimes were generated from
+  - `"records": {<Name>: [{name, type, optional?, docs?, default?}]}` — record types the props name (`Stat[]`,
+    `LinkActions`…), transitively; `type` is the TS type string (editor fields: `editor/src/fields/schema.ts`)
   - `"archive": {"file": "blocks.zip", "bytes": n, "sha256": "…"}`
   - variant templates in the runtime's extension: `blocks/<name>.latte` or `blocks/<name>.html.twig`
 - `blocks.zip` — `blocks/` and `ui/` of that runtime only (`.latte` or `.twig`, `.json`, `.md`; no PHP). The PHP

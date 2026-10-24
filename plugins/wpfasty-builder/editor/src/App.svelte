@@ -1,9 +1,11 @@
 <script lang="ts">
   import { onMount, untrack } from "svelte";
-  import Field from "./Field.svelte";
+  import FieldRenderer from "./fields/FieldRenderer.svelte";
+  import type { FieldCtx } from "./fields/context";
+  import { bindableOf, blockConfig } from "./fields/schema";
   import { api } from "./api";
-  import type { BlockSpec, Catalog, Config, Item, Json, Obj } from "./types";
-  import { clone, enumOf, getPath, human, isObj, kindOf, merge, newId, setPath } from "./util";
+  import type { Binding, Catalog, Config, Item, Json, Obj, RecordField } from "./types";
+  import { clone, getPath, human, isObj, kindOf, merge, newId, setPath } from "./util";
 
   let { config: initial }: { config: Config } = $props();
   // the config comes once from wp_add_inline_script and never changes
@@ -38,6 +40,21 @@
   const currentBlock = $derived(current ? blocks.get(current.block) ?? null : null);
   const currentVariant = $derived(currentBlock?.variants.find((v) => v.id === current?.variant) ?? null);
   const currentProps = $derived(current && currentVariant ? merge(currentVariant.props, current.props) : {});
+  const records = $derived((catalog?.meta.records ?? {}) as unknown as Record<string, RecordField[]>);
+  const blockCfg = $derived(currentBlock ? blockConfig(currentBlock, records) : null);
+  let advanced = $state(false);
+  let advancedError = $state("");
+  const fieldCtx = $derived<FieldCtx | null>(
+    current && currentBlock
+      ? {
+          overridden: (path) => getPath(current.props, path) !== undefined,
+          bindable: bindableOf(currentBlock, currentVariant ?? undefined),
+          bindings: current.bindings,
+          dataSources: catalog?.dataSources ?? [],
+          setBinding,
+        }
+      : null,
+  );
   const frameSrc = $derived(previewUrl ? `${previewUrl}&wpfb_r=${reloadKey}` : "");
 
   onMount(async () => {
@@ -214,8 +231,24 @@
     update((it) => ({ ...it, props: setPath(it.props, path, value) }));
   }
 
-  function overridden(path: string[]): boolean {
-    return current ? getPath(current.props, path) !== undefined : false;
+  function setBinding(path: string, b: Binding | null) {
+    update((it) => {
+      const bindings = { ...it.bindings };
+      if (b) bindings[path] = b;
+      else delete bindings[path];
+      return { ...it, bindings };
+    });
+  }
+
+  function commitAdvanced(text: string) {
+    try {
+      const v = JSON.parse(text);
+      if (!isObj(v)) throw new Error("the overrides must be a JSON object");
+      update((it) => ({ ...it, props: v }));
+      advancedError = "";
+    } catch (e) {
+      advancedError = (e as Error).message;
+    }
   }
 
   function usePage(page: NonNullable<Catalog["collection"]>["pages"] extends (infer P)[] | undefined ? P : never) {
@@ -327,9 +360,6 @@
 
   let device = $state<"desktop" | "mobile">("desktop");
 
-  function bindable(block: BlockSpec, variantId: string) {
-    return (block.variants.find((v) => v.id === variantId)?.bindings ?? []).map((b) => ({ path: b.path.join("."), kind: kindOf(block, b.data) }));
-  }
 </script>
 
 <div class="wpfb-app" class:is-dragging={drag !== null}>
@@ -443,41 +473,22 @@
           <div class="wpfb-row">
             <button type="button" class="button button-small" onclick={() => duplicate(current.id)}>Duplicate</button>
             <button type="button" class="button button-small" onclick={() => update((it) => ({ ...it, props: {} }))}>Reset texts</button>
+            <button type="button" class="button button-small" aria-pressed={advanced} onclick={() => (advanced = !advanced)}>Advanced (JSON)</button>
             <button type="button" class="button button-small wpfb-danger" onclick={() => remove(current.id)}>Remove</button>
           </div>
 
-          {#each bindable(currentBlock, current.variant) as bp (bp.path)}
-            {@const bound = current.bindings[bp.path]}
-            <fieldset class="wpfb-group wpfb-binding">
-              <legend>Data: {human(bp.path)} <span class="wpfb-muted">({bp.kind})</span></legend>
-              <label class="wpfb-field">
-                <span>Source</span>
-                <select value={bound?.source ?? ""} onchange={(e) => {
-                  const v = (e.currentTarget as HTMLSelectElement).value;
-                  update((it) => { const b = { ...it.bindings }; if (v) b[bp.path] = { source: v, limit: bound?.limit ?? 6 }; else delete b[bp.path]; return { ...it, bindings: b }; });
-                }}>
-                  <option value="">Sample data</option>
-                  {#each (catalog?.dataSources ?? []).filter((d) => d.kinds.includes(bp.kind)) as d (d.id)}<option value={d.id}>{d.label}</option>{/each}
-                </select>
-              </label>
-              {#if bound}
-                <label class="wpfb-field"><span>How many</span>
-                  <input type="number" min="1" max="24" value={bound.limit} onchange={(e) => update((it) => ({ ...it, bindings: { ...it.bindings, [bp.path]: { ...bound, limit: Number((e.currentTarget as HTMLInputElement).value) } } }))} />
-                </label>
-                <label class="wpfb-field"><span>Term slug (optional)</span>
-                  <input type="text" placeholder="e.g. design" value={bound.term ?? ""} onchange={(e) => update((it) => ({ ...it, bindings: { ...it.bindings, [bp.path]: { ...bound, term: (e.currentTarget as HTMLInputElement).value } } }))} />
-                </label>
-                {#if bound.source === "products"}
-                  <label class="wpfb-check"><input type="checkbox" checked={bound.sale === true} onchange={(e) => update((it) => { const b = { ...bound }; if ((e.currentTarget as HTMLInputElement).checked) b.sale = true; else delete b.sale; return { ...it, bindings: { ...it.bindings, [bp.path]: b } }; })} /> On sale only</label>
-                {/if}
-              {/if}
-            </fieldset>
-          {/each}
-
-          {#each currentBlock.props.filter((p) => p.name !== "id" && !current.bindings[p.name]) as p (p.name)}
-            <Field name={p.name} path={[p.name]} value={currentProps[p.name]} options={enumOf(p.type)} axes={currentBlock.axes}
-              docs={p.docs} {overridden} onchange={setProp} />
-          {/each}
+          {#if advanced}
+            <div class="wpfb-field wpfb-json">
+              <label for="wpfb-advanced">Overrides of the variant sample (JSON)</label>
+              <textarea id="wpfb-advanced" rows="16" spellcheck="false" value={JSON.stringify(current.props, null, 2)}
+                onchange={(e) => commitAdvanced(e.currentTarget.value)}></textarea>
+              {#if advancedError}<p class="wpfb-error">{advancedError}</p>{/if}
+            </div>
+          {:else if blockCfg && fieldCtx}
+            {#each Object.entries(blockCfg.fields) as [k, f] (k)}
+              <FieldRenderer field={f} path={[k]} value={currentProps[k]} onchange={setProp} ctx={fieldCtx} />
+            {/each}
+          {/if}
         </div>
       {:else}
         <p class="wpfb-muted">Select a block in the preview or in the list.</p>
@@ -489,62 +500,3 @@
     <div class="wpfb-ghost" style="left:{ghost.x + 12}px;top:{ghost.y + 12}px">{drag.label}</div>
   {/if}
 </div>
-
-<style>
-  /* editor chrome: every class is wpfb-prefixed, shared by App and Field */
-  :global {
-    #wpfooter { display: none; }
-    #wpbody-content { padding-bottom: 0; }
-    .wpfb-wrap { margin: 0 16px 0 0; }
-    .wpfb-app { --wpfb-line: #dcdcde; --wpfb-accent: #2271b1; display: flex; flex-direction: column; height: calc(100vh - 32px - 16px); min-height: 560px; margin: 8px 0; background: #fff; border: 1px solid var(--wpfb-line); }
-    .wpfb-app.is-dragging, .wpfb-app.is-dragging * { cursor: grabbing !important; user-select: none; }
-    .wpfb-app.is-dragging iframe { pointer-events: none; }
-    .wpfb-bar { display: flex; gap: 16px; align-items: center; padding: 8px 16px; border-bottom: 1px solid var(--wpfb-line); }
-    .wpfb-title { display: flex; flex-direction: column; min-width: 0; }
-    .wpfb-status { flex: 1; color: #50575e; font-size: 12px; white-space: pre-line; }
-    .wpfb-actions { display: flex; gap: 8px; align-items: center; }
-    .wpfb-seg { display: inline-flex; border: 1px solid var(--wpfb-line); border-radius: 4px; overflow: hidden; }
-    .wpfb-seg button { border: 0; background: #fff; padding: 4px 8px; cursor: pointer; }
-    .wpfb-seg button.is-on { background: var(--wpfb-accent); color: #fff; }
-    .wpfb-main { flex: 1; display: grid; grid-template-columns: 248px 1fr 320px; min-height: 0; }
-    .wpfb-palette, .wpfb-inspector { overflow: auto; padding: 16px; border-right: 1px solid var(--wpfb-line); }
-    .wpfb-inspector { border-right: 0; border-left: 1px solid var(--wpfb-line); }
-    .wpfb-inspector h2 { font-size: 13px; margin: 0 0 8px; }
-    .wpfb-canvas { position: relative; background: #f0f0f1; overflow: hidden; display: flex; justify-content: center; }
-    .wpfb-frame-wrap { width: 100%; height: 100%; }
-    .wpfb-frame-wrap.is-mobile { width: 390px; border-inline: 1px solid var(--wpfb-line); }
-    .wpfb-frame-wrap iframe { width: 100%; height: 100%; border: 0; background: #fff; display: block; }
-    .wpfb-empty { position: absolute; top: 40%; color: #50575e; }
-    .wpfb-field { display: flex; flex-direction: column; gap: 4px; margin: 0 0 8px; }
-    .wpfb-field > span, .wpfb-field > label, .wpfb-field > summary { font-size: 12px; color: #1d2327; }
-    .wpfb-field.is-set > label { font-weight: 600; }
-    .wpfb-check { display: flex; align-items: center; gap: 6px; font-size: 12px; margin: 0 0 8px; }
-    .wpfb-field input[type="text"], .wpfb-field input[type="number"], .wpfb-field select, .wpfb-field textarea, .wpfb-search { width: 100%; max-width: none; }
-    .wpfb-check { flex-direction: row; }
-    .wpfb-group { border: 1px solid var(--wpfb-line); border-radius: 4px; padding: 8px; margin: 0 0 8px; }
-    .wpfb-group legend { font-size: 12px; font-weight: 600; padding: 0 4px; }
-    .wpfb-json textarea { font-family: ui-monospace, monospace; font-size: 11px; }
-    .wpfb-muted { color: #646970; font-weight: 400; font-size: 12px; }
-    .wpfb-docs { color: #646970; font-size: 12px; margin: 0 0 8px; }
-    .wpfb-error { color: #b32d2e; }
-    .wpfb-danger { color: #b32d2e !important; border-color: #b32d2e !important; }
-    .wpfb-search { margin: 8px 0; }
-    .wpfb-pages { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 8px; }
-    .wpfb-pages p { width: 100%; margin: 0; }
-    .wpfb-blocks, .wpfb-variants, .wpfb-structure { list-style: none; margin: 0; padding: 0; }
-    .wpfb-block-head { width: 100%; display: flex; justify-content: space-between; background: none; border: 0; border-bottom: 1px solid #f0f0f1; padding: 8px 0; cursor: pointer; text-align: left; }
-    .wpfb-variants { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 0 8px; }
-    .wpfb-variant { border: 1px solid var(--wpfb-line); background: #f6f7f7; border-radius: 4px; padding: 4px 8px; cursor: grab; touch-action: none; font-size: 12px; }
-    .wpfb-variant:hover { border-color: var(--wpfb-accent); }
-    .wpfb-structure li { display: flex; align-items: center; gap: 4px; border: 1px solid var(--wpfb-line); border-radius: 4px; margin: 0 0 4px; background: #fff; }
-    .wpfb-structure li.is-selected { border-color: var(--wpfb-accent); box-shadow: inset 0 0 0 1px var(--wpfb-accent); }
-    .wpfb-structure li.wpfb-drop { height: 4px; border: 0; background: var(--wpfb-accent); }
-    .wpfb-handle { cursor: grab; border: 0; background: none; padding: 8px 4px; color: #646970; touch-action: none; }
-    .wpfb-item { flex: 1; text-align: left; border: 0; background: none; padding: 8px 0; cursor: pointer; }
-    .wpfb-icon { border: 0; background: none; cursor: pointer; padding: 4px; }
-    .wpfb-icon:disabled { opacity: 0.3; }
-    .wpfb-row { display: flex; gap: 4px; flex-wrap: wrap; margin: 0 0 8px; }
-    .wpfb-props { margin-top: 16px; border-top: 1px solid var(--wpfb-line); padding-top: 16px; }
-    .wpfb-ghost { position: fixed; z-index: 100000; pointer-events: none; background: var(--wpfb-accent); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
-  }
-</style>

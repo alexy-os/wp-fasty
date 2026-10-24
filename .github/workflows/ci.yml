@@ -94,10 +94,11 @@ jobs:
           bun run css:build
           git diff --exit-code -- themes/latte/assets/css
 
-      - name: Builder editor (Svelte 5, Vite IIFE) — svelte-check, build, committed assets must match
+      - name: Builder editor (Svelte 5, Vite IIFE) — svelte-check, field-type tests, build, committed assets must match
         run: |
           bun install --cwd plugins/wpfasty-builder/editor --frozen-lockfile
           bun run --cwd plugins/wpfasty-builder/editor check
+          bun run --cwd plugins/wpfasty-builder/editor test
           bun run --cwd plugins/wpfasty-builder/editor build
           git diff --exit-code -- plugins/wpfasty-builder/assets
 

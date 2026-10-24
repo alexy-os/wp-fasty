@@ -1,0 +1,20 @@
+/*
+ * WP FastY Builder editor: design tokens. The only file with raw colour values (the wp-admin palette; the accent follows
+ * the admin colour scheme). Everything else uses var(--wpfb-*) — tools/lint-design.ts enforces it.
+ */
+.wpfb-app {
+  --wpfb-accent: var(--wp-admin-theme-color, #2271b1);
+  --wpfb-accent-strong: var(--wp-admin-theme-color-darker-10, #135e96);
+  --wpfb-accent-soft: color-mix(in srgb, var(--wpfb-accent) 12%, transparent);
+  --wpfb-on-accent: #fff;
+  --wpfb-surface: #fff;
+  --wpfb-surface-muted: #f6f7f7;
+  --wpfb-canvas: #f0f0f1;
+  --wpfb-line: #dcdcde;
+  --wpfb-line-soft: #f0f0f1;
+  --wpfb-text: #1d2327;
+  --wpfb-text-muted: #646970;
+  --wpfb-danger: #b32d2e;
+  --wpfb-shadow: 0 1px 2px color-mix(in srgb, #000 16%, transparent), 0 4px 16px color-mix(in srgb, #000 8%, transparent);
+  --wpfb-radius: 4px;
+}
