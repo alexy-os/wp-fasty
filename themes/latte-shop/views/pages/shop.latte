@@ -5,9 +5,9 @@
 	{if !empty($archive['description'])}{capture $c_ui2}{$archive['description']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'mt-4 max-w-2xl text-muted-foreground', children: (string) $c_ui2, attrs: []}{/if}
 	{if !empty($shop['categories'])}
 		{capture $c_ui5}
-			{capture $c_ui3}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: ((($shop['url'])|checkUrl)) ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $shop['current_cat'] === '' ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent'])), children: (string) $c_ui3, attrs: []}
+			{capture $c_ui3}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $shop['current_cat'] === '' ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent'])), children: (string) $c_ui3, attrs: []}
 			{foreach $shop['categories'] as $cat}
-				{capture $c_ui4}{$cat['name']}{/capture}{include 'link/Link.latte', href: ((($cat['url'])|checkUrl)) ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $shop['current_cat'] === $cat['slug'] ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent'])), children: (string) $c_ui4, attrs: []}
+				{capture $c_ui4}{$cat['name']}{/capture}{include 'link/Link.latte', href: $cat['url'] ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $shop['current_cat'] === $cat['slug'] ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent'])), children: (string) $c_ui4, attrs: []}
 			{/foreach}
 		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-8 flex flex-wrap gap-2', children: (string) $c_ui5, attrs: ['aria-label' => ($labels['all_products'])]}
 	{/if}
@@ -23,9 +23,9 @@
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4', children: (string) $c_ui8, attrs: []}
 		{if !empty($pagination)}
 			{capture $c_ui12}
-				{if $pagination['prev_url']}{capture $c_ui9}{icon('arrow-left')}{$labels['previous']}{/capture}{include 'link/Link.latte', href: ((($pagination['prev_url'])|checkUrl)) ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui9, attrs: []}{/if}
+				{if $pagination['prev_url']}{capture $c_ui9}{icon('arrow-left')}{$labels['previous']}{/capture}{include 'link/Link.latte', href: $pagination['prev_url'] ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui9, attrs: []}{/if}
 				{capture $c_ui10}{$pagination['current']} / {$pagination['total']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui10, attrs: []}
-				{if $pagination['next_url']}{capture $c_ui11}{$labels['next']}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: ((($pagination['next_url'])|checkUrl)) ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui11, attrs: []}{/if}
+				{if $pagination['next_url']}{capture $c_ui11}{$labels['next']}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: $pagination['next_url'] ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui11, attrs: []}{/if}
 			{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-10 flex items-center justify-center gap-4', children: (string) $c_ui12, attrs: ['aria-label' => ($labels['pagination'] ?? 'Pagination')]}
 		{/if}
 	{/if}

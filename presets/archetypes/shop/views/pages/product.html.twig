@@ -3,10 +3,10 @@
 {% if page %}
 {% set c_ui24 %}
 	{% set c_ui3 %}
-		{% set c_ui1 %}{{ labels.all_products }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': 'text-muted-foreground no-underline hover:text-foreground', 'children': c_ui1, 'attrs': {}} only %}
+		{% set c_ui1 %}{{ labels.all_products }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': 'text-muted-foreground no-underline hover:text-foreground', 'children': c_ui1, 'attrs': {}} only %}
 		{% if page.product_cats ?? false %}
 			{{ icon('chevron-right') }}
-			{% set c_ui2 %}{{ page.product_cats[0].name }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((page.product_cats[0].url|safe_url)))|default(''), 'class': 'text-muted-foreground no-underline hover:text-foreground', 'children': c_ui2, 'attrs': {}} only %}
+			{% set c_ui2 %}{{ page.product_cats[0].name }}{% endset %}{% include 'link/Link.html.twig' with {'href': page.product_cats[0].url|default(''), 'class': 'text-muted-foreground no-underline hover:text-foreground', 'children': c_ui2, 'attrs': {}} only %}
 		{% endif %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mb-8 flex items-center gap-2 text-sm text-muted-foreground', 'children': c_ui3, 'attrs': {'aria-label': (labels.breadcrumb)}} only %}
 	{% set c_ui23 %}
@@ -48,7 +48,7 @@
 					{% if page.product.stock is not null %}
 						{% set c_ui15 %}{{ page.product.stock }} in stock{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-sm text-muted-foreground', 'children': c_ui15, 'attrs': {}} only %}
 					{% endif %}
-				{% endset %}{% include 'form/Form.html.twig' with {'action': (((shop.action|safe_url)))|default(''), 'class': 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', 'children': c_ui16, 'attrs': {'method': 'post'}} only %}
+				{% endset %}{% include 'form/Form.html.twig' with {'action': shop.action|default(''), 'class': 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', 'children': c_ui16, 'attrs': {'method': 'post'}} only %}
 			{% else %}
 				{% set oos %}{{ labels.out_of_stock }}{% endset %}
 				{% include 'alert/Alert.html.twig' with { variant: 'destructive', class: 'px-4 py-2', children: oos } %}

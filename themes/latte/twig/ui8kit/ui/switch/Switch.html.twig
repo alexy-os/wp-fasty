@@ -13,11 +13,11 @@
 {% set class = class|default('') %}
 {% set checked = checked|default(false) %}
 {% set disabled = disabled|default(false) %}
-{% set id = id|default('') %}
-{% set name = name|default('') %}
-{% set value = value|default('') %}
-{% set ariaLabel = ariaLabel|default('') %}
-{% set ariaLabelledBy = ariaLabelledBy|default('') %}
+{% set id = id ?? null %}
+{% set name = name ?? null %}
+{% set value = value ?? null %}
+{% set ariaLabel = ariaLabel ?? null %}
+{% set ariaLabelledBy = ariaLabelledBy ?? null %}
 {% set attrs = attrs|default([]) %}
 {% set children = children|default('') %}
-<button{{ ui8kit_attrs({'type': 'button', 'role': 'switch', 'aria-checked': ui8kit_bool_str(checked), 'data-state': ui8kit_bool_str(checked), 'class': ui8kit_or_null(ui8kit_classes('switchClasses', {'class': class, 'checked': checked, 'disabled': disabled, 'id': id, 'name': name, 'value': value, 'ariaLabel': ariaLabel, 'ariaLabelledBy': ariaLabelledBy})), 'disabled': disabled, 'id': ui8kit_or_null(id), 'name': ui8kit_or_null(name), 'value': ui8kit_or_null(value), 'aria-label': ui8kit_or_null(ariaLabel), 'aria-labelledby': ui8kit_or_null(ariaLabelledBy)}, attrs) }}>{{ children|raw }}</button>
+<button{{ ui8kit_attrs({'type': 'button', 'role': 'switch', 'aria-checked': ui8kit_bool_str(checked), 'data-state': ui8kit_bool_str(checked), 'class': ui8kit_or_null(ui8kit_classes('switchClasses', {'class': class, 'checked': checked, 'disabled': disabled, 'id': id, 'name': name, 'value': value, 'ariaLabel': ariaLabel, 'ariaLabelledBy': ariaLabelledBy})), 'disabled': disabled, 'id': ui8kit_or_null(id), 'name': ui8kit_or_null(name), 'value': value, 'aria-label': ui8kit_or_null(ariaLabel), 'aria-labelledby': ui8kit_or_null(ariaLabelledBy)}, attrs, false, ['id', 'name', 'aria-label', 'aria-labelledby']) }}>{{ children|raw }}</button>

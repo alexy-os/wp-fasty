@@ -3,10 +3,10 @@
 {if $page}
 {capture $c_ui24}
 	{capture $c_ui3}
-		{capture $c_ui1}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: ((($shop['url'])|checkUrl)) ?? '', class: 'text-muted-foreground no-underline hover:text-foreground', children: (string) $c_ui1, attrs: []}
+		{capture $c_ui1}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'text-muted-foreground no-underline hover:text-foreground', children: (string) $c_ui1, attrs: []}
 		{if !empty($page['product_cats'])}
 			{icon('chevron-right')}
-			{capture $c_ui2}{$page['product_cats'][0]['name']}{/capture}{include 'link/Link.latte', href: ((($page['product_cats'][0]['url'])|checkUrl)) ?? '', class: 'text-muted-foreground no-underline hover:text-foreground', children: (string) $c_ui2, attrs: []}
+			{capture $c_ui2}{$page['product_cats'][0]['name']}{/capture}{include 'link/Link.latte', href: $page['product_cats'][0]['url'] ?? '', class: 'text-muted-foreground no-underline hover:text-foreground', children: (string) $c_ui2, attrs: []}
 		{/if}
 	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mb-8 flex items-center gap-2 text-sm text-muted-foreground', children: (string) $c_ui3, attrs: ['aria-label' => ($labels['breadcrumb'])]}
 	{capture $c_ui23}
@@ -48,7 +48,7 @@
 					{if $page['product']['stock'] !== null}
 						{capture $c_ui15}{$page['product']['stock']} in stock{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $c_ui15, attrs: []}
 					{/if}
-				{/capture}{include 'form/Form.latte', action: ((($shop['action'])|checkUrl)) ?? '', class: 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $c_ui16, attrs: ['method' => 'post']}
+				{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', class: 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $c_ui16, attrs: ['method' => 'post']}
 			{else}
 				{capture $oos}{$labels['out_of_stock']}{/capture}
 				{include 'alert/Alert.latte', variant: 'destructive', class: 'px-4 py-2', children: (string) $oos}

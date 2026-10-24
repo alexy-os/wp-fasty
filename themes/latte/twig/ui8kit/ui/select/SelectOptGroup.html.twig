@@ -4,8 +4,8 @@
 {# @param disabled (bool) #}
 {# @param attrs (attrs) #}
 {# @param children (children) #}
-{% set label = label|default('') %}
+{% set label = label ?? null %}
 {% set disabled = disabled|default(false) %}
 {% set attrs = attrs|default([]) %}
 {% set children = children|default('') %}
-<optgroup{{ ui8kit_attrs({'label': ui8kit_or_null(label), 'disabled': disabled}, attrs) }}>{{ children|raw }}</optgroup>
+<optgroup{{ ui8kit_attrs({'label': ui8kit_or_null(label), 'disabled': disabled}, attrs, false, ['label']) }}>{{ children|raw }}</optgroup>

@@ -5,7 +5,7 @@
 		{capture $c_ui5}
 			{capture $c_ui1}{if !empty($page['title'])}{$page['title']}{else}{$site['title']}{/if}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'text-4xl font-bold leading-tight tracking-tight text-secondary-foreground md:text-5xl', children: (string) $c_ui1, attrs: []}
 			{if !empty($page['excerpt'])}{capture $c_ui2}{$page['excerpt']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-lg text-muted-foreground', children: (string) $c_ui2, attrs: []}{/if}
-			{capture $c_ui4}{capture $c_ui3}{icon('shopping-bag')}{$labels['shop_now']}{/capture}{include 'link/Link.latte', href: ((($shop['url'])|checkUrl)) ?? '', class: 'inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90', children: (string) $c_ui3, attrs: []}{/capture}{include 'box/Box.latte', tag: 'div', children: (string) $c_ui4, attrs: []}
+			{capture $c_ui4}{capture $c_ui3}{icon('shopping-bag')}{$labels['shop_now']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90', children: (string) $c_ui3, attrs: []}{/capture}{include 'box/Box.latte', tag: 'div', children: (string) $c_ui4, attrs: []}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-6', children: (string) $c_ui5, attrs: []}
 		{if !empty($page['featuredImage']['url'])}
 			{include 'image/Image.latte', src: $page['featuredImage']['url'], alt: $page['featuredImage']['alt'] ?? '', class: kit('image', [], 'aspect-[4/3] w-full rounded-xl object-cover'), loading: 'eager', decoding: 'async'}
@@ -25,7 +25,7 @@
 	{capture $c_ui23}
 		{capture $c_ui21}
 			{capture $c_ui19}{$labels['featured']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-2xl font-semibold tracking-tight md:text-3xl', children: (string) $c_ui19, attrs: []}
-			{capture $c_ui20}{$labels['shop_now']}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: ((($shop['url'])|checkUrl)) ?? '', class: 'inline-flex items-center gap-2 text-sm font-medium text-primary no-underline', children: (string) $c_ui20, attrs: []}
+			{capture $c_ui20}{$labels['shop_now']}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'inline-flex items-center gap-2 text-sm font-medium text-primary no-underline', children: (string) $c_ui20, attrs: []}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-8 flex items-end justify-between gap-4', children: (string) $c_ui21, attrs: []}
 		{capture $c_ui22}
 			{foreach $products as $product}

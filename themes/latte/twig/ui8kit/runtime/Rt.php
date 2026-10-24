@@ -153,10 +153,75 @@ final class Rt
      * attrs merged last so the caller wins. null/false omit, true prints a
      * bare boolean attribute, everything else stringifies and escapes.
      */
-    public static function attrs(array $attrs, array $rest = []): string
+    private const URL_ATTRS = ['href', 'src', 'action', 'formaction', 'poster', 'cite', 'background', 'xlink:href'];
+
+    /** URL attribute value: '' for javascript:, vbscript: and data: (ASCII whitespace/control chars removed, case-insensitive). */
+    public static function safeUrl(mixed $v): string
+    {
+        $s = self::s($v);
+        return self::unsafeUrl($s, false) ? '' : $s;
+    }
+
+    private static function unsafeUrl(string $s, bool $dataImage): bool
+    {
+        $k = strtolower((string) preg_replace('/[\x00-\x20]/', '', $s));
+        if ($dataImage && preg_match('#^data:image/(png|jpeg|gif|webp|avif|svg\+xml)[;,]#', $k)) {
+            return false;
+        }
+        return (bool) preg_match('/^(javascript|vbscript|data):/', $k);
+    }
+
+    /** Optional URL attribute: null (omitted) when unset, blank or an unsafe scheme, else the value as given. */
+    public static function urlOrNull(mixed $v): ?string
+    {
+        $s = self::s($v);
+        return trim($s) === '' || self::unsafeUrl($s, false) ? null : $s;
+    }
+
+    /** urlOrNull for <img src>: data:image/(png|jpeg|gif|webp|avif|svg+xml) placeholders are allowed. */
+    public static function imgUrlOrNull(mixed $v): ?string
+    {
+        $s = self::s($v);
+        return trim($s) === '' || self::unsafeUrl($s, true) ? null : $s;
+    }
+
+    /** Drops URL attributes with an unsafe URL (kept for callers of 3.2; generated templates use restAttrs). */
+    public static function safeAttrs(array $attrs): array
+    {
+        foreach ($attrs as $name => $value) {
+            if (is_string($value) && $value !== '' && in_array(strtolower((string) $name), self::URL_ATTRS, true) && self::safeUrl($value) === '') {
+                unset($attrs[$name]);
+            }
+        }
+        return $attrs;
+    }
+
+    /**
+     * The caller's attrs as rendered: an unsafe URL (data:image allowed in <img src> when $img) or a blank optional
+     * attribute ($blank, lowercase names; never value) becomes null. The key stays, so the caller still wins over
+     * the named attribute of the same name and the attribute is omitted.
+     */
+    public static function restAttrs(array $attrs, bool $img = false, array $blank = []): array
+    {
+        foreach ($attrs as $name => $value) {
+            if (!is_string($value)) {
+                continue;
+            }
+            $key = strtolower((string) $name);
+            if (trim($value) === '' && in_array($key, $blank, true)) {
+                $attrs[$name] = null;
+            } elseif ($value !== '' && in_array($key, self::URL_ATTRS, true) && self::unsafeUrl($value, $img && $key === 'src')) {
+                $attrs[$name] = null;
+            }
+        }
+        return $attrs;
+    }
+
+    /** Twig attribute string: named attrs, then the caller's attrs (restAttrs) merged last so the caller wins. */
+    public static function attrs(array $attrs, array $rest = [], bool $img = false, array $blank = []): string
     {
         $out = '';
-        foreach (array_merge($attrs, $rest) as $name => $value) {
+        foreach (array_merge($attrs, self::restAttrs($rest, $img, $blank)) as $name => $value) {
             if ($value === null || $value === false) {
                 continue;
             }

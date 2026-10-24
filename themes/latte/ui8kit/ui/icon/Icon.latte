@@ -13,5 +13,5 @@
   'aria-hidden' => (!\UI8Kit\Latte\Rt::isSetStr($label) ? 'true' : null),
   'role' => (\UI8Kit\Latte\Rt::isSetStr($label) ? 'img' : null),
   'aria-label' => (\UI8Kit\Latte\Rt::isSetStr($label) ? $label : null),
-  ...$attrs,
+  ...\UI8Kit\Latte\Rt::restAttrs($attrs),
 ]">{$children|noescape}</span>

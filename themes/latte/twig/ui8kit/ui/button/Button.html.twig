@@ -13,13 +13,13 @@
 {# @param children (children) #}
 {% set class = class|default('') %}
 {% set type = type|default('') %}
-{% set form = form|default('') %}
+{% set form = form ?? null %}
 {% set href = href|default('') %}
 {% set disabled = disabled|default(false) %}
-{% set ariaLabel = ariaLabel|default('') %}
-{% set ariaPressed = ariaPressed|default('') %}
-{% set ariaExpanded = ariaExpanded|default('') %}
-{% set ariaControls = ariaControls|default('') %}
+{% set ariaLabel = ariaLabel ?? null %}
+{% set ariaPressed = ariaPressed ?? null %}
+{% set ariaExpanded = ariaExpanded ?? null %}
+{% set ariaControls = ariaControls ?? null %}
 {% set attrs = attrs|default([]) %}
 {% set children = children|default('') %}
-{% if ui8kit_is_set_str(href) %}<a{{ ui8kit_attrs({'href': ui8kit_or_null(href), 'class': ui8kit_or_null(ui8kit_classes('buttonClasses', {'class': class, 'type': type, 'form': form, 'href': href, 'disabled': disabled, 'ariaLabel': ariaLabel, 'ariaPressed': ariaPressed, 'ariaExpanded': ariaExpanded, 'ariaControls': ariaControls})), 'aria-label': ui8kit_or_null(ariaLabel), 'aria-pressed': ui8kit_or_null(ariaPressed), 'aria-expanded': ui8kit_or_null(ariaExpanded), 'aria-controls': ui8kit_or_null(ariaControls), 'aria-disabled': (disabled ? 'true' : null), 'tabindex': (disabled ? (-1 ~ '') : null)}, attrs) }}>{{ children|raw }}</a>{% else %}<button{{ ui8kit_attrs({'type': ui8kit_one_of_or(type, 'button', ['submit', 'reset']), 'class': ui8kit_or_null(ui8kit_classes('buttonClasses', {'class': class, 'type': type, 'form': form, 'href': href, 'disabled': disabled, 'ariaLabel': ariaLabel, 'ariaPressed': ariaPressed, 'ariaExpanded': ariaExpanded, 'ariaControls': ariaControls})), 'disabled': disabled, 'form': ui8kit_or_null(form), 'aria-label': ui8kit_or_null(ariaLabel), 'aria-pressed': ui8kit_or_null(ariaPressed), 'aria-expanded': ui8kit_or_null(ariaExpanded), 'aria-controls': ui8kit_or_null(ariaControls)}, attrs) }}>{{ children|raw }}</button>{% endif %}
+{% if ui8kit_is_set_str(href) %}<a{{ ui8kit_attrs({'href': ui8kit_or_null(ui8kit_safe_url(href)), 'class': ui8kit_or_null(ui8kit_classes('buttonClasses', {'class': class, 'type': type, 'form': form, 'href': href, 'disabled': disabled, 'ariaLabel': ariaLabel, 'ariaPressed': ariaPressed, 'ariaExpanded': ariaExpanded, 'ariaControls': ariaControls})), 'aria-label': ui8kit_or_null(ariaLabel), 'aria-pressed': ui8kit_or_null(ariaPressed), 'aria-expanded': ui8kit_or_null(ariaExpanded), 'aria-controls': ui8kit_or_null(ariaControls), 'aria-disabled': (disabled ? 'true' : null), 'tabindex': (disabled ? (-1 ~ '') : null)}, attrs, false, ['aria-label', 'aria-pressed', 'aria-expanded', 'aria-controls']) }}>{{ children|raw }}</a>{% else %}<button{{ ui8kit_attrs({'type': ui8kit_one_of_or(type, 'button', ['submit', 'reset']), 'class': ui8kit_or_null(ui8kit_classes('buttonClasses', {'class': class, 'type': type, 'form': form, 'href': href, 'disabled': disabled, 'ariaLabel': ariaLabel, 'ariaPressed': ariaPressed, 'ariaExpanded': ariaExpanded, 'ariaControls': ariaControls})), 'disabled': disabled, 'form': ui8kit_or_null(form), 'aria-label': ui8kit_or_null(ariaLabel), 'aria-pressed': ui8kit_or_null(ariaPressed), 'aria-expanded': ui8kit_or_null(ariaExpanded), 'aria-controls': ui8kit_or_null(ariaControls)}, attrs, false, ['form', 'aria-label', 'aria-pressed', 'aria-expanded', 'aria-controls']) }}>{{ children|raw }}</button>{% endif %}

@@ -21,12 +21,12 @@
 						{if !empty($post['categories'])}
 							{capture $c_ui3}
 								{foreach $post['categories'] as $cat}
-									{capture $c_ui2}{$cat['name']}{/capture}{include 'link/Link.latte', href: ((($cat['url'])|checkUrl)) ?? '', class: 'text-xs font-semibold uppercase tracking-wide text-primary no-underline', children: (string) $c_ui2, attrs: []}
+									{capture $c_ui2}{$cat['name']}{/capture}{include 'link/Link.latte', href: $cat['url'] ?? '', class: 'text-xs font-semibold uppercase tracking-wide text-primary no-underline', children: (string) $c_ui2, attrs: []}
 								{/foreach}
 							{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-wrap gap-2', children: (string) $c_ui3, attrs: []}
 						{/if}
 						{capture $c_ui5}
-							{capture $c_ui4}{$post['title']}{/capture}{include 'link/Link.latte', href: ((($post['url'])|checkUrl)) ?? '', class: 'text-foreground no-underline hover:text-primary', children: (string) $c_ui4, attrs: []}
+							{capture $c_ui4}{$post['title']}{/capture}{include 'link/Link.latte', href: $post['url'] ?? '', class: 'text-foreground no-underline hover:text-primary', children: (string) $c_ui4, attrs: []}
 						{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-2xl font-semibold leading-tight', children: (string) $c_ui5, attrs: []}
 						{capture $c_ui9}
 							{if !empty($post['date']['display'])}
@@ -39,7 +39,7 @@
 						{if !empty($post['excerpt'])}
 							{capture $c_ui10}{$post['excerpt']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_ui10, attrs: []}
 						{/if}
-						{capture $c_ui11}{$labels['read_more'] ?? 'Read more'}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: ((($post['url'])|checkUrl)) ?? '', class: 'inline-flex items-center gap-2 text-sm font-medium text-primary no-underline', children: (string) $c_ui11, attrs: []}
+						{capture $c_ui11}{$labels['read_more'] ?? 'Read more'}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: $post['url'] ?? '', class: 'inline-flex items-center gap-2 text-sm font-medium text-primary no-underline', children: (string) $c_ui11, attrs: []}
 					{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui12, attrs: []}
 				{/capture}{include 'box/Box.latte', tag: 'article', class: (($post['post_class'] ?? '') . ' grid gap-6 border-b border-border pb-8 md:grid-cols-[240px_1fr]'), children: (string) $c_ui13, attrs: []}
 			{/foreach}
@@ -50,11 +50,11 @@
 	{if !empty($pagination)}
 		{capture $c_ui17}
 			{if $pagination['prev_url']}
-				{capture $c_ui14}{icon('arrow-left')}{$labels['previous'] ?? 'Previous'}{/capture}{include 'link/Link.latte', href: ((($pagination['prev_url'])|checkUrl)) ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui14, attrs: []}
+				{capture $c_ui14}{icon('arrow-left')}{$labels['previous'] ?? 'Previous'}{/capture}{include 'link/Link.latte', href: $pagination['prev_url'] ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui14, attrs: []}
 			{/if}
 			{capture $c_ui15}{$pagination['current']} / {$pagination['total']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui15, attrs: []}
 			{if $pagination['next_url']}
-				{capture $c_ui16}{$labels['next'] ?? 'Next'}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: ((($pagination['next_url'])|checkUrl)) ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui16, attrs: []}
+				{capture $c_ui16}{$labels['next'] ?? 'Next'}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: $pagination['next_url'] ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui16, attrs: []}
 			{/if}
 		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-10 flex items-center justify-center gap-4', children: (string) $c_ui17, attrs: ['aria-label' => ($labels['pagination'] ?? 'Pagination')]}
 	{/if}

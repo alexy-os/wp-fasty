@@ -89,6 +89,13 @@ final class CnMerge
                 return ['position'];
             case 'isolate': case 'isolation-auto':
                 return ['isolation'];
+            case 'object-contain': case 'object-cover': case 'object-fill': case 'object-none': case 'object-scale-down':
+                return ['object-fit'];
+            case 'object-bottom': case 'object-center': case 'object-left': case 'object-left-bottom': case 'object-left-top': case 'object-right': case 'object-right-bottom': case 'object-right-top': case 'object-top':
+                return ['object-position'];
+        }
+        if (str_starts_with($core, 'aspect-')) {
+            return ['aspect'];
         }
         // ring-offset-N (width) and ring-offset-<color> are their own groups
         if (str_starts_with($core, 'ring-offset-')) {

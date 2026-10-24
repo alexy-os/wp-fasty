@@ -18,4 +18,4 @@
 {/capture}
 {capture $c_ui2}
 	{$fields|noescape}
-{/capture}{include 'form/Form.latte', action: ((($search['action'])|checkUrl)) ?? '', class: 'flex w-full max-w-md items-center gap-2', children: (string) $c_ui2, attrs: ['role' => 'search', 'method' => 'get', 'aria-label' => $slabel]}
+{/capture}{include 'form/Form.latte', action: $search['action'] ?? '', class: 'flex w-full max-w-md items-center gap-2', children: (string) $c_ui2, attrs: ['role' => 'search', 'method' => 'get', 'aria-label' => $slabel]}

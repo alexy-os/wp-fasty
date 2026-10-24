@@ -5,9 +5,9 @@
 {# @param disabled (bool) #}
 {# @param attrs (attrs) #}
 {# @param children (children) #}
-{% set value = value|default('') %}
+{% set value = value ?? null %}
 {% set selected = selected|default(false) %}
 {% set disabled = disabled|default(false) %}
 {% set attrs = attrs|default([]) %}
 {% set children = children|default('') %}
-<option{{ ui8kit_attrs({'value': ui8kit_or_null(value), 'selected': selected, 'disabled': disabled}, attrs) }}>{{ children|raw }}</option>
+<option{{ ui8kit_attrs({'value': value, 'selected': selected, 'disabled': disabled}, attrs) }}>{{ children|raw }}</option>

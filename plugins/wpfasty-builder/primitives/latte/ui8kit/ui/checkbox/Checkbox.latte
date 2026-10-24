@@ -2,14 +2,14 @@
 {* Checkbox — Checkbox renders input[type=checkbox]. *}
 {parameters
   string $class = '',
-  string $id = '',
-  string $name = '',
-  string $value = '',
+  ?string $id = null,
+  ?string $name = null,
+  ?string $value = null,
   bool $checked = false,
   bool $required = false,
   bool $disabled = false,
-  string $ariaInvalid = '',
-  string $ariaDescribedBy = '',
+  ?string $ariaInvalid = null,
+  ?string $ariaDescribedBy = null,
   array $attrs = [],
 }
 <input n:attr="[
@@ -17,11 +17,11 @@
   'class' => \UI8Kit\Latte\Rt::orNull(\UI8Kit\Latte\Classes::checkboxClasses(['class' => $class, 'id' => $id, 'name' => $name, 'value' => $value, 'checked' => $checked, 'required' => $required, 'disabled' => $disabled, 'ariaInvalid' => $ariaInvalid, 'ariaDescribedBy' => $ariaDescribedBy])),
   'id' => \UI8Kit\Latte\Rt::orNull($id),
   'name' => \UI8Kit\Latte\Rt::orNull($name),
-  'value' => \UI8Kit\Latte\Rt::orNull($value),
+  'value' => $value,
   'checked' => $checked,
   'required' => $required,
   'disabled' => $disabled,
   'aria-invalid' => \UI8Kit\Latte\Rt::orNull($ariaInvalid),
   'aria-describedby' => \UI8Kit\Latte\Rt::orNull($ariaDescribedBy),
-  ...$attrs,
+  ...\UI8Kit\Latte\Rt::restAttrs($attrs, false, ['id', 'name', 'aria-invalid', 'aria-describedby']),
 ]">

@@ -14,12 +14,12 @@
 				{% set c_ui10 %}{% set c_ui8 %}{{ labels.shipping }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui8, 'attrs': {}} only %}{% set c_ui9 %}{{ order.shipping_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui9, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4 text-sm text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}
 				{% set c_ui13 %}{% set c_ui11 %}{{ labels.total }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui11, 'attrs': {}} only %}{% set c_ui12 %}{{ order.total_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui12, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4 text-lg font-semibold', 'children': c_ui13, 'attrs': {}} only %}
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', 'children': c_ui14, 'attrs': {}} only %}
-			{% set c_ui15 %}{{ labels.continue_shopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': 'mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui15, 'attrs': {}} only %}
+			{% set c_ui15 %}{{ labels.continue_shopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': 'mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui15, 'attrs': {}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mx-auto flex max-w-2xl flex-col gap-6', 'children': c_ui16, 'attrs': {}} only %}
 	{% elseif not cart.items %}
 		{% set c_ui19 %}
 			{% set c_ui17 %}{{ labels.empty_cart }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui17, 'attrs': {}} only %}
-			{% set c_ui18 %}{{ labels.continue_shopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui18, 'attrs': {}} only %}
+			{% set c_ui18 %}{{ labels.continue_shopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui18, 'attrs': {}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center', 'children': c_ui19, 'attrs': {}} only %}
 	{% else %}
 		{% set c_ui20 %}{{ labels.checkout }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'mb-8 text-3xl font-bold tracking-tight', 'children': c_ui20, 'attrs': {}} only %}
@@ -76,6 +76,6 @@
 				{% include 'button/Button.html.twig' with { type: 'submit', class: kit('button', {'size': 'lg'}, 'w-full'), children: place } %}
 				{% set c_ui38 %}{{ labels.demo_notice }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-xs text-muted-foreground', 'children': c_ui38, 'attrs': {}} only %}
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-4', 'children': c_ui39, 'attrs': {}} only %}
-		{% endset %}{% include 'form/Form.html.twig' with {'action': (((shop.action|safe_url)))|default(''), 'class': 'grid gap-8 lg:grid-cols-[1fr_360px]', 'children': c_ui40, 'attrs': {'method': 'post', 'novalidate': true}} only %}
+		{% endset %}{% include 'form/Form.html.twig' with {'action': shop.action|default(''), 'class': 'grid gap-8 lg:grid-cols-[1fr_360px]', 'children': c_ui40, 'attrs': {'method': 'post', 'novalidate': true}} only %}
 	{% endif %}
 {% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 py-12 md:px-6', 'children': c_ui41, 'attrs': {}} only %}

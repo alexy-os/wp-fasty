@@ -5,7 +5,7 @@
 		{% set c_ui5 %}
 			{% set c_ui1 %}{% if page.title ?? false %}{{ page.title }}{% else %}{{ site.title }}{% endif %}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'text-4xl font-bold leading-tight tracking-tight text-secondary-foreground md:text-5xl', 'children': c_ui1, 'attrs': {}} only %}
 			{% if page.excerpt ?? false %}{% set c_ui2 %}{{ page.excerpt }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-lg text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}{% endif %}
-			{% set c_ui4 %}{% set c_ui3 %}{{ icon('shopping-bag') }}{{ labels.shop_now }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': 'inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90', 'children': c_ui3, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'children': c_ui4, 'attrs': {}} only %}
+			{% set c_ui4 %}{% set c_ui3 %}{{ icon('shopping-bag') }}{{ labels.shop_now }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': 'inline-flex h-12 items-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90', 'children': c_ui3, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'children': c_ui4, 'attrs': {}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-6', 'children': c_ui5, 'attrs': {}} only %}
 		{% if page.featuredImage.url ?? false %}
 			{% include 'image/Image.html.twig' with { src: page.featuredImage.url, alt: page.featuredImage.alt ?? '', class: kit('image', {}, 'aspect-[4/3] w-full rounded-xl object-cover'), loading: 'eager', decoding: 'async' } %}
@@ -25,7 +25,7 @@
 	{% set c_ui23 %}
 		{% set c_ui21 %}
 			{% set c_ui19 %}{{ labels.featured }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'text-2xl font-semibold tracking-tight md:text-3xl', 'children': c_ui19, 'attrs': {}} only %}
-			{% set c_ui20 %}{{ labels.shop_now }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm font-medium text-primary no-underline', 'children': c_ui20, 'attrs': {}} only %}
+			{% set c_ui20 %}{{ labels.shop_now }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': 'inline-flex items-center gap-2 text-sm font-medium text-primary no-underline', 'children': c_ui20, 'attrs': {}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mb-8 flex items-end justify-between gap-4', 'children': c_ui21, 'attrs': {}} only %}
 		{% set c_ui22 %}
 			{% for product in products %}

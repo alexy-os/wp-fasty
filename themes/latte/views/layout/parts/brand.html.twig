@@ -15,4 +15,4 @@
 	{% else %}
 		{{ site.title }}
 	{% endif %}
-{% endset %}{% include 'link/Link.html.twig' with {'href': (((site.url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary', 'children': c_ui1, 'attrs': {}} only %}
+{% endset %}{% include 'link/Link.html.twig' with {'href': site.url|default(''), 'class': 'inline-flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary', 'children': c_ui1, 'attrs': {}} only %}

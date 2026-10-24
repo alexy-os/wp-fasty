@@ -5,7 +5,7 @@
 {# @param attrs (attrs) #}
 {# @param children (children) #}
 {% set class = class|default('') %}
-{% set htmlFor = htmlFor|default('') %}
+{% set htmlFor = htmlFor ?? null %}
 {% set attrs = attrs|default([]) %}
 {% set children = children|default('') %}
-<label{{ ui8kit_attrs({'class': ui8kit_or_null(ui8kit_classes('labelClasses', {'class': class, 'htmlFor': htmlFor})), 'for': ui8kit_or_null(htmlFor)}, attrs) }}>{{ children|raw }}</label>
+<label{{ ui8kit_attrs({'class': ui8kit_or_null(ui8kit_classes('labelClasses', {'class': class, 'htmlFor': htmlFor})), 'for': ui8kit_or_null(htmlFor)}, attrs, false, ['for']) }}>{{ children|raw }}</label>

@@ -2,7 +2,7 @@
 {if $page}
 {capture $c_ui17}
 	{capture $c_ui13}
-		{capture $c_ui1}{icon('arrow-left')}{$labels['all_work']}{/capture}{include 'link/Link.latte', href: ((($work['url'])|checkUrl)) ?? '', class: 'mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground no-underline hover:text-foreground', children: (string) $c_ui1, attrs: []}
+		{capture $c_ui1}{icon('arrow-left')}{$labels['all_work']}{/capture}{include 'link/Link.latte', href: $work['url'] ?? '', class: 'mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground no-underline hover:text-foreground', children: (string) $c_ui1, attrs: []}
 		{capture $c_ui12}
 			{capture $c_ui5}
 				{if !empty($page['types'])}
@@ -28,7 +28,7 @@
 					{if !empty($page['project']['url']['value'])}
 						{capture $c_ui10}
 							{capture $c_uiDt}{$page['project']['url']['label'] ?? $labels['visit_site']}{/capture}{include 'box/Box.latte', tag: 'dt', class: 'sr-only', children: (string) $c_uiDt, attrs: []}
-							{capture $c_uiDd}{capture $c_ui9}{$labels['visit_site']}{icon('external-link')}{/capture}{include 'link/Link.latte', href: ((($page['project']['url']['value'])|checkUrl)) ?? '', class: 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui9, attrs: ['rel' => 'noopener', 'target' => '_blank']}{/capture}{include 'box/Box.latte', tag: 'dd', class: '', children: (string) $c_uiDd, attrs: []}
+							{capture $c_uiDd}{capture $c_ui9}{$labels['visit_site']}{icon('external-link')}{/capture}{include 'link/Link.latte', href: $page['project']['url']['value'] ?? '', class: 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui9, attrs: ['rel' => 'noopener', 'target' => '_blank']}{/capture}{include 'box/Box.latte', tag: 'dd', class: '', children: (string) $c_uiDd, attrs: []}
 						{/capture}{include 'box/Box.latte', tag: 'div', class: 'col-span-2', children: (string) $c_ui10, attrs: []}
 					{/if}
 				{/capture}{include 'box/Box.latte', tag: 'dl', class: 'grid grid-cols-2 gap-6 self-end rounded-xl border border-border bg-card p-6', children: (string) $c_ui11, attrs: []}
@@ -55,7 +55,7 @@
 				{capture $c_ui19}{$next_project['title']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-2xl font-semibold text-foreground', children: (string) $c_ui19, attrs: []}
 			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui20, attrs: []}
 			{capture $c_ui21}{icon('arrow-right', 'size-8')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-primary', children: (string) $c_ui21, attrs: []}
-		{/capture}{include 'link/Link.latte', href: ((($next_project['url'])|checkUrl)) ?? '', class: 'group flex items-center justify-between gap-6 rounded-2xl border border-border bg-card p-8 no-underline hover:border-primary', children: (string) $c_ui22, attrs: []}
+		{/capture}{include 'link/Link.latte', href: $next_project['url'] ?? '', class: 'group flex items-center justify-between gap-6 rounded-2xl border border-border bg-card p-8 no-underline hover:border-primary', children: (string) $c_ui22, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 pb-16 md:px-6', children: (string) $c_ui23, attrs: []}
 {/if}
 {/if}

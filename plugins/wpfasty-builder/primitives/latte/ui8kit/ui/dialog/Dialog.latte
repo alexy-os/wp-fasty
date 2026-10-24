@@ -2,11 +2,11 @@
 {* Dialog — Dialog renders a native dialog element. *}
 {parameters
   string $class = '',
-  string $id = '',
+  ?string $id = null,
   bool $open = false,
-  string $ariaLabelledBy = '',
-  string $ariaDescribedBy = '',
-  string $ariaLabel = '',
+  ?string $ariaLabelledBy = null,
+  ?string $ariaDescribedBy = null,
+  ?string $ariaLabel = null,
   array $attrs = [],
   string $children = '',
 }
@@ -17,5 +17,5 @@
   'aria-labelledby' => \UI8Kit\Latte\Rt::orNull($ariaLabelledBy),
   'aria-describedby' => \UI8Kit\Latte\Rt::orNull($ariaDescribedBy),
   'aria-label' => \UI8Kit\Latte\Rt::orNull($ariaLabel),
-  ...$attrs,
+  ...\UI8Kit\Latte\Rt::restAttrs($attrs, false, ['id', 'aria-labelledby', 'aria-describedby', 'aria-label']),
 ]">{$children|noescape}</dialog>

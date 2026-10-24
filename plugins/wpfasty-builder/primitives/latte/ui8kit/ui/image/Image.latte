@@ -2,18 +2,18 @@
 {* Image — Image renders an img element; alt is always emitted. *}
 {parameters
   string $class = '',
-  string $src = '',
+  ?string $src = null,
   string $alt = '',
-  string $srcSet = '',
-  string $sizes = '',
-  string $width = '',
-  string $height = '',
-  string $loading = '',
-  string $decoding = '',
+  ?string $srcSet = null,
+  ?string $sizes = null,
+  ?string $width = null,
+  ?string $height = null,
+  ?string $loading = null,
+  ?string $decoding = null,
   array $attrs = [],
 }
 <img n:attr="[
-  'src' => \UI8Kit\Latte\Rt::orNull($src),
+  'src' => \UI8Kit\Latte\Rt::imgUrlOrNull($src),
   'alt' => $alt,
   'class' => \UI8Kit\Latte\Rt::orNull(\UI8Kit\Latte\Classes::imageClasses(['class' => $class, 'src' => $src, 'alt' => $alt, 'srcSet' => $srcSet, 'sizes' => $sizes, 'width' => $width, 'height' => $height, 'loading' => $loading, 'decoding' => $decoding])),
   'srcset' => \UI8Kit\Latte\Rt::orNull($srcSet),
@@ -22,5 +22,5 @@
   'height' => \UI8Kit\Latte\Rt::orNull($height),
   'loading' => \UI8Kit\Latte\Rt::orNull($loading),
   'decoding' => \UI8Kit\Latte\Rt::orNull($decoding),
-  ...$attrs,
+  ...\UI8Kit\Latte\Rt::restAttrs($attrs, true, ['src', 'srcset', 'sizes', 'width', 'height', 'loading', 'decoding']),
 ]">

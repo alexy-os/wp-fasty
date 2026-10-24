@@ -5,9 +5,9 @@
 	{% if archive.description ?? false %}{% set c_ui2 %}{{ archive.description|raw }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mt-4 max-w-2xl text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}{% endif %}
 	{% if shop.categories ?? false %}
 		{% set c_ui5 %}
-			{% set c_ui3 %}{{ labels.all_products }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((shop.url|safe_url)))|default(''), 'class': ('inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline ' ~ (shop.current_cat is same as('') ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent')), 'children': c_ui3, 'attrs': {}} only %}
+			{% set c_ui3 %}{{ labels.all_products }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': ('inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline ' ~ (shop.current_cat is same as('') ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent')), 'children': c_ui3, 'attrs': {}} only %}
 			{% for cat in shop.categories %}
-				{% set c_ui4 %}{{ cat.name }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((cat.url|safe_url)))|default(''), 'class': ('inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline ' ~ (shop.current_cat is same as(cat.slug) ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent')), 'children': c_ui4, 'attrs': {}} only %}
+				{% set c_ui4 %}{{ cat.name }}{% endset %}{% include 'link/Link.html.twig' with {'href': cat.url|default(''), 'class': ('inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline ' ~ (shop.current_cat is same as(cat.slug) ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card text-foreground hover:bg-accent')), 'children': c_ui4, 'attrs': {}} only %}
 			{% endfor %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mt-8 flex flex-wrap gap-2', 'children': c_ui5, 'attrs': {'aria-label': (labels.all_products)}} only %}
 	{% endif %}
@@ -23,9 +23,9 @@
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4', 'children': c_ui8, 'attrs': {}} only %}
 		{% if pagination ?? false %}
 			{% set c_ui12 %}
-				{% if pagination.prev_url %}{% set c_ui9 %}{{ icon('arrow-left') }}{{ labels.previous }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((pagination.prev_url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui9, 'attrs': {}} only %}{% endif %}
+				{% if pagination.prev_url %}{% set c_ui9 %}{{ icon('arrow-left') }}{{ labels.previous }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination.prev_url|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui9, 'attrs': {}} only %}{% endif %}
 				{% set c_ui10 %}{{ pagination.current }} / {{ pagination.total }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}
-				{% if pagination.next_url %}{% set c_ui11 %}{{ labels.next }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((pagination.next_url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui11, 'attrs': {}} only %}{% endif %}
+				{% if pagination.next_url %}{% set c_ui11 %}{{ labels.next }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination.next_url|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui11, 'attrs': {}} only %}{% endif %}
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mt-10 flex items-center justify-center gap-4', 'children': c_ui12, 'attrs': {'aria-label': (labels.pagination ?? 'Pagination')}} only %}
 		{% endif %}
 	{% endif %}

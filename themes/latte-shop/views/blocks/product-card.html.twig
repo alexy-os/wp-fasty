@@ -9,13 +9,13 @@
 		{% if product.product.on_sale %}
 			{% set c_ui2 %}{{ labels.sale }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'badge absolute left-4 top-4 rounded-full bg-destructive px-2 py-1 text-xs font-semibold text-primary-foreground', 'children': c_ui2, 'attrs': {}} only %}
 		{% endif %}
-	{% endset %}{% include 'link/Link.html.twig' with {'href': (((product.url|safe_url)))|default(''), 'class': 'relative block overflow-hidden bg-muted no-underline', 'children': c_ui3, 'attrs': {'aria-label': (product.title)}} only %}
+	{% endset %}{% include 'link/Link.html.twig' with {'href': product.url|default(''), 'class': 'relative block overflow-hidden bg-muted no-underline', 'children': c_ui3, 'attrs': {'aria-label': (product.title)}} only %}
 	{% set c_ui12 %}
 		{% if product.product_cats ?? false %}
 			{% set c_ui4 %}{{ product.product_cats[0].name }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs uppercase tracking-wide text-muted-foreground', 'children': c_ui4, 'attrs': {}} only %}
 		{% endif %}
 		{% set c_ui6 %}
-			{% set c_ui5 %}{{ product.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((product.url|safe_url)))|default(''), 'class': 'text-foreground no-underline hover:text-primary', 'children': c_ui5, 'attrs': {}} only %}
+			{% set c_ui5 %}{{ product.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': product.url|default(''), 'class': 'text-foreground no-underline hover:text-primary', 'children': c_ui5, 'attrs': {}} only %}
 		{% endset %}{% include 'text/Text.html.twig' with {'tag': (headingTag ?? 'h3'), 'class': 'font-semibold leading-tight', 'children': c_ui6, 'attrs': {}} only %}
 		{% set c_ui11 %}
 			{% set c_ui8 %}
@@ -30,7 +30,7 @@
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop.cart_nonce)}} only %}
 					{% set addIcon %}{{ icon('plus') }}{% endset %}
 					{% include 'button/Button.html.twig' with { type: 'submit', ariaLabel: labels.add_to_cart ~ ': ' ~ product.title, class: kit('button', {'size': 'icon'}), children: addIcon } %}
-				{% endset %}{% include 'form/Form.html.twig' with {'action': (((shop.action|safe_url)))|default(''), 'children': c_ui9, 'attrs': {'method': 'post'}} only %}
+				{% endset %}{% include 'form/Form.html.twig' with {'action': shop.action|default(''), 'children': c_ui9, 'attrs': {'method': 'post'}} only %}
 			{% else %}
 				{% set c_ui10 %}{{ labels.out_of_stock }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}
 			{% endif %}

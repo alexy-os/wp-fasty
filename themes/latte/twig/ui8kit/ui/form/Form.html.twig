@@ -15,17 +15,17 @@
 {# @param attrs (attrs) #}
 {# @param children (children) #}
 {% set class = class|default('') %}
-{% set id = id|default('') %}
-{% set name = name|default('') %}
-{% set action = action|default('') %}
+{% set id = id ?? null %}
+{% set name = name ?? null %}
+{% set action = action ?? null %}
 {% set method = method|default('') %}
-{% set encType = encType|default('') %}
+{% set encType = encType ?? null %}
 {% set noValidate = noValidate|default(false) %}
-{% set autoComplete = autoComplete|default('') %}
-{% set target = target|default('') %}
-{% set ariaLabel = ariaLabel|default('') %}
-{% set ariaLabelledBy = ariaLabelledBy|default('') %}
-{% set ariaDescribedBy = ariaDescribedBy|default('') %}
+{% set autoComplete = autoComplete ?? null %}
+{% set target = target ?? null %}
+{% set ariaLabel = ariaLabel ?? null %}
+{% set ariaLabelledBy = ariaLabelledBy ?? null %}
+{% set ariaDescribedBy = ariaDescribedBy ?? null %}
 {% set attrs = attrs|default([]) %}
 {% set children = children|default('') %}
-<form{{ ui8kit_attrs({'class': ui8kit_or_null(ui8kit_classes('formClasses', {'class': class, 'id': id, 'name': name, 'action': action, 'method': method, 'encType': encType, 'noValidate': noValidate, 'autoComplete': autoComplete, 'target': target, 'ariaLabel': ariaLabel, 'ariaLabelledBy': ariaLabelledBy, 'ariaDescribedBy': ariaDescribedBy})), 'id': ui8kit_or_null(id), 'name': ui8kit_or_null(name), 'action': ui8kit_or_null(action), 'method': ui8kit_or_null(ui8kit_one_of_or_lower(method, '', ['get', 'post', 'dialog'])), 'enctype': ui8kit_or_null(encType), 'novalidate': noValidate, 'autocomplete': ui8kit_or_null(autoComplete), 'target': ui8kit_or_null(target), 'aria-label': ui8kit_or_null(ariaLabel), 'aria-labelledby': ui8kit_or_null(ariaLabelledBy), 'aria-describedby': ui8kit_or_null(ariaDescribedBy)}, attrs) }}>{{ children|raw }}</form>
+<form{{ ui8kit_attrs({'class': ui8kit_or_null(ui8kit_classes('formClasses', {'class': class, 'id': id, 'name': name, 'action': action, 'method': method, 'encType': encType, 'noValidate': noValidate, 'autoComplete': autoComplete, 'target': target, 'ariaLabel': ariaLabel, 'ariaLabelledBy': ariaLabelledBy, 'ariaDescribedBy': ariaDescribedBy})), 'id': ui8kit_or_null(id), 'name': ui8kit_or_null(name), 'action': ui8kit_url_or_null(action), 'method': ui8kit_or_null(ui8kit_one_of_or_lower(method, '', ['get', 'post', 'dialog'])), 'enctype': ui8kit_or_null(encType), 'novalidate': noValidate, 'autocomplete': ui8kit_or_null(autoComplete), 'target': ui8kit_or_null(target), 'aria-label': ui8kit_or_null(ariaLabel), 'aria-labelledby': ui8kit_or_null(ariaLabelledBy), 'aria-describedby': ui8kit_or_null(ariaDescribedBy)}, attrs, false, ['id', 'name', 'action', 'enctype', 'autocomplete', 'target', 'aria-label', 'aria-labelledby', 'aria-describedby']) }}>{{ children|raw }}</form>

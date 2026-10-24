@@ -8,11 +8,11 @@
 		{% else %}
 			{% set c_ui1 %}{{ icon('image', 'size-8') }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex aspect-[4/3] items-center justify-center text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}
 		{% endif %}
-	{% endset %}{% include 'link/Link.html.twig' with {'href': (((project.url|safe_url)))|default(''), 'class': 'block overflow-hidden rounded-xl border border-border bg-card no-underline', 'children': c_ui2, 'attrs': {'aria-label': (project.title)}} only %}
+	{% endset %}{% include 'link/Link.html.twig' with {'href': project.url|default(''), 'class': 'block overflow-hidden rounded-xl border border-border bg-card no-underline', 'children': c_ui2, 'attrs': {'aria-label': (project.title)}} only %}
 	{% set c_ui8 %}
 		{% set c_ui6 %}
 			{% set c_ui4 %}
-				{% set c_ui3 %}{{ project.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((project.url|safe_url)))|default(''), 'class': 'text-foreground no-underline hover:text-primary', 'children': c_ui3, 'attrs': {}} only %}
+				{% set c_ui3 %}{{ project.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': project.url|default(''), 'class': 'text-foreground no-underline hover:text-primary', 'children': c_ui3, 'attrs': {}} only %}
 			{% endset %}{% include 'text/Text.html.twig' with {'tag': (headingTag ?? 'h3'), 'class': 'text-lg font-semibold leading-tight', 'children': c_ui4, 'attrs': {}} only %}
 			{% if project.types ?? false %}
 				{% set c_ui5 %}

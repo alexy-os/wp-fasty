@@ -11,13 +11,13 @@
 {# @param ariaDescribedBy (string) #}
 {# @param attrs (attrs) #}
 {% set class = class|default('') %}
-{% set id = id|default('') %}
-{% set name = name|default('') %}
-{% set value = value|default('') %}
+{% set id = id ?? null %}
+{% set name = name ?? null %}
+{% set value = value ?? null %}
 {% set checked = checked|default(false) %}
 {% set required = required|default(false) %}
 {% set disabled = disabled|default(false) %}
-{% set ariaInvalid = ariaInvalid|default('') %}
-{% set ariaDescribedBy = ariaDescribedBy|default('') %}
+{% set ariaInvalid = ariaInvalid ?? null %}
+{% set ariaDescribedBy = ariaDescribedBy ?? null %}
 {% set attrs = attrs|default([]) %}
-<input{{ ui8kit_attrs({'type': 'radio', 'class': ui8kit_or_null(ui8kit_classes('radioClasses', {'class': class, 'id': id, 'name': name, 'value': value, 'checked': checked, 'required': required, 'disabled': disabled, 'ariaInvalid': ariaInvalid, 'ariaDescribedBy': ariaDescribedBy})), 'id': ui8kit_or_null(id), 'name': ui8kit_or_null(name), 'value': ui8kit_or_null(value), 'checked': checked, 'required': required, 'disabled': disabled, 'aria-invalid': ui8kit_or_null(ariaInvalid), 'aria-describedby': ui8kit_or_null(ariaDescribedBy)}, attrs) }}>
+<input{{ ui8kit_attrs({'type': 'radio', 'class': ui8kit_or_null(ui8kit_classes('radioClasses', {'class': class, 'id': id, 'name': name, 'value': value, 'checked': checked, 'required': required, 'disabled': disabled, 'ariaInvalid': ariaInvalid, 'ariaDescribedBy': ariaDescribedBy})), 'id': ui8kit_or_null(id), 'name': ui8kit_or_null(name), 'value': value, 'checked': checked, 'required': required, 'disabled': disabled, 'aria-invalid': ui8kit_or_null(ariaInvalid), 'aria-describedby': ui8kit_or_null(ariaDescribedBy)}, attrs, false, ['id', 'name', 'aria-invalid', 'aria-describedby']) }}>

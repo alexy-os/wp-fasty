@@ -13,15 +13,15 @@
 {# @param attrs (attrs) #}
 {# @param children (children) #}
 {% set class = class|default('') %}
-{% set id = id|default('') %}
-{% set name = name|default('') %}
+{% set id = id ?? null %}
+{% set name = name ?? null %}
 {% set value = value|default('') %}
 {% set multiple = multiple|default(false) %}
 {% set required = required|default(false) %}
 {% set disabled = disabled|default(false) %}
 {% set options = options|default([]) %}
-{% set ariaInvalid = ariaInvalid|default('') %}
-{% set ariaDescribedBy = ariaDescribedBy|default('') %}
+{% set ariaInvalid = ariaInvalid ?? null %}
+{% set ariaDescribedBy = ariaDescribedBy ?? null %}
 {% set attrs = attrs|default([]) %}
 {% set children = children|default('') %}
-<select{{ ui8kit_attrs({'class': ui8kit_or_null(ui8kit_classes('selectClasses', {'class': class, 'id': id, 'name': name, 'value': value, 'multiple': multiple, 'required': required, 'disabled': disabled, 'ariaInvalid': ariaInvalid, 'ariaDescribedBy': ariaDescribedBy})), 'id': ui8kit_or_null(id), 'name': ui8kit_or_null(name), 'multiple': multiple, 'required': required, 'disabled': disabled, 'aria-invalid': ui8kit_or_null(ariaInvalid), 'aria-describedby': ui8kit_or_null(ariaDescribedBy)}, attrs) }}>{% for item in options %}<option{{ ui8kit_attrs({'value': (item.value ?? ''), 'selected': ((item.value ?? '') is same as(value)), 'disabled': (item.disabled ?? false)}) }}>{{ (item.label ?? '') }}</option>{% endfor %}{{ children|raw }}</select>
+<select{{ ui8kit_attrs({'class': ui8kit_or_null(ui8kit_classes('selectClasses', {'class': class, 'id': id, 'name': name, 'value': value, 'multiple': multiple, 'required': required, 'disabled': disabled, 'ariaInvalid': ariaInvalid, 'ariaDescribedBy': ariaDescribedBy})), 'id': ui8kit_or_null(id), 'name': ui8kit_or_null(name), 'multiple': multiple, 'required': required, 'disabled': disabled, 'aria-invalid': ui8kit_or_null(ariaInvalid), 'aria-describedby': ui8kit_or_null(ariaDescribedBy)}, attrs, false, ['id', 'name', 'aria-invalid', 'aria-describedby']) }}>{% for item in options %}<option{{ ui8kit_attrs({'value': (item.value ?? ''), 'selected': ((item.value ?? '') is same as(value)), 'disabled': (item.disabled ?? false)}) }}>{{ (item.label ?? '') }}</option>{% endfor %}{{ children|raw }}</select>

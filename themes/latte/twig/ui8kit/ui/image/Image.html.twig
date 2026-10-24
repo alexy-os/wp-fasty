@@ -11,13 +11,13 @@
 {# @param decoding (string) #}
 {# @param attrs (attrs) #}
 {% set class = class|default('') %}
-{% set src = src|default('') %}
+{% set src = src ?? null %}
 {% set alt = alt|default('') %}
-{% set srcSet = srcSet|default('') %}
-{% set sizes = sizes|default('') %}
-{% set width = width|default('') %}
-{% set height = height|default('') %}
-{% set loading = loading|default('') %}
-{% set decoding = decoding|default('') %}
+{% set srcSet = srcSet ?? null %}
+{% set sizes = sizes ?? null %}
+{% set width = width ?? null %}
+{% set height = height ?? null %}
+{% set loading = loading ?? null %}
+{% set decoding = decoding ?? null %}
 {% set attrs = attrs|default([]) %}
-<img{{ ui8kit_attrs({'src': ui8kit_or_null(src), 'alt': alt, 'class': ui8kit_or_null(ui8kit_classes('imageClasses', {'class': class, 'src': src, 'alt': alt, 'srcSet': srcSet, 'sizes': sizes, 'width': width, 'height': height, 'loading': loading, 'decoding': decoding})), 'srcset': ui8kit_or_null(srcSet), 'sizes': ui8kit_or_null(sizes), 'width': ui8kit_or_null(width), 'height': ui8kit_or_null(height), 'loading': ui8kit_or_null(loading), 'decoding': ui8kit_or_null(decoding)}, attrs) }}>
+<img{{ ui8kit_attrs({'src': ui8kit_img_url_or_null(src), 'alt': alt, 'class': ui8kit_or_null(ui8kit_classes('imageClasses', {'class': class, 'src': src, 'alt': alt, 'srcSet': srcSet, 'sizes': sizes, 'width': width, 'height': height, 'loading': loading, 'decoding': decoding})), 'srcset': ui8kit_or_null(srcSet), 'sizes': ui8kit_or_null(sizes), 'width': ui8kit_or_null(width), 'height': ui8kit_or_null(height), 'loading': ui8kit_or_null(loading), 'decoding': ui8kit_or_null(decoding)}, attrs, true, ['src', 'srcset', 'sizes', 'width', 'height', 'loading', 'decoding']) }}>

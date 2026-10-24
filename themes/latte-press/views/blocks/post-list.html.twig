@@ -21,12 +21,12 @@
 						{% if post.categories is not empty %}
 							{% set c_ui3 %}
 								{% for cat in post.categories %}
-									{% set c_ui2 %}{{ cat.name }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((cat.url|safe_url)))|default(''), 'class': 'text-xs font-semibold uppercase tracking-wide text-primary no-underline', 'children': c_ui2, 'attrs': {}} only %}
+									{% set c_ui2 %}{{ cat.name }}{% endset %}{% include 'link/Link.html.twig' with {'href': cat.url|default(''), 'class': 'text-xs font-semibold uppercase tracking-wide text-primary no-underline', 'children': c_ui2, 'attrs': {}} only %}
 								{% endfor %}
 							{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-wrap gap-2', 'children': c_ui3, 'attrs': {}} only %}
 						{% endif %}
 						{% set c_ui5 %}
-							{% set c_ui4 %}{{ post.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((post.url|safe_url)))|default(''), 'class': 'text-foreground no-underline hover:text-primary', 'children': c_ui4, 'attrs': {}} only %}
+							{% set c_ui4 %}{{ post.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': post.url|default(''), 'class': 'text-foreground no-underline hover:text-primary', 'children': c_ui4, 'attrs': {}} only %}
 						{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'text-2xl font-semibold leading-tight', 'children': c_ui5, 'attrs': {}} only %}
 						{% set c_ui9 %}
 							{% if post.date.display is not empty %}
@@ -39,7 +39,7 @@
 						{% if post.excerpt is not empty %}
 							{% set c_ui10 %}{{ post.excerpt }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}
 						{% endif %}
-						{% set c_ui11 %}{{ labels.read_more ?? 'Read more' }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((post.url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm font-medium text-primary no-underline', 'children': c_ui11, 'attrs': {}} only %}
+						{% set c_ui11 %}{{ labels.read_more ?? 'Read more' }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': post.url|default(''), 'class': 'inline-flex items-center gap-2 text-sm font-medium text-primary no-underline', 'children': c_ui11, 'attrs': {}} only %}
 					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui12, 'attrs': {}} only %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'article', 'class': ((post.post_class ?? '') ~ ' grid gap-6 border-b border-border pb-8 md:grid-cols-[240px_1fr]'), 'children': c_ui13, 'attrs': {}} only %}
 			{% endfor %}
@@ -50,11 +50,11 @@
 	{% if pagination is not empty %}
 		{% set c_ui17 %}
 			{% if pagination.prev_url %}
-				{% set c_ui14 %}{{ icon('arrow-left') }}{{ labels.previous ?? 'Previous' }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((pagination.prev_url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui14, 'attrs': {}} only %}
+				{% set c_ui14 %}{{ icon('arrow-left') }}{{ labels.previous ?? 'Previous' }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination.prev_url|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui14, 'attrs': {}} only %}
 			{% endif %}
 			{% set c_ui15 %}{{ pagination.current }} / {{ pagination.total }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui15, 'attrs': {}} only %}
 			{% if pagination.next_url %}
-				{% set c_ui16 %}{{ labels.next ?? 'Next' }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': (((pagination.next_url|safe_url)))|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui16, 'attrs': {}} only %}
+				{% set c_ui16 %}{{ labels.next ?? 'Next' }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination.next_url|default(''), 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui16, 'attrs': {}} only %}
 			{% endif %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mt-10 flex items-center justify-center gap-4', 'children': c_ui17, 'attrs': {'aria-label': (labels.pagination ?? 'Pagination')}} only %}
 	{% endif %}

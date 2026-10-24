@@ -2,15 +2,15 @@
 {* Select — Select renders option children from Options, then manual children. *}
 {parameters
   string $class = '',
-  string $id = '',
-  string $name = '',
+  ?string $id = null,
+  ?string $name = null,
   string $value = '',
   bool $multiple = false,
   bool $required = false,
   bool $disabled = false,
   array $options = [],
-  string $ariaInvalid = '',
-  string $ariaDescribedBy = '',
+  ?string $ariaInvalid = null,
+  ?string $ariaDescribedBy = null,
   array $attrs = [],
   string $children = '',
 }
@@ -23,7 +23,7 @@
   'disabled' => $disabled,
   'aria-invalid' => \UI8Kit\Latte\Rt::orNull($ariaInvalid),
   'aria-describedby' => \UI8Kit\Latte\Rt::orNull($ariaDescribedBy),
-  ...$attrs,
+  ...\UI8Kit\Latte\Rt::restAttrs($attrs, false, ['id', 'name', 'aria-invalid', 'aria-describedby']),
 ]">{foreach $options as $item}<option n:attr="[
   'value' => ($item['value'] ?? ''),
   'selected' => (($item['value'] ?? '') === $value),

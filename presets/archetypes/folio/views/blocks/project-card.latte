@@ -8,11 +8,11 @@
 		{else}
 			{capture $c_ui1}{icon('image', 'size-8')}{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex aspect-[4/3] items-center justify-center text-muted-foreground', children: (string) $c_ui1, attrs: []}
 		{/if}
-	{/capture}{include 'link/Link.latte', href: ((($project['url'])|checkUrl)) ?? '', class: 'block overflow-hidden rounded-xl border border-border bg-card no-underline', children: (string) $c_ui2, attrs: ['aria-label' => ($project['title'])]}
+	{/capture}{include 'link/Link.latte', href: $project['url'] ?? '', class: 'block overflow-hidden rounded-xl border border-border bg-card no-underline', children: (string) $c_ui2, attrs: ['aria-label' => ($project['title'])]}
 	{capture $c_ui8}
 		{capture $c_ui6}
 			{capture $c_ui4}
-				{capture $c_ui3}{$project['title']}{/capture}{include 'link/Link.latte', href: ((($project['url'])|checkUrl)) ?? '', class: 'text-foreground no-underline hover:text-primary', children: (string) $c_ui3, attrs: []}
+				{capture $c_ui3}{$project['title']}{/capture}{include 'link/Link.latte', href: $project['url'] ?? '', class: 'text-foreground no-underline hover:text-primary', children: (string) $c_ui3, attrs: []}
 			{/capture}{include 'text/Text.latte', tag: ($headingTag ?? 'h3'), class: 'text-lg font-semibold leading-tight', children: (string) $c_ui4, attrs: []}
 			{if !empty($project['types'])}
 				{capture $c_ui5}

@@ -6,9 +6,9 @@
 	{/if}
 	{if !empty($work['types'])}
 		{capture $c_ui5}
-			{capture $c_ui3}{$labels['all_work']}{/capture}{include 'link/Link.latte', href: ((($work['url'])|checkUrl)) ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $work['current'] === '' ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent'])), children: (string) $c_ui3, attrs: ['aria-current' => ($work['current'] === '' ? 'page' : null)]}
+			{capture $c_ui3}{$labels['all_work']}{/capture}{include 'link/Link.latte', href: $work['url'] ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $work['current'] === '' ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent'])), children: (string) $c_ui3, attrs: ['aria-current' => ($work['current'] === '' ? 'page' : null)]}
 			{foreach $work['types'] as $type}
-				{capture $c_ui4}{$type['name']}{/capture}{include 'link/Link.latte', href: ((($type['url'])|checkUrl)) ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $work['current'] === $type['slug'] ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent'])), children: (string) $c_ui4, attrs: ['aria-current' => ($work['current'] === $type['slug'] ? 'page' : null)]}
+				{capture $c_ui4}{$type['name']}{/capture}{include 'link/Link.latte', href: $type['url'] ?? '', class: implode(' ', array_filter(['inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline', $work['current'] === $type['slug'] ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent'])), children: (string) $c_ui4, attrs: ['aria-current' => ($work['current'] === $type['slug'] ? 'page' : null)]}
 			{/foreach}
 		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-8 flex flex-wrap gap-2', children: (string) $c_ui5, attrs: ['aria-label' => ($labels['all_work'])]}
 	{/if}

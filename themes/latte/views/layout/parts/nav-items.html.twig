@@ -6,7 +6,7 @@
 		{% set c_ui2 %}
 			{% set c_ui1 %}
 				{{ item.title }}
-			{% endset %}{% include 'link/Link.html.twig' with {'href': (((item.url|safe_url)))|default(''), 'class': ((linkClass ?? 'block rounded-md px-4 py-2 text-sm font-medium text-muted-foreground no-underline hover:bg-accent hover:text-foreground') ~ (item.current ? ' bg-accent text-foreground' : '')), 'children': c_ui1, 'attrs': {'aria-current': ((item.current)) ? 'page' : null}} only %}
+			{% endset %}{% include 'link/Link.html.twig' with {'href': item.url|default(''), 'class': ((linkClass ?? 'block rounded-md px-4 py-2 text-sm font-medium text-muted-foreground no-underline hover:bg-accent hover:text-foreground') ~ (item.current ? ' bg-accent text-foreground' : '')), 'children': c_ui1, 'attrs': {'aria-current': ((item.current)) ? 'page' : null}} only %}
 			{% if item.children ?? false %}
 				{% include 'layout/parts/nav-items.html.twig' with { items: item.children, listClass: 'ml-4 mt-2 flex flex-col gap-2', linkClass: linkClass ?? null } %}
 			{% endif %}

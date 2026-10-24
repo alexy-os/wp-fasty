@@ -48,7 +48,7 @@ Raw HTML is fine only for elements no primitive covers.
 (never a component name, custom element or made-up tag):
 
 - `Box`: `div`, `section`, `article`, `aside`, `header`, `footer`, `main`, `nav`, `figure`, `search`, `ul`, `ol`, `li`, `dl`, `dt`, `dd`, `fieldset`, `table`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`, `caption`, `colgroup`, `col`
-- `Text`: `p`, `span`, `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `blockquote`, `figcaption`, `pre`, `code`, `small`, `strong`, `em`, `time`, `legend`
+- `Text`: `p`, `span`, `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `blockquote`, `figcaption`, `pre`, `code`, `small`, `strong`, `em`, `time`, `legend`, `del`, `ins`
 
 ## 3. Static ARIA via props
 

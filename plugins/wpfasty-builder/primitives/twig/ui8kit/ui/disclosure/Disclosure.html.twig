@@ -7,7 +7,7 @@
 {# @param children (children) #}
 {% set class = class|default('') %}
 {% set open = open|default(false) %}
-{% set name = name|default('') %}
+{% set name = name ?? null %}
 {% set attrs = attrs|default([]) %}
 {% set children = children|default('') %}
-<details{{ ui8kit_attrs({'class': ui8kit_or_null(ui8kit_classes('disclosureClasses', {'class': class, 'open': open, 'name': name})), 'open': open, 'name': ui8kit_or_null(name)}, attrs) }}>{{ children|raw }}</details>
+<details{{ ui8kit_attrs({'class': ui8kit_or_null(ui8kit_classes('disclosureClasses', {'class': class, 'open': open, 'name': name})), 'open': open, 'name': ui8kit_or_null(name)}, attrs, false, ['name']) }}>{{ children|raw }}</details>

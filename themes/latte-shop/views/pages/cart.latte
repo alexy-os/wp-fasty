@@ -6,7 +6,7 @@
 		{capture $c_ui5}
 			{capture $c_ui2}{icon('shopping-cart', 'size-8')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-muted-foreground', children: (string) $c_ui2, attrs: []}
 			{capture $c_ui3}{$labels['empty_cart']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_ui3, attrs: []}
-			{capture $c_ui4}{$labels['continue_shopping']}{/capture}{include 'link/Link.latte', href: ((($shop['url'])|checkUrl)) ?? '', class: 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui4, attrs: []}
+			{capture $c_ui4}{$labels['continue_shopping']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui4, attrs: []}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center', children: (string) $c_ui5, attrs: []}
 	{else}
 		{capture $c_ui20}
@@ -17,9 +17,9 @@
 				{capture $c_ui15}
 					{foreach $cart['items'] as $item}
 						{capture $c_ui14}
-							{if $item['image']}{include 'image/Image.latte', src: ((($item['image'])|checkUrl)) ?? '', class: 'size-16 rounded-lg object-cover', attrs: ['alt' => '', 'loading' => 'lazy']}{else}{capture $c_ui6}{icon('package')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'flex size-16 items-center justify-center rounded-lg bg-muted text-muted-foreground', children: (string) $c_ui6, attrs: []}{/if}
+							{if $item['image']}{include 'image/Image.latte', src: $item['image'] ?? '', class: 'size-16 rounded-lg object-cover', attrs: ['alt' => '', 'loading' => 'lazy']}{else}{capture $c_ui6}{icon('package')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'flex size-16 items-center justify-center rounded-lg bg-muted text-muted-foreground', children: (string) $c_ui6, attrs: []}{/if}
 							{capture $c_ui9}
-								{capture $c_ui7}{$item['title']}{/capture}{include 'link/Link.latte', href: ((($item['url'])|checkUrl)) ?? '', class: 'font-medium text-foreground no-underline hover:text-primary', children: (string) $c_ui7, attrs: []}
+								{capture $c_ui7}{$item['title']}{/capture}{include 'link/Link.latte', href: $item['url'] ?? '', class: 'font-medium text-foreground no-underline hover:text-primary', children: (string) $c_ui7, attrs: []}
 								{capture $c_ui8}{$item['unit_display']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui8, attrs: []}
 							{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex min-w-0 flex-1 flex-col gap-2', children: (string) $c_ui9, attrs: []}
 							{capture $c_ui10}{$labels['qty']}{/capture}{include 'label/Label.latte', class: 'sr-only', children: (string) $c_ui10, attrs: ['for' => ('qty-' . ($item['id']))]}
@@ -30,18 +30,18 @@
 					{/foreach}
 				{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', children: (string) $c_ui15, attrs: []}
 				{capture $c_ui17}
-					{capture $c_ui16}{icon('arrow-left')}{$labels['continue_shopping']}{/capture}{include 'link/Link.latte', href: ((($shop['url'])|checkUrl)) ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui16, attrs: []}
+					{capture $c_ui16}{icon('arrow-left')}{$labels['continue_shopping']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'inline-flex items-center gap-2 text-sm text-primary no-underline', children: (string) $c_ui16, attrs: []}
 					{capture $upd}{icon('rotate-ccw')}{$labels['update_cart']}{/capture}
 					{include 'button/Button.latte', type: 'submit', class: kit('button', ['variant' => 'outline']), children: (string) $upd}
 				{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-wrap justify-between gap-4', children: (string) $c_ui17, attrs: []}
-			{/capture}{include 'form/Form.latte', action: ((($shop['action'])|checkUrl)) ?? '', class: 'flex flex-col gap-4', children: (string) $c_ui18, attrs: ['method' => 'post']}
+			{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', class: 'flex flex-col gap-4', children: (string) $c_ui18, attrs: ['method' => 'post']}
 			{foreach $cart['items'] as $item}
 				{capture $c_ui19}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => 'latte_shop_cart']}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'op', 'value' => 'remove']}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'product_id', 'value' => ($item['id'])]}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['cart_nonce'])]}
-				{/capture}{include 'form/Form.latte', action: ((($shop['action'])|checkUrl)) ?? '', children: (string) $c_ui19, attrs: ['id' => ('remove-' . ($item['id'])), 'method' => 'post', 'hidden' => true]}
+				{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', children: (string) $c_ui19, attrs: ['id' => ('remove-' . ($item['id'])), 'method' => 'post', 'hidden' => true]}
 			{/foreach}
 			{include 'blocks/order-summary.latte', cart: $cart, labels: $labels}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-8 lg:grid-cols-[1fr_360px]', children: (string) $c_ui20, attrs: []}

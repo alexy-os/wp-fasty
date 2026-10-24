@@ -2,24 +2,24 @@
 {* Meter — Meter renders a native meter; children are the fallback text. *}
 {parameters
   string $class = '',
-  string $value = '',
-  string $min = '',
-  string $max = '',
-  string $low = '',
-  string $high = '',
-  string $optimum = '',
-  string $ariaLabel = '',
+  ?string $value = null,
+  ?string $min = null,
+  ?string $max = null,
+  ?string $low = null,
+  ?string $high = null,
+  ?string $optimum = null,
+  ?string $ariaLabel = null,
   array $attrs = [],
   string $children = '',
 }
 <meter n:attr="[
   'class' => \UI8Kit\Latte\Rt::orNull(\UI8Kit\Latte\Classes::meterClasses(['class' => $class, 'value' => $value, 'min' => $min, 'max' => $max, 'low' => $low, 'high' => $high, 'optimum' => $optimum, 'ariaLabel' => $ariaLabel])),
-  'value' => \UI8Kit\Latte\Rt::orNull($value),
+  'value' => $value,
   'min' => \UI8Kit\Latte\Rt::orNull($min),
   'max' => \UI8Kit\Latte\Rt::orNull($max),
   'low' => \UI8Kit\Latte\Rt::orNull($low),
   'high' => \UI8Kit\Latte\Rt::orNull($high),
   'optimum' => \UI8Kit\Latte\Rt::orNull($optimum),
   'aria-label' => \UI8Kit\Latte\Rt::orNull($ariaLabel),
-  ...$attrs,
+  ...\UI8Kit\Latte\Rt::restAttrs($attrs, false, ['min', 'max', 'low', 'high', 'optimum', 'aria-label']),
 ]">{$children|noescape}</meter>
