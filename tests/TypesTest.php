@@ -39,7 +39,7 @@ final class TypesTest extends TestCase
     public static function sanitizeCases(): iterable
     {
         yield 'money comma' => ['money', '12,345', '12.35'];
-        yield 'money negative' => ['money', '-5', '0'];
+        yield 'money negative' => ['money', '-5', '-5'];
         yield 'money junk' => ['money', 'abc', ''];
         yield 'integer' => ['integer', '42.9', '42'];
         yield 'boolean on' => ['boolean', 'on', '1'];
@@ -80,6 +80,12 @@ final class TypesTest extends TestCase
         self::assertNull($money->fromInput(''));
         self::assertSame(4500, $money->toStorage(4500));
         self::assertSame(4500, $money->toStorage('4500'));
+        // Q9: money may be negative; a non-numeric value is "no value", never 0
+        self::assertSame(-1250, $money->toStorage(-1250));
+        self::assertSame(-1250, $money->fromInput('-12.50'));
+        self::assertNull($money->toStorage(''));
+        self::assertNull($money->toStorage('abc'));
+        self::assertNull($money->toStorage(null));
         self::assertSame('45.00', $money->toInput(4500));
         self::assertSame('45.00', $money->toInput('4500'));
         self::assertSame('', $money->toInput(''));
@@ -88,6 +94,8 @@ final class TypesTest extends TestCase
         self::assertSame('integer', $int->metaType());
         self::assertSame(12, $int->fromInput('12'));
         self::assertNull($int->fromInput(''));
+        self::assertNull($int->toStorage(''));
+        self::assertSame(0, $int->toStorage(-3));
 
         $num = Field::fromArray('w', ['type' => 'number'], 'p');
         self::assertSame('number', $num->metaType());

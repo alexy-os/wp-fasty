@@ -64,7 +64,8 @@ final class Field
                 ? sanitize_email($raw)
                 : (string) filter_var($raw, FILTER_SANITIZE_EMAIL),
             'integer' => $raw === '' || !is_numeric($raw) ? '' : (string) (int) $raw,
-            'number', 'money' => self::number($raw),
+            'number' => self::number($raw),
+            'money' => self::number($raw, true),
             'boolean' => in_array(strtolower($raw), ['1', 'on', 'yes', 'true'], true) ? '1' : '',
             'date' => self::date($raw),
             default => function_exists('sanitize_text_field') ? sanitize_text_field($raw) : strip_tags($raw),
@@ -100,12 +101,18 @@ final class Field
         };
     }
 
-    /** REST / programmatic value (money already in cents) → typed storage value. Used as the meta sanitize_callback. */
-    public function toStorage(mixed $value): int|float|bool|string
+    /**
+     * REST / programmatic value (money already in cents) → typed storage value. Used as the meta sanitize_callback.
+     * A non-numeric value of a numeric field is "no value" (null), never 0: an empty sale price stays unset.
+     * Money may be negative (refunds, discounts); integer and number stay non-negative.
+     */
+    public function toStorage(mixed $value): int|float|bool|string|null
     {
+        $num = is_int($value) || is_float($value) || (is_string($value) && is_numeric(trim($value)));
         return match ($this->type) {
-            'money', 'integer' => is_numeric($value) ? max(0, (int) round((float) $value)) : 0,
-            'number' => is_numeric($value) ? max(0.0, round((float) $value, 2)) : 0.0,
+            'money' => $num ? (int) round((float) $value) : null,
+            'integer' => $num ? max(0, (int) round((float) $value)) : null,
+            'number' => $num ? max(0.0, round((float) $value, 2)) : null,
             'boolean' => in_array($value, [true, 1, '1', 'true', 'on', 'yes'], true),
             default => $this->sanitize($value),
         };
@@ -145,7 +152,6 @@ final class Field
         return checkdate((int) $m[2], (int) $m[3], (int) $m[1]) ? "{$m[1]}-{$m[2]}-{$m[3]}" : '';
     }
 
-    /** Non-negative decimal with max 2 places, comma accepted; '' when empty/invalid. */
     private static function url(string $raw): string
     {
         if (function_exists('esc_url_raw')) {
@@ -154,9 +160,14 @@ final class Field
         return filter_var($raw, FILTER_VALIDATE_URL) ? $raw : '';
     }
 
-    public static function number(string $raw): string
+    /** Decimal with max 2 places, comma accepted; non-negative unless $signed (money); '' when empty/invalid. */
+    public static function number(string $raw, bool $signed = false): string
     {
         $raw = str_replace(',', '.', $raw);
-        return $raw === '' || !is_numeric($raw) ? '' : (string) max(0, round((float) $raw, 2));
+        if ($raw === '' || !is_numeric($raw)) {
+            return '';
+        }
+        $n = round((float) $raw, 2);
+        return (string) ($signed ? $n : max(0, $n));
     }
 }
