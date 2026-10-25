@@ -20,11 +20,6 @@ if (!is_file($wpfasty_pin_seeder)) {
 $wpfasty_pin_iso = str_replace(' ', 'T', $wpfasty_pin_at) . 'Z';
 update_option('uploads_use_yearmonth_folders', 0);
 global $wpdb;
-// ids independent of what the install created first (core version, MySQL vs MariaDB): demo rows start at 100
-foreach ([$wpdb->posts, $wpdb->terms, $wpdb->term_taxonomy] as $wpfasty_pin_table) {
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- fixture setup.
-    $wpdb->query("ALTER TABLE {$wpfasty_pin_table} AUTO_INCREMENT = 100");
-}
 add_filter('wpfasty_codex_now', static fn (): string => $wpfasty_pin_iso);
 require $wpfasty_pin_seeder;
 

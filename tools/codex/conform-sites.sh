@@ -11,7 +11,8 @@ WP_DIR=$1 BASE=$2 DEMO=$3; shift 3
 WRITE=""; [ "${1:-}" = "--write" ] && { WRITE="--write"; shift; }
 SITES=${*:-press folio shop}
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
-wp() { command wp --path="$WP_DIR" "$@"; }
+# --url: WP-CLI sets HTTP_HOST from it (no wp_guess_url warning while the tables are gone)
+wp() { command wp --path="$WP_DIR" --url="$BASE" "$@"; }
 fail=0
 for site in $SITES; do
   # fresh DB: drop the install's tables (no mysql client needed)
@@ -21,6 +22,9 @@ for site in $SITES; do
   rm -rf "$WP_DIR/wp-content/uploads"
   wp core install --url="$BASE" --title=CI --admin_user=admin --admin_password=admin --admin_email=ci@example.com \
     --skip-email --quiet
+  # ids independent of what core install created (version, MySQL vs MariaDB): everything after it starts at 100,
+  # including pages the theme creates on activation
+  wp eval 'global $wpdb; foreach ([$wpdb->posts, $wpdb->terms, $wpdb->term_taxonomy] as $t) { $wpdb->query("ALTER TABLE $t AUTO_INCREMENT = 100"); }'
   wp plugin activate wpfasty-types wpfasty-builder --quiet
   wp theme activate "latte-$site" --quiet
   wp rewrite structure '/%postname%/' --hard --quiet
