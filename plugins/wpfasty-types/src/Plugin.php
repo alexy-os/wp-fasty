@@ -27,6 +27,7 @@ final class Plugin
         $plugin = new self($types);
         add_action('init', [$plugin, 'register']);
         add_action('init', [self::class, 'registerCurrency']);
+        add_action('init', [$plugin, 'migrate'], 20);
         Codex\Rest::attach();
         if (is_admin()) {
             add_action('admin_init', [self::class, 'currencyField']);
@@ -100,6 +101,63 @@ final class Plugin
                 ]);
             }
         }
+    }
+
+    /** Option holding the field types the stored meta was last normalized to: {post type: {meta key: type}}. */
+    public const SCHEMA_OPTION = 'wpfasty_types_schema';
+    private const TYPED = ['integer', 'number', 'money', 'boolean', 'date'];
+
+    /**
+     * Data migration when a field's declared type changes (e.g. folio `year` string → integer): every stored value
+     * of that meta key is rewritten through the field's own toStorage() — "2024" → 2024 — and a value the new type
+     * cannot hold is deleted ("no value", never 0, Q9). Runs once per type change; one query per changed key.
+     *
+     * @return array<string, int> meta key → rows rewritten or deleted
+     */
+    public function migrate(): array
+    {
+        $now = [];
+        foreach ($this->types->all() as $type) {
+            foreach ($type->fields as $field) {
+                $now[$type->name][$field->metaKey] = $field->type;
+            }
+        }
+        $was = (array) get_option(self::SCHEMA_OPTION, []);
+        if ($was === $now) {
+            return [];
+        }
+        global $wpdb;
+        $done = [];
+        foreach ($this->types->all() as $type) {
+            foreach ($type->fields as $field) {
+                $old = $was[$type->name][$field->metaKey] ?? null;
+                if ($old === $field->type || !in_array($field->type, self::TYPED, true)) {
+                    continue;
+                }
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- one-off migration over one meta key, not cached.
+                $rows = (array) $wpdb->get_results($wpdb->prepare(
+                    "SELECT pm.post_id, pm.meta_value FROM {$wpdb->postmeta} pm"
+                    . " INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id WHERE pm.meta_key = %s AND p.post_type = %s",
+                    $field->metaKey,
+                    $type->name,
+                ));
+                $n = 0;
+                foreach ($rows as $row) {
+                    $raw = (string) $row->meta_value;
+                    $value = $field->type === 'date' ? Field::date($raw) : $field->toStorage($raw);
+                    if ($value === null || $value === '') {
+                        delete_post_meta((int) $row->post_id, $field->metaKey);
+                        $n++;
+                    } elseif ((string) (is_bool($value) ? (int) $value : $value) !== $raw) {
+                        update_post_meta((int) $row->post_id, $field->metaKey, $value);
+                        $n++;
+                    }
+                }
+                $done[$field->metaKey] = $n;
+            }
+        }
+        update_option(self::SCHEMA_OPTION, $now, true);
+        return $done;
     }
 
     /**

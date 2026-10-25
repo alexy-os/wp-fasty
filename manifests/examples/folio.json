@@ -92,7 +92,7 @@
           "label": "Client"
         },
         "year": {
-          "type": "string",
+          "type": "integer",
           "label": "Year"
         },
         "role": {
@@ -102,6 +102,10 @@
         "url": {
           "type": "url",
           "label": "Live URL"
+        },
+        "featured": {
+          "type": "boolean",
+          "label": "Featured"
         }
       },
       "metabox": {

@@ -1,5 +1,5 @@
 {
-  "manifest_digest": "codex-manifest/v2:sha256:dffa0246bffefb24dad86748d31a139e9e10801fb4bdc54381e88c35e263f45f",
+  "manifest_digest": "codex-manifest/v2:sha256:a50b6f0e01f298087c69f306812ce1230048c365ad4637666aeff2102001b539",
   "taxonomies": [
     {
       "id": "category",
@@ -28,7 +28,8 @@
           "client": "_folio_client",
           "year": "_folio_year",
           "role": "_folio_role",
-          "url": "_folio_url"
+          "url": "_folio_url",
+          "featured": "_folio_featured"
         }
       }
     },

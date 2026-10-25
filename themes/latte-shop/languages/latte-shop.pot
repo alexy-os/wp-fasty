@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-20T09:30:48+00:00\n"
+"POT-Creation-Date: 2026-10-25T15:00:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: latte-shop\n"
@@ -280,7 +280,7 @@ msgid "Product category"
 msgstr ""
 
 #: types/product.php:47
-#: types/product.php:65
+#: types/product.php:68
 msgid "Price"
 msgstr ""
 
@@ -296,15 +296,27 @@ msgstr ""
 msgid "Stock (empty = unlimited)"
 msgstr ""
 
+#: types/product.php:51
+msgid "Rating (0-5)"
+msgstr ""
+
 #: types/product.php:52
+msgid "Reviews"
+msgstr ""
+
+#: types/product.php:53
+msgid "Badge (empty = sale when discounted)"
+msgstr ""
+
+#: types/product.php:55
 msgid "Product data"
 msgstr ""
 
-#: types/product.php:60
+#: types/product.php:63
 msgid "Shop"
 msgstr ""
 
-#: types/product.php:68
+#: types/product.php:71
 msgid "Stock"
 msgstr ""
 

@@ -13,14 +13,15 @@ foreach (['Branding', 'Web', 'Product', 'Editorial'] as $name) {
 }
 
 $projects = [
-    ['northwind-rebrand', 'Northwind rebrand', 'Branding', 'Northwind Co.', '2026', 'Art direction', 'northwind-mountain'],
-    ['atlas-dashboard', 'Atlas analytics dashboard', 'Product', 'Atlas Labs', '2026', 'Product design', 'atlas-desk'],
-    ['field-notes-magazine', 'Field Notes magazine', 'Editorial', 'Field Notes', '2025', 'Layout & type', 'field-magazine'],
-    ['ember-coffee', 'Ember Coffee e-commerce', 'Web', 'Ember Roasters', '2025', 'Design & build', 'ember-coffee'],
-    ['orbit-app', 'Orbit mobile app', 'Product', 'Orbit Health', '2025', 'UX lead', 'orbit-phone'],
-    ['kinfolk-studio', 'Kinfolk Studio website', 'Web', 'Kinfolk', '2024', 'WordPress build', 'kinfolk-studio'],
+    ['northwind-rebrand', 'Northwind rebrand', 'Branding', 'Northwind Co.', 2026, 'Art direction', 'northwind-mountain'],
+    ['atlas-dashboard', 'Atlas analytics dashboard', 'Product', 'Atlas Labs', 2026, 'Product design', 'atlas-desk'],
+    ['field-notes-magazine', 'Field Notes magazine', 'Editorial', 'Field Notes', 2025, 'Layout & type', 'field-magazine'],
+    ['ember-coffee', 'Ember Coffee e-commerce', 'Web', 'Ember Roasters', 2025, 'Design & build', 'ember-coffee'],
+    ['orbit-app', 'Orbit mobile app', 'Product', 'Orbit Health', 2025, 'UX lead', 'orbit-phone'],
+    ['kinfolk-studio', 'Kinfolk Studio website', 'Web', 'Kinfolk', 2024, 'WordPress build', 'kinfolk-studio'],
 ];
 $order = 0;
+// year: integer (Codex project.year, migrated from the earlier string field); the first two projects are featured
 foreach ($projects as [$slug, $title, $type, $client, $year, $role, $img]) {
     $id = wpfasty_demo_post($slug, [
         'post_type' => 'project',
@@ -34,6 +35,11 @@ foreach ($projects as [$slug, $title, $type, $client, $year, $role, $img]) {
     update_post_meta($id, '_folio_year', $year);
     update_post_meta($id, '_folio_role', $role);
     update_post_meta($id, '_folio_url', 'https://example.com/' . $slug);
+    if ($order <= 2) {
+        update_post_meta($id, '_folio_featured', true);
+    } else {
+        delete_post_meta($id, '_folio_featured');
+    }
     $att = wpfasty_demo_image($img, 1600, 1200);
     if ($att) {
         set_post_thumbnail($id, $att);

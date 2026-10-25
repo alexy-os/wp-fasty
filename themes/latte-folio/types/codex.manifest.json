@@ -252,7 +252,12 @@
           {
             "id": "year",
             "label": "Year",
-            "type": "string"
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
           },
           {
             "id": "role",
@@ -268,6 +273,11 @@
                 "name": "fastygo.codex/uri"
               }
             ]
+          },
+          {
+            "id": "featured",
+            "label": "Featured",
+            "type": "boolean"
           }
         ]
       },

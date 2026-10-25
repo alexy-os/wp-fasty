@@ -20,19 +20,20 @@ foreach (['Kitchen', 'Home', 'Accessories'] as $name) {
 
 update_option('wpfasty_currency', 'USD');
 
-// price / sale in integer minor units (cents); null = not set; stock null = unlimited.
+// price / sale in integer minor units (cents); null = not set; stock null = unlimited;
+// rating 0-5, reviews count, badge (null = "sale" when discounted, set by the builder's purchasable projection).
 $products = [
-    ['ceramic-mug', 'Ceramic mug', 'Kitchen', 1800, null, 'MUG-01', null, 'ceramic-mug'],
-    ['pour-over-set', 'Pour-over coffee set', 'Kitchen', 5400, 4500, 'POUR-02', 12, 'pour-over'],
-    ['linen-apron', 'Linen apron', 'Kitchen', 3600, null, 'APR-03', null, 'linen-apron'],
-    ['wool-throw', 'Wool throw blanket', 'Home', 12000, 9600, 'THR-04', 5, 'wool-throw'],
-    ['stoneware-vase', 'Stoneware vase', 'Home', 4200, null, 'VAS-05', null, 'stoneware-vase'],
-    ['oak-tray', 'Oak serving tray', 'Home', 6400, null, 'TRY-06', 0, 'oak-tray'],
-    ['canvas-tote', 'Canvas tote bag', 'Accessories', 2800, null, 'TOT-07', null, 'canvas-tote'],
-    ['leather-wallet', 'Leather card wallet', 'Accessories', 4800, 3900, 'WAL-08', 20, 'leather-wallet'],
+    ['ceramic-mug', 'Ceramic mug', 'Kitchen', 1800, null, 'MUG-01', null, 'ceramic-mug', 4.8, 126, null],
+    ['pour-over-set', 'Pour-over coffee set', 'Kitchen', 5400, 4500, 'POUR-02', 12, 'pour-over', 4.6, 58, null],
+    ['linen-apron', 'Linen apron', 'Kitchen', 3600, null, 'APR-03', null, 'linen-apron', 4.4, 31, null],
+    ['wool-throw', 'Wool throw blanket', 'Home', 12000, 9600, 'THR-04', 5, 'wool-throw', 4.9, 212, null],
+    ['stoneware-vase', 'Stoneware vase', 'Home', 4200, null, 'VAS-05', null, 'stoneware-vase', 4.5, 17, null],
+    ['oak-tray', 'Oak serving tray', 'Home', 6400, null, 'TRY-06', 0, 'oak-tray', 4.2, 9, null],
+    ['canvas-tote', 'Canvas tote bag', 'Accessories', 2800, null, 'TOT-07', null, 'canvas-tote', 4.3, 44, 'new'],
+    ['leather-wallet', 'Leather card wallet', 'Accessories', 4800, 3900, 'WAL-08', 20, 'leather-wallet', 4.7, 88, null],
 ];
 $order = 0;
-foreach ($products as [$slug, $title, $cat, $price, $sale, $sku, $stock, $img]) {
+foreach ($products as [$slug, $title, $cat, $price, $sale, $sku, $stock, $img, $rating, $reviews, $badge]) {
     $id = wpfasty_demo_post($slug, [
         'post_type' => 'product',
         'post_title' => $title,
@@ -41,7 +42,11 @@ foreach ($products as [$slug, $title, $cat, $price, $sale, $sku, $stock, $img]) 
         'menu_order' => $order++,
     ]);
     wp_set_object_terms($id, [$cats[$cat]], 'product_cat');
-    foreach (['_shop_price' => $price, '_shop_sale_price' => $sale, '_shop_sku' => $sku, '_shop_stock' => $stock] as $key => $value) {
+    $meta = [
+        '_shop_price' => $price, '_shop_sale_price' => $sale, '_shop_sku' => $sku, '_shop_stock' => $stock,
+        '_shop_rating' => $rating, '_shop_reviews' => $reviews, '_shop_badge' => $badge,
+    ];
+    foreach ($meta as $key => $value) {
         if ($value === null) {
             delete_post_meta($id, $key);
         } else {

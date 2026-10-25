@@ -45,9 +45,10 @@ return [
     ],
     'fields' => [
         'client' => ['type' => 'string', 'label' => __('Client', 'latte-folio')],
-        'year' => ['type' => 'string', 'label' => __('Year', 'latte-folio')],
+        'year' => ['type' => 'integer', 'label' => __('Year', 'latte-folio')],
         'role' => ['type' => 'string', 'label' => __('Role', 'latte-folio')],
         'url' => ['type' => 'url', 'label' => __('Live URL', 'latte-folio')],
+        'featured' => ['type' => 'boolean', 'label' => __('Featured', 'latte-folio')],
     ],
     'metabox' => ['title' => __('Project details', 'latte-folio'), 'context' => 'side'],
     'views' => ['single' => 'pages/project', 'archive' => 'pages/work', 'card' => 'blocks/project-card'],

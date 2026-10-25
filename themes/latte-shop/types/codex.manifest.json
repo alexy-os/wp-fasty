@@ -279,6 +279,26 @@
                 "name": "fastygo.codex/integer"
               }
             ]
+          },
+          {
+            "id": "rating",
+            "label": "Rating (0-5)",
+            "type": "number"
+          },
+          {
+            "id": "reviews",
+            "label": "Reviews",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          },
+          {
+            "id": "badge",
+            "label": "Badge (empty = sale when discounted)",
+            "type": "string"
           }
         ],
         "capabilities": [

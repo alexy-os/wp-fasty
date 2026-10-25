@@ -48,6 +48,9 @@ return [
         'sale_price' => ['type' => 'money', 'label' => __('Sale price', 'latte-shop')],
         'sku' => ['type' => 'string', 'label' => __('SKU', 'latte-shop')],
         'stock' => ['type' => 'integer', 'label' => __('Stock (empty = unlimited)', 'latte-shop')],
+        'rating' => ['type' => 'number', 'label' => __('Rating (0-5)', 'latte-shop')],
+        'reviews' => ['type' => 'integer', 'label' => __('Reviews', 'latte-shop')],
+        'badge' => ['type' => 'string', 'label' => __('Badge (empty = sale when discounted)', 'latte-shop')],
     ],
     'metabox' => ['title' => __('Product data', 'latte-shop'), 'context' => 'side', 'priority' => 'high'],
     'supports' => [

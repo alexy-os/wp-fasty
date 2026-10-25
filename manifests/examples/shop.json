@@ -106,6 +106,18 @@
         "stock": {
           "type": "integer",
           "label": "Stock (empty = unlimited)"
+        },
+        "rating": {
+          "type": "number",
+          "label": "Rating (0-5)"
+        },
+        "reviews": {
+          "type": "integer",
+          "label": "Reviews"
+        },
+        "badge": {
+          "type": "string",
+          "label": "Badge (empty = sale when discounted)"
         }
       },
       "metabox": {
