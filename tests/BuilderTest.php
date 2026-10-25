@@ -248,9 +248,13 @@ final class BuilderTest extends TestCase
         $cases = [
             "{{ constant('PHP_VERSION') }}" => false, '{% do 1 %}' => false, "{{ ['id']|map(c => c)|join }}" => false,
             '{% macro m() %}{% endmacro %}' => false, "{{ source('blocks/x.html.twig') }}" => false,
-            "{{ ui_text('<b>') }}" => true, "{% set a = 1 %}{% if a %}{{ include('blocks/y.html.twig', {p: p}) }}{% endif %}" => true,
+            "{{ og_text('<b>') }}" => true, "{{ include('compose/Text.html.twig', {text: 'k'}) }}" => true,
+            "{% set a = 1 %}{% if a %}{{ include('blocks/y.html.twig', {p: p}) }}{% endif %}" => true,
         ];
         file_put_contents($dir . '/twig/blocks/y.html.twig', 'y');
+        // the shared layers of a remote source are never its own: compose/ comes from the bundled package
+        @mkdir($dir . '/twig/compose', 0777, true);
+        file_put_contents($dir . '/twig/compose/Text.html.twig', "EVIL{{ constant('PHP_VERSION') }}");
         $i = 0;
         foreach ($cases as $tpl => $ok) {
             // one file per case: Twig names compiled classes by template path, not by content
@@ -258,6 +262,7 @@ final class BuilderTest extends TestCase
             file_put_contents($dir . '/twig/' . $name, $tpl);
             $html = (new BlockRenderer(['e' => new LocalSource('e', $dir . '/twig', 'twig', '', true)], null))->render('e', $name, []);
             $this->assertSame($ok, !str_starts_with($html, '<!-- wpfasty-builder'), $tpl . ' → ' . $html);
+            $this->assertStringNotContainsString('EVIL', $html);
         }
     }
 
@@ -320,19 +325,29 @@ final class BuilderTest extends TestCase
         $dir = sys_get_temp_dir() . '/wpfb-guard-' . getmypid();
         @mkdir($dir . '/latte/blocks', 0777, true);
         $cases = [
-            "{=system('id')}" => false, '{php echo 1}' => false, '{=$x->y()}' => false, '{=ui_text(1)|upper}' => false,
-            '{do $a = 1}' => false, '{=new \\stdClass}' => false, "{=ui_text('<b>')|noescape}" => true,
+            "{=system('id')}" => false, '{php echo 1}' => false, '{=$x->y()}' => false, '{=og_text(1)|upper}' => false,
+            '{do $a = 1}' => false, '{=new \\stdClass}' => false, "{=og_text('<b>')|noescape}" => true,
+            "{include '../compose/Text.latte'}" => false, '{=\\CodegenX\\Compose\\Latte\\Compose::props("Text", [])}' => false,
+            "{=og_include('compose/Text.latte', ['text' => 'k'])|noescape}" => true,
         ];
+        // the shared layers of a remote source are never its own: compose/ comes from the bundled package
+        @mkdir($dir . '/latte/compose', 0777, true);
+        file_put_contents($dir . '/latte/compose/Text.latte', 'EVIL{php echo 1}');
+        $i = 0;
         foreach ($cases as $tpl => $ok) {
-            file_put_contents($dir . '/latte/blocks/x.latte', $tpl);
+            // one file per case: without a temp directory Latte names the evaluated class by template, not content
+            $name = 'blocks/x' . ++$i . '.latte';
+            file_put_contents($dir . '/latte/' . $name, $tpl);
             $r = new BlockRenderer(['e' => new LocalSource('e', $dir . '/latte', 'latte', '', true)], null);
             $thrown = false;
+            $html = '';
             try {
-                $r->engine('e')?->renderToString('blocks/x.latte', ['p' => []]);
+                $html = (string) $r->engine('e')?->renderToString($name, ['p' => []]);
             } catch (\Throwable) {
                 $thrown = true;
             }
             $this->assertSame(!$ok, $thrown, $tpl);
+            $this->assertStringNotContainsString('EVIL', $html);
         }
         $this->assertSame('', (new BlockRenderer([], null))->render('e', '../x.latte', []));
     }

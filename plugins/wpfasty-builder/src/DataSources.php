@@ -26,7 +26,11 @@ use WPFastyTypes\Codex\Site;
 final class DataSources
 {
     public const MAX = 24;
-    /** catalog record fields a stale catalog (pre-Codex export) declares optional but does not map */
+    /**
+     * Fallback paths of record fields a catalog declares but does not map. Since codegen-x 4a0c74fb the post, product,
+     * menu_item and page slots map href/image themselves; Feature, Question, Job, Project and some NavLink slots still
+     * leave href unmapped, so a source bound to them keeps the permalink through this overlay.
+     */
     private const OVERLAY = ['href' => 'slug|route', 'image' => 'featured_media_id|media'];
     private const TYPES = ['string' => 'string', 'number' => 'number', 'boolean' => 'boolean'];
 

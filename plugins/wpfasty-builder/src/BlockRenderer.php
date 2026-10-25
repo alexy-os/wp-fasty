@@ -8,12 +8,14 @@ use WPFastyBuilder\Source\SourceInterface;
 
 /**
  * Renders one block template of a source with its props ($p), in the runtime of the template name:
- * blocks/<name>.latte on a Latte engine of its own (the codegen-x ui_* functions are registered there), and
- * blocks/<name>.html.twig on a Twig environment over the source's Twig package. A source serves ONE runtime
+ * blocks/<name>.latte on a Latte engine of its own (the codegen-x og_* functions are registered there), and
+ * blocks/<name>.html.twig on a Twig environment over the source's Twig package. Blocks render through the
+ * compositions (compose/) over the UI8Kit 3 primitives (ui/) of the same package. A source serves ONE runtime
  * (SourceInterface::runtime()); a template of the other runtime, or one missing from the source, renders nothing and
  * is reported (action `wpfasty_builder_missing_block`) — never through the other engine (ADR-001, K7). Each engine is
  * created only when a template of its runtime renders. The PHP runtimes come from the plugin build of that runtime;
- * templates of remote sources render sandboxed: Latte through TemplateGuard, Twig through Twig's SandboxExtension.
+ * templates of remote sources render sandboxed: Latte through TemplateGuard, Twig through Twig's SandboxExtension;
+ * their compose/, ui/ and icons/ layers always come from the bundled package (SourceLoader, TwigSourceLoader).
  */
 final class BlockRenderer
 {
@@ -30,44 +32,47 @@ final class BlockRenderer
     {
     }
 
-    /** loads the Latte runtime of the bundled source (needs latte/latte) */
-    public static function loadRuntime(): void
+    /** the bundled package of a runtime (the trusted compose/ui/icons layers of sandboxed sources) */
+    public static function bundled(string $runtime): string
     {
-        if (class_exists('\UI8Kit\Latte\Extension', false) || !class_exists('\Latte\Engine')) {
-            return;
+        return dirname(__DIR__) . '/sources/ui8kit/' . $runtime;
+    }
+
+    /** loads the codegen-x runtime of the bundled package: UI8Kit 3 primitives, compositions and og_* organisms */
+    private static function loadPackage(string $runtime, string $probe): bool
+    {
+        if (class_exists($probe, false)) {
+            return true;
         }
-        // UI8Kit 3 runtime of the plugin first: its CnMerge is the class merge of the generated runtime too
-        if (!Primitives::loadRuntime('latte')) {
-            return;
+        if (!Primitives::loadRuntime($runtime)) {
+            return false;
         }
-        $php = dirname(__DIR__) . '/sources/ui8kit/latte/php';
-        foreach (['Runtime', 'Extension'] as $f) {
-            if (is_file("$php/$f.php")) {
-                require_once "$php/$f.php";
+        $root = self::bundled($runtime);
+        $files = [...(glob($root . '/compose/*.php') ?: [])];
+        foreach (['CnMerge', 'Runtime', 'OrganismExtension'] as $f) {
+            $files[] = "$root/php/$f.php";
+        }
+        foreach ($files as $file) {
+            if (!is_file($file)) {
+                return false;
             }
+            require_once $file;
         }
+        return class_exists($probe, false);
+    }
+
+    /** loads the Latte runtime of the bundled source (needs latte/latte) */
+    public static function loadRuntime(): bool
+    {
+        return class_exists('\Latte\Engine')
+            && self::loadPackage('latte', '\CodegenX\Organisms\Latte\OrganismExtension');
     }
 
     /** loads the Twig runtime of the bundled source (needs twig/twig) */
     public static function loadTwigRuntime(): bool
     {
-        if (class_exists('\UI8Kit\Twig\Extension', false)) {
-            return true;
-        }
-        if (!class_exists('\Twig\Environment')) {
-            return false;
-        }
-        if (!Primitives::loadRuntime('twig')) {
-            return false;
-        }
-        $php = dirname(__DIR__) . '/sources/ui8kit/twig/php';
-        foreach (['Runtime', 'Extension'] as $f) {
-            if (!is_file("$php/$f.php")) {
-                return false;
-            }
-            require_once "$php/$f.php";
-        }
-        return true;
+        return class_exists('\Twig\Environment')
+            && self::loadPackage('twig', '\CodegenX\Organisms\Twig\OrganismExtension');
     }
 
     /** @param array<string, mixed> $props */
@@ -114,17 +119,22 @@ final class BlockRenderer
         if ($src === null || $src->runtime() !== 'latte' || !is_dir($src->templateRoot() . '/blocks')) {
             return null;
         }
-        self::loadRuntime();
-        if (!class_exists('\UI8Kit\Latte\Extension')) {
+        if (!self::loadRuntime()) {
             return null;
         }
+        $root = $src->templateRoot();
+        $bundled = $src->sandboxed() ? self::bundled('latte') : null;
+        $loader = new SourceLoader($root, $bundled);
+        $engine = new \Latte\Engine();
         $tmp = $this->cache($source);
-        $engine = \UI8Kit\Latte\Extension::engine($src->templateRoot(), $tmp);
-        // bricks are adapters over the plugin's UI8Kit 3 primitives (rendered on a trusted engine, see Primitives)
-        $engine->addFunction('ui_prim', static fn (string $name, array $args = []): \Latte\Runtime\Html
-            => new \Latte\Runtime\Html(Primitives::latte($name, $args)));
-        if ($src->sandboxed()) {
-            $engine->addExtension(self::guard($engine));
+        if ($tmp !== null) {
+            $engine->setTempDirectory($tmp);
+        }
+        $engine->setLoader($loader);
+        // recipes, presets and icons (JSON) of a sandboxed source come from the bundled package too
+        $engine->addExtension(new \CodegenX\Organisms\Latte\OrganismExtension($bundled ?? $root, $engine));
+        if ($bundled !== null) {
+            $engine->addExtension(self::guard($engine, $loader));
         }
         return $this->engines[$source] = $engine;
     }
@@ -141,50 +151,56 @@ final class BlockRenderer
             return $this->twigs[$source] = null;
         }
         $tmp = $this->cache($source . '/twig');
-        $env = \UI8Kit\Twig\Extension::environment($root, ['cache' => $tmp ?? false, 'auto_reload' => true]);
-        self::addPrimitives($env);
-        if ($src->sandboxed()) {
-            $env->addExtension(self::sandbox($env));
+        $bundled = $src->sandboxed() ? self::bundled('twig') : null;
+        $loader = $bundled !== null
+            ? new TwigSourceLoader($root, $bundled)
+            : new \Twig\Loader\FilesystemLoader([$root]);
+        $env = new \Twig\Environment($loader, [
+            'autoescape' => 'html', 'strict_variables' => false, 'cache' => $tmp ?? false, 'auto_reload' => true,
+        ]);
+        $env->addExtension(new \UI8Kit\Twig\TwigExtension());
+        $env->addExtension(new \CodegenX\Compose\Twig\ComposeExtension());
+        $env->addExtension(new \CodegenX\Organisms\Twig\OrganismExtension($bundled ?? $root));
+        if ($loader instanceof TwigSourceLoader) {
+            $env->addExtension(self::sandbox($env, $loader));
         }
         return $this->twigs[$source] = $env;
     }
 
-    public static function guard(\Latte\Engine $engine): TemplateGuard
+    /** the Latte guard of a sandboxed source: the og_* functions; the trusted layers of $loader are not checked */
+    public static function guard(\Latte\Engine $engine, ?SourceLoader $loader = null): TemplateGuard
     {
         $fns = [];
         foreach (array_keys($engine->getFunctions()) as $name) {
-            if (str_starts_with((string) $name, 'ui_')) {
+            if (str_starts_with((string) $name, 'og_')) {
                 $fns[] = (string) $name;
             }
         }
-        return new TemplateGuard($fns);
+        return new TemplateGuard($fns, $loader);
     }
 
-    /** Twig sandbox (global): only the tags, filters and functions of the generated templates; no methods/properties */
-    public static function sandbox(\Twig\Environment $env): \Twig\Extension\SandboxExtension
-    {
-        $fns = ['include', 'ui_prim'];
-        foreach ($env->getExtension(\UI8Kit\Twig\Extension::class)->getFunctions() as $f) {
+    /**
+     * Twig sandbox of a remote source: its blocks may use only the tags, filters and og_* functions of the generated
+     * templates and no methods/properties; the bundled compose/ui/icons layers are trusted (the loader's source policy)
+     */
+    public static function sandbox(
+        \Twig\Environment $env,
+        ?\Twig\Sandbox\SourcePolicyInterface $policy = null,
+    ): \Twig\Extension\SandboxExtension {
+        $fns = ['include'];
+        foreach ($env->getExtension(\CodegenX\Organisms\Twig\OrganismExtension::class)->getFunctions() as $f) {
             $fns[] = $f->getName();
         }
-        $policy = new \Twig\Sandbox\SecurityPolicy(
+        $security = new \Twig\Sandbox\SecurityPolicy(
             ['if', 'for', 'set'],
             ['escape', 'e', 'raw', 'merge'],
             [],
             [],
             $fns,
         );
-        return new \Twig\Extension\SandboxExtension($policy, true);
-    }
-
-    /** `ui_prim()` of the Twig bricks: renders a UI8Kit 3 Twig primitive of the plugin (see Primitives) */
-    public static function addPrimitives(\Twig\Environment $env): void
-    {
-        $env->addFunction(new \Twig\TwigFunction(
-            'ui_prim',
-            static fn (string $name, array $args = []): string => Primitives::twig($name, $args),
-            ['is_safe' => ['html']],
-        ));
+        return $policy !== null
+            ? new \Twig\Extension\SandboxExtension($security, false, $policy)
+            : new \Twig\Extension\SandboxExtension($security, true);
     }
 
     private function cache(string $sub): ?string

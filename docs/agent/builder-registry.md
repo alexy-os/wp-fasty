@@ -27,6 +27,15 @@ Before publication the v2.0.0 catalogs gained `records` (the field lists of the 
 codegen-x specs of `source.commit`, `bun tools/builder/catalog-records.ts`; the editor builds typed fields from them);
 blocks.zip and its sha256 are unchanged.
 
+v3.0.0 (source catalogs here, **not published yet**; supersedes the unpublished v2.0.0): exported by
+`bun tools/builder/export-ui8kit.ts` from codegen-x/ui8kit main (`source.commit`, `source.digest`; CI re-checks the tree:
+`--check --offline`, or a full re-export with the `CODEGEN_X_TOKEN` secret). Blocks are the codegen-x server organisms
+(`og_*` functions) over kit-compose compositions (`compose/`) and the UI8Kit 3 primitives (`ui/`); a remote source supplies
+`blocks/` only — its `compose/`, `ui/` and `icons/` always come from the plugin's bundled package. v1/v2 remote sources
+(`ui_*` functions) no longer render on this plugin: re-import v3.0.0. Built and verified locally; `latte` blocks.zip
+sha256 `d80ad33b958e574c3242676dc07094240ac673f85ed33024e4183e4b54fc013c`, `twig`
+`231703621e56fe58fe1fd8df7adcc88cba16db99318b39cb757419873ba4ee0a`.
+
 Workflow `Published registries` (`.github/workflows/registry-published.yml`, separate from CI, never blocks it; after
 each green CI run on main, daily and on demand) compares the published `v<version>/` and `latest/` byte for byte
 (sha256, size) with `dist/registry` built from source in that CI run, runs `registry:verify` on the URLs, and imports

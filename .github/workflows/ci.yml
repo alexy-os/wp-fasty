@@ -76,6 +76,22 @@ jobs:
           (cd themes/latte && npx --yes ui8kit@3 check) && (cd themes/latte/twig && npx --yes ui8kit@3 check) && (cd plugins/wpfasty-builder/primitives/latte && npx --yes ui8kit@3 check) && (cd plugins/wpfasty-builder/primitives/twig && npx --yes ui8kit@3 check)
           php tools/ui8kit3/presets.php --check
 
+      - name: Builder ui8kit source reproduces from its pinned codegen-x commit (source.commit / source.digest)
+        env:
+          # codegen-x/ui8kit is private: with a read token the export is re-run at the pinned commit and diffed;
+          # without one only the committed tree is checked against the digest recorded at export time
+          CODEGEN_X_TOKEN: ${{ secrets.CODEGEN_X_TOKEN }}
+        run: |
+          if [ -n "$CODEGEN_X_TOKEN" ]; then
+            C=$(bun -e "console.log(require('./plugins/wpfasty-builder/sources/ui8kit/latte/catalog.json').source.commit)")
+            git init -q /tmp/cgx && git -C /tmp/cgx remote add origin "https://x-access-token:${CODEGEN_X_TOKEN}@github.com/codegen-x/ui8kit.git"
+            git -C /tmp/cgx fetch -q --depth 1 origin "$C" && git -C /tmp/cgx checkout -q FETCH_HEAD
+            (cd /tmp/cgx && bun install --frozen-lockfile)
+            bun tools/builder/export-ui8kit.ts --check --cgx /tmp/cgx
+          else
+            bun tools/builder/export-ui8kit.ts --check --offline
+          fi
+
       - name: Composer install (theme)
         run: composer install --no-interaction --no-progress --working-dir=themes/latte
 

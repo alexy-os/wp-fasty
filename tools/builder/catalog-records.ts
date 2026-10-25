@@ -1,14 +1,14 @@
 /**
  * Adds `records` to the bundled builder catalogs (sources/ui8kit/{latte,twig}/catalog.json): the field lists of every
  * record type the block props name (Stat, Feature, LinkActions, HeadLink…, transitively), read from the codegen-x specs
- * of the commit the catalogs were exported from (`source.commit`; xgen/specs/{organisms,patterns,parts}/*.json
- * `records`). The editor turns them into typed fields (editor/src/fields/schema.ts). Only `records` is written; blocks,
+ * of the commit the catalogs were exported from (`source.commit`; packages/compose-gen/specs/{organisms,patterns,parts}/*.json
+ * `records`). The exporter (tools/builder/export-ui8kit.ts) writes them too, from the checkout (specRecordsDir). The editor turns them into typed fields (editor/src/fields/schema.ts). Only `records` is written; blocks,
  * variants and templates stay as exported (tools/builder/export-ui8kit.ts).
  *   bun tools/builder/catalog-records.ts [--cgx /path/to/codegen-x/ui8kit] [--check]
  * --check: exit 1 when a catalog's records differ from the specs (needs the codegen-x checkout).
  */
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const arg = (n: string, d: string) => { const i = process.argv.indexOf(n); return i > 0 ? process.argv[i + 1]! : d; };
@@ -22,12 +22,13 @@ const BUILTIN = new Set(["Record", "Array", "Partial", "Readonly"]);
 export const refs = (ts: string): string[] => [...ts.matchAll(/\b([A-Z][A-Za-z0-9]*)\b/g)].map((m) => m[1]!).filter((n) => !BUILTIN.has(n));
 const tsOf = (t: unknown): string => (typeof t === "string" ? t : (t as any)?.ts ?? (t as any)?.record ?? "");
 
-function specRecords(commit: string): Map<string, RecordField[]> {
-  const git = (...a: string[]) => execFileSync("git", ["-C", CGX, ...a], { maxBuffer: 1 << 28 }).toString();
-  const files = git("ls-tree", "-r", "--name-only", commit, "xgen/specs").split("\n").filter((f) => /^xgen\/specs\/(organisms|patterns|parts)\/[^/]+\.json$/.test(f)).sort();
+const SPEC_DIRS = ["organisms", "patterns", "parts"];
+
+/** records of a list of spec files (path, JSON text), in path order */
+function collect(entries: Array<[string, string]>): Map<string, RecordField[]> {
   const out = new Map<string, RecordField[]>();
-  for (const f of files) {
-    const spec = JSON.parse(git("show", `${commit}:${f}`));
+  for (const [f, text] of entries) {
+    const spec = JSON.parse(text);
     for (const [name, fields] of Object.entries(spec.records ?? {}) as [string, any[]][]) {
       const list: RecordField[] = fields.map((x) => {
         const r: RecordField = { name: String(x.name), type: tsOf(x.type) };
@@ -42,6 +43,20 @@ function specRecords(commit: string): Map<string, RecordField[]> {
     }
   }
   return out;
+}
+
+/** records of the specs of a codegen-x commit (git show, no checkout needed) */
+function specRecords(commit: string): Map<string, RecordField[]> {
+  const git = (...a: string[]) => execFileSync("git", ["-C", CGX, ...a], { maxBuffer: 1 << 28 }).toString();
+  const files = git("ls-tree", "-r", "--name-only", commit, "packages/compose-gen/specs")
+    .split("\n").filter((f) => /^packages\/compose-gen\/specs\/(organisms|patterns|parts)\/[^/]+\.json$/.test(f)).sort();
+  return collect(files.map((f) => [f, git("show", `${commit}:${f}`)]));
+}
+
+/** records of a specs directory (packages/compose-gen/specs of a checkout) */
+export function specRecordsDir(specs: string): Map<string, RecordField[]> {
+  const files = SPEC_DIRS.flatMap((d) => readdirSync(join(specs, d)).filter((f) => f.endsWith(".json")).map((f) => `${d}/${f}`)).sort();
+  return collect(files.map((f) => [f, readFileSync(join(specs, f), "utf8")]));
 }
 
 /** the records a catalog's block props need, transitively, sorted by name */

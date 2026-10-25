@@ -63,7 +63,7 @@ describe("fields", () => {
   });
   test("optional record fields stay out of a new item; defaults apply", () => {
     const item = emptyOf({ kind: "record", name: "LinkActions" }, records) as Record<string, unknown>;
-    expect(item).toEqual({ cta: "", href: "" });
+    expect(item).toEqual({ cta: "" });
     expect(summaryOf("plain")).toBe("plain");
     expect(summaryOf([])).toBeUndefined();
   });

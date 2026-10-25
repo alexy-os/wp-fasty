@@ -204,7 +204,7 @@ $blocksSuite = static function () use ($root, $out): int {
         return 1;
     }
     if (!\WPFastyBuilder\BlockRenderer::loadTwigRuntime()) {
-        $out('✗ blocks: Twig runtime of the builder (primitives/twig, sources/ui8kit/twig/php) missing');
+        $out('✗ blocks: Twig runtime of the builder (primitives/twig, sources/ui8kit/twig/{compose,php}) missing');
         return 1;
     }
     $dom = require __DIR__ . '/normalize-dom.php';
@@ -217,8 +217,8 @@ $blocksSuite = static function () use ($root, $out): int {
         }
     }
     $latte = new \WPFastyBuilder\BlockRenderer(['ui8kit' => new LocalSource('ui8kit', $src . '/latte', 'latte')], null);
-    $twig = \UI8Kit\Twig\Extension::environment($src . '/twig');
-    \WPFastyBuilder\BlockRenderer::addPrimitives($twig);
+    $twig = (new \WPFastyBuilder\BlockRenderer(['ui8kit' => new LocalSource('ui8kit', $src . '/twig', 'twig')], null))
+        ->twig('ui8kit') ?? throw new \RuntimeException('no Twig environment over ' . $src . '/twig');
     $fail = 0;
     $n = 0;
     $blocks = 0;

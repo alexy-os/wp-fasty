@@ -15,9 +15,10 @@ use Latte\SecurityViolationException;
 /**
  * A compile-time allowlist for templates that come from outside the plugin (remote sources). Latte's own sandbox
  * forbids |noescape, which every generated block uses to print the HTML of its parts, so this pass checks the
- * same risks itself: only the tags {= capture var if elseif else foreach}, only registered ui_* functions and a
+ * same risks itself: only the tags {= capture var if elseif else foreach}, only registered og_* functions and a
  * few pure PHP ones, the filters noescape/nocheck, and no objects (new, ->, ::, $this, variable variables) except
- * the $iterator counters.
+ * the $iterator counters. Templates the SourceLoader serves from the bundled package (compose/, ui/, icons/) are
+ * trusted and not checked.
  */
 final class TemplateGuard extends \Latte\Extension
 {
@@ -34,8 +35,8 @@ final class TemplateGuard extends \Latte\Extension
     /** @var array<string, true> */
     private array $functions = [];
 
-    /** @param list<string> $functions the registered functions templates may call (ui_*) */
-    public function __construct(array $functions)
+    /** @param list<string> $functions the registered functions templates may call (og_*) */
+    public function __construct(array $functions, private readonly ?SourceLoader $loader = null)
     {
         foreach ([...$functions, ...self::PHP_FUNCTIONS] as $f) {
             $this->functions[strtolower($f)] = true;
@@ -49,6 +50,9 @@ final class TemplateGuard extends \Latte\Extension
 
     private function pass(TemplateNode $node): void
     {
+        if ($this->loader?->trusted === true) {
+            return;
+        }
         (new NodeTraverser())->traverse($node, leave: $this->visit(...));
     }
 

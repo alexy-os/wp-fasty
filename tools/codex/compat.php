@@ -13,6 +13,7 @@ $root = dirname(__DIR__, 2);
 foreach (['Format', 'ReadPath', 'Compat', 'Sources'] as $c) {
     require_once "$root/plugins/wpfasty-builder/src/Codex/$c.php";
 }
+require_once "$root/plugins/wpfasty-types/src/Codex/Site.php";
 
 use WPFastyBuilder\Codex\Compat;
 use WPFastyBuilder\Codex\Sources;
