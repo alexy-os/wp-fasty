@@ -86,6 +86,17 @@ final class Site
         return $out;
     }
 
+    /** Codex kind stored as this WP post type (delivery wp.kinds.*.post_type), null when the site does not declare one. */
+    public function kindOf(string $postType): ?string
+    {
+        foreach ($this->postKinds() as $kind) {
+            if ((string) ($this->wp($kind)['post_type'] ?? $kind) === $postType) {
+                return $kind;
+            }
+        }
+        return null;
+    }
+
     /** @return array<string, array<string, mixed>> field id → manifest field */
     public function fields(string $kind): array
     {

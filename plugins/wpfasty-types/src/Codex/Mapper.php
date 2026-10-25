@@ -178,9 +178,11 @@ final class Mapper
             'alt' => (string) get_post_meta($att->ID, '_wp_attachment_image_alt', true),
             'caption' => (string) $att->post_excerpt,
         ];
+        // contract 3a58400: attached_to = "<kind>-<n>" of the owner; post 0 / unknown kind -> no field
         if ((int) $att->post_parent > 0) {
-            $owner = (string) get_post_type((int) $att->post_parent);
-            if ($owner !== '') {
+            $type = get_post_type((int) $att->post_parent);
+            $owner = is_string($type) ? $this->site->kindOf($type) : null;
+            if ($owner !== null) {
                 $f[Profile::MEDIA_ATTACHED_FIELD] = self::id($owner, (int) $att->post_parent);
             }
         }
