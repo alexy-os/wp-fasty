@@ -1,0 +1,5036 @@
+{
+ "draft": "draft, заменить на vectors из @ui8kit/contract",
+ "source": "codegen-x packages/compose-gen/runtimes/core/assets/app/core.ts @ 655a18ea (+ Q4 draft pipes in tools/codex/readpath-vectors.ts)",
+ "now": "2026-03-30T12:00:00Z",
+ "default_locale": "en",
+ "opts": {
+  "media": [
+   {
+    "id": "media-11",
+    "kind": "media",
+    "status": "published",
+    "metadata": {
+     "file": {
+      "value": "https://x.test/a.jpg"
+     }
+    }
+   },
+   {
+    "id": "media-12",
+    "kind": "media",
+    "status": "draft",
+    "metadata": {
+     "file": {
+      "value": "https://x.test/b.jpg"
+     }
+    }
+   }
+  ],
+  "users": [
+   {
+    "id": "user-2",
+    "locale": "en-US",
+    "title": "Demo Author"
+   },
+   {
+    "id": "user-3",
+    "locale": "en-US",
+    "title": "T",
+    "metadata": {
+     "display_name": {
+      "value": "Shown"
+     }
+    }
+   }
+  ],
+  "terms": [
+   {
+    "id": "product_cat-2",
+    "locale": "en-US",
+    "taxonomy_id": "product_cat",
+    "name": "Kitchen",
+    "slug": "kitchen"
+   },
+   {
+    "id": "product_cat-3",
+    "locale": "en-US",
+    "taxonomy_id": "product_cat",
+    "name": "Home",
+    "slug": "home"
+   },
+   {
+    "id": "product_cat-2",
+    "locale": "ru",
+    "taxonomy_id": "product_cat",
+    "name": "Кухня",
+    "slug": "kuhnya"
+   }
+  ],
+  "routes": {
+   "product": "/shop/{slug}/"
+  },
+  "settings": {
+   "currency": "USD"
+  }
+ },
+ "cases": [
+  {
+   "name": "plain chrome",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "title",
+   "opts": "default",
+   "expect": "Linen apron"
+  },
+  {
+   "name": "dotted metadata",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.price.value",
+   "opts": "default",
+   "expect": 3600
+  },
+  {
+   "name": "deep",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.nested.value.a.b",
+   "opts": "default",
+   "expect": 5
+  },
+  {
+   "name": "missing path",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.nope.value",
+   "opts": "default",
+   "expect": {
+    "undefined": true
+   }
+  },
+  {
+   "name": "missing path with format pipe",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.nope.value|date",
+   "opts": "default",
+   "expect": {
+    "undefined": true
+   }
+  },
+  {
+   "name": "through a scalar",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "title.x",
+   "opts": "default",
+   "expect": {
+    "undefined": true
+   }
+  },
+  {
+   "name": "date en",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "published_at|date",
+   "opts": "default",
+   "expect": "Mar 09, 2026"
+  },
+  {
+   "name": "date not a date stays",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "d": {
+      "value": "soon"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.d.value|date",
+   "opts": "default",
+   "expect": "soon"
+  },
+  {
+   "name": "ago 0 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "0 min ago"
+  },
+  {
+   "name": "ago-days 0 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "1 day ago"
+  },
+  {
+   "name": "ago-short 0 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "0 min ago"
+  },
+  {
+   "name": "ago 2 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T11:58:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "2 min ago"
+  },
+  {
+   "name": "ago-days 2 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T11:58:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "1 day ago"
+  },
+  {
+   "name": "ago-short 2 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T11:58:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "2 min ago"
+  },
+  {
+   "name": "ago 59 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T11:01:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "59 min ago"
+  },
+  {
+   "name": "ago-days 59 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T11:01:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "1 day ago"
+  },
+  {
+   "name": "ago-short 59 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T11:01:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "59 min ago"
+  },
+  {
+   "name": "ago 1 h",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T11:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "1 h ago"
+  },
+  {
+   "name": "ago-days 1 h",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T11:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "1 day ago"
+  },
+  {
+   "name": "ago-short 1 h",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T11:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "1 h ago"
+  },
+  {
+   "name": "ago 90 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "1 h ago"
+  },
+  {
+   "name": "ago-days 90 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "1 day ago"
+  },
+  {
+   "name": "ago-short 90 min",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "1 h ago"
+  },
+  {
+   "name": "ago 23 h",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-29T12:01:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "23 h ago"
+  },
+  {
+   "name": "ago-days 23 h",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-29T12:01:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "1 day ago"
+  },
+  {
+   "name": "ago-short 23 h",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-29T12:01:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "23 h ago"
+  },
+  {
+   "name": "ago 1 day",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-29T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "Yesterday"
+  },
+  {
+   "name": "ago-days 1 day",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-29T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "1 day ago"
+  },
+  {
+   "name": "ago-short 1 day",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-29T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "1 d ago"
+  },
+  {
+   "name": "ago 2 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-28T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "2 days ago"
+  },
+  {
+   "name": "ago-days 2 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-28T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "2 days ago"
+  },
+  {
+   "name": "ago-short 2 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-28T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "2 d ago"
+  },
+  {
+   "name": "ago 6 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-24T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "6 days ago"
+  },
+  {
+   "name": "ago-days 6 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-24T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "6 days ago"
+  },
+  {
+   "name": "ago-short 6 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-24T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "6 d ago"
+  },
+  {
+   "name": "ago 1 week",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-23T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "Last week"
+  },
+  {
+   "name": "ago-days 1 week",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-23T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "1 week ago"
+  },
+  {
+   "name": "ago-short 1 week",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-23T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "7 d ago"
+  },
+  {
+   "name": "ago 15 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-15T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "2 weeks ago"
+  },
+  {
+   "name": "ago-days 15 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-15T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "2 weeks ago"
+  },
+  {
+   "name": "ago-short 15 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-15T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "15 d ago"
+  },
+  {
+   "name": "ago 40 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-02-18T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "5 weeks ago"
+  },
+  {
+   "name": "ago-days 40 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-02-18T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-days",
+   "opts": "default",
+   "expect": "5 weeks ago"
+  },
+  {
+   "name": "ago-short 40 days",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-02-18T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago-short",
+   "opts": "default",
+   "expect": "40 d ago"
+  },
+  {
+   "name": "ago future clamps to 0",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "t": {
+      "value": "2026-03-31T12:00:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.t.value|ago",
+   "opts": "default",
+   "expect": "0 min ago"
+  },
+  {
+   "name": "media published",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "featured_media_id|media",
+   "opts": "default",
+   "expect": "https://x.test/a.jpg"
+  },
+  {
+   "name": "media draft is no file",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-12",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "featured_media_id|media",
+   "opts": "default",
+   "expect": {
+    "undefined": true
+   }
+  },
+  {
+   "name": "media unknown",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-99",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "featured_media_id|media",
+   "opts": "default",
+   "expect": {
+    "undefined": true
+   }
+  },
+  {
+   "name": "author title fallback",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "author_id|author",
+   "opts": "default",
+   "expect": "Demo Author"
+  },
+  {
+   "name": "author display_name",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-3",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "author_id|author",
+   "opts": "default",
+   "expect": "Shown"
+  },
+  {
+   "name": "term first of taxonomy",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "terms|term:product_cat",
+   "opts": "default",
+   "expect": "Kitchen"
+  },
+  {
+   "name": "term slug",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "terms|term-slug:product_cat",
+   "opts": "default",
+   "expect": "kitchen"
+  },
+  {
+   "name": "term by locale",
+   "source": {
+    "id": "product-7",
+    "locale": "ru",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "terms|term:product_cat",
+   "opts": "default",
+   "expect": "Кухня"
+  },
+  {
+   "name": "term other taxonomy absent",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "terms|term:category",
+   "opts": "default",
+   "expect": {
+    "undefined": true
+   }
+  },
+  {
+   "name": "route",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "slug|route",
+   "opts": "default",
+   "expect": "/shop/linen%20apron%2F%C3%A4/"
+  },
+  {
+   "name": "route no kind route",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "post",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "slug|route",
+   "opts": "default",
+   "expect": {
+    "undefined": true
+   }
+  },
+  {
+   "name": "number currency 3600 USD",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "currency": {
+      "value": "USD"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.price.value|number",
+   "opts": "default",
+   "expect": "$36"
+  },
+  {
+   "name": "number currency 3650 USD",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3650
+     },
+     "currency": {
+      "value": "USD"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.price.value|number",
+   "opts": "default",
+   "expect": "$36.50"
+  },
+  {
+   "name": "number currency -1250 USD",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": -1250
+     },
+     "currency": {
+      "value": "USD"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.price.value|number",
+   "opts": "default",
+   "expect": "-$12.50"
+  },
+  {
+   "name": "number currency 4820000 USD",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 4820000
+     },
+     "currency": {
+      "value": "USD"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.price.value|number",
+   "opts": "default",
+   "expect": "$48,200"
+  },
+  {
+   "name": "number currency 1250 EUR",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 1250
+     },
+     "currency": {
+      "value": "EUR"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.price.value|number",
+   "opts": "default",
+   "expect": "€12.50"
+  },
+  {
+   "name": "number currency 1250 GBP",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 1250
+     },
+     "currency": {
+      "value": "GBP"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.price.value|number",
+   "opts": "default",
+   "expect": "£12.50"
+  },
+  {
+   "name": "number currency 1250 JPY",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 1250
+     },
+     "currency": {
+      "value": "JPY"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.price.value|number",
+   "opts": "default",
+   "expect": "¥1,250"
+  },
+  {
+   "name": "number currency 0 USD",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 0
+     },
+     "currency": {
+      "value": "USD"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.price.value|number",
+   "opts": "default",
+   "expect": "$0"
+  },
+  {
+   "name": "number figure 12400 -",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 12400
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "12,400"
+  },
+  {
+   "name": "number figure 99.99 percent",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 99.99
+     },
+     "unit": {
+      "value": "percent"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "99.99%"
+  },
+  {
+   "name": "number figure 0.8 second",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 0.8
+     },
+     "unit": {
+      "value": "second"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "0.8s"
+  },
+  {
+   "name": "number figure 120 millisecond",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 120
+     },
+     "unit": {
+      "value": "millisecond"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "120ms"
+  },
+  {
+   "name": "number figure 5 minute",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 5
+     },
+     "unit": {
+      "value": "minute"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "5m"
+  },
+  {
+   "name": "number figure 2 hour",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 2
+     },
+     "unit": {
+      "value": "hour"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "2h"
+  },
+  {
+   "name": "number figure 3 day",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 3
+     },
+     "unit": {
+      "value": "day"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "3d"
+  },
+  {
+   "name": "number figure 12 kilobyte",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 12
+     },
+     "unit": {
+      "value": "kilobyte"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "12kB"
+  },
+  {
+   "name": "number figure 3.456 megabyte",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 3.456
+     },
+     "unit": {
+      "value": "megabyte"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "3.46MB"
+  },
+  {
+   "name": "number figure 1 gigabyte",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 1
+     },
+     "unit": {
+      "value": "gigabyte"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "1GB"
+  },
+  {
+   "name": "number figure 1234.5678 -",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 1234.5678
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "1,234.57"
+  },
+  {
+   "name": "number figure 7 parsec",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 7
+     },
+     "unit": {
+      "value": "parsec"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "7"
+  },
+  {
+   "name": "number figure -3.5 -",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": -3.5
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|number",
+   "opts": "default",
+   "expect": "-3.5"
+  },
+  {
+   "name": "number not a number",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.sku.value|number",
+   "opts": "default",
+   "expect": {
+    "undefined": true
+   }
+  },
+  {
+   "name": "compact 0",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 0
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "0"
+  },
+  {
+   "name": "compact 96",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 96
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "96"
+  },
+  {
+   "name": "compact 999",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 999
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "999"
+  },
+  {
+   "name": "compact 1000",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 1000
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "1K"
+  },
+  {
+   "name": "compact 1200",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 1200
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "1.2K"
+  },
+  {
+   "name": "compact 1250",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 1250
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "1.3K"
+  },
+  {
+   "name": "compact 9999",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 9999
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "10K"
+  },
+  {
+   "name": "compact 15300",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 15300
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "15.3K"
+  },
+  {
+   "name": "compact 999999",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 999999
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "1M"
+  },
+  {
+   "name": "compact 1000000",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 1000000
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "1M"
+  },
+  {
+   "name": "compact 2500000",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 2500000
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "2.5M"
+  },
+  {
+   "name": "compact 1200000000",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 1200000000
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "1.2B"
+  },
+  {
+   "name": "compact 1500000000000",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "v": {
+      "value": 1500000000000
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.v.value|compact",
+   "opts": "default",
+   "expect": "1.5T"
+  },
+  {
+   "name": "excerpt-fallback own",
+   "source": {
+    "id": "post-1",
+    "locale": "en-US",
+    "kind": "post",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "w0 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23 w24 w25 w26 w27 w28 w29 w30 w31 w32 w33 w34 w35 w36 w37 w38 w39 w40 w41 w42 w43 w44 w45 w46 w47 w48 w49 w50 w51 w52 w53 w54 w55 w56 w57 w58 w59 w60 w61 w62 w63 w64 w65 w66 w67 w68 w69 w70 w71 w72 w73 w74 w75 w76 w77 w78 w79 w80 w81 w82 w83 w84 w85 w86 w87 w88 w89 w90 w91 w92 w93 w94 w95 w96 w97 w98 w99 w100 w101 w102 w103 w104 w105 w106 w107 w108 w109 w110 w111 w112 w113 w114 w115 w116 w117 w118 w119 w120 w121 w122 w123 w124 w125 w126 w127 w128 w129 w130 w131 w132 w133 w134 w135 w136 w137 w138 w139 w140 w141 w142 w143 w144 w145 w146 w147 w148 w149 w150 w151 w152 w153 w154 w155 w156 w157 w158 w159 w160 w161 w162 w163 w164 w165 w166 w167 w168 w169 w170 w171 w172 w173 w174 w175 w176 w177 w178 w179 w180 w181 w182 w183 w184 w185 w186 w187 w188 w189 w190 w191 w192 w193 w194 w195 w196 w197 w198 w199 w200 w201 w202 w203 w204 w205 w206 w207 w208 w209 w210 w211 w212 w213 w214 w215 w216 w217 w218 w219 w220 w221 w222 w223 w224 w225 w226 w227 w228 w229 w230 w231 w232 w233 w234 w235 w236 w237 w238 w239 w240 w241 w242 w243 w244 w245 w246 w247 w248 w249 w250 w251 w252 w253 w254 w255 w256 w257 w258 w259 w260 w261 w262 w263 w264 w265 w266 w267 w268 w269 w270 w271 w272 w273 w274 w275 w276 w277 w278 w279 w280 w281 w282 w283 w284 w285 w286 w287 w288 w289 w290 w291 w292 w293 w294 w295 w296 w297 w298 w299 w300 w301 w302 w303 w304 w305 w306 w307 w308 w309 w310 w311 w312 w313 w314 w315 w316 w317 w318 w319 w320 w321 w322 w323 w324 w325 w326 w327 w328 w329 w330 w331 w332 w333 w334 w335 w336 w337 w338 w339 w340 w341 w342 w343 w344 w345 w346 w347 w348 w349 w350 w351 w352 w353 w354 w355 w356 w357 w358 w359 w360 w361 w362 w363 w364 w365 w366 w367 w368 w369 w370 w371 w372 w373 w374 w375 w376 w377 w378 w379 w380 w381 w382 w383 w384 w385 w386 w387 w388 w389 w390 w391 w392 w393 w394 w395 w396 w397 w398 w399 w400 w401 w402 w403 w404 w405 w406 w407 w408 w409 w410 w411 w412 w413 w414 w415 w416 w417 w418 w419 w420 w421 w422 w423 w424 w425 w426 w427 w428 w429 w430 w431 w432 w433 w434 w435 w436 w437 w438 w439 w440 w441 w442 w443 w444 w445 w446 w447 w448 w449",
+    "excerpt": "Own excerpt",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {},
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "excerpt|excerpt-fallback",
+   "opts": "default",
+   "expect": "Own excerpt"
+  },
+  {
+   "name": "excerpt-fallback from content (absent)",
+   "source": {
+    "id": "post-1",
+    "locale": "en-US",
+    "kind": "post",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "w0 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23 w24 w25 w26 w27 w28 w29 w30 w31 w32 w33 w34 w35 w36 w37 w38 w39 w40 w41 w42 w43 w44 w45 w46 w47 w48 w49 w50 w51 w52 w53 w54 w55 w56 w57 w58 w59 w60 w61 w62 w63 w64 w65 w66 w67 w68 w69 w70 w71 w72 w73 w74 w75 w76 w77 w78 w79 w80 w81 w82 w83 w84 w85 w86 w87 w88 w89 w90 w91 w92 w93 w94 w95 w96 w97 w98 w99 w100 w101 w102 w103 w104 w105 w106 w107 w108 w109 w110 w111 w112 w113 w114 w115 w116 w117 w118 w119 w120 w121 w122 w123 w124 w125 w126 w127 w128 w129 w130 w131 w132 w133 w134 w135 w136 w137 w138 w139 w140 w141 w142 w143 w144 w145 w146 w147 w148 w149 w150 w151 w152 w153 w154 w155 w156 w157 w158 w159 w160 w161 w162 w163 w164 w165 w166 w167 w168 w169 w170 w171 w172 w173 w174 w175 w176 w177 w178 w179 w180 w181 w182 w183 w184 w185 w186 w187 w188 w189 w190 w191 w192 w193 w194 w195 w196 w197 w198 w199 w200 w201 w202 w203 w204 w205 w206 w207 w208 w209 w210 w211 w212 w213 w214 w215 w216 w217 w218 w219 w220 w221 w222 w223 w224 w225 w226 w227 w228 w229 w230 w231 w232 w233 w234 w235 w236 w237 w238 w239 w240 w241 w242 w243 w244 w245 w246 w247 w248 w249 w250 w251 w252 w253 w254 w255 w256 w257 w258 w259 w260 w261 w262 w263 w264 w265 w266 w267 w268 w269 w270 w271 w272 w273 w274 w275 w276 w277 w278 w279 w280 w281 w282 w283 w284 w285 w286 w287 w288 w289 w290 w291 w292 w293 w294 w295 w296 w297 w298 w299 w300 w301 w302 w303 w304 w305 w306 w307 w308 w309 w310 w311 w312 w313 w314 w315 w316 w317 w318 w319 w320 w321 w322 w323 w324 w325 w326 w327 w328 w329 w330 w331 w332 w333 w334 w335 w336 w337 w338 w339 w340 w341 w342 w343 w344 w345 w346 w347 w348 w349 w350 w351 w352 w353 w354 w355 w356 w357 w358 w359 w360 w361 w362 w363 w364 w365 w366 w367 w368 w369 w370 w371 w372 w373 w374 w375 w376 w377 w378 w379 w380 w381 w382 w383 w384 w385 w386 w387 w388 w389 w390 w391 w392 w393 w394 w395 w396 w397 w398 w399 w400 w401 w402 w403 w404 w405 w406 w407 w408 w409 w410 w411 w412 w413 w414 w415 w416 w417 w418 w419 w420 w421 w422 w423 w424 w425 w426 w427 w428 w429 w430 w431 w432 w433 w434 w435 w436 w437 w438 w439 w440 w441 w442 w443 w444 w445 w446 w447 w448 w449",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {},
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "excerpt|excerpt-fallback",
+   "opts": "default",
+   "expect": "w0 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23…"
+  },
+  {
+   "name": "excerpt-fallback short content",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "excerpt|excerpt-fallback",
+   "opts": "default",
+   "expect": "One two three"
+  },
+  {
+   "name": "excerpt-fallback nothing",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "excerpt|excerpt-fallback",
+   "opts": "default",
+   "expect": {
+    "undefined": true
+   }
+  },
+  {
+   "name": "reading-minutes 450 words",
+   "source": {
+    "id": "post-1",
+    "locale": "en-US",
+    "kind": "post",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "w0 w1 w2 w3 w4 w5 w6 w7 w8 w9 w10 w11 w12 w13 w14 w15 w16 w17 w18 w19 w20 w21 w22 w23 w24 w25 w26 w27 w28 w29 w30 w31 w32 w33 w34 w35 w36 w37 w38 w39 w40 w41 w42 w43 w44 w45 w46 w47 w48 w49 w50 w51 w52 w53 w54 w55 w56 w57 w58 w59 w60 w61 w62 w63 w64 w65 w66 w67 w68 w69 w70 w71 w72 w73 w74 w75 w76 w77 w78 w79 w80 w81 w82 w83 w84 w85 w86 w87 w88 w89 w90 w91 w92 w93 w94 w95 w96 w97 w98 w99 w100 w101 w102 w103 w104 w105 w106 w107 w108 w109 w110 w111 w112 w113 w114 w115 w116 w117 w118 w119 w120 w121 w122 w123 w124 w125 w126 w127 w128 w129 w130 w131 w132 w133 w134 w135 w136 w137 w138 w139 w140 w141 w142 w143 w144 w145 w146 w147 w148 w149 w150 w151 w152 w153 w154 w155 w156 w157 w158 w159 w160 w161 w162 w163 w164 w165 w166 w167 w168 w169 w170 w171 w172 w173 w174 w175 w176 w177 w178 w179 w180 w181 w182 w183 w184 w185 w186 w187 w188 w189 w190 w191 w192 w193 w194 w195 w196 w197 w198 w199 w200 w201 w202 w203 w204 w205 w206 w207 w208 w209 w210 w211 w212 w213 w214 w215 w216 w217 w218 w219 w220 w221 w222 w223 w224 w225 w226 w227 w228 w229 w230 w231 w232 w233 w234 w235 w236 w237 w238 w239 w240 w241 w242 w243 w244 w245 w246 w247 w248 w249 w250 w251 w252 w253 w254 w255 w256 w257 w258 w259 w260 w261 w262 w263 w264 w265 w266 w267 w268 w269 w270 w271 w272 w273 w274 w275 w276 w277 w278 w279 w280 w281 w282 w283 w284 w285 w286 w287 w288 w289 w290 w291 w292 w293 w294 w295 w296 w297 w298 w299 w300 w301 w302 w303 w304 w305 w306 w307 w308 w309 w310 w311 w312 w313 w314 w315 w316 w317 w318 w319 w320 w321 w322 w323 w324 w325 w326 w327 w328 w329 w330 w331 w332 w333 w334 w335 w336 w337 w338 w339 w340 w341 w342 w343 w344 w345 w346 w347 w348 w349 w350 w351 w352 w353 w354 w355 w356 w357 w358 w359 w360 w361 w362 w363 w364 w365 w366 w367 w368 w369 w370 w371 w372 w373 w374 w375 w376 w377 w378 w379 w380 w381 w382 w383 w384 w385 w386 w387 w388 w389 w390 w391 w392 w393 w394 w395 w396 w397 w398 w399 w400 w401 w402 w403 w404 w405 w406 w407 w408 w409 w410 w411 w412 w413 w414 w415 w416 w417 w418 w419 w420 w421 w422 w423 w424 w425 w426 w427 w428 w429 w430 w431 w432 w433 w434 w435 w436 w437 w438 w439 w440 w441 w442 w443 w444 w445 w446 w447 w448 w449",
+    "excerpt": "Own excerpt",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {},
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "content|reading-minutes",
+   "opts": "default",
+   "expect": 3
+  },
+  {
+   "name": "reading-minutes 3 words",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "content|reading-minutes",
+   "opts": "default",
+   "expect": 1
+  },
+  {
+   "name": "reading-minutes no content",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "content|reading-minutes",
+   "opts": "default",
+   "expect": {
+    "undefined": true
+   }
+  },
+  {
+   "name": "term-names",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "terms|term-names:product_cat",
+   "opts": "default",
+   "expect": [
+    "Kitchen",
+    "Home"
+   ]
+  },
+  {
+   "name": "term-names none",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "terms|term-names:category",
+   "opts": "default",
+   "expect": []
+  },
+  {
+   "name": "settings fallback",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.currency.value|settings:currency",
+   "opts": "default",
+   "expect": "USD"
+  },
+  {
+   "name": "settings own wins",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "currency": {
+      "value": "EUR"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.currency.value|settings:currency",
+   "opts": "default",
+   "expect": "EUR"
+  },
+  {
+   "name": "in-stock 0",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.stock.value|in-stock",
+   "opts": "default",
+   "expect": false
+  },
+  {
+   "name": "in-stock unset = unlimited",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {},
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.stock.value|in-stock",
+   "opts": "default",
+   "expect": true
+  },
+  {
+   "name": "in-stock 5",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "stock": {
+      "value": 5
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "metadata.stock.value|in-stock",
+   "opts": "default",
+   "expect": true
+  },
+  {
+   "name": "no options: media undefined",
+   "source": {
+    "id": "product-7",
+    "locale": "en-US",
+    "kind": "product",
+    "status": "published",
+    "visibility": "public",
+    "slug": "linen apron/ä",
+    "title": "Linen apron",
+    "content": "<p>One <b>two</b>\nthree</p>",
+    "excerpt": "",
+    "author_id": "user-2",
+    "featured_media_id": "media-11",
+    "terms": [
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-2"
+     },
+     {
+      "taxonomy": "product_cat",
+      "term_id": "product_cat-3"
+     },
+     {
+      "taxonomy": "post_tag",
+      "term_id": "post_tag-9"
+     }
+    ],
+    "metadata": {
+     "price": {
+      "value": 3600
+     },
+     "stock": {
+      "value": 0
+     },
+     "sku": {
+      "value": "APR-03"
+     },
+     "nested": {
+      "value": {
+       "a": {
+        "b": 5
+       }
+      }
+     },
+     "published": {
+      "value": "2026-03-30T10:30:00Z"
+     }
+    },
+    "published_at": "2026-03-09T08:00:00Z",
+    "version": 1,
+    "created_at": "2026-03-09T08:00:00Z",
+    "updated_at": "2026-03-09T08:00:00Z"
+   },
+   "path": "featured_media_id|media",
+   "opts": {},
+   "expect": {
+    "undefined": true
+   }
+  }
+ ]
+}
