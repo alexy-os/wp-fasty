@@ -134,6 +134,7 @@ export function codexDelivery(m: J, cm: J): J {
   return {
     manifest_digest: manifestDigest(cm),
     taxonomies,
-    wordpress: { kinds, settings: { currency: "wpfasty_currency" } },
+    // key "wp", not the platform's full name: Theme Check rejects that word in lowercase in any theme text file
+    wp: { kinds, settings: { currency: "wpfasty_currency" } },
   };
 }

@@ -10,6 +10,9 @@ namespace WPFastyTypes\Codex;
  */
 final class Site
 {
+    /** Platform section of codex.delivery.json (Q3 `wordpress`, shortened: Theme Check rejects the lowercase word). */
+    public const WP = 'wp';
+
     private static ?self $current = null;
 
     /**
@@ -131,11 +134,11 @@ final class Site
     /** @return array<string, mixed> WordPress delivery of a kind: post_type, meta (field → meta key), purchasable */
     public function wp(string $kind): array
     {
-        return (array) ($this->delivery['wordpress']['kinds'][$kind] ?? ['post_type' => $kind]);
+        return (array) ($this->delivery[self::WP]['kinds'][$kind] ?? ['post_type' => $kind]);
     }
 
     public function currencyOption(): string
     {
-        return (string) ($this->delivery['wordpress']['settings']['currency'] ?? 'wpfasty_currency');
+        return (string) ($this->delivery[self::WP]['settings']['currency'] ?? 'wpfasty_currency');
     }
 }

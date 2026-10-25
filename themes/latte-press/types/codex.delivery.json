@@ -10,7 +10,7 @@
       "role": "tag"
     }
   ],
-  "wordpress": {
+  "wp": {
     "kinds": {
       "post": {
         "post_type": "post"
