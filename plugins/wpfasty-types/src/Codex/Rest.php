@@ -14,8 +14,10 @@ use WP_REST_Server;
  *   GET /                                  {codex_version, profile, manifest_digest}
  *   GET /entries/{kind}?locale&page&per_page {data, pagination{page, per_page, total, total_pages}}, id asc (bytes)
  *   GET /entries/{kind}/{id}?locale        bare codex-entry/v1 bytes, Codex-Digest + ETag (also media, user)
- *   GET /taxonomies, /terms/{taxonomy_id}  same envelope; terms by codex-term/v1
- *   GET /settings                          site settings (currency)
+ *   GET /taxonomies, /terms/{taxonomy_id}  same envelope; terms by codex-term/v1, `count` next to data: {counts{id: n}}
+ *   GET /settings?locale&page&per_page     same envelope of SettingsV04 (one per locale)
+ *   GET /settings/{id}?locale              bare SettingsV04 JCS bytes, Codex-Digest + ETag
+ * Default locale = settings.language (Mapper::locale).
  * Only published + public records; anything else is 404 (never 403). Errors: {error{code, message, status}}.
  * Bodies are exact bytes: rest_pre_serve_request prints them so WordPress does not re-encode the JSON.
  */
@@ -45,6 +47,7 @@ final class Rest
         $add('/taxonomies', [self::class, 'taxonomies']);
         $add('/terms/(?P<taxonomy>[^/]+)', [self::class, 'terms']);
         $add('/settings', [self::class, 'settings']);
+        $add('/settings/(?P<id>[^/]+)', [self::class, 'setting']);
     }
 
     private static function raw(string $bytes, int $status = 200, array $headers = []): WP_REST_Response
@@ -79,13 +82,15 @@ final class Rest
         return true;
     }
 
-    private static function envelope(array $items, int $page, int $per, int $total): string
+    /** @param array<string, int>|null $counts terms only: `count` per term id of the page, outside the canonical bytes */
+    private static function envelope(array $items, int $page, int $per, int $total, ?array $counts = null): string
     {
         $p = Json::jcs([
             'page' => $page, 'per_page' => $per, 'total' => $total,
             'total_pages' => $per > 0 ? (int) ceil($total / $per) : 0,
         ]);
-        return '{"data":[' . implode(',', $items) . '],"pagination":' . $p . '}';
+        $c = $counts === null ? '' : '"counts":' . Json::jcs((object) $counts) . ',';
+        return '{' . $c . '"data":[' . implode(',', $items) . '],"pagination":' . $p . '}';
     }
 
     /**
@@ -309,11 +314,20 @@ final class Rest
             : [];
         usort($terms, static fn ($a, $b): int => strcmp(Mapper::id($tax, $a->term_id), Mapper::id($tax, $b->term_id)));
         $map = new Mapper($site);
-        $items = array_map(
-            static fn (\WP_Term $t): string => Canonical::termBytes($map->term($t)),
-            array_slice($terms, ($page - 1) * $per, $per),
-        );
-        return self::raw(self::envelope($items, $page, $per, count($terms)));
+        $slice = array_slice($terms, ($page - 1) * $per, $per);
+        $items = array_map(static fn (\WP_Term $t): string => Canonical::termBytes($map->term($t)), $slice);
+        $counts = [];
+        foreach ($slice as $t) {
+            $counts[Mapper::id($tax, $t->term_id)] = (int) $t->count;
+        }
+        return self::raw(self::envelope($items, $page, $per, count($terms), $counts));
+    }
+
+    /** SettingsV04 bytes of the site (empty values dropped, as the contract adapter does). */
+    private static function settingsBytes(Site $site): string
+    {
+        $s = (new Mapper($site))->settings();
+        return Json::jcs(array_filter($s, static fn ($v): bool => $v !== '' && $v !== null));
     }
 
     public static function settings(WP_REST_Request $req): WP_REST_Response
@@ -326,7 +340,30 @@ final class Rest
         if ($q instanceof WP_REST_Response) {
             return $q;
         }
-        $s = array_filter((new Mapper($site))->settings(), static fn ($v): bool => $v !== '' && $v !== null);
-        return self::raw(Json::jcs($s));
+        [, $page, $per] = $q;
+        // one settings record per locale; query() already answered an unknown locale with 404
+        $items = array_slice([self::settingsBytes($site)], ($page - 1) * $per, $per);
+        return self::raw(self::envelope($items, $page, $per, 1));
+    }
+
+    public static function setting(WP_REST_Request $req): WP_REST_Response
+    {
+        $site = self::site();
+        if ($site instanceof WP_REST_Response) {
+            return $site;
+        }
+        $q = self::query($req);
+        if ($q instanceof WP_REST_Response) {
+            return $q;
+        }
+        if ((string) $req['id'] !== Mapper::SETTINGS_ID) {
+            return self::error('not_found', 'settings was not found', 404);
+        }
+        $bytes = self::settingsBytes($site);
+        $hex = hash('sha256', $bytes);
+        return self::raw($bytes, 200, [
+            'Codex-Digest' => Profile::SETTINGS_PROFILE . ':sha256:' . $hex,
+            'ETag' => "\"{$hex}\"",
+        ]);
     }
 }

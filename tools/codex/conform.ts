@@ -24,8 +24,10 @@ const api = `${base.replace(/\/$/, "")}/wp-json/wpfasty/v1/codex`;
 const fails: string[] = [];
 const bodies = new Map<string, string>(); // golden file name → bytes
 
+const headers = new Map<string, Headers>();
 async function get(path: string, expect = 200): Promise<string> {
   const r = await fetch(api + path);
+  headers.set(path, r.headers);
   const text = await r.text();
   if (r.status !== expect) fails.push(`${path}: HTTP ${r.status} (want ${expect}) ${text.slice(0, 200)}`);
   const ct = r.headers.get("content-type");
@@ -48,17 +50,31 @@ const d = JSON.parse(disco);
 const delivery = JSON.parse(readFileSync(join(root, "themes", slug, "types/codex.delivery.json"), "utf8"));
 if (d.manifest_digest !== delivery.manifest_digest) fails.push(`discovery digest ${d.manifest_digest} ≠ codex.delivery.json ${delivery.manifest_digest}`);
 
+// Default locale = settings.language; every golden request names the locale explicitly.
+const probe = JSON.parse(await get("/settings"));
+const L = String(probe.data?.[0]?.language ?? "");
+if (!L) fails.push("/settings: no settings.language");
+if (probe.data?.[0]?.locale !== L) fails.push(`default locale ${probe.data?.[0]?.locale} ≠ settings.language ${L}`);
+const loc = (path: string) => `${path}${path.includes("?") ? "&" : "?"}locale=${encodeURIComponent(L)}`;
+const digestOk = (path: string, body: string, profile: string) => {
+  const hex = new Bun.CryptoHasher("sha256").update(body).digest("hex");
+  const h = headers.get(path);
+  if (h?.get("codex-digest") !== `${profile}:sha256:${hex}`) fails.push(`${path}: Codex-Digest ${h?.get("codex-digest")}`);
+  if (h?.get("etag") !== `"${hex}"`) fails.push(`${path}: ETag ${h?.get("etag")}`);
+};
+
 const entries: { file: string; data: unknown }[] = [];
 const terms: { file: string; data: unknown }[] = [];
 const kinds = manifest.resources.map((r: any) => r.record.id).filter((k: string) => k !== "media" && k !== "user");
 const refs = new Set<string>();
 for (const kind of kinds) {
   for (let page = 1; ; page++) {
-    const body = await get(`/entries/${kind}?per_page=100&page=${page}`);
+    const body = await get(loc(`/entries/${kind}?per_page=100&page=${page}`));
     const env = JSON.parse(body);
     bodies.set(`entries.${kind}.${page}.json`, body);
     for (const e of env.data) {
-      const one = await get(`/entries/${kind}/${e.id}`);
+      const one = await get(loc(`/entries/${kind}/${e.id}`));
+      digestOk(loc(`/entries/${kind}/${e.id}`), one, "codex-entry/v1");
       bodies.set(`entry.${e.id}.json`, one);
       if (JSON.stringify(JSON.parse(one)) !== JSON.stringify(e)) fails.push(`${kind}/${e.id}: single ≠ list item`);
       try { if (canonicalize(one) !== one) fails.push(`${kind}/${e.id}: body is not its canonical form`); }
@@ -72,7 +88,7 @@ for (const kind of kinds) {
 }
 for (const id of [...refs].sort()) {
   const kind = id.slice(0, id.lastIndexOf("-"));
-  const r = await fetch(`${api}/entries/${kind}/${id}`);
+  const r = await fetch(`${api}${loc(`/entries/${kind}/${id}`)}`);
   if (r.status === 404) continue; // e.g. an author without public content
   const one = await r.text();
   bodies.set(`entry.${id}.json`, one);
@@ -81,16 +97,32 @@ for (const id of [...refs].sort()) {
   shape("entry", e, id);
   entries.push({ file: id, data: e });
 }
-const tx = JSON.parse(await get("/taxonomies"));
+const tx = JSON.parse(await get(loc("/taxonomies")));
 bodies.set("taxonomies.json", JSON.stringify(tx));
 for (const t of tx.data) {
-  const body = await get(`/terms/${t.id}?per_page=100`);
+  const body = await get(loc(`/terms/${t.id}?per_page=100`));
   bodies.set(`terms.${t.id}.json`, body);
-  for (const term of JSON.parse(body).data) { shape("term", term, `${t.id}/${term.id}`); terms.push({ file: `${t.id}/${term.id}`, data: term }); }
+  const env = JSON.parse(body);
+  // codex-term/v1 has no count: the list serves it next to the data, one integer per term of the page
+  const ids = env.data.map((x: { id: string }) => x.id);
+  if (Object.keys(env.counts ?? {}).join() !== ids.join() || !Object.values(env.counts ?? {}).every(Number.isInteger))
+    fails.push(`/terms/${t.id}: counts ${JSON.stringify(env.counts)} ≠ ids ${ids.join()}`);
+  for (const term of env.data) {
+    if (term.metadata?.count !== undefined) fails.push(`${t.id}/${term.id}: count inside the canonical term`);
+    shape("term", term, `${t.id}/${term.id}`);
+    terms.push({ file: `${t.id}/${term.id}`, data: term });
+  }
 }
-const settingsBody = await get("/settings");
+const settingsList = await get(loc("/settings"));
+bodies.set("settings.list.json", settingsList);
+const sl = JSON.parse(settingsList);
+if (sl.data?.length !== 1 || sl.pagination?.total !== 1) fails.push(`/settings: ${sl.data?.length} records, total ${sl.pagination?.total} (want 1 per locale)`);
+const settingsBody = await get(loc(`/settings/${sl.data?.[0]?.id}`));
 bodies.set("settings.json", settingsBody);
+digestOk(loc(`/settings/${sl.data?.[0]?.id}`), settingsBody, "codex-settings/v1");
 const settings = JSON.parse(settingsBody);
+if (JSON.stringify(settings) !== JSON.stringify(sl.data?.[0])) fails.push("/settings/{id} ≠ list item");
+if (settings.locale !== L) fails.push(`settings.locale ${settings.locale} ≠ ${L}`);
 shape("settings", settings, "settings");
 
 // Errors and pagination in the form of fastygo/backend TestCodexV1Conform (internal/conformance, 1ef630f): same cases,
@@ -101,6 +133,8 @@ const errorCases: [string, number, string, string][] = [
   ["/entries/post/post-0", 404, "not_found", "content was not found"],
   ["/entries/post?locale=fr", 404, "not_found", "locale was not found"],
   ["/terms/missing", 404, "not_found", "taxonomy was not found"],
+  ["/settings/missing", 404, "not_found", "settings was not found"],
+  ["/settings?locale=fr", 404, "not_found", "locale was not found"],
   ["/entries/post?locale=ENGLISH", 400, "validation_error", "locale is invalid"],
   ["/entries/post?page=0", 400, "validation_error", "page must be a positive integer"],
   ["/entries/post?per_page=-1", 400, "validation_error", "per_page must be a positive integer"],

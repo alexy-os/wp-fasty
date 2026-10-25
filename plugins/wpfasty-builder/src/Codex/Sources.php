@@ -32,7 +32,7 @@ final class Sources
         foreach ((array) ($delivery['taxonomies'] ?? []) as $t) {
             $roleOf[(string) $t['id']] = (string) ($t['role'] ?? '');
         }
-        $kinds = (array) ($delivery['wp']['kinds'] ?? []);
+        $kinds = (array) ($delivery[\WPFastyTypes\Codex\Site::WP]['kinds'] ?? []);
         $out = [];
         $taxes = [];
         foreach ((array) ($manifest['resources'] ?? []) as $res) {

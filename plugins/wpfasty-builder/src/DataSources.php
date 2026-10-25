@@ -263,7 +263,7 @@ final class DataSources
         $out = [];
         foreach (is_array($terms) ? $terms : [] as $t) {
             if ($t instanceof WP_Term) {
-                $out[] = $mapper->term($t);
+                $out[] = $mapper->term($t, true);
             }
         }
         return $out;
@@ -358,7 +358,7 @@ final class DataSources
                     $tax = (string) $ref['taxonomy'];
                     $t = get_term(Mapper::wpId($tax, (string) $ref['term_id']), $tax);
                     if ($t instanceof WP_Term) {
-                        $opts['terms'][$t->term_taxonomy_id] = $mapper->term($t); // cached by get_the_terms
+                        $opts['terms'][$t->term_taxonomy_id] = $mapper->term($t, true); // cached by get_the_terms
                     }
                 }
             }

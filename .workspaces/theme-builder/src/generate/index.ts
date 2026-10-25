@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import { render } from "./template";
 import { extraEntries, type J, styleCss, templateVars, tokensCss, typePhp } from "./emit";
-import { codexDelivery, codexManifest } from "./codex";
+import { codexDelivery, codexManifest, deliveryJson } from "./codex";
 import Ajv2020 from "ajv/dist/2020";
 import { validateSnapshot } from "@ui8kit/contract";
 
@@ -27,7 +27,7 @@ function codexFiles(m: J): { manifest: string; delivery: string } {
   if (!check(cm)) throw new Error(`codex manifest invalid:\n${(check.errors ?? []).map((e) => `  ${e.instancePath} ${e.message}`).join("\n")}`);
   const issues = validateSnapshot(cm, []);
   if (issues.length) throw new Error(`codex manifest rejected by @ui8kit/contract:\n${issues.map((i) => `  ${i.code} ${i.path}`).join("\n")}`);
-  return { manifest: `${JSON.stringify(cm, null, 2)}\n`, delivery: `${JSON.stringify(codexDelivery(m, cm), null, 2)}\n` };
+  return { manifest: `${JSON.stringify(cm, null, 2)}\n`, delivery: deliveryJson(codexDelivery(m, cm)) };
 }
 
 function hasWp(): boolean {

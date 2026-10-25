@@ -11,7 +11,7 @@ namespace WPFastyTypes\Codex;
 final class Site
 {
     /** Platform section of codex.delivery.json (Q3 `wordpress`, shortened: Theme Check rejects the lowercase word). */
-    public const WP = 'wp';
+    public const WP = 'wordpress';
 
     private static ?self $current = null;
 

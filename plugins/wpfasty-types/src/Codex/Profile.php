@@ -21,6 +21,10 @@ final class Profile
     public const ID_PATTERN = '/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/';
     public const SYSTEM = 'wordpress';
     public const DEFAULT_LOCALE = 'en';
+    /** settings.language when WordPress reports no usable locale */
+    public const SETTINGS_LANGUAGE = 'en-US';
+    /** Codex-Digest prefix of GET /settings/{id} (draft, name to be agreed with XGenBot) */
+    public const SETTINGS_PROFILE = 'codex-settings/v1';
     public const MAX_SAFE = 9007199254740991;
     public const PER_PAGE = 20;
     public const MAX_PER_PAGE = 100;

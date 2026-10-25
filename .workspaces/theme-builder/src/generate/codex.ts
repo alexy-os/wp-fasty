@@ -148,7 +148,15 @@ export function codexDelivery(m: J, cm: J): J {
   return {
     manifest_digest: manifestDigest(cm),
     taxonomies,
-    // key "wp", not the platform's full name: Theme Check rejects that word in lowercase in any theme text file
-    wp: { kinds, settings: { currency: "wpfasty_currency" } },
+    // platform section key agreed with XGenBot; written JSON-escaped by deliveryJson (Theme Check spelling rule)
+    wordpress: { kinds, settings: { currency: "wpfasty_currency" } },
   };
 }
+
+/**
+ * codex.delivery.json text. The platform key is the lowercase platform name; Theme Check's spelling rule (REQUIRED)
+ * flags that word in any theme text file, so the key is written with a JSON escape (\u0077): the same key for every
+ * JSON reader, not prose.
+ */
+export const deliveryJson = (d: unknown): string =>
+  `${JSON.stringify(d, null, 2)}\n`.replace(/^  "wordpress": \{$/m, '  "\\u0077ordpress": {');

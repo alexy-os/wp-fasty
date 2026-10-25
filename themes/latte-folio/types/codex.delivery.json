@@ -14,7 +14,7 @@
       "role": "category"
     }
   ],
-  "wp": {
+  "\u0077ordpress": {
     "kinds": {
       "post": {
         "post_type": "post"

@@ -19,16 +19,29 @@ final class Mapper
     public const TERM_CREATED = '_wpfasty_codex_created';
     public const TERM_UPDATED = '_wpfasty_codex_updated';
     public const EPOCH = '1970-01-01T00:00:00Z';
+    public const SETTINGS_ID = 'site';
 
     public function __construct(private readonly Site $site)
     {
     }
 
+    /**
+     * Default locale = settings.language (get_locale as BCP 47, "en-US" when WordPress has none); "en" without settings
+     * (outside WordPress). Decided with XGenBot.
+     */
     public static function locale(): string
     {
-        $l = function_exists('get_locale') ? (string) get_locale() : '';
-        $l = str_replace('_', '-', $l);
-        return preg_match('/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/', $l) === 1 ? $l : Profile::DEFAULT_LOCALE;
+        return self::language() ?? Profile::DEFAULT_LOCALE;
+    }
+
+    /** settings.language; null when there are no settings (no WordPress loaded). */
+    public static function language(): ?string
+    {
+        if (!function_exists('get_locale')) {
+            return null;
+        }
+        $l = str_replace('_', '-', (string) get_locale());
+        return preg_match('/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/', $l) === 1 ? $l : Profile::SETTINGS_LANGUAGE;
     }
 
     public static function id(string $kind, int $wpId): string
@@ -270,8 +283,13 @@ final class Mapper
         return $md;
     }
 
-    /** @return array<string, mixed> */
-    public function term(WP_Term $t): array
+    /**
+     * codex-term/v1 record. `count` is not part of the canonical term (nor of any digest): the REST list serves it next
+     * to the data ({counts}); $withCount adds it as metadata.count for the builder's own record view.
+     *
+     * @return array<string, mixed>
+     */
+    public function term(WP_Term $t, bool $withCount = false): array
     {
         $created = (string) get_term_meta($t->term_id, self::TERM_CREATED, true);
         $updated = (string) get_term_meta($t->term_id, self::TERM_UPDATED, true);
@@ -285,7 +303,7 @@ final class Mapper
             'description' => (string) $t->description,
             'parent_id' => $t->parent > 0 ? self::id($t->taxonomy, (int) $t->parent) : '',
             'origin' => [['system' => Profile::SYSTEM, 'id' => (string) $t->term_id]],
-            'metadata' => ['count' => ['value' => (int) $t->count]],
+            ...($withCount ? ['metadata' => ['count' => ['value' => (int) $t->count]]] : []),
             'version' => 1,
             'created_at' => $created,
             'updated_at' => $updated !== '' ? $updated : $created,
@@ -316,10 +334,10 @@ final class Mapper
     /** Site settings (SettingsV04), as the contract adapter fromWpSettings maps them. */
     public function settings(): array
     {
-        $lang = str_replace('_', '-', (string) get_locale());
         $s = [
-            'id' => 'site', 'locale' => self::locale(), 'title' => (string) get_option('blogname'),
-            'description' => (string) get_option('blogdescription'), 'language' => $lang !== '' ? $lang : 'en-US',
+            'id' => self::SETTINGS_ID, 'locale' => self::locale(), 'title' => (string) get_option('blogname'),
+            'description' => (string) get_option('blogdescription'),
+            'language' => self::language() ?? Profile::SETTINGS_LANGUAGE,
             'timezone' => (string) get_option('timezone_string'),
         ];
         if (get_option('show_on_front') === 'page' && (int) get_option('page_on_front') > 0) {

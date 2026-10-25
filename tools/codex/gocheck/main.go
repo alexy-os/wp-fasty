@@ -1,5 +1,7 @@
 // Cross-check of the WordPress Codex bytes against the Go reference (fastygo/codex v0.4.0):
-//   go run . <golden dir> <codex.manifest.json>
+//
+//	go run . <golden dir> <codex.manifest.json>
+//
 // For every body of tests/fixtures/codex-draft/golden/<site> (what /wpfasty/v1/codex served): entry bodies and list
 // items must be fixed points of canonical.Canonicalize (codex-entry/v1), term items of canonical.CanonicalJSON, the
 // Codex-Digest is recomputed, and entries + terms + settings go through validate.CollectionV04 with the manifest.
@@ -82,6 +84,10 @@ func main() {
 				}
 			}
 		case name == "settings.json":
+			bodies++
+			if got, err := canonical.CanonicalJSON(text); err != nil || got != text {
+				fail("%s: not JCS (%v)\n  php: %s\n  go:  %s", name, err, text, got)
+			}
 			var v any
 			_ = json.Unmarshal([]byte(text), &v)
 			coll.Settings = append(coll.Settings, validate.RecordFile{File: name, Data: v})
