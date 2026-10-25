@@ -27,8 +27,8 @@ final class DataSources
 {
     public const MAX = 24;
     /**
-     * Fallback paths of record fields a catalog declares but does not map (catalogs before codegen-x 0c1223de; since
-     * then only hero/prompt Topic.href, which its template does not print). Kept until the specs hash is agreed.
+     * Fallback paths of record fields a catalog declares but does not map (catalogs before codegen-x 95aaf77f; since
+     * then every slot maps href/image itself). Kept until the specs hash is agreed.
      */
     private const OVERLAY = ['href' => 'slug|route', 'image' => 'featured_media_id|media'];
     private const TYPES = ['string' => 'string', 'number' => 'number', 'boolean' => 'boolean'];
