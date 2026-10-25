@@ -14,7 +14,7 @@ use WP_REST_Server;
  *   GET /                                  {codex_version, profile, manifest_digest}
  *   GET /entries/{kind}?locale&page&per_page {data, pagination{page, per_page, total, total_pages}}, id asc (bytes)
  *   GET /entries/{kind}/{id}?locale        bare codex-entry/v1 bytes, Codex-Digest + ETag (also media, user)
- *   GET /taxonomies, /terms/{taxonomy_id}  same envelope; terms by codex-term/v1, `count` next to data: {counts{id: n}}
+ *   GET /taxonomies, /terms/{taxonomy_id}  same envelope {data, pagination}; terms by codex-term/v1 (no count)
  *   GET /settings?locale&page&per_page     same envelope of SettingsV04 (one per locale)
  *   GET /settings/{id}?locale              bare SettingsV04 JCS bytes, Codex-Digest + ETag
  * Default locale = settings.language (Mapper::locale).
@@ -82,15 +82,13 @@ final class Rest
         return true;
     }
 
-    /** @param array<string, int>|null $counts terms only: `count` per term id of the page, outside the canonical bytes */
-    private static function envelope(array $items, int $page, int $per, int $total, ?array $counts = null): string
+    private static function envelope(array $items, int $page, int $per, int $total): string
     {
         $p = Json::jcs([
             'page' => $page, 'per_page' => $per, 'total' => $total,
             'total_pages' => $per > 0 ? (int) ceil($total / $per) : 0,
         ]);
-        $c = $counts === null ? '' : '"counts":' . Json::jcs((object) $counts) . ',';
-        return '{' . $c . '"data":[' . implode(',', $items) . '],"pagination":' . $p . '}';
+        return '{"data":[' . implode(',', $items) . '],"pagination":' . $p . '}';
     }
 
     /**
@@ -316,11 +314,7 @@ final class Rest
         $map = new Mapper($site);
         $slice = array_slice($terms, ($page - 1) * $per, $per);
         $items = array_map(static fn (\WP_Term $t): string => Canonical::termBytes($map->term($t)), $slice);
-        $counts = [];
-        foreach ($slice as $t) {
-            $counts[Mapper::id($tax, $t->term_id)] = (int) $t->count;
-        }
-        return self::raw(self::envelope($items, $page, $per, count($terms), $counts));
+        return self::raw(self::envelope($items, $page, $per, count($terms)));
     }
 
     /** SettingsV04 bytes of the site (empty values dropped, as the contract adapter does). */

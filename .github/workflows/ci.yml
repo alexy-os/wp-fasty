@@ -498,7 +498,7 @@ jobs:
       - name: Codex conformance — fresh install per site, pinned demo, golden bytes + @ui8kit/contract schemas, Go fastygo/codex cross-check, Codex N+1
         env:
           # ui8kit/contract with canonicalize() + validateCollectionV04 (npm 0.3.0 not published yet): pinned commit
-          CODEX_CONTRACT_REV: a70c243dbb0e22ed3bddc5d7f48818f483558363
+          CODEX_CONTRACT_REV: a0ae505f998a545c51e186c3dbb6d63c16afa004
         run: |
           git clone -q https://github.com/ui8kit/contract.git /tmp/contract
           git -C /tmp/contract checkout -q "$CODEX_CONTRACT_REV"

@@ -10,7 +10,7 @@
       "role": "tag"
     }
   ],
-  "\u0077ordpress": {
+  "wp": {
     "kinds": {
       "post": {
         "post_type": "post"

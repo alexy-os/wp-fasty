@@ -284,8 +284,8 @@ final class Mapper
     }
 
     /**
-     * codex-term/v1 record. `count` is not part of the canonical term (nor of any digest): the REST list serves it next
-     * to the data ({counts}); $withCount adds it as metadata.count for the builder's own record view.
+     * codex-term/v1 record. `count` is not part of the canonical term (nor of any digest) and the REST list does not
+     * serve it; $withCount adds it as metadata.count for the builder's own record view.
      *
      * @return array<string, mixed>
      */

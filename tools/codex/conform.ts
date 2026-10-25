@@ -104,10 +104,8 @@ for (const t of tx.data) {
   const body = await get(loc(`/terms/${t.id}?per_page=100`));
   bodies.set(`terms.${t.id}.json`, body);
   const env = JSON.parse(body);
-  // codex-term/v1 has no count: the list serves it next to the data, one integer per term of the page
-  const ids = env.data.map((x: { id: string }) => x.id);
-  if (Object.keys(env.counts ?? {}).join() !== ids.join() || !Object.values(env.counts ?? {}).every(Number.isInteger))
-    fails.push(`/terms/${t.id}: counts ${JSON.stringify(env.counts)} ≠ ids ${ids.join()}`);
+  // the envelope is exactly {data, pagination}; codex-term/v1 has no count
+  if (Object.keys(env).join() !== "data,pagination") fails.push(`/terms/${t.id}: envelope keys ${Object.keys(env).join()}`);
   for (const term of env.data) {
     if (term.metadata?.count !== undefined) fails.push(`${t.id}/${term.id}: count inside the canonical term`);
     shape("term", term, `${t.id}/${term.id}`);
