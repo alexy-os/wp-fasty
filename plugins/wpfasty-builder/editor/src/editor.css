@@ -70,10 +70,11 @@
 /* lists: palette blocks, structure and array items share one 32px row */
 .wpfb-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .wpfb-list > li, .wpfb-chips > li { margin: 0; }
-.wpfb-li { display: flex; align-items: center; height: var(--wpfb-row); border-radius: var(--wpfb-radius); }
+/* one row style for the three lists: a flat full-width band, hover = muted fill, selected/open = accent fill + 2px accent line on the left */
+.wpfb-li { display: flex; align-items: center; height: var(--wpfb-row); border-radius: 0; }
 .wpfb-li:hover, .wpfb-li.is-hover { background: var(--wpfb-surface-muted); }
 .wpfb-li.is-selected, .wpfb-li.is-open { background: var(--wpfb-accent-soft); box-shadow: inset 2px 0 0 var(--wpfb-accent); }
-.wpfb-li-main { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; height: var(--wpfb-row); padding: 0 8px; border: 0; background: none; color: var(--wpfb-text); font-size: 14px; line-height: 20px; text-align: left; cursor: pointer; border-radius: var(--wpfb-radius); }
+.wpfb-li-main { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; height: var(--wpfb-row); padding: 0 8px; border: 0; background: none; color: var(--wpfb-text); font-size: 14px; line-height: 20px; text-align: left; cursor: pointer; border-radius: 0; }
 .wpfb-li-main > :first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wpfb-handle + .wpfb-li-main { padding-left: 0; }
 .wpfb-list > li.wpfb-drop { height: 0; box-shadow: 0 0 0 1px var(--wpfb-accent); }
