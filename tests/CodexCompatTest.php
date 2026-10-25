@@ -57,7 +57,7 @@ final class CodexCompatTest extends TestCase
         $this->assertSame('folder', $r('metadata.icon.value', $s['product_cats'])['default']);
     }
 
-    public function testRecordPlanOfAStaleCatalog(): void
+    public function testRecordPlanOfTheBundledCatalog(): void
     {
         $catalog = new Catalog(json_decode((string) file_get_contents(
             dirname(__DIR__) . '/plugins/wpfasty-builder/sources/ui8kit/latte/catalog.json',
@@ -69,7 +69,7 @@ final class CodexCompatTest extends TestCase
         $this->assertSame('metadata.client.value', $plan['author'][0], 'manual map wins');
         $this->assertSame('published_at|date', $plan['date'][0]);
         $this->assertSame([null, 'briefcase'], [$plan['icon'][0], $plan['icon'][1]]);
-        $this->assertSame('slug|route', $plan['href'][0], 'overlay: optional record field the catalog does not map');
+        $this->assertSame('slug|route', $plan['href'][0], 'the catalog maps href itself');
         $this->assertSame('featured_media_id|media', $plan['image'][0]);
         $this->assertSame('auto', DataSources::level($slot, $folio['posts']));
         $this->assertSame('manual', DataSources::level((array) $catalog->slot('products', 'grid3', 'products'), $folio['posts']));

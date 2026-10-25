@@ -26,11 +26,6 @@ use WPFastyTypes\Codex\Site;
 final class DataSources
 {
     public const MAX = 24;
-    /**
-     * Fallback paths of record fields a catalog declares but does not map (catalogs before codegen-x 95aaf77f; since
-     * then every slot maps href/image itself). Kept until the specs hash is agreed.
-     */
-    private const OVERLAY = ['href' => 'slug|route', 'image' => 'featured_media_id|media'];
     private const TYPES = ['string' => 'string', 'number' => 'number', 'boolean' => 'boolean'];
 
     /** @var array<string, array<string, mixed>>|null */
@@ -180,10 +175,6 @@ final class DataSources
                 continue;
             }
             if ($path === null) {
-                if (isset(self::OVERLAY[$name])) {
-                    $r = Compat::resolve(self::OVERLAY[$name], $m);
-                    $plan[$name] = [$r['path'], null, $type];
-                }
                 continue;
             }
             $need = isset(self::TYPES[$type]) && $type !== 'string' ? [self::TYPES[$type], []] : null;
