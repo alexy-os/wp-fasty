@@ -38,35 +38,21 @@ final class Canonical
         return Json::jcs(self::record($term, Profile::TERM_KEYS, Profile::TERM_REQUIRED));
     }
 
-    /** codex-manifest/v2:sha256: + sha256(JCS(Canonical())) — go-codex Manifest.Canonical() ordering. */
+    /**
+     * Canonical() of a manifest (codex-manifest/v2, contract a70c243 fixtures/vectors/manifest.json): the full manifest
+     * in RFC 8785 — arrays (resources included) keep the order of the source, empty nested values are kept.
+     *
+     * @throws CanonicalError
+     */
+    public static function manifest(string $text): string
+    {
+        return Json::jcs(Json::parse($text));
+    }
+
+    /** codex-manifest/v2:sha256: + sha256(JCS(Canonical())) of a manifest value tree (objects as \stdClass). */
     public static function manifestDigest(mixed $manifest): string
     {
-        $m = self::arr($manifest);
-        $res = array_map([self::class, 'arr'], (array) ($m['resources'] ?? []));
-        usort($res, static fn (array $a, array $b): int
-            => strcmp((string) self::arr($a['record'])['id'], (string) self::arr($b['record'])['id']));
-        foreach ($res as &$r) {
-            if (isset($r['taxonomies'])) {
-                $t = (array) $r['taxonomies'];
-                sort($t, SORT_STRING);
-                $r['taxonomies'] = $t;
-            }
-            $rec = self::arr($r['record']);
-            if (isset($rec['capabilities'])) {
-                $c = (array) $rec['capabilities'];
-                sort($c, SORT_STRING);
-                $rec['capabilities'] = $c;
-            }
-            if (isset($rec['relations'])) {
-                $rel = array_map([self::class, 'arr'], (array) $rec['relations']);
-                usort($rel, static fn (array $a, array $b): int => strcmp((string) $a['id'], (string) $b['id']));
-                $rec['relations'] = $rel;
-            }
-            $r['record'] = $rec;
-        }
-        unset($r);
-        $m['resources'] = $res;
-        return Profile::MANIFEST_DIGEST . hash('sha256', Json::jcs($m));
+        return Profile::MANIFEST_DIGEST . hash('sha256', Json::jcs($manifest));
     }
 
     /** @return array<string, mixed> */

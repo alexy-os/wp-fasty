@@ -1,0 +1,152 @@
+[
+    {
+        "id": 2,
+        "username": "demo-author",
+        "name": "Demo Author",
+        "first_name": "Demo",
+        "last_name": "Author",
+        "email": "demo-author@example.com",
+        "url": "https://example.com/demo-author",
+        "description": "Writes the demo posts.",
+        "link": "http://localhost:8081/author/demo-author/",
+        "locale": "en_US",
+        "nickname": "demo-author",
+        "slug": "demo-author",
+        "roles": [
+            "author"
+        ],
+        "registered_date": "2026-10-25T14:33:48+00:00",
+        "capabilities": {
+            "upload_files": true,
+            "edit_posts": true,
+            "edit_published_posts": true,
+            "publish_posts": true,
+            "read": true,
+            "level_2": true,
+            "level_1": true,
+            "level_0": true,
+            "delete_posts": true,
+            "delete_published_posts": true,
+            "author": true
+        },
+        "extra_capabilities": {
+            "author": true
+        },
+        "avatar_urls": {
+            "24": "https://secure.gravatar.com/avatar/9b6f0f3da554379e24c077cfd551489574d240164207c29573e17caef15724bf?s=24&d=mm&r=g",
+            "48": "https://secure.gravatar.com/avatar/9b6f0f3da554379e24c077cfd551489574d240164207c29573e17caef15724bf?s=48&d=mm&r=g",
+            "96": "https://secure.gravatar.com/avatar/9b6f0f3da554379e24c077cfd551489574d240164207c29573e17caef15724bf?s=96&d=mm&r=g"
+        },
+        "meta": {
+            "persisted_preferences": []
+        },
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/users/2",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/users"
+                }
+            ]
+        }
+    },
+    {
+        "id": 3,
+        "username": "demo-editor",
+        "name": "Demo Editor",
+        "first_name": "",
+        "last_name": "",
+        "email": "demo-editor@example.com",
+        "url": "",
+        "description": "Edits the demo.",
+        "link": "http://localhost:8081/author/demo-editor/",
+        "locale": "en_US",
+        "nickname": "demo-editor",
+        "slug": "demo-editor",
+        "roles": [
+            "editor"
+        ],
+        "registered_date": "2026-10-25T14:33:48+00:00",
+        "capabilities": {
+            "moderate_comments": true,
+            "manage_categories": true,
+            "manage_links": true,
+            "upload_files": true,
+            "unfiltered_html": true,
+            "edit_posts": true,
+            "edit_others_posts": true,
+            "edit_published_posts": true,
+            "publish_posts": true,
+            "edit_pages": true,
+            "read": true,
+            "level_7": true,
+            "level_6": true,
+            "level_5": true,
+            "level_4": true,
+            "level_3": true,
+            "level_2": true,
+            "level_1": true,
+            "level_0": true,
+            "edit_others_pages": true,
+            "edit_published_pages": true,
+            "publish_pages": true,
+            "delete_pages": true,
+            "delete_others_pages": true,
+            "delete_published_pages": true,
+            "delete_posts": true,
+            "delete_others_posts": true,
+            "delete_published_posts": true,
+            "delete_private_posts": true,
+            "edit_private_posts": true,
+            "read_private_posts": true,
+            "delete_private_pages": true,
+            "edit_private_pages": true,
+            "read_private_pages": true,
+            "editor": true
+        },
+        "extra_capabilities": {
+            "editor": true
+        },
+        "avatar_urls": {
+            "24": "https://secure.gravatar.com/avatar/751bb458135072bbac6d9b5f6326af90af9a959a6c51e3ad5a5c0f422285691d?s=24&d=mm&r=g",
+            "48": "https://secure.gravatar.com/avatar/751bb458135072bbac6d9b5f6326af90af9a959a6c51e3ad5a5c0f422285691d?s=48&d=mm&r=g",
+            "96": "https://secure.gravatar.com/avatar/751bb458135072bbac6d9b5f6326af90af9a959a6c51e3ad5a5c0f422285691d?s=96&d=mm&r=g"
+        },
+        "meta": {
+            "persisted_preferences": []
+        },
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/users/3",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/users"
+                }
+            ]
+        }
+    }
+]

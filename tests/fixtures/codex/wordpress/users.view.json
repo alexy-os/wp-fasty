@@ -1,0 +1,72 @@
+[
+    {
+        "id": 2,
+        "name": "Demo Author",
+        "url": "https://example.com/demo-author",
+        "description": "Writes the demo posts.",
+        "link": "http://localhost:8081/author/demo-author/",
+        "slug": "demo-author",
+        "avatar_urls": {
+            "24": "https://secure.gravatar.com/avatar/9b6f0f3da554379e24c077cfd551489574d240164207c29573e17caef15724bf?s=24&d=mm&r=g",
+            "48": "https://secure.gravatar.com/avatar/9b6f0f3da554379e24c077cfd551489574d240164207c29573e17caef15724bf?s=48&d=mm&r=g",
+            "96": "https://secure.gravatar.com/avatar/9b6f0f3da554379e24c077cfd551489574d240164207c29573e17caef15724bf?s=96&d=mm&r=g"
+        },
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/users/2",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/users"
+                }
+            ]
+        }
+    },
+    {
+        "id": 3,
+        "name": "Demo Editor",
+        "url": "",
+        "description": "Edits the demo.",
+        "link": "http://localhost:8081/author/demo-editor/",
+        "slug": "demo-editor",
+        "avatar_urls": {
+            "24": "https://secure.gravatar.com/avatar/751bb458135072bbac6d9b5f6326af90af9a959a6c51e3ad5a5c0f422285691d?s=24&d=mm&r=g",
+            "48": "https://secure.gravatar.com/avatar/751bb458135072bbac6d9b5f6326af90af9a959a6c51e3ad5a5c0f422285691d?s=48&d=mm&r=g",
+            "96": "https://secure.gravatar.com/avatar/751bb458135072bbac6d9b5f6326af90af9a959a6c51e3ad5a5c0f422285691d?s=96&d=mm&r=g"
+        },
+        "meta": [],
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/users/3",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/users"
+                }
+            ]
+        }
+    }
+]

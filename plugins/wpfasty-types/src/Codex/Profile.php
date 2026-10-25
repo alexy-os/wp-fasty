@@ -23,6 +23,8 @@ final class Profile
     public const DEFAULT_LOCALE = 'en';
     /** settings.language when WordPress reports no usable locale */
     public const SETTINGS_LANGUAGE = 'en-US';
+    /** registered REST meta that never becomes Codex metadata: editor UI state (norm agreed with XGenBot) */
+    public const DROPPED_META = ['persisted_preferences'];
     /** Codex-Digest prefix of GET /settings/{id} (draft, name to be agreed with XGenBot) */
     public const SETTINGS_PROFILE = 'codex-settings/v1';
     public const MAX_SAFE = 9007199254740991;

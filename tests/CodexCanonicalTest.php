@@ -48,6 +48,39 @@ final class CodexCanonicalTest extends TestCase
         self::assertCount(24, $doc['cases']);
     }
 
+    /** @return iterable<string, array{array<string, mixed>}> */
+    public static function manifestVectors(): iterable
+    {
+        $doc = json_decode((string) file_get_contents(__DIR__ . '/fixtures/codex/manifest.json'), true);
+        foreach ($doc['cases'] as $case) {
+            yield $case['name'] => [$case];
+        }
+    }
+
+    /** codex-manifest/v2 vectors (contract a70c243): source array order kept, empty nested values kept. */
+    #[DataProvider('manifestVectors')]
+    public function testManifestVector(array $case): void
+    {
+        if (isset($case['error'])) {
+            try {
+                $out = Canonical::manifest($case['input_text']);
+                self::fail("expected {$case['error']}, got {$out}");
+            } catch (CanonicalError $e) {
+                self::assertSame($case['error'], $e->codexCode, $e->getMessage());
+            }
+            return;
+        }
+        self::assertSame($case['canonical'], Canonical::manifest($case['input_text']));
+        self::assertSame($case['digest'], Canonical::manifestDigest(Json::parse($case['input_text'])));
+    }
+
+    public function testManifestVectorFileShape(): void
+    {
+        $doc = json_decode((string) file_get_contents(__DIR__ . '/fixtures/codex/manifest.json'), true);
+        self::assertSame('codex-manifest/v2', $doc['profile']);
+        self::assertCount(6, $doc['cases']);
+    }
+
     public function testPhpTraps(): void
     {
         self::assertSame('{"a":{}}', Json::jcs(Json::parse('{"a":{}}')));

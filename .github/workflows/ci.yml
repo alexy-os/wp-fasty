@@ -482,11 +482,18 @@ jobs:
       - name: Codex conformance — fresh install per site, pinned demo, golden bytes + @ui8kit/contract schemas, Go fastygo/codex cross-check, Codex N+1
         env:
           # ui8kit/contract with canonicalize() + validateCollectionV04 (npm 0.3.0 not published yet): pinned commit
-          CODEX_CONTRACT_REV: 3a584004940e3773265d3fddb2df1aa426ca77b7
+          CODEX_CONTRACT_REV: a70c243dbb0e22ed3bddc5d7f48818f483558363
         run: |
           git clone -q https://github.com/ui8kit/contract.git /tmp/contract
           git -C /tmp/contract checkout -q "$CODEX_CONTRACT_REV"
           (cd /tmp/contract && bun install --frozen-lockfile > /dev/null && bun run build > /dev/null)
+          # copies of the contract vectors / live WP samples are the pinned ones; expected Mapper output = contract adapter
+          cmp tests/fixtures/codex/canonical.json /tmp/contract/fixtures/vectors/canonical.json
+          cmp tests/fixtures/codex/manifest.json /tmp/contract/fixtures/vectors/manifest.json
+          for f in media.edit media.view users.edit users.view; do
+            cmp "tests/fixtures/codex/wordpress/$f.json" "/tmp/contract/fixtures/wordpress/$f.json"
+          done
+          CODEX_CONTRACT=/tmp/contract bun tools/codex/wp-samples-expected.ts --check
           # A separate install (own DB, own port): the conformance resets its DB per site.
           mkdir -p /tmp/wpc && tar -xzf /tmp/wp-dl/wp.tar.gz -C /tmp/wpc --strip-components=1
           mysql -h 127.0.0.1 -uroot -proot -e 'CREATE DATABASE IF NOT EXISTS wpc'

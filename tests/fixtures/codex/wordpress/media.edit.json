@@ -1,0 +1,330 @@
+[
+    {
+        "id": 11,
+        "date": "2026-10-25T14:32:53",
+        "date_gmt": "2026-10-25T14:32:53",
+        "guid": {
+            "rendered": "http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron.jpg",
+            "raw": "http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron.jpg"
+        },
+        "modified": "2026-10-25T14:34:02",
+        "modified_gmt": "2026-10-25T14:34:02",
+        "slug": "picsum-id-972",
+        "status": "inherit",
+        "type": "attachment",
+        "link": "http://localhost:8081/product/linen-apron/picsum-id-972/",
+        "title": {
+            "raw": "Picsum ID: 972",
+            "rendered": "Picsum ID: 972"
+        },
+        "author": 0,
+        "featured_media": 0,
+        "comment_status": "open",
+        "ping_status": "closed",
+        "template": "",
+        "meta": [],
+        "permalink_template": "http://localhost:8081/product/linen-apron/%postname%/",
+        "generated_slug": "picsum-id-972",
+        "class_list": [
+            "post-11",
+            "attachment",
+            "type-attachment",
+            "status-inherit",
+            "hentry"
+        ],
+        "description": {
+            "raw": "Picsum ID: 972",
+            "rendered": "<p class=\"attachment\"><a aria-label=\"Picsum ID: 972\" href=\"http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron.jpg\"><img loading=\"lazy\" decoding=\"async\" width=\"300\" height=\"300\" src=\"http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron-300x300.jpg\" class=\"attachment-medium size-medium\" alt=\"Shop Linen Apron\" srcset=\"http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron-300x300.jpg 300w, http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron-150x150.jpg 150w, http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron-768x768.jpg 768w, http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron.jpg 1000w\" sizes=\"auto, (max-width: 300px) 100vw, 300px\" /></a></p>\n<p>Picsum ID: 972</p>\n"
+        },
+        "caption": {
+            "raw": "",
+            "rendered": "<p>Picsum ID: 972</p>\n"
+        },
+        "alt_text": "Shop Linen Apron",
+        "media_type": "image",
+        "mime_type": "image/jpeg",
+        "media_details": {
+            "width": 1000,
+            "height": 1000,
+            "file": "2026/10/shop-linen-apron.jpg",
+            "filesize": 145618,
+            "sizes": {
+                "medium": {
+                    "file": "shop-linen-apron-300x300.jpg",
+                    "width": 300,
+                    "height": 300,
+                    "filesize": 20429,
+                    "mime_type": "image/jpeg",
+                    "source_url": "http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron-300x300.jpg"
+                },
+                "thumbnail": {
+                    "file": "shop-linen-apron-150x150.jpg",
+                    "width": 150,
+                    "height": 150,
+                    "filesize": 5935,
+                    "mime_type": "image/jpeg",
+                    "source_url": "http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron-150x150.jpg"
+                },
+                "medium_large": {
+                    "file": "shop-linen-apron-768x768.jpg",
+                    "width": 768,
+                    "height": 768,
+                    "filesize": 107493,
+                    "mime_type": "image/jpeg",
+                    "source_url": "http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron-768x768.jpg"
+                },
+                "full": {
+                    "file": "shop-linen-apron.jpg",
+                    "width": 1000,
+                    "height": 1000,
+                    "mime_type": "image/jpeg",
+                    "source_url": "http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron.jpg"
+                }
+            },
+            "image_meta": {
+                "aperture": "0",
+                "credit": "",
+                "camera": "",
+                "caption": "Picsum ID: 972",
+                "created_timestamp": "0",
+                "copyright": "",
+                "focal_length": "0",
+                "iso": "0",
+                "shutter_speed": "0",
+                "title": "Picsum ID: 972",
+                "orientation": "1",
+                "keywords": [],
+                "alt": ""
+            }
+        },
+        "post": 10,
+        "source_url": "http://localhost:8081/wp-content/uploads/2026/10/shop-linen-apron.jpg",
+        "missing_image_sizes": [],
+        "filename": "shop-linen-apron.jpg",
+        "filesize": 145618,
+        "exif_orientation": 1,
+        "image_output_format": null,
+        "image_save_progressive": false,
+        "image_quality": {
+            "default": 82,
+            "sizes": []
+        },
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/11",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/types/attachment"
+                }
+            ],
+            "replies": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/comments?post=11"
+                }
+            ],
+            "wp:attached-to": [
+                {
+                    "embeddable": true,
+                    "post_type": "product",
+                    "id": 10,
+                    "href": "http://localhost:8081/wp-json/wp/v2/product/10"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/11"
+                }
+            ],
+            "wp:action-assign-author": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/11"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    },
+    {
+        "id": 19,
+        "date": "2026-10-25T14:32:55",
+        "date_gmt": "2026-10-25T14:32:55",
+        "guid": {
+            "rendered": "http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote.jpg",
+            "raw": "http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote.jpg"
+        },
+        "modified": "2026-10-25T14:32:55",
+        "modified_gmt": "2026-10-25T14:32:55",
+        "slug": "picsum-id-903",
+        "status": "inherit",
+        "type": "attachment",
+        "link": "http://localhost:8081/picsum-id-903/",
+        "title": {
+            "raw": "Picsum ID: 903",
+            "rendered": "Picsum ID: 903"
+        },
+        "author": 0,
+        "featured_media": 0,
+        "comment_status": "open",
+        "ping_status": "closed",
+        "template": "",
+        "meta": [],
+        "permalink_template": "http://localhost:8081/?attachment_id=19",
+        "generated_slug": "picsum-id-903",
+        "class_list": [
+            "post-19",
+            "attachment",
+            "type-attachment",
+            "status-inherit",
+            "hentry"
+        ],
+        "description": {
+            "raw": "Picsum ID: 903",
+            "rendered": "<p class=\"attachment\"><a aria-label=\"Picsum ID: 903\" href=\"http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote.jpg\"><img loading=\"lazy\" decoding=\"async\" width=\"300\" height=\"300\" src=\"http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote-300x300.jpg\" class=\"attachment-medium size-medium\" alt=\"Shop Canvas Tote\" srcset=\"http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote-300x300.jpg 300w, http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote-150x150.jpg 150w, http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote-768x768.jpg 768w, http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote.jpg 1000w\" sizes=\"auto, (max-width: 300px) 100vw, 300px\" /></a></p>\n<p>Picsum ID: 903</p>\n"
+        },
+        "caption": {
+            "raw": "",
+            "rendered": "<p>Picsum ID: 903</p>\n"
+        },
+        "alt_text": "Shop Canvas Tote",
+        "media_type": "image",
+        "mime_type": "image/jpeg",
+        "media_details": {
+            "width": 1000,
+            "height": 1000,
+            "file": "2026/10/shop-canvas-tote.jpg",
+            "filesize": 167569,
+            "sizes": {
+                "medium": {
+                    "file": "shop-canvas-tote-300x300.jpg",
+                    "width": 300,
+                    "height": 300,
+                    "filesize": 19223,
+                    "mime_type": "image/jpeg",
+                    "source_url": "http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote-300x300.jpg"
+                },
+                "thumbnail": {
+                    "file": "shop-canvas-tote-150x150.jpg",
+                    "width": 150,
+                    "height": 150,
+                    "filesize": 4893,
+                    "mime_type": "image/jpeg",
+                    "source_url": "http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote-150x150.jpg"
+                },
+                "medium_large": {
+                    "file": "shop-canvas-tote-768x768.jpg",
+                    "width": 768,
+                    "height": 768,
+                    "filesize": 120472,
+                    "mime_type": "image/jpeg",
+                    "source_url": "http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote-768x768.jpg"
+                },
+                "full": {
+                    "file": "shop-canvas-tote.jpg",
+                    "width": 1000,
+                    "height": 1000,
+                    "mime_type": "image/jpeg",
+                    "source_url": "http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote.jpg"
+                }
+            },
+            "image_meta": {
+                "aperture": "0",
+                "credit": "",
+                "camera": "",
+                "caption": "Picsum ID: 903",
+                "created_timestamp": "0",
+                "copyright": "",
+                "focal_length": "0",
+                "iso": "0",
+                "shutter_speed": "0",
+                "title": "Picsum ID: 903",
+                "orientation": "1",
+                "keywords": [],
+                "alt": ""
+            }
+        },
+        "post": null,
+        "source_url": "http://localhost:8081/wp-content/uploads/2026/10/shop-canvas-tote.jpg",
+        "missing_image_sizes": [],
+        "filename": "shop-canvas-tote.jpg",
+        "filesize": 167569,
+        "exif_orientation": 1,
+        "image_output_format": null,
+        "image_save_progressive": false,
+        "image_quality": {
+            "default": 82,
+            "sizes": []
+        },
+        "_links": {
+            "self": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/19",
+                    "targetHints": {
+                        "allow": [
+                            "GET",
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "DELETE"
+                        ]
+                    }
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media"
+                }
+            ],
+            "about": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/types/attachment"
+                }
+            ],
+            "replies": [
+                {
+                    "embeddable": true,
+                    "href": "http://localhost:8081/wp-json/wp/v2/comments?post=19"
+                }
+            ],
+            "wp:action-unfiltered-html": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/19"
+                }
+            ],
+            "wp:action-assign-author": [
+                {
+                    "href": "http://localhost:8081/wp-json/wp/v2/media/19"
+                }
+            ],
+            "curies": [
+                {
+                    "name": "wp",
+                    "href": "https://api.w.org/{rel}",
+                    "templated": true
+                }
+            ]
+        }
+    }
+]

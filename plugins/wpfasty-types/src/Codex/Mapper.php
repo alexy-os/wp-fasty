@@ -266,10 +266,10 @@ final class Mapper
     private static function withRestMeta(array $md, string $type, string $sub, int $id, string $what): array
     {
         foreach (get_registered_meta_keys($type, $sub) as $key => $args) {
-            if (empty($args['show_in_rest'])) {
+            $key = (string) $key;
+            if (empty($args['show_in_rest']) || in_array($key, Profile::DROPPED_META, true)) {
                 continue;
             }
-            $key = (string) $key;
             if (isset($md[$key])) {
                 throw new \LogicException("wordpress: meta key \"{$key}\" of {$what} collides with an adapter field");
             }
