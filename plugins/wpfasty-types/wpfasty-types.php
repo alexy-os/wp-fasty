@@ -20,6 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 require_once __DIR__ . '/src/Plugin.php';
+require_once __DIR__ . '/src/Codex/autoload.php';
 
 add_action('wpfasty_types_loaded', [WPFastyTypes\Plugin::class, 'attach']);
 

@@ -27,6 +27,7 @@ final class Plugin
         $plugin = new self($types);
         add_action('init', [$plugin, 'register']);
         add_action('init', [self::class, 'registerCurrency']);
+        Codex\Rest::attach();
         if (is_admin()) {
             add_action('admin_init', [self::class, 'currencyField']);
             add_action('add_meta_boxes', [$plugin, 'metaBoxes']);

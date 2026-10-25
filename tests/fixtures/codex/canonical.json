@@ -1,0 +1,140 @@
+{
+  "profile": "codex-entry/v1",
+  "cases": [
+    {
+      "name": "control: post-1/en-US with metadata.price",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"metadata\":{\"price\":{\"value\":1250}}}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"metadata\":{\"price\":{\"value\":1250}},\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:d7ebf2eece26fa0a0b6772b2ad8a14e7eb517882946023bfff1fbbaa8224cc4a"
+    },
+    {
+      "name": "key order: reversed top level, whitespace and newlines",
+      "input_text": "{\n  \"visibility\": \"public\", \"version\": 1, \"updated_at\": \"2026-10-25T11:09:00Z\", \"title\": \"Hello\",\n  \"status\": \"published\", \"slug\": \"hello\", \"locale\": \"en-US\", \"kind\": \"post\", \"id\": \"post-1\", \"created_at\": \"2026-10-25T11:09:00Z\"\n}\n",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:9c71a088d552cc40b9f12218320acf53bd39f58a62fabb126d802ffcda4596eb"
+    },
+    {
+      "name": "key order: nested in metadata value, UTF-16 order puts U+FF5E before an astral key",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"metadata\":{\"x\":{\"value\":{\"b\":1,\"a\":{\"z\":true,\"y\":false},\"\\ud83d\\ude00\":\"astral\",\"\\uff5e\":\"bmp\",\"A\":0,\"é\":\"e-acute\",\"10\":\"ten\",\"2\":\"two\"}}}}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"metadata\":{\"x\":{\"value\":{\"10\":\"ten\",\"2\":\"two\",\"A\":0,\"a\":{\"y\":false,\"z\":true},\"b\":1,\"é\":\"e-acute\",\"😀\":\"astral\",\"～\":\"bmp\"}}},\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:d68d38dc8452c874d5916f89599d58ee2e83d144bc2bc013dda2b05dc83ebfe3"
+    },
+    {
+      "name": "strings: quote, backslash, newline, U+001F, solidus",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"content\":\"say \\\"hi\\\" \\\\ path\\nline\\u001ftab\\t/slash\\/escaped\"}",
+      "canonical": "{\"content\":\"say \\\"hi\\\" \\\\ path\\nline\\u001ftab\\t/slash/escaped\",\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:0cf193640bfc2eed7335c6708f32614c94173685f427d9b92183aecbced4538f"
+    },
+    {
+      "name": "strings: <>& U+2028 U+2029 emoji and Cyrillic stay unescaped",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"<a>&amp; \\u2028 \\u2029   😀 \\ud83d\\ude80 Привет, мир\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\"}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"slug\":\"hello\",\"status\":\"published\",\"title\":\"<a>&amp;       😀 🚀 Привет, мир\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:73d79493a8ed96da178cffd4e13bd9ea2a772be368c13ddbb554a7421cfdd4c9"
+    },
+    {
+      "name": "numbers: 1250 4.5 0.1 12.50 1e21 1e-7 -0 -1250 9007199254740991",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"metadata\":{\"x\":{\"value\":[1250,4.5,0.1,12.50,1e21,1e-7,-0,-0.0,-1250,9007199254740991,-9007199254740991,1E2,100e-2]}}}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"metadata\":{\"x\":{\"value\":[1250,4.5,0.1,12.5,1e+21,1e-7,0,0,-1250,9007199254740991,-9007199254740991,100,1]}},\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:c578a2a933ef27ade22aac72af22304380f652e50b23ea07634d40ce24482ad9"
+    },
+    {
+      "name": "numbers: 9007199254740993 is an unsafe integer",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"metadata\":{\"x\":{\"value\":9007199254740993}}}",
+      "error": "canonical.unsafe_integer"
+    },
+    {
+      "name": "numbers: -9007199254740992 is an unsafe integer",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"metadata\":{\"x\":{\"value\":-9007199254740992}}}",
+      "error": "canonical.unsafe_integer"
+    },
+    {
+      "name": "empty optional top-level fields are omitted, metadata values are kept",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"excerpt\":\"\",\"content\":null,\"author_id\":\"\",\"parent_id\":null,\"featured_media_id\":\"\",\"template\":\"\",\"terms\":[],\"origin\":[],\"published_at\":null,\"deleted_at\":null,\"discussion\":{},\"metadata\":{\"badge\":{\"value\":\"\"},\"note\":{\"value\":null},\"list\":{\"value\":[]},\"obj\":{\"value\":{}}}}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"metadata\":{\"badge\":{\"value\":\"\"},\"list\":{\"value\":[]},\"note\":{\"value\":null},\"obj\":{\"value\":{}}},\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:940b35faf920d4f763dc075e72cda76a56dd87d553567ab57e66d14bfe3efe75"
+    },
+    {
+      "name": "metadata private:true is removed, private:false is dropped",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"metadata\":{\"secret\":{\"value\":\"s3\",\"private\":true},\"_edit_lock\":{\"value\":\"1700000000:1\",\"private\":true},\"price\":{\"value\":1250,\"private\":false}}}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"metadata\":{\"price\":{\"value\":1250}},\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:d7ebf2eece26fa0a0b6772b2ad8a14e7eb517882946023bfff1fbbaa8224cc4a"
+    },
+    {
+      "name": "metadata with only private items is omitted",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"metadata\":{\"secret\":{\"value\":1,\"private\":true}}}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:9c71a088d552cc40b9f12218320acf53bd39f58a62fabb126d802ffcda4596eb"
+    },
+    {
+      "name": "dates: +03:00 offset is converted to Z, .000Z is dropped",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T23:30:00-01:00\",\"published_at\":\"2026-10-25T14:09:00+03:00\",\"deleted_at\":\"2026-10-25T11:09:00.000Z\"}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"deleted_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"published_at\":\"2026-10-25T11:09:00Z\",\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-26T00:30:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:c03a841ce2bd843df1b9028922887aacb1bba83bdc9b86da93e8772df332a512"
+    },
+    {
+      "name": "dates: fractional seconds .5Z",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"published_at\":\"2026-10-25T11:09:00.5Z\"}",
+      "error": "canonical.fractional_seconds"
+    },
+    {
+      "name": "dates: date without time",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"published_at\":\"2026-10-25\"}",
+      "error": "canonical.invalid_date"
+    },
+    {
+      "name": "terms are sorted by (taxonomy, term_id) in code point order",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"terms\":[{\"term_id\":\"tag-svelte\",\"taxonomy\":\"post_tag\"},{\"taxonomy\":\"category\",\"term_id\":\"news\"},{\"taxonomy\":\"post_tag\",\"term_id\":\"tag-a11y\"},{\"taxonomy\":\"category\",\"term_id\":\"guides\"},{\"taxonomy\":\"post_tag\",\"term_id\":\"Tag-Z\"}]}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"slug\":\"hello\",\"status\":\"published\",\"terms\":[{\"taxonomy\":\"category\",\"term_id\":\"guides\"},{\"taxonomy\":\"category\",\"term_id\":\"news\"},{\"taxonomy\":\"post_tag\",\"term_id\":\"Tag-Z\"},{\"taxonomy\":\"post_tag\",\"term_id\":\"tag-a11y\"},{\"taxonomy\":\"post_tag\",\"term_id\":\"tag-svelte\"}],\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:aaa00b45d561712f939a67c230d8fc0a776ce2ee252ddff6913674c0e03e4c37"
+    },
+    {
+      "name": "origin keeps its order",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"origin\":[{\"system\":\"wordpress\",\"id\":\"42\"},{\"system\":\"ghost\",\"id\":\"abc\"},{\"system\":\"csv\",\"id\":\"1\"}]}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"origin\":[{\"id\":\"42\",\"system\":\"wordpress\"},{\"id\":\"abc\",\"system\":\"ghost\"},{\"id\":\"1\",\"system\":\"csv\"}],\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:3e8f0b663af01737568040a9a9fc146fe0d1da4e426842ce625b8e6dc01a8e53"
+    },
+    {
+      "name": "unknown top-level field",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"password\":\"secret\"}",
+      "error": "canonical.unknown_field"
+    },
+    {
+      "name": "duplicate key",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"slug\":\"again\"}",
+      "error": "canonical.duplicate_key"
+    },
+    {
+      "name": "duplicate key inside a metadata value",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"metadata\":{\"x\":{\"value\":{\"a\":1,\"a\":2}}}}",
+      "error": "canonical.duplicate_key"
+    },
+    {
+      "name": "non-ASCII id",
+      "input_text": "{\"id\":\"пост-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\"}",
+      "error": "canonical.invalid_id"
+    },
+    {
+      "name": "missing locale",
+      "input_text": "{\"id\":\"post-1\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\"}",
+      "error": "canonical.missing_field"
+    },
+    {
+      "name": "PHP trap: {} in a json metadata value stays {} (not [])",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"metadata\":{\"settings\":{\"value\":{}},\"layout\":{\"value\":{\"blocks\":{}}}}}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"metadata\":{\"layout\":{\"value\":{\"blocks\":{}}},\"settings\":{\"value\":{}}},\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:915cb2fb783bcf0c48aef5ee436fd949099ab9d9365fbbaf2dc76479d92ce495"
+    },
+    {
+      "name": "PHP trap: object with keys \"0\",\"1\" stays an object",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"metadata\":{\"x\":{\"value\":{\"1\":\"b\",\"0\":\"a\"}}}}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"metadata\":{\"x\":{\"value\":{\"0\":\"a\",\"1\":\"b\"}}},\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:da511da98cf71fbb04f3b2e7600a9d8e34d20c3da7d79be0ef7156d6623d7f47"
+    },
+    {
+      "name": "order 0 and pinned false are kept (not empty values)",
+      "input_text": "{\"id\":\"post-1\",\"locale\":\"en-US\",\"kind\":\"post\",\"status\":\"published\",\"visibility\":\"public\",\"slug\":\"hello\",\"title\":\"Hello\",\"version\":1,\"created_at\":\"2026-10-25T11:09:00Z\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"order\":0,\"pinned\":false,\"format\":\"standard\",\"discussion\":{\"pings\":false,\"comments\":true}}",
+      "canonical": "{\"created_at\":\"2026-10-25T11:09:00Z\",\"discussion\":{\"comments\":true,\"pings\":false},\"format\":\"standard\",\"id\":\"post-1\",\"kind\":\"post\",\"locale\":\"en-US\",\"order\":0,\"pinned\":false,\"slug\":\"hello\",\"status\":\"published\",\"title\":\"Hello\",\"updated_at\":\"2026-10-25T11:09:00Z\",\"version\":1,\"visibility\":\"public\"}",
+      "digest": "codex-entry/v1:sha256:fb8a8e68809e53fdbaa5ae9da0a69d2419b10c4a8938c2405f819ee922a72ef5"
+    }
+  ]
+}

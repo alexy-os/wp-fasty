@@ -33,15 +33,25 @@ const INT = [{ name: PROFILE.rule.integer }];
 const PLATFORM: J[] = [
   { record: { id: "media", label: "Media", scope: PROFILE.scope, fields: [
     { id: "title", label: "Title", type: "text", localized: true },
+    { id: "content", label: "Description", type: "richtext", localized: true },
+    { id: "author_id", label: "Uploaded by", type: "string", ui_hint: "user" },
+    { id: "published_at", label: "Published", type: "datetime" },
     { id: "alt", label: "Alt", type: "string" },
+    // proposal (not agreed): the owner as `<kind>-<n>`; contract fromWpMedia has `post` (WP integer id)
+    { id: "attached_to", label: "Attached to", type: "string", ui_hint: "entry" },
+    { id: "caption", label: "Caption", type: "textarea" },
     { id: "file", label: "File", type: "string", required: true, rules: [{ name: PROFILE.rule.uri }] },
     { id: "height", label: "Height", type: "number", rules: INT },
     { id: "mime", label: "Mime", type: "string", required: true },
+    { id: "size", label: "File size", type: "number", rules: INT },
     { id: "width", label: "Width", type: "number", rules: INT },
   ] } },
   { record: { id: "user", label: "Users", scope: PROFILE.scope, fields: [
     { id: "title", label: "Name", type: "text", localized: true },
-    { id: "display_name", label: "Display name", type: "string", required: true },
+    { id: "content", label: "Biographical info", type: "textarea", localized: true },
+    { id: "login", label: "Username", type: "string", sensitive: true },
+    { id: "roles", label: "Roles", type: "collection", items: { id: "item", label: "Role", type: "string" }, sensitive: true },
+    { id: "url", label: "Website", type: "string", rules: [{ name: PROFILE.rule.uri }] },
   ] } },
 ];
 

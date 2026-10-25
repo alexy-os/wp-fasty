@@ -15,9 +15,37 @@
             "localized": true
           },
           {
+            "id": "content",
+            "label": "Description",
+            "type": "richtext",
+            "localized": true
+          },
+          {
+            "id": "author_id",
+            "label": "Uploaded by",
+            "type": "string",
+            "ui_hint": "user"
+          },
+          {
+            "id": "published_at",
+            "label": "Published",
+            "type": "datetime"
+          },
+          {
             "id": "alt",
             "label": "Alt",
             "type": "string"
+          },
+          {
+            "id": "attached_to",
+            "label": "Attached to",
+            "type": "string",
+            "ui_hint": "entry"
+          },
+          {
+            "id": "caption",
+            "label": "Caption",
+            "type": "textarea"
           },
           {
             "id": "file",
@@ -45,6 +73,16 @@
             "label": "Mime",
             "type": "string",
             "required": true
+          },
+          {
+            "id": "size",
+            "label": "File size",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
           },
           {
             "id": "width",
@@ -264,10 +302,37 @@
             "localized": true
           },
           {
-            "id": "display_name",
-            "label": "Display name",
+            "id": "content",
+            "label": "Biographical info",
+            "type": "textarea",
+            "localized": true
+          },
+          {
+            "id": "login",
+            "label": "Username",
             "type": "string",
-            "required": true
+            "sensitive": true
+          },
+          {
+            "id": "roles",
+            "label": "Roles",
+            "type": "collection",
+            "items": {
+              "id": "item",
+              "label": "Role",
+              "type": "string"
+            },
+            "sensitive": true
+          },
+          {
+            "id": "url",
+            "label": "Website",
+            "type": "string",
+            "rules": [
+              {
+                "name": "fastygo.codex/uri"
+              }
+            ]
           }
         ]
       }
