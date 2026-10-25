@@ -345,6 +345,7 @@ A Parent correctness ✓
 | L3 | Selection overlay over the iframe (hover, selected, label, toolbar, drag grip, drop line); no in-page selection styles | `a4c6c40` | [x] |
 | L4 | `EditorStore` ($state) + undo/redo (50 JSON snapshots, typing coalesced), shortcuts and buttons | `1eea3f8` | [x] |
 | L5 | Nesting (slots): design only — README "Next step" | README | [ ] |
+| L6 | IDE layout, step 1: resizable columns (separators on the 8px grid, min/max, double click resets, ARIA separator), collapse by bar buttons / `[` `]`, focus mode `F`, widths + collapsed columns in localStorage per user (`config.user`) | `editor/src/layout*.ts`, `Splitter.svelte` | [x] |
 
 ---
 

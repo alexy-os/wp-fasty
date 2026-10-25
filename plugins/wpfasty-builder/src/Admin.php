@@ -126,6 +126,7 @@ final class Admin
             'permalink' => (string) get_permalink($id),
             'canPublish' => current_user_can('publish_pages'),
             'editUrl' => (string) get_edit_post_link($id, 'raw'),
+            'user' => get_current_user_id(),
         ];
         wp_add_inline_script(
             'wpfasty-builder-editor',

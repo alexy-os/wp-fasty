@@ -5,8 +5,14 @@
   import { bindableOf, blockConfig } from "./fields/schema";
   import Icon from "./Icon.svelte";
   import Overlay from "./Overlay.svelte";
+  import Splitter from "./Splitter.svelte";
+  import { PanelLayout } from "./layout.svelte";
+  import { isTyping, shortcutOf } from "./layout";
   import { EditorStore } from "./store.svelte";
-  import { Braces, ChevronDown, ChevronUp, Copy, GripVertical, Monitor, Redo2, RotateCcw, Smartphone, Trash2, Undo2 } from "./icons";
+  import {
+    Braces, ChevronDown, ChevronUp, Copy, GripVertical, Maximize2, Minimize2, Monitor, PanelLeftClose, PanelLeftOpen, PanelRightClose,
+    PanelRightOpen, Redo2, RotateCcw, Smartphone, Trash2, Undo2,
+  } from "./icons";
   import { api } from "./api";
   import type { Binding, Box, Catalog, Config, Item, Json, Obj, RecordField } from "./types";
   import { clone, getPath, human, isObj, kindOf, merge, newId, setPath } from "./util";
@@ -18,6 +24,9 @@
 
   let catalog = $state<Catalog | null>(null);
   const store = new EditorStore();
+  /** column widths, collapsed columns (localStorage, per user) and focus mode */
+  const layout = new PanelLayout(config.user);
+  let resizing = $state(false);
   let source = $state(config.source || "ui8kit");
   let collection = $state(config.collection || "");
   let previewUrl = $state("");
@@ -329,7 +338,19 @@
         return;
       }
     }
+    if (e.key === "Escape" && layout.focus) {
+      e.preventDefault();
+      layout.toggleFocus();
+      return;
+    }
     if (e.key === "Escape" && store.selected && !(e.target instanceof HTMLElement && e.target.closest("input, textarea, select"))) select(null);
+    // single-key layout shortcuts: [ left column, ] right column, F focus mode (never while typing)
+    const cut = e.repeat || isTyping(e.target) ? null : shortcutOf(e);
+    if (cut) {
+      e.preventDefault();
+      if (cut === "focus") layout.toggleFocus();
+      else layout.toggle(cut);
+    }
   }
 
   // ---- drag and drop (pointer events, no library): palette → list/preview, list handle or overlay grip → list/preview
@@ -429,6 +450,10 @@
     void store.selected;
     void store.hovered;
     void device;
+    void layout.left;
+    void layout.right;
+    void layout.leftOpen;
+    void layout.rightOpen;
     schedule();
   });
 
@@ -455,11 +480,18 @@
   }
 </script>
 
-<div class="wpfb-app" class:is-dragging={drag !== null}>
-  <header class="wpfb-bar">
+<div class="wpfb-app" class:is-dragging={drag !== null} class:is-resizing={resizing} class:is-focus={layout.focus}
+  style:--wpfb-col-left={layout.leftOpen ? `${layout.left}px` : "0px"} style:--wpfb-col-right={layout.rightOpen ? `${layout.right}px` : "0px"}
+  style:--wpfb-bar-left={layout.leftOpen ? `${layout.left}px` : "auto"} style:--wpfb-bar-right={layout.rightOpen ? `${layout.right}px` : "auto"}>
+  <header class="wpfb-bar" hidden={layout.focus}>
     <div class="wpfb-title">
-      <strong>{config.title || "Untitled page"}</strong>
-      <span class="wpfb-muted">{published ? "published layout" : "not published"}</span>
+      <button type="button" class="wpfb-icon" aria-controls="wpfb-palette" aria-expanded={layout.leftOpen} aria-keyshortcuts="["
+        title="{layout.leftOpen ? 'Hide' : 'Show'} blocks panel ([)" aria-label="{layout.leftOpen ? 'Hide' : 'Show'} blocks panel"
+        onclick={() => layout.toggle("left")}><Icon icon={layout.leftOpen ? PanelLeftClose : PanelLeftOpen} /></button>
+      <div class="wpfb-title-text">
+        <strong>{config.title || "Untitled page"}</strong>
+        <span class="wpfb-muted">{published ? "published layout" : "not published"}</span>
+      </div>
     </div>
     <div class="wpfb-bar-mid">
       <div class="wpfb-history" role="group" aria-label="History">
@@ -474,16 +506,21 @@
         <button type="button" class:is-on={device === "desktop"} aria-pressed={device === "desktop"} onclick={() => (device = "desktop")}><Icon icon={Monitor} /> Desktop</button>
         <button type="button" class:is-on={device === "mobile"} aria-pressed={device === "mobile"} onclick={() => (device = "mobile")}><Icon icon={Smartphone} /> Mobile</button>
       </div>
+      <button type="button" class="wpfb-icon" title="Focus mode: canvas only (F)" aria-label="Focus mode" aria-keyshortcuts="F" aria-pressed={layout.focus}
+        onclick={() => layout.toggleFocus()}><Icon icon={Maximize2} /></button>
     </div>
     <div class="wpfb-actions">
       <a class="button" href={config.permalink} target="_blank" rel="noopener">View page</a>
       <button type="button" class="button" onclick={() => save(false)}>Save draft</button>
       {#if config.canPublish}<button type="button" class="button button-primary" onclick={() => save(true)}>Publish</button>{/if}
+      <button type="button" class="wpfb-icon" aria-controls="wpfb-inspector" aria-expanded={layout.rightOpen} aria-keyshortcuts="]"
+        title="{layout.rightOpen ? 'Hide' : 'Show'} inspector (])" aria-label="{layout.rightOpen ? 'Hide' : 'Show'} inspector"
+        onclick={() => layout.toggle("right")}><Icon icon={layout.rightOpen ? PanelRightClose : PanelRightOpen} /></button>
     </div>
   </header>
 
   <div class="wpfb-main">
-    <aside class="wpfb-palette" aria-label="Blocks">
+    <aside id="wpfb-palette" class="wpfb-palette" aria-label="Blocks" hidden={!layout.leftOpen}>
       <div class="wpfb-section">
         <label class="wpfb-heading" for="wpfb-collection">Collection</label>
         <select id="wpfb-collection" class="wpfb-search" value={collection} onchange={(e) => switchCollection(e.currentTarget.value)}>
@@ -536,7 +573,16 @@
       </div>
     </aside>
 
+    {#if layout.leftOpen}
+      <Splitter side="left" width={layout.left} controls="wpfb-palette" label="Resize blocks panel"
+        onresize={(px) => layout.setWidth("left", px)} onreset={() => layout.reset("left")} ondragging={(on) => (resizing = on)} />
+    {/if}
+
     <section class="wpfb-canvas" aria-label="Preview">
+      {#if layout.focus}
+        <button type="button" class="button wpfb-unfocus" title="Exit focus mode (F or Esc)" aria-keyshortcuts="F Escape"
+          onclick={() => layout.toggleFocus()}><Icon icon={Minimize2} /> Exit focus</button>
+      {/if}
       {#if frameSrc}
         <div class="wpfb-frame-wrap" class:is-mobile={device === "mobile"}>
           {#key reloadKey}
@@ -554,7 +600,12 @@
       {/if}
     </section>
 
-    <aside class="wpfb-inspector" aria-label="Structure and properties">
+    {#if layout.rightOpen}
+      <Splitter side="right" width={layout.right} controls="wpfb-inspector" label="Resize inspector"
+        onresize={(px) => layout.setWidth("right", px)} onreset={() => layout.reset("right")} ondragging={(on) => (resizing = on)} />
+    {/if}
+
+    <aside id="wpfb-inspector" class="wpfb-inspector" aria-label="Structure and properties" hidden={!layout.rightOpen}>
       <h2 class="wpfb-heading">Structure</h2>
       <ol class="wpfb-list wpfb-structure" bind:this={list} onmouseleave={() => (store.hovered = null)}>
         {#each store.items as it, i (it.id)}

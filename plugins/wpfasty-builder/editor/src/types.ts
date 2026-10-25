@@ -4,6 +4,8 @@ export type Obj = { [k: string]: Json };
 export interface Config {
   rest: string; nonce: string; page: number; title: string; source: string; collection: string;
   permalink: string; canPublish: boolean; editUrl: string;
+  /** the current user id (per-user layout in localStorage); absent in older bootstrap data */
+  user?: number;
 }
 export interface PropSpec { name: string; type: string | { ts?: string; record?: string }; optional: boolean; docs: string }
 /** a field of a catalog record (catalog `records`, from the codegen-x specs) */

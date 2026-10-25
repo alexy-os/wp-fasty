@@ -11,25 +11,43 @@
   color: var(--wpfb-text); background: var(--wpfb-surface); border: 1px solid var(--wpfb-line); font-size: 14px; line-height: 20px;
 }
 .wpfb-app.is-dragging, .wpfb-app.is-dragging * { cursor: grabbing !important; user-select: none; }
-.wpfb-app.is-dragging iframe { pointer-events: none; }
+.wpfb-app.is-dragging iframe, .wpfb-app.is-resizing iframe { pointer-events: none; }
+.wpfb-app.is-resizing, .wpfb-app.is-resizing * { cursor: col-resize !important; user-select: none; }
+.wpfb-app [hidden] { display: none !important; }
 .wpfb-app :focus-visible { outline: 2px solid var(--wpfb-accent); outline-offset: -2px; }
 .wpfb-app h2, .wpfb-app p { margin: 0; }
 
-/* one column grid for the bar and the main area: palette | canvas | inspector */
-.wpfb-bar, .wpfb-main { display: grid; grid-template-columns: var(--wpfb-col-left) minmax(0, 1fr) var(--wpfb-col-right); }
+/* one column grid for the bar and the main area: palette | canvas | inspector. The widths come from the layout state
+   (inline --wpfb-col-*: 0px when a column is collapsed; the bar keeps an auto cell for its title and actions). */
+.wpfb-bar { display: grid; grid-template-columns: var(--wpfb-bar-left, var(--wpfb-col-left)) minmax(0, 1fr) var(--wpfb-bar-right, var(--wpfb-col-right)); }
+.wpfb-main { display: grid; grid-template-columns: var(--wpfb-col-left) minmax(0, 1fr) var(--wpfb-col-right); position: relative; }
 .wpfb-bar { height: 56px; flex: none; border-bottom: 1px solid var(--wpfb-line); }
 .wpfb-bar > * { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 0 16px; }
-.wpfb-title { flex-direction: column; align-items: flex-start !important; justify-content: center; gap: 0 !important; border-right: 1px solid var(--wpfb-line); }
+.wpfb-title { border-right: 1px solid var(--wpfb-line); padding-left: 8px !important; }
+.wpfb-title-text { display: flex; flex-direction: column; justify-content: center; min-width: 0; max-width: 216px; }
 .wpfb-title strong { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .wpfb-bar-mid { gap: 16px !important; }
 .wpfb-status { flex: 1; min-width: 0; color: var(--wpfb-text-muted); font-size: 12px; line-height: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wpfb-actions { justify-content: flex-end; border-left: 1px solid var(--wpfb-line); }
+.wpfb-actions { justify-content: flex-end; border-left: 1px solid var(--wpfb-line); padding-right: 8px !important; }
 .wpfb-history, .wpfb-tools { display: flex; flex: none; }
 
 .wpfb-main { flex: 1; min-height: 0; }
 .wpfb-palette, .wpfb-inspector { overflow: auto; padding: 16px; }
-.wpfb-palette { border-right: 1px solid var(--wpfb-line); }
-.wpfb-inspector { border-left: 1px solid var(--wpfb-line); }
+/* fixed cells: a collapsed (hidden) column must not shift the canvas into its track */
+.wpfb-palette { grid-column: 1; grid-row: 1; }
+.wpfb-canvas { grid-column: 2; grid-row: 1; }
+.wpfb-inspector { grid-column: 3; grid-row: 1; }
+
+/* column separators: a 1px line on the column edge with an 8px hit area; hover, focus and drag show the accent line */
+.wpfb-splitter { position: absolute; top: 0; bottom: 0; z-index: 3; width: 8px; cursor: col-resize; touch-action: none; outline: 0; }
+.wpfb-splitter.is-left { left: var(--wpfb-col-left); transform: translateX(-50%); }
+.wpfb-splitter.is-right { right: var(--wpfb-col-right); transform: translateX(50%); }
+.wpfb-splitter::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; transform: translateX(-50%); background: var(--wpfb-line); }
+.wpfb-splitter:hover::before, .wpfb-splitter:focus-visible::before, .wpfb-splitter.is-dragging::before { width: 2px; background: var(--wpfb-accent); }
+
+/* focus mode: canvas only, over the whole window (the block overlay and its toolbar stay) */
+.wpfb-app.is-focus { position: fixed; inset: 0; z-index: 100000; height: auto; min-height: 0; margin: 0; border: 0; }
+.wpfb-unfocus { position: absolute; right: 16px; bottom: 16px; z-index: 3; box-shadow: var(--wpfb-shadow); }
 .wpfb-canvas { position: relative; background: var(--wpfb-canvas); overflow: hidden; display: flex; justify-content: center; }
 .wpfb-frame-wrap { position: relative; width: 100%; height: 100%; }
 .wpfb-frame-wrap.is-mobile { width: 392px; border-inline: 1px solid var(--wpfb-line); }
@@ -119,7 +137,7 @@
 .wpfb-props { margin-top: 16px; border-top: 1px solid var(--wpfb-line); padding-top: 16px; }
 .wpfb-props-head { margin: 0 0 8px; }
 .wpfb-props-head > h2 { text-transform: none; letter-spacing: 0; font-size: 14px; line-height: 20px; color: var(--wpfb-text); }
-.wpfb-ghost { position: fixed; z-index: 100000; pointer-events: none; background: var(--wpfb-accent); color: var(--wpfb-on-accent); padding: 4px 8px; border-radius: var(--wpfb-radius); font-size: 12px; }
+.wpfb-ghost { position: fixed; z-index: 100001; pointer-events: none; background: var(--wpfb-accent); color: var(--wpfb-on-accent); padding: 4px 8px; border-radius: var(--wpfb-radius); font-size: 12px; }
 
 /* selection overlay over the preview (drawn here, nothing is injected into the page) */
 .wpfb-overlay { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; }
