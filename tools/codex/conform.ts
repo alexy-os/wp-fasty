@@ -93,14 +93,44 @@ bodies.set("settings.json", settingsBody);
 const settings = JSON.parse(settingsBody);
 shape("settings", settings, "settings");
 
-// errors: 404 / 400 in the agreed envelope
-for (const [path, status, code] of [["/entries/nope", 404, "not_found"], ["/entries/post/post-0", 404, "not_found"],
-  ["/terms/nope", 404, "not_found"], ["/entries/post?page=0", 400, "validation_error"], ["/entries/post?per_page=1000", 400, "validation_error"],
-  ["/entries/post?locale=xx", 404, "not_found"], ["/entries/post?locale=bad_tag", 400, "validation_error"], ["/entries/post?bogus=1", 400, "validation_error"],
-  ["/entries/post?page=999", 200, ""]] as const) {
+// Errors and pagination in the form of fastygo/backend TestCodexV1Conform (internal/conformance, 1ef630f): same cases,
+// same codes and messages, error = {code, message, status[, details]} with status = the HTTP status.
+const errorCases: [string, number, string, string][] = [
+  ["/entries/unknownkind", 404, "not_found", "kind was not found"],
+  ["/entries/post/missing", 404, "not_found", "content was not found"],
+  ["/entries/post/post-0", 404, "not_found", "content was not found"],
+  ["/entries/post?locale=fr", 404, "not_found", "locale was not found"],
+  ["/terms/missing", 404, "not_found", "taxonomy was not found"],
+  ["/entries/post?locale=ENGLISH", 400, "validation_error", "locale is invalid"],
+  ["/entries/post?page=0", 400, "validation_error", "page must be a positive integer"],
+  ["/entries/post?per_page=-1", 400, "validation_error", "per_page must be a positive integer"],
+  ["/entries/post?foo=1", 400, "validation_error", "unknown query parameter"],
+];
+for (const [path, status, code, message] of errorCases) {
   const body = JSON.parse(await get(path, status));
-  if (code && body.error?.code !== code) fails.push(`${path}: error.code ${body.error?.code} (want ${code})`);
-  if (!code && body.data?.length !== 0) fails.push(`${path}: page past the end must be empty`);
+  const e = body.error ?? {};
+  const keys = Object.keys(body).join(",");
+  if (keys !== "error") fails.push(`${path}: error document keys ${keys}`);
+  for (const k of Object.keys(e)) if (!["code", "message", "status", "details"].includes(k)) fails.push(`${path}: error.${k} not in the form`);
+  if (e.code !== code || e.status !== status || e.message !== message)
+    fails.push(`${path}: error ${JSON.stringify(e)} (want ${code} ${status} "${message}")`);
+}
+{
+  const all = JSON.parse(await get("/entries/post"));
+  const p = all.pagination ?? {};
+  if (p.page !== 1 || p.per_page !== 20) fails.push(`/entries/post: default pagination ${JSON.stringify(p)} (want page 1, per_page 20)`);
+  if (p.total_pages !== (p.total ? Math.ceil(p.total / p.per_page) : 0)) fails.push(`/entries/post: total_pages ${p.total_pages}`);
+  const ids = all.data.map((d: { id: string }) => d.id);
+  if (ids.join() !== [...ids].sort((a: string, b: string) => (Buffer.from(a) < Buffer.from(b) ? -1 : 1)).join()) fails.push("/entries/post: not in id order");
+  if (p.total >= 1) {
+    const one = JSON.parse(await get("/entries/post?page=1&per_page=1"));
+    if (one.pagination.per_page !== 1 || one.pagination.total !== p.total || one.data[0]?.id !== ids[0])
+      fails.push(`page=1&per_page=1: ${JSON.stringify(one.pagination)} first ${one.data[0]?.id}`);
+  }
+  const clamped = JSON.parse(await get("/entries/post?per_page=1000"));
+  if (clamped.pagination?.per_page !== 100) fails.push(`per_page=1000: per_page ${clamped.pagination?.per_page} (want clamped to 100)`);
+  const past = await get("/entries/post?page=999&per_page=1");
+  if (!/"data":\[\]/.test(past)) fails.push(`page past the end must be an empty array: ${past}`);
 }
 
 const issues = validateCollectionV04({ entries, terms, settings: [{ file: "settings", data: settings }] }, { manifest });

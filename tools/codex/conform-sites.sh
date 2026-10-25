@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Codex conformance of the demo sites on a fresh install each: reset the DB, install, seed the packaged demo with a
 # pinned clock (tools/codex/seed-pinned.php), then tools/codex/conform.ts (schemas + validateCollectionV04 of
-# @ui8kit/contract, canonical bytes, byte-for-byte golden) and the Codex list N+1 guard.
+# @ui8kit/contract, canonical bytes, byte-for-byte golden), the Go cross-check (tools/codex/gocheck) and the Codex list
+# N+1 guard.
 #   tools/codex/conform-sites.sh <wp dir> <base url> <demo prefix> [--write] [site…]
 # <demo prefix>latte-<site>/wpfasty-demo/<site>.php = the unpacked demo.zip of theme:package (CI: /tmp/demo-). CODEX_CONTRACT = a
 # built ui8kit/contract checkout (see conform.ts). Golden: tests/fixtures/codex-draft/golden/latte-<site>/ (draft).
@@ -27,6 +28,13 @@ for site in $SITES; do
   if ! (cd "$ROOT" && bun tools/codex/conform.ts "$BASE" "latte-$site" \
       --golden "tests/fixtures/codex-draft/golden/latte-$site" $WRITE); then
     fail=1
+  fi
+  # the same bytes through the Go reference (fastygo/codex v0.4.0): canonical fixed points + CollectionV04
+  if command -v go > /dev/null; then
+    (cd "$ROOT/tools/codex/gocheck" && go run . "$ROOT/tests/fixtures/codex-draft/golden/latte-$site" \
+      "$ROOT/themes/latte-$site/types/codex.manifest.json") || fail=1
+  else
+    echo "go not found: Go cross-check skipped"
   fi
   kind=$(case $site in folio) echo project;; shop) echo product;; *) echo post;; esac)
   wp eval-file "$ROOT/tools/perf/codex-queries.php" "$kind" 2 4 || fail=1

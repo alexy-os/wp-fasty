@@ -55,6 +55,8 @@ final class Rest
         return $r;
     }
 
+    private const QUERY = ['locale', 'page', 'per_page'];
+
     public static function error(string $code, string $message, int $status, ?array $details = null): WP_REST_Response
     {
         $e = ['code' => $code, 'message' => $message, 'status' => $status];
@@ -87,38 +89,39 @@ final class Rest
     }
 
     /**
-     * @param list<string> $allowed
+     * Query of every route (as fastygo/backend /codex/v1): only locale, page, per_page; anything else is 400.
+     *
      * @return array{0: string, 1: int, 2: int}|WP_REST_Response locale, page, per_page
      */
-    private static function query(WP_REST_Request $req, array $allowed): array|WP_REST_Response
+    private static function query(WP_REST_Request $req): array|WP_REST_Response
     {
         $q = $req->get_query_params();
         unset($q['rest_route']); // plain permalinks route through ?rest_route=
         foreach (array_keys($q) as $k) {
-            if (!in_array((string) $k, $allowed, true)) {
-                return self::error('validation_error', "unknown parameter \"{$k}\"", 400, ['parameter' => (string) $k]);
+            if (!in_array((string) $k, self::QUERY, true)) {
+                return self::error('validation_error', 'unknown query parameter', 400, ['parameter' => (string) $k]);
             }
         }
         $locale = Mapper::locale();
         if (isset($q['locale'])) {
             $l = is_string($q['locale']) ? $q['locale'] : '';
             if (preg_match('/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/', $l) !== 1) {
-                return self::error('validation_error', 'locale must be a BCP 47 tag', 400, ['parameter' => 'locale']);
+                return self::error('validation_error', 'locale is invalid', 400, ['locale' => $l]);
             }
             if ($l !== $locale) {
-                return self::error('not_found', "locale \"{$l}\" not found", 404);
+                return self::error('not_found', 'locale was not found', 404);
             }
         }
         $page = 1;
         $per = Profile::PER_PAGE;
         foreach (['page' => &$page, 'per_page' => &$per] as $k => &$v) {
             if (isset($q[$k])) {
-                $max = $k === 'per_page' ? Profile::MAX_PER_PAGE : PHP_INT_MAX;
-                if (!is_string($q[$k]) || preg_match('/^[1-9][0-9]{0,8}$/', $q[$k]) !== 1 || (int) $q[$k] > $max) {
-                    $msg = "{$k} must be an integer 1..{$max}";
-                    return self::error('validation_error', $msg, 400, ['parameter' => $k]);
+                $raw = is_string($q[$k]) ? $q[$k] : '';
+                if (preg_match('/^\+?0*[1-9][0-9]{0,17}$/', $raw) !== 1) {
+                    return self::error('validation_error', "{$k} must be a positive integer", 400, [$k => $raw]);
                 }
-                $v = (int) $q[$k];
+                // per_page above the maximum is clamped, not rejected (fastygo/backend /codex/v1)
+                $v = $k === 'per_page' ? min((int) $raw, Profile::MAX_PER_PAGE) : (int) $raw;
             }
         }
         unset($v);
@@ -127,7 +130,7 @@ final class Rest
 
     private static function site(): Site|WP_REST_Response
     {
-        return Site::current() ?? self::error('not_found', 'the active theme has no types/codex.manifest.json', 404);
+        return Site::current() ?? self::error('not_found', 'manifest was not found', 404);
     }
 
     private static function publicPost(mixed $post, string $postType): bool
@@ -142,7 +145,7 @@ final class Rest
         if ($site instanceof WP_REST_Response) {
             return $site;
         }
-        $q = self::query($req, []);
+        $q = self::query($req);
         if ($q instanceof WP_REST_Response) {
             return $q;
         }
@@ -159,13 +162,13 @@ final class Rest
         if ($site instanceof WP_REST_Response) {
             return $site;
         }
-        $kind = (string) $req['kind'];
-        if (!in_array($kind, $site->postKinds(), true)) {
-            return self::error('not_found', "kind \"{$kind}\" not found", 404);
-        }
-        $q = self::query($req, ['locale', 'page', 'per_page']);
+        $q = self::query($req);
         if ($q instanceof WP_REST_Response) {
             return $q;
+        }
+        $kind = (string) $req['kind'];
+        if (!in_array($kind, $site->postKinds(), true)) {
+            return self::error('not_found', 'kind was not found', 404);
         }
         [, $page, $per] = $q;
         $ids = self::sortedIds($kind, (string) $site->wp($kind)['post_type']);
@@ -224,9 +227,12 @@ final class Rest
         }
         $kind = (string) $req['kind'];
         $id = (string) $req['id'];
-        $q = self::query($req, ['locale']);
+        $q = self::query($req);
         if ($q instanceof WP_REST_Response) {
             return $q;
+        }
+        if (!in_array($kind, [...$site->postKinds(), 'media', 'user'], true) || $site->resource($kind) === null) {
+            return self::error('not_found', 'kind was not found', 404);
         }
         $wpId = Mapper::wpId($kind, $id);
         $map = new Mapper($site);
@@ -252,7 +258,7 @@ final class Rest
             }
         }
         if ($entry === null) {
-            return self::error('not_found', "entry \"{$kind}/{$id}\" not found", 404);
+            return self::error('not_found', 'content was not found', 404);
         }
         $bytes = Canonical::entryBytes($entry);
         $hex = hash('sha256', $bytes);
@@ -268,7 +274,7 @@ final class Rest
         if ($site instanceof WP_REST_Response) {
             return $site;
         }
-        $q = self::query($req, ['locale', 'page', 'per_page']);
+        $q = self::query($req);
         if ($q instanceof WP_REST_Response) {
             return $q;
         }
@@ -288,13 +294,13 @@ final class Rest
         if ($site instanceof WP_REST_Response) {
             return $site;
         }
-        $tax = (string) $req['taxonomy'];
-        if (!in_array($tax, $site->allTaxonomies(), true) || !taxonomy_exists($tax)) {
-            return self::error('not_found', "taxonomy \"{$tax}\" not found", 404);
-        }
-        $q = self::query($req, ['locale', 'page', 'per_page']);
+        $q = self::query($req);
         if ($q instanceof WP_REST_Response) {
             return $q;
+        }
+        $tax = (string) $req['taxonomy'];
+        if (!in_array($tax, $site->allTaxonomies(), true) || !taxonomy_exists($tax)) {
+            return self::error('not_found', 'taxonomy was not found', 404);
         }
         [, $page, $per] = $q;
         $terms = get_terms(['taxonomy' => $tax, 'hide_empty' => false, 'update_term_meta_cache' => true]);
@@ -316,7 +322,7 @@ final class Rest
         if ($site instanceof WP_REST_Response) {
             return $site;
         }
-        $q = self::query($req, ['locale']);
+        $q = self::query($req);
         if ($q instanceof WP_REST_Response) {
             return $q;
         }
