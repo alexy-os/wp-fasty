@@ -68,8 +68,27 @@ final class Field
             'money' => self::number($raw, true),
             'boolean' => in_array(strtolower($raw), ['1', 'on', 'yes', 'true'], true) ? '1' : '',
             'date' => self::date($raw),
-            default => function_exists('sanitize_text_field') ? sanitize_text_field($raw) : strip_tags($raw),
+            default => self::option(
+                function_exists('sanitize_text_field') ? sanitize_text_field($raw) : strip_tags($raw),
+                $this->options(),
+            ),
         };
+    }
+
+    /**
+     * Closed value set of the field (site manifest `options`; Codex type select); [] = any value.
+     *
+     * @return list<string>
+     */
+    public function options(): array
+    {
+        return array_values(array_map('strval', (array) ($this->def['options'] ?? [])));
+    }
+
+    /** @param list<string> $options */
+    private static function option(string $value, array $options): string
+    {
+        return $options === [] || in_array($value, $options, true) ? $value : '';
     }
 
     /** register_post_meta() type for this field. */
@@ -133,6 +152,9 @@ final class Field
 
     public function inputType(): string
     {
+        if ($this->options() !== []) {
+            return 'select';
+        }
         return match ($this->type) {
             'url' => 'url',
             'email' => 'email',

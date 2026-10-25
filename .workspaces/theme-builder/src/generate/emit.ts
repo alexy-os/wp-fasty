@@ -143,6 +143,11 @@ export function typePhp(pt: J, m: J, extra = ""): string {
   if (fields.length)
     def.fields = Object.fromEntries(fields.map(([k, f]) => [k, {
       type: f.type, label: { php: tr(f.label, d) }, ...(f.rest === false ? { show_in_rest: false } : {}),
+      ...(f.metaKey ? { meta_key: f.metaKey } : {}),
+      ...(f.options ? {
+        options: f.options.map((o: J) => o.value),
+        option_labels: Object.fromEntries(f.options.map((o: J) => [o.value, { php: tr(o.label, d) }])),
+      } : {}),
     }]));
   if (pt.metabox === false) def.metabox = false;
   else if (pt.metabox) {

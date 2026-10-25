@@ -218,7 +218,19 @@
           "enum": ["string", "text", "url", "email", "integer", "number", "money", "boolean", "date"]
         },
         "label": { "type": "string", "minLength": 1 },
-        "rest": { "type": "boolean", "default": true, "description": "Expose in the REST API (typed)." }
+        "rest": { "type": "boolean", "default": true, "description": "Expose in the REST API (typed)." },
+        "required": { "type": "boolean", "default": false, "description": "Codex: an entry of this type must carry a value (manifest field `required`)." },
+        "nullable": { "type": "boolean", "default": true, "description": "An empty value is \"no value\" (meta unset, field absent from the Codex entry), never 0 or \"\". false: the admin form keeps the last value." },
+        "options": {
+          "description": "Closed set of values (string fields only): Codex type `select`; other values are rejected on save.",
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["value", "label"],
+            "properties": { "value": { "type": "string", "minLength": 1 }, "label": { "type": "string", "minLength": 1 } }
+          }
+        },
+        "private": { "type": "boolean", "default": false, "description": "Codex `sensitive`: kept out of the public projection (/wpfasty/v1/codex). Privacy comes from here, never from the `_` meta key prefix." },
+        "metaKey": { "type": "string", "pattern": "^[A-Za-z0-9_-]{1,64}$", "description": "WordPress storage key; default `_<metaPrefix>_<name>`. The Codex field id is always the field name (the map key): price ↔ _shop_price." }
       }
     },
     "taxonomy": {
@@ -236,7 +248,8 @@
         "hierarchical": { "type": "boolean", "default": true },
         "rest": { "type": "boolean", "default": true },
         "adminColumn": { "type": "boolean", "default": true },
-        "slug": { "$ref": "#/$defs/urlPath" }
+        "slug": { "$ref": "#/$defs/urlPath" },
+        "role": { "enum": ["category", "tag"], "description": "Codex role for block bindings (codex.delivery.json): category = the item's primary category (product_cat ↔ product_category), tag = free tags." }
       }
     },
     "postType": {

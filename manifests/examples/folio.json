@@ -111,6 +111,7 @@
       },
       "taxonomies": {
         "project_type": {
+          "role": "category",
           "labels": {
             "singular": "Project type",
             "plural": "Project types"

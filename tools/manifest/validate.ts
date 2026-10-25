@@ -66,6 +66,15 @@ function semantic(m: J, err: (msg: string) => void): void {
       taxes.add(tx);
     }
     const fields: J = pt.fields ?? {};
+    const keys = new Set<string>();
+    for (const [k, f] of Object.entries<J>(fields)) {
+      if (f.options && f.type !== "string") err(`${at}: fields.${k}.options needs type string, is ${f.type}`);
+      const key = f.metaKey ?? `_${pt.metaPrefix ?? m.theme.prefix}_${k}`;
+      if (keys.has(key)) err(`${at}: fields.${k} storage key "${key}" used twice`);
+      keys.add(key);
+    }
+    const cats = Object.entries<J>(pt.taxonomies ?? {}).filter(([, t]) => t.role === "category");
+    if (cats.length > 1) err(`${at}: ${cats.length} taxonomies have role category (max 1)`);
     const need = (cap: string, key: string, type: string, required: boolean) => {
       const f = pt.capabilities?.[cap]?.[key];
       if (f === undefined) return required && err(`${at}: capabilities.${cap}.${key} is required`);
@@ -159,7 +168,8 @@ function fromPhp(d: J): J {
     supports: (a.supports ?? ["title", "editor"]).map((s: string) => (s === "page-attributes" ? "order" : s)),
     metaPrefix: d.meta_prefix,
     fields: Object.fromEntries(Object.entries<J>(d.fields ?? {}).map(([k, f]) =>
-      [k, { type: f.type ?? "string", label: f.label ?? k, rest: f.show_in_rest === false ? false : true }])),
+      [k, strip({ type: f.type ?? "string", label: f.label ?? k, rest: f.show_in_rest === false ? false : true, metaKey: f.meta_key,
+        options: f.options ? f.options.map((v: string) => ({ value: v, label: f.option_labels?.[v] ?? v })) : undefined })])),
     metabox: d.metabox === false ? false : d.metabox
       ? { title: d.metabox.title, position: d.metabox.context === "side" ? "side" : "main", priority: d.metabox.priority ?? "default" }
       : undefined,
@@ -191,9 +201,10 @@ function withDefaults(pt: J, m: J): J {
     rest: pt.rest ?? true,
     supports: pt.supports ?? ["title", "editor"],
     metaPrefix: pt.metaPrefix ?? (Object.keys(pt.fields ?? {}).length ? m.theme.prefix : undefined),
-    fields: Object.fromEntries(Object.entries<J>(pt.fields ?? {}).map(([k, f]) => [k, { ...f, rest: f.rest ?? true }])),
+    // Codex-only keys (required, nullable, private, role) live in types/codex.*.json, checked by theme:roundtrip.
+    fields: Object.fromEntries(Object.entries<J>(pt.fields ?? {}).map(([k, { required, nullable, private: _p, ...f }]) => [k, { ...f, rest: f.rest ?? true }])),
     metabox: pt.metabox && { position: "main", priority: "default", ...pt.metabox },
-    taxonomies: Object.fromEntries(Object.entries<J>(pt.taxonomies ?? {}).map(([k, x]) =>
+    taxonomies: Object.fromEntries(Object.entries<J>(pt.taxonomies ?? {}).map(([k, { role, ...x }]) =>
       [k, { public: true, hierarchical: true, rest: true, adminColumn: true, ...x }])),
   });
 }

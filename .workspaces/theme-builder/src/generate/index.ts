@@ -7,6 +7,9 @@ import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import { render } from "./template";
 import { extraEntries, type J, styleCss, templateVars, tokensCss, typePhp } from "./emit";
+import { codexDelivery, codexManifest } from "./codex";
+import Ajv2020 from "ajv/dist/2020";
+import { validateSnapshot } from "@ui8kit/contract";
 
 const root = resolve(dirname(new URL(import.meta.url).pathname), "../../../..");
 const json = (p: string): J => JSON.parse(readFileSync(p, "utf8"));
@@ -14,6 +17,17 @@ const json = (p: string): J => JSON.parse(readFileSync(p, "utf8"));
 function write(dir: string, rel: string, body: string): void {
   mkdirSync(dirname(join(dir, rel)), { recursive: true });
   writeFileSync(join(dir, rel), body);
+}
+
+/** Codex Manifest of the site, validated against the contract schema (@ui8kit/contract, manifest.schema.json). */
+function codexFiles(m: J): { manifest: string; delivery: string } {
+  const cm = codexManifest(m);
+  const schema = json(join(root, "node_modules/@ui8kit/contract/schemas/manifest.schema.json"));
+  const check = new Ajv2020({ allErrors: true, strict: false }).compile(schema);
+  if (!check(cm)) throw new Error(`codex manifest invalid:\n${(check.errors ?? []).map((e) => `  ${e.instancePath} ${e.message}`).join("\n")}`);
+  const issues = validateSnapshot(cm, []);
+  if (issues.length) throw new Error(`codex manifest rejected by @ui8kit/contract:\n${issues.map((i) => `  ${i.code} ${i.path}`).join("\n")}`);
+  return { manifest: `${JSON.stringify(cm, null, 2)}\n`, delivery: `${JSON.stringify(codexDelivery(m, cm), null, 2)}\n` };
 }
 
 function hasWp(): boolean {
@@ -60,6 +74,9 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
     const extra = existsSync(extraFile) ? render(extraEntries(readFileSync(extraFile, "utf8")), vars) : "";
     write(dir, `types/${pt.name}.php`, typePhp(pt, m, extra));
   }
+  const codex = codexFiles(m);
+  write(dir, "types/codex.manifest.json", codex.manifest);
+  write(dir, "types/codex.delivery.json", codex.delivery);
   if (arch.inc && existsSync(join(adir, arch.inc))) cpSync(join(adir, arch.inc), join(dir, "inc"), { recursive: true });
   if (arch.views && existsSync(join(adir, arch.views))) cpSync(join(adir, arch.views), join(dir, "views"), { recursive: true });
   // engine twig: the site's renderer is Twig (ADR-001: `wpfasty_renderer`); there is no Latte fallback.

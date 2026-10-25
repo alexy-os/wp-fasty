@@ -90,7 +90,9 @@ final class Plugin
                     // Typed values in REST (money = integer minor units).
                     // Opt out per field with 'show_in_rest' => false.
                     'show_in_rest' => ($field->def['show_in_rest'] ?? true) === false ? false : (
-                        $field->type === 'date' ? ['schema' => ['pattern' => Field::DATE_PATTERN]] : true
+                        $field->type === 'date' ? ['schema' => ['pattern' => Field::DATE_PATTERN]] : (
+                            $field->options() !== [] ? ['schema' => ['enum' => $field->options()]] : true
+                        )
                     ),
                     'sanitize_callback' => [$field, 'toStorage'],
                     'auth_callback' => static fn (): bool => current_user_can('edit_posts'),
@@ -155,8 +157,30 @@ final class Plugin
                 );
                 continue;
             }
+            if ($input === 'select') {
+                $opts = '<option value=""></option>';
+                foreach ($field->options() as $option) {
+                    $opts .= sprintf(
+                        '<option value="%1$s"%2$s>%3$s</option>',
+                        esc_attr($option),
+                        selected($value, $option, false),
+                        esc_html((string) ($field->def['option_labels'][$option] ?? $option))
+                    );
+                }
+                printf(
+                    '<p><label for="%1$s"><strong>%2$s</strong></label><br>'
+                        . '<select class="widefat" id="%1$s" name="wpfasty_fields[%3$s]">%4$s</select></p>',
+                    esc_attr($id),
+                    esc_html($field->label),
+                    esc_attr($name),
+                    $opts // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per option above.
+                );
+                continue;
+            }
             $step = $field->type === 'integer' ? '1' : '0.01';
-            $extra = $input === 'number' ? ' min="0" step="' . esc_attr($step) . '"' : '';
+            // money may be negative (Q9); integer / number stay >= 0
+            $min = $field->type === 'money' ? '' : ' min="0"';
+            $extra = $input === 'number' ? $min . ' step="' . esc_attr($step) . '"' : '';
             printf(
                 '<p><label for="%1$s"><strong>%2$s</strong></label><br>'
                     . '<input class="widefat" type="%3$s"%4$s id="%1$s" name="wpfasty_fields[%5$s]" value="%6$s"></p>',

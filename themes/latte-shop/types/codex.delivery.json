@@ -1,0 +1,44 @@
+{
+  "manifest_digest": "codex-manifest/v2:sha256:92c89fe37e6cdc117774b9fecb82dc2e224a3ace928caa0efd18df4424d3ef37",
+  "taxonomies": [
+    {
+      "id": "category",
+      "role": "category"
+    },
+    {
+      "id": "post_tag",
+      "role": "tag"
+    },
+    {
+      "id": "product_cat",
+      "role": "category"
+    }
+  ],
+  "wordpress": {
+    "kinds": {
+      "post": {
+        "post_type": "post"
+      },
+      "page": {
+        "post_type": "page"
+      },
+      "product": {
+        "post_type": "product",
+        "meta": {
+          "price": "_shop_price",
+          "sale_price": "_shop_sale_price",
+          "sku": "_shop_sku",
+          "stock": "_shop_stock"
+        },
+        "purchasable": {
+          "price": "price",
+          "sale": "sale_price",
+          "stock": "stock"
+        }
+      }
+    },
+    "settings": {
+      "currency": "wpfasty_currency"
+    }
+  }
+}

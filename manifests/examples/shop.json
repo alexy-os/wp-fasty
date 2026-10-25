@@ -92,7 +92,8 @@
       "fields": {
         "price": {
           "type": "money",
-          "label": "Price"
+          "label": "Price",
+          "required": true
         },
         "sale_price": {
           "type": "money",
@@ -114,6 +115,7 @@
       },
       "taxonomies": {
         "product_cat": {
+          "role": "category",
           "labels": {
             "singular": "Product category",
             "plural": "Product categories"
