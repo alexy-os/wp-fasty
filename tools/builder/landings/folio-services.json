@@ -105,7 +105,11 @@
         "bindings": {
           "posts": {
             "source": "projects",
-            "limit": 4
+            "limit": 4,
+            "map": {
+              "author": "metadata.client.value",
+              "date": "metadata.year.value"
+            }
           }
         }
       },

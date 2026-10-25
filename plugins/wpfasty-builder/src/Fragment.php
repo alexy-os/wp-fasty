@@ -16,7 +16,8 @@ final class Fragment
     /**
      * @param array<string, mixed> $input      untrusted {id?, block, variant, props?, bindings?}
      * @param list<string>         $dataSources ids accepted in bindings
-     * @param callable(array<string, mixed>, string): list<array<string, mixed>> $resolve  records of a binding
+     * @param callable(array<string, mixed>, string, array<string, mixed>|null): list<array<string, mixed>> $resolve
+     *        records of a binding (binding, data kind, Catalog::slot())
      * @param callable(string, array<string, mixed>): string                    $render   HTML of a template
      * @return array{id: string, html: string, issues: list<array{code: string, path: string, message: string}>}|null
      *         null when the block or variant is unknown or its template is not of the catalog's runtime
@@ -49,13 +50,17 @@ final class Fragment
             return null;
         }
         $props = Compiler::blockProps($variant, $b);
-        $kinds = $catalog->bindable((string) $b['block'], (string) $b['variant']);
+        $block = (string) $b['block'];
+        $variantId = (string) $b['variant'];
+        $kinds = $catalog->bindable($block, $variantId);
         foreach ($b['bindings'] as $path => $bind) {
             $path = (string) $path;
             Layout::set(
                 $props,
                 explode('.', $path),
-                is_array($bind) && isset($kinds[$path]) ? $resolve($bind, $kinds[$path]) : [],
+                is_array($bind) && isset($kinds[$path])
+                    ? $resolve($bind, $kinds[$path], $catalog->slot($block, $variantId, $path))
+                    : [],
             );
         }
         $issues = array_values(array_filter(

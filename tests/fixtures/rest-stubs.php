@@ -97,6 +97,18 @@ if (!function_exists('taxonomy_exists')) {
         return false;
     }
 }
+if (!function_exists('get_post_type_object')) {
+    function get_post_type_object(string $type): ?object
+    {
+        return null;
+    }
+}
+if (!function_exists('get_taxonomy')) {
+    function get_taxonomy(string $tax): object|false
+    {
+        return false;
+    }
+}
 if (!function_exists('wp_upload_dir')) {
     /** @return array{basedir: string} */
     function wp_upload_dir(mixed $time = null, bool $create = true): array

@@ -76,7 +76,7 @@ final class Rest
                 array_values(Sources::all()),
             ),
             'collections' => $catalog->collections(),
-            'dataSources' => array_values(DataSources::all()),
+            'dataSources' => array_values(DataSources::all($catalog)),
         ] + $catalog->forEditor($col !== '' && $catalog->collection($col) !== null ? $col : null));
     }
 

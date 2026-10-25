@@ -16,6 +16,7 @@
   import { api } from "./api";
   import type { Binding, Box, Catalog, Config, Item, Json, Obj, RecordField } from "./types";
   import { clone, getPath, human, isObj, kindOf, merge, newId, setPath } from "./util";
+  import { defaultSource } from "./sources";
 
   let { config: initial }: { config: Config } = $props();
   // the config comes once from wp_add_inline_script and never changes
@@ -227,8 +228,8 @@
     const b = blocks.get(block);
     for (const bind of b?.variants.find((v) => v.id === variant)?.bindings ?? []) {
       const kind = b ? kindOf(b, bind.data) : "";
-      const src = catalog?.dataSources.find((d) => d.kinds.includes(kind) && (kind !== "post" || d.id === "posts") && (kind !== "product" || d.id === "products"));
-      if (src && ["post", "product", "project", "category", "topic"].includes(kind)) item.bindings[bind.path.join(".")] = { source: src.id, limit: 6 };
+      const src = defaultSource(catalog?.dataSources ?? [], kind);
+      if (src) item.bindings[bind.path.join(".")] = { source: src.id, limit: 6 };
     }
     return item;
   }

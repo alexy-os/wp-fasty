@@ -1,0 +1,26 @@
+{
+  "manifest_digest": "codex-manifest/v2:sha256:d10aeee00eceb082dabab774966e0ead12aa76d2a143f1b19549c1ad8a4c92c4",
+  "taxonomies": [
+    {
+      "id": "category",
+      "role": "category"
+    },
+    {
+      "id": "post_tag",
+      "role": "tag"
+    }
+  ],
+  "wp": {
+    "kinds": {
+      "post": {
+        "post_type": "post"
+      },
+      "page": {
+        "post_type": "page"
+      }
+    },
+    "settings": {
+      "currency": "wpfasty_currency"
+    }
+  }
+}

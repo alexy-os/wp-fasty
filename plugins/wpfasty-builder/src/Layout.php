@@ -93,6 +93,10 @@ final class Layout
                 if (($bind['sale'] ?? false) === true) {
                     $one['sale'] = true;
                 }
+                $map = self::map($bind['map'] ?? null);
+                if ($map !== []) {
+                    $one['map'] = $map;
+                }
                 $bindings[$path] = $one;
             }
             $props = self::clean(is_array($b['props'] ?? null) ? $b['props'] : [], 0);
@@ -334,5 +338,26 @@ final class Layout
     private static function issue(string $code, string $path, string $message): array
     {
         return ['code' => $code, 'path' => $path, 'message' => $message];
+    }
+
+    /** readPath grammar of a manual field mapping (record field → path[|pipe[:arg]]) */
+    public const MAP_PATH = '/^[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)*(\\|[a-z][a-z-]*(:[A-Za-z0-9_-]+)?)?$/';
+
+    /**
+     * Manual mapping of a binding: {record field: readPath}, invalid pairs dropped.
+     *
+     * @return array<string, string>
+     */
+    public static function map(mixed $map): array
+    {
+        $out = [];
+        foreach (is_array($map) ? $map : [] as $field => $path) {
+            if (is_string($field) && preg_match('/^[A-Za-z][A-Za-z0-9_]{0,62}$/', $field) === 1
+                && is_string($path) && strlen($path) <= 200 && preg_match(self::MAP_PATH, $path) === 1) {
+                $out[$field] = $path;
+            }
+        }
+        ksort($out, SORT_STRING);
+        return $out;
     }
 }

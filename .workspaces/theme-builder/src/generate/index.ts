@@ -134,9 +134,27 @@ function files(dir: string, base = dir): string[] {
 const normalize = (rel: string, s: string) =>
   rel.endsWith(".pot") ? s.replace(/^"POT-Creation-Date: .*"$/m, '"POT-Creation-Date: *"').replace(/^"X-Generator: .*"$/m, '"X-Generator: *"') : s;
 
+/**
+ * Codex manifest of a site without one (core post / page, category / post_tag): wpfasty-types serves it when the
+ * active theme ships no types/codex.manifest.json. Same generator as the themes; the roundtrip checks it is current.
+ */
+export const CORE_CODEX_DIR = "plugins/wpfasty-types/codex";
+export function coreCodex(): { manifest: string; delivery: string } {
+  return codexFiles({ theme: { slug: "wpfasty-core", version: "1.0.0", prefix: "wpfasty" }, postTypes: [] });
+}
+
 export function roundtrip(): number {
   const ex = join(root, "manifests/examples");
   let failed = 0;
+  const core = coreCodex();
+  for (const [name, text] of [["codex.manifest.json", core.manifest], ["codex.delivery.json", core.delivery]] as const) {
+    const f = join(root, CORE_CODEX_DIR, name);
+    if (process.argv.includes("--write-core")) write(join(root, CORE_CODEX_DIR), name, text);
+    else if (!existsSync(f) || readFileSync(f, "utf8") !== text) {
+      failed++;
+      console.log(`✗ ${CORE_CODEX_DIR}/${name} is stale — bun run theme:roundtrip -- --write-core`);
+    }
+  }
   let checked = 0;
   for (const f of readdirSync(ex).filter((n) => n.endsWith(".json")).sort()) {
     const m = json(join(ex, f));

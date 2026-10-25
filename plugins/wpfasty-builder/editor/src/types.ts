@@ -16,8 +16,11 @@ export interface BlockSpec {
   props: PropSpec[]; data: { as: string; kind: string; record: string; fields: Record<string, string> }[]; variants: Variant[];
 }
 export interface Collection { id: string; label: string; type: string; docs?: string; blocks: string[]; pages?: { id: string; blocks: { block: string; variant: string; props: Obj }[] }[] }
-export interface DataSource { id: string; label: string; kinds: string[]; type: string; object: string }
-export interface Binding { source: string; limit: number; term?: string; sale?: boolean }
+/** a site data source; `kinds` = data kinds it fills exactly or by an auto rule, `levels` their Compat level */
+export interface DataSource {
+  id: string; label: string; kinds: string[]; levels?: Record<string, "exact" | "auto">; type: string; object: string; purchasable?: boolean;
+}
+export interface Binding { source: string; limit: number; term?: string; sale?: boolean; map?: Record<string, string> }
 export interface Item { id: string; block: string; variant: string; props: Obj; bindings: Record<string, Binding> }
 export interface Catalog {
   source: string; sources: { id: string; label: string }[]; collections: { id: string; label: string; type: string; blocks: number }[];

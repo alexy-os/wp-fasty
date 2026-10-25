@@ -219,6 +219,65 @@ final class Catalog
     }
 
     /**
+     * The data slot behind a bindable path: its kind, the record fields → readPath map of the catalog and the
+     * record's field definitions (name, type, optional), e.g. for "products": Product {name ← title, price ← …}.
+     *
+     * @return array{kind: string, record: string, fields: array<string, string>, defs: list<array<string, mixed>>}|null
+     */
+    public function slot(string $block, string $variant, string $path): ?array
+    {
+        $b = $this->block($block);
+        $v = $this->variant($block, $variant);
+        $as = null;
+        foreach ((array) ($v['bindings'] ?? []) as $bind) {
+            if (is_array($bind) && is_array($bind['path'] ?? null) && implode('.', $bind['path']) === $path) {
+                $as = (string) ($bind['data'] ?? '');
+            }
+        }
+        foreach ((array) ($b['data'] ?? []) as $d) {
+            if (is_array($d) && ($d['as'] ?? null) === $as) {
+                return self::slotOf($d, $this->data);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * The first data slot of each kind (what the editor rates a data source against).
+     *
+     * @return array<string, array<string, mixed>> kind → slot (as slot())
+     */
+    public function slotsByKind(): array
+    {
+        $out = [];
+        foreach ($this->blocks as $b) {
+            foreach ((array) ($b['data'] ?? []) as $d) {
+                $kind = is_array($d) ? (string) ($d['kind'] ?? '') : '';
+                if ($kind !== '' && !isset($out[$kind])) {
+                    $out[$kind] = self::slotOf($d, $this->data);
+                }
+            }
+        }
+        return $out;
+    }
+
+    /**
+     * @param array<string, mixed> $d
+     * @param array<string, mixed> $data
+     * @return array{kind: string, record: string, fields: array<string, string>, defs: list<array<string, mixed>>}
+     */
+    private static function slotOf(array $d, array $data): array
+    {
+        $record = (string) ($d['record'] ?? '');
+        return [
+            'kind' => (string) ($d['kind'] ?? ''),
+            'record' => $record,
+            'fields' => array_map('strval', (array) ($d['fields'] ?? [])),
+            'defs' => array_values(array_filter((array) ($data['records'][$record] ?? []), 'is_array')),
+        ];
+    }
+
+    /**
      * The blocks the editor offers: those of a collection (with its pages), or all of them.
      *
      * @return array{

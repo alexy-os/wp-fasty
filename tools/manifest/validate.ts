@@ -8,6 +8,7 @@ import addFormats from "ajv-formats";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
+import { codexManifest, sourceIds } from "../../.workspaces/theme-builder/src/generate/codex";
 
 type J = Record<string, any>;
 const root = resolve(dirname(new URL(import.meta.url).pathname), "../..");
@@ -34,12 +35,6 @@ const ARCHETYPE_TYPES: Record<string, { name: string; capability?: string }[]> =
   blank: [],
 };
 
-/** Builder data sources (WPFastyBuilder\\DataSources::all()) → [post type, taxonomy] they need; null = always there. */
-const SOURCES: Record<string, [string, string?] | null> = {
-  posts: null, pages: null, categories: null,
-  projects: ["project"], products: ["product"],
-  project_types: ["", "project_type"], product_cats: ["", "product_cat"],
-};
 
 function semantic(m: J, err: (msg: string) => void): void {
   const t = m.theme;
@@ -105,6 +100,7 @@ function semantic(m: J, err: (msg: string) => void): void {
   if (landings.length && !m.builder?.enabled) err("builder.landings given but builder.enabled is not true");
   let fronts = 0;
   const slugs = new Set<string>();
+  const sources = sourceIds(codexManifest(m));
   for (const [i, l] of landings.entries()) {
     let spec = l;
     const at = l.file ? `builder.landings[${i}] (${l.file})` : `builder.landings[${i}]`;
@@ -127,10 +123,9 @@ function semantic(m: J, err: (msg: string) => void): void {
       if (b.id && ids.has(b.id)) err(`${at}: blocks[${j}] duplicate id "${b.id}"`);
       if (b.id) ids.add(b.id);
       for (const [prop, bind] of Object.entries<J>(b.bindings ?? {})) {
-        const need = SOURCES[bind.source];
-        if (need === undefined) err(`${at}: blocks[${j}].bindings.${prop} unknown source "${bind.source}"`);
-        else if (need && !names.has(need[0]) && !taxes.has(need[1] ?? ""))
-          err(`${at}: blocks[${j}].bindings.${prop} source "${bind.source}" needs ${need[1] ? `taxonomy ${need[1]}` : `post type ${need[0]}`}`);
+        // the builder's sources are the site's Codex kinds and taxonomies (WPFastyBuilder\\DataSources::all())
+        if (!sources.has(bind.source))
+          err(`${at}: blocks[${j}].bindings.${prop} unknown source "${bind.source}" (site sources: ${[...sources].join(", ")})`);
       }
       const vs = variants.get(b.block);
       if (!vs) err(`${at}: blocks[${j}] unknown block "${b.block}"`);

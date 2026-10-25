@@ -126,7 +126,12 @@ final class Front
             $kinds = $catalog?->bindable((string) $b['block'], (string) $b['variant']) ?? [];
             foreach ($b['bindings'] as $path => $bind) {
                 if (is_array($bind) && isset($kinds[(string) $path])) {
-                    $out[(string) $b['id']][(string) $path] = DataSources::resolve($bind, $kinds[(string) $path]);
+                    $slot = $catalog?->slot((string) $b['block'], (string) $b['variant'], (string) $path);
+                    $out[(string) $b['id']][(string) $path] = DataSources::resolve(
+                        $bind,
+                        $kinds[(string) $path],
+                        $slot,
+                    );
                 }
             }
         }

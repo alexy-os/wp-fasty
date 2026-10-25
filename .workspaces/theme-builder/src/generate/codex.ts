@@ -77,6 +77,20 @@ function field(id: string, f: J): J {
 
 const restTypes = (m: J): J[] => (m.postTypes ?? []).filter((pt: J) => pt.rest !== false);
 
+/** Builder data source id of a Codex kind or taxonomy (PHP: WPFastyBuilder\\Codex\\Sources::idFor). */
+export const sourceId = (kind: string): string => (kind === "category" ? "categories" : `${kind}s`);
+
+/** Builder data sources of a site: its Codex kinds (minus media / user) and their taxonomies. */
+export function sourceIds(cm: J): Set<string> {
+  const out = new Set<string>();
+  for (const r of cm.resources) {
+    if (r.record.id === "media" || r.record.id === "user") continue;
+    out.add(sourceId(r.record.id));
+    for (const t of r.taxonomies ?? []) out.add(sourceId(t));
+  }
+  return out;
+}
+
 export function codexManifest(m: J): J {
   const res: J[] = structuredClone(PLATFORM);
   for (const c of PROFILE.core)

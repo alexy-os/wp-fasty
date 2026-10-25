@@ -35,12 +35,13 @@ final class Site
             ? array_unique([get_stylesheet_directory(), get_template_directory()])
             : [];
         foreach ($dirs as $dir) {
-            $site = self::fromDir((string) $dir);
+            $site = self::fromDir((string) $dir . '/types');
             if ($site !== null) {
                 return self::$current = $site;
             }
         }
-        return null;
+        // a theme without its own Codex manifest: core post / page (generated, see theme-builder coreCodex())
+        return self::$current = self::fromDir(dirname(__DIR__, 2) . '/codex');
     }
 
     public static function reset(?self $site = null): void
@@ -50,8 +51,8 @@ final class Site
 
     public static function fromDir(string $dir): ?self
     {
-        $m = $dir . '/types/codex.manifest.json';
-        $d = $dir . '/types/codex.delivery.json';
+        $m = $dir . '/codex.manifest.json';
+        $d = $dir . '/codex.delivery.json';
         if (!is_file($m)) {
             return null;
         }
