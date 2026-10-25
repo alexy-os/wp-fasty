@@ -357,7 +357,7 @@ final class Rest
             return $q;
         }
         if ((string) $req['id'] !== Mapper::SETTINGS_ID) {
-            return self::error('not_found', 'settings was not found', 404);
+            return self::error('not_found', 'settings were not found', 404);
         }
         $bytes = self::settingsBytes($site);
         $hex = hash('sha256', $bytes);

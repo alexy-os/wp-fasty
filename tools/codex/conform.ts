@@ -97,8 +97,9 @@ for (const id of [...refs].sort()) {
   shape("entry", e, id);
   entries.push({ file: id, data: e });
 }
-const tx = JSON.parse(await get(loc("/taxonomies")));
-bodies.set("taxonomies.json", JSON.stringify(tx));
+const txBody = await get(loc("/taxonomies"));
+bodies.set("taxonomies.json", txBody);
+const tx = JSON.parse(txBody);
 for (const t of tx.data) {
   const body = await get(loc(`/terms/${t.id}?per_page=100`));
   bodies.set(`terms.${t.id}.json`, body);
@@ -133,7 +134,7 @@ const errorCases: [string, number, string, string][] = [
   ["/entries/post/post-0", 404, "not_found", "content was not found"],
   ["/entries/post?locale=fr", 404, "not_found", "locale was not found"],
   ["/terms/missing", 404, "not_found", "taxonomy was not found"],
-  ["/settings/missing", 404, "not_found", "settings was not found"],
+  ["/settings/missing", 404, "not_found", "settings were not found"],
   ["/settings?locale=fr", 404, "not_found", "locale was not found"],
   ["/entries/post?locale=ENGLISH", 400, "validation_error", "locale is invalid"],
   ["/entries/post?page=0", 400, "validation_error", "page must be a positive integer"],
