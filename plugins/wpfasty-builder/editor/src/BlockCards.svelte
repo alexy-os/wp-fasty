@@ -2,13 +2,17 @@
   // Block cards of the left column: a card (preview image, block and variant) per variant of the site's blocks, a
   // search and a category filter; a virtual grid renders only the rows in view. A card adds its variant on click or
   // Enter, and is dragged onto the canvas or the structure with HTML5 drag and drop (data: MIME, "<block>/<variant>").
+  // In dark mode a card shows the variant's dark shot, the light one when it has none or the dark file fails to load.
   import Icon from "./Icon.svelte";
   import { ImageOff, LayoutGrid, Search } from "./icons";
   import { CAPTION, cardsOf, filterCards, GAP, gridOf, groupsOf, MIME, rowOf, windowOf, type Card } from "./cards";
+  import { previewSrc } from "./theme";
   import type { BlockSpec, Collection } from "./types";
 
-  let { blocks, collections, onadd, ondrag }: {
+  let { blocks, collections, dark = false, onadd, ondrag }: {
     blocks: BlockSpec[];
+    /** the editor's dark mode: dark preview shots */
+    dark?: boolean;
     collections: Pick<Collection, "id" | "label" | "type">[];
     onadd: (block: string, variant: string) => void;
     /** a card drag starts (the card) or ends (null) */
@@ -63,6 +67,12 @@
     requestAnimationFrame(() => scroller?.querySelector<HTMLElement>(`[data-card="${next}"]`)?.focus());
   }
 
+  /** a dark shot that fails to load: the light one instead */
+  function fallback(e: Event, c: Card) {
+    const img = e.currentTarget as HTMLImageElement;
+    if (c.preview && img.getAttribute("src") !== c.preview.src) img.src = c.preview.src;
+  }
+
   function dragStart(e: DragEvent, c: Card) {
     if (!e.dataTransfer) return;
     e.dataTransfer.effectAllowed = "copy";
@@ -103,7 +113,7 @@
                 ondragstart={(e) => dragStart(e, c)} ondragend={() => ondrag(null)}>
                 <span class="wpfb-card-media" style:height="{grid.imageHeight - 2}px">
                   {#if c.preview}
-                    <img src={c.preview.src} width={c.preview.width} height={c.preview.height} alt="" loading="lazy" decoding="async" draggable="false" />
+                    <img src={previewSrc(c.preview, dark)} onerror={(e) => fallback(e, c)} width={c.preview.width} height={c.preview.height} alt="" loading="lazy" decoding="async" draggable="false" />
                   {:else}
                     <Icon icon={ImageOff} size={16} />
                   {/if}

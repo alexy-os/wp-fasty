@@ -18,3 +18,21 @@
   --wpfb-shadow: 0 1px 2px color-mix(in srgb, #000 16%, transparent), 0 4px 16px color-mix(in srgb, #000 8%, transparent);
   --wpfb-radius: 4px;
 }
+
+/* dark mode (class "dark" on .wpfb-app, the toolbar switch): the wp-admin dark greys of the toolbar and menu; the accent
+   keeps the admin colour scheme, lighter where it is text on the dark surface. Also on the wp-admin page around a dark
+   editor (#wpwrap), so its gutter is not a light frame. */
+.wpfb-app.dark, #wpwrap:has(.wpfb-app.dark) {
+  --wpfb-accent-strong: color-mix(in srgb, var(--wpfb-accent) 56%, #fff);
+  --wpfb-accent-soft: color-mix(in srgb, var(--wpfb-accent) 28%, transparent);
+  --wpfb-surface: #1d2327;
+  --wpfb-surface-muted: #2c3338;
+  --wpfb-canvas: #101517;
+  --wpfb-line: #3c434a;
+  --wpfb-line-soft: #2c3338;
+  --wpfb-text: #f0f0f1;
+  --wpfb-text-muted: #a7aaad;
+  --wpfb-danger: #f86368;
+  --wpfb-shadow: 0 1px 2px color-mix(in srgb, #000 48%, transparent), 0 4px 16px color-mix(in srgb, #000 40%, transparent);
+  color-scheme: dark;
+}

@@ -7,10 +7,12 @@ namespace WPFastyBuilder;
 use WPFastyBuilder\Source\LocalSource;
 
 /**
- * Preview cards of the bundled ui8kit source: sources/ui8kit/previews/<block>/<variant>.webp, listed by
- * previews/manifest.json (tools/builder/previews.ts; outside the pinned, digested source tree because the shots are
- * not byte-reproducible). attach() gives every variant of the editor catalog its `preview` URL (and the card size);
- * a source without previews (an imported registry) is returned as is and the editor shows a placeholder card.
+ * Preview cards of the bundled ui8kit source: sources/ui8kit/previews/<block>/<variant>.webp (light) and
+ * <block>/<variant>.dark.webp (dark mode), listed by previews/manifest.json (tools/builder/previews.ts; outside the
+ * pinned, digested source tree because the shots are not byte-reproducible). attach() gives every variant of the
+ * editor catalog its `preview`: the light URL (`src`), the dark one (`dark`, when shot; the editor falls back to `src`)
+ * and the card size; a source without previews (an imported registry) is returned as is and the editor shows a
+ * placeholder card.
  */
 final class Previews
 {
@@ -37,8 +39,12 @@ final class Previews
             foreach ((array) ($b['variants'] ?? []) as $j => $v) {
                 $e = $m[(string) ($b['id'] ?? '') . '/' . (string) ($v['id'] ?? '')] ?? null;
                 if (is_array($e) && is_string($e['file'] ?? null)) {
-                    $blocks[$i]['variants'][$j]['preview'] = [
-                        'src' => $base . $e['file'], 'width' => self::WIDTH, 'height' => self::HEIGHT,
+                    $preview = ['src' => $base . $e['file']];
+                    if (is_string($e['dark']['file'] ?? null) && $e['dark']['file'] !== '') {
+                        $preview['dark'] = $base . $e['dark']['file'];
+                    }
+                    $blocks[$i]['variants'][$j]['preview'] = $preview + [
+                        'width' => self::WIDTH, 'height' => self::HEIGHT,
                     ];
                 }
             }
@@ -57,7 +63,7 @@ final class Previews
         return str_starts_with($dir, $root) && is_file($dir . '/manifest.json') ? $dir : null;
     }
 
-    /** @return array<string, mixed>|null "<block>/<variant>" => {file, bytes, …} */
+    /** @return array<string, mixed>|null "<block>/<variant>" => {file, bytes, …, dark: {file, bytes, …}} */
     private static function manifest(string $dir): ?array
     {
         if (!array_key_exists($dir, self::$manifests)) {

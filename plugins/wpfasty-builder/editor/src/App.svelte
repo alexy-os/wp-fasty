@@ -20,6 +20,8 @@
   import { clone, getPath, human, isObj, kindOf, merge, newId, setPath } from "./util";
   import { defaultSource } from "./sources";
   import { LinkStore, setLinks } from "./links.svelte";
+  import { ThemeMode } from "./theme.svelte";
+  import { DARK_CLASS, TOGGLE_ID } from "./theme";
 
   let { config: initial }: { config: Config } = $props();
   // the config comes once from wp_add_inline_script and never changes
@@ -33,6 +35,8 @@
   const store = new EditorStore();
   /** column widths, collapsed columns (localStorage, per user) and focus mode */
   const layout = new PanelLayout(config.user);
+  /** dark mode (localStorage, per user), switched from the toolbar button of Admin::darkSwitch */
+  const theme = new ThemeMode(config.user);
   let resizing = $state(false);
   let source = $state(config.source || "ui8kit");
   let collection = $state(config.collection || "");
@@ -78,10 +82,20 @@
     init();
     window.addEventListener("resize", schedule);
     window.addEventListener("keydown", keydown);
+    const toggle = document.getElementById(TOGGLE_ID);
+    const switchMode = () => theme.toggle();
+    toggle?.addEventListener("click", switchMode);
     return () => {
       window.removeEventListener("resize", schedule);
       window.removeEventListener("keydown", keydown);
+      toggle?.removeEventListener("click", switchMode);
     };
+  });
+
+  // dark mode outside this component: the toolbar switch's pressed state and the preview page's root class
+  $effect(() => {
+    document.getElementById(TOGGLE_ID)?.setAttribute("aria-pressed", String(theme.dark));
+    frame?.contentDocument?.documentElement.classList.toggle(DARK_CLASS, theme.dark);
   });
 
   async function init() {
@@ -490,6 +504,7 @@
     const doc = frame?.contentDocument;
     const win = frame?.contentWindow;
     if (!doc || !win) return;
+    doc.documentElement.classList.toggle(DARK_CLASS, theme.dark);
     doc.addEventListener("click", (e) => {
       const el = (e.target as HTMLElement).closest("[data-wpfb-block]");
       e.preventDefault();
@@ -509,7 +524,7 @@
   }
 </script>
 
-<div class="wpfb-app" class:is-dragging={drag !== null} class:is-resizing={resizing} class:is-focus={layout.focus}
+<div class={["wpfb-app", { "is-dragging": drag !== null, "is-resizing": resizing, "is-focus": layout.focus, [DARK_CLASS]: theme.dark }]}
   style:--wpfb-col-left={layout.leftOpen ? `${layout.left}px` : "0px"} style:--wpfb-col-right={layout.rightOpen ? `${layout.right}px` : "0px"}
   style:--wpfb-bar-left={layout.leftOpen ? `${layout.left}px` : "auto"} style:--wpfb-bar-right={layout.rightOpen ? `${layout.right}px` : "auto"}>
   <header class="wpfb-bar" hidden={layout.focus}>
@@ -571,7 +586,7 @@
       {/if}
       <div class="wpfb-section is-cards">
         <h2 class="wpfb-heading">Blocks</h2>
-        <BlockCards blocks={catalog?.blocks ?? []} collections={catalog?.collections ?? []}
+        <BlockCards blocks={catalog?.blocks ?? []} collections={catalog?.collections ?? []} dark={theme.dark}
           onadd={(block, variant) => add(block, variant, store.selected ? currentIndex + 1 : store.items.length)}
           ondrag={(c) => { card = c; if (!c) dragDone(); }} />
       </div>

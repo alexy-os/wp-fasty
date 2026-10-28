@@ -8,12 +8,20 @@ namespace WPFastyBuilder;
  * wp-admin: the builder screen (Pages → Builder, edit_pages) and the sources screen (Settings → Builder sources,
  * manage_options). The editor script and styles are enqueued on the builder screen only.
  * Open a collection with ?collection=<id> to show only its blocks in the sidebar.
+ * The dark mode switch of the editor is the last item of the toolbar (admin bar), on the editor screen only; the
+ * editor script wires it up and remembers the mode in localStorage per user.
  */
 final class Admin
 {
     public const SLUG = 'wpfasty-builder';
     public const SOURCES = 'wpfasty-builder-sources';
+    /** admin bar node of the dark mode switch (li#wp-admin-bar-wpfasty-builder-dark) */
+    public const DARK = 'wpfasty-builder-dark';
+    /** after every core toolbar item (core top-secondary items run at 9991…9999): the switch is the last node */
+    public const DARK_PRIORITY = 100000;
     private static string $hook = '';
+    /** the editor is enqueued on this request (a page is open in the builder) */
+    private static bool $editor = false;
 
     public static function register(): void
     {
@@ -22,6 +30,7 @@ final class Admin
         add_filter('page_row_actions', [self::class, 'rowAction'], 10, 2);
         add_action('admin_post_wpfb_import', [self::class, 'handleImport']);
         add_action('admin_notices', [self::class, 'problems']);
+        add_action('admin_bar_menu', [self::class, 'darkSwitch'], self::DARK_PRIORITY);
     }
 
     public static function menu(): void
@@ -133,6 +142,48 @@ final class Admin
             'window.WPFastyBuilderConfig = ' . wp_json_encode($config) . ';',
             'before',
         );
+        self::$editor = true;
+    }
+
+    /**
+     * The dark mode switch: last item of the toolbar's secondary (right-hand) group, only on the builder screen with a
+     * page open in the editor (screen id = the hook of the Builder page). A toggle button (aria-pressed, set by the
+     * editor from the remembered mode), Lucide moon / sun inline; the editor script handles the click.
+     */
+    public static function darkSwitch(\WP_Admin_Bar $bar): void
+    {
+        if (!self::$editor || self::$hook === '' || !function_exists('get_current_screen')) {
+            return;
+        }
+        $screen = get_current_screen();
+        if ($screen === null || $screen->id !== self::$hook) {
+            return;
+        }
+        $bar->add_node([
+            'id' => self::DARK,
+            'parent' => 'top-secondary',
+            'title' => self::darkButton(),
+            'href' => false,
+            'meta' => ['class' => 'wpfb-adminbar-dark'],
+        ]);
+    }
+
+    /** the switch markup; the editor script sets aria-pressed from the remembered mode and toggles it */
+    public static function darkButton(): string
+    {
+        $label = __('Dark mode', 'wpfasty-builder');
+        $svg = static fn (string $class, string $body): string => '<svg class="' . $class
+            . '" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" '
+            . 'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+            . 'aria-hidden="true" focusable="false">' . $body . '</svg>';
+        $moon = $svg('wpfb-dark-moon', '<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803'
+            . 'a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>');
+        $sun = $svg('wpfb-dark-sun', '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/>'
+            . '<path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/>'
+            . '<path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>');
+        return '<button type="button" id="wpfb-dark-toggle" class="wpfb-dark-toggle" aria-pressed="false" title="'
+            . esc_attr($label) . '">' . $moon . $sun . '<span class="screen-reader-text">' . esc_html($label)
+            . '</span></button>';
     }
 
     public static function screen(): void

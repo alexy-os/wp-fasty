@@ -13,7 +13,7 @@ use WPFastyBuilder\Source\LocalSource;
 
 /**
  * Block preview cards (sources/ui8kit/previews, tools/builder/previews.ts): every variant of the bundled catalog gets
- * the URL of its WebP in the editor catalog; a source outside the plugin (an imported registry) gets none.
+ * the URLs of its light and dark WebP in the editor catalog (no dark shot: light only); a source outside the plugin (an imported registry) gets none.
  */
 #[RunTestsInSeparateProcesses]
 final class PreviewsTest extends TestCase
@@ -45,16 +45,41 @@ final class PreviewsTest extends TestCase
             foreach ($blocks as $b) {
                 foreach ($b['variants'] as $v) {
                     $key = $b['id'] . '/' . $v['id'];
+                    $base = 'http://example.test/wp-content/plugins/wpfasty-builder/sources/ui8kit/previews/';
                     $this->assertSame([
-                        'src' => 'http://example.test/wp-content/plugins/wpfasty-builder/sources/ui8kit/previews/' . $key . '.webp',
+                        'src' => $base . $key . '.webp',
+                        'dark' => $base . $key . '.dark.webp',
                         'width' => 320, 'height' => 180,
                     ], $v['preview'] ?? null, $key);
                     $this->assertFileExists($this->plugin . '/sources/ui8kit/previews/' . $key . '.webp');
+                    $this->assertFileExists($this->plugin . '/sources/ui8kit/previews/' . $key . '.dark.webp');
                     $n++;
                 }
             }
             $this->assertSame(474, $n, $runtime);
         }
+    }
+
+    public function testAVariantWithoutADarkShotGetsOnlyTheLightOne(): void
+    {
+        $dir = $this->plugin . '/sources/ui8kit/previews';
+        $m = json_decode((string) file_get_contents($dir . '/manifest.json'), true);
+        $key = array_key_first($m['variants']);
+        unset($m['variants'][$key]['dark']);
+        $prop = new \ReflectionProperty(Previews::class, 'manifests');
+        $prop->setValue(null, [$dir => $m['variants']]);
+        $src = new LocalSource('ui8kit', $this->plugin . '/sources/ui8kit/latte', 'latte');
+        [$block, $variant] = explode('/', $key);
+        foreach (Previews::attach((new Catalog($src->catalog()))->forEditor(null)['blocks'], $src) as $b) {
+            foreach ($b['variants'] as $v) {
+                if ($b['id'] === $block && $v['id'] === $variant) {
+                    $this->assertArrayNotHasKey('dark', $v['preview']);
+                    $this->assertStringEndsWith('/previews/' . $key . '.webp', $v['preview']['src']);
+                    return;
+                }
+            }
+        }
+        $this->fail('variant ' . $key . ' not in the catalog');
     }
 
     public function testSourcesOutsideThePluginHaveNoPreviews(): void

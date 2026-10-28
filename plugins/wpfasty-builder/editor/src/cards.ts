@@ -8,7 +8,7 @@ import { human } from "./util";
 
 export interface Card {
   key: string; block: string; variant: string; title: string; label: string; group: string;
-  preview?: { src: string; width: number; height: number };
+  preview?: { src: string; dark?: string; width: number; height: number };
 }
 
 /** every variant of the blocks, in catalog order */

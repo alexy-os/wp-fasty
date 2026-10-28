@@ -3,7 +3,7 @@
 **Purpose:** Single handoff document for agents (including Cursor browser).  
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
-**Last updated:** 2026-10-24 (Cycle L: builder editor on the Puck model — live block render, typed fields, overlay, undo/redo)
+**Last updated:** 2026-10-28 (Cycle L7: builder dark mode — dark block previews, toolbar switch)
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
 **Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
@@ -346,6 +346,7 @@ A Parent correctness ✓
 | L4 | `EditorStore` ($state) + undo/redo (50 JSON snapshots, typing coalesced), shortcuts and buttons | `1eea3f8` | [x] |
 | L5 | Nesting (slots): design only — README "Next step" | README | [ ] |
 | L6 | IDE layout, step 1: resizable columns (separators on the 8px grid, min/max, double click resets, ARIA separator), collapse by bar buttons / `[` `]`, focus mode `F`, widths + collapsed columns in localStorage per user (`config.user`) | `editor/src/layout*.ts`, `Splitter.svelte` | [x] |
+| L7 | Dark mode: a dark preview per variant (`<block>/<variant>.dark.webp`, class `dark` + shadcn `.dark` tokens, 640×360, quality searched for 6–10 KB; manifest format 2 `dark`, `Previews::attach` → `preview.dark`, CI `--check` 474 × 2); toolbar switch (last `top-secondary` node, Builder screen only, `aria-pressed`, Lucide moon/sun) toggles `.dark` on the editor, the preview page and the cards; localStorage per user | `Admin::darkSwitch`, `editor/src/theme*.ts` | [x] |
 
 ---
 

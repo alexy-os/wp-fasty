@@ -209,3 +209,19 @@
 .wpfb-card-title { margin-top: 8px; font-weight: 600; }
 .wpfb-card-variant { color: var(--wpfb-text-muted); }
 .wpfb-droplayer { position: absolute; inset: 0; z-index: 4; }
+
+/* dark mode (.wpfb-app.dark, tokens.css): wp-admin's own controls inside the editor follow the tokens too, and the
+   page around the editor takes the canvas colour */
+#wpwrap:has(.wpfb-app.dark) { background: var(--wpfb-canvas); }
+.wpfb-root .wpfb-app.dark .button:not(.button-primary) { background: var(--wpfb-surface-muted); border-color: var(--wpfb-line); color: var(--wpfb-text); }
+.wpfb-root .wpfb-app.dark .button:not(.button-primary):hover, .wpfb-root .wpfb-app.dark .button:not(.button-primary):focus { border-color: var(--wpfb-accent); color: var(--wpfb-accent-strong); }
+.wpfb-root .wpfb-app.dark :is(textarea, input[type="checkbox"], input[type="radio"]) { background-color: var(--wpfb-surface); border-color: var(--wpfb-line); color: var(--wpfb-text); }
+.wpfb-root .wpfb-app.dark select { appearance: auto; background-image: none; }
+
+/* the dark mode switch: last item of the wp-admin toolbar on the builder screen (Admin::darkSwitch); the toolbar's
+   own colours (inherited), moon while light, sun while dark */
+#wpadminbar #wp-admin-bar-wpfasty-builder-dark > .ab-item { padding: 0; }
+#wpadminbar .wpfb-dark-toggle { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; margin: 0; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+#wpadminbar .wpfb-dark-toggle svg { display: block; }
+#wpadminbar .wpfb-dark-toggle[aria-pressed="true"] .wpfb-dark-moon, #wpadminbar .wpfb-dark-toggle[aria-pressed="false"] .wpfb-dark-sun { display: none; }
+#wpadminbar .wpfb-dark-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }
