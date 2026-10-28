@@ -29,7 +29,7 @@
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'product_id', 'value': (product.id)}} only %}
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop.cart_nonce)}} only %}
 					{% set addIcon %}{{ icon('plus') }}{% endset %}
-					{% include 'button/Button.html.twig' with { type: 'submit', ariaLabel: labels.add_to_cart ~ ': ' ~ product.title, class: kit('button', {'size': 'icon'}), children: addIcon } %}
+					{% include 'button/Button.html.twig' with { type: 'submit', ariaLabel: labels.add_to_cart ~ ': ' ~ product.title, class: kit('button', {'layout': 'icon'}), children: addIcon } %}
 				{% endset %}{% include 'form/Form.html.twig' with {'action': shop.action|default(''), 'children': c_ui9, 'attrs': {'method': 'post'}} only %}
 			{% else %}
 				{% set c_ui10 %}{{ labels.out_of_stock }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}

@@ -3,10 +3,10 @@
 {if $page}
 {capture $c_ui24}
 	{capture $c_ui3}
-		{capture $c_ui1}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'text-muted-foreground no-underline hover:text-foreground', children: (string) $c_ui1, attrs: []}
+		{capture $c_ui1}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: kit('link', ['variant' => 'muted', 'size' => 'sm']), children: (string) $c_ui1, attrs: []}
 		{if !empty($page['product_cats'])}
 			{icon('chevron-right')}
-			{capture $c_ui2}{$page['product_cats'][0]['name']}{/capture}{include 'link/Link.latte', href: $page['product_cats'][0]['url'] ?? '', class: 'text-muted-foreground no-underline hover:text-foreground', children: (string) $c_ui2, attrs: []}
+			{capture $c_ui2}{$page['product_cats'][0]['name']}{/capture}{include 'link/Link.latte', href: $page['product_cats'][0]['url'] ?? '', class: kit('link', ['variant' => 'muted', 'size' => 'sm']), children: (string) $c_ui2, attrs: []}
 		{/if}
 	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mb-8 flex items-center gap-2 text-sm text-muted-foreground', children: (string) $c_ui3, attrs: ['aria-label' => ($labels['breadcrumb'])]}
 	{capture $c_ui23}
@@ -41,7 +41,7 @@
 					{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui13, attrs: []}
 					{capture $c_ui14}
 						{capture $addLabel}{icon('shopping-cart')}{$labels['add_to_cart']}{/capture}
-						{include 'button/Button.latte', type: 'submit', class: kit('button', ['size' => 'lg']), children: (string) $addLabel}
+						{include 'button/Button.latte', type: 'submit', class: kit('button', ['size' => 'lg'], 'gap-2'), children: (string) $addLabel}
 						{capture $buyLabel}{$labels['buy_now']}{/capture}
 						{include 'button/Button.latte', type: 'submit', attrs: ['name' => 'buy_now', 'value' => '1'], class: kit('button', ['variant' => 'outline', 'size' => 'lg']), children: (string) $buyLabel}
 					{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-wrap gap-4', children: (string) $c_ui14, attrs: []}
@@ -51,7 +51,7 @@
 				{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', class: 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $c_ui16, attrs: ['method' => 'post']}
 			{else}
 				{capture $oos}{$labels['out_of_stock']}{/capture}
-				{include 'alert/Alert.latte', variant: 'destructive', class: 'px-4 py-2', children: (string) $oos}
+				{include 'alert/Alert.latte', variant: 'destructive', children: (string) $oos}
 			{/if}
 
 			{capture $c_ui20}

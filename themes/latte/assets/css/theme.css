@@ -448,9 +448,6 @@
   .w-8 {
     width: calc(var(--spacing) * 8);
   }
-  .w-10 {
-    width: calc(var(--spacing) * 10);
-  }
   .w-12 {
     width: calc(var(--spacing) * 12);
   }
@@ -507,9 +504,6 @@
   }
   .min-w-0 {
     min-width: 0px;
-  }
-  .min-w-6 {
-    min-width: calc(var(--spacing) * 6);
   }
   .flex-1 {
     flex: 1;
@@ -690,12 +684,6 @@
   }
   .border-border {
     border-color: var(--border);
-  }
-  .border-destructive {
-    border-color: var(--destructive);
-  }
-  .border-primary {
-    border-color: var(--primary);
   }
   .bg-accent {
     background-color: var(--accent);
@@ -1035,17 +1023,6 @@
     }
     .hover\:bg-accent:hover {
       background-color: var(--accent);
-    }
-    .hover\:bg-primary\/90:hover {
-      background-color: var(--primary);
-    }
-    @supports (color: color-mix(in lab, red, red)) {
-      .hover\:bg-primary\/90:hover {
-        background-color: color-mix(in oklab, var(--primary) 90%, transparent);
-      }
-    }
-    .hover\:text-destructive:hover {
-      color: var(--destructive);
     }
     .hover\:text-foreground:hover {
       color: var(--foreground);

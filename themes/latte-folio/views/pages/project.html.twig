@@ -2,7 +2,7 @@
 {% if page %}
 {% set c_ui17 %}
 	{% set c_ui13 %}
-		{% set c_ui1 %}{{ icon('arrow-left') }}{{ labels.all_work }}{% endset %}{% include 'link/Link.html.twig' with {'href': work.url|default(''), 'class': 'mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground no-underline hover:text-foreground', 'children': c_ui1, 'attrs': {}} only %}
+		{% set c_ui1 %}{{ icon('arrow-left') }}{{ labels.all_work }}{% endset %}{% include 'link/Link.html.twig' with {'href': work.url|default(''), 'class': kit('link', {'variant': 'muted', 'size': 'sm'}, 'mb-8'), 'children': c_ui1, 'attrs': {}} only %}
 		{% set c_ui12 %}
 			{% set c_ui5 %}
 				{% if page.types ?? false %}
@@ -28,7 +28,7 @@
 					{% if page.project.url.value ?? false %}
 						{% set c_ui10 %}
 							{% set c_uiDt %}{{ page.project.url.label ?? labels.visit_site }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dt', 'class': 'sr-only', 'children': c_uiDt, 'attrs': {}} only %}
-							{% set c_uiDd %}{% set c_ui9 %}{{ labels.visit_site }}{{ icon('external-link') }}{% endset %}{% include 'link/Link.html.twig' with {'href': page.project.url.value|default(''), 'class': 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui9, 'attrs': {'rel': 'noopener', 'target': '_blank'}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dd', 'class': '', 'children': c_uiDd, 'attrs': {}} only %}
+							{% set c_uiDd %}{% set c_ui9 %}{{ labels.visit_site }}{{ icon('external-link') }}{% endset %}{% include 'link/Link.html.twig' with {'href': page.project.url.value|default(''), 'class': kit('button', {}, 'gap-2'), 'children': c_ui9, 'attrs': {'rel': 'noopener', 'target': '_blank'}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dd', 'class': '', 'children': c_uiDd, 'attrs': {}} only %}
 						{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'col-span-2', 'children': c_ui10, 'attrs': {}} only %}
 					{% endif %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dl', 'class': 'grid grid-cols-2 gap-6 self-end rounded-xl border border-border bg-card p-6', 'children': c_ui11, 'attrs': {}} only %}

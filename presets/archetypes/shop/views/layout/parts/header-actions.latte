@@ -2,6 +2,6 @@
 {capture $c_ui2}
 	{icon('shopping-bag', 'size-5')}
 	{if $shop['count'] > 0}
-		{capture $c_ui1}{$shop['count']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'absolute -right-2 -top-2 badge inline-flex min-w-6 items-center justify-center rounded-full bg-primary px-2 text-xs font-semibold text-primary-foreground', children: (string) $c_ui1, attrs: []}
+		{capture $c_ui1}{$shop['count']}{/capture}{include 'text/Text.latte', tag: 'span', class: kit('badge', ['size' => 'sm'], 'absolute -right-2 -top-2'), children: (string) $c_ui1, attrs: []}
 	{/if}
-{/capture}{include 'link/Link.latte', href: $shop['cart_url'] ?? '', class: 'relative inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-background text-foreground no-underline hover:bg-accent', children: (string) $c_ui2, attrs: ['aria-label' => (($labels['cart']) . ' (' . ($shop['count']) . ')')]}
+{/capture}{include 'link/Link.latte', href: $shop['cart_url'] ?? '', class: kit('button', ['variant' => 'outline', 'layout' => 'icon'], 'relative'), children: (string) $c_ui2, attrs: ['aria-label' => (($labels['cart']) . ' (' . ($shop['count']) . ')')]}

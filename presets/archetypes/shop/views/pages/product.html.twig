@@ -3,10 +3,10 @@
 {% if page %}
 {% set c_ui24 %}
 	{% set c_ui3 %}
-		{% set c_ui1 %}{{ labels.all_products }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': 'text-muted-foreground no-underline hover:text-foreground', 'children': c_ui1, 'attrs': {}} only %}
+		{% set c_ui1 %}{{ labels.all_products }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': kit('link', {'variant': 'muted', 'size': 'sm'}), 'children': c_ui1, 'attrs': {}} only %}
 		{% if page.product_cats ?? false %}
 			{{ icon('chevron-right') }}
-			{% set c_ui2 %}{{ page.product_cats[0].name }}{% endset %}{% include 'link/Link.html.twig' with {'href': page.product_cats[0].url|default(''), 'class': 'text-muted-foreground no-underline hover:text-foreground', 'children': c_ui2, 'attrs': {}} only %}
+			{% set c_ui2 %}{{ page.product_cats[0].name }}{% endset %}{% include 'link/Link.html.twig' with {'href': page.product_cats[0].url|default(''), 'class': kit('link', {'variant': 'muted', 'size': 'sm'}), 'children': c_ui2, 'attrs': {}} only %}
 		{% endif %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mb-8 flex items-center gap-2 text-sm text-muted-foreground', 'children': c_ui3, 'attrs': {'aria-label': (labels.breadcrumb)}} only %}
 	{% set c_ui23 %}
@@ -41,7 +41,7 @@
 					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui13, 'attrs': {}} only %}
 					{% set c_ui14 %}
 						{% set addLabel %}{{ icon('shopping-cart') }}{{ labels.add_to_cart }}{% endset %}
-						{% include 'button/Button.html.twig' with { type: 'submit', class: kit('button', {'size': 'lg'}), children: addLabel } %}
+						{% include 'button/Button.html.twig' with { type: 'submit', class: kit('button', {'size': 'lg'}, 'gap-2'), children: addLabel } %}
 						{% set buyLabel %}{{ labels.buy_now }}{% endset %}
 						{% include 'button/Button.html.twig' with { type: 'submit', attrs: { name: 'buy_now', value: '1' }, class: kit('button', {'variant': 'outline', 'size': 'lg'}), children: buyLabel } %}
 					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-wrap gap-4', 'children': c_ui14, 'attrs': {}} only %}
@@ -51,7 +51,7 @@
 				{% endset %}{% include 'form/Form.html.twig' with {'action': shop.action|default(''), 'class': 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', 'children': c_ui16, 'attrs': {'method': 'post'}} only %}
 			{% else %}
 				{% set oos %}{{ labels.out_of_stock }}{% endset %}
-				{% include 'alert/Alert.html.twig' with { variant: 'destructive', class: 'px-4 py-2', children: oos } %}
+				{% include 'alert/Alert.html.twig' with { variant: 'destructive', children: oos } %}
 			{% endif %}
 
 			{% set c_ui20 %}

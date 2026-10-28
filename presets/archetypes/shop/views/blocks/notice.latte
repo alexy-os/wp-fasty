@@ -2,6 +2,6 @@
 {if !empty($shop['notice'])}
 	{capture $c_ui2}
 		{capture $noticeBody}{capture $c_ui1}{icon($shop['notice']['icon'])}{$shop['notice']['text']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex items-center gap-2', children: (string) $c_ui1, attrs: []}{/capture}
-		{include 'alert/Alert.latte', variant: $shop['notice']['variant'], role: 'status', ariaLive: 'polite', class: 'flex items-center px-4 py-2', children: (string) $noticeBody}
+		{include 'alert/Alert.latte', variant: $shop['notice']['variant'], role: 'status', ariaLive: 'polite', children: (string) $noticeBody}
 	{/capture}{include 'box/Box.latte', tag: 'div', class: 'container mx-auto px-4 pt-8 md:px-6', children: (string) $c_ui2, attrs: []}
 {/if}

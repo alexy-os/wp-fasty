@@ -6,6 +6,6 @@
 		{% set c_ui9 %}{% set c_ui7 %}{{ labels.total }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dt', 'children': c_ui7, 'attrs': {}} only %}{% set c_ui8 %}{{ cart.total_display }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dd', 'children': c_ui8, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex justify-between border-t border-border pt-4 text-base font-semibold', 'children': c_ui9, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dl', 'class': 'flex flex-col gap-2 text-sm', 'children': c_ui10, 'attrs': {}} only %}
 	{% if showCheckout ?? true %}
-		{% set c_ui11 %}{{ icon('credit-card') }}{{ labels.checkout }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.checkout_url|default(''), 'class': 'inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90', 'children': c_ui11, 'attrs': {}} only %}
+		{% set c_ui11 %}{{ icon('credit-card') }}{{ labels.checkout }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.checkout_url|default(''), 'class': kit('button', {'size': 'lg'}, 'gap-2'), 'children': c_ui11, 'attrs': {}} only %}
 	{% endif %}
 {% endset %}{% include 'box/Box.html.twig' with {'tag': 'aside', 'class': 'flex h-fit flex-col gap-4 rounded-xl border border-border bg-card p-6', 'children': c_ui12, 'attrs': {}} only %}

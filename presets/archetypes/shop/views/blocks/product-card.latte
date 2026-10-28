@@ -29,7 +29,7 @@
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'product_id', 'value' => ($product['id'])]}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['cart_nonce'])]}
 					{capture $addIcon}{icon('plus')}{/capture}
-					{include 'button/Button.latte', type: 'submit', ariaLabel: $labels['add_to_cart'] . ': ' . $product['title'], class: kit('button', ['size' => 'icon']), children: (string) $addIcon}
+					{include 'button/Button.latte', type: 'submit', ariaLabel: $labels['add_to_cart'] . ': ' . $product['title'], class: kit('button', ['layout' => 'icon']), children: (string) $addIcon}
 				{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', children: (string) $c_ui9, attrs: ['method' => 'post']}
 			{else}
 				{capture $c_ui10}{$labels['out_of_stock']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-xs text-muted-foreground', children: (string) $c_ui10, attrs: []}

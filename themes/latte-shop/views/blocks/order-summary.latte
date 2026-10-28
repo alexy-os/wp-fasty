@@ -6,6 +6,6 @@
 		{capture $c_ui9}{capture $c_ui7}{$labels['total']}{/capture}{include 'box/Box.latte', tag: 'dt', children: (string) $c_ui7, attrs: []}{capture $c_ui8}{$cart['total_display']}{/capture}{include 'box/Box.latte', tag: 'dd', children: (string) $c_ui8, attrs: []}{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex justify-between border-t border-border pt-4 text-base font-semibold', children: (string) $c_ui9, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'dl', class: 'flex flex-col gap-2 text-sm', children: (string) $c_ui10, attrs: []}
 	{if $showCheckout ?? true}
-		{capture $c_ui11}{icon('credit-card')}{$labels['checkout']}{/capture}{include 'link/Link.latte', href: $shop['checkout_url'] ?? '', class: 'inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90', children: (string) $c_ui11, attrs: []}
+		{capture $c_ui11}{icon('credit-card')}{$labels['checkout']}{/capture}{include 'link/Link.latte', href: $shop['checkout_url'] ?? '', class: kit('button', ['size' => 'lg'], 'gap-2'), children: (string) $c_ui11, attrs: []}
 	{/if}
 {/capture}{include 'box/Box.latte', tag: 'aside', class: 'flex h-fit flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $c_ui12, attrs: []}

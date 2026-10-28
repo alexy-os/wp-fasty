@@ -6,9 +6,9 @@
 	{% endif %}
 	{% if work.types ?? false %}
 		{% set c_ui5 %}
-			{% set c_ui3 %}{{ labels.all_work }}{% endset %}{% include 'link/Link.html.twig' with {'href': work.url|default(''), 'class': ('inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline ' ~ (work.current is same as('') ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent')), 'children': c_ui3, 'attrs': {'aria-current': ((work.current is same as(''))) ? 'page' : null}} only %}
+			{% set c_ui3 %}{{ labels.all_work }}{% endset %}{% include 'link/Link.html.twig' with {'href': work.url|default(''), 'class': kit('button', {'variant': (work.current is same as('')) ? 'default' : 'outline'}), 'children': c_ui3, 'attrs': {'aria-current': ((work.current is same as(''))) ? 'page' : null}} only %}
 			{% for type in work.types %}
-				{% set c_ui4 %}{{ type.name }}{% endset %}{% include 'link/Link.html.twig' with {'href': type.url|default(''), 'class': ('inline-flex h-10 items-center rounded-full border px-4 text-sm no-underline ' ~ (work.current is same as(type.slug) ? 'border-primary bg-primary text-primary-foreground' : 'border-border text-foreground hover:bg-accent')), 'children': c_ui4, 'attrs': {'aria-current': ((work.current is same as(type.slug))) ? 'page' : null}} only %}
+				{% set c_ui4 %}{{ type.name }}{% endset %}{% include 'link/Link.html.twig' with {'href': type.url|default(''), 'class': kit('button', {'variant': (work.current is same as(type.slug)) ? 'default' : 'outline'}), 'children': c_ui4, 'attrs': {'aria-current': ((work.current is same as(type.slug))) ? 'page' : null}} only %}
 			{% endfor %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mt-8 flex flex-wrap gap-2', 'children': c_ui5, 'attrs': {'aria-label': (labels.all_work)}} only %}
 	{% endif %}
