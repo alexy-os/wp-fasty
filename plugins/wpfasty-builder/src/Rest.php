@@ -177,6 +177,9 @@ final class Rest
             [DataSources::class, 'resolve'],
             static fn (string $template, array $props): string => Front::block($source, $template, $props),
             static fn (array $slot): array => $post instanceof \WP_Post ? DataSources::current($slot, $post) : [],
+            // the pager: the editor previews the first page of the list (pages of its own query), none on one page
+            static fn (array $bind, string $kind, ?array $slot): array => DataSources::paged($bind, $kind, $slot, 1),
+            static fn (int $pages): ?array => Pager::value(1, $pages),
         );
         if ($out === null) {
             return new WP_Error('wpfb_block', __('Unknown block or variant.', 'wpfasty-builder'), ['status' => 400]);

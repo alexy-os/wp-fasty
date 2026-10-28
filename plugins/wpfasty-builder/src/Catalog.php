@@ -309,6 +309,30 @@ final class Catalog
     }
 
     /**
+     * The pager group of a block (a prop of a pager record type, Pager::RECORDS: PostGrid `pager`) and the list it
+     * pages (the variant's first bindable path, PostGrid `posts`): ['path' => 'pager', 'list' => 'posts']; null
+     * without one.
+     * The WordPress adapter fills the group (Pager); a layout sets only its `mode`.
+     *
+     * @return array{path: string, list: string}|null
+     */
+    public function pager(string $block, string $variant): ?array
+    {
+        $b = $this->block($block);
+        if ($b === null || $this->variant($block, $variant) === null) {
+            return null;
+        }
+        foreach ((array) ($b['props'] ?? []) as $prop) {
+            $record = is_array($prop) && is_array($prop['type'] ?? null) ? ($prop['type']['record'] ?? null) : null;
+            if (is_string($record) && in_array($record, Pager::RECORDS, true) && is_string($prop['name'] ?? null)) {
+                $list = array_key_first($this->bindable($block, $variant));
+                return ['path' => $prop['name'], 'list' => is_string($list) ? $list : ''];
+            }
+        }
+        return null;
+    }
+
+    /**
      * The first data slot of each kind (what the editor rates a data source against).
      *
      * @return array<string, array<string, mixed>> kind → slot (as slot())

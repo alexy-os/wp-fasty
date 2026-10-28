@@ -56,8 +56,14 @@ final class Compiler
                 $exprs[(string) $path] = ($twig ? 'wpfb[' : '$wpfb[') . self::str((string) $b['id']) . ']['
                     . self::str((string) $path) . '] ?? []';
             }
-            // the paths the record of the current route fills (Front::bound, DataSources::current)
-            foreach (array_keys($catalog->current((string) $b['block'], (string) $b['variant'])) as $path) {
+            // the paths the record of the current route fills (Front::bound, DataSources::current) and the pager
+            // group the adapter fills (Pager; null on a single page)
+            $filled = array_keys($catalog->current((string) $b['block'], (string) $b['variant']));
+            $pager = $catalog->pager((string) $b['block'], (string) $b['variant']);
+            if ($pager !== null) {
+                $filled[] = $pager['path'];
+            }
+            foreach ($filled as $path) {
                 $exprs[(string) $path] = ($twig ? 'wpfb[' : '$wpfb[') . self::str((string) $b['id']) . ']['
                     . self::str((string) $path) . '] ?? null';
             }
@@ -73,7 +79,7 @@ final class Compiler
 
     /**
      * The props a block renders with: the variant sample props, the block's overrides on top, the kind-aware read
-     * label; every bound path and every path of the current record is null (the page fills it from
+     * label; every bound path, every path of the current record and the pager group is null (the page fills it from
      * wpfb[<block id>][<path>], Fragment from the data). No trusted markup survives here (Layout::untrust).
      *
      * @param array<string, mixed> $variant
@@ -85,7 +91,12 @@ final class Compiler
         $merged = Layout::merge((array) ($variant['props'] ?? []), (array) $b['props']);
         $props = Layout::untrust(self::readLabel($merged, $b));
         $current = $catalog?->current((string) $b['block'], (string) $b['variant']) ?? [];
-        foreach ([...array_keys((array) $b['bindings']), ...array_keys($current)] as $path) {
+        $pager = $catalog?->pager((string) $b['block'], (string) $b['variant']);
+        $filled = [...array_keys((array) $b['bindings']), ...array_keys($current)];
+        if ($pager !== null) {
+            $filled[] = $pager['path'];
+        }
+        foreach ($filled as $path) {
             Layout::set($props, explode('.', (string) $path), null);
         }
         return $props;

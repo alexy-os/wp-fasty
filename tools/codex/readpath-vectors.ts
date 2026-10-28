@@ -2,8 +2,8 @@
 // reference: codegen-x packages/compose-gen/runtimes/core/assets/app/core.ts (readPath, fromCodex).
 // DRAFT — replace with the vectors of @ui8kit/contract when they exist (Q4: data pipes normative, format pipes en only).
 //   bun tools/codex/readpath-vectors.ts [path/to/core.ts]  → tests/fixtures/codex-draft/readpath.json
-// The pipes agreed in Q4 but not yet in core.ts (excerpt-fallback, reading-minutes, term-names:, settings:, in-stock)
-// are defined below (DRAFT_PIPES) exactly as the PHP port implements them.
+// The Q4 pipes (excerpt-fallback, reading-minutes, term-names:, settings:, in-stock) come from core.ts itself
+// (codegen-x 68004e62+); their shared TS↔PHP vectors: tests/fixtures/codex-shared (tools/codex/readpath-shared.ts).
 import { writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -14,33 +14,10 @@ const core = await import(coreTs);
 const rev = spawnSync("git", ["-C", dirname(coreTs), "log", "-1", "--format=%h", "--", coreTs], { encoding: "utf8" }).stdout.trim();
 
 type J = Record<string, any>;
-const f = (o: unknown, k: string): unknown => (o !== null && typeof o === "object" ? (o as J)[k] : undefined);
-/** Q4 draft pipes: they also run when the path is absent (fallbacks). */
-function readPath(source: unknown, path: string, opts: J = {}): unknown {
-  const [dotted, pipe = ""] = path.split("|");
-  const at = (p: string) => p.split(".").reduce<unknown>((c, k) => f(c, k), source);
-  const words = (html: unknown) => String(html ?? "").replace(/<[^>]*>/g, " ").split(/\s+/).filter(Boolean);
-  if (pipe === "excerpt-fallback") {
-    const v = at(dotted);
-    if (typeof v === "string" && v.trim() !== "") return v;
-    const w = words(f(source, "content"));
-    if (!w.length) return undefined;
-    return w.length > 24 ? `${w.slice(0, 24).join(" ")}…` : w.join(" ");
-  }
-  if (pipe === "reading-minutes") { const c = at(dotted); return c === undefined ? undefined : Math.ceil(words(c).length / 200); }
-  if (pipe.startsWith("term-names:")) {
-    const tax = pipe.slice(11), refs = at(dotted);
-    if (!Array.isArray(refs)) return undefined;
-    const loc = opts.locale ?? f(source, "locale") ?? "en";
-    return refs.filter((r) => f(r, "taxonomy") === tax).map((r) => {
-      const ts = (opts.terms ?? []).filter((t: J) => t.taxonomy_id === tax && t.id === f(r, "term_id"));
-      return f(ts.find((t: J) => t.locale === loc) ?? ts[0], "name");
-    }).filter((n) => n !== undefined);
-  }
-  if (pipe.startsWith("settings:")) { const v = at(dotted); return v !== undefined ? v : f(opts.settings, pipe.slice(9)); }
-  if (pipe === "in-stock") { const v = at(dotted); return v === undefined || v === null ? true : typeof v === "number" && v > 0; }
-  return core.readPath(source, path, opts);
-}
+// the Q4 pipes (excerpt-fallback, reading-minutes, term-names:, settings:, in-stock) are in core.ts since codegen-x
+// 68004e62; older checkouts are refused (the draft copies that stood here are gone)
+if (typeof core.EXCERPT_WORDS !== "number") throw new Error(`${coreTs}: core.ts without the wp-fasty pipes (codegen-x >= 68004e62)`);
+const readPath = (source: unknown, path: string, opts: J = {}): unknown => core.readPath(source, path, opts);
 
 const T = "2026-03-30T12:00:00Z";
 const minus = (m: number) => new Date(Date.parse(T) - m * 60000).toISOString().replace(/\.000Z$/, "Z");
@@ -107,6 +84,7 @@ add("reading-minutes 3 words", entry, "content|reading-minutes");
 add("reading-minutes no content", { ...entry, content: undefined }, "content|reading-minutes");
 add("term-names", entry, "terms|term-names:product_cat");
 add("term-names none", entry, "terms|term-names:category");
+add("term-names of a map is absent", { ...entry, terms: { product_cat: { taxonomy: "product_cat", term_id: "product_cat-2" } } }, "terms|term-names:product_cat");
 add("settings fallback", entry, "metadata.currency.value|settings:currency");
 add("settings own wins", { ...entry, metadata: { currency: { value: "EUR" } } }, "metadata.currency.value|settings:currency");
 add("in-stock 0", entry, "metadata.stock.value|in-stock");
@@ -116,7 +94,7 @@ add("no options: media undefined", entry, "featured_media_id|media", {});
 
 const out = {
   draft: "draft, заменить на vectors из @ui8kit/contract",
-  source: `codegen-x packages/compose-gen/runtimes/core/assets/app/core.ts @ ${rev || "?"} (+ Q4 draft pipes in tools/codex/readpath-vectors.ts)`,
+  source: `codegen-x packages/compose-gen/runtimes/core/assets/app/core.ts @ ${rev || "?"}`,
   now: core.DEMO_NOW, default_locale: core.DEFAULT_LOCALE, opts, cases,
 };
 writeFileSync(join(root, "tests/fixtures/codex-draft/readpath.json"), `${JSON.stringify(out, null, 1)}\n`);

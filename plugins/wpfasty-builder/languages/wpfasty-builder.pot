@@ -1,0 +1,322 @@
+# Copyright (C) 2026 alexy-os
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP FastY Builder 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpfasty-builder\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-28T19:02:03+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: wpfasty-builder\n"
+
+#. Plugin Name of the plugin
+#: wpfasty-builder.php
+msgid "WP FastY Builder"
+msgstr ""
+
+#. Description of the plugin
+#: wpfasty-builder.php
+msgid "Drag-and-drop page builder for WP FastY Latte themes, in wp-admin only. Pages are saved"
+msgstr ""
+
+#. Author of the plugin
+#: wpfasty-builder.php
+msgid "alexy-os"
+msgstr ""
+
+#: src/Admin.php:42
+#: src/Admin.php:43
+#: src/Admin.php:262
+msgid "Builder"
+msgstr ""
+
+#: src/Admin.php:49
+#: src/Admin.php:50
+#: src/Admin.php:308
+msgid "Builder sources"
+msgstr ""
+
+#: src/Admin.php:79
+msgid "Edit with Builder"
+msgstr ""
+
+#: src/Admin.php:123
+msgid "Add New with Builder"
+msgstr ""
+
+#: src/Admin.php:226
+msgid "Dark mode"
+msgstr ""
+
+#: src/Admin.php:244
+msgid "Sorry, you are not allowed to use the builder."
+msgstr ""
+
+#: src/Admin.php:248
+msgid "Loading the builder…"
+msgstr ""
+
+#: src/Admin.php:253
+msgid "The editor build is missing: run the editor build (plugins/wpfasty-builder/editor)."
+msgstr ""
+
+#: src/Admin.php:266
+msgid "Choose a page to build. Pages with a published layout render it on the front end."
+msgstr ""
+
+#: src/Admin.php:274
+msgid "built"
+msgstr ""
+
+#: src/Admin.php:289
+msgid "New page"
+msgstr ""
+
+#: src/Admin.php:306
+#: src/Admin.php:360
+msgid "Sorry, you are not allowed to manage builder sources."
+msgstr ""
+
+#: src/Admin.php:313
+msgid "Source"
+msgstr ""
+
+#: src/Admin.php:314
+msgid "Collections"
+msgstr ""
+
+#: src/Admin.php:331
+msgid "Import a remote source"
+msgstr ""
+
+#. translators: %1$s: site engine (latte or twig)
+#: src/Admin.php:335
+#, php-format
+msgid "The URL must be a %1$s block registry (catalog.json + blocks.zip), e.g. https://registry.buildy.tw/%1$s/wpfasty/v1.0.0/."
+msgstr ""
+
+#: src/Admin.php:339
+msgid "Remote templates compile through an allowlist of tags and functions."
+msgstr ""
+
+#: src/Admin.php:344
+msgid "Id"
+msgstr ""
+
+#: src/Admin.php:348
+msgid "URL"
+msgstr ""
+
+#: src/Admin.php:352
+msgid "Import"
+msgstr ""
+
+#. translators: 1: number of blocks, 2: number of collections
+#: src/Admin.php:372
+#, php-format
+msgid "Imported %1$d blocks and %2$d collections."
+msgstr ""
+
+#: src/Compiler.php:162
+msgid "View project"
+msgstr ""
+
+#: src/Compiler.php:163
+msgid "View product"
+msgstr ""
+
+#: src/Compiler.php:164
+msgid "Read more"
+msgstr ""
+
+#: src/Front.php:69
+msgid "This preview link has expired."
+msgstr ""
+
+#: src/Links.php:154
+msgid "Mon"
+msgstr ""
+
+#: src/Links.php:154
+msgid "Tue"
+msgstr ""
+
+#: src/Links.php:155
+msgid "Wed"
+msgstr ""
+
+#: src/Links.php:155
+msgid "Thu"
+msgstr ""
+
+#: src/Links.php:156
+msgid "Fri"
+msgstr ""
+
+#: src/Links.php:156
+msgid "Sat"
+msgstr ""
+
+#: src/Links.php:157
+msgid "Sun"
+msgstr ""
+
+#: src/Links.php:274
+msgid "Open now"
+msgstr ""
+
+#: src/Links.php:275
+msgid "Closed now"
+msgstr ""
+
+#: src/Links.php:380
+msgid "Home"
+msgstr ""
+
+#: src/Links.php:383
+msgid "Posts"
+msgstr ""
+
+#: src/Links.php:439
+msgid "Call"
+msgstr ""
+
+#: src/Links.php:439
+#: src/Links.php:452
+msgid "Email"
+msgstr ""
+
+#: src/Links.php:440
+msgid "WhatsApp"
+msgstr ""
+
+#: src/Links.php:440
+msgid "Telegram"
+msgstr ""
+
+#: src/Links.php:441
+msgid "Map"
+msgstr ""
+
+#: src/Links.php:451
+msgid "Site name"
+msgstr ""
+
+#: src/Links.php:451
+msgid "Phone"
+msgstr ""
+
+#: src/Links.php:452
+msgid "Address"
+msgstr ""
+
+#: src/Links.php:453
+msgid "Opening hours"
+msgstr ""
+
+#: src/Links.php:459
+msgid "Year"
+msgstr ""
+
+#: src/Links.php:460
+msgid "Today"
+msgstr ""
+
+#: src/Pager.php:83
+msgid "Pages of posts"
+msgstr ""
+
+#. translators: summary line of a pager: {0} is the current page, {1} the number of pages (keep the braces).
+#: src/Pager.php:85
+msgid "Page {0} of {1}"
+msgstr ""
+
+#: src/Pager.php:86
+msgid "Previous page"
+msgstr ""
+
+#: src/Pager.php:87
+msgid "Next page"
+msgstr ""
+
+#. translators: accessible name of a page number button: {0} is the page number (keep the braces).
+#: src/Pager.php:89
+msgid "Page {0}"
+msgstr ""
+
+#: src/Pages.php:25
+msgid "Enter a title for the page."
+msgstr ""
+
+#: src/Pages.php:33
+msgid "This starter set is not available on this site."
+msgstr ""
+
+#: src/Records.php:265
+msgid "In stock"
+msgstr ""
+
+#: src/Records.php:265
+msgid "Out of stock"
+msgstr ""
+
+#: src/Rest.php:93
+#: src/Rest.php:159
+#: src/Store.php:102
+msgid "Unknown source."
+msgstr ""
+
+#: src/Rest.php:134
+msgid "You cannot publish pages."
+msgstr ""
+
+#: src/Rest.php:185
+msgid "Unknown block or variant."
+msgstr ""
+
+#: src/Seeder.php:42
+msgid "Blog"
+msgstr ""
+
+#: src/Sources.php:88
+msgid "WP FastY Builder: the active theme has no WP FastY renderer; landings do not render."
+msgstr ""
+
+#. translators: 1: site engine (latte or twig), 2: engines of this plugin build
+#: src/Sources.php:98
+#, php-format
+msgid "WP FastY Builder: this site renders %1$s, but this plugin build ships %2$s blocks only. Install the %1$s build of the plugin."
+msgstr ""
+
+#. translators: 1: source id, 2: its runtime, 3: site engine
+#: src/Sources.php:113
+#, php-format
+msgid "WP FastY Builder: source %1$s holds %2$s blocks; this site renders %3$s. Import the %3$s registry of this source."
+msgstr ""
+
+#. translators: 1: site engine, 2: list of source:template
+#: src/Sources.php:125
+#, php-format
+msgid "WP FastY Builder: blocks missing from the %1$s sources render nothing: %2$s"
+msgstr ""
+
+#: src/Sources.php:154
+msgid "The active theme has no WP FastY renderer."
+msgstr ""
+
+#: src/Sources.php:157
+msgid "The source id must be a short lowercase name other than ui8kit."
+msgstr ""
+
+#: src/Sources.php:164
+msgid "The source URL is not a valid public http(s) URL."
+msgstr ""
+
+#: src/Store.php:125
+msgid "The layout is not a valid entry."
+msgstr ""

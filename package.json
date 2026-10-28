@@ -31,7 +31,7 @@
     "css:build": "bun run --cwd .workspaces/css-build build",
     "lint:design": "bun tools/lint-design.ts",
     "icons": "bun tools/icons.ts",
-    "i18n:pot": "for t in latte latte-press latte-folio latte-shop latte-skin; do wp i18n make-pot themes/$t themes/$t/languages/$t.pot --domain=$t --exclude=vendor,~cache,node_modules; done",
+    "i18n:pot": "for t in latte latte-press latte-folio latte-shop latte-skin; do wp i18n make-pot themes/$t themes/$t/languages/$t.pot --domain=$t --exclude=vendor,~cache,node_modules; done && wp i18n make-pot plugins/wpfasty-builder plugins/wpfasty-builder/languages/wpfasty-builder.pot --domain=wpfasty-builder --exclude=editor,node_modules,sources,primitives,assets,starters",
     "perf:queries": "wp eval-file tools/perf/queries.php",
     "manifest:validate": "bun tools/manifest/validate.ts",
     "registry:build": "bun tools/builder/registry-build.ts",

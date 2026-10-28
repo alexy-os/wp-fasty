@@ -1,0 +1,440 @@
+{
+  "$comment": "Vectors of the wp-fasty readPath pipes (excerpt-fallback, settings:<key>, in-stock, reading-minutes, term-names:<tax>): `want` is the output of wp-fasty plugins/wpfasty-builder/src/Codex/ReadPath.php (godudy/wpfasty 50b8fbf) run under PHP 8.4 on the same source, path and opts (null = absent). A content \"W<n>\" stands for n words \"w\".",
+  "opts": {
+    "settings": {
+      "currency": "EUR",
+      "blogname": "Fasty",
+      "zero": 0
+    },
+    "terms": [
+      {
+        "id": "t-news",
+        "taxonomy_id": "category",
+        "locale": "en",
+        "name": "News",
+        "slug": "news"
+      },
+      {
+        "id": "t-news",
+        "taxonomy_id": "category",
+        "locale": "fr",
+        "name": "Actualités",
+        "slug": "actualites"
+      },
+      {
+        "id": "t-guides",
+        "taxonomy_id": "category",
+        "locale": "en",
+        "name": "Guides",
+        "slug": "guides"
+      },
+      {
+        "id": "t-php",
+        "taxonomy_id": "post_tag",
+        "locale": "en",
+        "name": "PHP",
+        "slug": "php"
+      },
+      {
+        "id": "t-noname",
+        "taxonomy_id": "post_tag",
+        "locale": "en",
+        "slug": "noname"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "label": "excerpt given",
+      "source": {
+        "excerpt": "  A short excerpt.  ",
+        "content": "<p>ignored</p>"
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": "  A short excerpt.  "
+    },
+    {
+      "label": "excerpt blank, short content",
+      "source": {
+        "excerpt": "   ",
+        "content": "<p>Hello <b>wide</b>\n world</p>"
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": "Hello wide world"
+    },
+    {
+      "label": "excerpt absent, long content",
+      "source": {
+        "content": "<h2>Title</h2><p>one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty twenty-one twenty-two twenty-three twenty-four twenty-five twenty-six</p>"
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": "Title one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty twenty-one twenty-two twenty-three…"
+    },
+    {
+      "label": "exactly 24 words",
+      "source": {
+        "content": "a b c d e f g h i j k l m n o p q r s t u v w x"
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": "a b c d e f g h i j k l m n o p q r s t u v w x"
+    },
+    {
+      "label": "excerpt null, no content",
+      "source": {
+        "excerpt": null
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": null
+    },
+    {
+      "label": "content only tags",
+      "source": {
+        "excerpt": "",
+        "content": "<p></p><img src=x>"
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": null
+    },
+    {
+      "label": "glued tags",
+      "source": {
+        "content": "one<br>two</p><p>three"
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": "one two three"
+    },
+    {
+      "label": "excerpt not a string",
+      "source": {
+        "excerpt": 42,
+        "content": "fallback words"
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": "fallback words"
+    },
+    {
+      "label": "content a number",
+      "source": {
+        "content": 1234
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": "1234"
+    },
+    {
+      "label": "unicode spaces",
+      "source": {
+        "content": "un deux trois\tquatre"
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": "un deux trois quatre"
+    },
+    {
+      "label": "settings: value present",
+      "source": {
+        "metadata": {
+          "currency": {
+            "value": "USD"
+          }
+        }
+      },
+      "path": "metadata.currency.value|settings:currency",
+      "want": "USD"
+    },
+    {
+      "label": "settings: value absent",
+      "source": {
+        "metadata": {}
+      },
+      "path": "metadata.currency.value|settings:currency",
+      "want": "EUR"
+    },
+    {
+      "label": "settings: value null",
+      "source": {
+        "site": null
+      },
+      "path": "site|settings:blogname",
+      "want": "Fasty"
+    },
+    {
+      "label": "settings: zero kept",
+      "source": {
+        "n": 0
+      },
+      "path": "n|settings:zero",
+      "want": 0
+    },
+    {
+      "label": "settings: empty string kept",
+      "source": {
+        "n": ""
+      },
+      "path": "n|settings:blogname",
+      "want": ""
+    },
+    {
+      "label": "settings: unknown key",
+      "source": {},
+      "path": "n|settings:nope",
+      "want": null
+    },
+    {
+      "label": "in-stock absent",
+      "source": {},
+      "path": "metadata.stock.value|in-stock",
+      "want": true
+    },
+    {
+      "label": "in-stock null",
+      "source": {
+        "stock": null
+      },
+      "path": "stock|in-stock",
+      "want": true
+    },
+    {
+      "label": "in-stock 3",
+      "source": {
+        "stock": 3
+      },
+      "path": "stock|in-stock",
+      "want": true
+    },
+    {
+      "label": "in-stock 0",
+      "source": {
+        "stock": 0
+      },
+      "path": "stock|in-stock",
+      "want": false
+    },
+    {
+      "label": "in-stock -1",
+      "source": {
+        "stock": -1
+      },
+      "path": "stock|in-stock",
+      "want": false
+    },
+    {
+      "label": "in-stock 0.5",
+      "source": {
+        "stock": 0.5
+      },
+      "path": "stock|in-stock",
+      "want": true
+    },
+    {
+      "label": "in-stock string 5",
+      "source": {
+        "stock": "5"
+      },
+      "path": "stock|in-stock",
+      "want": false
+    },
+    {
+      "label": "in-stock true",
+      "source": {
+        "stock": true
+      },
+      "path": "stock|in-stock",
+      "want": false
+    },
+    {
+      "label": "reading empty",
+      "source": {
+        "content": ""
+      },
+      "path": "content|reading-minutes",
+      "want": 0
+    },
+    {
+      "label": "reading one word",
+      "source": {
+        "content": "<p>word</p>"
+      },
+      "path": "content|reading-minutes",
+      "want": 1
+    },
+    {
+      "label": "reading absent",
+      "source": {},
+      "path": "content|reading-minutes",
+      "want": null
+    },
+    {
+      "label": "reading null",
+      "source": {
+        "content": null
+      },
+      "path": "content|reading-minutes",
+      "want": null
+    },
+    {
+      "label": "reading not text",
+      "source": {
+        "content": [
+          "a"
+        ]
+      },
+      "path": "content|reading-minutes",
+      "want": 0
+    },
+    {
+      "label": "reading 200",
+      "source": {
+        "content": "W200"
+      },
+      "path": "content|reading-minutes",
+      "want": 1
+    },
+    {
+      "label": "reading 201",
+      "source": {
+        "content": "W201"
+      },
+      "path": "content|reading-minutes",
+      "want": 2
+    },
+    {
+      "label": "reading 450",
+      "source": {
+        "content": "W450"
+      },
+      "path": "content|reading-minutes",
+      "want": 3
+    },
+    {
+      "label": "term-names category",
+      "source": {
+        "terms": [
+          {
+            "taxonomy": "category",
+            "term_id": "t-news"
+          },
+          {
+            "taxonomy": "post_tag",
+            "term_id": "t-php"
+          },
+          {
+            "taxonomy": "category",
+            "term_id": "t-guides"
+          }
+        ]
+      },
+      "path": "terms|term-names:category",
+      "want": [
+        "News",
+        "Guides"
+      ]
+    },
+    {
+      "label": "term-names fr",
+      "source": {
+        "locale": "fr",
+        "terms": [
+          {
+            "taxonomy": "category",
+            "term_id": "t-news"
+          }
+        ]
+      },
+      "path": "terms|term-names:category",
+      "want": [
+        "Actualités"
+      ]
+    },
+    {
+      "label": "term-names unknown term and no name",
+      "source": {
+        "terms": [
+          {
+            "taxonomy": "post_tag",
+            "term_id": "t-missing"
+          },
+          {
+            "taxonomy": "post_tag",
+            "term_id": "t-noname"
+          },
+          {
+            "taxonomy": "post_tag",
+            "term_id": "t-php"
+          }
+        ]
+      },
+      "path": "terms|term-names:post_tag",
+      "want": [
+        "PHP"
+      ]
+    },
+    {
+      "label": "term-names none of the taxonomy",
+      "source": {
+        "terms": [
+          {
+            "taxonomy": "post_tag",
+            "term_id": "t-php"
+          }
+        ]
+      },
+      "path": "terms|term-names:category",
+      "want": []
+    },
+    {
+      "label": "term-names absent",
+      "source": {},
+      "path": "terms|term-names:category",
+      "want": null
+    },
+    {
+      "label": "term-names not a list",
+      "source": {
+        "terms": "x"
+      },
+      "path": "terms|term-names:category",
+      "want": null
+    },
+    {
+      "label": "excerpt only a no-break space",
+      "source": {
+        "excerpt": " ",
+        "content": "x y"
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": " "
+    },
+    {
+      "label": "excerpt only tab and newline",
+      "source": {
+        "excerpt": "\t\n",
+        "content": "x y"
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": "x y"
+    },
+    {
+      "label": "content true",
+      "source": {
+        "content": true
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": "1"
+    },
+    {
+      "label": "content false",
+      "source": {
+        "content": false
+      },
+      "path": "excerpt|excerpt-fallback",
+      "want": null
+    },
+    {
+      "label": "reading markup",
+      "source": {
+        "content": "<p>alpha</p><p>beta</p>"
+      },
+      "path": "content|reading-minutes",
+      "want": 1
+    }
+  ]
+}

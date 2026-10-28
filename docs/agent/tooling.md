@@ -34,12 +34,14 @@ job `wordpress` (WP 7.1.3 + MariaDB: Theme Check 20260901 on the unpacked zip an
 | `composer test` / `bun run test` | PHPUnit (`tests/`, bootstrap stubs WP functions) | yes |
 | `composer phpcs` / `bun run phpcs` | WPCS via `phpcs.xml` (all themes) | yes |
 | `wp plugin activate wpfasty-types` | companion plugin (post types/taxonomies/meta/metaboxes) needed by folio/shop | – |
-| `bun run i18n:pot` | regenerates `themes/*/languages/*.pot` (needs wp-cli) | – |
+| `bun run i18n:pot` | regenerates `themes/*/languages/*.pot` and `plugins/wpfasty-builder/languages/wpfasty-builder.pot` (needs wp-cli) | – |
 | `composer audit` | known-vulnerability check of PHP deps | yes |
 | `bash tools/playground-build.sh` | builds `playground/*.zip` (themes + demo seeders + images; gitignored, built in CI by the Playground workflow) | yes (Playground workflow) |
 | `wp eval-file tools/perf/queries.php` | SAVEQUERIES: DB query count on archive must not grow with N posts | – (needs WP+DB) |
 | `wp eval-file tools/perf/queries.php macros [2] [6]` | builder record tokens (`{post:}`, `{product:}`, `{term:}`, `{price:}`, `{stock:}`, `tools/perf/macros-queries.php`): a page of 2 vs 6 blocks naming one record of each type, rendered as `Front` does (`Links::prime` + `Links::walk`) — same query count; needs a purchasable type (latte-shop + wpfasty-types) | yes (wordpress job, latte-shop) |
 | `wp eval-file tools/perf/queries.php richtext [2] [6]` | builder richtext (`tools/perf/richtext-queries.php`): a page with 2 vs 6 richtext blocks gets its bound data as `Front::bound` does (the queried page as one Codex record, `the_content` through its filters) — same query count, every block has the body | yes (wordpress job, latte-press) |
+| `wp eval-file tools/perf/queries.php pager [2] [6]` | builder pager (`tools/perf/pager-queries.php`): a `posts:listPaged` block bound to posts, 2 vs 6 per page, pages 1 and 2, rendered as `Front::bound` does (one `WP_Query` with found rows per block) — same query count, the pager value and the page's posts checked | yes (wordpress job, latte-press) |
+| `bun tools/codex/readpath-shared.ts [--cgx <codegen checkout>]` | shared ReadPath/pipe vectors `tests/fixtures/codex-shared/readpath-wpfasty*.json` through codegen-x `core.readPath` (TS); PHPUnit `CodexReadPathSharedTest` runs the same files through `Codex\ReadPath`; with `--cgx` the codegen copy must be byte-equal | yes (token branch) |
 | Theme Check | see [wporg-theme-review.md](wporg-theme-review.md#running-theme-check-locally-verified) | – (needs WP) |
 
 ## Previews

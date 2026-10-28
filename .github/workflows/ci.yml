@@ -91,11 +91,13 @@ jobs:
             git -C /tmp/cgx fetch -q --depth 1 origin "$C" && git -C /tmp/cgx checkout -q FETCH_HEAD
             (cd /tmp/cgx && bun install --frozen-lockfile)
             bun tools/builder/export-ui8kit.ts --check --cgx /tmp/cgx
+            # shared readPath vectors: codegen-x core.ts gives what ReadPath.php gives (PHP side: tests/CodexReadPathSharedTest)
+            bun tools/codex/readpath-shared.ts --cgx /tmp/cgx
           else
             bun tools/builder/export-ui8kit.ts --check --offline
           fi
 
-      - name: Builder block previews — a light and a dark WebP per variant (480 × 2), size as listed, ≤ 10 KB (shots are outside source.digest)
+      - name: Builder block previews — a light and a dark WebP per variant (481 × 2), size as listed, ≤ 10 KB (shots are outside source.digest)
         run: |
           bun tools/builder/previews.ts --check
           echo "Block previews: $(bun tools/builder/previews.ts --check)" >> "$GITHUB_STEP_SUMMARY"
@@ -374,6 +376,10 @@ jobs:
           out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/queries.php" richtext 2 6 2>&1) || { echo "$out"; exit 1; }
           echo "$out"
           echo "Builder richtext: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
+          # builder posts pager (posts/listPaged bound to posts): same queries for 2 and 6 posts a page, page 1 = page 2
+          out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/queries.php" pager 2 6 2>&1) || { echo "$out"; exit 1; }
+          echo "$out"
+          echo "Builder pager: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Builder — seed landings, smoke-render (200, no PHP notices), validate layouts with @ui8kit/contract
         run: |

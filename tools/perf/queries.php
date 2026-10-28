@@ -5,6 +5,7 @@
  * Usage: wp eval-file tools/perf/queries.php [post_type] [small] [large]
  *        wp eval-file tools/perf/queries.php macros [small] [large]   (builder record tokens, macros-queries.php)
  *        wp eval-file tools/perf/queries.php richtext [small] [large] (builder richtext, richtext-queries.php)
+ *        wp eval-file tools/perf/queries.php pager [small] [large]    (builder posts pager, pager-queries.php)
  * Counts $wpdb->num_queries (SAVEQUERIES is not needed).
  * Exit code 1 when the large page needs more queries than the small one.
  *
@@ -21,6 +22,11 @@ $wpfasty_perf_type = $args[0] ?? 'post';
 if ($wpfasty_perf_type === 'macros') {
     // builder record tokens on a page: wp eval-file tools/perf/queries.php macros [small] [large]
     require __DIR__ . '/macros-queries.php';
+    return;
+}
+if ($wpfasty_perf_type === 'pager') {
+    // builder posts pager (posts/listPaged, pages 1 and 2): wp eval-file tools/perf/queries.php pager [small] [large]
+    require __DIR__ . '/pager-queries.php';
     return;
 }
 if ($wpfasty_perf_type === 'richtext') {

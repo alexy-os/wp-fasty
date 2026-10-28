@@ -1,0 +1,41 @@
+{
+  "$comment": "wp-fasty cases of the same pipes beyond the codegen-x vectors (readpath-wpfasty.json): term-names takes a list of term refs only, never a map (core.ts Array.isArray). Same format; checked by tests/CodexReadPathSharedTest.php (PHP) and tools/codex/readpath-shared.ts (TS core.ts).",
+  "cases": [
+    {
+      "label": "term-names of a map keyed by taxonomy",
+      "source": { "terms": { "category": { "taxonomy": "category", "term_id": "t-news" } } },
+      "path": "terms|term-names:category",
+      "want": null
+    },
+    {
+      "label": "term-names of a map keyed by id",
+      "source": { "terms": { "t-news": { "taxonomy": "category", "term_id": "t-news" }, "t-guides": { "taxonomy": "category", "term_id": "t-guides" } } },
+      "path": "terms|term-names:category",
+      "want": null
+    },
+    {
+      "label": "term-names of a list, as the WordPress adapter gives it (Mapper::entry)",
+      "source": { "terms": [{ "taxonomy": "category", "term_id": "t-guides" }, { "taxonomy": "category", "term_id": "t-news" }] },
+      "path": "terms|term-names:category",
+      "want": ["Guides", "News"]
+    },
+    {
+      "label": "term-names through a scalar ends early",
+      "source": { "terms": "x" },
+      "path": "terms.list|term-names:category",
+      "want": null
+    },
+    {
+      "label": "in-stock through a scalar ends early (absent: in stock)",
+      "source": { "metadata": "x" },
+      "path": "metadata.stock.value|in-stock",
+      "want": true
+    },
+    {
+      "label": "settings through a scalar ends early",
+      "source": { "metadata": 5 },
+      "path": "metadata.currency.value|settings:currency",
+      "want": "EUR"
+    }
+  ]
+}

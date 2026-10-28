@@ -256,9 +256,14 @@ export const NO_SETTINGS: string[] = [];
 /** props the inspector never shows: the block's own id and extra classes */
 export const HIDDEN_PROPS = ["id", "className"];
 
+/** record types the WordPress adapter fills (the pager of a list: page, pages and its texts, PHP Pager); the
+ *  inspector keeps only the listed fields of such a prop (the mode), like the paths of the current record */
+export const ADAPTER_RECORDS: Record<string, string[]> = { PostPager: ["mode"] };
+
 /**
  * The config of one block: a field per prop (bindable paths wrapped in binding fields; no field for a path the record
- * of the current route fills, e.g. the richtext title and content: they come from the page), defaults per variant. The
+ * of the current route fills, e.g. the richtext title and content: they come from the page, nor for the adapter's
+ * fields of a pager, ADAPTER_RECORDS), defaults per variant. The
  * sample of the fields is every variant's sample merged, and sample keys the props or records do not declare get a
  * field typed by their value, so a text a variant shows is never reachable only through "Advanced (JSON)".
  */
@@ -274,6 +279,14 @@ export function blockConfig(block: BlockSpec, records: Record<string, RecordFiel
   }
   for (const [k, v] of Object.entries(sample)) if (!fields[k] && !HIDDEN_PROPS.includes(k)) fields[k] = fieldOf(k, typeOfSample(v), records, v);
   for (const v of block.variants) for (const c of v.current ?? []) dropPath(fields, c.path);
+  for (const p of block.props) {
+    const keep = typeof p.type === "object" && p.type.record ? ADAPTER_RECORDS[p.type.record] : undefined;
+    const f = keep ? fields[p.name] : undefined;
+    if (!keep || !f) continue;
+    if (f.type !== "object") { delete fields[p.name]; continue; }
+    for (const k of Object.keys(f.objectFields)) if (!keep.includes(k)) delete f.objectFields[k];
+    if (!Object.keys(f.objectFields).length) delete fields[p.name];
+  }
   return {
     label: block.title,
     fields,

@@ -118,7 +118,8 @@ final class ReadPath
             return (int) ceil(count(self::words($cur)) / self::WORDS_PER_MINUTE);
         }
         if (str_starts_with($pipe, 'term-names:')) {
-            if (!is_array($cur)) {
+            // a list of term refs only (codegen-x core.ts: Array.isArray), never a map keyed by taxonomy or id
+            if (!is_array($cur) || !array_is_list($cur)) {
                 return null;
             }
             $tax = substr($pipe, 11);

@@ -25,6 +25,7 @@ final class Front
         add_filter('wpfasty_context', [self::class, 'context'], 20, 2);
         add_action('wp_enqueue_scripts', [self::class, 'styles'], 20);
         add_action('template_redirect', [self::class, 'previewGuard'], 1);
+        add_action('wp_head', [Pager::class, 'head'], 5);
     }
 
     /** @param array<int, string> $roots */
@@ -108,7 +109,7 @@ final class Front
             return $context;
         }
         $entry = Store::get(self::$page, self::$preview);
-        $context['wpfb'] = $entry !== null ? self::bound($entry) : [];
+        $context['wpfb'] = $entry !== null ? self::bound($entry, $context) : [];
         // record tokens of every block ({post:}, {product:}, {term:}, {price:}, {stock:}): one query per type
         Links::prime($entry !== null ? array_column(Layout::blocks($entry), 'props') : []);
         $context['widgets']['sidebar'] = '';
@@ -116,26 +117,43 @@ final class Front
     }
 
     /**
-     * Data of every binding: [block id][path] => records.
+     * Data of every binding: [block id][path] => records; the pager group of a list block (Pager) at its path.
      *
      * @param array<string, mixed> $entry
-     * @return array<string, array<string, list<array<string, mixed>>>>
+     * @param array<string, mixed> $context the theme context (ContextFactory: `pagination` of the main query)
+     * @return array<string, array<string, mixed>>
      */
-    public static function bound(array $entry): array
+    public static function bound(array $entry, array $context = []): array
     {
         $catalog = Sources::catalog((string) ($entry['metadata']['source']['value'] ?? ''));
         $out = [];
         foreach (Layout::blocks($entry) as $b) {
             $kinds = $catalog?->bindable((string) $b['block'], (string) $b['variant']) ?? [];
+            // the pager (PostGrid `pager`): asked for by the variant / layout mode, filled here, null on one page
+            $pager = $catalog?->pager((string) $b['block'], (string) $b['variant']);
+            $sample = (array) ($catalog?->variant((string) $b['block'], (string) $b['variant'])['props'] ?? []);
+            $paged = $pager !== null && Pager::active(Layout::merge($sample, (array) $b['props']), $pager['path']);
             foreach ($b['bindings'] as $path => $bind) {
                 if (is_array($bind) && isset($kinds[(string) $path])) {
                     $slot = $catalog?->slot((string) $b['block'], (string) $b['variant'], (string) $path);
+                    if ($paged && (string) $path === $pager['list']) {
+                        // the block's own query: the page of the request, its pages from the found rows of that query
+                        $page = Pager::request();
+                        [$records, $pages] = DataSources::paged($bind, $kinds[(string) $path], $slot, $page);
+                        $out[(string) $b['id']][(string) $path] = $records;
+                        $out[(string) $b['id']][$pager['path']] = Pager::value($page, $pages);
+                        continue;
+                    }
                     $out[(string) $b['id']][(string) $path] = DataSources::resolve(
                         $bind,
                         $kinds[(string) $path],
                         $slot,
                     );
                 }
+            }
+            if ($pager !== null && !array_key_exists($pager['path'], $out[(string) $b['id']] ?? [])) {
+                // no own query: the main query (ContextFactory pagination, else max_num_pages); a page has one page
+                $out[(string) $b['id']][$pager['path']] = $paged ? Pager::value(...Pager::main($context)) : null;
             }
             // the record of the current route (the queried post: richtext title, the_content…), read once per page
             $current = $catalog?->currentValues(

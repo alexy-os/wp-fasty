@@ -104,6 +104,15 @@ final class Layout
             foreach ([...array_keys($bindings), ...array_keys($catalog->current($block, $variant))] as $path) {
                 self::unset($props, explode('.', (string) $path));
             }
+            // the pager group is the adapter's (page, pages, texts: Pager); a layout keeps only its mode
+            $pager = $catalog->pager($block, $variant);
+            if ($pager !== null) {
+                $mode = is_array($props[$pager['path']] ?? null) ? ($props[$pager['path']]['mode'] ?? null) : null;
+                unset($props[$pager['path']]);
+                if (in_array($mode, Pager::MODES, true)) {
+                    $props[$pager['path']] = ['mode' => $mode];
+                }
+            }
             $blocks[] = [
                 'id' => $id,
                 'block' => $block,

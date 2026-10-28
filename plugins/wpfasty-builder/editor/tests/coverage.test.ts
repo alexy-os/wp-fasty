@@ -10,7 +10,7 @@ import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { BlockSpec, Json, RecordField } from "../src/types";
-import { blockConfig, NO_SETTINGS, type Field } from "../src/fields/schema";
+import { ADAPTER_RECORDS, blockConfig, NO_SETTINGS, type Field } from "../src/fields/schema";
 import { isObj, missingBlocks } from "../src/util";
 
 const plugin = join(import.meta.dir, "../..");
@@ -66,7 +66,7 @@ for (const runtime of ["latte", "twig"]) {
     const uses = usesOf(cat);
 
     test("the sources are all there", () => {
-      expect(uses.filter((u) => u.where === "card").length).toBe(480);
+      expect(uses.filter((u) => u.where === "card").length).toBe(481);
       expect(new Set(uses.filter((u) => u.where.startsWith("template page")).map((u) => u.where)).size).toBe(63);
       expect(uses.filter((u) => u.where.startsWith("starter")).length).toBeGreaterThan(0);
       expect(uses.filter((u) => u.where.startsWith("landing")).length).toBeGreaterThan(0);
@@ -102,6 +102,14 @@ for (const runtime of ["latte", "twig"]) {
           const out: string[] = [];
           for (const [k, v] of Object.entries(isObj(props) ? props : {})) {
             if (k === "id" || k === "className") continue;
+            // a prop the WordPress adapter fills (the pager: page, pages, texts) is reachable only through its kept fields
+            const prop = b.props.find((p) => p.name === k);
+            const keep = prop && typeof prop.type === "object" && prop.type.record ? ADAPTER_RECORDS[prop.type.record] : undefined;
+            if (keep && isObj(v)) {
+              const kept = Object.fromEntries(Object.entries(v).filter(([f]) => keep.includes(f)));
+              if (cfg.fields[k]) unreached(cfg.fields[k], kept, k, out);
+              continue;
+            }
             if (cfg.fields[k]) unreached(cfg.fields[k], v, k, out);
             else out.push(`${k}: no field`);
           }

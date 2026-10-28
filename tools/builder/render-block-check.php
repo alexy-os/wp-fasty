@@ -38,6 +38,7 @@ if (!isset($args['live'])) {
     }
     $fail = 0;
     $sample = static fn (array $slot): array => (array) ($slot['sample'] ?? []);
+    $pagerOf = static fn (int $pages): ?array => WPFastyBuilder\Pager::value(2, $pages);
     foreach (['latte', 'twig'] as $engine) {
         $src = new WPFastyBuilder\Source\LocalSource('ui8kit', $root . '/plugins/wpfasty-builder/sources/ui8kit/' . $engine, $engine);
         $catalog = new WPFastyBuilder\Catalog($src->catalog());
@@ -63,6 +64,12 @@ if (!isset($args['live'])) {
                 foreach ($catalog->currentValues($b['block'], $b['variant'], $sample) as $path => $value) {
                     $wpfb[$b['id']][$path] = $value;
                 }
+                // the pager the adapter fills (posts listPaged): page 2 of 5, on the page and in the fragment
+                $at = $catalog->pager($b['block'], $b['variant']);
+                if ($at !== null) {
+                    $props = (array) ($catalog->variant($b['block'], $b['variant'])['props'] ?? []);
+                    $wpfb[$b['id']][$at['path']] = WPFastyBuilder\Pager::active($props, $at['path']) ? $pagerOf(5) : null;
+                }
             }
             if ($engine === 'latte') {
                 $l = new Latte\Engine();
@@ -77,7 +84,7 @@ if (!isset($args['live'])) {
             }
             $blocks = $html['blocks']('<!doctype html><html><body>' . $page . '</body></html>');
             foreach ($chunk as $b) {
-                $out = WPFastyBuilder\Fragment::render($catalog, 'ui8kit', $b, [], static fn (): array => [], static fn (string $t, array $p): string => $r->render('ui8kit', $t, $p), $sample);
+                $out = WPFastyBuilder\Fragment::render($catalog, 'ui8kit', $b, [], static fn (): array => [], static fn (string $t, array $p): string => $r->render('ui8kit', $t, $p), $sample, null, static fn (): ?array => $pagerOf(5));
                 $frag = $out === null ? null : $html['inner']($out['html']);
                 if ($frag === null || ($blocks[$b['id']] ?? null) !== $frag || str_contains($frag, '<!-- wpfasty-builder')) {
                     $fail++;

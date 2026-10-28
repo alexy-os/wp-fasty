@@ -58,7 +58,7 @@ final class PreviewsTest extends TestCase
                     $n++;
                 }
             }
-            $this->assertSame(480, $n, $runtime);
+            $this->assertSame(481, $n, $runtime);
         }
     }
 

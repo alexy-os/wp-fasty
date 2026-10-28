@@ -22,6 +22,11 @@ final class Fragment
      * @param (callable(array<string, mixed>): array<string, mixed>)|null       $current  the record of the current
      *        route for a current-scope slot (Catalog::currentSlot); null: none (those paths stay null, as on a page
      *        without the record)
+     * @param callable|null                                                   $paged    (binding, kind, slot) →
+     *        [records, pages]: the first page of the list a pager pages and its number of pages (DataSources::paged
+     *        on page 1); null: the list resolves as any binding, one page
+     * @param (callable(int): (array<string, mixed>|null))|null $pager the pager group for a number of pages (the
+     *        editor previews page 1: Pager::value(1, pages)); null: no pager
      * @return array{id: string, html: string, issues: list<array{code: string, path: string, message: string}>}|null
      *         null when the block or variant is unknown or its template is not of the catalog's runtime
      */
@@ -33,6 +38,8 @@ final class Fragment
         callable $resolve,
         callable $render,
         ?callable $current = null,
+        ?callable $paged = null,
+        ?callable $pager = null,
     ): ?array {
         [$entry, $issues] = Layout::normalize(['blocks' => [$input]], $sourceId, $catalog, $dataSources, [
             'id' => 'fragment',
@@ -57,8 +64,18 @@ final class Fragment
         $block = (string) $b['block'];
         $variantId = (string) $b['variant'];
         $kinds = $catalog->bindable($block, $variantId);
+        // the pager group (Pager): filled as on the page, null when the mode is not `pages` or on one page
+        $at = $catalog->pager($block, $variantId);
+        $active = $at !== null && $pager !== null
+            && Pager::active(Layout::merge((array) ($variant['props'] ?? []), (array) $b['props']), $at['path']);
+        $pages = 1;
         foreach ($b['bindings'] as $path => $bind) {
             $path = (string) $path;
+            if ($active && $paged !== null && $path === $at['list'] && is_array($bind) && isset($kinds[$path])) {
+                [$records, $pages] = $paged($bind, $kinds[$path], $catalog->slot($block, $variantId, $path));
+                Layout::set($props, explode('.', $path), $records);
+                continue;
+            }
             Layout::set(
                 $props,
                 explode('.', $path),
@@ -71,6 +88,9 @@ final class Fragment
             foreach ($catalog->currentValues($block, $variantId, $current) as $path => $value) {
                 Layout::set($props, explode('.', $path), $value);
             }
+        }
+        if ($at !== null) {
+            Layout::set($props, explode('.', $at['path']), $active ? $pager($pages) : null);
         }
         $issues = array_values(array_filter(
             $issues,

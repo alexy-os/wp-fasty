@@ -58,6 +58,11 @@ both published registries into a real WordPress (latte-shop on latte.zip, latte-
     queried post (`DataSources::current`: Codex entry, `content` = `the_content` after its filters). Trusted markup
     (`TrustedHtml`, `{"__html": …}`, the `|html` pipe) only comes from there: layout props drop `__html` keys and
     catalog sample props lose the marker (`Layout::untrust`), so markup from a layout or a remote catalog is escaped
+  - `PostPager` props (codegen-x since `4d33299f`: `posts:listPaged`) — filled by the plugin, not by a layout: a layout
+    keeps only `mode` (`none` | `pages`, `Layout::normalize`); with `mode: pages` and a bound list the block's own
+    `WP_Query` runs with found rows on the requested page (`paged`, `page` on a static front page) and `Pager::value`
+    gives `page`, `pages` and translated labels (text domain `wpfasty-builder`); `pages ≤ 1` → no pager. The block has
+    no links (codegen buttons), so the plugin prints `<link rel=prev|next>` (`esc_url(get_pagenum_link())`) in the head
   - `"archive": {"file": "blocks.zip", "bytes": n, "sha256": "…"}`
   - variant templates in the runtime's extension: `blocks/<name>.latte` or `blocks/<name>.html.twig`
 - `blocks.zip` — `blocks/` and `ui/` of that runtime only (`.latte` or `.twig`, `.json`, `.md`; no PHP). The PHP

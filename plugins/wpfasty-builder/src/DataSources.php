@@ -138,21 +138,47 @@ final class DataSources
      */
     public static function resolve(array $binding, string $kind, ?array $slot = null): array
     {
+        return self::run($binding, $slot, null)[0];
+    }
+
+    /**
+     * Records of one page of a binding and the number of pages (a list block with a pager, Pager): the binding's
+     * `limit` per page, page $page of the same query (paged, found rows of that one query: no query per item, no
+     * second list query). A term source has one page.
+     *
+     * @param array{source: string, limit?: int, term?: string, sale?: bool, map?: array<string, string>} $binding
+     * @param array<string, mixed>|null $slot
+     * @return array{0: list<array<string, mixed>>, 1: int}
+     */
+    public static function paged(array $binding, string $kind, ?array $slot, int $page): array
+    {
+        return self::run($binding, $slot, max(1, $page));
+    }
+
+    /**
+     * @param array<string, mixed>      $binding
+     * @param array<string, mixed>|null $slot
+     * @return array{0: list<array<string, mixed>>, 1: int} records, pages
+     */
+    private static function run(array $binding, ?array $slot, ?int $page): array
+    {
         $m = self::models()[$binding['source']] ?? null;
         $site = self::site();
         if ($m === null || $site === null || $slot === null) {
-            return [];
+            return [[], 1];
         }
         $mapper = new Mapper($site);
         $limit = max(1, min(self::MAX, (int) ($binding['limit'] ?? 6)));
-        $entries = $m['term'] ? self::terms($m, $limit, $mapper) : self::posts($m, $binding, $limit, $mapper, $site);
+        [$entries, $pages] = $m['term']
+            ? [self::terms($m, $limit, $mapper), 1]
+            : self::posts($m, $binding, $limit, $mapper, $site, $page);
         $plan = self::plan($slot, $m, (array) ($binding['map'] ?? []));
         $opts = self::opts($plan, $entries, $mapper, $site);
         $out = [];
         foreach ($entries as $e) {
             $out[] = self::record(self::project($e, $m), $plan, $opts, $m);
         }
-        return $out;
+        return [$out, $pages];
     }
 
     /**
@@ -324,10 +350,17 @@ final class DataSources
     /**
      * @param array<string, mixed> $m
      * @param array<string, mixed> $binding
-     * @return list<array<string, mixed>>
+     * @param integer|null         $page    a page of the list (with its number of pages), null: the first $limit
+     * @return array{0: list<array<string, mixed>>, 1: int} entries, pages
      */
-    private static function posts(array $m, array $binding, int $limit, Mapper $mapper, Site $site): array
-    {
+    private static function posts(
+        array $m,
+        array $binding,
+        int $limit,
+        Mapper $mapper,
+        Site $site,
+        ?int $page = null,
+    ): array {
         $kind = (string) $m['kind'];
         $args = [
             'post_type' => (string) $m['post_type'],
@@ -351,13 +384,24 @@ final class DataSources
             // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- small demo catalogs, bounded by limit.
             $args['meta_query'] = [['key' => $saleKey, 'value' => 0, 'compare' => '>', 'type' => 'NUMERIC']];
         }
+        $pages = 1;
+        if ($page === null) {
+            $posts = get_posts($args);
+        } else {
+            // one query with its found rows (get_posts() drops them): the page and the number of pages
+            $q = new \WP_Query(
+                array_merge($args, ['paged' => $page, 'no_found_rows' => false, 'suppress_filters' => true]),
+            );
+            $posts = $q->posts;
+            $pages = max(1, (int) $q->max_num_pages);
+        }
         $out = [];
-        foreach (get_posts($args) as $post) {
+        foreach ($posts as $post) {
             if ($post instanceof WP_Post) {
                 $out[] = $mapper->entry($post, $kind);
             }
         }
-        return $out;
+        return [$out, $pages];
     }
 
     /**
