@@ -152,7 +152,7 @@ export function fieldOf(name: string, type: TypeNode, records: Record<string, Re
     case "map":
       return { type: "map", label, docs };
     case "array": {
-      const first = Array.isArray(sample) ? sample[0] : undefined;
+      const first = Array.isArray(sample) ? (sample.length && sample.every(isObj) ? mergeSamples(sample) : sample[0]) : undefined;
       const item = fieldOf("item", type.of, records, first, undefined, seen);
       const arrayFields = item.type === "object" ? item.objectFields : { value: item };
       return {
@@ -177,7 +177,34 @@ function objectField(label: string, fields: { name: string; type: TypeNode; docs
   const s = isObj(sample) ? sample : {};
   const objectFields: Record<string, Field> = {};
   for (const f of fields) objectFields[f.name] = fieldOf(f.name, f.type, records, s[f.name], f.docs, seen);
+  // keys the sample has but the record does not declare (a record list of codegen-x behind its template): typed by
+  // the sample value, so every text the block shows stays editable in a field
+  for (const [k, v] of Object.entries(s)) if (!objectFields[k] && k !== "className") objectFields[k] = fieldOf(k, typeOfSample(v), records, v, undefined, seen);
   return { type: "object", label, objectFields, docs };
+}
+
+/** the type of a sample value: scalars as they are, objects by their keys, a list by the union of its items */
+export function typeOfSample(v: Json | undefined): TypeNode {
+  if (typeof v === "string") return { kind: "string" };
+  if (typeof v === "number") return { kind: "number" };
+  if (typeof v === "boolean") return { kind: "boolean" };
+  if (Array.isArray(v)) return { kind: "array", of: v.length ? typeOfSample(v.every(isObj) ? mergeSamples(v) : v[0]) : { kind: "string" } };
+  if (isObj(v)) return { kind: "object", fields: Object.entries(v).map(([name, x]) => ({ name, type: typeOfSample(x), optional: false })) };
+  return { kind: "unknown", ts: "null" };
+}
+
+/** one sample from many (the variants of a block, the items of a list): objects merge key by key, the first value
+ *  of a key wins, lists of objects merge their items */
+export function mergeSamples(values: (Json | undefined)[]): Json | undefined {
+  const objs = values.filter(isObj);
+  if (!objs.length) return values.find((v) => v !== undefined && v !== null) ?? values[0];
+  const keys = [...new Set(objs.flatMap((o) => Object.keys(o)))];
+  return Object.fromEntries(keys.map((k) => {
+    const vs = objs.map((o) => o[k]).filter((x) => x !== undefined);
+    const lists = vs.filter(Array.isArray);
+    if (lists.length && lists.every((l) => l.every(isObj)) && lists.some((l) => l.length)) return [k, [mergeSamples(lists.flat()) as Json]];
+    return [k, (vs.some(isObj) ? mergeSamples(vs) : vs[0]) as Json];
+  }));
 }
 
 const isObj = (v: unknown): v is Obj => typeof v === "object" && v !== null && !Array.isArray(v);
@@ -222,20 +249,33 @@ export function summaryOf(v: Json): string | undefined {
   return undefined;
 }
 
-/** the config of one block: a field per prop (bindable paths wrapped in binding fields), defaults per variant */
+/** blocks that have nothing to set on purpose (the inspector says so instead of showing fields); the gate
+ *  tests/coverage.test.ts fails for any other block without typed fields */
+export const NO_SETTINGS: string[] = [];
+
+/** props the inspector never shows: the block's own id and extra classes */
+export const HIDDEN_PROPS = ["id", "className"];
+
+/**
+ * The config of one block: a field per prop (bindable paths wrapped in binding fields), defaults per variant. The
+ * sample of the fields is every variant's sample merged, and sample keys the props or records do not declare get a
+ * field typed by their value, so a text a variant shows is never reachable only through "Advanced (JSON)".
+ */
 export function blockConfig(block: BlockSpec, records: Record<string, RecordField[]>): BlockConfig {
-  const sample = block.variants[0]?.props ?? {};
+  const first = block.variants[0]?.props ?? {};
+  const sample = (mergeSamples(block.variants.map((v) => v.props)) ?? {}) as Obj;
   const fields: Record<string, Field> = {};
   for (const p of block.props) {
-    if (p.name === "id" || p.name === "className") continue;
+    if (HIDDEN_PROPS.includes(p.name)) continue;
     const axis = block.axes[p.name];
     const type = axis?.length ? ({ kind: "enum", options: axis } as TypeNode) : parseType(tsOf(p.type));
     fields[p.name] = fieldOf(p.name, type, records, sample[p.name], p.docs || undefined);
   }
+  for (const [k, v] of Object.entries(sample)) if (!fields[k] && !HIDDEN_PROPS.includes(k)) fields[k] = fieldOf(k, typeOfSample(v), records, v);
   return {
     label: block.title,
     fields,
-    defaultProps: (variant) => block.variants.find((v) => v.id === variant)?.props ?? sample,
+    defaultProps: (variant) => block.variants.find((v) => v.id === variant)?.props ?? first,
   };
 }
 

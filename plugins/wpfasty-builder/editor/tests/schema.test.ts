@@ -2,7 +2,8 @@ import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { BlockSpec, RecordField } from "../src/types";
-import { blockConfig, emptyOf, fieldOf, parseType, summaryOf, type Field } from "../src/fields/schema";
+import { blockConfig, emptyOf, fieldOf, mergeSamples, parseType, summaryOf, typeOfSample, type Field } from "../src/fields/schema";
+import { missingBlocks } from "../src/util";
 
 const catalog = (runtime: string) =>
   JSON.parse(readFileSync(join(import.meta.dir, `../../sources/ui8kit/${runtime}/catalog.json`), "utf8")) as {
@@ -69,6 +70,35 @@ describe("fields", () => {
   });
   test("unknown record names fall back to the JSON field", () => {
     expect(fieldOf("x", parseType("NoSuchRecord"), records).type).toBe("json");
+  });
+});
+
+describe("sample keys without a declared type", () => {
+  const records = catalog("latte").records;
+  test("a sample value has a type: scalars, objects by keys, lists by the union of their items", () => {
+    expect(typeOfSample("x")).toEqual({ kind: "string" });
+    expect(typeOfSample(2)).toEqual({ kind: "number" });
+    expect(typeOfSample([{ a: "x" }, { b: 1 }])).toEqual({
+      kind: "array", of: { kind: "object", fields: [{ name: "a", type: { kind: "string" }, optional: false }, { name: "b", type: { kind: "number" }, optional: false }] },
+    });
+    expect(mergeSamples([{ a: "1", o: { x: "x" } }, { a: "2", b: true, o: { y: "y" } }])).toEqual({ a: "1", o: { x: "x", y: "y" }, b: true });
+  });
+  test("a record field list missing a sample key still gets a field for it", () => {
+    const f = fieldOf("labels", parseType("AboutMeLabels"), records, { level: "{0}%", title: "Hi", lead: "x".repeat(80) }) as Extract<Field, { type: "object" }>;
+    expect(Object.keys(f.objectFields)).toEqual(["level", "title", "lead"]);
+    expect(f.objectFields.title!.type).toBe("text");
+    expect(f.objectFields.lead!.type).toBe("textarea");
+  });
+  test("a sample prop the block does not declare gets a field (hero prompt: composer, nav, badge mark)", () => {
+    const hero = catalog("latte").blocks.find((b) => b.id === "hero")!;
+    const cfg = blockConfig(hero, records);
+    expect(cfg.fields.composer?.type).toBe("object");
+    expect(cfg.fields.nav?.type).toBe("object");
+    expect((cfg.fields.nav as Extract<Field, { type: "object" }>).objectFields.links?.type).toBe("array");
+    expect(cfg.fields.badgeMark?.type).toBe("text");
+  });
+  test("blocks of a layout outside the loaded specs", () => {
+    expect(missingBlocks([{ block: "a" }, { block: "cta" }, { block: "cta" }], [{ id: "a" }])).toEqual(["cta"]);
   });
 });
 

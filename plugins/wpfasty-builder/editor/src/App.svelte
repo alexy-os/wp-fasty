@@ -2,7 +2,7 @@
   import { onMount, untrack } from "svelte";
   import FieldRenderer from "./fields/FieldRenderer.svelte";
   import type { FieldCtx } from "./fields/context";
-  import { bindableOf, blockConfig } from "./fields/schema";
+  import { bindableOf, blockConfig, NO_SETTINGS } from "./fields/schema";
   import Icon from "./Icon.svelte";
   import Overlay from "./Overlay.svelte";
   import Splitter from "./Splitter.svelte";
@@ -18,8 +18,8 @@
     PanelRightOpen, Redo2, RotateCcw, Smartphone, Trash2, Undo2,
   } from "./icons";
   import { api } from "./api";
-  import type { Binding, Box, Catalog, Config, Item, Json, Obj, RecordField, TemplatePage } from "./types";
-  import { clone, getPath, human, isObj, kindOf, merge, newId, setPath } from "./util";
+  import type { BlockSpec, Binding, Box, Catalog, Config, Item, Json, Obj, RecordField, TemplatePage } from "./types";
+  import { clone, getPath, human, isObj, kindOf, merge, missingBlocks, newId, setPath } from "./util";
   import { defaultSource } from "./sources";
   import { LinkStore, setLinks } from "./links.svelte";
   import { ThemeMode } from "./theme.svelte";
@@ -34,6 +34,10 @@
   setLinks(links);
 
   let catalog = $state<Catalog | null>(null);
+  /** specs of the whole source when the layout holds blocks outside the open collection (a starter or a page saved
+   *  under a collection that does not list all its blocks): the inspector still opens them; the cards stay the
+   *  collection's */
+  let outside = $state.raw<BlockSpec[]>([]);
   const store = new EditorStore();
   /** column widths, collapsed columns (localStorage, per user) and focus mode */
   const layout = new PanelLayout(config.user);
@@ -60,7 +64,7 @@
   /** the preview must reload after the next save (it does not show the saved layout yet) */
   let reloadAfterSave = false;
 
-  const blocks = $derived(new Map((catalog?.blocks ?? []).map((b) => [b.id, b])));
+  const blocks = $derived(new Map([...outside, ...(catalog?.blocks ?? [])].map((b) => [b.id, b])));
   const current = $derived(store.current);
   const currentIndex = $derived(store.index);
   const currentBlock = $derived(current ? blocks.get(current.block) ?? null : null);
@@ -120,8 +124,10 @@
   }
 
   async function loadCatalog() {
-    catalog = await client.catalog(source, collection);
-    if (catalog.collection === null) collection = "";
+    const next = await client.catalog(source, collection);
+    if (next.collection === null) collection = "";
+    outside = missingBlocks(store.items, next.blocks).length ? (await client.catalog(source, "")).blocks : [];
+    catalog = next;
   }
 
   function fail(e: unknown) {
@@ -688,6 +694,7 @@
               {#if advancedError}<p class="wpfb-error">{advancedError}</p>{/if}
             </div>
           {:else if blockCfg && fieldCtx}
+            {#if NO_SETTINGS.includes(currentBlock.id)}<p class="wpfb-muted">This block has no settings.</p>{/if}
             {#each Object.entries(blockCfg.fields) as [k, f] (k)}
               <FieldRenderer field={f} path={[k]} value={currentProps[k]} onchange={setProp} ctx={fieldCtx} />
             {/each}

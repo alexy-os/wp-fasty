@@ -29,6 +29,12 @@ export function getPath(o: Json | undefined, path: string[]): Json | undefined {
   return cur;
 }
 
+/** block ids of the layout that a list of block specs does not have */
+export function missingBlocks(items: Pick<Item, "block">[], blocks: Pick<BlockSpec, "id">[]): string[] {
+  const have = new Set(blocks.map((b) => b.id));
+  return [...new Set(items.map((i) => i.block).filter((id) => !have.has(id)))];
+}
+
 export function kindOf(block: BlockSpec, data: string): string {
   return block.data.find((d) => d.as === data)?.kind ?? "";
 }
