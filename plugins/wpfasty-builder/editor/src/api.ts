@@ -1,4 +1,5 @@
 import type { Catalog, Config, Issue, Item, Obj } from "./types";
+import type { LinkIndex } from "./links";
 
 export function api(cfg: Config) {
   async function call<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -23,6 +24,8 @@ export function api(cfg: Config) {
       }),
     catalog: (source: string, collection: string) =>
       call<Catalog>(`/catalog?source=${encodeURIComponent(source)}&collection=${encodeURIComponent(collection)}`),
+    /** link-token targets of the site (GET /links), for the link picker */
+    links: () => call<LinkIndex>("/links"),
     layout: () => call<{ layout: Obj | null; published: boolean; previewUrl: string; permalink: string }>(`/layout/${cfg.page}`),
     save: (source: string, collection: string, blocks: Item[], publish: boolean) =>
       call<{ layout: Obj; issues: Issue[]; published: boolean; previewUrl: string }>(`/layout/${cfg.page}`, {

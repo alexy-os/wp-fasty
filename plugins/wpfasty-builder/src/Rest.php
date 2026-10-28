@@ -12,6 +12,8 @@ use WP_REST_Response;
  * REST API of the editor (namespace wpfasty-builder/v1). Every route needs a logged-in user with the capability
  * named below and the wp_rest nonce (X-WP-Nonce), which the editor receives from wp_add_inline_script.
  *   GET  /catalog?source=&collection=   edit_pages   blocks of a source (or of one collection), data sources
+ *   GET  /links                         edit_pages   link-token targets of the site (Links::index): site, pages,
+ *                                                    sections with the URL of each token, for the editor's link picker
  *   GET  /layout/<page>                 edit_page    draft entry, issues, preview URL
  *   POST /layout/<page>                 edit_page    save the draft; publish=true also needs publish_pages
  *   POST /sources                       manage_options  import a remote source {id, url}
@@ -38,6 +40,11 @@ final class Rest
                 'source' => ['type' => 'string', 'default' => 'ui8kit', 'sanitize_callback' => 'sanitize_key'],
                 'collection' => ['type' => 'string', 'default' => '', 'sanitize_callback' => 'sanitize_key'],
             ],
+        ]);
+        register_rest_route(self::NS, '/links', [
+            'methods' => 'GET',
+            'callback' => [self::class, 'links'],
+            'permission_callback' => static fn (): bool => current_user_can('edit_pages'),
         ]);
         $page = static fn (WP_REST_Request $r): bool => get_post_type((int) $r['id']) === 'page' && current_user_can(
             'edit_page',
@@ -78,6 +85,11 @@ final class Rest
             'collections' => $catalog->collections(),
             'dataSources' => array_values(DataSources::all($catalog)),
         ] + $catalog->forEditor($col !== '' && $catalog->collection($col) !== null ? $col : null));
+    }
+
+    public static function links(): WP_REST_Response
+    {
+        return new WP_REST_Response(Links::index());
     }
 
     public static function getLayout(WP_REST_Request $r): WP_REST_Response

@@ -346,6 +346,11 @@ jobs:
           guard latte-folio-twig project
           guard latte-shop-twig product
           use-builder latte
+          # builder link picker: GET /wpfasty-builder/v1/links, same queries with 6 more pages and categories
+          wp theme activate latte-press --quiet
+          out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/links-queries.php" 6 2>&1) || { echo "$out"; exit 1; }
+          echo "$out"
+          echo "" >> "$GITHUB_STEP_SUMMARY"; echo "Builder links: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Builder — seed landings, smoke-render (200, no PHP notices), validate layouts with @ui8kit/contract
         run: |

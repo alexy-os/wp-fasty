@@ -17,11 +17,15 @@
   import type { Binding, Box, Catalog, Config, Item, Json, Obj, RecordField } from "./types";
   import { clone, getPath, human, isObj, kindOf, merge, newId, setPath } from "./util";
   import { defaultSource } from "./sources";
+  import { LinkStore, setLinks } from "./links.svelte";
 
   let { config: initial }: { config: Config } = $props();
   // the config comes once from wp_add_inline_script and never changes
   const config = untrack(() => initial);
   const client = api(config);
+  /** link picker data: one GET /links per editor session, shared by every link field */
+  const links = new LinkStore(() => client.links());
+  setLinks(links);
 
   let catalog = $state<Catalog | null>(null);
   const store = new EditorStore();
@@ -93,6 +97,7 @@
       previewUrl = layout.previewUrl;
       published = layout.published;
       await loadCatalog();
+      void links.ensure();
       status = "idle";
     } catch (e) {
       fail(e);
