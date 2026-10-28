@@ -186,4 +186,24 @@ final class RecordsTest extends TestCase
         $this->assertFalse(Layout::safeHref('{price:mug}'));
         $this->assertFalse(Layout::safeHref('{stock:mug}'));
     }
+
+    /** {post:}/{product:} name only published records; a password-protected product keeps its link, not its data */
+    public function testUnpublishedAndProtectedRecordsStayPrivate(): void
+    {
+        $post = static fn (int $id, string $type, string $slug, array $more): \WP_Post
+            => new \WP_Post(['ID' => $id, 'post_type' => $type, 'post_name' => $slug, 'post_title' => $slug] + $more);
+        $GLOBALS['wpfb_records']['posts'][] = $post(20, 'post', 'draft-post', ['post_status' => 'draft']);
+        $GLOBALS['wpfb_records']['posts'][] = $post(21, 'post', 'private-post', ['post_status' => 'private']);
+        $GLOBALS['wpfb_records']['posts'][] = $post(22, 'product', 'draft-product', ['post_status' => 'draft']);
+        $GLOBALS['wpfb_records']['posts'][] = $post(23, 'product', 'locked', ['post_password' => 'pw']);
+        $GLOBALS['wpfb_records']['meta'][22] = ['_shop_price' => '100'];
+        $GLOBALS['wpfb_records']['meta'][23] = ['_shop_price' => '777', '_shop_stock' => '3'];
+        $GLOBALS['wp_test_permalinks'] += [20 => 'http://example.test/?p=20', 21 => 'http://example.test/private-post/',
+            22 => 'http://example.test/?p=22', 23 => 'http://example.test/product/locked/'];
+        $this->assertSame('#|#|#|', Links::resolve('{post:draft-post}|{post:private-post}|{product:draft-product}|{price:draft-product}'));
+        $this->assertSame('http://example.test/product/locked/||', Links::resolve('{product:locked}|{price:locked}|{stock:locked}'));
+        foreach (self::queries() as $i => $fn) {
+            $this->assertSame('publish', $GLOBALS['wpfb_records']['log'][$i][1]['post_status'] ?? null, "$fn: published only");
+        }
+    }
 }

@@ -52,6 +52,11 @@ if (!class_exists('WP_REST_Request')) {
             return $this->json;
         }
 
+        public function get_body(): string
+        {
+            return (string) json_encode($this->json);
+        }
+
         public function get_param(string $k): mixed
         {
             return $this->params[$k] ?? $this->json[$k] ?? null;
