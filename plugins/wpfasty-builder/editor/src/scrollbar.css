@@ -1,0 +1,31 @@
+/*
+ * Editor scrollbars, touchpad style: 8px, no arrows, a transparent track and a rounded 4px thumb (inset by a 2px
+ * transparent border, the 4px control step) on the border token, muted-foreground while the area or the thumb is
+ * hovered. One class, .wpfb-scroll, on every scrolling area of the editor chrome (sidebars, block cards, the "New page"
+ * sheet, the template preview, the link picker); not shipped to the themes or the front.
+ * Compiled by @tailwindcss/vite (vite.config.ts): Tailwind is only @reference'd, so nothing but the @apply lands here
+ * (no preflight, no theme variables, no generated utilities). The shadcn colour names map onto the editor tokens
+ * (tokens.css), so light and dark follow .wpfb-app.dark.
+ */
+@reference "tailwindcss";
+@theme inline reference {
+  --spacing: 4px;
+  --color-border: var(--wpfb-line);
+  --color-muted-foreground: var(--wpfb-text-muted);
+}
+
+.wpfb-scroll {
+  @apply [&::-webkit-scrollbar]:size-2 [&::-webkit-scrollbar]:bg-transparent
+    [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-corner]:bg-transparent [&::-webkit-scrollbar-track]:bg-transparent
+    [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:[border:2px_solid_transparent]
+    [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:bg-clip-padding
+    hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/60 [&::-webkit-scrollbar-thumb:hover]:bg-muted-foreground;
+}
+
+/* Firefox (no ::-webkit-scrollbar): the standard properties; kept out of Chromium, where they would switch the
+   ::-webkit-scrollbar styles above off */
+@supports not selector(::-webkit-scrollbar) {
+  .wpfb-scroll {
+    @apply [scrollbar-width:thin] [scrollbar-color:var(--wpfb-line)_transparent] hover:[scrollbar-color:var(--wpfb-text-muted)_transparent];
+  }
+}

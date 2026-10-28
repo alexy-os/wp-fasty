@@ -146,10 +146,13 @@
 .wpfb-box.is-selected { border: 2px solid var(--wpfb-accent); }
 .wpfb-tag { position: absolute; height: 32px; line-height: 32px; padding: 0 8px; background: var(--wpfb-accent); color: var(--wpfb-on-accent); font-size: 12px; font-weight: 600; border-radius: var(--wpfb-radius) var(--wpfb-radius) 0 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; box-sizing: border-box; }
 .wpfb-tag.is-inside, .wpfb-toolbar.is-inside { border-radius: 0 0 var(--wpfb-radius) var(--wpfb-radius); }
-.wpfb-toolbar { position: absolute; transform: translateX(-100%); display: flex; height: 32px; background: var(--wpfb-text); border-radius: var(--wpfb-radius) var(--wpfb-radius) 0 0; pointer-events: auto; box-shadow: var(--wpfb-shadow); }
-.wpfb-tool { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 0; background: none; color: var(--wpfb-on-accent); cursor: pointer; }
-.wpfb-tool:hover:not(:disabled) { background: var(--wpfb-accent); }
-.wpfb-tool:disabled { opacity: 0.4; cursor: default; }
+/* the block toolbar is a popover on the surface tokens (popover/border/foreground), so it follows dark mode; the outline
+   (not a border) keeps it 32px tall, level with the tag */
+.wpfb-toolbar { position: absolute; transform: translateX(-100%); display: flex; height: 32px; overflow: hidden; background: var(--wpfb-surface); color: var(--wpfb-text); outline: 1px solid var(--wpfb-line); outline-offset: -1px; border-radius: var(--wpfb-radius) var(--wpfb-radius) 0 0; pointer-events: auto; box-shadow: var(--wpfb-shadow); }
+.wpfb-tool { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+.wpfb-tool:hover:not(:disabled) { background: var(--wpfb-surface-muted); color: var(--wpfb-accent-strong); }
+.wpfb-tool:focus-visible { outline: 2px solid var(--wpfb-accent); outline-offset: -2px; }
+.wpfb-tool:disabled { color: var(--wpfb-text-muted); opacity: 0.4; cursor: default; }
 .wpfb-tool.wpfb-grip { cursor: grab; touch-action: none; }
 .wpfb-dropline { position: absolute; left: 0; right: 0; height: 2px; background: var(--wpfb-accent); box-shadow: 0 0 0 1px var(--wpfb-surface); }
 .wpfb-svg { flex: none; display: block; }

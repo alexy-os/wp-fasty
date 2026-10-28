@@ -66,7 +66,7 @@
       <h2 id="wpfb-new-title">New page</h2>
       <button type="button" class="wpfb-icon" aria-label="Close" title="Close (Esc)" onclick={() => (open = false)}><Icon icon={X} /></button>
     </header>
-    <div class="wpfb-sheet-body">
+    <div class="wpfb-sheet-body wpfb-scroll">
       <div class="wpfb-sheet-field">
         <label for="wpfb-new-page-title">Title</label>
         <!-- svelte-ignore a11y_autofocus -->

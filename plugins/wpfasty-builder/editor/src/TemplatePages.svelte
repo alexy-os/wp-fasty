@@ -76,7 +76,7 @@
       <span class="wpfb-peek-title">{collection} · {human(open.id)}</span>
       <span class="wpfb-peek-meta">{open.blocks.length} {open.blocks.length === 1 ? "block" : "blocks"} · click to use</span>
     </div>
-    <div class="wpfb-peek-body">
+    <div class="wpfb-peek-body wpfb-scroll">
       <img {src} alt="Preview of the {human(open.id)} template page" width={preview.width * 0.75} height={preview.height * 0.75}
         decoding="async" onerror={() => { if (dark && !darkFailed && preview.dark) darkFailed = true; }} />
     </div>

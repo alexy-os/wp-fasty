@@ -97,7 +97,7 @@
     </select>
   </div>
   <p class="wpfb-cards-count" aria-live="polite"><Icon icon={LayoutGrid} size={12} /> {shown.length} of {all.length} variants</p>
-  <div class="wpfb-cards-scroll" id="wpfb-cards-grid" role="group" aria-label="Block variants: Enter adds, drag onto the page"
+  <div class="wpfb-cards-scroll wpfb-scroll" id="wpfb-cards-grid" role="group" aria-label="Block variants: Enter adds, drag onto the page"
     bind:this={scroller} onscroll={(e) => (scrollTop = e.currentTarget.scrollTop)} {@attach measure}>
     {#if !shown.length}
       <p class="wpfb-docs">No blocks match.</p>

@@ -516,6 +516,10 @@
     const win = frame?.contentWindow;
     if (!doc || !win) return;
     doc.documentElement.classList.toggle(DARK_CLASS, theme.dark);
+    // the canvas scrolls inside the preview page: its scrollbar thin, on the theme's own tokens (light and dark), set
+    // here so only the editor's preview gets it, never the theme or the front
+    doc.documentElement.style.setProperty("scrollbar-width", "thin");
+    doc.documentElement.style.setProperty("scrollbar-color", "var(--border) transparent");
     doc.addEventListener("click", (e) => {
       const el = (e.target as HTMLElement).closest("[data-wpfb-block]");
       e.preventDefault();
@@ -576,7 +580,7 @@
   </header>
 
   <div class="wpfb-main">
-    <aside id="wpfb-palette" class="wpfb-palette" aria-label="Blocks" hidden={!layout.leftOpen}>
+    <aside id="wpfb-palette" class="wpfb-palette wpfb-scroll" aria-label="Blocks" hidden={!layout.leftOpen}>
       <div class="wpfb-section">
         <label class="wpfb-heading" for="wpfb-collection">Collection</label>
         <select id="wpfb-collection" class="wpfb-search" value={collection} onchange={(e) => switchCollection(e.currentTarget.value)}>
@@ -636,7 +640,7 @@
         onresize={(px) => layout.setWidth("right", px)} onreset={() => layout.reset("right")} ondragging={(on) => (resizing = on)} />
     {/if}
 
-    <aside id="wpfb-inspector" class="wpfb-inspector" aria-label="Structure and properties" hidden={!layout.rightOpen}>
+    <aside id="wpfb-inspector" class="wpfb-inspector wpfb-scroll" aria-label="Structure and properties" hidden={!layout.rightOpen}>
       <h2 class="wpfb-heading">Structure</h2>
       <ol class="wpfb-list wpfb-structure" bind:this={list} onmouseleave={() => (store.hovered = null)}
         ondragover={cardOver} ondrop={(e) => { if (card) cardDrop(e); }}

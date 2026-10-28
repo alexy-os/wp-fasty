@@ -3,6 +3,7 @@ import App from "./App.svelte";
 import NewPageScreen from "./NewPageScreen.svelte";
 import "./tokens.css";
 import "./editor.css";
+import "./scrollbar.css";
 import type { Config } from "./types";
 
 declare global {

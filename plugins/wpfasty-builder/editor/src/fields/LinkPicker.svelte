@@ -100,7 +100,7 @@
   {:else if !links.index}
     <p class="wpfb-linkpicker-note">Loading…</p>
   {:else}
-    <div class="wpfb-linkpicker-cols" style:--wpfb-picker-cols={columns.length} id="{id}-list" role="listbox" aria-label={mode === "link" ? "Link tokens" : "Site data tokens"}>
+    <div class="wpfb-linkpicker-cols wpfb-scroll" style:--wpfb-picker-cols={columns.length} id="{id}-list" role="listbox" aria-label={mode === "link" ? "Link tokens" : "Site data tokens"}>
       {#each columns as col, c (col.key)}
         <div class="wpfb-linkpicker-col" role="group" aria-labelledby="{id}-h{c}">
           <div class="wpfb-linkpicker-head" id="{id}-h{c}" role="presentation"><Icon icon={col.icon} size={12} /> {col.title}</div>
