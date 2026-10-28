@@ -145,6 +145,7 @@ dist/latte.zip               release artifact (gitignored)
 | 9 | N+1 guard on realistic data: `tools/perf/seed.php` (thumbnails, terms, typed meta, 3 authors) for post / project / product, 2 vs 6 items, also measured without widgets; numbers in the CI run summary | [x] 2026-10-19 (no N+1 found) |
 | 10 | CI fails on any PHP notice / warning / deprecation logged by the WordPress job (`WP_DEBUG_LOG`) | [x] 2026-10-19 |
 | 11 | XSS / template-injection audit (report: ui8kit3 `audit/security-xss.md`): page title could close the compiled template's comment and run Latte/Twig code (fixed in `Compiler`), props sanitized in the adapter for both engines (`Safe`: URL schemes through obfuscation, control characters; `Layout::clean`: sample types, depth), `{__html}` of meta through `wp_kses_post`, `{page:}`/records published only, password-protected posts closed in the theme, REST body limit, remote source import needs `unfiltered_html`, editor preview iframe sandboxed. CI job `security`: `tools/security/xss-fuzz.php` (480 variants × 57 payloads, render-block + raw + page, Latte = Twig, 4 shards), raw-output gate `tools/security/raw-sinks.php` (+ `raw-sinks.json`), `sandbox-check.sh` (headless Chrome); PHPUnit `SecurityXssTest`, `RestSecurityTest`; PHPCS `WordPress.Security` in full | [x] 2026-10-28 |
+| 12 | codegen-x security fixes `832d7f17` (`fb4652ce..832d7f17`): builder source re-exported (organism runtime: URL allowlist `og_url`/`og_srcset`, attribute names without `on*`, slot props through `og_markup`→`og_slot`, richtext side note only with its markup; block HTML of all 481 variants and 63 template pages unchanged); `\|html` of a blank string → null (ReadPath, `DataSources::trusted` after kses); shared vectors `readpath-null.json` + `safety-vectors.json` in `tests/fixtures/codex-shared` (`CodexReadPathSharedTest`, `CodegenSafetySharedTest`; byte-equal to codegen-x with the CI token); raw-sinks: `og_slot(` replaces the raw slot-prop pattern and its catalog-template restriction. Input guards unchanged (`Safe::props`, `Layout::clean`, `wp_kses_post`, 1 MB REST limit, iframe sandbox). Open questions to XGenBot: `?q=a:b` / `#fn:1` relative links and `sms:`/`ftp:` lose their href in the runtime; `packages/kit` primitives keep a denylist; `children` raw on the server runtimes | [x] 2026-10-28 |
 
 **saas-design rules to port (item 7):**
 
@@ -428,6 +429,7 @@ bun run dev:wp -- theme activate latte-skin
 
 | Date | Decision |
 |------|----------|
+| 2026-10-28 | Output safety of builder blocks is codegen-x's (organism runtime allowlist, codegen-x `832d7f17`); wp-fasty keeps its input guards (adapter `Safe`, `Layout::clean`, kses, REST limit, sandbox) as the first layer and drops a guard only where a shared-vector test proves codegen-x does the same |
 | 2026-07 | YM deleted; `themes/latte` is reference parent |
 | 2026-07 | Child skins = WP child themes, no Composer |
 | 2026-07 | Release zip bundles primitives under `lib/ui8kit-latte` |
