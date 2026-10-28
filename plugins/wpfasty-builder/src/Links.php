@@ -284,7 +284,10 @@ final class Links
             return;
         }
         $js = '(function(d){' . self::OPEN_NOW_JS . '})('
-            . (string) wp_json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) . ');';
+            . (string) wp_json_encode(
+                $data,
+                JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE,
+            ) . ');';
         if (function_exists('wp_print_inline_script_tag')) {
             wp_print_inline_script_tag($js, ['id' => 'wpfb-open-now']);
             return;
@@ -477,7 +480,11 @@ final class Links
             'posts' => (int) get_option('page_for_posts') > 0
                 ? get_permalink((int) get_option('page_for_posts'))
                 : $home,
-            'page' => ($p = get_page_by_path($arg)) instanceof \WP_Post ? get_permalink($p) : $home,
+            // published pages only: a draft, pending, private or trashed page is not a link target (its URL would
+            // name it to every visitor), the same set the picker lists (index())
+            'page' => ($p = get_page_by_path($arg)) instanceof \WP_Post && $p->post_status === 'publish'
+                ? get_permalink($p)
+                : $home,
             'category' => ($t = get_category_by_slug($arg)) instanceof \WP_Term ? get_category_link($t) : $home,
             'archive' => post_type_exists($arg) ? get_post_type_archive_link($arg) : $home,
             default => $home,

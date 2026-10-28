@@ -220,7 +220,12 @@ final class Records
         ]);
         foreach (is_array($found) ? $found : [] as $p) {
             if ($p instanceof \WP_Post && array_key_exists((string) $p->post_name, self::$products)) {
-                self::$products[(string) $p->post_name] = self::product($p);
+                $product = self::product($p);
+                if ((string) $p->post_password !== '') {
+                    // a password-protected product: its link stays, its fields are behind the password
+                    $product = ['amount' => null, 'price' => '', 'in_stock' => false, 'stock' => ''] + $product;
+                }
+                self::$products[(string) $p->post_name] = $product;
             }
         }
     }

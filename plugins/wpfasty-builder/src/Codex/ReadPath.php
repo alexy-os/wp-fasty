@@ -136,7 +136,8 @@ final class ReadPath
         if ($pipe === 'html') {
             // markup of the Codex (the body of an entry) is trusted: the TrustedHtml marker the og_html helper of the
             // runtimes prints unescaped (codegen-x readPath `html`); a value read without this pipe stays text
-            return is_scalar($cur) ? ['__html' => (string) $cur] : null;
+            // only a string is markup: a number, a boolean, a list or null gives null (codegen-x readPath to follow)
+            return is_string($cur) ? ['__html' => $cur] : null;
         }
         if ($pipe === 'date') {
             return Format::date($cur, $locale);
