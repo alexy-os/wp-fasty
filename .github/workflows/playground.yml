@@ -1,0 +1,84 @@
+name: Playground
+
+# Rebuild the WordPress Playground preview zips (tools/playground-build.sh, the same script as locally) and publish
+# them to the preview gist (tools/playground-publish.sh) as <name>.zip.b64. The raw URLs carry no revision, so
+# playground/urls.txt and the blueprints never change. Only zips whose content changed are rewritten; no change → no
+# gist commit. Manual run: `gh workflow run playground.yml --repo alexy-os/wp-fasty` (or Actions → Playground → Run).
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "themes/**"
+      - "plugins/wpfasty-types/**"
+      - "plugins/wpfasty-builder/**"
+      - "tools/demo/**"
+      - "tools/builder/landings/**"
+      - "tools/matrix/**"
+      - "tools/playground-build.sh"
+      - "tools/playground-publish.sh"
+      - "playground/*.json"
+      - "presets/**"
+      - "manifests/examples/**"
+      - ".workspaces/theme-builder/**"
+      - "composer.json"
+      - "composer.lock"
+      - ".github/workflows/playground.yml"
+
+# one publish at a time; a newer push waits for the running one instead of racing it on the gist
+concurrency:
+  group: playground-gist
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.repository == 'alexy-os/wp-fasty'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer, wp-cli
+          coverage: none
+
+      - name: Install
+        run: |
+          sudo apt-get install -y -qq zip >/dev/null
+          composer install --no-interaction --prefer-dist --no-progress
+          bun install --frozen-lockfile
+
+      - name: Build the ten zips (tools/playground-build.sh)
+        run: bash tools/playground-build.sh
+
+      - name: Clone the preview gist
+        env:
+          GIST_TOKEN: ${{ secrets.PLAYGROUND_GIST_TOKEN }}
+        run: |
+          # the token goes through a credential helper reading the env, never into a URL, argv or the log
+          git config --global credential.helper '!f() { echo username=x-access-token; echo "password=$GIST_TOKEN"; }; f'
+          git clone -q https://gist.github.com/ce9f531eeb05bb8aee9dadcd3b0c1ecc.git "$RUNNER_TEMP/gist"
+
+      - name: Publish changed zips, check raw URLs (200 + sha256)
+        env:
+          GIST_TOKEN: ${{ secrets.PLAYGROUND_GIST_TOKEN }}
+        run: |
+          bash tools/playground-publish.sh "$RUNNER_TEMP/gist" --push | tee "$RUNNER_TEMP/publish.txt"
+          { echo "### Playground gist"; echo '```'; cat "$RUNNER_TEMP/publish.txt"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Forget the credential helper
+        if: always()
+        run: git config --global --unset credential.helper || true
