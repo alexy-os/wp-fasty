@@ -1,7 +1,7 @@
 /**
  * Tokens of the builder (the set of src/Links.php): links {home}, {posts}, {page:<slug>}, {category:<slug>},
  * {archive:<post type>}; site data {site:name|phone|email|address|hours}; contact links {tel}, {mailto}, {whatsapp},
- * {telegram}, {map}; dates {year}, {today}. Which fields offer which, parsing, replacing a link token while keeping
+ * {telegram}, {map}; dates {year}, {today}; {open-now} (text only, computed in the browser on the site). Which fields offer which, parsing, replacing a link token while keeping
  * what follows it (a path, #anchor or ?query), inserting one into text, and resolving client-side from the one
  * GET /links response. Pure functions (bun test).
  */
@@ -23,7 +23,7 @@ export interface LinkIndex {
 }
 
 /** same pattern as Links::TOKEN */
-export const MACRO = /\{(home|posts|page|category|archive|site|tel|mailto|whatsapp|telegram|map|year|today)(?::([a-z0-9_-]+))?\}/;
+export const MACRO = /\{(home|posts|page|category|archive|site|tel|mailto|whatsapp|telegram|map|year|today|open-now)(?::([a-z0-9_-]+))?\}/;
 const MACROS = new RegExp(MACRO.source, "g");
 /** kinds that need an argument ({page:<slug>}…) */
 const NEEDS_ARG = new Set(["page", "category", "archive", "site"]);
@@ -75,11 +75,25 @@ export function tokenMode(name: string, field: Pick<Field, "type">): "link" | "t
   return field.type === "text" || field.type === "textarea" ? "text" : null;
 }
 
+/** {open-now}: the site's script computes it in the visitor's browser; the editor only says so */
+export const OPEN_NOW = "{open-now}";
+export const OPEN_NOW_PREVIEW = "open now / closed (client-side)";
+
+/** the Site data column entry of {open-now}: "" (not set) while the site has no opening hours */
+export function openNowToken(data: readonly DataToken[]): DataToken {
+  const hours = data.find((t) => t.token === "{site:hours}")?.value ?? "";
+  return { token: OPEN_NOW, label: "Open now", value: hours === "" ? "" : OPEN_NOW_PREVIEW };
+}
+
 const NOUN: Record<string, string> = { page: "page", category: "category", archive: "archive", site: "site data" };
 
 /** a token's value from the index: a URL (links, contact) or text (site data, dates), with a warning when empty */
 function lookup(m: Macro, index: LinkIndex): { value: string; warning?: string } | { error: string } {
   if (NEEDS_ARG.has(m.kind) && m.arg === "") return { error: `add ${m.kind === "site" ? "a key" : "a slug"}: {${m.kind}:<${m.kind === "site" ? "key" : "slug"}>}` };
+  if (m.kind === "open-now") {
+    const t = openNowToken(index.data ?? []);
+    return t.value === "" ? { value: "", warning: "opening hours are not set in the site settings: shows nothing" } : { value: t.value };
+  }
   const data = index.data.find((t) => t.token === m.token);
   if (data) return data.value === "" ? { value: "", warning: `${data.label.toLowerCase()} is not set in the site settings` } : { value: data.value };
   const contact = index.contact.find((t) => t.token === m.token);
@@ -95,6 +109,7 @@ export type Resolved = { url: string; shown: string; warning?: string } | { erro
 export function resolveMacro(value: string, index: LinkIndex): Resolved | null {
   const m = parseMacro(value);
   if (!m) return null;
+  if (m.kind === "open-now") return { error: "{open-now} is text, not a link: use it in a text field" };
   const r = lookup(m, index);
   if ("error" in r) return r;
   const url = m.prefix + r.value + m.suffix;
@@ -134,6 +149,6 @@ export function filterIndex(index: LinkIndex | null, query: string): Filtered {
   const hit = (t: { label: string; token: string; slug?: string }) => !q || [t.label, t.slug ?? "", t.token].some((s) => s.toLowerCase().includes(q));
   return {
     site: index.site.filter(hit), pages: index.pages.filter(hit), sections: index.sections.filter(hit),
-    contact: (index.contact ?? []).filter(hit), data: (index.data ?? []).filter(hit),
+    contact: (index.contact ?? []).filter(hit), data: [...(index.data ?? []), openNowToken(index.data ?? [])].filter(hit),
   };
 }

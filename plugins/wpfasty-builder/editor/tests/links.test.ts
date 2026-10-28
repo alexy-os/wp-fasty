@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { applyMacro, expandText, filterIndex, insertMacro, isLinkField, parseMacro, relative, resolveMacro, tokenMode, type LinkIndex } from "../src/links";
+import { applyMacro, expandText, filterIndex, OPEN_NOW_PREVIEW, insertMacro, isLinkField, parseMacro, relative, resolveMacro, tokenMode, type LinkIndex } from "../src/links";
 
 const index: LinkIndex = {
   home: "http://x.test/",
@@ -101,7 +101,7 @@ describe("contact, site data and dates", () => {
     expect(parseMacro("{site:phone}")?.arg).toBe("phone");
     expect(parseMacro("{tel}")?.kind).toBe("tel");
     expect(parseMacro("© {year}")?.prefix).toBe("© ");
-    expect(parseMacro("{open-now}")).toBeNull();
+    expect(parseMacro("{open-now}")?.kind).toBe("open-now");
   });
   test("contact links in link fields: the URL, or # with a warning", () => {
     expect(resolveMacro("{tel}", index)).toEqual({ url: "tel:+79001234567", shown: "tel:+79001234567" });
@@ -128,5 +128,22 @@ describe("contact, site data and dates", () => {
     expect(tokenMode("imageUrl", { type: "text" })).toBeNull();
     expect(tokenMode("iconName", { type: "text" })).toBeNull();
     expect(tokenMode("count", { type: "number" as never })).toBeNull();
+  });
+});
+
+describe("{open-now}", () => {
+  const hours: LinkIndex = { ...index, data: index.data.map((t) => (t.token === "{site:hours}" ? { ...t, value: "Mon–Fri 09:00–18:00" } : t)) };
+  test("Site data column only (text fields), with the client-side note; not set without hours", () => {
+    expect(filterIndex(hours, "open now").data).toEqual([{ token: "{open-now}", label: "Open now", value: OPEN_NOW_PREVIEW }]);
+    expect(filterIndex(index, "open now").data[0]?.value).toBe("");
+    const all = filterIndex(hours, "");
+    expect([...all.site, ...all.pages, ...all.sections, ...all.contact].map((t) => t.token)).not.toContain("{open-now}");
+  });
+  test("text fields: the note, never a computed state", () => {
+    expect(expandText("We are {open-now}", hours)).toEqual({ text: "We are open now / closed (client-side)", warnings: [] });
+    expect(expandText("{open-now}", index)).toEqual({ text: "", warnings: ["opening hours are not set in the site settings: shows nothing"] });
+  });
+  test("never an href", () => {
+    expect(resolveMacro("{open-now}", hours)).toEqual({ error: "{open-now} is text, not a link: use it in a text field" });
   });
 });
