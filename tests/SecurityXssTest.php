@@ -77,7 +77,7 @@ final class SecurityXssTest extends TestCase
                 self::assertSame('', Safe::url($u, true), "src: $u");
             }
         }
-        foreach (['/a', '#x', '?q=1', 'page.html', 'https://example.test/a?b=c#d', 'mailto:a@b.test', 'tel:+1', '//cdn.test/a.png'] as $u) {
+        foreach (['/a', '#x', '?q=1', 'page.html', 'https://example.test/a?b=c#d', 'mailto:a@b.test', 'tel:+1'] as $u) {
             self::assertSame($u, Safe::url($u), $u);
         }
         // data: only an image, only in an image key
@@ -97,6 +97,33 @@ final class SecurityXssTest extends TestCase
         ], $props);
         self::assertTrue(Safe::isUrlKey('posterSrc'));
         self::assertFalse(Safe::isUrlKey('label'));
+    }
+
+    /**
+     * Protocol-relative URLs are refused (not rewritten to https://): //host, /\host, \\host, \/host — also behind
+     * entities, spaces, tabs, newlines; a site path, #, ? and http(s) stay. At save (Layout::safeHref → "#/") and at
+     * render (Safe::url → "").
+     */
+    public function testProtocolRelativeUrlsAreRefused(): void
+    {
+        $bad = ['//evil.test/x', '/\\evil.test', '\\\\evil.test', '\\/evil.test', ' //evil.test', "\t//evil.test",
+            "/\t/evil.test", "/\n/evil.test", '&#47;/evil.test', '&#x2F;&#x2F;evil.test', '&sol;&sol;evil.test',
+            "\x01//evil.test"];
+        foreach ($bad as $u) {
+            self::assertTrue(Safe::networkPath($u), json_encode($u));
+            self::assertSame('', Safe::url($u), json_encode($u));
+            self::assertSame('', Safe::url($u, true), json_encode($u));
+            self::assertFalse(Layout::safeHref($u), json_encode($u));
+        }
+        foreach (['/', '/about/', '/a//b', '#team', '?s=x', 'https://example.test/', 'mailto:a@b.test', 'tel:+1', '{page:about}'] as $u) {
+            self::assertTrue(Layout::safeHref($u), $u);
+            self::assertFalse(Safe::networkPath($u), $u);
+        }
+        // bare words stay for URL-named enum props of the catalog (cover: "wide", actions: "pair"); they cannot leave
+        // the site, href refuses them at save
+        self::assertSame('wide', Safe::url('wide'));
+        self::assertFalse(Layout::safeHref('wide'));
+        self::assertSame(['href' => '', 'logos' => ['', '/l.png']], Safe::props(['href' => '//evil.test', 'logos' => ['\\\\evil/l.png', '/l.png']]));
     }
 
     /** a list under a URL key (singular or plural) is checked item by item */

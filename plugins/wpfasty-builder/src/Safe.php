@@ -10,7 +10,7 @@ namespace WPFastyBuilder;
  *   - a prop that holds a URL (its key ends in href, src, srcset, action, poster, url, image, avatar, logo, cover,
  *     or a plural of them: each item of the list) keeps its value only when the URL is relative or its scheme is
  *     allowed (wp_allowed_protocols(); data: only data:image/(png|jpeg|gif|webp|avif|svg+xml) and only in image
- *     keys); anything else — javascript:, vbscript:,
+ *     keys); a protocol-relative URL (//host, /\host, \\host) is refused too; anything else — javascript:, vbscript:,
  *     data:text/html…, also obfuscated with case, whitespace, tabs, newlines, control characters or entities —
  *     becomes "" (the templates omit an empty URL attribute)
  *   - text: C0 control characters (but tab, line feed, carriage return) are removed (Latte refuses them in a
@@ -96,8 +96,28 @@ final class Safe
         return preg_match('/^([a-z][a-z0-9+.\-]*):/', $s, $m) === 1 ? $m[1] : '';
     }
 
+    /**
+     * true for a URL that leaves the site without naming a scheme: //host, /\host, \\host, \/host (also behind
+     * entities, leading spaces or control characters, tabs or newlines — what a browser removes). Browsers read a
+     * backslash as a slash in http(s) URLs, so /\host is //host, while a server-side check sees a path.
+     */
+    public static function networkPath(string $url): bool
+    {
+        $s = $url;
+        for ($i = 0; $i < 3 && str_contains($s, '&'); $i++) {
+            $s = html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+        $s = ltrim((string) preg_replace('/[\t\n\r]+/', '', $s), "\x00..\x20\x7F");
+        return preg_match('#^[/\\\\]{2}#', $s) === 1;
+    }
+
     private static function allowed(string $url, bool $image): bool
     {
+        if (self::networkPath($url)) {
+            // protocol-relative: refused, not rewritten — an external link names its scheme (https://host); the
+            // backslash forms are only ever a filter bypass
+            return false;
+        }
         $scheme = self::scheme($url);
         if ($scheme === '') {
             return true; // relative: /x, #a, ?q, x.html (scheme() already sees through entities and whitespace)
