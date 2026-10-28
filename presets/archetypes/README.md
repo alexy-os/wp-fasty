@@ -30,7 +30,7 @@ result to equal `themes/<slug>` byte for byte (only the `.pot` `POT-Creation-Dat
 | `<slug>.zip` | always | the generated child theme (same tree `theme:roundtrip` checks) |
 | `wpfasty-types.zip` | `output.typesPlugin = companion` and post types | companion plugin; reads the active theme's `types/` (no generated config) |
 | `wpfasty-builder.zip` | `builder.enabled` | builder plugin without `editor/` sources |
-| `demo.zip` | `output.includeDemo` | `wpfasty-demo/`: `common.php`, the archetype seeder (`archetype.json` → `demo`), `images/` taken from the committed `playground/demo.zip` (missing seeds are fetched by `common.php` at seeding time), `landings/` from the manifest |
+| `demo.zip` | `output.includeDemo` | `wpfasty-demo/`: `common.php`, the archetype seeder (`archetype.json` → `demo`), `images/` taken from a local `playground/demo.zip` build when present, else from the cache `dist/demo-images/` or fetched once at package time (picsum, 1000×750, the same URLs as `tools/playground-build.sh`; a seed that cannot be fetched is left to `common.php` at seeding time), `landings/` from the manifest |
 | `blueprint.json`, `<slug>-playground.zip` | `output.playground` | Playground blueprint (install parent + child + plugins, activate, permalinks, unzip demo, run seeder, seed landings in manifest order); every resource is `bundled`, so the bundle zip (one top-level folder) is self-contained — no gist or other external URLs |
 | `site.manifest.json` | always | copy of the input manifest |
 

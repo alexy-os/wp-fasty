@@ -106,7 +106,7 @@ plugins/wpfasty-types/       companion plugin: CPTs, taxonomies, typed meta, met
 plugins/wpfasty-builder/     landing builder: sources, layouts, Latte compiler, REST, Svelte editor
 .workspaces/theme-builder/   build + pack
 .workspaces/css-build/       token-only Tailwind v4 build (css:build)
-playground/                  Playground blueprints + zips + urls.txt
+playground/                  Playground blueprints + urls.txt (zips built in CI, gitignored)
 dist/latte.zip               release artifact (gitignored)
 ```
 

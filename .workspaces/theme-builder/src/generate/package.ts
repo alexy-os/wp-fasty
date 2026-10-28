@@ -43,15 +43,26 @@ function demoZip(m: J, arch: J, stage: string, out: string): { images: number; m
     if (l.file) copyFileSync(join(root, l.file), join(d, "landings", basename(l.file)));
     else writeFileSync(join(d, "landings", `${l.page.slug}.json`), JSON.stringify(l, null, 2) + "\n");
   }
-  // Images: taken from the committed preview bundle (playground/demo.zip) so packaging needs no network.
-  // A seed that is not bundled is fetched by common.php at seeding time (wpfasty_demo_image falls back to network).
+  // Images: from a local preview build (playground/demo.zip, built by tools/playground-build.sh, not in git) when present,
+  // else from the cache dist/demo-images/, else fetched once at package time from the same URL as playground-build.sh
+  // (1000×750) into that cache — so a package (and its Playground bundle) carries its images and CI needs no committed zip.
+  // A seed that cannot be fetched is left to common.php at seeding time (wpfasty_demo_image falls back to network).
   const source = join(root, "playground/demo.zip");
+  const cache = join(root, "dist/demo-images");
   const missing: string[] = [];
   let images = 0;
   for (const seed of demoSeeds(seeder)) {
     const r = existsSync(source) ? spawnSync("unzip", ["-p", source, `wpfasty-demo/images/${seed}.jpg`]) : null;
-    if (r && r.status === 0 && r.stdout.length) {
-      writeFileSync(join(d, "images", `${seed}.jpg`), r.stdout);
+    let bytes: Buffer | null = r && r.status === 0 && r.stdout.length ? r.stdout : null;
+    const cached = join(cache, `${seed}.jpg`);
+    if (!bytes && !existsSync(cached)) {
+      mkdirSync(cache, { recursive: true });
+      const f = spawnSync("curl", ["-sSfL", "--retry", "3", "--max-time", "30", "-o", cached, `https://picsum.photos/seed/${seed}/1000/750.jpg`]);
+      if (f.status !== 0) rmSync(cached, { force: true });
+    }
+    if (!bytes && existsSync(cached) && statSync(cached).size > 0) bytes = readFileSync(cached);
+    if (bytes) {
+      writeFileSync(join(d, "images", `${seed}.jpg`), bytes);
       images++;
     } else missing.push(seed);
   }

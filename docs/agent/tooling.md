@@ -36,7 +36,7 @@ job `wordpress` (WP 7.1.3 + MariaDB: Theme Check 20260901 on the unpacked zip an
 | `wp plugin activate wpfasty-types` | companion plugin (post types/taxonomies/meta/metaboxes) needed by folio/shop | – |
 | `bun run i18n:pot` | regenerates `themes/*/languages/*.pot` (needs wp-cli) | – |
 | `composer audit` | known-vulnerability check of PHP deps | yes |
-| `bash tools/playground-build.sh` | builds `playground/*.zip` (themes + demo seeders + images) | – |
+| `bash tools/playground-build.sh` | builds `playground/*.zip` (themes + demo seeders + images; gitignored, built in CI by the Playground workflow) | yes (Playground workflow) |
 | `wp eval-file tools/perf/queries.php` | SAVEQUERIES: DB query count on archive must not grow with N posts | – (needs WP+DB) |
 | Theme Check | see [wporg-theme-review.md](wporg-theme-review.md#running-theme-check-locally-verified) | – (needs WP) |
 

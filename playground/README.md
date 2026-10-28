@@ -1,7 +1,7 @@
 # Live previews (WordPress Playground)
 
-The built zips are mirrored
-(base64) in a secret gist: https://gist.github.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc
+The zips are not in git (`playground/*.zip` is gitignored): the **Playground** workflow builds them in CI with
+`tools/playground-build.sh` and mirrors them (base64) in a secret gist: https://gist.github.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc
 and the blueprints (`press.json`, `folio.json`, `shop.json`, `shop-twig.json`) are passed inline in the Playground URL fragment.
 Everything runs in the visitor's browser — no server.
 
@@ -25,7 +25,8 @@ The raw URLs have no revision, so `urls.txt` and the blueprints never change.
 Gist raw cache: after a publish, `gist.githubusercontent.com/.../raw/<file>` may serve the previous file for up to
 ~5 minutes. A Playground opened right after a rebuild can still boot the old build — wait a few minutes and reload.
 
-Locally: `bash tools/playground-build.sh` (needs `zip`), then `tools/playground-publish.sh <gist checkout>` shows what
+Locally: `bash tools/playground-build.sh` (needs `zip`) writes the ten zips into `playground/` (ignored by git — never
+commit them), then `tools/playground-publish.sh <gist checkout>` shows what
 would change (dry run; `--push` publishes).
 Last rebuild 2026-10-24 (UI8Kit 3): all four blueprints booted with `@wp-playground/cli` 3.1.60 server on Node 24 (PHP 8.5, WP_DEBUG display on) — front page, archive and a single entry 200 with no PHP notices; the Twig shop loads no `Latte\` class and ships no Latte file; all four URLs open on playground.wordpress.net.
 Rebuild 2026-10-24 (builder editor, Cycle L): shop and shop-twig booted locally from the new zips with `@wp-playground/cli` (Node 24, PHP 8.5): editor opens, overlay/typed fields/undo work, `render-block` checked live (`tools/builder/render-block-check.php --live`).

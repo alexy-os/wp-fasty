@@ -22,6 +22,8 @@ bun.lockb
 # composer.lock
 
 # Build / cache
+# Playground preview zips: built by tools/playground-build.sh (locally or in the Playground workflow), never committed
+playground/*.zip
 ~cache/
 themes/*/~cache/
 packages/ui8kit-codegen/generated/
