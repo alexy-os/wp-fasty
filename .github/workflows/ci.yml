@@ -92,6 +92,11 @@ jobs:
             bun tools/builder/export-ui8kit.ts --check --offline
           fi
 
+      - name: Builder block previews — one WebP per variant (474), size as listed, ≤ 10 KB (shots are outside source.digest)
+        run: |
+          bun tools/builder/previews.ts --check
+          echo "Block previews: $(bun tools/builder/previews.ts --check)" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Composer install (theme)
         run: composer install --no-interaction --no-progress --working-dir=themes/latte
 

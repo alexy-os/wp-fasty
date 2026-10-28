@@ -76,6 +76,8 @@ final class Rest
             return new WP_Error('wpfb_source', __('Unknown source.', 'wpfasty-builder'), ['status' => 404]);
         }
         $col = (string) $r['collection'];
+        $editor = $catalog->forEditor($col !== '' && $catalog->collection($col) !== null ? $col : null);
+        $editor['blocks'] = Previews::attach($editor['blocks'], Sources::get((string) $r['source']));
         return new WP_REST_Response([
             'source' => (string) $r['source'],
             'sources' => array_map(
@@ -84,7 +86,7 @@ final class Rest
             ),
             'collections' => $catalog->collections(),
             'dataSources' => array_values(DataSources::all($catalog)),
-        ] + $catalog->forEditor($col !== '' && $catalog->collection($col) !== null ? $col : null));
+        ] + $editor);
     }
 
     public static function links(): WP_REST_Response
