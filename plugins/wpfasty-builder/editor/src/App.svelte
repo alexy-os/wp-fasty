@@ -6,6 +6,8 @@
   import Icon from "./Icon.svelte";
   import Overlay from "./Overlay.svelte";
   import Splitter from "./Splitter.svelte";
+  import BlockCards from "./BlockCards.svelte";
+  import { MIME, type Card } from "./cards";
   import { PanelLayout } from "./layout.svelte";
   import { isTyping, shortcutOf } from "./layout";
   import { EditorStore } from "./store.svelte";
@@ -38,8 +40,6 @@
   let published = $state(false);
   let status = $state<"loading" | "idle" | "saving" | "saved" | "error">("loading");
   let message = $state("");
-  let search = $state("");
-  let openBlock = $state<string | null>(null);
   let frame = $state<HTMLIFrameElement | null>(null);
   let list = $state<HTMLOListElement | null>(null);
   let reloadKey = $state(0);
@@ -53,9 +53,6 @@
   let reloadAfterSave = false;
 
   const blocks = $derived(new Map((catalog?.blocks ?? []).map((b) => [b.id, b])));
-  const filtered = $derived(
-    (catalog?.blocks ?? []).filter((b) => !search || `${b.title} ${b.id} ${b.group}`.toLowerCase().includes(search.toLowerCase())),
-  );
   const current = $derived(store.current);
   const currentIndex = $derived(store.index);
   const currentBlock = $derived(current ? blocks.get(current.block) ?? null : null);
@@ -326,7 +323,8 @@
     const win = frame?.contentWindow;
     if (!el || !win) return;
     const r = el.getBoundingClientRect();
-    if (r.top < 0 || r.top > win.innerHeight - 48) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    // scroll the frame's own window: scrollIntoView would also scroll wp-admin around the editor
+    if (r.top < 0 || r.top > win.innerHeight - 48) win.scrollTo({ top: win.scrollY + r.top, behavior: "smooth" });
   }
 
   /** text controls keep their own (native) undo while focused; everywhere else Ctrl/Cmd+Z undoes the layout */
@@ -398,6 +396,31 @@
     else move(d.from, at);
   }
 
+  // HTML5 drag and drop of a block card (BlockCards) onto the structure or the canvas (a drop layer over the iframe
+  // while a card is dragged: the iframe's own document would get the events)
+  let card = $state<Card | null>(null);
+  function cardOver(e: DragEvent) {
+    if (!card || !e.dataTransfer?.types.includes(MIME)) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+    dropAt = dropIndex(e.clientX, e.clientY);
+    schedule();
+  }
+  function cardDrop(e: DragEvent) {
+    const key = e.dataTransfer?.getData(MIME) ?? "";
+    const at = dropIndex(e.clientX, e.clientY);
+    e.preventDefault();
+    dragDone();
+    const [block, variant] = key.split("/");
+    if (block && variant && at !== null) add(block, variant, at);
+  }
+  function dragDone() {
+    card = null;
+    dropAt = null;
+    dropIn = null;
+    schedule();
+  }
+
   function indexBy(ys: { top: number; bottom: number }[], y: number): number {
     for (let i = 0; i < ys.length; i++) if (y < (ys[i].top + ys[i].bottom) / 2) return i;
     return ys.length;
@@ -445,8 +468,8 @@
 
   function measure() {
     selBox = boxOf(store.selected);
-    hoverBox = drag || store.hovered === store.selected ? null : boxOf(store.hovered);
-    if (drag && dropIn === "frame" && dropAt !== null) {
+    hoverBox = drag || card || store.hovered === store.selected ? null : boxOf(store.hovered);
+    if ((drag || card) && dropIn === "frame" && dropAt !== null) {
       const at = store.items[dropAt] ? boxOf(store.items[dropAt].id) : boxOf(store.items[store.items.length - 1]?.id ?? null);
       dropY = at ? (store.items[dropAt] ? at.top : at.top + at.height) : 0;
     } else dropY = null;
@@ -546,36 +569,11 @@
           </div>
         </div>
       {/if}
-      <div class="wpfb-section">
+      <div class="wpfb-section is-cards">
         <h2 class="wpfb-heading">Blocks</h2>
-        <input class="wpfb-search" type="search" placeholder="Search blocks" bind:value={search} aria-label="Search blocks" />
-        <ul class="wpfb-list">
-        {#each filtered as b (b.id)}
-          <li>
-            <div class="wpfb-li" class:is-open={openBlock === b.id}>
-              <button type="button" class="wpfb-li-main" aria-expanded={openBlock === b.id} onclick={() => (openBlock = openBlock === b.id ? null : b.id)}>
-                <span>{b.title}</span><span class="wpfb-muted">{b.variants.length}</span>
-              </button>
-            </div>
-            {#if openBlock === b.id}
-              <div class="wpfb-sub">
-              <p class="wpfb-docs">{b.docs}</p>
-              <ul class="wpfb-chips is-two">
-                {#each b.variants as v (v.id)}
-                  <li>
-                    <button type="button" class="wpfb-chip is-drag" title="Drag onto the page or click to add"
-                      onpointerdown={(e) => pointerDown(e, { kind: "new", block: b.id, variant: v.id, label: `${b.title} · ${human(v.id)}` })}
-                      onclick={() => { if (!drag) add(b.id, v.id, store.selected ? currentIndex + 1 : store.items.length); }}>
-                      {human(v.id)}
-                    </button>
-                  </li>
-                {/each}
-              </ul>
-              </div>
-            {/if}
-          </li>
-        {/each}
-        </ul>
+        <BlockCards blocks={catalog?.blocks ?? []} collections={catalog?.collections ?? []}
+          onadd={(block, variant) => add(block, variant, store.selected ? currentIndex + 1 : store.items.length)}
+          ondrag={(c) => { card = c; if (!c) dragDone(); }} />
       </div>
     </aside>
 
@@ -599,6 +597,10 @@
             onup={() => move(currentIndex, currentIndex - 1)} ondown={() => move(currentIndex, currentIndex + 2)}
             onduplicate={() => current && duplicate(current.id)} onremove={() => current && remove(current.id)}
             ondragstart={(e) => current && pointerDown(e, { kind: "move", from: currentIndex, label: titleOf(current) })} />
+          {#if card}
+            <div class="wpfb-droplayer" role="presentation" ondragover={cardOver} ondrop={cardDrop}
+              ondragleave={() => { dropAt = null; dropIn = null; schedule(); }}></div>
+          {/if}
         </div>
       {/if}
       {#if store.items.length === 0 && status !== "loading"}
@@ -613,7 +615,9 @@
 
     <aside id="wpfb-inspector" class="wpfb-inspector" aria-label="Structure and properties" hidden={!layout.rightOpen}>
       <h2 class="wpfb-heading">Structure</h2>
-      <ol class="wpfb-list wpfb-structure" bind:this={list} onmouseleave={() => (store.hovered = null)}>
+      <ol class="wpfb-list wpfb-structure" bind:this={list} onmouseleave={() => (store.hovered = null)}
+        ondragover={cardOver} ondrop={(e) => { if (card) cardDrop(e); }}
+        ondragleave={(e) => { if (card && !list?.contains(e.relatedTarget as Node | null)) { dropAt = null; dropIn = null; } }}>
         {#each store.items as it, i (it.id)}
           {#if dropIn === "list" && dropAt === i}<li class="wpfb-drop" aria-hidden="true"></li>{/if}
           <li data-index={i} class="wpfb-li" class:is-selected={store.selected === it.id} class:is-hover={store.hovered === it.id} onmouseenter={() => (store.hovered = it.id)}>
