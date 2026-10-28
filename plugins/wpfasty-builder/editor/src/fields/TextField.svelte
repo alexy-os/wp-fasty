@@ -58,7 +58,7 @@
       <input {id} type="text" value={draft} bind:this={input} aria-describedby={resolved ? id + "-hint" : undefined}
         oninput={(e) => typed(e.currentTarget.value)} onchange={(e) => commit(e.currentTarget.value)}
         onkeydown={(e) => { if (e.key === "ArrowDown" && e.altKey) { e.preventDefault(); toggle(); } }} />
-      <button type="button" class={["wpfb-link-icon", { "is-open": open }]} title="Макросы ссылок (Alt+↓)" aria-label="Макросы ссылок"
+      <button type="button" class={["wpfb-link-icon", { "is-open": open }]} title="Link tokens (Alt+↓)" aria-label="Link tokens"
         aria-haspopup="listbox" aria-expanded={open} aria-controls={open ? id + "-picker-list" : undefined} onclick={toggle}>
         <Icon icon={Braces} size={16} />
       </button>

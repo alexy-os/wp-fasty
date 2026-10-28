@@ -25,9 +25,9 @@
 
   const cols = $derived(filterIndex(links.index, query));
   const columns = $derived([
-    { key: "site", title: "Сайт", icon: House, items: cols.site },
-    { key: "pages", title: "Страницы", icon: FileText, items: cols.pages },
-    { key: "sections", title: "Разделы", icon: FolderTree, items: cols.sections },
+    { key: "site", title: "Site", icon: House, items: cols.site },
+    { key: "pages", title: "Pages", icon: FileText, items: cols.pages },
+    { key: "sections", title: "Sections", icon: FolderTree, items: cols.sections },
   ]);
   const flat = $derived(columns.flatMap((c) => c.items));
   const home = $derived(links.index?.home ?? "");
@@ -72,7 +72,7 @@
   const focus = (el: HTMLInputElement) => {
     el.focus();
   };
-  const hint = (t: LinkTarget) => (t.kind === "archive" ? "архив" : t.kind === "category" ? "рубрика" : (t.slug ?? relative(t.url, home)));
+  const hint = (t: LinkTarget) => (t.kind === "archive" ? "archive" : t.kind === "category" ? "category" : (t.slug ?? relative(t.url, home)));
 </script>
 
 <svelte:document onpointerdown={outside} onscrollcapture={(e) => { if (!root?.contains(e.target as Node)) place(); }} />
@@ -81,17 +81,17 @@
 <div class={["wpfb-linkpicker", { "is-up": pos.up }]} bind:this={root} style:top="{pos.top}px" style:left="{pos.left}px" style:--wpfb-picker-w="{WIDTH}px">
   <div class="wpfb-linkpicker-search">
     <Icon icon={Search} size={16} />
-    <input type="search" placeholder="Поиск страницы или раздела" aria-label="Поиск ссылки" role="combobox" aria-expanded="true"
+    <input type="search" placeholder="Search pages and sections" aria-label="Search links" role="combobox" aria-expanded="true"
       aria-controls="{id}-list" aria-autocomplete="list" aria-activedescendant={flat.length ? optId(active) : undefined}
       value={query} oninput={(e) => { query = e.currentTarget.value; active = 0; }} onkeydown={key} {@attach focus} />
   </div>
   {#if links.error && !links.index}
-    <p class="wpfb-linkpicker-note is-error">Не удалось загрузить ссылки: {links.error}
-      <button type="button" class="button" onclick={() => links.ensure()}>Повторить</button></p>
+    <p class="wpfb-linkpicker-note is-error">Could not load links: {links.error}
+      <button type="button" class="button" onclick={() => links.ensure()}>Retry</button></p>
   {:else if !links.index}
-    <p class="wpfb-linkpicker-note">Загрузка…</p>
+    <p class="wpfb-linkpicker-note">Loading…</p>
   {:else}
-    <div class="wpfb-linkpicker-cols" id="{id}-list" role="listbox" aria-label="Макросы ссылок">
+    <div class="wpfb-linkpicker-cols" id="{id}-list" role="listbox" aria-label="Link tokens">
       {#each columns as col, c (col.key)}
         <div class="wpfb-linkpicker-col" role="group" aria-labelledby="{id}-h{c}">
           <div class="wpfb-linkpicker-head" id="{id}-h{c}" role="presentation"><Icon icon={col.icon} size={12} /> {col.title}</div>
@@ -105,7 +105,7 @@
               <span class="wpfb-linkpicker-meta">{hint(t)}</span>
             </div>
           {:else}
-            <p class="wpfb-linkpicker-empty">{query ? "Нет совпадений" : "Пусто"}</p>
+            <p class="wpfb-linkpicker-empty">{query ? "No matches" : "Nothing here"}</p>
           {/each}
         </div>
       {/each}

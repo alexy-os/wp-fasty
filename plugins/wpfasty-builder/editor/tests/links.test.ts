@@ -45,10 +45,10 @@ describe("resolveMacro", () => {
     expect(resolveMacro("{archive:product}?sale=1", index)).toEqual({ url: "http://x.test/shop/?sale=1", shown: "/shop/?sale=1" });
   });
   test("missing targets", () => {
-    expect(resolveMacro("{page:team}", index)).toEqual({ error: "страница team не найдена" });
-    expect(resolveMacro("{category:old}", index)).toEqual({ error: "рубрика old не найдена" });
-    expect(resolveMacro("{archive:event}", index)).toEqual({ error: "архив event не найден" });
-    expect(resolveMacro("{page}", index)).toEqual({ error: "укажите слаг: {page:<слаг>}" });
+    expect(resolveMacro("{page:team}", index)).toEqual({ error: "page team not found" });
+    expect(resolveMacro("{category:old}", index)).toEqual({ error: "category old not found" });
+    expect(resolveMacro("{archive:event}", index)).toEqual({ error: "archive event not found" });
+    expect(resolveMacro("{page}", index)).toEqual({ error: "add a slug: {page:<slug>}" });
   });
   test("no token: nothing to show", () => {
     expect(resolveMacro("/about/", index)).toBeNull();
@@ -61,9 +61,16 @@ describe("resolveMacro", () => {
 
 describe("isLinkField", () => {
   test("by prop name, text fields only", () => {
-    for (const n of ["href", "url", "link", "Link", "ctaHref", "secondaryHref", "imageUrl", "brandURL"]) expect(isLinkField(n, { type: "text" })).toBe(true);
+    for (const n of ["href", "url", "link", "Link", "ctaHref", "secondaryHref", "brandURL", "logoLinkUrl"]) expect(isLinkField(n, { type: "text" })).toBe(true);
     for (const n of ["title", "links", "hrefLabel", "linkText"]) expect(isLinkField(n, { type: "text" })).toBe(false);
     expect(isLinkField("href", { type: "textarea" })).toBe(false);
+  });
+  test("never media props", () => {
+    for (const n of ["imageUrl", "imageHref", "image", "src", "imageSrc", "videoSrc", "poster", "avatarUrl", "avatar", "iconUrl", "iconHref"]) {
+      expect(isLinkField(n, { type: "text" })).toBe(false);
+      expect(isLinkField(n, { type: "url" as never })).toBe(false);
+    }
+    expect(isLinkField("posterHref", { type: "text" })).toBe(true);
   });
 });
 

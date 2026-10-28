@@ -32,15 +32,21 @@ export function applyMacro(value: string, token: string): string {
   return /^[#?]/.test(value) ? token + value : token;
 }
 
-/** fields that take a link: prop names href, url, link or ending in Href / Url (any case); a field typed url */
+/** media props (an image, video poster, avatar or icon URL): no link tokens there, whatever the name ends with */
+export const MEDIA_FIELDS: readonly RegExp[] = [/^image/i, /^src$/i, /src$/i, /^poster$/i, /^avatar/i, /^icon/i];
+
+/**
+ * Fields that take a link: prop names href, url, link or ending in Href / Url (any case), or a field typed url;
+ * never the media props of MEDIA_FIELDS (imageUrl, imageSrc, posterUrl…).
+ */
 export function isLinkField(name: string, field: Pick<Field, "type">): boolean {
+  if (MEDIA_FIELDS.some((re) => re.test(name))) return false;
   if ((field.type as string) === "url") return true;
   if (field.type !== "text") return false;
   return /^link$/i.test(name) || /(href|url)$/i.test(name);
 }
 
-const NOUN: Record<string, string> = { page: "страница", category: "рубрика", archive: "архив" };
-const MISSING: Record<string, string> = { page: "не найдена", category: "не найдена", archive: "не найден" };
+const NOUN: Record<string, string> = { page: "page", category: "category", archive: "archive" };
 
 export type Resolved = { url: string; shown: string } | { error: string };
 
@@ -48,9 +54,9 @@ export type Resolved = { url: string; shown: string } | { error: string };
 export function resolveMacro(value: string, index: LinkIndex): Resolved | null {
   const m = parseMacro(value);
   if (!m) return null;
-  if (m.kind !== "home" && m.kind !== "posts" && m.arg === "") return { error: `укажите слаг: {${m.kind}:<слаг>}` };
+  if (m.kind !== "home" && m.kind !== "posts" && m.arg === "") return { error: `add a slug: {${m.kind}:<slug>}` };
   const target = [...index.site, ...index.pages, ...index.sections].find((t) => t.token === m.token);
-  if (!target) return { error: `${NOUN[m.kind] ?? m.kind} ${m.arg} ${MISSING[m.kind] ?? "не найдено"}` };
+  if (!target) return { error: `${NOUN[m.kind] ?? m.kind} ${m.arg} not found` };
   const url = m.prefix + target.url + m.suffix;
   return { url, shown: relative(url, index.home) };
 }
