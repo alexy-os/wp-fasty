@@ -25,7 +25,7 @@
         {%- set c_2 -%}
           {{ og_text(og_get(v_action, ['label'])) }}
         {%- endset -%}
-        {{ include('compose/Link.html.twig', {'href': og_s(og_get(v_action, ['href'])), 'variant': 'default', 'class': og_s(og_cnv([og_preset('blocks/presets/defaults.json', ['text', 'tiny']), 'shrink-0 font-medium leading-5'])), 'attrs': og_attrs(['data-testid', 'section-action']), 'children': c_2}, with_context = false) }}
+        {{ include('compose/Link.html.twig', {'href': og_url(og_s(og_get(v_action, ['href']))), 'variant': 'default', 'class': og_s(og_cnv([og_preset('blocks/presets/defaults.json', ['text', 'tiny']), 'shrink-0 font-medium leading-5'])), 'attrs': og_attrs(['data-testid', 'section-action']), 'children': c_2}, with_context = false) }}
       {%- endif %}
     {%- endset -%}
     {{ include('compose/Group.html.twig', {'gap': '4', 'align': 'center', 'justify': 'between', 'class': 'w-full', 'children': c_3}, with_context = false) }}

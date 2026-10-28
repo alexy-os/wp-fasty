@@ -7,7 +7,7 @@
   {%- set c_4 -%}
     {%- if og_t(((p.icon ?? null) is not null)) %}
       {%- set c_1 -%}
-        {{ (p.icon ?? '')|raw }}
+        {{ og_slot((p.icon ?? null))|raw }}
       {%- endset -%}
       {{ include('compose/Inline.html.twig', {'class': 'flex w-7 shrink-0 items-center pr-2', 'attrs': og_attrs(['data-slot', 'dropdown-item-icon']), 'children': c_1}, with_context = false) }}
     {%- endif %}
@@ -17,7 +17,7 @@
     {{ include('compose/Inline.html.twig', {'class': og_s(og_cnv(['text-xs', 'min-w-0 flex-1 truncate px-1 font-bold'])), 'attrs': og_attrs(['data-slot', 'dropdown-item-label']), 'children': c_2}, with_context = false) }}
     {%- if og_t(((p.right ?? null) is not null)) %}
       {%- set c_3 -%}
-        {{ (p.right ?? '')|raw }}
+        {{ og_slot((p.right ?? null))|raw }}
       {%- endset -%}
       {{ include('compose/Inline.html.twig', {'class': 'flex shrink-0 items-center pr-1', 'attrs': og_attrs(['data-slot', 'dropdown-item-right']), 'children': c_3}, with_context = false) }}
     {%- endif %}

@@ -83,5 +83,5 @@
       {{ include('compose/Grid.html.twig', {'cols': '1-3', 'class': 'gap-4', 'attrs': og_attrs(['data-testid', 'perks']), 'children': c_13}, with_context = false) }}
     {%- endif %}
   {%- endset -%}
-  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge, 'level': v_level}, 'layout': 'split', 'media': {'show': true, 'side': v_mediaSide}, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel, 'aside': f_14}, 'children': c_15}, with_context = false) }}
+  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge, 'level': v_level}, 'layout': 'split', 'media': {'show': true, 'side': v_mediaSide}, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_14)}, 'children': c_15}, with_context = false) }}
 {%- endif %}

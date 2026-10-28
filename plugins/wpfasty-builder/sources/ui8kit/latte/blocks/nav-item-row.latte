@@ -6,7 +6,7 @@
 {var $v_reserveRight = ($p['reserveRight'] ?? false)}
 {capture $c_4}
   {capture $c_2}
-    {=($p['icon'] ?? '')|noescape}
+    {=og_slot(($p['icon'] ?? null))|noescape}
     {capture $c_1}
       {=($children ?? '')|noescape}
     {/capture}
@@ -15,7 +15,7 @@
   {=og_include('compose/Inline.latte', ['class' => 'flex min-w-0 flex-1 items-center gap-4 in-data-[nav=collapsed]:flex-none in-data-[nav=collapsed]:justify-center', 'attrs' => og_attrs(['data-slot', 'nav-item-left']), 'children' => (string) $c_2])|noescape}
   {if og_t(((($p['right'] ?? null) !== null)))}
     {capture $c_3}
-      {=($p['right'] ?? '')|noescape}
+      {=og_slot(($p['right'] ?? null))|noescape}
     {/capture}
     {=og_include('compose/Inline.latte', ['class' => 'flex items-center gap-2 in-data-[nav=collapsed]:hidden', 'attrs' => og_attrs(['data-slot', 'nav-item-right']), 'children' => (string) $c_3])|noescape}
   {elseif og_t($v_reserveRight)}

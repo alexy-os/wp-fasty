@@ -9,5 +9,5 @@
     {=og_include('icons/LucideIcon.latte', ['name' => 'arrow-right', 'size' => 16])|noescape}
     {=og_text($v_label)}
   {/capture}
-  {=og_include('compose/Link.latte', ['href' => og_s($v_href), 'size' => 'sm', 'attrs' => og_attrs(['data-testid', 'footer-sitemap']), 'children' => (string) $c_1])|noescape}
+  {=og_include('compose/Link.latte', ['href' => og_url(og_s($v_href)), 'size' => 'sm', 'attrs' => og_attrs(['data-testid', 'footer-sitemap']), 'children' => (string) $c_1])|noescape}
 {/if}

@@ -6,7 +6,7 @@
 {var $v_name = ($p['name'] ?? null)}
 {capture $c_4}
   {capture $c_2}
-    {=($p['mark'] ?? '')|noescape}
+    {=og_slot(($p['mark'] ?? null))|noescape}
     {capture $c_1}
       {=og_text($v_name)}
     {/capture}
@@ -15,7 +15,7 @@
   {=og_include('compose/Inline.latte', ['class' => 'flex items-center gap-4', 'attrs' => og_attrs(['data-slot', 'logo-sidebar-brand']), 'children' => (string) $c_2])|noescape}
   {if og_t(((($p['actions'] ?? null) !== null)))}
     {capture $c_3}
-      {=($p['actions'] ?? '')|noescape}
+      {=og_slot(($p['actions'] ?? null))|noescape}
     {/capture}
     {=og_include('compose/Inline.latte', ['class' => 'flex items-center gap-2 in-data-[nav=collapsed]:hidden', 'attrs' => og_attrs(['data-slot', 'logo-sidebar-actions']), 'children' => (string) $c_3])|noescape}
   {/if}

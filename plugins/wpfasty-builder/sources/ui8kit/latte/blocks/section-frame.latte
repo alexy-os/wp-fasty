@@ -25,7 +25,7 @@
         {capture $c_4}
           {if og_t(og_and([og_get($v_media, ['show']), og_eq(og_get($v_media, ['side']), 'start')]))}
             {capture $c_1}
-              {=($p['aside'] ?? '')|noescape}
+              {=og_slot(($p['aside'] ?? null))|noescape}
             {/capture}
             {=og_include('compose/Box.latte', ['class' => 'w-full', 'attrs' => og_attrs(['data-slot', 'media']), 'children' => (string) $c_1])|noescape}
           {/if}
@@ -36,7 +36,7 @@
           {=og_include('compose/Stack.latte', ['gap' => '6', 'align' => 'stretch', 'children' => (string) $c_2])|noescape}
           {if og_t(og_and([og_get($v_media, ['show']), !(og_eq(og_get($v_media, ['side']), 'start'))]))}
             {capture $c_3}
-              {=($p['aside'] ?? '')|noescape}
+              {=og_slot(($p['aside'] ?? null))|noescape}
             {/capture}
             {=og_include('compose/Box.latte', ['class' => 'w-full', 'attrs' => og_attrs(['data-slot', 'media']), 'children' => (string) $c_3])|noescape}
           {/if}
@@ -48,7 +48,7 @@
           {=($children ?? '')|noescape}
           {if og_t(og_get($v_media, ['show']))}
             {capture $c_5}
-              {=($p['aside'] ?? '')|noescape}
+              {=og_slot(($p['aside'] ?? null))|noescape}
             {/capture}
             {=og_include('compose/Box.latte', ['class' => 'w-full', 'attrs' => og_attrs(['data-slot', 'media']), 'children' => (string) $c_5])|noescape}
           {/if}

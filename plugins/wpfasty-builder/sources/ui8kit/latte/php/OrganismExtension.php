@@ -41,7 +41,7 @@ final class OrganismExtension extends \Latte\Extension
             'coalesce', 'def', 'l', 'len', 'spread', 'str', 'has', 'cnv', 'tpl', 'num', 'money', 'at', 'page_window',
             'fit_cols', 'uniq', 'words', 'nbsp', 'nth', 'range', 'max', 'min', 'round', 'count', 'where', 'match', 'pick',
             'sum_by', 'first_of', 'max_by', 'css', 'attrs', 'is_set_str', 'default_if_empty', 'map_or', 'int_map_or',
-            'bool_str', 'concat_trim', 'cn', 'resolve_tag', 'title_tag',
+            'bool_str', 'concat_trim', 'cn', 'resolve_tag', 'title_tag', 'url', 'srcset', 'style', 'slot', 'markup',
         ];
         $fns = [];
         foreach ($static as $name) {

@@ -137,6 +137,193 @@ final class Runtime
         return strtr(self::text($v), ['&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#39;']);
     }
 
+    /**
+     * a slot prop printed in place (|raw, |noescape): the markup the calling template captured ({"__html": "..."}, made by
+     * markup()) as it is; any other value (a plain string from a caller) is text, escaped, so a sub-template called directly
+     * with a string prints no markup of it
+     */
+    public static function slot(mixed $v): string
+    {
+        return self::html($v);
+    }
+
+    /** captured markup (a fill of a slot) as a TrustedHtml marker, which slot() prints as it is */
+    public static function markup(mixed $v): array
+    {
+        return ['__html' => $v === null ? '' : (string) $v];
+    }
+
+    // ---------------------------------------------------------------- output safety (assets/ts/safe.ts, test/safety-vectors.json)
+
+    /** the named character references the URL check decodes */
+    public const NAMED_ENTITIES = [
+        'Tab' => "\t", 'NewLine' => "\n", 'colon' => ':', 'sol' => '/', 'bsol' => '\\', 'lpar' => '(', 'rpar' => ')', 'amp' => '&',
+        'lt' => '<', 'gt' => '>', 'quot' => '"', 'apos' => "'", 'nbsp' => "\u{00a0}", 'period' => '.', 'comma' => ',', 'excl' => '!',
+        'num' => '#', 'quest' => '?', 'equals' => '=', 'plus' => '+', 'semi' => ';', 'percnt' => '%', 'lowbar' => '_', 'ast' => '*',
+        'commat' => '@', 'dollar' => '$', 'Hat' => '^', 'grave' => '`', 'lsqb' => '[', 'rsqb' => ']', 'lcub' => '{', 'rcub' => '}',
+        'verbar' => '|', 'vert' => '|',
+    ];
+    public const URL_SCHEMES = ['http', 'https', 'mailto', 'tel'];
+    public const URL_ATTRS = ['href', 'src', 'action', 'formaction', 'poster', 'cite', 'background', 'data', 'xlink:href'];
+    public const IMAGE_ATTRS = ['src', 'poster', 'background'];
+
+    private static function fromCode(int|float $n): string
+    {
+        return $n > 0 && $n <= 0x10FFFF && !($n >= 0xD800 && $n <= 0xDFFF) ? (string) mb_chr((int) $n, 'UTF-8') : "\u{FFFD}";
+    }
+
+    /** character references decoded as a browser would (numeric with or without ;, the named ones of NAMED_ENTITIES), up to 3 rounds */
+    public static function decodeEntities(string $s): string
+    {
+        for ($i = 0; $i < 3 && str_contains($s, '&'); $i++) {
+            $s = (string) preg_replace_callback('/&(?:#[xX]([0-9a-fA-F]{1,8});?|#([0-9]{1,10});?|([a-zA-Z][a-zA-Z0-9]{0,31});)/u', static function (array $m): string {
+                if (($m[1] ?? '') !== '') {
+                    return self::fromCode(hexdec($m[1]));
+                }
+                if (($m[2] ?? '') !== '') {
+                    return self::fromCode((float) $m[2]);
+                }
+                return self::NAMED_ENTITIES[$m[3] ?? ''] ?? $m[0];
+            }, $s);
+        }
+        return $s;
+    }
+
+    private static function compact(string $s): string
+    {
+        return (string) preg_replace('/[\x00-\x20\x7F]+/u', '', self::decodeEntities($s));
+    }
+
+    /** true when the URL is allowed: no scheme and not //host, or http(s), mailto, tel; an image also data:image/* */
+    public static function isSafeUrl(string $v, bool $image = false): bool
+    {
+        $k = self::compact($v);
+        if (preg_match('#^[/\\\\]{2}#', $k) === 1) {
+            return false;
+        }
+        if (preg_match('/^([a-zA-Z][a-zA-Z0-9+.\-]*):/', $k, $m) !== 1) {
+            // no scheme: a path, unless a ':' comes before any '/' (as written or decoded), as templ.URL
+            return preg_match('#^[^/]*:#', $k) !== 1 && preg_match('#^[^/]*:#', $v) !== 1;
+        }
+        $scheme = strtolower($m[1]);
+        if ($scheme === 'data') {
+            return $image && preg_match('#^data:image/(png|jpeg|gif|webp|avif|svg\+xml)[;,]#', strtolower($k)) === 1;
+        }
+        return in_array($scheme, self::URL_SCHEMES, true);
+    }
+
+    private static function safeStr(mixed $v): string
+    {
+        return is_string($v) ? $v : (self::isNum($v) ? self::fmtNum($v) : '');
+    }
+
+    /** a URL attribute value: the value when allowed, else '' */
+    public static function url(mixed $v, bool $image = false): string
+    {
+        $s = self::safeStr($v);
+        return self::isSafeUrl($s, $image) ? $s : '';
+    }
+
+    /** the URLs of a srcset, candidate by candidate */
+    public static function srcsetUrls(string $v): array
+    {
+        $s = self::decodeEntities($v);
+        $out = [];
+        $n = strlen($s);
+        $i = 0;
+        $ws = static fn (string $c): bool => $c === "\t" || $c === "\n" || $c === "\f" || $c === "\r" || $c === ' ';
+        while ($i < $n) {
+            while ($i < $n && ($ws($s[$i]) || $s[$i] === ',')) {
+                $i++;
+            }
+            if ($i >= $n) {
+                break;
+            }
+            $j = $i;
+            while ($j < $n && !$ws($s[$j])) {
+                $j++;
+            }
+            $url = substr($s, $i, $j - $i);
+            if (preg_match('/,+$/', $url, $cut) === 1) {
+                $out[] = substr($url, 0, -strlen($cut[0]));
+                $i = $j;
+                continue;
+            }
+            $out[] = $url;
+            $depth = 0;
+            while ($j < $n && ($depth > 0 || $s[$j] !== ',')) {
+                if ($s[$j] === '(') {
+                    $depth++;
+                } elseif ($s[$j] === ')') {
+                    $depth = max(0, $depth - 1);
+                }
+                $j++;
+            }
+            $i = $j + 1;
+        }
+        return $out;
+    }
+
+    /** a srcset value: the value when every candidate is an allowed image URL, else '' */
+    public static function srcset(mixed $v): string
+    {
+        $s = self::safeStr($v);
+        foreach (self::srcsetUrls($s) as $u) {
+            if (!self::isSafeUrl($u, true)) {
+                return '';
+            }
+        }
+        return $s;
+    }
+
+    /** a style value: '' when a url(...) is not an image URL or it holds a script form or a CSS escape, else the value */
+    public static function style(mixed $v): string
+    {
+        $s = self::safeStr($v);
+        $d = self::decodeEntities($s);
+        $k = strtolower(self::compact($s));
+        if (str_contains($d, '\\') || preg_match('/expression\(|javascript:|vbscript:|-moz-binding|behavior:/', $k) === 1) {
+            return '';
+        }
+        preg_match_all('/url\(([^)]*)\)?/i', $d, $all);
+        foreach ($all[1] as $arg) {
+            $u = (string) preg_replace('/^(["\'])(.*)\1$/s', '$2', trim($arg, " \t\n\r\f\v"));
+            if (!self::isSafeUrl($u, true)) {
+                return '';
+            }
+        }
+        return $s;
+    }
+
+    /** a value of an inline style declaration (the css op): kept when plain (numbers, words, %, #, +, -, ., commas, spaces), else '' */
+    public static function cssValue(mixed $v): string
+    {
+        $s = self::safeStr($v);
+        return preg_match('/^[-+.%#a-zA-Z0-9 ,]*$/', $s) === 1 ? $s : '';
+    }
+
+    /** an attribute name that may be printed: a valid name, not an event handler (on*) */
+    public static function isSafeAttrName(string $name): bool
+    {
+        return preg_match('/^[a-zA-Z_:][-a-zA-Z0-9_:.]*$/', $name) === 1 && preg_match('/^on/i', $name) !== 1;
+    }
+
+    /** the value of attribute $name as it may be printed: URL, srcset and style checked */
+    public static function attrValue(string $name, mixed $v): mixed
+    {
+        $n = strtolower($name);
+        if ($n === 'srcset' || $n === 'imagesrcset') {
+            return self::srcset($v);
+        }
+        if ($n === 'style') {
+            return self::style($v);
+        }
+        if (in_array($n, self::URL_ATTRS, true)) {
+            return self::url($v, in_array($n, self::IMAGE_ATTRS, true));
+        }
+        return $v;
+    }
+
     /** JS truthiness: null, false, 0, NaN and '' are false */
     public static function t(mixed $v): bool
     {
@@ -550,7 +737,7 @@ final class Runtime
     {
         $parts = [];
         for ($i = 0; $i + 2 < count($triples); $i += 3) {
-            $parts[] = self::s($triples[$i]) . ':' . self::s($triples[$i + 1]) . self::s($triples[$i + 2]);
+            $parts[] = self::s($triples[$i]) . ':' . self::cssValue($triples[$i + 1]) . self::s($triples[$i + 2]);
         }
         return implode(';', $parts);
     }
@@ -601,8 +788,11 @@ final class Runtime
         for ($i = 0; $i + 1 < count($kv); $i += 2) {
             $k = self::s($kv[$i]);
             $v = $kv[$i + 1];
-            if ($v === null) {
+            if ($v === null || !self::isSafeAttrName($k)) {
                 continue;
+            }
+            if (!is_bool($v)) {
+                $v = self::attrValue($k, $v);
             }
             if (is_bool($v)) {
                 if (str_starts_with($k, 'data-') || str_starts_with($k, 'aria-')) {
@@ -625,11 +815,11 @@ final class Runtime
         }
         $out = '';
         foreach ($attrs as $k => $v) {
-            if ($v === null || $v === false) {
+            if ($v === null || $v === false || !self::isSafeAttrName((string) $k)) {
                 continue;
             }
-            $name = htmlspecialchars((string) $k, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-            $out .= $v === true ? " $name" : " $name=\"" . htmlspecialchars(self::s($v), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"';
+            $name = (string) $k;
+            $out .= $v === true ? " $name" : " $name=\"" . htmlspecialchars(self::s(self::attrValue($name, $v)), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"';
         }
         return $out;
     }

@@ -34,7 +34,7 @@
           {{ og_text(v_cta) }}
           {{ include('icons/LucideIcon.html.twig', {'name': 'arrow-right', 'size': 16}, with_context = false) }}
         {%- endset -%}
-        {{ include('compose/LinkPlain.html.twig', {'href': og_s(v_ctaHref), 'class': 'inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-4', 'attrs': og_attrs(['data-testid', 'announcement-cta']), 'children': c_3}, with_context = false) }}
+        {{ include('compose/LinkPlain.html.twig', {'href': og_url(og_s(v_ctaHref)), 'class': 'inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-4', 'attrs': og_attrs(['data-testid', 'announcement-cta']), 'children': c_3}, with_context = false) }}
       {%- endif %}
     {%- endset -%}
     {{ include('compose/Group.html.twig', {'gap': '4', 'align': 'center', 'class': og_s(og_cnv(['min-w-0 flex-wrap', (og_t(og_and([og_eq(v_layout, 'center'), og_eq(v_dismiss, 'show')])) ? 'ml-auto' : '')])), 'children': c_4}, with_context = false) }}

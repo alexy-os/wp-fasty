@@ -32,7 +32,7 @@
         {{ include('compose/Text.html.twig', {'class': 'm-0 text-xs font-medium text-muted-foreground', 'children': c_5}, with_context = false) }}
       {%- endif %}
     {%- endset -%}
-    {{ include('compose/Link.html.twig', {'href': og_s(v_href), 'variant': 'block', 'class': 'flex min-w-0 flex-col gap-4 rounded bg-card p-6 text-foreground no-underline inset-ring inset-ring-border hover:bg-muted', 'children': c_6}, with_context = false) }}
+    {{ include('compose/Link.html.twig', {'href': og_url(og_s(v_href)), 'variant': 'block', 'class': 'flex min-w-0 flex-col gap-4 rounded bg-card p-6 text-foreground no-underline inset-ring inset-ring-border hover:bg-muted', 'children': c_6}, with_context = false) }}
   {%- else %}
     {%- set c_12 -%}
       {%- set c_9 -%}

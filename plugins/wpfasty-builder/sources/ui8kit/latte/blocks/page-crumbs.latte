@@ -16,7 +16,7 @@
             {capture $c_1}
               {=og_text(og_get($v_c, ['name']))}
             {/capture}
-            {=og_include('compose/Link.latte', ['href' => og_s(og_get($v_c, ['href'])), 'variant' => 'muted', 'size' => 'sm', 'attrs' => og_attrs(['data-testid', 'crumb']), 'children' => (string) $c_1])|noescape}
+            {=og_include('compose/Link.latte', ['href' => og_url(og_s(og_get($v_c, ['href']))), 'variant' => 'muted', 'size' => 'sm', 'attrs' => og_attrs(['data-testid', 'crumb']), 'children' => (string) $c_1])|noescape}
           {else}
             {capture $c_2}
               {=og_text(og_get($v_c, ['name']))}

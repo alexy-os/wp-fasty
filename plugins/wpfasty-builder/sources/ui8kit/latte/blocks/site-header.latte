@@ -44,7 +44,7 @@
         {capture $c_8}
           {=og_text($v_cta)}
         {/capture}
-        {=og_include('compose/Button.latte', ['variant' => 'default', 'size' => 'sm', 'href' => og_s($v_ctaHref), 'attrs' => og_attrs(['data-testid', 'header-cta']), 'children' => (string) $c_8])|noescape}
+        {=og_include('compose/Button.latte', ['variant' => 'default', 'size' => 'sm', 'href' => og_url(og_s($v_ctaHref)), 'attrs' => og_attrs(['data-testid', 'header-cta']), 'children' => (string) $c_8])|noescape}
       {/if}
     {/capture}
     {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'children' => (string) $c_9])|noescape}

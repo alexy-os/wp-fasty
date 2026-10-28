@@ -6,7 +6,7 @@
 {%- set v_name = (p.name ?? null) -%}
 {%- set c_4 -%}
   {%- set c_2 -%}
-    {{ (p.mark ?? '')|raw }}
+    {{ og_slot((p.mark ?? null))|raw }}
     {%- set c_1 -%}
       {{ og_text(v_name) }}
     {%- endset -%}
@@ -15,7 +15,7 @@
   {{ include('compose/Inline.html.twig', {'class': 'flex items-center gap-4', 'attrs': og_attrs(['data-slot', 'logo-sidebar-brand']), 'children': c_2}, with_context = false) }}
   {%- if og_t(((p.actions ?? null) is not null)) %}
     {%- set c_3 -%}
-      {{ (p.actions ?? '')|raw }}
+      {{ og_slot((p.actions ?? null))|raw }}
     {%- endset -%}
     {{ include('compose/Inline.html.twig', {'class': 'flex items-center gap-2 in-data-[nav=collapsed]:hidden', 'attrs': og_attrs(['data-slot', 'logo-sidebar-actions']), 'children': c_3}, with_context = false) }}
   {%- endif %}

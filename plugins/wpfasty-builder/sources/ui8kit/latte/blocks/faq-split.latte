@@ -35,7 +35,7 @@
       {/capture}
       {=og_include('compose/Box.latte', ['children' => (string) $c_3])|noescape}
     {/capture}
-    {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => 'end', 'align' => 'start'], 'landmarkLabel' => $v_landmarkLabel, 'aside' => $f_4], 'children' => $c_5])|noescape}
+    {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => 'end', 'align' => 'start'], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_4)], 'children' => $c_5])|noescape}
   {/if}
   {if og_t(og_eq($v_layout, 'aside'))}
     {capture $f_6}
@@ -44,7 +44,7 @@
     {capture $c_7}
       {=og_include('blocks/faq-disclosures.latte', ['p' => ['items' => $v_items, 'name' => og_tpl('{0}-faq', [$v_id])]])|noescape}
     {/capture}
-    {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => 'end', 'align' => 'start'], 'landmarkLabel' => $v_landmarkLabel, 'aside' => $f_6], 'children' => $c_7])|noescape}
+    {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => 'end', 'align' => 'start'], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_6)], 'children' => $c_7])|noescape}
   {/if}
   {if og_t(og_eq($v_layout, 'media'))}
     {capture $f_10}
@@ -60,7 +60,7 @@
       {/capture}
       {=og_include('compose/Box.latte', ['children' => (string) $c_9])|noescape}
     {/capture}
-    {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide, 'align' => 'start'], 'landmarkLabel' => $v_landmarkLabel, 'aside' => $f_10], 'children' => $c_11])|noescape}
+    {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide, 'align' => 'start'], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_10)], 'children' => $c_11])|noescape}
   {/if}
   {if og_t(og_eq($v_layout, 'search'))}
     {capture $f_12}
@@ -69,6 +69,6 @@
     {capture $c_13}
       {=og_include('blocks/faq-finder.latte', ['p' => ['items' => $v_items, 'labels' => $v_labels, 'topics' => $v_topics]])|noescape}
     {/capture}
-    {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'landmarkLabel' => $v_landmarkLabel, 'aside' => $f_12], 'children' => $c_13])|noescape}
+    {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_12)], 'children' => $c_13])|noescape}
   {/if}
 {/if}

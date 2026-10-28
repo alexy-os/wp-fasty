@@ -34,7 +34,7 @@
         {capture $c_4}
           {=og_text(og_get($v_product, ['name']))}
         {/capture}
-        {=og_include('compose/Link.latte', ['href' => og_s(og_get($v_product, ['href'])), 'variant' => 'default', 'attrs' => og_attrs(['data-testid', 'open']), 'children' => (string) $c_4])|noescape}
+        {=og_include('compose/Link.latte', ['href' => og_url(og_s(og_get($v_product, ['href']))), 'variant' => 'default', 'attrs' => og_attrs(['data-testid', 'open']), 'children' => (string) $c_4])|noescape}
       {else}
         {=og_text(og_get($v_product, ['name']))}
       {/if}

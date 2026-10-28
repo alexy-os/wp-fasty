@@ -32,7 +32,7 @@
         {=og_include('compose/Text.latte', ['class' => 'm-0 text-xs font-medium text-muted-foreground', 'children' => (string) $c_5])|noescape}
       {/if}
     {/capture}
-    {=og_include('compose/Link.latte', ['href' => og_s($v_href), 'variant' => 'block', 'class' => 'flex min-w-0 flex-col gap-4 rounded bg-card p-6 text-foreground no-underline inset-ring inset-ring-border hover:bg-muted', 'children' => (string) $c_6])|noescape}
+    {=og_include('compose/Link.latte', ['href' => og_url(og_s($v_href)), 'variant' => 'block', 'class' => 'flex min-w-0 flex-col gap-4 rounded bg-card p-6 text-foreground no-underline inset-ring inset-ring-border hover:bg-muted', 'children' => (string) $c_6])|noescape}
   {else}
     {capture $c_12}
       {capture $c_9}

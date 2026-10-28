@@ -18,7 +18,7 @@
     {%- endset -%}
     {{ include('blocks/nav-item-row.html.twig', {'p': {'inner': v_inner, 'reserveRight': v_reserveRight, 'icon': (p.icon ?? null), 'right': (p.right ?? null)}, 'children': c_1}, with_context = false) }}
   {%- endset -%}
-  {{ include('compose/LinkPlain.html.twig', {'href': og_s(v_href), 'class': og_s(v_outer), 'ariaCurrent': og_s((og_t(v_selected) ? 'page' : null)), 'attrs': og_attrs(['data-slot', 'nav-item', 'data-state', v_state]), 'children': c_2}, with_context = false) }}
+  {{ include('compose/LinkPlain.html.twig', {'href': og_url(og_s(v_href)), 'class': og_s(v_outer), 'ariaCurrent': og_s((og_t(v_selected) ? 'page' : null)), 'attrs': og_attrs(['data-slot', 'nav-item', 'data-state', v_state]), 'children': c_2}, with_context = false) }}
 {%- elseif og_t(v_interactive) %}
   {%- set c_4 -%}
     {%- set c_3 -%}

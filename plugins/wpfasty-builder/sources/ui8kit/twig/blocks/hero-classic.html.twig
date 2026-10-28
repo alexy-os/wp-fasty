@@ -56,7 +56,7 @@
           {%- set c_2 -%}
             {{ og_text(og_get(v_actions, ['cta'])) }}
           {%- endset -%}
-          {{ include('compose/Button.html.twig', {'variant': 'default', 'size': 'default', 'href': og_s(og_get(v_actions, ['href'])), 'attrs': og_attrs(['data-testid', 'submit']), 'children': c_2}, with_context = false) }}
+          {{ include('compose/Button.html.twig', {'variant': 'default', 'size': 'default', 'href': og_url(og_s(og_get(v_actions, ['href']))), 'attrs': og_attrs(['data-testid', 'submit']), 'children': c_2}, with_context = false) }}
         {%- endset -%}
         {{ include('compose/Group.html.twig', {'gap': '2', 'align': 'start', 'class': 'w-full flex-wrap', 'children': c_3}, with_context = false) }}
       {%- endset -%}
@@ -69,4 +69,4 @@
     {{ include('blocks/topic-chips.html.twig', {'p': {'topics': v_topics}}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_text, 'heading': {'level': v_level, 'scale': v_scale, 'badge': v_badge}, 'layout': (og_t(og_eq(v_layout, 'split')) ? 'split' : 'stack'), 'align': (og_t(og_eq(v_layout, 'split')) ? 'start' : 'center'), 'media': {'show': og_or([og_eq(v_mediaKind, 'image'), og_eq(v_mediaKind, 'code'), og_eq(v_mediaKind, 'cluster')]), 'side': v_mediaSide}, 'tone': v_tone, 'density': v_density, 'className': og_cnv([(og_t(og_eq((og_t(og_eq(v_mediaKind, 'backdrop')) ? 'image' : 'none'), 'image')) ? 'relative isolate overflow-hidden' : '')]), 'landmarkLabel': v_landmarkLabel, 'aside': f_5}, 'children': c_10}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_text, 'heading': {'level': v_level, 'scale': v_scale, 'badge': v_badge}, 'layout': (og_t(og_eq(v_layout, 'split')) ? 'split' : 'stack'), 'align': (og_t(og_eq(v_layout, 'split')) ? 'start' : 'center'), 'media': {'show': og_or([og_eq(v_mediaKind, 'image'), og_eq(v_mediaKind, 'code'), og_eq(v_mediaKind, 'cluster')]), 'side': v_mediaSide}, 'tone': v_tone, 'density': v_density, 'className': og_cnv([(og_t(og_eq((og_t(og_eq(v_mediaKind, 'backdrop')) ? 'image' : 'none'), 'image')) ? 'relative isolate overflow-hidden' : '')]), 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_5)}, 'children': c_10}, with_context = false) }}

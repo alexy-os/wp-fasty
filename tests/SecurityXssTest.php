@@ -220,10 +220,12 @@ final class SecurityXssTest extends TestCase
 
     public function testHtmlPipeOfANonStringIsNull(): void
     {
-        foreach ([['a' => '<b>'], 7, 1.5, true, null] as $v) {
+        // a blank string is absent too (codegen-x readPath since 89a08eff: PHP trim(), so a no-break space is text)
+        foreach ([['a' => '<b>'], 7, 1.5, true, null, '', ' ', "\t\n", "\0 "] as $v) {
             self::assertNull(ReadPath::read(['f' => $v], 'f|html'), var_export($v, true));
         }
         self::assertSame(['__html' => '<b>x</b>'], ReadPath::read(['f' => '<b>x</b>'], 'f|html'));
+        self::assertSame(['__html' => "\u{00a0}"], ReadPath::read(['f' => "\u{00a0}"], 'f|html'));
     }
 
     public function testPageTokensLinkOnlyPublishedPages(): void

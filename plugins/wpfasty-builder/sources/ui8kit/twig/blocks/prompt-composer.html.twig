@@ -46,7 +46,7 @@
     {%- set c_8 -%}
       {{ include('icons/LucideIcon.html.twig', {'name': 'arrow-up', 'size': 16}, with_context = false) }}
     {%- endset -%}
-    {{ include('compose/Button.html.twig', {'href': og_s(v_href), 'variant': 'secondary', 'size': 'sm', 'layout': 'icon', 'attrs': og_attrs(['data-testid', 'submit', 'aria-label', og_coalesce([v_send, 'Send'])]), 'children': c_8}, with_context = false) }}
+    {{ include('compose/Button.html.twig', {'href': og_url(og_s(v_href)), 'variant': 'secondary', 'size': 'sm', 'layout': 'icon', 'attrs': og_attrs(['data-testid', 'submit', 'aria-label', og_coalesce([v_send, 'Send'])]), 'children': c_8}, with_context = false) }}
   {%- endset -%}
   {{ include('compose/Group.html.twig', {'gap': '2', 'align': 'center', 'justify': 'between', 'class': 'h-8 w-full', 'attrs': og_attrs(['data-testid', 'composer-tools']), 'children': c_9}, with_context = false) }}
 {%- endset -%}

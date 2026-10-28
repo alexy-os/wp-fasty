@@ -82,7 +82,7 @@
     {%- set c_14 -%}
       {{ og_text(v_switchLink) }}
     {%- endset -%}
-    {{ include('compose/Link.html.twig', {'href': og_s(v_switchHref), 'variant': 'default', 'attrs': og_attrs(['data-testid', 'switch']), 'children': c_14}, with_context = false) }}
+    {{ include('compose/Link.html.twig', {'href': og_url(og_s(v_switchHref)), 'variant': 'default', 'attrs': og_attrs(['data-testid', 'switch']), 'children': c_14}, with_context = false) }}
   {%- endset -%}
   {{ include('compose/Text.html.twig', {'size': 'sm', 'class': 'text-center text-muted-foreground', 'children': c_15}, with_context = false) }}
 {%- endset -%}

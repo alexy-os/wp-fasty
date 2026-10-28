@@ -25,7 +25,7 @@
         {%- set c_4 -%}
           {%- if og_t(og_and([og_get(v_media, ['show']), og_eq(og_get(v_media, ['side']), 'start')])) %}
             {%- set c_1 -%}
-              {{ (p.aside ?? '')|raw }}
+              {{ og_slot((p.aside ?? null))|raw }}
             {%- endset -%}
             {{ include('compose/Box.html.twig', {'class': 'w-full', 'attrs': og_attrs(['data-slot', 'media']), 'children': c_1}, with_context = false) }}
           {%- endif %}
@@ -36,7 +36,7 @@
           {{ include('compose/Stack.html.twig', {'gap': '6', 'align': 'stretch', 'children': c_2}, with_context = false) }}
           {%- if og_t(og_and([og_get(v_media, ['show']), not (og_eq(og_get(v_media, ['side']), 'start'))])) %}
             {%- set c_3 -%}
-              {{ (p.aside ?? '')|raw }}
+              {{ og_slot((p.aside ?? null))|raw }}
             {%- endset -%}
             {{ include('compose/Box.html.twig', {'class': 'w-full', 'attrs': og_attrs(['data-slot', 'media']), 'children': c_3}, with_context = false) }}
           {%- endif %}
@@ -48,7 +48,7 @@
           {{ (children ?? '')|raw }}
           {%- if og_t(og_get(v_media, ['show'])) %}
             {%- set c_5 -%}
-              {{ (p.aside ?? '')|raw }}
+              {{ og_slot((p.aside ?? null))|raw }}
             {%- endset -%}
             {{ include('compose/Box.html.twig', {'class': 'w-full', 'attrs': og_attrs(['data-slot', 'media']), 'children': c_5}, with_context = false) }}
           {%- endif %}

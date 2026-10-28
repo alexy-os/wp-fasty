@@ -1,0 +1,356 @@
+{
+  "$comment": "readPath on a null and an absent value, one case per pipe: JSON null is absent (only excerpt-fallback, settings:<key> and in-stock run on it; every other pipe gives absent). want = what wp-fasty plugins/wpfasty-builder/src/Codex/ReadPath.php gives at 300af7b (PHP has no null/absent distinction); null here is undefined in TypeScript. Shared with wp-fasty tests/fixtures/codex-shared.",
+  "opts": {
+    "settings": {
+      "blogname": "Fasty"
+    },
+    "routes": {
+      "post": "/p/{slug}"
+    },
+    "media": [
+      {
+        "id": null,
+        "status": "published",
+        "metadata": {
+          "file": {
+            "value": "x.png"
+          }
+        }
+      }
+    ],
+    "users": [],
+    "terms": [],
+    "menus": [
+      {
+        "id": "m1",
+        "parent_id": null,
+        "title": "Orphan"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "label": "(none) null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v",
+      "want": null
+    },
+    {
+      "label": "(none) absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v",
+      "want": null
+    },
+    {
+      "label": "date null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|date",
+      "want": null
+    },
+    {
+      "label": "date absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|date",
+      "want": null
+    },
+    {
+      "label": "ago null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|ago",
+      "want": null
+    },
+    {
+      "label": "ago absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|ago",
+      "want": null
+    },
+    {
+      "label": "ago-days null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|ago-days",
+      "want": null
+    },
+    {
+      "label": "ago-days absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|ago-days",
+      "want": null
+    },
+    {
+      "label": "ago-short null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|ago-short",
+      "want": null
+    },
+    {
+      "label": "ago-short absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|ago-short",
+      "want": null
+    },
+    {
+      "label": "media null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|media",
+      "want": null
+    },
+    {
+      "label": "media absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|media",
+      "want": null
+    },
+    {
+      "label": "author null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|author",
+      "want": null
+    },
+    {
+      "label": "author absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|author",
+      "want": null
+    },
+    {
+      "label": "number null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|number",
+      "want": null
+    },
+    {
+      "label": "number absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|number",
+      "want": null
+    },
+    {
+      "label": "compact null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|compact",
+      "want": null
+    },
+    {
+      "label": "compact absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|compact",
+      "want": null
+    },
+    {
+      "label": "html null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|html",
+      "want": null
+    },
+    {
+      "label": "html absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|html",
+      "want": null
+    },
+    {
+      "label": "term:category null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|term:category",
+      "want": null
+    },
+    {
+      "label": "term:category absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|term:category",
+      "want": null
+    },
+    {
+      "label": "term-slug:category null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|term-slug:category",
+      "want": null
+    },
+    {
+      "label": "term-slug:category absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|term-slug:category",
+      "want": null
+    },
+    {
+      "label": "term-names:category null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|term-names:category",
+      "want": null
+    },
+    {
+      "label": "term-names:category absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|term-names:category",
+      "want": null
+    },
+    {
+      "label": "menu null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|menu",
+      "want": null
+    },
+    {
+      "label": "menu absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|menu",
+      "want": null
+    },
+    {
+      "label": "route null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|route",
+      "want": null
+    },
+    {
+      "label": "route absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|route",
+      "want": null
+    },
+    {
+      "label": "excerpt-fallback null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|excerpt-fallback",
+      "want": null
+    },
+    {
+      "label": "excerpt-fallback absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|excerpt-fallback",
+      "want": null
+    },
+    {
+      "label": "settings:blogname null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|settings:blogname",
+      "want": "Fasty"
+    },
+    {
+      "label": "settings:blogname absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|settings:blogname",
+      "want": "Fasty"
+    },
+    {
+      "label": "in-stock null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|in-stock",
+      "want": true
+    },
+    {
+      "label": "in-stock absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|in-stock",
+      "want": true
+    },
+    {
+      "label": "reading-minutes null",
+      "source": {
+        "kind": "post",
+        "v": null
+      },
+      "path": "v|reading-minutes",
+      "want": null
+    },
+    {
+      "label": "reading-minutes absent",
+      "source": {
+        "kind": "post"
+      },
+      "path": "v|reading-minutes",
+      "want": null
+    }
+  ]
+}

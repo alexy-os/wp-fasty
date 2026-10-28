@@ -88,7 +88,7 @@
         {%- set c_16 -%}
           {{ og_text(og_get(v_labels, ['read'])) }}
         {%- endset -%}
-        {{ include('compose/Link.html.twig', {'href': og_s(og_get(v_post, ['href'])), 'variant': 'default', 'attrs': og_attrs(['data-testid', 'read']), 'children': c_16}, with_context = false) }}
+        {{ include('compose/Link.html.twig', {'href': og_url(og_s(og_get(v_post, ['href']))), 'variant': 'default', 'attrs': og_attrs(['data-testid', 'read']), 'children': c_16}, with_context = false) }}
       {%- endif %}
     {%- endset -%}
     {{ include('compose/CardContent.html.twig', {'class': 'flex flex-1 flex-col gap-2', 'children': c_17}, with_context = false) }}

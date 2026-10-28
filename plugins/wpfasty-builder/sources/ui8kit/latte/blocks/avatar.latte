@@ -6,6 +6,6 @@
 {var $v_alt = ($p['alt'] ?? '')}
 {var $v_size = ($p['size'] ?? 'default')}
 {capture $c_1}
-  {=og_include('compose/Image.latte', ['src' => og_s($v_src), 'alt' => og_s($v_alt), 'class' => 'size-full object-cover', 'fit' => 'cover', 'size' => 'auto', 'loading' => 'eager', 'decoding' => 'auto', 'attrs' => og_attrs(['draggable', 'false'])])|noescape}
+  {=og_include('compose/Image.latte', ['src' => og_url(og_s($v_src), true), 'alt' => og_s($v_alt), 'class' => 'size-full object-cover', 'fit' => 'cover', 'size' => 'auto', 'loading' => 'eager', 'decoding' => 'auto', 'attrs' => og_attrs(['draggable', 'false'])])|noescape}
 {/capture}
 {=og_include('compose/Inline.latte', ['class' => og_s(og_cnv([og_recipe('blocks/recipes/avatar.variants.json', ['size' => $v_size]), ($p['className'] ?? '')])), 'attrs' => og_attrs(['data-slot', 'avatar']), 'children' => (string) $c_1])|noescape}

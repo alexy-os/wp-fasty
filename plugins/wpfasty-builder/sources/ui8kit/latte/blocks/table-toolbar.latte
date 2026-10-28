@@ -9,7 +9,7 @@
   {/capture}
   {=og_include('compose/Inline.latte', ['class' => 'flex min-w-0 flex-wrap items-center gap-2', 'children' => (string) $c_1])|noescape}
   {capture $c_2}
-    {=($p['actions'] ?? '')|noescape}
+    {=og_slot(($p['actions'] ?? null))|noescape}
   {/capture}
   {=og_include('compose/Inline.latte', ['class' => 'flex flex-wrap items-center gap-2', 'children' => (string) $c_2])|noescape}
 {/capture}

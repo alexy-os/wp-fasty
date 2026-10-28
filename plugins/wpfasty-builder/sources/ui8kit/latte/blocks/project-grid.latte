@@ -54,4 +54,4 @@
     {=og_include('blocks/project-tiles.latte', ['p' => ['projects' => $v_projects, 'labels' => $v_labels, 'layout' => $v_layout]])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'tone' => $v_tone, 'density' => $v_density, 'layout' => (og_t(og_eq($v_layout, 'list')) ? 'split' : 'stack'), 'media' => ['show' => og_eq($v_layout, 'list'), 'align' => 'start'], 'landmarkLabel' => $v_landmarkLabel, 'aside' => $f_8], 'children' => $c_10])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'tone' => $v_tone, 'density' => $v_density, 'layout' => (og_t(og_eq($v_layout, 'list')) ? 'split' : 'stack'), 'media' => ['show' => og_eq($v_layout, 'list'), 'align' => 'start'], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_8)], 'children' => $c_10])|noescape}

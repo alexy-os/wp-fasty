@@ -82,7 +82,7 @@
     {capture $c_14}
       {=og_text($v_switchLink)}
     {/capture}
-    {=og_include('compose/Link.latte', ['href' => og_s($v_switchHref), 'variant' => 'default', 'attrs' => og_attrs(['data-testid', 'switch']), 'children' => (string) $c_14])|noescape}
+    {=og_include('compose/Link.latte', ['href' => og_url(og_s($v_switchHref)), 'variant' => 'default', 'attrs' => og_attrs(['data-testid', 'switch']), 'children' => (string) $c_14])|noescape}
   {/capture}
   {=og_include('compose/Text.latte', ['size' => 'sm', 'class' => 'text-center text-muted-foreground', 'children' => (string) $c_15])|noescape}
 {/capture}

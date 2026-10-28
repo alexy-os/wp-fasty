@@ -36,6 +36,6 @@
     {=og_text(og_get($v_labels, ['read']))}
     {=og_include('icons/LucideIcon.latte', ['name' => 'arrow-right', 'size' => 16])|noescape}
   {/capture}
-  {=og_include('compose/Button.latte', ['variant' => 'default', 'size' => 'default', 'href' => og_s(og_get($v_p, ['href'])), 'class' => 'w-full gap-2', 'attrs' => og_attrs(['data-testid', 'action-primary']), 'children' => (string) $c_8])|noescape}
+  {=og_include('compose/Button.latte', ['variant' => 'default', 'size' => 'default', 'href' => og_url(og_s(og_get($v_p, ['href']))), 'class' => 'w-full gap-2', 'attrs' => og_attrs(['data-testid', 'action-primary']), 'children' => (string) $c_8])|noescape}
 {/capture}
 {=og_include('compose/Stack.latte', ['gap' => '4', 'align' => 'stretch', 'class' => 'border-t border-border pt-6', 'attrs' => og_attrs(['data-testid', 'post-feature']), 'children' => (string) $c_9])|noescape}

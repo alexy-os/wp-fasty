@@ -13,13 +13,13 @@
   {capture $c_1}
     {=og_text($v_login)}
   {/capture}
-  {=og_include('compose/Button.latte', ['variant' => 'ghost', 'size' => 'sm', 'href' => og_s($v_loginHref), 'class' => og_s((og_t(og_eq($v_tone, 'inverse')) ? 'text-background hover:bg-background/10' : '')), 'attrs' => og_attrs(['data-testid', 'nav-login']), 'children' => (string) $c_1])|noescape}
+  {=og_include('compose/Button.latte', ['variant' => 'ghost', 'size' => 'sm', 'href' => og_url(og_s($v_loginHref)), 'class' => og_s((og_t(og_eq($v_tone, 'inverse')) ? 'text-background hover:bg-background/10' : '')), 'attrs' => og_attrs(['data-testid', 'nav-login']), 'children' => (string) $c_1])|noescape}
 {/if}
 {if og_t(og_and([og_eq($v_actions, 'cta'), $v_cta]))}
   {capture $c_2}
     {=og_text($v_cta)}
   {/capture}
-  {=og_include('compose/Button.latte', ['variant' => og_s((og_t(og_eq($v_tone, 'inverse')) ? 'secondary' : 'default')), 'size' => 'sm', 'href' => og_s($v_ctaHref), 'attrs' => og_attrs(['data-testid', 'header-cta']), 'children' => (string) $c_2])|noescape}
+  {=og_include('compose/Button.latte', ['variant' => og_s((og_t(og_eq($v_tone, 'inverse')) ? 'secondary' : 'default')), 'size' => 'sm', 'href' => og_url(og_s($v_ctaHref)), 'attrs' => og_attrs(['data-testid', 'header-cta']), 'children' => (string) $c_2])|noescape}
 {/if}
 {if og_t($v_themeLabel)}
   {capture $c_3}

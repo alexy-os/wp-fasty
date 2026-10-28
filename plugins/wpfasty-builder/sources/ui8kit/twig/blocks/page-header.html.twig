@@ -21,7 +21,7 @@
   {{ include('compose/Box.html.twig', {'class': 'flex min-w-0 flex-col gap-2', 'children': c_3}, with_context = false) }}
   {%- if og_t(((p.actions ?? null) is not null)) %}
     {%- set c_4 -%}
-      {{ (p.actions ?? '')|raw }}
+      {{ og_slot((p.actions ?? null))|raw }}
     {%- endset -%}
     {{ include('compose/Box.html.twig', {'class': 'flex flex-wrap items-center gap-2', 'children': c_4}, with_context = false) }}
   {%- endif %}

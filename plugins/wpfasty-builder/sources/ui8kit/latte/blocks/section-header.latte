@@ -26,7 +26,7 @@
     {capture $c_3}
       {=og_text(og_get($v_action, ['label']))}
     {/capture}
-    {=og_include('compose/Link.latte', ['href' => og_s(og_get($v_action, ['href'])), 'variant' => 'default', 'class' => og_s(og_cnv([og_preset('blocks/presets/defaults.json', ['text', 'tiny']), 'shrink-0 font-medium leading-5'])), 'attrs' => og_attrs(['data-testid', 'section-action']), 'children' => (string) $c_3])|noescape}
+    {=og_include('compose/Link.latte', ['href' => og_url(og_s(og_get($v_action, ['href']))), 'variant' => 'default', 'class' => og_s(og_cnv([og_preset('blocks/presets/defaults.json', ['text', 'tiny']), 'shrink-0 font-medium leading-5'])), 'attrs' => og_attrs(['data-testid', 'section-action']), 'children' => (string) $c_3])|noescape}
   {/capture}
   {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'justify' => 'between', 'class' => 'w-full flex-wrap', 'children' => (string) $c_4])|noescape}
 {/if}
@@ -41,7 +41,7 @@
     {capture $c_6}
       {=og_text(og_get($v_action, ['label']))}
     {/capture}
-    {=og_include('compose/Link.latte', ['href' => og_s(og_get($v_action, ['href'])), 'variant' => 'default', 'class' => og_s(og_cnv([og_preset('blocks/presets/defaults.json', ['text', 'tiny']), 'shrink-0 font-medium leading-5'])), 'attrs' => og_attrs(['data-testid', 'section-action']), 'children' => (string) $c_6])|noescape}
+    {=og_include('compose/Link.latte', ['href' => og_url(og_s(og_get($v_action, ['href']))), 'variant' => 'default', 'class' => og_s(og_cnv([og_preset('blocks/presets/defaults.json', ['text', 'tiny']), 'shrink-0 font-medium leading-5'])), 'attrs' => og_attrs(['data-testid', 'section-action']), 'children' => (string) $c_6])|noescape}
   {/capture}
   {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'justify' => 'end', 'class' => 'w-full', 'children' => (string) $c_7])|noescape}
 {/if}

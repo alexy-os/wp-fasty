@@ -10,7 +10,7 @@
 {%- set v_lightSrc = og_coalesce([v_src, og_at(k_PLACEHOLDER, 'light')]) -%}
 {%- set v_nightSrc = og_coalesce([v_darkSrc, v_src, og_at(k_PLACEHOLDER, 'dark')]) -%}
 {%- set c_1 -%}
-  {{ include('compose/Image.html.twig', {'src': og_s(v_lightSrc), 'alt': og_s(v_alt), 'class': 'absolute inset-0 size-full object-cover dark:hidden', 'attrs': og_attrs(['data-theme-src', 'light'])}, with_context = false) }}
-  {{ include('compose/Image.html.twig', {'src': og_s(v_nightSrc), 'alt': og_s(v_alt), 'class': 'absolute inset-0 hidden size-full object-cover dark:block', 'attrs': og_attrs(['data-theme-src', 'dark'])}, with_context = false) }}
+  {{ include('compose/Image.html.twig', {'src': og_url(og_s(v_lightSrc), true), 'alt': og_s(v_alt), 'class': 'absolute inset-0 size-full object-cover dark:hidden', 'attrs': og_attrs(['data-theme-src', 'light'])}, with_context = false) }}
+  {{ include('compose/Image.html.twig', {'src': og_url(og_s(v_nightSrc), true), 'alt': og_s(v_alt), 'class': 'absolute inset-0 hidden size-full object-cover dark:block', 'attrs': og_attrs(['data-theme-src', 'dark'])}, with_context = false) }}
 {%- endset -%}
 {{ include('compose/Box.html.twig', {'class': og_s(og_cnv([og_recipe('blocks/recipes/media-frame.variants.json', {'ratio': v_ratio}), (p.className ?? '')])), 'attrs': og_attrs(['data-slot', 'media-frame', 'data-placeholder', (og_t(v_src) ? 'false' : 'true')]), 'children': c_1}, with_context = false) }}

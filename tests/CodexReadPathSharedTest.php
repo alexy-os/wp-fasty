@@ -13,7 +13,9 @@ require_once dirname(__DIR__) . '/plugins/wpfasty-builder/src/Codex/ReadPath.php
  * Shared TS↔PHP vectors of the wp-fasty readPath pipes (excerpt-fallback, settings:<key>, in-stock, reading-minutes,
  * term-names:<tax>): tests/fixtures/codex-shared/readpath-wpfasty.json is codegen-x
  * packages/compose-gen/runtimes/core/test/readpath-wpfasty.json (core.ts passes it), readpath-wpfasty-extra.json the
- * wp-fasty cases (term-names: a list only). The TS side: bun tools/codex/readpath-shared.ts --cgx <codegen-x>.
+ * wp-fasty cases (term-names: a list only). readpath-null.json is codegen-x test/readpath-null.json (since 89a08eff:
+ * JSON null is absent for every pipe but the fallbacks; recorded from this ReadPath.php at 300af7b). The TS side:
+ * bun tools/codex/readpath-shared.ts --cgx <codegen-x> (byte-equal copies, core.ts gives `want`).
  */
 final class CodexReadPathSharedTest extends TestCase
 {
@@ -26,6 +28,31 @@ final class CodexReadPathSharedTest extends TestCase
         foreach ([...$main['cases'], ...$extra['cases']] as $case) {
             yield $case['label'] => [$case, $main['opts']];
         }
+    }
+
+    /** @return iterable<string, array{array<string, mixed>, array<string, mixed>}> */
+    public static function nullVectors(): iterable
+    {
+        $doc = json_decode((string) file_get_contents(__DIR__ . '/fixtures/codex-shared/readpath-null.json'), true);
+        foreach ($doc['cases'] as $case) {
+            yield $case['label'] => [$case, $doc['opts']];
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $case
+     * @param array<string, mixed> $opts
+     */
+    #[DataProvider('nullVectors')]
+    public function testNullIsAbsent(array $case, array $opts): void
+    {
+        self::assertSame($case['want'], ReadPath::read($case['source'], (string) $case['path'], $opts));
+    }
+
+    public function testNullVectorsCount(): void
+    {
+        $doc = json_decode((string) file_get_contents(__DIR__ . '/fixtures/codex-shared/readpath-null.json'), true);
+        self::assertCount(38, $doc['cases']);
     }
 
     /** "W<n>" stands for n words "w" (as the codegen-x test expands it) */

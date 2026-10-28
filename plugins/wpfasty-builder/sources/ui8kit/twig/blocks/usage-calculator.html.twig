@@ -56,7 +56,7 @@
       {%- set c_10 -%}
         {{ og_text(v_cta) }}
       {%- endset -%}
-      {{ include('compose/Button.html.twig', {'variant': 'default', 'size': 'default', 'href': og_s(v_href), 'attrs': og_attrs(['data-testid', 'submit']), 'children': c_10}, with_context = false) }}
+      {{ include('compose/Button.html.twig', {'variant': 'default', 'size': 'default', 'href': og_url(og_s(v_href)), 'attrs': og_attrs(['data-testid', 'submit']), 'children': c_10}, with_context = false) }}
     {%- endset -%}
     {{ include('compose/Group.html.twig', {'justify': 'between', 'align': 'center', 'class': 'flex-wrap', 'children': c_11}, with_context = false) }}
   {%- endset -%}

@@ -39,7 +39,7 @@
     {%- endset -%}
     {{ include('compose/Group.html.twig', {'gap': '4', 'align': 'center', 'justify': og_s((og_t(og_eq(v_layout, 'center')) ? 'center' : 'start')), 'class': 'flex-wrap', 'attrs': og_attrs(['data-testid', 'post-meta']), 'children': c_5}, with_context = false) }}
   {%- endset -%}
-  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': og_get(v_post, ['title']), 'lead': og_get(v_post, ['excerpt']), 'heading': {'level': v_level}, 'align': v_layout, 'tone': v_tone, 'media': {'show': og_eq(v_cover, 'show')}, 'landmarkLabel': v_landmarkLabel, 'aside': f_6}, 'children': c_7}, with_context = false) }}
+  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': og_get(v_post, ['title']), 'lead': og_get(v_post, ['excerpt']), 'heading': {'level': v_level}, 'align': v_layout, 'tone': v_tone, 'media': {'show': og_eq(v_cover, 'show')}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_6)}, 'children': c_7}, with_context = false) }}
 {%- else %}
   {%- set c_8 -%}
     {{ include('blocks/empty-state.html.twig', {'p': {'icon': 'file-text', 'title': og_get(v_labels, ['empty'])}}, with_context = false) }}

@@ -14,7 +14,7 @@
     {=og_include('compose/Inline.latte', ['attrs' => og_attrs(['data-slot', 'section-head-title']), 'children' => (string) $c_1])|noescape}
     {if og_t(((($p['right'] ?? null) !== null)))}
       {capture $c_2}
-        {=($p['right'] ?? '')|noescape}
+        {=og_slot(($p['right'] ?? null))|noescape}
       {/capture}
       {=og_include('compose/Inline.latte', ['class' => 'flex items-center gap-2', 'attrs' => og_attrs(['data-slot', 'section-head-right']), 'children' => (string) $c_2])|noescape}
     {/if}
@@ -28,7 +28,7 @@
     {=og_include('compose/Inline.latte', ['attrs' => og_attrs(['data-slot', 'section-head-title']), 'children' => (string) $c_4])|noescape}
     {if og_t(((($p['right'] ?? null) !== null)))}
       {capture $c_5}
-        {=($p['right'] ?? '')|noescape}
+        {=og_slot(($p['right'] ?? null))|noescape}
       {/capture}
       {=og_include('compose/Inline.latte', ['class' => 'flex items-center gap-2', 'attrs' => og_attrs(['data-slot', 'section-head-right']), 'children' => (string) $c_5])|noescape}
     {/if}

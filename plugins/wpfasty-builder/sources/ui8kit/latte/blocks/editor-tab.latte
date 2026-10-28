@@ -8,7 +8,7 @@
 {var $v_preview = ($p['preview'] ?? false)}
 {capture $c_4}
   {capture $c_3}
-    {=($p['icon'] ?? '')|noescape}
+    {=og_slot(($p['icon'] ?? null))|noescape}
     {capture $c_1}
       {=og_text($v_label)}
     {/capture}

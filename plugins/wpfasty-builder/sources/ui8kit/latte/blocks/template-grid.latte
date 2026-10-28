@@ -96,7 +96,7 @@
     {capture $c_19}
       {=og_text(og_get($v_labels, ['browse']))}
     {/capture}
-    {=og_include('compose/Button.latte', ['variant' => 'outline', 'size' => 'sm', 'href' => og_s($v_browseHref), 'class' => 'w-full', 'attrs' => og_attrs(['data-testid', 'template-browse']), 'children' => (string) $c_19])|noescape}
+    {=og_include('compose/Button.latte', ['variant' => 'outline', 'size' => 'sm', 'href' => og_url(og_s($v_browseHref)), 'class' => 'w-full', 'attrs' => og_attrs(['data-testid', 'template-browse']), 'children' => (string) $c_19])|noescape}
   {/capture}
   {=og_include('compose/Stack.latte', ['gap' => '8', 'align' => 'stretch', 'children' => (string) $c_20])|noescape}
 {/capture}

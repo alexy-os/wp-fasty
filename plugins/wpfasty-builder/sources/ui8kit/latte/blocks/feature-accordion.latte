@@ -45,4 +45,4 @@
     {=og_include('compose/Stack.latte', ['gap' => '0', 'align' => 'stretch', 'attrs' => og_attrs(['data-testid', 'items']), 'children' => (string) $c_6])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'layout' => (og_t(og_eq($v_media, 'image')) ? 'split' : 'stack'), 'media' => ['show' => og_eq($v_media, 'image')], 'landmarkLabel' => $v_landmarkLabel, 'aside' => $f_7], 'children' => $c_8])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'layout' => (og_t(og_eq($v_media, 'image')) ? 'split' : 'stack'), 'media' => ['show' => og_eq($v_media, 'image')], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_7)], 'children' => $c_8])|noescape}

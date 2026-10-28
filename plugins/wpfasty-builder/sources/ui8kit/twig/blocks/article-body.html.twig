@@ -29,7 +29,7 @@
                   {%- set c_2 -%}
                     {{ og_text(og_get(v_s, ['title'])) }}
                   {%- endset -%}
-                  {{ include('compose/Link.html.twig', {'href': og_s(og_tpl('#{0}-{1}', [v_id, og_get(v_s, ['id'])])), 'variant': 'default', 'class': 'text-sm text-muted-foreground', 'attrs': og_attrs(['data-testid', 'toc-link']), 'children': c_2}, with_context = false) }}
+                  {{ include('compose/Link.html.twig', {'href': og_url(og_s(og_tpl('#{0}-{1}', [v_id, og_get(v_s, ['id'])]))), 'variant': 'default', 'class': 'text-sm text-muted-foreground', 'attrs': og_attrs(['data-testid', 'toc-link']), 'children': c_2}, with_context = false) }}
                 {%- endset -%}
                 {{ include('compose/ListItem.html.twig', {'children': c_3}, with_context = false) }}
               {%- endfor %}

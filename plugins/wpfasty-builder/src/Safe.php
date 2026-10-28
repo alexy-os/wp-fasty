@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace WPFastyBuilder;
 
 /**
- * Output safety of builder props, in the adapter (never in templates), so the Latte and the Twig block of the same
- * props get the same safe values (Latte checks URLs of href/src itself, Twig autoescape does not):
+ * Input guard of builder props, in the adapter (never in templates), so the Latte and the Twig block of the same
+ * props get the same safe values. Since codegen-x 832d7f17 the organism runtime of both engines checks every URL sink
+ * itself (og_url / og_srcset / attribute maps: http, https, mailto, tel, paths; tests/CodegenSafetySharedTest); this
+ * guard stays as the first of the two layers (WordPress schemes, layout props, tokens); the two together print what
+ * the codegen-x vectors allow (tests/CodegenSafetySharedTest::testAdapterThenRuntimeGivesTheCodegenAnswer):
  *   - a prop that holds a URL (its key ends in href, src, srcset, action, poster, url, image, avatar, logo, cover,
  *     or a plural of them: each item of the list) keeps its value only when the URL is relative or its scheme is
  *     allowed (wp_allowed_protocols(); data: only data:image/(png|jpeg|gif|webp|avif|svg+xml) and only in image

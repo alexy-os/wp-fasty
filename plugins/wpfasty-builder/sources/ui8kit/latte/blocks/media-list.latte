@@ -51,4 +51,4 @@
     {=og_include('blocks/action-group.latte', ['p' => ['primary' => og_get($v_actions, ['cta']), 'primaryHref' => og_get($v_actions, ['href']), 'secondary' => (og_t(og_eq(og_get($v_actions, ['mode']), 'two')) ? og_get($v_actions, ['secondary']) : null), 'secondaryHref' => og_get($v_actions, ['secondaryHref'])]])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'landmarkLabel' => $v_landmarkLabel, 'aside' => $f_1], 'children' => $c_2])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_1)], 'children' => $c_2])|noescape}

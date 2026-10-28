@@ -29,7 +29,7 @@
         {{ include('compose/Text.html.twig', {'class': 'm-0 text-xs font-medium text-muted-foreground', 'children': c_4}, with_context = false) }}
       {%- endif %}
     {%- endset -%}
-    {{ include('compose/Link.html.twig', {'href': og_s(v_href), 'variant': 'block', 'class': 'flex min-w-0 flex-col gap-2 rounded p-2 text-foreground no-underline hover:bg-muted', 'children': c_5}, with_context = false) }}
+    {{ include('compose/Link.html.twig', {'href': og_url(og_s(v_href)), 'variant': 'block', 'class': 'flex min-w-0 flex-col gap-2 rounded p-2 text-foreground no-underline hover:bg-muted', 'children': c_5}, with_context = false) }}
   {%- else %}
     {%- set c_10 -%}
       {%- set c_8 -%}

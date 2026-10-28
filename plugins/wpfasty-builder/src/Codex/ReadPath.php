@@ -10,7 +10,7 @@ namespace WPFastyBuilder\Codex;
  *   |date |ago |ago-days |ago-short |number |compact      formatting (Format)
  *   |media |author |term:<tax> |term-slug:<tax> |route |menu  data pipes
  *   |excerpt-fallback |reading-minutes |term-names:<tax> |settings:<key> |in-stock   (Q4 additions)
- *   |html                 trusted markup: {"__html": string} (TrustedHtml, printed unescaped by og_html)
+ *   |html                 trusted markup: {"__html": string} (TrustedHtml, printed unescaped by og_html); blank → null
  * Options: now (epoch s or RFC 3339), locale, media[], users[], terms[], menus[],
  * routes{kind: "/x/{slug}"}, settings{}.
  * Records are JSON-decoded arrays (assoc for objects).
@@ -136,9 +136,11 @@ final class ReadPath
         }
         if ($pipe === 'html') {
             // markup of the Codex (the body of an entry) is trusted: the TrustedHtml marker the og_html helper of the
-            // runtimes prints unescaped (codegen-x readPath `html`); a value read without this pipe stays text
-            // only a string is markup: a number, a boolean, a list or null gives null (codegen-x readPath to follow)
-            return is_string($cur) ? ['__html' => $cur] : null;
+            // runtimes prints unescaped (codegen-x readPath `html`); a value read without this pipe stays text.
+            // Only a string with text is markup (codegen-x core.ts since 89a08eff, test/readpath-null.json): a blank
+            // string (PHP trim()), a number, a boolean, a list or null gives null — absent, so a block that shows a
+            // part only when its markup is set (the RichText side note) leaves it out
+            return is_string($cur) && trim($cur) !== '' ? ['__html' => $cur] : null;
         }
         if ($pipe === 'date') {
             return Format::date($cur, $locale);

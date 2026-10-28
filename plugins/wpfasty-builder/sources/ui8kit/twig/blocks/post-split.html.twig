@@ -25,7 +25,7 @@
     {{ include('blocks/post-stats.html.twig', {'p': {'post': v_post, 'extras': v_extras, 'labels': v_labels, 'align': 'center'}}, with_context = false) }}
     {{ include('blocks/post-author.html.twig', {'p': {'post': v_post, 'extras': v_extras, 'labels': v_labels, 'mode': 'card', 'share': true, 'className': og_cnv(['mx-auto w-full max-w-md'])}}, with_context = false) }}
   {%- endset -%}
-  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': og_get(v_post, ['title']), 'lead': og_get(v_post, ['excerpt']), 'heading': {'badge': og_get(v_post, ['category']), 'level': v_level}, 'tone': v_tone, 'media': {'show': true}, 'align': 'center', 'landmarkLabel': v_landmarkLabel, 'aside': f_1}, 'children': c_2}, with_context = false) }}
+  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': og_get(v_post, ['title']), 'lead': og_get(v_post, ['excerpt']), 'heading': {'badge': og_get(v_post, ['category']), 'level': v_level}, 'tone': v_tone, 'media': {'show': true}, 'align': 'center', 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_1)}, 'children': c_2}, with_context = false) }}
 {%- else %}
   {%- set f_3 -%}
     {{ include('blocks/media-frame.html.twig', {'p': {'alt': og_get(v_post, ['title']), 'ratio': (og_t(og_eq(v_layout, 'center')) ? '21/9' : (og_t(og_eq(v_cover, 'square')) ? '1/1' : '4/3'))}}, with_context = false) }}
@@ -46,5 +46,5 @@
     {%- endif %}
     {{ include('blocks/post-actions.html.twig', {'p': {'labels': v_labels, 'mode': v_actions}}, with_context = false) }}
   {%- endset -%}
-  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': og_get(v_post, ['title']), 'lead': og_get(v_post, ['excerpt']), 'heading': {'badge': og_get(v_post, ['category']), 'level': v_level}, 'tone': v_tone, 'media': {'show': true, 'side': v_mediaSide}, 'layout': 'split', 'landmarkLabel': v_landmarkLabel, 'aside': f_3}, 'children': c_4}, with_context = false) }}
+  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': og_get(v_post, ['title']), 'lead': og_get(v_post, ['excerpt']), 'heading': {'badge': og_get(v_post, ['category']), 'level': v_level}, 'tone': v_tone, 'media': {'show': true, 'side': v_mediaSide}, 'layout': 'split', 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_3)}, 'children': c_4}, with_context = false) }}
 {%- endif %}

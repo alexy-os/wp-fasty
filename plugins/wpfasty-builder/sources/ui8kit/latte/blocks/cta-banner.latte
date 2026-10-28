@@ -22,7 +22,7 @@
     {capture $c_3}
       {=og_text($v_cta)}
     {/capture}
-    {=og_include('compose/Button.latte', ['variant' => 'default', 'size' => 'lg', 'href' => og_s($v_href), 'class' => og_s(og_preset('blocks/presets/defaults.json', ['cta', 'button'])), 'attrs' => og_attrs(['data-testid', 'action-primary']), 'children' => (string) $c_3])|noescape}
+    {=og_include('compose/Button.latte', ['variant' => 'default', 'size' => 'lg', 'href' => og_url(og_s($v_href)), 'class' => og_s(og_preset('blocks/presets/defaults.json', ['cta', 'button'])), 'attrs' => og_attrs(['data-testid', 'action-primary']), 'children' => (string) $c_3])|noescape}
   {/capture}
   {=og_include('compose/Box.latte', ['class' => og_s(og_cnv(['flex w-full flex-col items-center gap-10 bg-muted px-6 text-center', og_preset('blocks/presets/defaults.json', ['cta', 'panel'])])), 'attrs' => og_attrs(['data-testid', 'cta-banner']), 'children' => (string) $c_4])|noescape}
 {/capture}

@@ -11,12 +11,12 @@
   {%- set c_1 -%}
     {{ og_text(v_primary) }}
   {%- endset -%}
-  {{ include('compose/Button.html.twig', {'variant': 'default', 'size': 'default', 'href': og_s(v_primaryHref), 'attrs': og_attrs(['data-testid', 'action-primary']), 'children': c_1}, with_context = false) }}
+  {{ include('compose/Button.html.twig', {'variant': 'default', 'size': 'default', 'href': og_url(og_s(v_primaryHref)), 'attrs': og_attrs(['data-testid', 'action-primary']), 'children': c_1}, with_context = false) }}
   {%- if og_t(v_secondary) %}
     {%- set c_2 -%}
       {{ og_text(v_secondary) }}
     {%- endset -%}
-    {{ include('compose/Button.html.twig', {'variant': 'outline', 'size': 'default', 'href': og_s(v_secondaryHref), 'attrs': og_attrs(['data-testid', 'action-secondary']), 'children': c_2}, with_context = false) }}
+    {{ include('compose/Button.html.twig', {'variant': 'outline', 'size': 'default', 'href': og_url(og_s(v_secondaryHref)), 'attrs': og_attrs(['data-testid', 'action-secondary']), 'children': c_2}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
 {{ include('compose/Group.html.twig', {'gap': '4', 'align': 'center', 'justify': og_s((og_t(og_eq(v_align, 'center')) ? 'center' : 'start')), 'class': 'flex-wrap', 'attrs': og_attrs(['data-slot', 'action-group']), 'children': c_3}, with_context = false) }}

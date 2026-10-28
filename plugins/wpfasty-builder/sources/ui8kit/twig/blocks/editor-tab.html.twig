@@ -8,7 +8,7 @@
 {%- set v_preview = (p.preview ?? false) -%}
 {%- set c_4 -%}
   {%- set c_3 -%}
-    {{ (p.icon ?? '')|raw }}
+    {{ og_slot((p.icon ?? null))|raw }}
     {%- set c_1 -%}
       {{ og_text(v_label) }}
     {%- endset -%}

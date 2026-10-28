@@ -36,6 +36,6 @@
     {{ og_text(og_get(v_labels, ['read'])) }}
     {{ include('icons/LucideIcon.html.twig', {'name': 'arrow-right', 'size': 16}, with_context = false) }}
   {%- endset -%}
-  {{ include('compose/Button.html.twig', {'variant': 'default', 'size': 'default', 'href': og_s(og_get(v_p, ['href'])), 'class': 'w-full gap-2', 'attrs': og_attrs(['data-testid', 'action-primary']), 'children': c_8}, with_context = false) }}
+  {{ include('compose/Button.html.twig', {'variant': 'default', 'size': 'default', 'href': og_url(og_s(og_get(v_p, ['href']))), 'class': 'w-full gap-2', 'attrs': og_attrs(['data-testid', 'action-primary']), 'children': c_8}, with_context = false) }}
 {%- endset -%}
 {{ include('compose/Stack.html.twig', {'gap': '4', 'align': 'stretch', 'class': 'border-t border-border pt-6', 'attrs': og_attrs(['data-testid', 'post-feature']), 'children': c_9}, with_context = false) }}

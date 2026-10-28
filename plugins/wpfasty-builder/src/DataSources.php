@@ -301,7 +301,9 @@ final class DataSources
      * `|html` pipe. The body of the current record (`content|html` = the_content after its filters: post_content was
      * filtered by kses on save for users without unfiltered_html, like the theme's single view) passes as it is;
      * any other markup (a meta or settings field read with `|html`, e.g. metadata.aside.value, never filtered on save)
-     * goes through wp_kses_post — the same tags an author may post. Anything else is null.
+     * goes through wp_kses_post — the same tags an author may post. Anything else is null, and so is markup that is
+     * blank (PHP trim()) after kses: the `|html` rule of codegen-x / ReadPath (blank = absent), so a part shown only
+     * when its markup is set (the RichText side note) stays out.
      *
      * @return array{__html: string}|null
      */
@@ -310,7 +312,8 @@ final class DataSources
         if (!is_array($v) || !is_string($v['__html'] ?? null)) {
             return null;
         }
-        return ['__html' => $theContent ? $v['__html'] : self::kses($v['__html'])];
+        $html = $theContent ? $v['__html'] : self::kses($v['__html']);
+        return trim($html) === '' ? null : ['__html' => $html];
     }
 
     /** wp_kses_post; without WordPress (offline tools) the text, escaped */

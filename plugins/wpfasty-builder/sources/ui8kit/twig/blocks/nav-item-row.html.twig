@@ -6,7 +6,7 @@
 {%- set v_reserveRight = (p.reserveRight ?? false) -%}
 {%- set c_4 -%}
   {%- set c_2 -%}
-    {{ (p.icon ?? '')|raw }}
+    {{ og_slot((p.icon ?? null))|raw }}
     {%- set c_1 -%}
       {{ (children ?? '')|raw }}
     {%- endset -%}
@@ -15,7 +15,7 @@
   {{ include('compose/Inline.html.twig', {'class': 'flex min-w-0 flex-1 items-center gap-4 in-data-[nav=collapsed]:flex-none in-data-[nav=collapsed]:justify-center', 'attrs': og_attrs(['data-slot', 'nav-item-left']), 'children': c_2}, with_context = false) }}
   {%- if og_t(((p.right ?? null) is not null)) %}
     {%- set c_3 -%}
-      {{ (p.right ?? '')|raw }}
+      {{ og_slot((p.right ?? null))|raw }}
     {%- endset -%}
     {{ include('compose/Inline.html.twig', {'class': 'flex items-center gap-2 in-data-[nav=collapsed]:hidden', 'attrs': og_attrs(['data-slot', 'nav-item-right']), 'children': c_3}, with_context = false) }}
   {%- elseif og_t(v_reserveRight) %}

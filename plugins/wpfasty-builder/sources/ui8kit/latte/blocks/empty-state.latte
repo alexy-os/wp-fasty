@@ -20,6 +20,6 @@
     {/capture}
     {=og_include('compose/Text.latte', ['class' => 'm-0 max-w-80 text-xs font-medium text-muted-foreground', 'children' => (string) $c_3])|noescape}
   {/if}
-  {=($p['action'] ?? '')|noescape}
+  {=og_slot(($p['action'] ?? null))|noescape}
 {/capture}
 {=og_include('compose/Box.latte', ['class' => og_s(og_cnv(['flex min-w-0 flex-col items-center gap-4 rounded bg-card px-6 py-14 text-center inset-ring inset-ring-border', ($p['className'] ?? '')])), 'attrs' => og_attrs(['role', 'status']), 'children' => (string) $c_4])|noescape}

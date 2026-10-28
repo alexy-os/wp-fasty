@@ -12,7 +12,7 @@
   {%- set c_1 -%}
     {{ (children ?? '')|raw }}
   {%- endset -%}
-  {{ include('compose/Link.html.twig', {'href': og_s(v_href), 'variant': og_s(v_variant), 'size': og_s(v_size), 'ariaCurrent': og_s((og_t(v_current) ? 'page' : null)), 'class': og_s((p.className ?? '')), 'attrs': og_attrs(['data-testid', v_testid]), 'children': c_1}, with_context = false) }}
+  {{ include('compose/Link.html.twig', {'href': og_url(og_s(v_href)), 'variant': og_s(v_variant), 'size': og_s(v_size), 'ariaCurrent': og_s((og_t(v_current) ? 'page' : null)), 'class': og_s((p.className ?? '')), 'attrs': og_attrs(['data-testid', v_testid]), 'children': c_1}, with_context = false) }}
 {%- elseif og_t(v_block) %}
   {%- set c_2 -%}
     {{ (children ?? '')|raw }}

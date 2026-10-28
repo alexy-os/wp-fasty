@@ -6,6 +6,6 @@
 {%- set v_alt = (p.alt ?? '') -%}
 {%- set v_size = (p.size ?? 'default') -%}
 {%- set c_1 -%}
-  {{ include('compose/Image.html.twig', {'src': og_s(v_src), 'alt': og_s(v_alt), 'class': 'size-full object-cover', 'fit': 'cover', 'size': 'auto', 'loading': 'eager', 'decoding': 'auto', 'attrs': og_attrs(['draggable', 'false'])}, with_context = false) }}
+  {{ include('compose/Image.html.twig', {'src': og_url(og_s(v_src), true), 'alt': og_s(v_alt), 'class': 'size-full object-cover', 'fit': 'cover', 'size': 'auto', 'loading': 'eager', 'decoding': 'auto', 'attrs': og_attrs(['draggable', 'false'])}, with_context = false) }}
 {%- endset -%}
 {{ include('compose/Inline.html.twig', {'class': og_s(og_cnv([og_recipe('blocks/recipes/avatar.variants.json', {'size': v_size}), (p.className ?? '')])), 'attrs': og_attrs(['data-slot', 'avatar']), 'children': c_1}, with_context = false) }}

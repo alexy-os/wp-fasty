@@ -10,16 +10,15 @@
     },
     {
       "pattern": "^\\(?\\$?children( \\?\\? '')?\\)?$",
-      "why": "slot of a primitive or organism: callers pass a captured, already escaped fragment ({capture} / (string) $c_N); the builder never passes children from layout props (Fragment and Front render catalog templates with props only; Layout::clean strip_tags + escapes strings and drops __html)"
+      "why": "slot of a primitive or organism: every `children` a generated block passes is a fragment it captured itself ({capture} / (string) $c_N, 3658 places in latte+twig blocks/); catalog blocks are rendered with ['p' => props] only (BlockRenderer::render), so `$children` is never a layout or data value (Fragment, Front and the compiled page pass props only; Layout::clean strip_tags + escapes strings and drops __html). codegen-x prints children raw on the server runtimes without a marker check (not changed in 832d7f17)"
     },
     {
-      "pattern": "^\\(\\$?p(\\.|\\[')(right|actions|icon|aside|mark|action)('\\])? \\?\\? ''\\)$",
-      "subtemplate": true,
-      "why": "slot props of internal sub-templates (section-frame, page-header, panel, …): filled only by generated organisms with captured fragments ($f_N) or og_lucide(); never a catalog block template (the gate checks it), so layout props cannot reach them"
+      "pattern": "^og_slot\\(",
+      "why": "slot props of sub-templates (section-frame, page-header, panel, section-head, …; codegen-x since 41706af7): og_slot (Runtime::slot = Runtime::html) prints only the TrustedHtml marker that og_markup() made of a fragment the calling generated template captured; any other value — a plain string, also one a layout could put on a catalog block — is escaped. Checked by tests/CodegenSafetySharedTest (direct render with a plain string, Latte and Twig) and the fuzz; so no longer restricted to templates outside the catalog"
     },
     {
       "pattern": "^og_html\\(",
-      "why": "TrustedHtml ({__html}) printed by og_html (Runtime::html): a non-marker value is escaped; markers come only from DataSources — the_content of the current post as is, every other {__html} (meta, records) through wp_kses_post (DataSources::trusted); layouts cannot carry __html (Layout::untrust)"
+      "why": "TrustedHtml ({__html}) printed by og_html (Runtime::html): a non-marker value is escaped, a blank marker never reaches it (ReadPath |html and DataSources::trusted give null); markers come only from DataSources — the_content of the current post as is, every other {__html} (meta, records) through wp_kses_post (DataSources::trusted); layouts cannot carry __html (Layout::untrust)"
     },
     {
       "pattern": "^og_lucide\\(",

@@ -88,7 +88,7 @@
         {capture $c_16}
           {=og_text(og_get($v_labels, ['read']))}
         {/capture}
-        {=og_include('compose/Link.latte', ['href' => og_s(og_get($v_post, ['href'])), 'variant' => 'default', 'attrs' => og_attrs(['data-testid', 'read']), 'children' => (string) $c_16])|noescape}
+        {=og_include('compose/Link.latte', ['href' => og_url(og_s(og_get($v_post, ['href']))), 'variant' => 'default', 'attrs' => og_attrs(['data-testid', 'read']), 'children' => (string) $c_16])|noescape}
       {/if}
     {/capture}
     {=og_include('compose/CardContent.latte', ['class' => 'flex flex-1 flex-col gap-2', 'children' => (string) $c_17])|noescape}

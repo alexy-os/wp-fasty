@@ -44,7 +44,7 @@
         {%- set c_8 -%}
           {{ og_text(v_cta) }}
         {%- endset -%}
-        {{ include('compose/Button.html.twig', {'variant': 'default', 'size': 'sm', 'href': og_s(v_ctaHref), 'attrs': og_attrs(['data-testid', 'header-cta']), 'children': c_8}, with_context = false) }}
+        {{ include('compose/Button.html.twig', {'variant': 'default', 'size': 'sm', 'href': og_url(og_s(v_ctaHref)), 'attrs': og_attrs(['data-testid', 'header-cta']), 'children': c_8}, with_context = false) }}
       {%- endif %}
     {%- endset -%}
     {{ include('compose/Group.html.twig', {'gap': '4', 'align': 'center', 'children': c_9}, with_context = false) }}

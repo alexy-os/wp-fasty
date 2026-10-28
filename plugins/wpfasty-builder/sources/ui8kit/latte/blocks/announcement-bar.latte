@@ -34,7 +34,7 @@
           {=og_text($v_cta)}
           {=og_include('icons/LucideIcon.latte', ['name' => 'arrow-right', 'size' => 16])|noescape}
         {/capture}
-        {=og_include('compose/LinkPlain.latte', ['href' => og_s($v_ctaHref), 'class' => 'inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-4', 'attrs' => og_attrs(['data-testid', 'announcement-cta']), 'children' => (string) $c_3])|noescape}
+        {=og_include('compose/LinkPlain.latte', ['href' => og_url(og_s($v_ctaHref)), 'class' => 'inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-4', 'attrs' => og_attrs(['data-testid', 'announcement-cta']), 'children' => (string) $c_3])|noescape}
       {/if}
     {/capture}
     {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'class' => og_s(og_cnv(['min-w-0 flex-wrap', (og_t(og_and([og_eq($v_layout, 'center'), og_eq($v_dismiss, 'show')])) ? 'ml-auto' : '')])), 'children' => (string) $c_4])|noescape}

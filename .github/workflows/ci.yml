@@ -91,7 +91,9 @@ jobs:
             git -C /tmp/cgx fetch -q --depth 1 origin "$C" && git -C /tmp/cgx checkout -q FETCH_HEAD
             (cd /tmp/cgx && bun install --frozen-lockfile)
             bun tools/builder/export-ui8kit.ts --check --cgx /tmp/cgx
-            # shared readPath vectors: codegen-x core.ts gives what ReadPath.php gives (PHP side: tests/CodexReadPathSharedTest)
+            # shared vectors (tests/fixtures/codex-shared): readpath-wpfasty / readpath-null / safety-vectors are byte-equal to
+            # the codegen-x sources, core.ts and safe.ts give `want` (PHP side, every run: tests/CodexReadPathSharedTest,
+            # tests/CodegenSafetySharedTest)
             bun tools/codex/readpath-shared.ts --cgx /tmp/cgx
           else
             bun tools/builder/export-ui8kit.ts --check --offline

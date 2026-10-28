@@ -21,7 +21,7 @@
   {=og_include('compose/Box.latte', ['class' => 'flex min-w-0 flex-col gap-2', 'children' => (string) $c_3])|noescape}
   {if og_t(((($p['actions'] ?? null) !== null)))}
     {capture $c_4}
-      {=($p['actions'] ?? '')|noescape}
+      {=og_slot(($p['actions'] ?? null))|noescape}
     {/capture}
     {=og_include('compose/Box.latte', ['class' => 'flex flex-wrap items-center gap-2', 'children' => (string) $c_4])|noescape}
   {/if}

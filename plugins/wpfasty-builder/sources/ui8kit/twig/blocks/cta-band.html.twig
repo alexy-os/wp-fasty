@@ -53,5 +53,5 @@
     {%- endif %}
     {{ include('blocks/cta-actions.html.twig', {'p': {'id': v_id, 'actions': v_actions, 'center': v_center}}, with_context = false) }}
   {%- endset -%}
-  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_text, 'layout': (og_t(og_eq(v_layout, 'split')) ? 'split' : 'stack'), 'align': (og_t(v_center) ? 'center' : 'start'), 'boxed': og_eq(v_layout, 'card'), 'media': {'show': og_eq(v_layout, 'split')}, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel, 'aside': f_8}, 'children': c_9}, with_context = false) }}
+  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_text, 'layout': (og_t(og_eq(v_layout, 'split')) ? 'split' : 'stack'), 'align': (og_t(v_center) ? 'center' : 'start'), 'boxed': og_eq(v_layout, 'card'), 'media': {'show': og_eq(v_layout, 'split')}, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_8)}, 'children': c_9}, with_context = false) }}
 {%- endif %}

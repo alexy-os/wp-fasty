@@ -7,7 +7,7 @@
   {capture $c_4}
     {if og_t(((($p['icon'] ?? null) !== null)))}
       {capture $c_1}
-        {=($p['icon'] ?? '')|noescape}
+        {=og_slot(($p['icon'] ?? null))|noescape}
       {/capture}
       {=og_include('compose/Inline.latte', ['class' => 'flex w-7 shrink-0 items-center pr-2', 'attrs' => og_attrs(['data-slot', 'dropdown-item-icon']), 'children' => (string) $c_1])|noescape}
     {/if}
@@ -17,7 +17,7 @@
     {=og_include('compose/Inline.latte', ['class' => og_s(og_cnv(['text-xs', 'min-w-0 flex-1 truncate px-1 font-bold'])), 'attrs' => og_attrs(['data-slot', 'dropdown-item-label']), 'children' => (string) $c_2])|noescape}
     {if og_t(((($p['right'] ?? null) !== null)))}
       {capture $c_3}
-        {=($p['right'] ?? '')|noescape}
+        {=og_slot(($p['right'] ?? null))|noescape}
       {/capture}
       {=og_include('compose/Inline.latte', ['class' => 'flex shrink-0 items-center pr-1', 'attrs' => og_attrs(['data-slot', 'dropdown-item-right']), 'children' => (string) $c_3])|noescape}
     {/if}

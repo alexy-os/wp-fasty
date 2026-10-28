@@ -14,7 +14,7 @@
     {{ include('compose/Inline.html.twig', {'attrs': og_attrs(['data-slot', 'section-head-title']), 'children': c_1}, with_context = false) }}
     {%- if og_t(((p.right ?? null) is not null)) %}
       {%- set c_2 -%}
-        {{ (p.right ?? '')|raw }}
+        {{ og_slot((p.right ?? null))|raw }}
       {%- endset -%}
       {{ include('compose/Inline.html.twig', {'class': 'flex items-center gap-2', 'attrs': og_attrs(['data-slot', 'section-head-right']), 'children': c_2}, with_context = false) }}
     {%- endif %}
@@ -28,7 +28,7 @@
     {{ include('compose/Inline.html.twig', {'attrs': og_attrs(['data-slot', 'section-head-title']), 'children': c_4}, with_context = false) }}
     {%- if og_t(((p.right ?? null) is not null)) %}
       {%- set c_5 -%}
-        {{ (p.right ?? '')|raw }}
+        {{ og_slot((p.right ?? null))|raw }}
       {%- endset -%}
       {{ include('compose/Inline.html.twig', {'class': 'flex items-center gap-2', 'attrs': og_attrs(['data-slot', 'section-head-right']), 'children': c_5}, with_context = false) }}
     {%- endif %}

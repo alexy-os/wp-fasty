@@ -46,7 +46,7 @@
     {capture $c_8}
       {=og_include('icons/LucideIcon.latte', ['name' => 'arrow-up', 'size' => 16])|noescape}
     {/capture}
-    {=og_include('compose/Button.latte', ['href' => og_s($v_href), 'variant' => 'secondary', 'size' => 'sm', 'layout' => 'icon', 'attrs' => og_attrs(['data-testid', 'submit', 'aria-label', og_coalesce([$v_send, 'Send'])]), 'children' => (string) $c_8])|noescape}
+    {=og_include('compose/Button.latte', ['href' => og_url(og_s($v_href)), 'variant' => 'secondary', 'size' => 'sm', 'layout' => 'icon', 'attrs' => og_attrs(['data-testid', 'submit', 'aria-label', og_coalesce([$v_send, 'Send'])]), 'children' => (string) $c_8])|noescape}
   {/capture}
   {=og_include('compose/Group.latte', ['gap' => '2', 'align' => 'center', 'justify' => 'between', 'class' => 'h-8 w-full', 'attrs' => og_attrs(['data-testid', 'composer-tools']), 'children' => (string) $c_9])|noescape}
 {/capture}

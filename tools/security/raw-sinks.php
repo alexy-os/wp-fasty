@@ -8,9 +8,9 @@
  * it is safe:
  *   generated  files marked "Code generated … DO NOT EDIT" (codegen-x / UI8Kit output, never hand-edited): the
  *              expression must match one of the reviewed patterns (e.g. og_include(…) — a rendered template; og_html(…) —
- *              TrustedHtml, sanitized in the adapter); a pattern marked "subtemplate" (raw slot props such as
- *              $p['aside']) must not match in a catalog block template — only in sub-templates that generated
- *              organisms include with rendered fragments
+ *              TrustedHtml, sanitized in the adapter; og_slot(…) — a slot prop, raw only as captured markup, a plain
+ *              string escaped by codegen-x itself since 41706af7, so slot props are no longer limited to templates
+ *              outside the catalog)
  *   views      hand-written views: exact (file, expression) entries with their count
  *   safe       PHP `is_safe` registrations: exact (file, function name) entries
  * A new place, or one more of a listed expression in a file, fails the build until it is reviewed and added. Entries
@@ -98,18 +98,6 @@ $sinks = static function (string $src, bool $twig) use ($norm): array {
     return $out;
 };
 
-// templates the builder renders as blocks (catalog variants): a "subtemplate" pattern must never match in one, its
-// raw slot props would come straight from layout props
-$catalogTemplates = [];
-foreach (array_merge(glob("$root/plugins/wpfasty-builder/sources/*/latte/catalog.json") ?: [], glob("$root/plugins/wpfasty-builder/sources/*/twig/catalog.json") ?: []) as $cat) {
-    $dir = substr(dirname($cat), strlen($root) + 1);
-    foreach ((array) (json_decode((string) file_get_contents($cat), true)['blocks'] ?? []) as $b) {
-        foreach ((array) ($b['variants'] ?? []) as $v) {
-            $catalogTemplates["$dir/" . ($v['template'] ?? '')] = true;
-        }
-    }
-}
-
 $found = ['generated' => [], 'views' => [], 'safe' => []];
 $fail = [];
 foreach ($git("'*.latte' '*.twig'") as $file) {
@@ -123,9 +111,6 @@ foreach ($git("'*.latte' '*.twig'") as $file) {
             $ok = false;
             foreach ($allow['generated'] as $rule) {
                 if (preg_match('#' . $rule['pattern'] . '#s', $expr) === 1) {
-                    if (($rule['subtemplate'] ?? false) && isset($catalogTemplates[$file])) {
-                        $fail[] = "$file:$line raw slot prop in a catalog block template (layout props reach it): $expr";
-                    }
                     $ok = true;
                     $found['generated'][$rule['pattern']] = ($found['generated'][$rule['pattern']] ?? 0) + 1;
                     break;

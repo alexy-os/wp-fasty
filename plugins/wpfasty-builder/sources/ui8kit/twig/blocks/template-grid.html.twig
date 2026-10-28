@@ -96,7 +96,7 @@
     {%- set c_19 -%}
       {{ og_text(og_get(v_labels, ['browse'])) }}
     {%- endset -%}
-    {{ include('compose/Button.html.twig', {'variant': 'outline', 'size': 'sm', 'href': og_s(v_browseHref), 'class': 'w-full', 'attrs': og_attrs(['data-testid', 'template-browse']), 'children': c_19}, with_context = false) }}
+    {{ include('compose/Button.html.twig', {'variant': 'outline', 'size': 'sm', 'href': og_url(og_s(v_browseHref)), 'class': 'w-full', 'attrs': og_attrs(['data-testid', 'template-browse']), 'children': c_19}, with_context = false) }}
   {%- endset -%}
   {{ include('compose/Stack.html.twig', {'gap': '8', 'align': 'stretch', 'children': c_20}, with_context = false) }}
 {%- endset -%}

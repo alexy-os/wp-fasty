@@ -51,7 +51,7 @@
         {/if}
       {/capture}
       {=og_include('compose/Box.latte', ['class' => 'min-w-0 lg:col-span-2', 'children' => (string) $c_6])|noescape}
-      {if og_t(og_or([og_get($v_aside, ['title']), og_get($v_aside, ['content'])]))}
+      {if og_t(og_get($v_aside, ['content']))}
         {capture $c_9}
           {if og_t(og_get($v_aside, ['title']))}
             {capture $c_7}

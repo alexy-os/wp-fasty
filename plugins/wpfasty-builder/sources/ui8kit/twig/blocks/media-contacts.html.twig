@@ -16,7 +16,7 @@
         {{ include('icons/LucideIcon.html.twig', {'name': og_s(og_get(v_c, ['icon'])), 'size': 16}, with_context = false) }}
         {{ og_text(og_get(v_c, ['title'])) }}
       {%- endset -%}
-      {{ include('compose/Button.html.twig', {'variant': 'outline', 'size': 'default', 'href': og_s(og_get(v_c, ['href'])), 'class': 'w-full gap-2', 'attrs': og_attrs(['data-testid', 'media-channel']), 'children': c_2}, with_context = false) }}
+      {{ include('compose/Button.html.twig', {'variant': 'outline', 'size': 'default', 'href': og_url(og_s(og_get(v_c, ['href']))), 'class': 'w-full gap-2', 'attrs': og_attrs(['data-testid', 'media-channel']), 'children': c_2}, with_context = false) }}
     {%- endfor %}
   {%- endset -%}
   {{ include('compose/Stack.html.twig', {'gap': '2', 'align': 'stretch', 'children': c_3}, with_context = false) }}

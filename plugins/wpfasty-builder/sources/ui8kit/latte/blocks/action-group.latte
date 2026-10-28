@@ -11,12 +11,12 @@
   {capture $c_1}
     {=og_text($v_primary)}
   {/capture}
-  {=og_include('compose/Button.latte', ['variant' => 'default', 'size' => 'default', 'href' => og_s($v_primaryHref), 'attrs' => og_attrs(['data-testid', 'action-primary']), 'children' => (string) $c_1])|noescape}
+  {=og_include('compose/Button.latte', ['variant' => 'default', 'size' => 'default', 'href' => og_url(og_s($v_primaryHref)), 'attrs' => og_attrs(['data-testid', 'action-primary']), 'children' => (string) $c_1])|noescape}
   {if og_t($v_secondary)}
     {capture $c_2}
       {=og_text($v_secondary)}
     {/capture}
-    {=og_include('compose/Button.latte', ['variant' => 'outline', 'size' => 'default', 'href' => og_s($v_secondaryHref), 'attrs' => og_attrs(['data-testid', 'action-secondary']), 'children' => (string) $c_2])|noescape}
+    {=og_include('compose/Button.latte', ['variant' => 'outline', 'size' => 'default', 'href' => og_url(og_s($v_secondaryHref)), 'attrs' => og_attrs(['data-testid', 'action-secondary']), 'children' => (string) $c_2])|noescape}
   {/if}
 {/capture}
 {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'justify' => og_s((og_t(og_eq($v_align, 'center')) ? 'center' : 'start')), 'class' => 'flex-wrap', 'attrs' => og_attrs(['data-slot', 'action-group']), 'children' => (string) $c_3])|noescape}

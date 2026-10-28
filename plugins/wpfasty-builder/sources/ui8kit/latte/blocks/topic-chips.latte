@@ -13,12 +13,12 @@
         {/if}
         {=og_text(og_get($v_topic, ['name']))}
       {/capture}
-      {=og_include('compose/Button.latte', ['href' => og_s(og_get($v_topic, ['href'])), 'variant' => 'ghost', 'size' => 'sm', 'class' => 'gap-2 text-background inset-ring-background/30 hover:bg-background/10', 'attrs' => og_attrs(['data-testid', 'hero-topic']), 'children' => (string) $c_1])|noescape}
+      {=og_include('compose/Button.latte', ['href' => og_url(og_s(og_get($v_topic, ['href']))), 'variant' => 'ghost', 'size' => 'sm', 'class' => 'gap-2 text-background inset-ring-background/30 hover:bg-background/10', 'attrs' => og_attrs(['data-testid', 'hero-topic']), 'children' => (string) $c_1])|noescape}
     {else}
       {capture $c_2}
         {=og_text(og_get($v_topic, ['name']))}
       {/capture}
-      {=og_include('compose/Button.latte', ['href' => og_s(og_get($v_topic, ['href'])), 'variant' => 'outline', 'size' => 'sm', 'attrs' => og_attrs(['data-testid', 'hero-topic']), 'children' => (string) $c_2])|noescape}
+      {=og_include('compose/Button.latte', ['href' => og_url(og_s(og_get($v_topic, ['href']))), 'variant' => 'outline', 'size' => 'sm', 'attrs' => og_attrs(['data-testid', 'hero-topic']), 'children' => (string) $c_2])|noescape}
     {/if}
   {/foreach}
 {/capture}

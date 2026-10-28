@@ -13,13 +13,13 @@
   {%- set c_1 -%}
     {{ og_text(v_login) }}
   {%- endset -%}
-  {{ include('compose/Button.html.twig', {'variant': 'ghost', 'size': 'sm', 'href': og_s(v_loginHref), 'class': og_s((og_t(og_eq(v_tone, 'inverse')) ? 'text-background hover:bg-background/10' : '')), 'attrs': og_attrs(['data-testid', 'nav-login']), 'children': c_1}, with_context = false) }}
+  {{ include('compose/Button.html.twig', {'variant': 'ghost', 'size': 'sm', 'href': og_url(og_s(v_loginHref)), 'class': og_s((og_t(og_eq(v_tone, 'inverse')) ? 'text-background hover:bg-background/10' : '')), 'attrs': og_attrs(['data-testid', 'nav-login']), 'children': c_1}, with_context = false) }}
 {%- endif %}
 {%- if og_t(og_and([og_eq(v_actions, 'cta'), v_cta])) %}
   {%- set c_2 -%}
     {{ og_text(v_cta) }}
   {%- endset -%}
-  {{ include('compose/Button.html.twig', {'variant': og_s((og_t(og_eq(v_tone, 'inverse')) ? 'secondary' : 'default')), 'size': 'sm', 'href': og_s(v_ctaHref), 'attrs': og_attrs(['data-testid', 'header-cta']), 'children': c_2}, with_context = false) }}
+  {{ include('compose/Button.html.twig', {'variant': og_s((og_t(og_eq(v_tone, 'inverse')) ? 'secondary' : 'default')), 'size': 'sm', 'href': og_url(og_s(v_ctaHref)), 'attrs': og_attrs(['data-testid', 'header-cta']), 'children': c_2}, with_context = false) }}
 {%- endif %}
 {%- if og_t(v_themeLabel) %}
   {%- set c_3 -%}
