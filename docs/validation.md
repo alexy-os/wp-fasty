@@ -83,6 +83,9 @@ the generator maps them.
 `POT-Creation-Date` and `X-Generator` lines are normalized. CI `wordpress` also runs Theme Check on the generated
 theme (0 REQUIRED). Packaged today: press, folio, shop.
 
+`bun run tokens:contrast` (CI): every theme's `tokens.css` has `.dark` with the `:root` colour keys, and the palette a
+page gets (child over parent, per scheme) passes WCAG AA 4.5:1 on every text/surface pair and primary on background.
+
 ## What agents should run
 
 **Changing bricks (codegen):**

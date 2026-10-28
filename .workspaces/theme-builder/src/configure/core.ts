@@ -1,6 +1,7 @@
 // buildManifest(answers) → full site manifest v0.2. Pure (no fs): the CLI, the MCP server and the browser form
 // pass the data (archetype example manifests + palette presets) in.
 import { AA, checkTokens } from "./contrast";
+import { brandDark } from "./palette";
 
 export type J = Record<string, any>;
 
@@ -82,11 +83,12 @@ export function buildManifest(a: Answers, data: Data): { manifest: J; warnings: 
     const p = data.palettes[a.palette];
     if (!p) problems.push(`unknown palette "${a.palette}" (have: ${Object.keys(data.palettes).join(", ")})`);
     else {
-      for (const i of checkTokens({ light: p.light, dark: p.dark })) problems.push(`palette ${a.palette}: contrast ${i.scheme} ${i.fg} on ${i.bg} is ${i.ratio}:1 (< ${AA}:1 WCAG AA)`);
+      for (const i of checkTokens({ light: p.light, dark: brandDark(p) })) problems.push(`palette ${a.palette}: contrast ${i.scheme} ${i.fg} on ${i.bg} is ${i.ratio}:1 (< ${AA}:1 WCAG AA)`);
       m.brand = { radius: p.radius, ...(p.fonts ? { fonts: p.fonts } : {}), light: p.light, ...(p.dark ? { dark: p.dark } : {}) };
     }
   } else if (a.tokens) {
-    const issues = checkTokens({ light: a.tokens.light, dark: a.tokens.dark });
+    // no dark given: the generator derives one (palette.ts) — gate that one too
+    const issues = checkTokens({ light: a.tokens.light, dark: brandDark(a.tokens) });
     for (const i of issues) problems.push(`contrast ${i.scheme} ${i.fg} on ${i.bg} is ${i.ratio}:1 (< ${AA}:1 WCAG AA)`);
     m.brand = {
       radius: a.tokens.radius ?? m.brand?.radius ?? "0.625rem",

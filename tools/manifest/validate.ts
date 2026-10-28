@@ -9,6 +9,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { codexManifest, sourceIds } from "../../.workspaces/theme-builder/src/generate/codex";
+import { brandDark } from "../../.workspaces/theme-builder/src/configure/palette";
 
 type J = Record<string, any>;
 const root = resolve(dirname(new URL(import.meta.url).pathname), "../..");
@@ -245,7 +246,8 @@ function parity(m: J, err: (msg: string) => void): void {
   const b = m.brand ?? {};
   const wantLight = strip({ ...b.light, radius: b.radius, "font-body": b.fonts?.body, "font-display": b.fonts?.display });
   if (canon(wantLight) !== canon(light)) err(`tokens.css :root differs from brand (light/radius/fonts)\n    manifest ${canon(wantLight)}\n    theme    ${canon(light)}`);
-  if (canon(b.dark) !== canon(dark)) err(`tokens.css .dark differs from brand.dark`);
+  if (canon(brandDark(b)) !== canon(dark)) err(`tokens.css .dark differs from brand.dark (or the dark derived from brand.light)`);
+  if (dark && canon(Object.keys(dark).sort()) !== canon(Object.keys(b.light ?? {}).sort())) err(`tokens.css .dark keys differ from :root colour keys`);
 
   const viewFiles = filesUnder(join(dir, "views")).filter((f) => f.endsWith(".latte")).map((f) => f.replace(/\.latte$/, "")).sort();
   const wantViews = [...(m.views ?? [])].sort();

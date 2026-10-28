@@ -194,7 +194,7 @@
           }
         },
         "light": { "$ref": "#/$defs/tokens" },
-        "dark": { "$ref": "#/$defs/tokens", "description": "Omit to keep the parent dark palette." }
+        "dark": { "$ref": "#/$defs/tokens", "description": "Dark scheme (tokens.css .dark, applied only under the .dark class; the site stays light by default). Same keys as light. Omit to have the generator derive one from light (same hues, WCAG AA text pairs)." }
       }
     },
     "labels": {

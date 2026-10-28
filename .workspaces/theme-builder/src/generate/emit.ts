@@ -1,4 +1,6 @@
 // Pure emitters: manifest (+ archetype) → file contents of a child theme.
+import { brandDark } from "../configure/palette";
+
 export type J = Record<string, any>;
 
 export const DEFAULTS = {
@@ -73,7 +75,10 @@ export function tokensCss(m: J, palette: string): string {
   root.push(...Object.entries<string>(b.light ?? {}));
   if (b.radius) root.push(["radius", b.radius]);
   let css = `/* ${m.theme.name} — ${palette}. All colors are tokens. */\n:root {\n${decl(root)}\n}\n`;
-  if (b.dark) css += `\n.dark {\n${decl(Object.entries<string>(b.dark))}\n}\n`;
+  // Both schemes always: brand.dark, or one derived from brand.light (a child's :root loads after the parent's .dark
+  // and would otherwise override it). The front end stays light; .dark applies only under the class.
+  const dark = brandDark(b);
+  if (dark) css += `\n.dark {\n${decl(Object.entries<string>(dark))}\n}\n`;
   return css;
 }
 

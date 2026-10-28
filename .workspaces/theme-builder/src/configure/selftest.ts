@@ -4,6 +4,8 @@
 import { buildManifest, ConfigureError, type J } from "./core";
 import { AA, checkTokens, contrast } from "./contrast";
 import { loadData } from "./node";
+import { deriveDark } from "./palette";
+import { tokensCss } from "../generate/emit";
 
 const data = loadData();
 let fail = 0;
@@ -26,6 +28,19 @@ for (const [id, p] of Object.entries(data.palettes)) {
 check("muted-foreground on muted below AA is caught", contrast("oklch(0.556 0 0)", "oklch(0.97 0 0)") < AA
   && checkTokens({ light: { muted: "oklch(0.97 0 0)", "muted-foreground": "oklch(0.556 0 0)" } }).some((i) => i.fg === "muted-foreground" && i.bg === "muted"));
 rejects("low-contrast tokens rejected", { archetype: "press", name: "Grey Site", tokens: { light: { background: "#ffffff", foreground: "#aaaaaa" } } }, "contrast light foreground on background");
+{
+  // free tokens without dark: the generator derives a dark palette with the same keys, hues kept, AA on every pair
+  const light = { background: "#fffaf0", foreground: "#1f2937", card: "#ffffff", "card-foreground": "#1f2937", primary: "#0f766e", "primary-foreground": "#ffffff", muted: "#f3f4f6", "muted-foreground": "#4b5563", border: "#e5e7eb" };
+  const { manifest } = buildManifest({ archetype: "press", name: "Teal Times", tokens: { light } }, data);
+  const dark = deriveDark(light);
+  const css = tokensCss(manifest, "custom");
+  check("no brand.dark: tokens.css still gets a .dark block (derived), same keys as light", !manifest.brand.dark
+    && /\.dark \{/.test(css) && JSON.stringify(Object.keys(dark)) === JSON.stringify(Object.keys(light)), Object.keys(dark).join(","));
+  check("derived dark passes AA on every pair", !checkTokens({ dark }).length, JSON.stringify(checkTokens({ dark })));
+  check("derived dark keeps the primary hue", Math.abs(Number(dark.primary.match(/ ([\d.]+)\)$/)?.[1]) - 186.4) < 1, dark.primary);
+  for (const [id, p] of Object.entries(data.palettes))
+    check(`palette ${id}: has dark, same keys as light`, !!p.dark && JSON.stringify(Object.keys(p.dark)) === JSON.stringify(Object.keys(p.light)));
+}
 rejects("archetype type clash rejected", { archetype: "shop", name: "Clash Shop", postTypes: [{ name: "product", labels: { singular: "P", plural: "Ps" } }] }, "clashes with archetype shop type");
 rejects("taxonomy clash rejected", { archetype: "folio", name: "Clash Folio", postTypes: [{ name: "case_study", labels: { singular: "C", plural: "Cs" }, taxonomies: { project_type: { labels: { singular: "T", plural: "Ts" } } } }] }, "taxonomy \"project_type\" clashes");
 rejects("reserved name rejected", { archetype: "press", name: "Reserved", postTypes: [{ name: "page", labels: { singular: "P", plural: "Ps" } }] }, "reserved platform post type");

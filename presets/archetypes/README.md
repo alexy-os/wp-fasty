@@ -44,5 +44,10 @@ archetype's required ones (name/taxonomy clashes and reserved platform names rej
 reference theme has its text domain literal retargeted (`archetype.json` → `sourceTextDomain`). Front ends:
 `bun run theme:new-site`, the MCP server (`tools/mcp/`), and the static form `configurator/index.html`.
 
+Both schemes: `tokens.css` always has `:root` (light) and `.dark` with the same colour keys. `brand.dark` comes from
+the palette (every `presets/palettes/*.json` has one) or the answers; without it the generator derives one from
+`brand.light` (`configure/palette.ts`: same hues, surfaces dark, text pushed to AA). The site stays light — `.dark`
+applies only under the class (the Builder preview's dark mode). `bun run tokens:contrast` checks every theme.
+
 Note: the `neutral` palette (shadcn default) has light `muted-foreground` on `muted` at 4.34:1; presets are a fixed,
 reviewed list and are not gated, custom tokens are.

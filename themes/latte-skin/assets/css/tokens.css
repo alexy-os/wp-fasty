@@ -1,9 +1,17 @@
 /**
  * Latte Skin — token overrides (loaded after parent tokens).
+ * Both schemes: this file loads after the parent's tokens.css, so a :root override would also win over the
+ * parent's .dark — every colour overridden in :root is overridden in .dark too (same keys). The site stays light;
+ * .dark applies only under the class.
  */
 
 :root {
   --primary: oklch(0.45 0.12 250);
   --primary-foreground: oklch(0.98 0 0);
   --radius: 0.75rem;
+}
+
+.dark {
+  --primary: oklch(0.72 0.12 250);
+  --primary-foreground: oklch(0.17 0.03 250);
 }

@@ -60,6 +60,9 @@ jobs:
           bun install --frozen-lockfile
           bun run manifest:validate
 
+      - name: Theme tokens — light + dark in every child theme, same keys, text pairs WCAG AA
+        run: bun run tokens:contrast
+
       - name: Generator round-trip (byte-identical) + slug retarget test (namespace, text domain)
         run: |
           bun run theme:roundtrip
