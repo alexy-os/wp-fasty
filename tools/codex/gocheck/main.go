@@ -1,11 +1,11 @@
-// Cross-check of the WordPress Codex bytes against the Go reference (fastygo/codex v0.4.0):
+// Cross-check of the WordPress Codex bytes against the Go reference (fastygo/codex v0.4.2):
 //
 //	go run . <golden dir> <codex.manifest.json>
 //
 // For every body of tests/fixtures/codex-draft/golden/<site> (what /wpfasty/v1/codex served): entry bodies and list
 // items must be fixed points of canonical.Canonicalize (codex-entry/v1), term items of canonical.CanonicalJSON, the
-// Codex-Digest is recomputed, and entries + terms + settings go through validate.CollectionV04 with the manifest
-// (settings without the contact block, see contactBlock).
+// Codex-Digest is recomputed, and entries + terms + settings (whole, incl. the contact block contact, hours,
+// hours_exceptions, map) go through validate.CollectionV04 with the manifest.
 // Exit 1 on any difference. The site origin placeholder {base} is replaced by a fixed origin.
 package main
 
@@ -22,9 +22,6 @@ import (
 	"github.com/fastygo/codex/validate"
 	"github.com/fastygo/codex/validation"
 )
-
-// contactBlock = settings keys of the contact block (contract SettingsV04: contact, hours, hours_exceptions, map).
-var contactBlock = []string{"contact", "hours", "hours_exceptions", "map"}
 
 func main() {
 	if len(os.Args) != 3 {
@@ -92,15 +89,9 @@ func main() {
 			if got, err := canonical.CanonicalJSON(text); err != nil || got != text {
 				fail("%s: not JCS (%v)\n  php: %s\n  go:  %s", name, err, text, got)
 			}
-			var v map[string]any
+			var v any
 			_ = json.Unmarshal([]byte(text), &v)
-			// The settings contact block of ui8kit/contract (after a0ae505) is not in fastygo/codex v0.4.x yet, whose
-			// CollectionV04 closes the settings keys: the bytes above stay checked whole (JCS), the closed-key validation
-			// runs on the record without the block. Drop when the Go reference knows the keys.
-			for _, k := range contactBlock {
-				delete(v, k)
-			}
-			coll.Settings = append(coll.Settings, validate.RecordFile{File: name, Data: any(v)})
+			coll.Settings = append(coll.Settings, validate.RecordFile{File: name, Data: v})
 		}
 	}
 	var manifest schema.Manifest

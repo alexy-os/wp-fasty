@@ -33,7 +33,7 @@ for site in $SITES; do
       --golden "tests/fixtures/codex-draft/golden/latte-$site" $WRITE); then
     fail=1
   fi
-  # the same bytes through the Go reference (fastygo/codex v0.4.0): canonical fixed points + CollectionV04
+  # the same bytes through the Go reference (fastygo/codex v0.4.2): canonical fixed points + CollectionV04
   if command -v go > /dev/null; then
     (cd "$ROOT/tools/codex/gocheck" && go run . "$ROOT/tests/fixtures/codex-draft/golden/latte-$site" \
       "$ROOT/themes/latte-$site/types/codex.manifest.json") || fail=1
