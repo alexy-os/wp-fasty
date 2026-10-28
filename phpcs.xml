@@ -11,6 +11,7 @@
     <file>plugins/wpfasty-builder</file>
     <file>tools/parity</file>
     <file>tools/qa</file>
+    <file>tools/security</file>
     <arg name="extensions" value="php"/>
 
     <!-- Exclude directories and files -->
@@ -54,6 +55,14 @@
         </properties>
         <!-- Child themes ship small inc/*.php files (no Composer autoload). -->
         <exclude-pattern>themes/latte-*/inc/*</exclude-pattern>
+    </rule>
+
+    <!-- tools/security: CLI test harnesses (fuzz matrix, DOM check), long payload / format lines, run as scripts -->
+    <rule ref="Generic.Files.LineLength">
+        <exclude-pattern>tools/security/*</exclude-pattern>
+    </rule>
+    <rule ref="PSR1.Files.SideEffects">
+        <exclude-pattern>tools/security/*</exclude-pattern>
     </rule>
 
     <!-- Use LF line endings instead of CRLF -->
@@ -112,8 +121,9 @@
 
     <!-- Keep some important WordPress checks -->
     <rule ref="WordPress.WP.I18n" />
-    <rule ref="WordPress.Security.EscapeOutput" />
-    <rule ref="WordPress.Security.NonceVerification" />
+    <!-- The whole WordPress.Security category: escaping, nonces, validated + sanitized + unslashed input, safe
+         redirects, plugin menu slugs (security audit 2026-10-28) -->
+    <rule ref="WordPress.Security" />
     <rule ref="WordPress.WP.EnqueuedResources" />
 
     <!-- Configure text domains for internationalization -->

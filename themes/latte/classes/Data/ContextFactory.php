@@ -299,10 +299,14 @@ final class ContextFactory
         $data = [
             'id' => $post->ID,
             'title' => self::text(get_the_title($post)),
-            'content' => apply_filters('the_content', $post->post_content),
+            // a password-protected post shows the password form (and no excerpt) until the visitor has entered it,
+            // like the_content() / get_the_excerpt() of core templates
+            'content' => post_password_required($post)
+                ? get_the_password_form($post)
+                : apply_filters('the_content', $post->post_content),
             'slug' => $post->post_name,
             'url' => (string) get_permalink($post),
-            'excerpt' => self::text(has_excerpt($post)
+            'excerpt' => self::text(has_excerpt($post) || post_password_required($post)
                 ? get_the_excerpt($post)
                 : wp_trim_words(wp_strip_all_tags(strip_shortcodes($post->post_content)), 40)),
             'featuredImage' => null,
@@ -415,6 +419,9 @@ final class ContextFactory
         }
         if (!comments_open($post) && (int) get_comments_number($post) === 0) {
             return '';
+        }
+        if (post_password_required($post)) {
+            return ''; // comments of a protected post stay behind its password (core comments_template())
         }
 
         $list = wp_list_comments([

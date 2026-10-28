@@ -268,10 +268,11 @@ final class Plugin
             return;
         }
         // Each value is sanitized per field type below.
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        // phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $input = isset($_POST['wpfasty_fields']) && is_array($_POST['wpfasty_fields'])
             ? wp_unslash($_POST['wpfasty_fields'])
             : [];
+        // phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         foreach ($type->fields as $name => $field) {
             $value = $field->fromInput($input[$name] ?? '');
             if ($value === null) {
