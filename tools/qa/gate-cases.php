@@ -30,9 +30,16 @@ if ($mode === 'blocks') {
     ], null);
     foreach (['latte', 'twig'] as $e) {
         $cat = json_decode((string) file_get_contents("$src/$e/catalog.json"), true, 512, JSON_THROW_ON_ERROR);
+        $catalog = new \WPFastyBuilder\Catalog($cat);
+        // the paths of a current-scope record (richtext title, body…) get the catalog's fixture record (real markup)
+        $sample = static fn (array $slot): array => (array) ($slot['sample'] ?? []);
         foreach ($cat['blocks'] as $blk) {
             foreach ($blk['variants'] as $v) {
-                $html = $r->render($e, (string) $v['template'], (array) $v['props']);
+                $props = (array) $v['props'];
+                foreach ($catalog->currentValues((string) $blk['id'], (string) $v['id'], $sample) as $path => $value) {
+                    \WPFastyBuilder\Layout::set($props, explode('.', $path), $value);
+                }
+                $html = $r->render($e, (string) $v['template'], $props);
                 if ($html === '' || str_contains($html, '<!-- wpfasty-builder')) {
                     fwrite(STDERR, "✗ $e {$blk['id']}/{$v['id']} did not render\n");
                     exit(1);

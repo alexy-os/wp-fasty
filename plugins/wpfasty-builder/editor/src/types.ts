@@ -22,11 +22,13 @@ export interface RecordField { name: string; type: string; optional?: boolean; d
  *  (when shot), CSS size */
 export interface Variant {
   id: string; set: Obj; organism: string; template: string; props: Obj; bindings: { path: string[]; data: string; pick?: string }[];
+  /** paths the record of the current route fills (data `scope: "current"`: richtext title, content…); not editable */
+  current?: { path: string[]; data: string; field: string }[];
   preview?: { src: string; dark?: string; width: number; height: number };
 }
 export interface BlockSpec {
   id: string; title: string; docs: string; group: string; axes: Record<string, string[]>; defaults: Obj;
-  props: PropSpec[]; data: { as: string; kind: string; record: string; fields: Record<string, string> }[]; variants: Variant[];
+  props: PropSpec[]; data: { as: string; kind: string; record: string; fields: Record<string, string>; scope?: "current"; sample?: Obj }[]; variants: Variant[];
 }
 export interface Collection { id: string; label: string; type: string; docs?: string; blocks: string[]; pages?: TemplatePage[] }
 /** a page of a template collection; `preview`: its tall page shot (file pixels, 640 wide), light and dark */

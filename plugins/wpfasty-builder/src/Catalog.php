@@ -243,6 +243,72 @@ final class Catalog
     }
 
     /**
+     * The paths of a variant the record of the current route fills (codegen-x data `scope: "current"`, e.g. the
+     * richtext block: title ← entry.title, content ← entry.content): path => [data alias, record field]. They are not
+     * layout props and not bindable; the page reads them from wpfb[<block id>][<path>] like a binding.
+     *
+     * @return array<string, array{data: string, field: string}>
+     */
+    public function current(string $block, string $variant): array
+    {
+        $v = $this->variant($block, $variant);
+        $scoped = [];
+        foreach ((array) ($this->blocks[$block]['data'] ?? []) as $d) {
+            if (is_array($d) && ($d['scope'] ?? null) === 'current' && is_string($d['as'] ?? null)) {
+                $scoped[$d['as']] = true;
+            }
+        }
+        $out = [];
+        foreach ((array) ($v['current'] ?? []) as $c) {
+            $path = is_array($c) && is_array($c['path'] ?? null) ? implode('.', array_map('strval', $c['path'])) : '';
+            $data = is_array($c) ? (string) ($c['data'] ?? '') : '';
+            $field = is_array($c) ? (string) ($c['field'] ?? '') : '';
+            if ($path !== '' && $field !== '' && isset($scoped[$data])) {
+                $out[$path] = ['data' => $data, 'field' => $field];
+            }
+        }
+        return $out;
+    }
+
+    /**
+     * The current-scope data slot of a block by its alias (as slot()), with the catalog's `sample` record (the
+     * record on the codegen-x fixtures, for offline renders).
+     *
+     * @return array{kind: string, record: string, fields: array<string, string>, defs: list<array<string, mixed>>,
+     *   sample: array<string, mixed>}|null
+     */
+    public function currentSlot(string $block, string $as): ?array
+    {
+        foreach ((array) ($this->blocks[$block]['data'] ?? []) as $d) {
+            if (is_array($d) && ($d['as'] ?? null) === $as && ($d['scope'] ?? null) === 'current') {
+                return self::slotOf($d, $this->data) + ['sample' => (array) ($d['sample'] ?? [])];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * The values of the current paths of a variant from one record per alias ($record(slot) → record):
+     * path => value, null when the record has no such field.
+     *
+     * @param callable(array<string, mixed>): array<string, mixed> $record
+     * @return array<string, mixed>
+     */
+    public function currentValues(string $block, string $variant, callable $record): array
+    {
+        $records = [];
+        $out = [];
+        foreach ($this->current($block, $variant) as $path => $c) {
+            if (!array_key_exists($c['data'], $records)) {
+                $slot = $this->currentSlot($block, $c['data']);
+                $records[$c['data']] = $slot !== null ? $record($slot) : [];
+            }
+            $out[$path] = $records[$c['data']][$c['field']] ?? null;
+        }
+        return $out;
+    }
+
+    /**
      * The first data slot of each kind (what the editor rates a data source against).
      *
      * @return array<string, array<string, mixed>> kind → slot (as slot())
@@ -252,7 +318,7 @@ final class Catalog
         $out = [];
         foreach ($this->blocks as $b) {
             foreach ((array) ($b['data'] ?? []) as $d) {
-                $kind = is_array($d) ? (string) ($d['kind'] ?? '') : '';
+                $kind = is_array($d) && ($d['scope'] ?? null) !== 'current' ? (string) ($d['kind'] ?? '') : '';
                 if ($kind !== '' && !isset($out[$kind])) {
                     $out[$kind] = self::slotOf($d, $this->data);
                 }

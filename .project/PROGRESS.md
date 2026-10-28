@@ -3,7 +3,7 @@
 **Purpose:** Single handoff document for agents (including Cursor browser).  
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
-**Last updated:** 2026-10-28 (macros 2 and 4: record tokens, price and stock; playground zips out of git)
+**Last updated:** 2026-10-28 (builder block richtext + prose recipe from codegen-x 485a53b6)
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
 **Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
@@ -351,6 +351,7 @@ A Parent correctness ✓
 | L9 | Light + dark in every child theme: `.dark` with the `:root` colour keys in latte-shop / folio / press / skin; palettes (`presets/palettes/*.json`) and example manifests carry `dark`; without `brand.dark` the generator derives one (`configure/palette.ts`, hues kept, AA); `bun run tokens:contrast` (CI) checks keys + text pairs ≥ 4.5:1; front stays light | `tokens.css`, `palette.ts`, `tools/qa/token-contrast.ts` | [x] |
 | L10 | Template page preview: hover / focus on a "Template pages" button opens a side panel (right of the left column, under the bar) with the tall page shot, light / dark, scrolls inside; 150 ms show delay, Esc closes; shots by `tools/builder/page-previews.ts` (62 × 2 WebP, 640 px wide, CI `--check`), `Previews::attachPages` | `TemplatePages.svelte`, `peek.ts` | [x] |
 | L11 | Every block opens its fields: audit of the 474 card variants, 62 template pages, 3 starters and 6 demo landings (static + a click on each of 760 blocks in the live editor). Fixed in the editor: sample keys the codegen-x records / props do not declare get fields typed by the value (`labels.title`/`lead`… in 18 blocks, 65 variants; hero `prompt`: `composer`, `nav`, `badgeMark`), the sample is all variants merged; a layout block outside the open collection (press starter / landing `cta:banner` under `content-blog`) is looked up in the whole catalog. Nothing excluded. Gate `editor/tests/coverage.test.ts` (Latte + Twig); `NO_SETTINGS` for blocks without settings (none) | `schema.ts` (`typeOfSample`, `mergeSamples`), `App.svelte`, `util.ts` | [x] |
+| L12 | Block `richtext` + recipe `prose` from codegen-x `485a53b6` (TrustedHtml, scope `current`, Prose): catalog re-exported (93 blocks, 480 variants, 63 template pages; `scope`/`sample` on current data, variant `current` paths, heroTitle keeps level 1); the WP adapter fills the current paths from the queried post (`DataSources::current`: Codex entry, `the_content` after its filters, memoized; render-block: the edited page), `\|html` → `{"__html"}` printed by `og_html`; `__html` never from a layout or a catalog sample (`Layout::untrust`); editor hides the current paths; previews 6 × 2 + content-blog/page; gates: `tests/RichTextTest.php` (Latte = Twig, fragment = page, escaping, one h1), parity/render-block/ui-gates with the fixture record, N+1 `queries.php richtext 2 6` in CI. Theme `post-content`/`attachment` and `.prose` stay as they are (theme must not depend on the builder plugin; recipe port = separate task) | `tools/builder/export-ui8kit.ts`, `Catalog::current*`, `DataSources::current` | [x] |
 
 ---
 

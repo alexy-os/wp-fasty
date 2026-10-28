@@ -166,6 +166,9 @@ final class Rest
             'bindings' => is_array($body['bindings'] ?? null) ? $body['bindings'] : [],
         ];
         Links::prime($input['props']);
+        // the current record (richtext): the page being edited (edit_page checked by the route), as on its front end
+        $page = (int) ($body['page'] ?? $r->get_param('page'));
+        $post = $page > 0 ? get_post($page) : null;
         $out = Fragment::render(
             $catalog,
             $source,
@@ -173,6 +176,7 @@ final class Rest
             array_keys(DataSources::all()),
             [DataSources::class, 'resolve'],
             static fn (string $template, array $props): string => Front::block($source, $template, $props),
+            static fn (array $slot): array => $post instanceof \WP_Post ? DataSources::current($slot, $post) : [],
         );
         if ($out === null) {
             return new WP_Error('wpfb_block', __('Unknown block or variant.', 'wpfasty-builder'), ['status' => 400]);

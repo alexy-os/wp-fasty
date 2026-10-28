@@ -1,5 +1,5 @@
 /**
- * Preview images of the bundled ui8kit catalog: two WebP cards per variant (474 = every variant of every block), a
+ * Preview images of the bundled ui8kit catalog: two WebP cards per variant (480 = every variant of every block), a
  * light one and a dark one (class "dark" on the root: the shadcn tokens of tokens.css :root / .dark — colours only through
  * tokens), shown by the editor's block list in its light or dark mode. Rendered on Latte exactly as POST /render-block returns a variant (sample props:
  * tools/builder/preview-html.php), styled like a site of the default skin (themes/latte tokens.css + theme.min.css,

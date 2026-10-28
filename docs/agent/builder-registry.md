@@ -51,6 +51,13 @@ both published registries into a real WordPress (latte-shop on latte.zip, latte-
   - `"source": {repo, commit}` — the codegen-x commit both runtimes were generated from
   - `"records": {<Name>: [{name, type, optional?, docs?, default?}]}` — record types the props name (`Stat[]`,
     `LinkActions`…), transitively; `type` is the TS type string (editor fields: `editor/src/fields/schema.ts`)
+  - `blocks[].data[]` with `"scope": "current"` (codegen-x, since `485a53b6`: the `richtext` block) — one record of the
+    current route, not a list: `sample` is that record on the codegen-x fixtures (offline renders, previews); variants
+    list in `current: [{path, data, field}]` the props it fills (`title`, `content`, `media.src`…). Those paths are not
+    in the variant `props`, not bindable and never taken from a layout; on a site the plugin fills them from the
+    queried post (`DataSources::current`: Codex entry, `content` = `the_content` after its filters). Trusted markup
+    (`TrustedHtml`, `{"__html": …}`, the `|html` pipe) only comes from there: layout props drop `__html` keys and
+    catalog sample props lose the marker (`Layout::untrust`), so markup from a layout or a remote catalog is escaped
   - `"archive": {"file": "blocks.zip", "bytes": n, "sha256": "…"}`
   - variant templates in the runtime's extension: `blocks/<name>.latte` or `blocks/<name>.html.twig`
 - `blocks.zip` — `blocks/` and `ui/` of that runtime only (`.latte` or `.twig`, `.json`, `.md`; no PHP). The PHP

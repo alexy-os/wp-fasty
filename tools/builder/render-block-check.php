@@ -37,6 +37,7 @@ if (!isset($args['live'])) {
         }
     }
     $fail = 0;
+    $sample = static fn (array $slot): array => (array) ($slot['sample'] ?? []);
     foreach (['latte', 'twig'] as $engine) {
         $src = new WPFastyBuilder\Source\LocalSource('ui8kit', $root . '/plugins/wpfasty-builder/sources/ui8kit/' . $engine, $engine);
         $catalog = new WPFastyBuilder\Catalog($src->catalog());
@@ -56,20 +57,27 @@ if (!isset($args['live'])) {
                 'created_at' => '2026-10-24T00:00:00Z', 'updated_at' => '2026-10-24T00:00:00Z',
             ]);
             $tpl = WPFastyBuilder\Compiler::compile($entry, $catalog, $engine);
+            // the current record (richtext): the catalog's fixture record, on the page (wpfb) and in the fragment
+            $wpfb = [];
+            foreach ($chunk as $b) {
+                foreach ($catalog->currentValues($b['block'], $b['variant'], $sample) as $path => $value) {
+                    $wpfb[$b['id']][$path] = $value;
+                }
+            }
             if ($engine === 'latte') {
                 $l = new Latte\Engine();
                 $l->setLoader(new Latte\Loaders\StringLoader(['page' => $tpl]));
                 $l->addFunction('wpfb_block', $fn);
-                $page = $l->renderToString('page', ['wpfb' => []]);
+                $page = $l->renderToString('page', ['wpfb' => $wpfb]);
             } else {
                 $env = new Twig\Environment(new Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
                 $env->registerUndefinedFunctionCallback(static fn (string $n): Twig\TwigFunction|false
                     => $n === 'wpfb_block' ? new Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
-                $page = $env->render('page', ['wpfb' => []]);
+                $page = $env->render('page', ['wpfb' => $wpfb]);
             }
             $blocks = $html['blocks']('<!doctype html><html><body>' . $page . '</body></html>');
             foreach ($chunk as $b) {
-                $out = WPFastyBuilder\Fragment::render($catalog, 'ui8kit', $b, [], static fn (): array => [], static fn (string $t, array $p): string => $r->render('ui8kit', $t, $p));
+                $out = WPFastyBuilder\Fragment::render($catalog, 'ui8kit', $b, [], static fn (): array => [], static fn (string $t, array $p): string => $r->render('ui8kit', $t, $p), $sample);
                 $frag = $out === null ? null : $html['inner']($out['html']);
                 if ($frag === null || ($blocks[$b['id']] ?? null) !== $frag || str_contains($frag, '<!-- wpfasty-builder')) {
                     $fail++;

@@ -42,6 +42,8 @@ $fragment = static function (string $block, string $variant, array $props) use (
         [],
         static fn (): array => [],
         static fn (string $t, array $p): string => $r->render('ui8kit', $t, $p),
+        // the current record (richtext): the catalog's fixture record, as a page shows it
+        static fn (array $slot): array => (array) ($slot['sample'] ?? []),
     );
     if ($res === null) {
         fwrite(STDERR, "✗ {$block}/{$variant}: no fragment\n");

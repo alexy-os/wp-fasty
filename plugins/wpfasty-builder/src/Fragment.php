@@ -19,6 +19,9 @@ final class Fragment
      * @param callable(array<string, mixed>, string, array<string, mixed>|null): list<array<string, mixed>> $resolve
      *        records of a binding (binding, data kind, Catalog::slot())
      * @param callable(string, array<string, mixed>): string                    $render   HTML of a template
+     * @param (callable(array<string, mixed>): array<string, mixed>)|null       $current  the record of the current
+     *        route for a current-scope slot (Catalog::currentSlot); null: none (those paths stay null, as on a page
+     *        without the record)
      * @return array{id: string, html: string, issues: list<array{code: string, path: string, message: string}>}|null
      *         null when the block or variant is unknown or its template is not of the catalog's runtime
      */
@@ -29,6 +32,7 @@ final class Fragment
         array $dataSources,
         callable $resolve,
         callable $render,
+        ?callable $current = null,
     ): ?array {
         [$entry, $issues] = Layout::normalize(['blocks' => [$input]], $sourceId, $catalog, $dataSources, [
             'id' => 'fragment',
@@ -49,7 +53,7 @@ final class Fragment
         if (preg_match(Catalog::TEMPLATE, $template) !== 1 || !$own) {
             return null;
         }
-        $props = Compiler::blockProps($variant, $b);
+        $props = Compiler::blockProps($variant, $b, $catalog);
         $block = (string) $b['block'];
         $variantId = (string) $b['variant'];
         $kinds = $catalog->bindable($block, $variantId);
@@ -62,6 +66,11 @@ final class Fragment
                     ? $resolve($bind, $kinds[$path], $catalog->slot($block, $variantId, $path))
                     : [],
             );
+        }
+        if ($current !== null) {
+            foreach ($catalog->currentValues($block, $variantId, $current) as $path => $value) {
+                Layout::set($props, explode('.', $path), $value);
+            }
         }
         $issues = array_values(array_filter(
             $issues,

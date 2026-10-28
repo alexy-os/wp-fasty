@@ -50,11 +50,16 @@ final class Compiler
                     . $close;
                 continue;
             }
-            $props = self::blockProps($variant, $b);
+            $props = self::blockProps($variant, $b, $catalog);
             $exprs = [];
             foreach (array_keys($b['bindings']) as $path) {
                 $exprs[(string) $path] = ($twig ? 'wpfb[' : '$wpfb[') . self::str((string) $b['id']) . ']['
                     . self::str((string) $path) . '] ?? []';
+            }
+            // the paths the record of the current route fills (Front::bound, DataSources::current)
+            foreach (array_keys($catalog->current((string) $b['block'], (string) $b['variant'])) as $path) {
+                $exprs[(string) $path] = ($twig ? 'wpfb[' : '$wpfb[') . self::str((string) $b['id']) . ']['
+                    . self::str((string) $path) . '] ?? null';
             }
             $lines[] = '<div class="wpfb-block" data-wpfb-block="' . self::attr((string) $b['id']) . '">';
             $call = 'wpfb_block(' . self::str($source) . ', ' . self::str($template) . ', '
@@ -68,16 +73,19 @@ final class Compiler
 
     /**
      * The props a block renders with: the variant sample props, the block's overrides on top, the kind-aware read
-     * label; every bound path is null (the page fills it from wpfb[<block id>][<path>], Fragment from the data).
+     * label; every bound path and every path of the current record is null (the page fills it from
+     * wpfb[<block id>][<path>], Fragment from the data). No trusted markup survives here (Layout::untrust).
      *
      * @param array<string, mixed> $variant
      * @param array<string, mixed> $b       a block of Layout::blocks()
      * @return array<string, mixed>
      */
-    public static function blockProps(array $variant, array $b): array
+    public static function blockProps(array $variant, array $b, ?Catalog $catalog = null): array
     {
-        $props = self::readLabel(Layout::merge((array) ($variant['props'] ?? []), (array) $b['props']), $b);
-        foreach (array_keys((array) $b['bindings']) as $path) {
+        $merged = Layout::merge((array) ($variant['props'] ?? []), (array) $b['props']);
+        $props = Layout::untrust(self::readLabel($merged, $b));
+        $current = $catalog?->current((string) $b['block'], (string) $b['variant']) ?? [];
+        foreach ([...array_keys((array) $b['bindings']), ...array_keys($current)] as $path) {
             Layout::set($props, explode('.', (string) $path), null);
         }
         return $props;

@@ -147,6 +147,11 @@ $builder = static function () use (
                 }
                 $wpfb[(string) $b['id']][(string) $path] = $v;
             }
+            // paths of the current record (richtext): the catalog's fixture record
+            $sample = static fn (array $slot): array => (array) ($slot['sample'] ?? []);
+            foreach ($catalog->currentValues((string) $b['block'], (string) $b['variant'], $sample) as $path => $v) {
+                $wpfb[(string) $b['id']][(string) $path] = $v;
+            }
         }
         $ctxFile = $root . '/tests/fixtures/parity/' . ($contexts[$arch] ?? 'latte/page') . '.json';
         $ctx = json_decode((string) file_get_contents($ctxFile), true, 512, JSON_THROW_ON_ERROR)['context'];
@@ -222,12 +227,18 @@ $blocksSuite = static function () use ($root, $out): int {
     $fail = 0;
     $n = 0;
     $blocks = 0;
+    // the paths of a current-scope record (richtext title, content…) get the catalog's fixture record
+    $cat = new \WPFastyBuilder\Catalog($catalog);
+    $sample = static fn (array $slot): array => (array) ($slot['sample'] ?? []);
     foreach ((array) $catalog['blocks'] as $b) {
         $blocks++;
         foreach ((array) $b['variants'] as $v) {
             $n++;
             $name = "blocks/{$b['id']}/{$v['id']}";
             $tpl = (string) $v['template'];
+            foreach ($cat->currentValues((string) $b['id'], (string) $v['id'], $sample) as $path => $value) {
+                \WPFastyBuilder\Layout::set($v['props'], explode('.', $path), $value);
+            }
             try {
                 $a = $dom($latte->render('ui8kit', $tpl, (array) $v['props']));
                 // the twig catalog's own template of the same block/variant (one catalog per runtime)

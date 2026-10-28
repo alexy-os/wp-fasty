@@ -114,7 +114,17 @@ describe("bundled catalogs", () => {
       };
       for (const b of blocks) for (const [k, f] of Object.entries(blockConfig(b, records).fields)) walk(`${b.id}.${k}`, f);
       expect(json).toEqual([]);
-      expect(blocks.length).toBe(92);
+      expect(blocks.length).toBe(93);
+    });
+    test(`${runtime}: richtext — the fields the current page fills (title, content, cover, meta, side note body) are not editable`, () => {
+      const { blocks, records } = catalog(runtime);
+      const rt = blocks.find((b) => b.id === "richtext")!;
+      const cfg = blockConfig(rt, records);
+      for (const k of ["title", "content", "media", "meta"]) expect(cfg.fields[k]).toBeUndefined();
+      const aside = cfg.fields.aside as Extract<Field, { type: "object" }>;
+      expect(Object.keys(aside.objectFields)).toEqual(["title"]);
+      expect(cfg.fields.level?.type).toBeDefined();
+      for (const v of rt.variants) expect(v.current?.map((c) => c.path.join("."))).toContain("content");
     });
   }
 });

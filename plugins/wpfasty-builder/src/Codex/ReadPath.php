@@ -10,6 +10,7 @@ namespace WPFastyBuilder\Codex;
  *   |date |ago |ago-days |ago-short |number |compact      formatting (Format)
  *   |media |author |term:<tax> |term-slug:<tax> |route |menu  data pipes
  *   |excerpt-fallback |reading-minutes |term-names:<tax> |settings:<key> |in-stock   (Q4 additions)
+ *   |html                 trusted markup: {"__html": string} (TrustedHtml, printed unescaped by og_html)
  * Options: now (epoch s or RFC 3339), locale, media[], users[], terms[], menus[],
  * routes{kind: "/x/{slug}"}, settings{}.
  * Records are JSON-decoded arrays (assoc for objects).
@@ -131,6 +132,11 @@ final class ReadPath
                 }
             }
             return $names;
+        }
+        if ($pipe === 'html') {
+            // markup of the Codex (the body of an entry) is trusted: the TrustedHtml marker the og_html helper of the
+            // runtimes prints unescaped (codegen-x readPath `html`); a value read without this pipe stays text
+            return is_scalar($cur) ? ['__html' => (string) $cur] : null;
         }
         if ($pipe === 'date') {
             return Format::date($cur, $locale);

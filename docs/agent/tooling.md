@@ -39,6 +39,7 @@ job `wordpress` (WP 7.1.3 + MariaDB: Theme Check 20260901 on the unpacked zip an
 | `bash tools/playground-build.sh` | builds `playground/*.zip` (themes + demo seeders + images; gitignored, built in CI by the Playground workflow) | yes (Playground workflow) |
 | `wp eval-file tools/perf/queries.php` | SAVEQUERIES: DB query count on archive must not grow with N posts | – (needs WP+DB) |
 | `wp eval-file tools/perf/queries.php macros [2] [6]` | builder record tokens (`{post:}`, `{product:}`, `{term:}`, `{price:}`, `{stock:}`, `tools/perf/macros-queries.php`): a page of 2 vs 6 blocks naming one record of each type, rendered as `Front` does (`Links::prime` + `Links::walk`) — same query count; needs a purchasable type (latte-shop + wpfasty-types) | yes (wordpress job, latte-shop) |
+| `wp eval-file tools/perf/queries.php richtext [2] [6]` | builder richtext (`tools/perf/richtext-queries.php`): a page with 2 vs 6 richtext blocks gets its bound data as `Front::bound` does (the queried page as one Codex record, `the_content` through its filters) — same query count, every block has the body | yes (wordpress job, latte-press) |
 | Theme Check | see [wporg-theme-review.md](wporg-theme-review.md#running-theme-check-locally-verified) | – (needs WP) |
 
 ## Previews

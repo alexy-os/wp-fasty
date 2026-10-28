@@ -257,7 +257,8 @@ export const NO_SETTINGS: string[] = [];
 export const HIDDEN_PROPS = ["id", "className"];
 
 /**
- * The config of one block: a field per prop (bindable paths wrapped in binding fields), defaults per variant. The
+ * The config of one block: a field per prop (bindable paths wrapped in binding fields; no field for a path the record
+ * of the current route fills, e.g. the richtext title and content: they come from the page), defaults per variant. The
  * sample of the fields is every variant's sample merged, and sample keys the props or records do not declare get a
  * field typed by their value, so a text a variant shows is never reachable only through "Advanced (JSON)".
  */
@@ -272,11 +273,23 @@ export function blockConfig(block: BlockSpec, records: Record<string, RecordFiel
     fields[p.name] = fieldOf(p.name, type, records, sample[p.name], p.docs || undefined);
   }
   for (const [k, v] of Object.entries(sample)) if (!fields[k] && !HIDDEN_PROPS.includes(k)) fields[k] = fieldOf(k, typeOfSample(v), records, v);
+  for (const v of block.variants) for (const c of v.current ?? []) dropPath(fields, c.path);
   return {
     label: block.title,
     fields,
     defaultProps: (variant) => block.variants.find((v) => v.id === variant)?.props ?? first,
   };
+}
+
+/** removes the field of a path the current record fills (and an object field left without fields) */
+function dropPath(fields: Record<string, Field>, path: string[]): void {
+  const [head, ...rest] = path;
+  const f = head === undefined ? undefined : fields[head];
+  if (!f) return;
+  if (!rest.length) { delete fields[head!]; return; }
+  if (f.type !== "object") return;
+  dropPath(f.objectFields, rest);
+  if (!Object.keys(f.objectFields).length) delete fields[head!];
 }
 
 /** bindable paths of a variant → data kind ("posts" → "post", "filter.topics" → "topic") */

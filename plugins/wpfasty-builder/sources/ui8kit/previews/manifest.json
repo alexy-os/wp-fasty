@@ -4256,6 +4256,78 @@
     "input": "sha256:49bc734e2fd0a179a9be5e4777e6309e629416d70935e0a31fd7bc905f4f1e31"
    }
   },
+  "richtext/narrow": {
+   "file": "richtext/narrow.webp",
+   "bytes": 10066,
+   "quality": 0.595,
+   "input": "sha256:40b6992028fca73d4a9e42275a249b4af5d554386143b37fd43e0cfc429bde74",
+   "dark": {
+    "file": "richtext/narrow.dark.webp",
+    "bytes": 10152,
+    "quality": 0.595,
+    "input": "sha256:919f25039bad28b05ff41611d4caf12beddab279ea439f0b7598d154267dd8a2"
+   }
+  },
+  "richtext/wide": {
+   "file": "richtext/wide.webp",
+   "bytes": 10068,
+   "quality": 0.595,
+   "input": "sha256:f18b19c62442bde65dc4bb69fdb5c9ac9fd77c2d2e95ea563a7172e49cb64872",
+   "dark": {
+    "file": "richtext/wide.dark.webp",
+    "bytes": 10136,
+    "quality": 0.595,
+    "input": "sha256:436c99b6b696ec6148544b7637f79cbf2d7f255f853fb53a4cedfc6d3b137ae6"
+   }
+  },
+  "richtext/sidebar": {
+   "file": "richtext/sidebar.webp",
+   "bytes": 9636,
+   "quality": 0.397,
+   "input": "sha256:b59e85174e6bd57ee0b9072cda5cf3310a2d738c81fd834757d0d8b41a5a67da",
+   "dark": {
+    "file": "richtext/sidebar.dark.webp",
+    "bytes": 9720,
+    "quality": 0.397,
+    "input": "sha256:6bdd7ab805f28c9aa7a01f8d3e742b2ff4682bd41ea204b5464819daea7c18d1"
+   }
+  },
+  "richtext/media": {
+   "file": "richtext/media.webp",
+   "bytes": 6572,
+   "quality": 0.7,
+   "input": "sha256:c4a86c503139bc9544a692ccc103f5a01a81988f091a4357a1cf8d16b0505832",
+   "dark": {
+    "file": "richtext/media.dark.webp",
+    "bytes": 6558,
+    "quality": 0.7,
+    "input": "sha256:ebe2c50e48a3d8763af30b1224fea78056e31a0d2e2c3b3ce10cb6fcd0723f41"
+   }
+  },
+  "richtext/card": {
+   "file": "richtext/card.webp",
+   "bytes": 10068,
+   "quality": 0.595,
+   "input": "sha256:dc707d5bd209089e4d4ff76682b791f93efd588386d5b8cabb2d51d5104c50de",
+   "dark": {
+    "file": "richtext/card.dark.webp",
+    "bytes": 9834,
+    "quality": 0.595,
+    "input": "sha256:dd5de20b9995cde69a2934d8fda945e6ec9fcb7383108c44dd2a88f034fe0afa"
+   }
+  },
+  "richtext/heroTitle": {
+   "file": "richtext/heroTitle.webp",
+   "bytes": 7568,
+   "quality": 0.891,
+   "input": "sha256:d9bd82ad0880fdf310c4ccff07d33255551dae7d30641770e1bd94959902afb7",
+   "dark": {
+    "file": "richtext/heroTitle.dark.webp",
+    "bytes": 7252,
+    "quality": 0.891,
+    "input": "sha256:13c72033bd1f650ac6c59c566f0122ee9314dd51c6ce9dc48d3ce7c12dfea7e5"
+   }
+  },
   "storytabs/yearTabs": {
    "file": "storytabs/yearTabs.webp",
    "bytes": 6712,

@@ -100,8 +100,9 @@ final class Layout
                 $bindings[$path] = $one;
             }
             $props = self::clean(is_array($b['props'] ?? null) ? $b['props'] : [], 0);
-            foreach (array_keys($bindings) as $path) {
-                self::unset($props, explode('.', $path));
+            // bound paths and the paths the current record fills (richtext title, content…) are never layout props
+            foreach ([...array_keys($bindings), ...array_keys($catalog->current($block, $variant))] as $path) {
+                self::unset($props, explode('.', (string) $path));
             }
             $blocks[] = [
                 'id' => $id,
@@ -310,7 +311,8 @@ final class Layout
         }
         foreach ($v as $k => $x) {
             $key = is_int($k) ? $k : (string) preg_replace('/[^A-Za-z0-9_.-]/', '', (string) $k);
-            if ($key === '') {
+            // `__html` is the trusted-markup marker (TrustedHtml): only the data adapter sets it, never a layout
+            if ($key === '' || $key === '__html') {
                 continue;
             }
             if (is_array($x)) {
@@ -326,6 +328,25 @@ final class Layout
             }
         }
         return $out;
+    }
+
+    /**
+     * Props without trusted markup: every TrustedHtml marker ({"__html": "…"}) becomes its plain text, which the
+     * templates escape. Applied to the props of a catalog variant and a layout; trusted markup reaches a block only
+     * through the current record of the data adapter (DataSources::current), filled after this.
+     *
+     * @param array<array-key, mixed> $v
+     * @return array<array-key, mixed>
+     */
+    public static function untrust(array $v): array
+    {
+        foreach ($v as $k => $x) {
+            if (is_array($x)) {
+                $v[$k] = array_key_exists('__html', $x) ? (is_scalar($x['__html']) ? (string) $x['__html'] : '')
+                    : self::untrust($x);
+            }
+        }
+        return $v;
     }
 
     public static function safeHref(string $h): bool

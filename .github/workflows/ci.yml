@@ -95,12 +95,12 @@ jobs:
             bun tools/builder/export-ui8kit.ts --check --offline
           fi
 
-      - name: Builder block previews — a light and a dark WebP per variant (474 × 2), size as listed, ≤ 10 KB (shots are outside source.digest)
+      - name: Builder block previews — a light and a dark WebP per variant (480 × 2), size as listed, ≤ 10 KB (shots are outside source.digest)
         run: |
           bun tools/builder/previews.ts --check
           echo "Block previews: $(bun tools/builder/previews.ts --check)" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Template page previews — a tall light and dark WebP per template page (62 × 2), 640 px wide, ≤ 40 KB
+      - name: Template page previews — a tall light and dark WebP per template page (63 × 2), 640 px wide, ≤ 40 KB
         run: |
           bun tools/builder/page-previews.ts --check
           echo "Template page previews: $(bun tools/builder/page-previews.ts --check)" >> "$GITHUB_STEP_SUMMARY"
@@ -369,6 +369,11 @@ jobs:
           out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/queries.php" macros 2 6 2>&1) || { echo "$out"; exit 1; }
           echo "$out"
           echo "Builder record tokens: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
+          # builder richtext (the queried page as one record, the_content through its filters): same queries for 2 and 6 blocks
+          wp theme activate latte-press --quiet
+          out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/queries.php" richtext 2 6 2>&1) || { echo "$out"; exit 1; }
+          echo "$out"
+          echo "Builder richtext: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Builder — seed landings, smoke-render (200, no PHP notices), validate layouts with @ui8kit/contract
         run: |

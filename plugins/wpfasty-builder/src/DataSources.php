@@ -156,6 +156,62 @@ final class DataSources
     }
 
     /**
+     * The record of the current route for a current-scope slot (codegen-x `scope: "current"`; the richtext block):
+     * the queried post (or $post, e.g. the page the editor previews) as its Codex entry, read by the slot's fields.
+     * WP specifics kept here: `content` is the body after the `the_content` filters (blocks, shortcodes, embeds,
+     * wpautop; the password form for a protected post), the platform-neutral record only says it is trusted markup
+     * (`content|html`). Memoized per post and slot: any number of blocks on a page costs one read.
+     *
+     * @param array<string, mixed> $slot Catalog::currentSlot()
+     * @return array<string, mixed> the record; [] without a post of a kind of the site's Codex manifest
+     */
+    public static function current(array $slot, ?WP_Post $post = null): array
+    {
+        static $memo = [];
+        $post ??= get_queried_object() instanceof WP_Post ? get_queried_object() : null;
+        $site = self::site();
+        if (!$post instanceof WP_Post || $site === null) {
+            return [];
+        }
+        $m = null;
+        foreach (self::models() as $model) {
+            if (!$model['term'] && (string) $model['post_type'] === $post->post_type) {
+                $m = $model;
+                break;
+            }
+        }
+        if ($m === null) {
+            return [];
+        }
+        $key = $post->ID . '|' . md5((string) wp_json_encode([$slot['fields'] ?? [], $slot['defs'] ?? []]));
+        if (isset($memo[$key])) {
+            return $memo[$key];
+        }
+        $mapper = new Mapper($site);
+        $e = $mapper->entry($post, (string) $m['kind']);
+        $e['content'] = self::content($post);
+        $plan = self::plan($slot, $m);
+        $memo[$key] = self::record(self::project($e, $m), $plan, self::opts($plan, [$e], $mapper, $site), $m);
+        return $memo[$key];
+    }
+
+    /** the body of a post as the theme prints it: get_the_content() through the `the_content` filters */
+    private static function content(WP_Post $post): string
+    {
+        $prev = $GLOBALS['post'] ?? null;
+        // the_content filters (blocks, shortcodes) read the global post: set for the call, restored after it
+        $GLOBALS['post'] = $post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+        setup_postdata($post);
+        $html = (string) apply_filters('the_content', get_the_content(null, false, $post));
+        $html = str_replace(']]>', ']]&gt;', $html);
+        $GLOBALS['post'] = $prev; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+        if ($prev instanceof WP_Post) {
+            setup_postdata($prev);
+        }
+        return $html;
+    }
+
+    /**
      * Record field → [path|null, default, type]: the effective readPath of every record field.
      *
      * @param array<string, mixed>  $slot
@@ -215,6 +271,8 @@ final class DataSources
             'boolean' => is_bool($v) ? $v : false,
             'string' => is_scalar($v) && !is_bool($v) ? (string) $v : '',
             'string[]' => is_array($v) ? array_values(array_map('strval', $v)) : [],
+            // trusted markup: only the {"__html": string} marker of the `|html` pipe; anything else is not markup
+            'TrustedHtml' => is_array($v) && is_string($v['__html'] ?? null) ? ['__html' => $v['__html']] : null,
             default => $v,
         };
     }

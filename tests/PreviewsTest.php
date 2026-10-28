@@ -58,7 +58,7 @@ final class PreviewsTest extends TestCase
                     $n++;
                 }
             }
-            $this->assertSame(474, $n, $runtime);
+            $this->assertSame(480, $n, $runtime);
         }
     }
 
@@ -119,7 +119,7 @@ final class PreviewsTest extends TestCase
                     $n++;
                 }
             }
-            $this->assertSame(62, $n, $runtime);
+            $this->assertSame(63, $n, $runtime);
         }
         $src = new LocalSource('ui8kit', $this->plugin . '/sources/ui8kit/latte', 'latte');
         $this->assertNull(Previews::attachPages(null, $src));

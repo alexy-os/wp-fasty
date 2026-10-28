@@ -137,6 +137,15 @@ final class Front
                     );
                 }
             }
+            // the record of the current route (the queried post: richtext title, the_content…), read once per page
+            $current = $catalog?->currentValues(
+                (string) $b['block'],
+                (string) $b['variant'],
+                static fn (array $slot): array => DataSources::current($slot),
+            ) ?? [];
+            foreach ($current as $path => $value) {
+                $out[(string) $b['id']][(string) $path] = $value;
+            }
         }
         return $out;
     }
