@@ -99,7 +99,8 @@ final class Layout
                 }
                 $bindings[$path] = $one;
             }
-            $props = self::clean(is_array($b['props'] ?? null) ? $b['props'] : [], 0);
+            $sample = (array) ($catalog->variant($block, $variant)['props'] ?? []);
+            $props = self::clean(is_array($b['props'] ?? null) ? $b['props'] : [], 0, $sample, $issues, "$p.props");
             // bound paths and the paths the current record fills (richtext title, content…) are never layout props
             foreach ([...array_keys($bindings), ...array_keys($catalog->current($block, $variant))] as $path) {
                 self::unset($props, explode('.', (string) $path));
@@ -298,36 +299,90 @@ final class Layout
     }
 
     /**
-     * Plain JSON values only; strings without tags, hrefs limited to safe schemes.
+     * Plain JSON values only; strings without tags and control characters, at most 2000 characters; hrefs limited to
+     * safe schemes (safeHref), every other URL prop (Safe::URL_KEY: src, srcset, action, poster, url, image…) to a
+     * relative URL or an allowed scheme (Safe::url); a value whose JSON type differs from the variant sample at the
+     * same path (string / number / boolean / list / object; the catalog schema of the props) is dropped with an issue,
+     * so a template never gets an object where it prints a string. No `__html` key at any depth.
      *
      * @param array<mixed> $v
+     * @param mixed        $sample the variant sample props at the same path (null: no constraint)
+     * @param list<array{code: string, path: string, message: string}> $issues
      * @return array<mixed>
      */
-    private static function clean(array $v, int $depth): array
-    {
+    private static function clean(
+        array $v,
+        int $depth,
+        mixed $sample = null,
+        array &$issues = [],
+        string $at = 'props',
+        string $parent = '',
+    ): array {
         $out = [];
         if ($depth > self::MAX_DEPTH) {
+            $issues[] = self::issue('layout.props_too_deep', $at, 'props nest at most ' . self::MAX_DEPTH . ' levels');
             return $out;
         }
+        $list = array_is_list($v);
         foreach ($v as $k => $x) {
             $key = is_int($k) ? $k : (string) preg_replace('/[^A-Za-z0-9_.-]/', '', (string) $k);
             // `__html` is the trusted-markup marker (TrustedHtml): only the data adapter sets it, never a layout
             if ($key === '' || $key === '__html') {
                 continue;
             }
+            $name = is_string($key) ? $key : $parent; // list items are checked like the list's key ("images" → src)
+            $want = null;
+            if (is_array($sample)) {
+                $want = $list && array_is_list($sample) ? ($sample[0] ?? null) : ($sample[$key] ?? null);
+            }
+            $path = $at . '.' . $key;
+            if (!self::sameKind($want, $x)) {
+                $issues[] = self::issue(
+                    'layout.prop_type',
+                    $path,
+                    $path . ' must be ' . self::kind($want) . ', not ' . self::kind($x),
+                );
+                continue;
+            }
             if (is_array($x)) {
-                $out[$key] = self::clean($x, $depth + 1);
+                $out[$key] = self::clean($x, $depth + 1, $want, $issues, $path, $name);
             } elseif (is_string($x)) {
-                $s = trim(strip_tags(mb_substr($x, 0, 2000)));
-                if (is_string($key) && preg_match('/href$/i', $key) === 1 && !self::safeHref($s)) {
-                    $s = '#/';
+                $s = trim(Safe::text(strip_tags(mb_substr($x, 0, 2000))));
+                if (preg_match('/href$/i', $name) === 1) {
+                    $s = self::safeHref($s) ? $s : '#/';
+                } elseif (Safe::isUrlKey($name) && preg_match(Links::TOKEN, $s) !== 1) {
+                    $s = Safe::url($s, preg_match(Safe::IMAGE_KEY, $name) === 1);
                 }
                 $out[$key] = $s;
             } elseif (is_int($x) || is_float($x) || is_bool($x) || $x === null) {
-                $out[$key] = $x;
+                $out[$key] = is_float($x) && !is_finite($x) ? 0 : $x;
             }
         }
         return $out;
+    }
+
+    /** $x may stand where the sample has $want: same JSON type; null (unset) and an empty array fit any shape */
+    private static function sameKind(mixed $want, mixed $x): bool
+    {
+        if ($want === null || $x === null) {
+            return true;
+        }
+        $a = self::kind($want);
+        $b = self::kind($x);
+        return $a === $b || (is_array($want) && is_array($x) && ($want === [] || $x === []));
+    }
+
+    /** JSON type of a prop value: string, number, boolean, list, object, null, other */
+    private static function kind(mixed $v): string
+    {
+        return match (true) {
+            is_string($v) => 'string',
+            is_int($v) || is_float($v) => 'number',
+            is_bool($v) => 'boolean',
+            $v === null => 'null',
+            is_array($v) => $v === [] || array_is_list($v) ? 'list' : 'object',
+            default => 'other',
+        };
     }
 
     /**

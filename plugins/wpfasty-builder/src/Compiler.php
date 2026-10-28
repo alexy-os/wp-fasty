@@ -168,18 +168,30 @@ final class Compiler
         return md5((string) json_encode($entry) . '|' . filemtime(__FILE__));
     }
 
+    /**
+     * A single-quoted string literal of both engines: backslash and quote escaped, control characters (which Latte
+     * refuses in a template) dropped. Data never leaves the literal: neither engine interpolates single quotes.
+     */
     public static function str(string $s): string
     {
-        return "'" . strtr($s, ['\\' => '\\\\', "'" => "\\'"]) . "'";
+        return "'" . strtr(Safe::text($s), ['\\' => '\\\\', "'" => "\\'"]) . "'";
     }
 
+    /** an attribute value in the static part of the template: HTML-escaped, and no brace can open a tag of either engine */
     private static function attr(string $s): string
     {
-        return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        return strtr(htmlspecialchars(Safe::text($s), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), [
+            '{' => '&#123;',
+            '}' => '&#125;',
+        ]);
     }
 
-    private static function comment(string $s): string
+    /**
+     * Text inside a template comment ({* … *} / {# … #}): no brace at all, so nothing (`**}}`, `#}`, `*}`) can close
+     * the comment and open template code (SSTI: the page title is a layout field), no control character or newline.
+     */
+    public static function comment(string $s): string
     {
-        return str_replace(['*}', '{*', '#}', '{#', "\n"], ['', '', '', '', ' '], $s);
+        return trim((string) preg_replace('/[{}\x00-\x1F\x7F]+/', ' ', $s));
     }
 }

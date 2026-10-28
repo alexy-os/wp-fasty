@@ -190,7 +190,20 @@ final class Front
     public static function block(string $source, string $template, array $props): string
     {
         self::$renderer ??= new BlockRenderer(Sources::all(), Store::dir() . '/cache');
-        return Links::finish(self::$renderer->render($source, $template, Links::walk($props)));
+        return Links::finish(self::$renderer->render($source, $template, self::prepare($props)));
+    }
+
+    /**
+     * The props a block template gets: link tokens resolved (Links::walk), then made safe to print (Safe::props: URL
+     * props with a disallowed scheme emptied, control characters dropped) — after the tokens, so a resolved value
+     * ({site:…}, a record URL) is checked like a typed one. Latte and Twig render from the same safe props.
+     *
+     * @param array<string, mixed> $props
+     * @return array<string, mixed>
+     */
+    public static function prepare(array $props): array
+    {
+        return Safe::props(Links::walk($props));
     }
 
     /** the theme's Latte engine or Twig environment, null without a known WP FastY renderer */
