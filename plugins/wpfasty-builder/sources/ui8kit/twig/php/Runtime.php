@@ -125,6 +125,18 @@ final class Runtime
         return is_bool($v) ? '' : self::s($v);
     }
 
+    /**
+     * the markup an html node prints (printed with |raw, |noescape): the trusted markup ({"__html": "..."}, a TrustedHtml prop) as it
+     * is; any other value is text, escaped (& < > " ' as entities, like htmlOf of the TypeScript runtimes)
+     */
+    public static function html(mixed $v): string
+    {
+        if (is_array($v) && isset($v['__html']) && is_string($v['__html'])) {
+            return $v['__html'];
+        }
+        return strtr(self::text($v), ['&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#39;']);
+    }
+
     /** JS truthiness: null, false, 0, NaN and '' are false */
     public static function t(mixed $v): bool
     {

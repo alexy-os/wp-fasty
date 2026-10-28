@@ -87,8 +87,14 @@ const organisms = Object.fromEntries(inputs.organisms.map((o: any) => [o.value.n
 const presets = Object.fromEntries(inputs.presets.map((p: any) => [p.value.name, p.value.values]));
 const fixtures = new Map<string, any[]>(inputs.collections.map((c: any) => [c.value.collection, c.value.entries]));
 const dict = inputs.dictionary.value;
+/** the lookups the codegen-x hosts pass as CODEX: media, users and the taxonomy terms */
+const allEntries = inputs.collections.flatMap((c: any) => c.value.entries as any[]);
+const codex = { media: allEntries.filter((e) => e.kind === "media"), users: allEntries.filter((e) => e.kind === "user"), terms: inputs.taxonomies.flatMap((t: any) => t.value.terms) };
 
 type Binding = { path: string[]; data: string; pick?: string };
+type Current = { path: string[]; data: string; field: string };
+/** the data sources of a block read as one record of the current route (codegen-x `scope: "current"`, currentOf) */
+const currentAs = (b: any) => new Set<string>((b.data ?? []).filter((d: any) => d.scope === "current").map((d: any) => d.as));
 /** where a block's props read a data source directly (a list) or pick one record of it */
 function bindingsOf(v: any, as: Set<string>, path: string[] = [], out: Binding[] = []): Binding[] {
   if (!v || typeof v !== "object") return out;
@@ -100,14 +106,45 @@ function bindingsOf(v: any, as: Set<string>, path: string[] = [], out: Binding[]
   if (isGroup(v) || !Array.isArray(v)) for (const [k, x] of Object.entries(v)) if (k !== "...") bindingsOf(x, as, [...path, k], out);
   return out;
 }
+/** where a block's props read a field of a current-scope record (`{"$": "entry.title"}`): the page fills these paths from
+ *  the record of the current route (WordPress: the queried post), never the layout */
+function currentOf(v: any, as: Set<string>, path: string[] = [], out: Current[] = []): Current[] {
+  if (!v || typeof v !== "object") return out;
+  if (isRef(v)) {
+    const [head, ...rest] = String(v.$).split(".");
+    if (as.has(head!) && rest.length === 1) out.push({ path, data: head!, field: rest[0]! });
+    return out;
+  }
+  if (isOp(v)) return out;
+  if (isGroup(v) || !Array.isArray(v)) for (const [k, x] of Object.entries(v)) if (k !== "...") currentOf(x, as, [...path, k], out);
+  return out;
+}
+/** a copy of props without the paths the current record fills (they are not layout props); empty groups dropped */
+function withoutPaths(props: Record<string, unknown>, paths: string[][]): Record<string, unknown> {
+  const out = structuredClone(props);
+  for (const p of paths) {
+    const stack: any[] = [out];
+    for (const k of p.slice(0, -1)) { const next = stack.at(-1)?.[k]; if (!next || typeof next !== "object") break; stack.push(next); }
+    if (stack.length === p.length) delete stack.at(-1)[p.at(-1)!];
+    for (let i = stack.length - 1; i > 0; i--) if (!Object.keys(stack[i]).length) delete stack[i - 1][p[i - 1]!];
+  }
+  return out;
+}
 
 const scopeOf = (b: any) => {
   const scope: Record<string, unknown> = { ui: dict };
-  for (const d of b.data ?? []) scope[d.as] = (fixtures.get(d.collection) ?? []).map((e) => Object.fromEntries(Object.entries(d.fields).map(([n, p]) => [n, readPath(e, p as string)])));
+  for (const d of b.data ?? []) {
+    // a current record reads with the Codex lookups (media, users, terms) like the codegen-x gallery; lists stay as before
+    const opts = d.scope === "current" ? codex : {};
+    const rows = (fixtures.get(d.collection) ?? []).map((e) => Object.fromEntries(Object.entries(d.fields).map(([n, p]) => [n, readPath(e, p as string, opts)])));
+    // scope current: the record of the current route (the first fixture entry, as codegen-x currentOf reads it), not the list
+    scope[d.as] = d.scope === "current" ? rows[0] ?? Object.fromEntries(Object.keys(d.fields).map((n) => [n, undefined])) : rows;
+  }
   return scope;
 };
 const propsOf = (b: any, v: any) => {
-  const node: any = blockNode(b, v, { id: blockKey(b), level: 2 }, organisms);
+  // level 2 unless the variant itself sets it (richtext.heroTitle: level 1, the page heading)
+  const node: any = blockNode(b, v, { id: blockKey(b), level: v.props?.level ?? 2 }, organisms);
   const o = organisms[node.organism];
   const scope = scopeOf(b);
   const props: Record<string, unknown> = {};
@@ -123,10 +160,14 @@ const gallery = galleryOf(inputs.blocks.map((x: any) => x.value)) as any[];
 const blocks: any[] = [];
 for (const b of gallery) {
   const key = blockKey(b);
-  const as = new Set<string>((b.data ?? []).map((d: any) => d.as));
+  const cur = currentAs(b);
+  const as = new Set<string>((b.data ?? []).map((d: any) => d.as).filter((a: string) => !cur.has(a)));
   const variants = b.variants.map((v: any) => {
     const { node, props } = propsOf(b, v);
-    return { id: v.id, set: v.set ?? {}, organism: node.organism, template: organismTemplate(node.organism, latte), props, bindings: bindingsOf(node.props, as) };
+    const current = currentOf(node.props, cur);
+    const base = { id: v.id, set: v.set ?? {}, organism: node.organism, template: organismTemplate(node.organism, latte) };
+    if (!current.length) return { ...base, props, bindings: bindingsOf(node.props, as) };
+    return { ...base, props: withoutPaths(props, current.map((c) => c.path)), bindings: bindingsOf(node.props, as), current };
   });
   const o = organisms[variants[0].organism];
   blocks.push({
@@ -137,7 +178,8 @@ for (const b of gallery) {
     axes: b.axes ?? {},
     defaults: b.defaults ?? {},
     props: o.props.map((p: any) => ({ name: p.name, type: p.type, optional: !!p.optional, docs: p.docs ?? "" })),
-    data: (b.data ?? []).map((d: any) => ({ as: d.as, kind: d.kind, record: d.record, fields: d.fields })),
+    // scope current: one record of the current route; `sample` is that record on the codegen-x fixtures (offline renders)
+    data: (b.data ?? []).map((d: any) => ({ as: d.as, kind: d.kind, record: d.record, fields: d.fields, ...(d.scope === "current" ? { scope: d.scope, sample: scopeOf(b)[d.as] } : {}) })),
     variants,
   });
 }

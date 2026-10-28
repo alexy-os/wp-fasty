@@ -17,7 +17,8 @@ const CHECK = process.argv.includes("--check");
 const SRC = resolve(import.meta.dir, "../../plugins/wpfasty-builder/sources/ui8kit");
 
 export type RecordField = { name: string; type: string; optional?: boolean; docs?: string; default?: unknown };
-const BUILTIN = new Set(["Record", "Array", "Partial", "Readonly"]);
+/** type names that are not records (TrustedHtml: the codegen-x scalar of trusted markup, `content|html` of a source) */
+const BUILTIN = new Set(["Record", "Array", "Partial", "Readonly", "TrustedHtml"]);
 /** record names a TS type string refers to */
 export const refs = (ts: string): string[] => [...ts.matchAll(/\b([A-Z][A-Za-z0-9]*)\b/g)].map((m) => m[1]!).filter((n) => !BUILTIN.has(n));
 const tsOf = (t: unknown): string => (typeof t === "string" ? t : (t as any)?.ts ?? (t as any)?.record ?? "");
