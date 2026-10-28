@@ -36,6 +36,14 @@
     },
     {
       "step": "writeFile",
+      "path": "/tmp/wpfasty-types.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/wpfasty-types.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
       "path": "/tmp/wpfasty-builder.zip.b64",
       "data": {
         "resource": "url",
@@ -60,6 +68,15 @@
       "step": "unzip",
       "zipPath": "/tmp/demo.zip",
       "extractToPath": "/wordpress/wp-content"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wpfasty-types.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "wpfasty-types/wpfasty-types.php"
     },
     {
       "step": "unzip",
