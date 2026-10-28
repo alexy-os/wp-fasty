@@ -9,6 +9,10 @@ alwaysApply: true
   (Twig, `UI8Kit\Twig\` → `twig/ui8kit/runtime/`). Unstyled; never hand-edit. `npx ui8kit@3 add --all --force` + `npx ui8kit@3 check`.
 - Classes: `kit('button', {variant, size}, extra)` from `kit/presets.json` (source `presets/components/*.json`,
   regenerate with `php tools/ui8kit3/presets.php`). Never hardcode variant recipes in views.
+- Codegen recipes: alert, badge, button, card (+ parts), iconbadge, input, textarea, label, link, stack, title come from
+  codegen-x `packages/kit-compose/variants/*.variants.json` at the builder source pin (`compose/compose.json`); UI8Kit first:
+  views pick their keys (`button` `layout: icon`, `title` `size`/`weight`, `stack` `gap`), extra classes only for layout
+  (margins, gap between an icon and its text, position, responsive size). What codegen lacks goes to XGenBot, not to a view.
 - Loader chain: views → `kit/ui` → `ui8kit/ui` (Twig: views → `twig/kit/ui` → `twig/ui8kit/ui`).
 - Twig: `include … with {…} only` for kit compositions (no context leakage); `ui8kit_attrs`, `ui8kit_classes`.
 - Latte/Twig props: `srcSet`, `htmlFor`, string `rows`; optional attributes as `null`, not `''`.

@@ -3,7 +3,9 @@
 - Primitives are **UI8Kit 3** (`npx ui8kit@3`, registry 3.2.0): `themes/latte/ui8kit` (Latte), `themes/latte/twig/ui8kit` (Twig).
   They are unstyled and generated: never hand-edit; update with `add --all --force`, verify with `npx ui8kit@3 check` in both dirs.
 - Styling lives in the kit: `presets/components/*.json` → `php tools/ui8kit3/presets.php` → `themes/latte/kit/presets.json`;
-  use `kit('<component>', {variant, size, …}, extra)` and pass the result as `class`.
+  use `kit('<component>', {variant, size, …}, extra)` and pass the result as `class`. alert, badge, button, card, iconbadge,
+  input, textarea, label, link, stack, title are the codegen-x kit-compose recipes (`packages/kit-compose/variants`, pinned
+  with the builder source): never edit them here; a missing variant is a question to codegen-x, not a theme class.
 - Middle layer (legacy prop API): `themes/latte/kit/ui` and `themes/latte/twig/kit/ui`. Twig includes of kit compositions use `only`.
 - Engines are isolated: no Twig in latte.zip, no Latte in twig.zip (CI greps enforce it).
 - Checks before commit: `bun run test`, `vendor/bin/phpcs`, `bun run lint:design`, `bun run parity`, `php tools/ui8kit3/presets.php --check`,

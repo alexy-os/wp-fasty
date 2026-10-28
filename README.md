@@ -10,7 +10,7 @@ catalog of layout / block / style presets.
 ```
 themes/latte/ui8kit/          # UI8Kit 3 Latte primitives (npx ui8kit@3, registry 3.2.0) — unstyled, never hand-edit
 themes/latte/twig/ui8kit/     # UI8Kit 3 Twig primitives (npx ui8kit@3 --framework twig) — never hand-edit
-themes/latte/kit/presets.json # our classes: variant/size recipes (generated from presets/components/*.json)
+themes/latte/kit/presets.json # our classes: variant/size recipes (generated from presets/components/*.json; 11 of them are codegen-x kit-compose recipes)
 themes/latte/kit/ui/          # Latte middle layer: Block, Title, Card*, Badge, Alert … (legacy prop API → v3 + kit())
 themes/latte/twig/kit/ui/     # the same compositions for Twig
 presets/                      # layouts × blocks × styles

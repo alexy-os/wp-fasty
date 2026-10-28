@@ -15,6 +15,14 @@
     `https://registry.buildy.tw/<runtime>/wpfasty/`. Format-1 sources still import, using only the site engine's zip.
 - The engine is chosen at site creation; there is no supported live switch between engines.
 
+### Changed
+- Themes use the codegen-x kit-compose recipes (codegen-x/ui8kit `fb4652ce`, `packages/kit-compose/variants`) for alert,
+  badge, button, card (+ parts), iconbadge, input, textarea, label, link, stack and title instead of the legacy xgen
+  presets (`php tools/ui8kit3/presets.php` imports them at the builder source pin; `Kit` applies `compound`). Views pick
+  recipe keys instead of hand-written classes: button-styled links are `kit('button')`, icon buttons `layout: icon`,
+  titles `size`/`weight`, stacks `gap`, post-list cards `variant: compact`; badges render a `<span>`; checkout errors are
+  `aria-invalid`; shop category chips carry `aria-current`. Plain `rounded` follows the theme `--radius` token.
+
 ### Added
 - Site contacts and opening hours (Codex SettingsV04 contact block, ui8kit/contract `8a09c8f`): wpfasty-types options
   `wpfasty_contact_phone|email|address|links`, `wpfasty_hours`, `wpfasty_hours_exceptions`, `wpfasty_map`, a

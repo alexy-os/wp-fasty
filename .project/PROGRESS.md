@@ -3,7 +3,7 @@
 **Purpose:** Single handoff document for agents (including Cursor browser).  
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
-**Last updated:** 2026-10-28 (XSS / template-injection audit: adapter sanitizing, REST permissions, CI job `security`)
+**Last updated:** 2026-10-28 (themes on the codegen-x kit-compose recipes: alert, badge, button, card, iconbadge, input, textarea, label, link, stack, title)
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
 **Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
@@ -358,6 +358,16 @@ A Parent correctness ✓
 | L11 | Every block opens its fields: audit of the 474 card variants, 62 template pages, 3 starters and 6 demo landings (static + a click on each of 760 blocks in the live editor). Fixed in the editor: sample keys the codegen-x records / props do not declare get fields typed by the value (`labels.title`/`lead`… in 18 blocks, 65 variants; hero `prompt`: `composer`, `nav`, `badgeMark`), the sample is all variants merged; a layout block outside the open collection (press starter / landing `cta:banner` under `content-blog`) is looked up in the whole catalog. Nothing excluded. Gate `editor/tests/coverage.test.ts` (Latte + Twig); `NO_SETTINGS` for blocks without settings (none) | `schema.ts` (`typeOfSample`, `mergeSamples`), `App.svelte`, `util.ts` | [x] |
 | L12 | Block `richtext` + recipe `prose` from codegen-x `485a53b6` (TrustedHtml, scope `current`, Prose): catalog re-exported (93 blocks, 480 variants, 63 template pages; `scope`/`sample` on current data, variant `current` paths, heroTitle keeps level 1); the WP adapter fills the current paths from the queried post (`DataSources::current`: Codex entry, `the_content` after its filters, memoized; render-block: the edited page), `\|html` → `{"__html"}` printed by `og_html`; `__html` never from a layout or a catalog sample (`Layout::untrust`); editor hides the current paths; previews 6 × 2 + content-blog/page; gates: `tests/RichTextTest.php` (Latte = Twig, fragment = page, escaping, one h1), parity/render-block/ui-gates with the fixture record, N+1 `queries.php richtext 2 6` in CI. Theme `post-content`/`attachment` and `.prose` stay as they are (theme must not depend on the builder plugin; recipe port = separate task) | `tools/builder/export-ui8kit.ts`, `Catalog::current*`, `DataSources::current` | [x] |
 
+
+### Codegen recipes in the themes (2026-10-28)
+
+Owner policy: UI8Kit first — the themes take the codegen-x kit-compose recipe, never their own variant of it.
+
+- [x] alert, badge, button, card (+ parts), iconbadge, input, textarea, label, link, stack, title: `presets/components/*.json` and `themes/latte/kit/presets.json` are imported by `php tools/ui8kit3/presets.php` from codegen-x `packages/kit-compose/variants` at the builder source pin (`compose/compose.json`, `fb4652ce`; `--cgx <dir>` compares with a checkout); `Kit` applies `compound` (button `layout: icon`)
+- [x] Middle layer: `title` size/weight, `stack` gap/align/justify, `badge` a `<span>` (kit-compose Badge); Latte + Twig
+- [x] Views (parent, skin, press/folio/shop archetypes + children): button-styled links → `kit('button')`, icon buttons → `layout: icon`, links → link recipe keys, titles/stacks → keys, post-list cards `compact`, alert extras dropped, checkout `aria-invalid`, shop chips `aria-current`; `rounded` follows `--radius` (`@theme inline reference`)
+- [ ] Open (questions to XGenBot, nothing invented in the themes): link primary colour / size inherit (heading links keep their classes), nav-item, media card, input invalid state, alert role status, destructive-foreground token (sale badges keep their classes), button hover/gap/focus
+
 ---
 
 ## План макросов
@@ -457,6 +467,7 @@ bun run dev:wp -- theme activate latte-skin
 | 2026-10-20 | K5: brand = fixed palette list, free tokens only with WCAG AA contrast; custom post types allowed on top of any archetype; MCP server lives in the repo (separate package later) |
 | 2026-10-20 | K4: demo ships as a separate `demo.zip`; wpfasty-types keeps reading the active theme's `types/` (no generated plugin config) |
 | 2026-10-19 | One site manifest (`schema/site.manifest.schema.json` v0.2) replaces the 0.1 theme-manifest draft; `presets/themes/*.json` stay parent presets referenced by `parent.preset`; platform-neutral names, money in cents; `wporg` ⇒ types in the companion plugin |
+| 2026-10-28 | Themes use the codegen-x kit-compose recipes for the 11 shared components (alert, badge, button, card, iconbadge, input, textarea, label, link, stack, title); a missing variant is a codegen-x question, not a theme class |
 
 ---
 
