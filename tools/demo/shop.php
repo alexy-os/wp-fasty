@@ -76,6 +76,25 @@ $about = wpfasty_demo_post('about', ['post_type' => 'page', 'post_title' => 'Abo
 
 wpfasty_demo_menu('Primary', 'primary', [['Shop', get_post_type_archive_link('product')], ['Kitchen', get_term_link($cats['Kitchen'])], ['Home', get_term_link($cats['Home'])], ['About', get_permalink($about)]]);
 wpfasty_demo_menu('Footer', 'footer', [['Shop', get_post_type_archive_link('product')], ['Cart', $front::pageUrl('cart')], ['About', get_permalink($about)]]);
+wpfasty_demo_contact([
+    'contact_phone' => '+12025550143',
+    'contact_email' => 'hello@example.com',
+    'contact_address' => '742 Evergreen Terrace, Springfield, IL 62704, USA',
+    'contact_links' => [
+        ['network' => 'whatsapp', 'handle' => '+12025550143'],
+        ['network' => 'telegram', 'handle' => 'latte_shop_demo'],
+        ['network' => 'instagram', 'handle' => 'latte.shop.demo'],
+    ],
+    'hours' => [
+        ['days' => ['mon', 'tue', 'wed', 'thu', 'fri'], 'open' => '09:00', 'close' => '18:00'],
+        ['days' => ['sat'], 'open' => '10:00', 'close' => '16:00'],
+    ],
+    'hours_exceptions' => [
+        ['date' => '2026-12-25', 'closed' => true],
+        ['date' => '2026-12-31', 'open' => '10:00', 'close' => '14:00'],
+    ],
+    'map' => ['provider' => 'osm', 'lat' => 39.7817, 'lng' => -89.6501],
+], 'America/Chicago');
 flush_rewrite_rules();
 
 wpfasty_demo_log($theme->get('Name') . ' demo content ready.');

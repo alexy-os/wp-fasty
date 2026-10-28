@@ -8,7 +8,8 @@ namespace WPFastyBuilder;
  * Front end: a page with a published layout renders its compiled template through the theme pipeline, Latte or
  * Twig (whichever `wpfasty_renderer` picked)
  * (`wpfasty_view_roots`, `wpfasty_resolve_view`, `wpfasty_context`). The only builder asset on the front end
- * is the block stylesheet; there is no builder script.
+ * is the block stylesheet; the only builder script is the small inline {open-now} one (Links::footer), printed only
+ * on pages that use the token and only when the site has opening hours.
  */
 final class Front
 {
@@ -178,7 +179,7 @@ final class Front
     public static function block(string $source, string $template, array $props): string
     {
         self::$renderer ??= new BlockRenderer(Sources::all(), Store::dir() . '/cache');
-        return self::$renderer->render($source, $template, Links::walk($props));
+        return Links::finish(self::$renderer->render($source, $template, Links::walk($props)));
     }
 
     /** the theme's Latte engine or Twig environment, null without a known WP FastY renderer */

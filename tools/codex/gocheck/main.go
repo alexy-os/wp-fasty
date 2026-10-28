@@ -4,7 +4,8 @@
 //
 // For every body of tests/fixtures/codex-draft/golden/<site> (what /wpfasty/v1/codex served): entry bodies and list
 // items must be fixed points of canonical.Canonicalize (codex-entry/v1), term items of canonical.CanonicalJSON, the
-// Codex-Digest is recomputed, and entries + terms + settings go through validate.CollectionV04 with the manifest.
+// Codex-Digest is recomputed, and entries + terms + settings go through validate.CollectionV04 with the manifest
+// (settings without the contact block, see contactBlock).
 // Exit 1 on any difference. The site origin placeholder {base} is replaced by a fixed origin.
 package main
 
@@ -21,6 +22,9 @@ import (
 	"github.com/fastygo/codex/validate"
 	"github.com/fastygo/codex/validation"
 )
+
+// contactBlock = settings keys of the contact block (contract SettingsV04: contact, hours, hours_exceptions, map).
+var contactBlock = []string{"contact", "hours", "hours_exceptions", "map"}
 
 func main() {
 	if len(os.Args) != 3 {
@@ -88,9 +92,15 @@ func main() {
 			if got, err := canonical.CanonicalJSON(text); err != nil || got != text {
 				fail("%s: not JCS (%v)\n  php: %s\n  go:  %s", name, err, text, got)
 			}
-			var v any
+			var v map[string]any
 			_ = json.Unmarshal([]byte(text), &v)
-			coll.Settings = append(coll.Settings, validate.RecordFile{File: name, Data: v})
+			// The settings contact block of ui8kit/contract (after a0ae505) is not in fastygo/codex v0.4.x yet, whose
+			// CollectionV04 closes the settings keys: the bytes above stay checked whole (JCS), the closed-key validation
+			// runs on the record without the block. Drop when the Go reference knows the keys.
+			for _, k := range contactBlock {
+				delete(v, k)
+			}
+			coll.Settings = append(coll.Settings, validate.RecordFile{File: name, Data: any(v)})
 		}
 	}
 	var manifest schema.Manifest

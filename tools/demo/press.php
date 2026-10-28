@@ -62,4 +62,15 @@ update_option('widget_categories', [2 => ['title' => 'Categories', 'count' => 1]
 update_option('widget_archives', [2 => ['title' => 'Archives'], '_multiwidget' => 1]);
 update_option('sidebars_widgets', ['wp_inactive_widgets' => [], 'sidebar-1' => ['search-2', 'recent-posts-2', 'categories-2', 'archives-2'], 'footer-1' => [], 'array_version' => 3]);
 
+// a newsroom: contacts, no opening hours ({site:hours} and {open-now} print nothing)
+wpfasty_demo_contact([
+    'contact_phone' => '+12025550188',
+    'contact_email' => 'editors@example.com',
+    'contact_address' => 'Latte Press, PO Box 0100, Portland, OR 97201, USA',
+    'contact_links' => [
+        ['network' => 'telegram', 'handle' => 'latte_press_demo'],
+        ['network' => 'mastodon', 'handle' => '@lattepress@example.com'],
+        ['network' => 'rss', 'handle' => '/feed/'],
+    ],
+]);
 wpfasty_demo_log('Latte Press demo content ready.');

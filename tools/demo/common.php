@@ -121,3 +121,21 @@ function wpfasty_demo_cleanup_defaults(): void
         }
     }
 }
+
+/**
+ * Site contacts, opening hours and map pin (wpfasty-types options, Codex settings contact block). Test data only:
+ * reserved fictional phone ranges (+1 202 555 01xx, +44 20 7946 0xxx) and example.com mail. Values pass the option
+ * sanitizers, as from Settings → Contact & hours.
+ *
+ * @param array<string, mixed> $c option name without the wpfasty_ prefix => value
+ */
+function wpfasty_demo_contact(array $c, string $timezone = ''): void
+{
+    foreach ($c as $key => $value) {
+        update_option('wpfasty_' . $key, $value);
+    }
+    if ($timezone !== '') {
+        update_option('timezone_string', $timezone);
+        update_option('gmt_offset', '');
+    }
+}

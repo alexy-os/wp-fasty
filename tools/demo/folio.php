@@ -61,4 +61,16 @@ wpfasty_demo_menu('Primary', 'primary', [['Work', get_post_type_archive_link('pr
 wpfasty_demo_menu('Footer', 'footer', [['Work', get_post_type_archive_link('project')], ['Contact', get_permalink($contact)]]);
 flush_rewrite_rules();
 
+wpfasty_demo_contact([
+    'contact_phone' => '+442079460123',
+    'contact_email' => 'alex@example.com',
+    'contact_address' => 'Studio 4, 10 Example Yard, London E1 6AN, United Kingdom',
+    'contact_links' => [
+        ['network' => 'telegram', 'handle' => 'alex_rivera_demo'],
+        ['network' => 'dribbble', 'handle' => 'alexrivera-demo'],
+        ['network' => 'github', 'handle' => 'alexrivera-demo'],
+    ],
+    'hours' => [['days' => ['mon', 'tue', 'wed', 'thu'], 'open' => '10:00', 'close' => '17:30']],
+    'map' => ['provider' => 'google'],
+], 'Europe/London');
 wpfasty_demo_log('Latte Folio demo content ready.');

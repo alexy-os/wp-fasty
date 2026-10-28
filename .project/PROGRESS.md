@@ -357,11 +357,11 @@ A Parent correctness ✓
 
 **Ядро (wpfasty-builder)**
 - [x] 0. Дропдаун макросов ссылок: иконка в поле-ссылке, 3 колонки, поиск, подсказка о результате (`GET wpfasty-builder/v1/links`, `editor/src/links.ts`, `fields/LinkPicker.svelte`)
-- [x] 1. Данные сайта: `{site:name}`, `{site:phone}`, `{site:email}`, `{site:address}`, `{site:hours}` (`Links::data()`; значение есть только у `name` = SettingsV04 `title`; phone, email, address, hours — пустая строка, пока для них нет поля в контракте settings, ждут XGenBot)
+- [x] 1. Данные сайта: `{site:name}`, `{site:phone}`, `{site:email}`, `{site:address}`, `{site:hours}` (`Links::data()`; `name` = SettingsV04 `title`, остальные — блок контактов SettingsV04 `contact.phone|email|address`, `hours` (ui8kit/contract `8a09c8f`): опции wpfasty-types `wpfasty_contact_*`, `wpfasty_hours*`, `wpfasty_map`, страница Settings → Contact & hours (`WPFastyTypes\Contact`, санитайзеры, i18n), Mapper отдаёт их в `/codex/settings`; `{site:hours}` — «Mon–Fri 09:00–18:00; Sat 10:00–16:00»; пустое поле — пустая строка)
 - [ ] 2. Ссылки на записи, товары и термины: `{post:<slug>}`, `{product:<slug>}`, `{term:<tax>:<slug>}` (согласовать с контрактом, XGenBot)
-- [x] 3. Действия: `{tel}`, `{mailto}`, `{whatsapp}`, `{telegram}`, `{map}` (`Links::contact()`; без исходного значения — `#` и предупреждение в редакторе; карта — OpenStreetMap, провайдера в настройках нет; источники phone, email, address и Telegram-handle ждут контракта)
+- [x] 3. Действия: `{tel}`, `{mailto}`, `{whatsapp}`, `{telegram}`, `{map}` (`Links::contact()`; без исходного значения — `#` и предупреждение в редакторе; источники — `contact.phone`, `contact.email`, `contact.links` (`whatsapp` — номер из links, иначе телефон; `telegram` — handle), `{map}` — пин по `map.lat/lng`, иначе поиск по `contact.address`, провайдер `map.provider` (osm по умолчанию, google, yandex, apple))
 - [ ] 4. Цены и наличие: `{price:<product>}`, `{stock:<product>}` на пайпах `|settings:currency` и `|in-stock` (согласовать с контрактом)
-- [ ] 5. Дата и время: `{year}`, `{today}`, `{open-now}` по часам работы (сделаны `{year}` и `{today}` — на сервере, `date_format`, таймзона сайта; `{open-now}` ждёт структуры часов работы в контракте)
+- [x] 5. Дата и время: `{year}`, `{today}`, `{open-now}` по часам работы (`{year}` и `{today}` — на сервере, `date_format`, таймзона сайта; `{open-now}` — только на клиенте: в HTML пустой `<span data-wpfb-open-now>`, один инлайн-скрипт в футере с `hours`, `hours_exceptions`, `timezone_string` (иначе `gmt_offset`), пересчёт раз в минуту — кеш страницы не ломается; без часов работы ничего не выводится; в пикере редактора `{open-now}` пока нет — editor/src в параллельной задаче)
 - [ ] 6. Формы и якоря: `{form:booking}`, `{anchor:<block>}`, переживают перемещение блока
 - [ ] 7. Медиа: `{logo}`, `{media:<id>}`, переживают импорт и Playground
 - [ ] 8. Переводы: значение по текущей локали (Codex localized)

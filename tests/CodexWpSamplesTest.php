@@ -9,7 +9,7 @@ use WPFastyTypes\Codex\Mapper;
 use WPFastyTypes\Codex\Site;
 
 /**
- * The PHP Mapper over the LIVE /wp/v2 samples of ui8kit/contract (fixtures/wordpress at a0ae505, copied to
+ * The PHP Mapper over the LIVE /wp/v2 samples of ui8kit/contract (fixtures/wordpress at a0ae505 = 8a09c8f, copied to
  * tests/fixtures/codex/wordpress): each context=edit item is loaded into WordPress objects (title.raw → post_title,
  * description.raw → post_content, caption.raw → post_excerpt: WordPress stores raw), mapped, and its canonical bytes must
  * equal the contract adapter's (expected.json, tools/codex/wp-samples-expected.ts). context=view has no raw / edit-only

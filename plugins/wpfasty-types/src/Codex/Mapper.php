@@ -352,6 +352,10 @@ final class Mapper
         if (preg_match('/^[A-Z]{3}$/', $cur) === 1) {
             $s['currency'] = $cur;
         }
+        // contact block (contract WP_CONTACT_OPTIONS: the wpfasty-types options, only what is set)
+        if (class_exists(\WPFastyTypes\Contact::class)) {
+            $s += \WPFastyTypes\Contact::block();
+        }
         $s['origin'] = [['system' => Profile::SYSTEM, 'id' => 'settings']];
         $s['version'] = 1;
         $s['created_at'] = self::EPOCH;
