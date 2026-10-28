@@ -3,7 +3,7 @@
 **Purpose:** Single handoff document for agents (including Cursor browser).  
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
-**Last updated:** 2026-10-28 (Cycle L7: builder dark mode — dark block previews, toolbar switch)
+**Last updated:** 2026-10-28 (Cycle L8: new pages from the Builder — panel, starters, Pages list buttons)
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
 **Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
@@ -347,6 +347,7 @@ A Parent correctness ✓
 | L5 | Nesting (slots): design only — README "Next step" | README | [ ] |
 | L6 | IDE layout, step 1: resizable columns (separators on the 8px grid, min/max, double click resets, ARIA separator), collapse by bar buttons / `[` `]`, focus mode `F`, widths + collapsed columns in localStorage per user (`config.user`) | `editor/src/layout*.ts`, `Splitter.svelte` | [x] |
 | L7 | Dark mode: a dark preview per variant (`<block>/<variant>.dark.webp`, class `dark` + shadcn `.dark` tokens, 640×360, quality searched for 6–10 KB; manifest format 2 `dark`, `Previews::attach` → `preview.dark`, CI `--check` 474 × 2); toolbar switch (last `top-secondary` node, Builder screen only, `aria-pressed`, Lucide moon/sun) toggles `.dark` on the editor, the preview page and the cards; localStorage per user | `Admin::darkSwitch`, `editor/src/theme*.ts` | [x] |
+| L8 | New pages from the Builder: "Add New with Builder" on Pages, row action "Edit with Builder", "New page" panel (title, slug, starter: Empty / shop / folio / press landing when available) on the chooser and in the editor bar; `POST /pages` → draft + Builder draft, opens the editor; page template untouched | `Pages`, `Starters`, `NewPage.svelte` | [x] |
 
 ---
 

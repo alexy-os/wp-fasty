@@ -1,8 +1,9 @@
 /*
  * WP FastY Builder editor: design tokens. The only file with raw colour values (the wp-admin palette; the accent follows
  * the admin colour scheme). Everything else uses var(--wpfb-*) — tools/lint-design.ts enforces it.
+ * .wpfb-tokens: the same tokens for editor parts mounted outside the editor (the "New page" panel of the page chooser).
  */
-.wpfb-app {
+.wpfb-app, .wpfb-tokens {
   --wpfb-accent: var(--wp-admin-theme-color, #2271b1);
   --wpfb-accent-strong: var(--wp-admin-theme-color-darker-10, #135e96);
   --wpfb-accent-soft: color-mix(in srgb, var(--wpfb-accent) 12%, transparent);
@@ -36,3 +37,6 @@
   --wpfb-shadow: 0 1px 2px color-mix(in srgb, #000 48%, transparent), 0 4px 16px color-mix(in srgb, #000 40%, transparent);
   color-scheme: dark;
 }
+
+/* the dimmed page behind a modal sheet (the "New page" panel) */
+.wpfb-sheet::backdrop { background: color-mix(in srgb, #000 40%, transparent); }

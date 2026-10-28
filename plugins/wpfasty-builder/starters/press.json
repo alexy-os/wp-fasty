@@ -1,0 +1,93 @@
+{
+  "id": "press",
+  "label": "Magazine",
+  "description": "A magazine front: intro, latest stories, picks and a call to action.",
+  "landing": "tools/builder/landings/press.json",
+  "layout": {
+    "source": "ui8kit",
+    "collection": "content-blog",
+    "blocks": [
+      {
+        "id": "intro",
+        "block": "pagehead",
+        "variant": "start",
+        "props": {
+          "title": "The journal",
+          "text": "Notes on design, engineering and the work in between.",
+          "cta": "Read the latest",
+          "href": "{posts}"
+        }
+      },
+      {
+        "id": "latest",
+        "block": "posts",
+        "variant": "magazine",
+        "props": {
+          "title": "Latest stories",
+          "action": {
+            "label": "All posts",
+            "href": "{posts}"
+          }
+        },
+        "bindings": {
+          "posts": {
+            "source": "posts",
+            "limit": 4
+          }
+        }
+      },
+      {
+        "id": "picks",
+        "block": "posts",
+        "variant": "twoUp",
+        "props": {
+          "title": "Design notes",
+          "action": {
+            "label": "All design posts",
+            "href": "{category:design}"
+          }
+        },
+        "bindings": {
+          "posts": {
+            "source": "posts",
+            "limit": 2,
+            "term": "design"
+          }
+        }
+      },
+      {
+        "id": "more",
+        "block": "posts",
+        "variant": "grid",
+        "props": {
+          "title": "Engineering",
+          "action": {
+            "label": "All engineering posts",
+            "href": "{category:engineering}"
+          }
+        },
+        "bindings": {
+          "posts": {
+            "source": "posts",
+            "limit": 3,
+            "term": "engineering"
+          }
+        }
+      },
+      {
+        "id": "about",
+        "block": "cta",
+        "variant": "banner",
+        "props": {
+          "title": "Who writes here",
+          "text": "A small team writing about the craft of building for the web.",
+          "actions": {
+            "cta": "About the journal",
+            "href": "{page:about}",
+            "mode": "one"
+          }
+        }
+      }
+    ]
+  }
+}

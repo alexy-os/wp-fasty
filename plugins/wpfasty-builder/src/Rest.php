@@ -16,6 +16,10 @@ use WP_REST_Response;
  *                                                    sections with the URL of each token, for the editor's link picker
  *   GET  /layout/<page>                 edit_page    draft entry, issues, preview URL
  *   POST /layout/<page>                 edit_page    save the draft; publish=true also needs publish_pages
+ *   POST /pages                         edit_pages   create a draft page from the "New page" panel: {title, slug?,
+ *                                                    starter?} → 201 {id, slug, url, blocks} (Pages::create; a starter
+ *                                                    is only blocks, put into the Builder draft; the page template is
+ *                                                    not touched)
  *   POST /sources                       manage_options  import a remote source {id, url}
  *   POST /render-block                  edit_pages (edit_page with `page`)  one block's HTML for the live preview:
  *        {source?, page?, id?, block, variant, props?, bindings?} → {id, html, issues}; same sanitizing, props and
@@ -61,6 +65,18 @@ final class Rest
                 $page = (int) $r->get_param('page');
                 return $page > 0 ? current_user_can('edit_page', $page) : current_user_can('edit_pages');
             },
+        ]);
+        register_rest_route(self::NS, '/pages', [
+            'methods' => 'POST',
+            'callback' => [self::class, 'createPage'],
+            // edit_pages is the create_posts capability of the page post type
+            'permission_callback' => static fn (): bool => current_user_can('edit_pages'),
+            'args' => [
+                'title' => ['type' => 'string', 'required' => true],
+                'slug' => ['type' => 'string', 'default' => ''],
+                // 'empty' = Pages::EMPTY (a literal: registering the routes loads no other class)
+                'starter' => ['type' => 'string', 'default' => 'empty', 'sanitize_callback' => 'sanitize_key'],
+            ],
         ]);
         register_rest_route(self::NS, '/sources', [
             'methods' => 'POST',
@@ -159,6 +175,16 @@ final class Rest
             return new WP_Error('wpfb_block', __('Unknown block or variant.', 'wpfasty-builder'), ['status' => 400]);
         }
         return new WP_REST_Response($out);
+    }
+
+    public static function createPage(WP_REST_Request $r): WP_REST_Response|WP_Error
+    {
+        $out = Pages::create(
+            (string) $r->get_param('title'),
+            (string) $r->get_param('slug'),
+            sanitize_key((string) ($r->get_param('starter') ?? Pages::EMPTY)),
+        );
+        return $out instanceof WP_Error ? $out : new WP_REST_Response($out, 201);
     }
 
     public static function importSource(WP_REST_Request $r): WP_REST_Response|WP_Error

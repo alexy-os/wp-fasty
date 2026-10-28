@@ -7,12 +7,13 @@
   import Overlay from "./Overlay.svelte";
   import Splitter from "./Splitter.svelte";
   import BlockCards from "./BlockCards.svelte";
+  import NewPage from "./NewPage.svelte";
   import { MIME, type Card } from "./cards";
   import { PanelLayout } from "./layout.svelte";
   import { isTyping, shortcutOf } from "./layout";
   import { EditorStore } from "./store.svelte";
   import {
-    Braces, ChevronDown, ChevronUp, Copy, GripVertical, Maximize2, Minimize2, Monitor, PanelLeftClose, PanelLeftOpen, PanelRightClose,
+    Braces, ChevronDown, ChevronUp, Copy, FilePlus, GripVertical, Maximize2, Minimize2, Monitor, PanelLeftClose, PanelLeftOpen, PanelRightClose,
     PanelRightOpen, Redo2, RotateCcw, Smartphone, Trash2, Undo2,
   } from "./icons";
   import { api } from "./api";
@@ -38,6 +39,8 @@
   /** dark mode (localStorage, per user), switched from the toolbar button of Admin::darkSwitch */
   const theme = new ThemeMode(config.user);
   let resizing = $state(false);
+  /** the "New page" panel (?new=1 opens it on load) */
+  let newOpen = $state(config.newPage === true);
   let source = $state(config.source || "ui8kit");
   let collection = $state(config.collection || "");
   let previewUrl = $state("");
@@ -217,6 +220,11 @@
     return fresh;
   }
 
+  /** before leaving for a new page: the draft change still waiting for its save is saved now */
+  async function flush() {
+    if (status === "saving") await save(false);
+  }
+
   async function save(publish: boolean) {
     clearTimeout(timer);
     status = "saving";
@@ -346,6 +354,8 @@
     t instanceof Element && !!t.closest("textarea, select, [contenteditable], input:not([type=checkbox], [type=radio], [type=button], [type=range])");
 
   function keydown(e: KeyboardEvent) {
+    // the "New page" panel is modal: no editor shortcut behind it
+    if (newOpen) return;
     const mod = e.ctrlKey || e.metaKey;
     if (mod && !e.altKey && !typing(e.target)) {
       const k = e.key.toLowerCase();
@@ -552,6 +562,7 @@
       </div>
       <button type="button" class="wpfb-icon" title="Focus mode: canvas only (F)" aria-label="Focus mode" aria-keyshortcuts="F" aria-pressed={layout.focus}
         onclick={() => layout.toggleFocus()}><Icon icon={Maximize2} /></button>
+      <button type="button" class="button" aria-haspopup="dialog" onclick={() => (newOpen = true)}><Icon icon={FilePlus} /> New page</button>
     </div>
     <div class="wpfb-actions">
       <a class="button" href={config.permalink} target="_blank" rel="noopener">View page</a>
@@ -686,6 +697,8 @@
       {/if}
     </aside>
   </div>
+
+  <NewPage bind:open={newOpen} starters={config.starters ?? []} create={client.createPage} beforeleave={flush} />
 
   {#if drag}
     <div class="wpfb-ghost" style="left:{ghost.x + 12}px;top:{ghost.y + 12}px">{drag.label}</div>

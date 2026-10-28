@@ -8,6 +8,8 @@ namespace WPFastyBuilder;
  * wp-admin: the builder screen (Pages → Builder, edit_pages) and the sources screen (Settings → Builder sources,
  * manage_options). The editor script and styles are enqueued on the builder screen only.
  * Open a collection with ?collection=<id> to show only its blocks in the sidebar.
+ * New pages: "Add New with Builder" next to "Add New" on Pages, "New page" on the Builder screen (page chooser and
+ * editor bar) open the "New page" panel of the editor script (?new=1 opens it on load); Pages::create makes the draft.
  * The dark mode switch of the editor is the last item of the toolbar (admin bar), on the editor screen only; the
  * editor script wires it up and remembers the mode in localStorage per user.
  */
@@ -27,6 +29,7 @@ final class Admin
     {
         add_action('admin_menu', [self::class, 'menu']);
         add_action('admin_enqueue_scripts', [self::class, 'enqueue']);
+        add_action('admin_enqueue_scripts', [self::class, 'pagesList']);
         add_filter('page_row_actions', [self::class, 'rowAction'], 10, 2);
         add_action('admin_post_wpfb_import', [self::class, 'handleImport']);
         add_action('admin_notices', [self::class, 'problems']);
@@ -51,6 +54,12 @@ final class Admin
         );
     }
 
+    /** the Builder screen with the "New page" panel open */
+    public static function newUrl(): string
+    {
+        return add_query_arg(['page' => self::SLUG, 'new' => 1], admin_url('edit.php?post_type=page'));
+    }
+
     public static function url(int $pageId, string $collection = ''): string
     {
         $args = ['page' => self::SLUG, 'post' => $pageId];
@@ -68,7 +77,7 @@ final class Admin
     {
         if (current_user_can('edit_page', $post->ID)) {
             $actions['wpfb'] = '<a href="' . esc_url(self::url($post->ID)) . '">' . esc_html__(
-                'Edit with builder',
+                'Edit with Builder',
                 'wpfasty-builder',
             ) . '</a>';
         }
@@ -87,13 +96,41 @@ final class Admin
         return absint(self::query('post'));
     }
 
+    /**
+     * Pages list (edit.php?post_type=page): "Add New with Builder" right after the core "Add New" button
+     * (.page-title-action), added by a small inline script — the core heading has no hook for a second button.
+     */
+    public static function pagesList(string $hook): void
+    {
+        if ($hook !== 'edit.php' || !current_user_can('edit_pages') || !function_exists('get_current_screen')) {
+            return;
+        }
+        $screen = get_current_screen();
+        if ($screen === null || $screen->post_type !== 'page') {
+            return;
+        }
+        wp_register_script('wpfasty-builder-pages', false, [], Plugin::VERSION, true);
+        wp_enqueue_script('wpfasty-builder-pages');
+        wp_add_inline_script('wpfasty-builder-pages', self::addNewScript());
+    }
+
+    /** the inline script of pagesList(): one link, the core button's class, after the core button */
+    public static function addNewScript(): string
+    {
+        return '(function(){var a=document.querySelector(".wrap .page-title-action");if(!a){return;}'
+            . 'var b=document.createElement("a");b.className="page-title-action wpfb-add-new";'
+            . 'b.href=' . wp_json_encode(self::newUrl()) . ';b.textContent='
+            . wp_json_encode(__('Add New with Builder', 'wpfasty-builder')) . ';a.after(b);})();';
+    }
+
     public static function enqueue(string $hook): void
     {
         if ($hook !== self::$hook || self::$hook === '') {
             return;
         }
         $id = self::pageId();
-        if ($id === 0 || get_post_type($id) !== 'page' || !current_user_can('edit_page', $id)) {
+        $chooser = $id === 0 && current_user_can('edit_pages');
+        if (!$chooser && ($id === 0 || get_post_type($id) !== 'page' || !current_user_can('edit_page', $id))) {
             return;
         }
         $js = Plugin::$dir . '/assets/editor.js';
@@ -116,6 +153,24 @@ final class Admin
                 (string) filemtime($css),
             );
         }
+        $common = [
+            'rest' => esc_url_raw(rest_url(Rest::NS)),
+            'nonce' => wp_create_nonce('wp_rest'),
+            'user' => get_current_user_id(),
+            'starters' => Starters::forEditor(),
+            'newPage' => self::query('new') === '1',
+        ];
+        if ($chooser) {
+            wp_add_inline_script(
+                'wpfasty-builder-editor',
+                'window.WPFastyBuilderConfig = ' . wp_json_encode($common + [
+                    'page' => 0, 'title' => '', 'source' => '', 'collection' => '', 'permalink' => '',
+                    'canPublish' => false, 'editUrl' => '',
+                ]) . ';',
+                'before',
+            );
+            return;
+        }
         $collection = sanitize_key(self::query('collection'));
         $source = sanitize_key(self::query('source'));
         $entry = Store::get($id, true);
@@ -125,9 +180,7 @@ final class Admin
         if ($collection === '') {
             $collection = (string) ($entry['metadata']['collection']['value'] ?? '');
         }
-        $config = [
-            'rest' => esc_url_raw(rest_url(Rest::NS)),
-            'nonce' => wp_create_nonce('wp_rest'),
+        $config = $common + [
             'page' => $id,
             'title' => get_the_title($id),
             'source' => $source,
@@ -135,7 +188,6 @@ final class Admin
             'permalink' => (string) get_permalink($id),
             'canPublish' => current_user_can('publish_pages'),
             'editUrl' => (string) get_edit_post_link($id, 'raw'),
-            'user' => get_current_user_id(),
         ];
         wp_add_inline_script(
             'wpfasty-builder-editor',
@@ -207,7 +259,10 @@ final class Admin
             return;
         }
         $pages = get_pages(['post_status' => 'publish,draft,private', 'sort_column' => 'post_title']);
-        echo '<div class="wrap"><h1>' . esc_html__('Builder', 'wpfasty-builder') . '</h1>';
+        echo '<div class="wrap"><h1 class="wp-heading-inline">' . esc_html__('Builder', 'wpfasty-builder') . '</h1> ';
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup of escaped parts (newPageButton)
+        echo self::newPageButton() . '<hr class="wp-header-end">';
+        echo '<div id="wpfasty-builder-new" class="wpfb-root"></div>';
         echo '<p>' . esc_html__(
             'Choose a page to build. Pages with a published layout render it on the front end.',
             'wpfasty-builder',
@@ -225,6 +280,13 @@ final class Admin
             );
         }
         echo '</tbody></table></div>';
+    }
+
+    /** "New page" on the page chooser: the editor script opens the panel (aria-haspopup: a dialog) */
+    public static function newPageButton(): string
+    {
+        return '<button type="button" id="wpfb-new-page" class="page-title-action" aria-haspopup="dialog">'
+            . esc_html__('New page', 'wpfasty-builder') . '</button>';
     }
 
     /** blocks that cannot render in the site runtime — never rendered through the other engine instead */

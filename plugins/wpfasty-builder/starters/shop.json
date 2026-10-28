@@ -1,0 +1,70 @@
+{
+  "id": "shop",
+  "label": "Shop",
+  "description": "A shop front: intro, two product grids and a call to action.",
+  "landing": "tools/builder/landings/shop.json",
+  "layout": {
+    "source": "ui8kit",
+    "collection": "commerce-shop",
+    "blocks": [
+      {
+        "id": "intro",
+        "block": "pagehead",
+        "variant": "start",
+        "props": {
+          "title": "Everyday goods, simply made",
+          "text": "Kitchen, home and accessories from small workshops.",
+          "cta": "Browse the shop",
+          "href": "{archive:product}"
+        }
+      },
+      {
+        "id": "new",
+        "block": "products",
+        "variant": "grid3",
+        "props": {
+          "title": "New in the shop",
+          "rating": "hide",
+          "action": "none"
+        },
+        "bindings": {
+          "products": {
+            "source": "products",
+            "limit": 6
+          }
+        }
+      },
+      {
+        "id": "kitchen",
+        "block": "products",
+        "variant": "grid4",
+        "props": {
+          "title": "For the kitchen",
+          "rating": "hide",
+          "action": "none"
+        },
+        "bindings": {
+          "products": {
+            "source": "products",
+            "limit": 4,
+            "term": "kitchen"
+          }
+        }
+      },
+      {
+        "id": "about",
+        "block": "cta",
+        "variant": "banner",
+        "props": {
+          "title": "Made to last",
+          "text": "We work with a handful of makers and keep the range small on purpose.",
+          "actions": {
+            "cta": "About us",
+            "href": "{page:about}",
+            "mode": "one"
+          }
+        }
+      }
+    ]
+  }
+}

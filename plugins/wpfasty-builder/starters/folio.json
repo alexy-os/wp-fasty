@@ -1,0 +1,60 @@
+{
+  "id": "folio",
+  "label": "Portfolio",
+  "description": "A portfolio: intro, selected projects and a call to action.",
+  "landing": "tools/builder/landings/folio.json",
+  "layout": {
+    "source": "ui8kit",
+    "collection": "",
+    "blocks": [
+      {
+        "id": "intro",
+        "block": "pagehead",
+        "variant": "start",
+        "props": {
+          "title": "Calm, fast digital products",
+          "text": "Product design and front-end work for teams who care about the details.",
+          "cta": "See the work",
+          "href": "{archive:project}"
+        }
+      },
+      {
+        "id": "work",
+        "block": "posts",
+        "variant": "grid",
+        "props": {
+          "title": "Selected work",
+          "meta": "short",
+          "action": {
+            "label": "All projects",
+            "href": "{archive:project}"
+          }
+        },
+        "bindings": {
+          "posts": {
+            "source": "projects",
+            "limit": 6,
+            "map": {
+              "author": "metadata.client.value",
+              "date": "metadata.year.value"
+            }
+          }
+        }
+      },
+      {
+        "id": "contact",
+        "block": "cta",
+        "variant": "banner",
+        "props": {
+          "title": "Have a project in mind?",
+          "text": "Tell me about it, I reply within two working days.",
+          "actions": {
+            "cta": "Get in touch",
+            "href": "{page:contact}",
+            "mode": "one"
+          }
+        }
+      }
+    ]
+  }
+}

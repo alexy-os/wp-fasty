@@ -1,4 +1,4 @@
-import type { Catalog, Config, Issue, Item, Obj } from "./types";
+import type { Catalog, Config, Issue, Item, NewPage, Obj } from "./types";
 import type { LinkIndex } from "./links";
 
 export function api(cfg: Config) {
@@ -27,6 +27,9 @@ export function api(cfg: Config) {
     /** link-token targets of the site (GET /links), for the link picker */
     links: () => call<LinkIndex>("/links"),
     layout: () => call<{ layout: Obj | null; published: boolean; previewUrl: string; permalink: string }>(`/layout/${cfg.page}`),
+    /** a draft page with the starter's blocks in its Builder draft (POST /pages) */
+    createPage: (title: string, slug: string, starter: string) =>
+      call<NewPage>("/pages", { method: "POST", body: JSON.stringify({ title, slug, starter }) }),
     save: (source: string, collection: string, blocks: Item[], publish: boolean) =>
       call<{ layout: Obj; issues: Issue[]; published: boolean; previewUrl: string }>(`/layout/${cfg.page}`, {
         method: "POST",

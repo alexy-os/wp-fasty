@@ -6,7 +6,15 @@ export interface Config {
   permalink: string; canPublish: boolean; editUrl: string;
   /** the current user id (per-user layout in localStorage); absent in older bootstrap data */
   user?: number;
+  /** starter sets of the "New page" panel available on this site (Starters::forEditor) */
+  starters?: Starter[];
+  /** open the "New page" panel on load (?new=1: "Add New with Builder") */
+  newPage?: boolean;
 }
+/** a starter set: the blocks of a demo landing, put into the Builder draft of a new page */
+export interface Starter { id: string; label: string; description: string; blocks: number }
+/** POST /pages: the new draft page and its Builder URL */
+export interface NewPage { id: number; slug: string; url: string; blocks: number }
 export interface PropSpec { name: string; type: string | { ts?: string; record?: string }; optional: boolean; docs: string }
 /** a field of a catalog record (catalog `records`, from the codegen-x specs) */
 export interface RecordField { name: string; type: string; optional?: boolean; docs?: string; default?: Json }
