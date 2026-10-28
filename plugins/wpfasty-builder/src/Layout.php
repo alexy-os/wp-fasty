@@ -415,7 +415,9 @@ final class Layout
 
     public static function safeHref(string $h): bool
     {
-        return $h === '' || preg_match('#^(https?://|/|\#|mailto:|tel:)#i', $h) === 1
+        // a site path (/x, not //host or /\host), a fragment, a query, or http(s)/mailto/tel
+        $plain = preg_match('#^(https?://|/(?![/\\\\])|\#|\?|mailto:|tel:)#i', $h) === 1 && Safe::url($h) === $h;
+        return $h === '' || $plain
             || (preg_match(Links::TOKEN, $h, $m, PREG_OFFSET_CAPTURE) === 1 && $m[0][1] === 0
                 && !in_array($m[1][0], ['open-now', 'price', 'stock'], true)); // text tokens are never a link
     }

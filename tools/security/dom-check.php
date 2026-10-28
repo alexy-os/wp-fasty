@@ -9,6 +9,8 @@
  *                     data, ping) whose URL — ASCII whitespace / control characters removed, case folded — has a
  *                     javascript:, vbscript:, livescript: or data: scheme; data:image/(png|jpeg|gif|webp|avif|svg+xml)
  *                     is allowed only in <img>/<source> src and srcset
+ *   url-network       more URL attributes than the baseline that leave the site without a scheme: //host, /\host,
+ *                     \\host (tabs / newlines / leading spaces and control characters removed, as a browser does)
  *   style-url         url(javascript:/vbscript:/data:…) or expression( in a style attribute
  *   attr-name         an attribute name carrying the payload (dynamic attribute names)
  *   element:<tag>     iframe, frame, object, embed, base, meta, link, style, math elements beyond the baseline
@@ -74,6 +76,19 @@ return static function (string $html, string $payload = '', string $baseline = '
                 $out[] = 'style-url';
             }
         }
+    }
+    $network = static function (DOMXPath $x) use ($urlAttrs): int {
+        $n = 0;
+        foreach ($x->query('//@*') ?: [] as $a) {
+            if (in_array(strtolower($a->nodeName), $urlAttrs, true)) {
+                $v = ltrim((string) preg_replace('/[\t\n\r]+/', '', (string) $a->nodeValue), "\x00..\x20\x7F");
+                $n += preg_match('#^[/\\\\]{2}#', $v) === 1 ? 1 : 0;
+            }
+        }
+        return $n;
+    };
+    if ($network($xp) > $network($base)) {
+        $out[] = 'url-network';
     }
     if (!str_contains($payload, '1337') && str_contains($html, '1337') && !str_contains($baseline, '1337')) {
         $out[] = 'ssti';

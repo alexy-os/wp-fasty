@@ -15,6 +15,9 @@ namespace WPFastyBuilder;
  */
 final class Admin
 {
+    /** transient prefix of the Sources screen notice (+ user id) */
+    private const NOTICE = 'wpfb_sources_notice_';
+
     /** JSON inside a <script>: <, >, &, ' and " as \u escapes, so no value (a page title…) can end the script */
     private const JSON = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 
@@ -309,10 +312,7 @@ final class Admin
             wp_die(esc_html__('Sorry, you are not allowed to manage builder sources.', 'wpfasty-builder'));
         }
         echo '<div class="wrap"><h1>' . esc_html__('Builder sources', 'wpfasty-builder') . '</h1>';
-        $msg = sanitize_text_field(self::query('wpfb_msg'));
-        if ($msg !== '') {
-            echo '<div class="notice notice-info"><p>' . esc_html($msg) . '</p></div>';
-        }
+        echo self::takeNotice(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped there
         echo '<table class="widefat striped"><thead><tr><th>' . esc_html__('Source', 'wpfasty-builder') . '</th><th>'
             . esc_html__('Collections', 'wpfasty-builder') . '</th></tr></thead><tbody>';
         foreach (Sources::all() as $src) {
@@ -373,19 +373,41 @@ final class Admin
         $url = isset($_POST['url']) ? esc_url_raw(wp_unslash((string) $_POST['url'])) : '';
         try {
             $s = Sources::import($id, $url);
-            $msg = sprintf(
+            self::notice('success', sprintf(
                 /* translators: 1: number of blocks, 2: number of collections */
                 __('Imported %1$d blocks and %2$d collections.', 'wpfasty-builder'),
                 $s['blocks'],
                 $s['collections'],
-            );
+            ));
         } catch (\Throwable $e) {
-            $msg = $e->getMessage();
+            self::notice('error', $e->getMessage());
         }
-        wp_safe_redirect(add_query_arg(
-            ['page' => self::SOURCES, 'wpfb_msg' => rawurlencode($msg)],
-            admin_url('options-general.php'),
-        ));
+        wp_safe_redirect(add_query_arg(['page' => self::SOURCES], admin_url('options-general.php')));
         exit;
+    }
+
+    /**
+     * The result of an import for the Sources screen after the redirect: kept server-side for the current user (a
+     * transient, 5 minutes, read once), never in the URL — a link cannot put text on the screen.
+     */
+    public static function notice(string $type, string $text): void
+    {
+        set_transient(self::NOTICE . get_current_user_id(), [
+            'type' => $type === 'error' ? 'error' : 'success',
+            'text' => $text,
+        ], 300);
+    }
+
+    /** the pending notice of the current user as an admin notice (escaped), then forgotten; '' without one */
+    public static function takeNotice(): string
+    {
+        $key = self::NOTICE . get_current_user_id();
+        $n = get_transient($key);
+        if (!is_array($n) || !is_string($n['text'] ?? null)) {
+            return '';
+        }
+        delete_transient($key);
+        $type = ($n['type'] ?? '') === 'error' ? 'error' : 'success';
+        return '<div class="notice notice-' . $type . '"><p>' . esc_html($n['text']) . '</p></div>';
     }
 }
