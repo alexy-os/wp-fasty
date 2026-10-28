@@ -142,6 +142,12 @@ final class BuilderTest extends TestCase
         $this->assertTrue(Layout::safeHref('{page:about}#team'));
         $this->assertTrue(Layout::safeHref('/shop/'));
         $this->assertFalse(Layout::safeHref('data:text/html,x'));
+        // every token of Links::TOKEN (contact links, site data), at the start only
+        foreach (['{tel}', '{mailto}?subject=Hi', '{whatsapp}', '{telegram}', '{map}', '{site:name}', '{year}'] as $h) {
+            $this->assertTrue(Layout::safeHref($h), $h);
+        }
+        $this->assertFalse(Layout::safeHref('javascript:{tel}'));
+        $this->assertFalse(Layout::safeHref('{open-now}'));
         [$sale] = Layout::normalize([
             'blocks' => [['id' => 'sale', 'block' => 'products', 'variant' => 'grid3',
                 'bindings' => ['products' => ['source' => 'products', 'limit' => 4, 'sale' => true]]]],

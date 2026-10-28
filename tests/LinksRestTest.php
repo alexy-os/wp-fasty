@@ -89,4 +89,50 @@ final class LinksRestTest extends TestCase
         $this->assertSame(Links::MAX, $args['numberposts']);
         $this->assertIsArray($data['pages']);
     }
+
+    public function testContactLinksFromSiteData(): void
+    {
+        $d = ['phone' => '+7 (900) 123-45-67', 'email' => 'hello@example.com', 'address' => 'Tverskaya 1, Moscow', 'telegram' => '@demo_shop'];
+        $this->assertSame('tel:+79001234567', Links::contact('tel', $d));
+        $this->assertSame('tel:89001234567', Links::contact('tel', ['phone' => '8 900 123 45 67']));
+        $this->assertSame('https://wa.me/79001234567', Links::contact('whatsapp', $d));
+        $this->assertSame('mailto:hello@example.com', Links::contact('mailto', $d));
+        $this->assertSame('https://t.me/demo_shop', Links::contact('telegram', $d));
+        $this->assertSame(Links::MAP . 'Tverskaya%201%2C%20Moscow', Links::contact('map', $d));
+        // no value (or one that cannot make a link): "#"
+        foreach (array_keys(Links::CONTACT) as $kind) {
+            $this->assertSame('#', Links::contact($kind, []), $kind);
+        }
+        $this->assertSame('#', Links::contact('mailto', ['email' => 'not an email']));
+        $this->assertSame('#', Links::contact('telegram', ['telegram' => 'a b']));
+    }
+
+    public function testSiteDataAndDateTokensInText(): void
+    {
+        // the site has no phone, address… in its settings yet: "" for site data, "#" for contact links
+        $this->assertSame('© 2026 ', Links::resolve('© {year} {site:name}'));
+        $this->assertSame('Today: October 28, 2026', Links::resolve('Today: {today}'));
+        $this->assertSame('Call  at #', Links::resolve('Call {site:phone} at {tel}'));
+        $this->assertSame('', Links::resolve('{site:unknown}'));
+        $this->assertSame('#?x=1', Links::resolve('{map}?x=1'));
+        $this->assertSame(['name' => '', 'phone' => '', 'email' => '', 'address' => '', 'hours' => '', 'telegram' => ''], Links::data());
+        $this->assertSame('a {open-now} b', Links::resolve('a {open-now} b'));
+    }
+
+    public function testIndexListsContactAndDataTokens(): void
+    {
+        $data = Links::index();
+        $this->assertSame(
+            ['{tel}' => '#', '{mailto}' => '#', '{whatsapp}' => '#', '{telegram}' => '#', '{map}' => '#'],
+            array_column($data['contact'], 'url', 'token'),
+        );
+        $this->assertSame(['phone', 'email', 'phone', 'telegram', 'address'], array_column($data['contact'], 'source'));
+        $this->assertSame(
+            ['{site:name}' => '', '{site:phone}' => '', '{site:email}' => '', '{site:address}' => '', '{site:hours}' => '', '{year}' => '2026', '{today}' => 'October 28, 2026'],
+            array_column($data['data'], 'value', 'token'),
+        );
+        foreach ([...$data['contact'], ...$data['data']] as $t) {
+            $this->assertSame($t['url'] ?? $t['value'], Links::resolve($t['token']), $t['token']);
+        }
+    }
 }

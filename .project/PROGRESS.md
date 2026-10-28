@@ -357,11 +357,11 @@ A Parent correctness ✓
 
 **Ядро (wpfasty-builder)**
 - [x] 0. Дропдаун макросов ссылок: иконка в поле-ссылке, 3 колонки, поиск, подсказка о результате (`GET wpfasty-builder/v1/links`, `editor/src/links.ts`, `fields/LinkPicker.svelte`)
-- [ ] 1. Данные сайта: `{site:name}`, `{site:phone}`, `{site:email}`, `{site:address}`, `{site:hours}`
+- [x] 1. Данные сайта: `{site:name}`, `{site:phone}`, `{site:email}`, `{site:address}`, `{site:hours}` (`Links::data()`; значение есть только у `name` = SettingsV04 `title`; phone, email, address, hours — пустая строка, пока для них нет поля в контракте settings, ждут XGenBot)
 - [ ] 2. Ссылки на записи, товары и термины: `{post:<slug>}`, `{product:<slug>}`, `{term:<tax>:<slug>}` (согласовать с контрактом, XGenBot)
-- [ ] 3. Действия: `{tel}`, `{mailto}`, `{whatsapp}`, `{telegram}`, `{map}`
+- [x] 3. Действия: `{tel}`, `{mailto}`, `{whatsapp}`, `{telegram}`, `{map}` (`Links::contact()`; без исходного значения — `#` и предупреждение в редакторе; карта — OpenStreetMap, провайдера в настройках нет; источники phone, email, address и Telegram-handle ждут контракта)
 - [ ] 4. Цены и наличие: `{price:<product>}`, `{stock:<product>}` на пайпах `|settings:currency` и `|in-stock` (согласовать с контрактом)
-- [ ] 5. Дата и время: `{year}`, `{today}`, `{open-now}` по часам работы
+- [ ] 5. Дата и время: `{year}`, `{today}`, `{open-now}` по часам работы (сделаны `{year}` и `{today}` — на сервере, `date_format`, таймзона сайта; `{open-now}` ждёт структуры часов работы в контракте)
 - [ ] 6. Формы и якоря: `{form:booking}`, `{anchor:<block>}`, переживают перемещение блока
 - [ ] 7. Медиа: `{logo}`, `{media:<id>}`, переживают импорт и Playground
 - [ ] 8. Переводы: значение по текущей локали (Codex localized)

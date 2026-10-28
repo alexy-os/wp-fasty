@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { applyMacro, filterIndex, isLinkField, parseMacro, relative, resolveMacro, type LinkIndex } from "../src/links";
+import { applyMacro, expandText, filterIndex, insertMacro, isLinkField, parseMacro, relative, resolveMacro, tokenMode, type LinkIndex } from "../src/links";
 
 const index: LinkIndex = {
   home: "http://x.test/",
@@ -8,6 +8,17 @@ const index: LinkIndex = {
   sections: [
     { token: "{category:news}", label: "News", slug: "news", kind: "category", url: "http://x.test/category/news/" },
     { token: "{archive:product}", label: "Products", slug: "product", kind: "archive", url: "http://x.test/shop/" },
+  ],
+  contact: [
+    { token: "{tel}", label: "Call", url: "tel:+79001234567", source: "phone" },
+    { token: "{mailto}", label: "Email", url: "#", source: "email" },
+    { token: "{map}", label: "Map", url: "#", source: "address" },
+  ],
+  data: [
+    { token: "{site:name}", label: "Site name", value: "Demo Shop" },
+    { token: "{site:phone}", label: "Phone", value: "+7 900 123-45-67" },
+    { token: "{site:hours}", label: "Opening hours", value: "" },
+    { token: "{year}", label: "Year", value: "2026" },
   ],
 };
 
@@ -79,6 +90,43 @@ describe("filterIndex", () => {
     expect(filterIndex(index, "ABO").pages.map((t) => t.slug)).toEqual(["about"]);
     expect(filterIndex(index, "archive").sections.map((t) => t.slug)).toEqual(["product"]);
     expect(filterIndex(index, "").site.length).toBe(2);
-    expect(filterIndex(null, "x")).toEqual({ site: [], pages: [], sections: [] });
+    expect(filterIndex(null, "x")).toEqual({ site: [], pages: [], sections: [], contact: [], data: [] });
+    expect(filterIndex(index, "phone").data.map((t) => t.token)).toEqual(["{site:phone}"]);
+    expect(filterIndex(index, "tel").contact.map((t) => t.token)).toEqual(["{tel}"]);
+  });
+});
+
+describe("contact, site data and dates", () => {
+  test("parse the new tokens", () => {
+    expect(parseMacro("{site:phone}")?.arg).toBe("phone");
+    expect(parseMacro("{tel}")?.kind).toBe("tel");
+    expect(parseMacro("© {year}")?.prefix).toBe("© ");
+    expect(parseMacro("{open-now}")).toBeNull();
+  });
+  test("contact links in link fields: the URL, or # with a warning", () => {
+    expect(resolveMacro("{tel}", index)).toEqual({ url: "tel:+79001234567", shown: "tel:+79001234567" });
+    expect(resolveMacro("{mailto}?subject=Hi", index)).toEqual({ url: "#?subject=Hi", shown: "#?subject=Hi", warning: "no email in the site settings: links to #" });
+    expect(applyMacro("{page:about}?x=1", "{tel}")).toBe("{tel}?x=1");
+  });
+  test("text fields: every token expanded, empty values reported once", () => {
+    expect(expandText("© {year} {site:name}", index)).toEqual({ text: "© 2026 Demo Shop", warnings: [] });
+    expect(expandText("Open {site:hours}, {site:hours}. Call {site:phone}", index)).toEqual({
+      text: "Open , . Call +7 900 123-45-67", warnings: ["opening hours is not set in the site settings"],
+    });
+    expect(expandText("{site} and {site:fax}", index)).toEqual({ text: "{site} and {site:fax}", warnings: ["add a key: {site:<key>}", "site data fax not found"] });
+    expect(expandText("plain text", index)).toBeNull();
+  });
+  test("insertMacro: at the caret or over the selection", () => {
+    expect(insertMacro("© 2025 Shop", "{year}", 2, 6)).toEqual({ value: "© {year} Shop", caret: 8 });
+    expect(insertMacro("Hi ", "{site:name}")).toEqual({ value: "Hi {site:name}", caret: 14 });
+    expect(insertMacro("", "{year}", 5, 9)).toEqual({ value: "{year}", caret: 6 });
+  });
+  test("tokenMode: link fields get links, other text fields site data, media fields nothing", () => {
+    expect(tokenMode("href", { type: "text" })).toBe("link");
+    expect(tokenMode("title", { type: "text" })).toBe("text");
+    expect(tokenMode("body", { type: "textarea" })).toBe("text");
+    expect(tokenMode("imageUrl", { type: "text" })).toBeNull();
+    expect(tokenMode("iconName", { type: "text" })).toBeNull();
+    expect(tokenMode("count", { type: "number" as never })).toBeNull();
   });
 });

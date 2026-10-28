@@ -331,7 +331,7 @@ final class Layout
     public static function safeHref(string $h): bool
     {
         return $h === '' || preg_match('#^(https?://|/|\#|mailto:|tel:)#i', $h) === 1
-            || preg_match('/^\{(home|posts|page|category|archive)(:[a-z0-9_-]+)?\}/', $h) === 1;
+            || (preg_match(Links::TOKEN, $h, $m, PREG_OFFSET_CAPTURE) === 1 && $m[0][1] === 0);
     }
 
     /** @return array{code: string, path: string, message: string} */

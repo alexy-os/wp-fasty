@@ -154,27 +154,33 @@
 .wpfb-dropline { position: absolute; left: 0; right: 0; height: 2px; background: var(--wpfb-accent); box-shadow: 0 0 0 1px var(--wpfb-surface); }
 .wpfb-svg { flex: none; display: block; }
 
-/* link fields: token picker button inside the input, resolved-URL hint under it, the picker (fixed, above the panels) */
+/* token fields: picker button inside the input (text fields: only on hover / focus), the hint under it (what the
+   tokens turn into, what is missing), the picker (fixed, above the panels) */
 .wpfb-link-field { position: relative; }
-.wpfb-root .wpfb-app .wpfb-link-field input[type="text"] { padding-right: 32px; }
+.wpfb-root .wpfb-app .wpfb-link-field.has-token input[type="text"], .wpfb-link-field.has-token textarea { padding-right: 32px; }
 .wpfb-link-icon { position: absolute; top: 4px; right: 4px; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: var(--wpfb-radius); background: transparent; color: var(--wpfb-text-muted); cursor: pointer; }
 .wpfb-link-icon:hover, .wpfb-link-icon.is-open { background: var(--wpfb-accent-soft); color: var(--wpfb-accent-strong); }
 .wpfb-link-icon:focus-visible { outline: 2px solid var(--wpfb-accent); outline-offset: 0; }
+.wpfb-link-field.is-text .wpfb-link-icon { opacity: 0; transition: opacity 0.12s; }
+.wpfb-link-field.is-text:hover .wpfb-link-icon, .wpfb-link-field.is-text:focus-within .wpfb-link-icon, .wpfb-link-field.is-text .wpfb-link-icon.is-open { opacity: 1; }
 .wpfb-field > .wpfb-field-hint { margin: 8px 0 0; }
-.wpfb-field-hint { color: var(--wpfb-text-muted); font-size: 12px; line-height: 16px; overflow-wrap: anywhere; }
-.wpfb-field-hint.is-error { color: var(--wpfb-danger); }
+.wpfb-field-hint { display: flex; flex-direction: column; color: var(--wpfb-text-muted); font-size: 12px; line-height: 16px; overflow-wrap: anywhere; }
+.wpfb-field-hint p { margin: 0; }
+.wpfb-field-hint .is-error { color: var(--wpfb-danger); }
+.wpfb-field-hint .is-warning { display: flex; align-items: center; gap: 4px; color: var(--wpfb-danger); }
 .wpfb-linkpicker { position: fixed; z-index: 100002; box-sizing: border-box; display: flex; flex-direction: column; width: min(var(--wpfb-picker-w), calc(100vw - 16px)); max-height: 360px; background: var(--wpfb-surface); border: 1px solid var(--wpfb-line); border-radius: var(--wpfb-radius); box-shadow: var(--wpfb-shadow); color: var(--wpfb-text); font-size: 14px; line-height: 20px; }
 .wpfb-linkpicker.is-up { transform: translateY(-100%); }
 .wpfb-linkpicker-search { position: relative; flex: none; padding: 8px; border-bottom: 1px solid var(--wpfb-line-soft); }
 .wpfb-linkpicker-search > .wpfb-svg { position: absolute; top: 16px; left: 16px; color: var(--wpfb-text-muted); pointer-events: none; }
 .wpfb-root .wpfb-app .wpfb-linkpicker-search input[type="search"] { width: 100%; max-width: none; padding-left: 32px; }
-.wpfb-linkpicker-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); min-height: 0; overflow-y: auto; }
+.wpfb-linkpicker-cols { display: grid; grid-template-columns: repeat(var(--wpfb-picker-cols, 3), minmax(0, 1fr)); min-height: 0; overflow-y: auto; }
 .wpfb-linkpicker-col { min-width: 0; padding: 8px 0; }
 .wpfb-linkpicker-col + .wpfb-linkpicker-col { border-left: 1px solid var(--wpfb-line-soft); }
 .wpfb-linkpicker-head { display: flex; align-items: center; gap: 8px; padding: 0 8px 8px; color: var(--wpfb-text-muted); font-size: 12px; line-height: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 .wpfb-linkpicker-option { display: flex; flex-direction: column; padding: 4px 8px; border-radius: 0; cursor: pointer; }
 .wpfb-linkpicker-option.is-active { background: var(--wpfb-accent-soft); box-shadow: inset 2px 0 0 var(--wpfb-accent); }
 .wpfb-linkpicker-option.is-current .wpfb-linkpicker-label { font-weight: 600; }
+.wpfb-linkpicker-option.is-empty .wpfb-linkpicker-meta { font-style: italic; }
 .wpfb-linkpicker-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wpfb-linkpicker-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--wpfb-text-muted); font-size: 12px; line-height: 16px; }
 .wpfb-linkpicker-empty, .wpfb-linkpicker-note { margin: 0; padding: 0 8px; color: var(--wpfb-text-muted); font-size: 12px; line-height: 16px; }

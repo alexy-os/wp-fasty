@@ -90,3 +90,17 @@ if (!function_exists('get_category_link')) {
         return 'http://example.test/category/' . ($term instanceof WP_Term ? $term->slug : (string) $term) . '/';
     }
 }
+
+if (!function_exists('is_email')) {
+    function is_email(string $email): string|false
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false ? $email : false;
+    }
+}
+if (!function_exists('wp_date')) {
+    /** fixed clock: 2026-10-28 12:00 UTC */
+    function wp_date(string $format, ?int $timestamp = null): string|false
+    {
+        return gmdate($format, $timestamp ?? 1793188800);
+    }
+}
