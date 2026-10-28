@@ -15,6 +15,9 @@ namespace WPFastyBuilder;
  */
 final class Admin
 {
+    /** JSON inside a <script>: <, >, &, ' and " as \u escapes, so no value (a page title…) can end the script */
+    private const JSON = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+
     public const SLUG = 'wpfasty-builder';
     public const SOURCES = 'wpfasty-builder-sources';
     /** admin bar node of the dark mode switch (li#wp-admin-bar-wpfasty-builder-dark) */
@@ -88,7 +91,7 @@ final class Admin
     private static function query(string $key): string
     {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        return isset($_GET[$key]) && is_string($_GET[$key]) ? (string) wp_unslash($_GET[$key]) : '';
+        return isset($_GET[$key]) && is_string($_GET[$key]) ? sanitize_text_field(wp_unslash($_GET[$key])) : '';
     }
 
     private static function pageId(): int
@@ -119,8 +122,8 @@ final class Admin
     {
         return '(function(){var a=document.querySelector(".wrap .page-title-action");if(!a){return;}'
             . 'var b=document.createElement("a");b.className="page-title-action wpfb-add-new";'
-            . 'b.href=' . wp_json_encode(self::newUrl()) . ';b.textContent='
-            . wp_json_encode(__('Add New with Builder', 'wpfasty-builder')) . ';a.after(b);})();';
+            . 'b.href=' . wp_json_encode(self::newUrl(), self::JSON) . ';b.textContent='
+            . wp_json_encode(__('Add New with Builder', 'wpfasty-builder'), self::JSON) . ';a.after(b);})();';
     }
 
     public static function enqueue(string $hook): void
@@ -166,7 +169,7 @@ final class Admin
                 'window.WPFastyBuilderConfig = ' . wp_json_encode($common + [
                     'page' => 0, 'title' => '', 'source' => '', 'collection' => '', 'permalink' => '',
                     'canPublish' => false, 'editUrl' => '',
-                ]) . ';',
+                ], self::JSON) . ';',
                 'before',
             );
             return;
@@ -191,7 +194,7 @@ final class Admin
         ];
         wp_add_inline_script(
             'wpfasty-builder-editor',
-            'window.WPFastyBuilderConfig = ' . wp_json_encode($config) . ';',
+            'window.WPFastyBuilderConfig = ' . wp_json_encode($config, self::JSON) . ';',
             'before',
         );
         self::$editor = true;
@@ -328,34 +331,37 @@ final class Admin
             );
         }
         echo '</tbody></table>';
-        echo '<h2>' . esc_html__('Import a remote source', 'wpfasty-builder') . '</h2>';
-        echo '<p>' . esc_html(sprintf(
-            // phpcs:disable Generic.Files.LineLength.TooLong -- a translatable literal must stay one string.
-            /* translators: %1$s: site engine (latte or twig) */
-            __('The URL must be a %1$s block registry (catalog.json + blocks.zip), e.g. https://registry.buildy.tw/%1$s/wpfasty/v1.0.0/.', 'wpfasty-builder'),
-            // phpcs:enable Generic.Files.LineLength.TooLong
-            (string) Plugin::engine(),
-        )) . ' '
-            . esc_html__('Remote templates compile through an allowlist of tags and functions.', 'wpfasty-builder')
-            . '</p>';
-        echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
-        wp_nonce_field('wpfb_import');
-        echo '<input type="hidden" name="action" value="wpfb_import">';
-        echo '<p><label>' . esc_html__(
-            'Id',
-            'wpfasty-builder',
-        ) . ' <input name="id" pattern="[a-z][a-z0-9_-]*" required></label> ';
-        echo '<label>' . esc_html__(
-            'URL',
-            'wpfasty-builder',
-        ) . ' <input name="url" type="url" size="60" required></label> ';
-        submit_button(__('Import', 'wpfasty-builder'), 'primary', 'submit', false);
-        echo '</p></form></div>';
+        if (Sources::canImport()) {
+            echo '<h2>' . esc_html__('Import a remote source', 'wpfasty-builder') . '</h2>';
+            echo '<p>' . esc_html(sprintf(
+                // phpcs:disable Generic.Files.LineLength.TooLong -- a translatable literal must stay one string.
+                /* translators: %1$s: site engine (latte or twig) */
+                __('The URL must be a %1$s block registry (catalog.json + blocks.zip), e.g. https://registry.buildy.tw/%1$s/wpfasty/v1.0.0/.', 'wpfasty-builder'),
+                // phpcs:enable Generic.Files.LineLength.TooLong
+                (string) Plugin::engine(),
+            )) . ' '
+                . esc_html__('Remote templates compile through an allowlist of tags and functions.', 'wpfasty-builder')
+                . '</p>';
+            echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
+            wp_nonce_field('wpfb_import');
+            echo '<input type="hidden" name="action" value="wpfb_import">';
+            echo '<p><label>' . esc_html__(
+                'Id',
+                'wpfasty-builder',
+            ) . ' <input name="id" pattern="[a-z][a-z0-9_-]*" required></label> ';
+            echo '<label>' . esc_html__(
+                'URL',
+                'wpfasty-builder',
+            ) . ' <input name="url" type="url" size="60" required></label> ';
+            submit_button(__('Import', 'wpfasty-builder'), 'primary', 'submit', false);
+            echo '</p></form>';
+        }
+        echo '</div>';
     }
 
     public static function handleImport(): void
     {
-        if (!current_user_can('manage_options')) {
+        if (!Sources::canImport()) {
             wp_die(
                 esc_html__('Sorry, you are not allowed to manage builder sources.', 'wpfasty-builder'),
                 '',

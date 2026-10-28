@@ -143,7 +143,18 @@ final class Sources
     }
 
     /**
-     * Adds or refreshes a remote source (administrators only; the caller checks the capability and nonce).
+     * Who may import a remote source: an administrator who may also post unfiltered HTML. A source is templates —
+     * markup and script of its own author, printed on every page that uses its blocks — so on a multisite (site
+     * administrators have no unfiltered_html) or with a role that lost it, importing one would publish markup the
+     * user could not post in the editor.
+     */
+    public static function canImport(): bool
+    {
+        return current_user_can('manage_options') && current_user_can('unfiltered_html');
+    }
+
+    /**
+     * Adds or refreshes a remote source (canImport(); the caller checks the capability and nonce).
      *
      * @return array{blocks: int, collections: int, runtime: string, version: string}
      */
