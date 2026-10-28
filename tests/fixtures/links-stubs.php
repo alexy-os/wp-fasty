@@ -7,7 +7,7 @@ declare(strict_types=1);
 if (!function_exists('get_page_by_path')) {
     function get_page_by_path(string $path): ?object
     {
-        return null;
+        return $GLOBALS['wp_test_pages'][$path] ?? null; // WP_Post by path (tests/SecurityXssTest.php)
     }
 }
 if (!function_exists('get_category_by_slug')) {

@@ -19,6 +19,7 @@ if (!class_exists('WP_Post')) {
         public string $post_excerpt = '';
         public string $post_name = '';
         public string $post_status = 'publish';
+        public string $post_password = '';
         public string $post_type = 'post';
         public string $post_mime_type = '';
         public int $post_parent = 0;

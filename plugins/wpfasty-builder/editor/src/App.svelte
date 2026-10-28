@@ -623,7 +623,10 @@
       {#if frameSrc}
         <div class="wpfb-frame-wrap" class:is-mobile={device === "mobile"}>
           {#key reloadKey}
-            <iframe bind:this={frame} src={frameSrc} title="Page preview" onload={framed}></iframe>
+            <!-- sandbox without allow-scripts: no script of the preview page (nor an injected handler) runs in the
+                 editor's origin; allow-same-origin keeps contentDocument for the overlay, selection and render-block
+                 swaps (the editor's own listeners run in the editor). tests/security.test.ts -->
+            <iframe bind:this={frame} src={frameSrc} title="Page preview" sandbox="allow-same-origin" onload={framed}></iframe>
           {/key}
           <Overlay hover={hoverBox} selected={selBox} drop={dropY} label={current ? `${titleOf(current)} · ${human(current.variant)}` : ""}
             first={currentIndex <= 0} last={currentIndex === store.items.length - 1}

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-28T19:02:03+00:00\n"
+"POT-Creation-Date: 2026-10-28T19:12:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wpfasty-builder\n"
@@ -29,95 +29,95 @@ msgstr ""
 msgid "alexy-os"
 msgstr ""
 
-#: src/Admin.php:42
-#: src/Admin.php:43
-#: src/Admin.php:262
+#: src/Admin.php:45
+#: src/Admin.php:46
+#: src/Admin.php:265
 msgid "Builder"
 msgstr ""
 
-#: src/Admin.php:49
-#: src/Admin.php:50
-#: src/Admin.php:308
+#: src/Admin.php:52
+#: src/Admin.php:53
+#: src/Admin.php:311
 msgid "Builder sources"
 msgstr ""
 
-#: src/Admin.php:79
+#: src/Admin.php:82
 msgid "Edit with Builder"
 msgstr ""
 
-#: src/Admin.php:123
+#: src/Admin.php:126
 msgid "Add New with Builder"
 msgstr ""
 
-#: src/Admin.php:226
+#: src/Admin.php:229
 msgid "Dark mode"
 msgstr ""
 
-#: src/Admin.php:244
+#: src/Admin.php:247
 msgid "Sorry, you are not allowed to use the builder."
 msgstr ""
 
-#: src/Admin.php:248
+#: src/Admin.php:251
 msgid "Loading the builder…"
 msgstr ""
 
-#: src/Admin.php:253
+#: src/Admin.php:256
 msgid "The editor build is missing: run the editor build (plugins/wpfasty-builder/editor)."
 msgstr ""
 
-#: src/Admin.php:266
+#: src/Admin.php:269
 msgid "Choose a page to build. Pages with a published layout render it on the front end."
 msgstr ""
 
-#: src/Admin.php:274
+#: src/Admin.php:277
 msgid "built"
 msgstr ""
 
-#: src/Admin.php:289
+#: src/Admin.php:292
 msgid "New page"
 msgstr ""
 
-#: src/Admin.php:306
-#: src/Admin.php:360
+#: src/Admin.php:309
+#: src/Admin.php:366
 msgid "Sorry, you are not allowed to manage builder sources."
 msgstr ""
 
-#: src/Admin.php:313
+#: src/Admin.php:316
 msgid "Source"
 msgstr ""
 
-#: src/Admin.php:314
+#: src/Admin.php:317
 msgid "Collections"
 msgstr ""
 
-#: src/Admin.php:331
+#: src/Admin.php:335
 msgid "Import a remote source"
 msgstr ""
 
 #. translators: %1$s: site engine (latte or twig)
-#: src/Admin.php:335
+#: src/Admin.php:339
 #, php-format
 msgid "The URL must be a %1$s block registry (catalog.json + blocks.zip), e.g. https://registry.buildy.tw/%1$s/wpfasty/v1.0.0/."
 msgstr ""
 
-#: src/Admin.php:339
+#: src/Admin.php:343
 msgid "Remote templates compile through an allowlist of tags and functions."
 msgstr ""
 
-#: src/Admin.php:344
+#: src/Admin.php:348
 msgid "Id"
 msgstr ""
 
-#: src/Admin.php:348
+#: src/Admin.php:352
 msgid "URL"
 msgstr ""
 
-#: src/Admin.php:352
+#: src/Admin.php:356
 msgid "Import"
 msgstr ""
 
 #. translators: 1: number of blocks, 2: number of collections
-#: src/Admin.php:372
+#: src/Admin.php:378
 #, php-format
 msgid "Imported %1$d blocks and %2$d collections."
 msgstr ""
@@ -174,56 +174,56 @@ msgstr ""
 msgid "Closed now"
 msgstr ""
 
-#: src/Links.php:380
+#: src/Links.php:383
 msgid "Home"
 msgstr ""
 
-#: src/Links.php:383
+#: src/Links.php:386
 msgid "Posts"
 msgstr ""
 
-#: src/Links.php:439
+#: src/Links.php:442
 msgid "Call"
 msgstr ""
 
-#: src/Links.php:439
-#: src/Links.php:452
+#: src/Links.php:442
+#: src/Links.php:455
 msgid "Email"
 msgstr ""
 
-#: src/Links.php:440
+#: src/Links.php:443
 msgid "WhatsApp"
 msgstr ""
 
-#: src/Links.php:440
+#: src/Links.php:443
 msgid "Telegram"
 msgstr ""
 
-#: src/Links.php:441
+#: src/Links.php:444
 msgid "Map"
 msgstr ""
 
-#: src/Links.php:451
+#: src/Links.php:454
 msgid "Site name"
 msgstr ""
 
-#: src/Links.php:451
+#: src/Links.php:454
 msgid "Phone"
 msgstr ""
 
-#: src/Links.php:452
+#: src/Links.php:455
 msgid "Address"
 msgstr ""
 
-#: src/Links.php:453
+#: src/Links.php:456
 msgid "Opening hours"
 msgstr ""
 
-#: src/Links.php:459
+#: src/Links.php:462
 msgid "Year"
 msgstr ""
 
-#: src/Links.php:460
+#: src/Links.php:463
 msgid "Today"
 msgstr ""
 
@@ -231,7 +231,7 @@ msgstr ""
 msgid "Pages of posts"
 msgstr ""
 
-#. translators: summary line of a pager: {0} is the current page, {1} the number of pages (keep the braces).
+#. translators: pager summary line: {0} the current page, {1} the number of pages (keep the braces).
 #: src/Pager.php:85
 msgid "Page {0} of {1}"
 msgstr ""
@@ -257,25 +257,29 @@ msgstr ""
 msgid "This starter set is not available on this site."
 msgstr ""
 
-#: src/Records.php:265
+#: src/Records.php:270
 msgid "In stock"
 msgstr ""
 
-#: src/Records.php:265
+#: src/Records.php:270
 msgid "Out of stock"
 msgstr ""
 
-#: src/Rest.php:93
-#: src/Rest.php:159
+#: src/Rest.php:96
+#: src/Rest.php:185
 #: src/Store.php:102
 msgid "Unknown source."
 msgstr ""
 
-#: src/Rest.php:134
+#: src/Rest.php:137
 msgid "You cannot publish pages."
 msgstr ""
 
-#: src/Rest.php:185
+#: src/Rest.php:170
+msgid "The request is too large."
+msgstr ""
+
+#: src/Rest.php:211
 msgid "Unknown block or variant."
 msgstr ""
 
@@ -305,15 +309,15 @@ msgstr ""
 msgid "WP FastY Builder: blocks missing from the %1$s sources render nothing: %2$s"
 msgstr ""
 
-#: src/Sources.php:154
+#: src/Sources.php:165
 msgid "The active theme has no WP FastY renderer."
 msgstr ""
 
-#: src/Sources.php:157
+#: src/Sources.php:168
 msgid "The source id must be a short lowercase name other than ui8kit."
 msgstr ""
 
-#: src/Sources.php:164
+#: src/Sources.php:175
 msgid "The source URL is not a valid public http(s) URL."
 msgstr ""
 

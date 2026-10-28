@@ -3,7 +3,7 @@
 **Purpose:** Single handoff document for agents (including Cursor browser).  
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
-**Last updated:** 2026-10-28 (builder block richtext + prose recipe from codegen-x 485a53b6)
+**Last updated:** 2026-10-28 (XSS / template-injection audit: adapter sanitizing, REST permissions, CI job `security`)
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
 **Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
@@ -124,6 +124,7 @@ dist/latte.zip               release artifact (gitignored)
 - Design tokens only: `bun run lint:design` must pass (8px grid, no half-steps, no arbitrary px, token colors)
 - Post lists must stay N+1-free (`tools/perf/queries.php` guard)
 - Never write gist ids, tokens or other secrets into `.project/` docs
+- Every `|noescape` / `|raw` / Twig `is_safe` is reviewed in `tools/security/raw-sinks.json` (CI gate); builder props are made safe in the adapter (`Safe`, `Layout::clean`), never by hand-editing generated templates
 
 ---
 
@@ -143,6 +144,7 @@ dist/latte.zip               release artifact (gitignored)
 | 8 | `wpfasty-builder` in CI: svelte-check + Vite IIFE build with committed-asset check, PHPUnit (compiler, `Links`), PHPCS, Seeder landings on the CI site (HTTP 200, no PHP notices), layouts validated per site with `@ui8kit/contract` | [x] 2026-10-19 |
 | 9 | N+1 guard on realistic data: `tools/perf/seed.php` (thumbnails, terms, typed meta, 3 authors) for post / project / product, 2 vs 6 items, also measured without widgets; numbers in the CI run summary | [x] 2026-10-19 (no N+1 found) |
 | 10 | CI fails on any PHP notice / warning / deprecation logged by the WordPress job (`WP_DEBUG_LOG`) | [x] 2026-10-19 |
+| 11 | XSS / template-injection audit (report: ui8kit3 `audit/security-xss.md`): page title could close the compiled template's comment and run Latte/Twig code (fixed in `Compiler`), props sanitized in the adapter for both engines (`Safe`: URL schemes through obfuscation, control characters; `Layout::clean`: sample types, depth), `{__html}` of meta through `wp_kses_post`, `{page:}`/records published only, password-protected posts closed in the theme, REST body limit, remote source import needs `unfiltered_html`, editor preview iframe sandboxed. CI job `security`: `tools/security/xss-fuzz.php` (480 variants × 57 payloads, render-block + raw + page, Latte = Twig, 4 shards), raw-output gate `tools/security/raw-sinks.php` (+ `raw-sinks.json`), `sandbox-check.sh` (headless Chrome); PHPUnit `SecurityXssTest`, `RestSecurityTest`; PHPCS `WordPress.Security` in full | [x] 2026-10-28 |
 
 **saas-design rules to port (item 7):**
 

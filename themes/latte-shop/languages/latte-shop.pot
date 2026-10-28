@@ -216,11 +216,11 @@ msgstr ""
 msgid "Sorry, this product is unavailable."
 msgstr ""
 
-#: inc/handlers.php:49
+#: inc/handlers.php:51
 msgid "Unknown cart action."
 msgstr ""
 
-#: inc/handlers.php:120
+#: inc/handlers.php:125
 msgid "Your session expired. Please go back and try again."
 msgstr ""
 

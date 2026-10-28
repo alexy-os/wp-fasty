@@ -28,6 +28,8 @@ final class Cart
         if (self::$lines !== null) {
             return self::$lines;
         }
+        // the cookie is validated, not sanitized: decode() accepts it only with a valid HMAC and keeps integer ids/qtys
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         self::$lines = self::decode(isset($_COOKIE[self::COOKIE]) ? (string) wp_unslash($_COOKIE[self::COOKIE]) : '');
         return self::$lines;
     }

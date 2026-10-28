@@ -225,6 +225,65 @@ jobs:
             !dist/generated
           retention-days: 7
 
+  security:
+    name: security (XSS fuzz ${{ matrix.shard }}/4)
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    # Every builder variant (480) × every XSS / template-injection payload (tools/security/payloads.php) through
+    # POST /render-block (Fragment), the raw template and a compiled page — Latte and Twig, DOM-checked: no <script>,
+    # no on* attribute, no dangerous URL scheme, no executed template code, Latte = Twig (tools/security/xss-fuzz.php).
+    # Shard 1 also runs the raw-output gate (every |noescape / |raw / is_safe reviewed: tools/security/raw-sinks.json)
+    # and the editor preview sandbox check in headless Chrome.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer
+          coverage: none
+
+      - name: Cache composer downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Composer install (root + theme)
+        run: |
+          composer install --no-interaction --no-progress --prefer-dist
+          composer install --no-interaction --no-progress --prefer-dist --working-dir=themes/latte
+
+      - name: Raw-output gate — every |noescape / |raw / is_safe html reviewed (tools/security/raw-sinks.json)
+        if: matrix.shard == 1
+        run: php tools/security/raw-sinks.php
+
+      - name: Editor preview sandbox — preview scripts and handlers never run in the admin origin (headless Chrome)
+        if: matrix.shard == 1
+        run: bash tools/security/sandbox-check.sh
+
+      - name: XSS fuzz — render-block, raw template, compiled page; Latte and Twig
+        run: |
+          set -o pipefail
+          php -d memory_limit=1G tools/security/xss-fuzz.php --shard ${{ matrix.shard }}/4 --json "$RUNNER_TEMP/fuzz.json" | tee "$RUNNER_TEMP/fuzz.txt"
+          { echo "### XSS fuzz ${{ matrix.shard }}/4"; tail -1 "$RUNNER_TEMP/fuzz.txt"; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fuzz findings
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xss-fuzz-${{ matrix.shard }}
+          path: ${{ runner.temp }}/fuzz.json
+          if-no-files-found: ignore
+
   wordpress:
     name: wordpress (PHP ${{ matrix.php }})
     strategy:

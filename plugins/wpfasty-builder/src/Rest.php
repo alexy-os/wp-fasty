@@ -21,7 +21,8 @@ use WP_REST_Response;
  *                                                    starter?} → 201 {id, slug, url, blocks} (Pages::create; a starter
  *                                                    is only blocks, put into the Builder draft; the page template is
  *                                                    not touched)
- *   POST /sources                       manage_options  import a remote source {id, url}
+ *   POST /sources                       manage_options + unfiltered_html  import a remote source {id, url}
+ *                                                    (Sources::canImport: a source is templates, i.e. markup)
  *   POST /render-block                  edit_pages (edit_page with `page`)  one block's HTML for the live preview:
  *        {source?, page?, id?, block, variant, props?, bindings?} → {id, html, issues}; same sanitizing, props and
  *        bound data as the page template (Fragment), rendered by the site engine's BlockRenderer
@@ -29,6 +30,8 @@ use WP_REST_Response;
 final class Rest
 {
     public const NS = 'wpfasty-builder/v1';
+    /** largest accepted JSON body of POST /layout and /render-block, bytes */
+    public const MAX_BODY = 1048576;
 
     public static function register(): void
     {
@@ -62,10 +65,10 @@ final class Rest
         register_rest_route(self::NS, '/render-block', [
             'methods' => 'POST',
             'callback' => [self::class, 'renderBlock'],
-            'permission_callback' => static function (WP_REST_Request $r): bool {
-                $page = (int) $r->get_param('page');
-                return $page > 0 ? current_user_can('edit_page', $page) : current_user_can('edit_pages');
-            },
+            // the `page` the permission is checked for is the page whose record renders (renderBlock: same read)
+            'permission_callback' => static fn (WP_REST_Request $r): bool => self::page($r) > 0
+                ? current_user_can('edit_page', self::page($r))
+                : current_user_can('edit_pages'),
         ]);
         register_rest_route(self::NS, '/pages', [
             'methods' => 'POST',
@@ -82,7 +85,7 @@ final class Rest
         register_rest_route(self::NS, '/sources', [
             'methods' => 'POST',
             'callback' => [self::class, 'importSource'],
-            'permission_callback' => static fn (): bool => current_user_can('manage_options'),
+            'permission_callback' => [Sources::class, 'canImport'],
         ]);
     }
 
@@ -135,6 +138,9 @@ final class Rest
                 ['status' => 403],
             );
         }
+        if (($e = self::tooLarge($r)) !== null) {
+            return $e;
+        }
         $body = $r->get_json_params();
         $result = Store::save($id, is_array($body['layout'] ?? null) ? $body['layout'] : [], $publish);
         if ($result instanceof WP_Error) {
@@ -149,8 +155,28 @@ final class Rest
         ]);
     }
 
+    /** the `page` parameter of a request (JSON body first, as WP_REST_Request::get_param), 0 without one */
+    public static function page(WP_REST_Request $r): int
+    {
+        $page = $r->get_param('page');
+        return is_numeric($page) ? max(0, (int) $page) : 0;
+    }
+
+    /** a request body over MAX_BODY bytes (a layout of 40 blocks is far below): 413 */
+    private static function tooLarge(WP_REST_Request $r): ?WP_Error
+    {
+        return strlen((string) $r->get_body()) > self::MAX_BODY ? new WP_Error(
+            'wpfb_too_large',
+            __('The request is too large.', 'wpfasty-builder'),
+            ['status' => 413],
+        ) : null;
+    }
+
     public static function renderBlock(WP_REST_Request $r): WP_REST_Response|WP_Error
     {
+        if (($e = self::tooLarge($r)) !== null) {
+            return $e;
+        }
         $body = $r->get_json_params();
         $body = is_array($body) ? $body : [];
         $source = sanitize_key((string) ($body['source'] ?? 'ui8kit'));
@@ -167,7 +193,7 @@ final class Rest
         ];
         Links::prime($input['props']);
         // the current record (richtext): the page being edited (edit_page checked by the route), as on its front end
-        $page = (int) ($body['page'] ?? $r->get_param('page'));
+        $page = self::page($r);
         $post = $page > 0 ? get_post($page) : null;
         $out = Fragment::render(
             $catalog,

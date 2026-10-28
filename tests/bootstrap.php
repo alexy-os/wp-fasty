@@ -66,7 +66,8 @@ if (!function_exists('wp_json_encode')) {
 if (!function_exists('wp_kses_post')) {
     function wp_kses_post(string $html): string
     {
-        return $html;
+        // identity, unless a test installs a filter (tests/SecurityXssTest.php)
+        return isset($GLOBALS['wp_test_kses']) ? (string) ($GLOBALS['wp_test_kses'])($html) : $html;
     }
 }
 

@@ -26,6 +26,8 @@ use WPFastyTypes\Codex\Site;
 final class DataSources
 {
     public const MAX = 24;
+    /** the readPath of the current record's body: the_content (DataSources::content), the only unfiltered markup */
+    public const CONTENT = 'content|html';
     private const TYPES = ['string' => 'string', 'number' => 'number', 'boolean' => 'boolean'];
 
     /** @var array<string, array<string, mixed>>|null */
@@ -217,7 +219,7 @@ final class DataSources
         $e = $mapper->entry($post, (string) $m['kind']);
         $e['content'] = self::content($post);
         $plan = self::plan($slot, $m);
-        $memo[$key] = self::record(self::project($e, $m), $plan, self::opts($plan, [$e], $mapper, $site), $m);
+        $memo[$key] = self::record(self::project($e, $m), $plan, self::opts($plan, [$e], $mapper, $site), $m, true);
         return $memo[$key];
     }
 
@@ -273,10 +275,15 @@ final class DataSources
      * @param array<string, mixed> $m
      * @return array<string, mixed>
      */
-    private static function record(array $e, array $plan, array $opts, array $m): array
+    private static function record(array $e, array $plan, array $opts, array $m, bool $current = false): array
     {
         $rec = [];
         foreach ($plan as $name => [$path, $default, $type]) {
+            if ($type === 'TrustedHtml') {
+                $v = $path !== null ? ReadPath::read($e, $path, $opts) : null;
+                $rec[$name] = self::trusted($v, $current && $path === self::CONTENT);
+                continue;
+            }
             if ($path === 'slug|route') {
                 $wp = Mapper::wpId((string) $m['kind'], (string) $e['id']);
                 $link = $m['term'] ? get_term_link($wp, (string) $m['taxonomy']) : get_permalink($wp);
@@ -289,6 +296,31 @@ final class DataSources
         return $rec;
     }
 
+    /**
+     * A TrustedHtml value as the templates may print it unescaped (og_html): only the {"__html": string} marker of the
+     * `|html` pipe. The body of the current record (`content|html` = the_content after its filters: post_content was
+     * filtered by kses on save for users without unfiltered_html, like the theme's single view) passes as it is;
+     * any other markup (a meta or settings field read with `|html`, e.g. metadata.aside.value, never filtered on save)
+     * goes through wp_kses_post — the same tags an author may post. Anything else is null.
+     *
+     * @return array{__html: string}|null
+     */
+    public static function trusted(mixed $v, bool $theContent): ?array
+    {
+        if (!is_array($v) || !is_string($v['__html'] ?? null)) {
+            return null;
+        }
+        return ['__html' => $theContent ? $v['__html'] : self::kses($v['__html'])];
+    }
+
+    /** wp_kses_post; without WordPress (offline tools) the text, escaped */
+    private static function kses(string $html): string
+    {
+        return function_exists('wp_kses_post')
+            ? (string) wp_kses_post($html)
+            : htmlspecialchars($html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    }
+
     /** A value in the record's type; absent → the type's empty value (templates read every declared field). */
     private static function cast(mixed $v, string $type): mixed
     {
@@ -298,8 +330,9 @@ final class DataSources
             'string' => is_scalar($v) && !is_bool($v) ? (string) $v : '',
             'string[]' => is_array($v) ? array_values(array_map('strval', $v)) : [],
             // trusted markup: only the {"__html": string} marker of the `|html` pipe; anything else is not markup
-            'TrustedHtml' => is_array($v) && is_string($v['__html'] ?? null) ? ['__html' => $v['__html']] : null,
-            default => $v,
+            'TrustedHtml' => self::trusted($v, false),
+            // a type that is not TrustedHtml never carries the marker (a manual mapping `…|html` stays text)
+            default => is_array($v) ? Layout::untrust(['v' => $v])['v'] : $v,
         };
     }
 
@@ -365,6 +398,9 @@ final class DataSources
         $args = [
             'post_type' => (string) $m['post_type'],
             'post_status' => 'publish',
+            // as the Codex REST (wpfasty-types): a password-protected post is not listed (its body, excerpt and
+            // fields are behind the password)
+            'has_password' => false,
             'posts_per_page' => $limit,
             'ignore_sticky_posts' => true,
             'no_found_rows' => true,

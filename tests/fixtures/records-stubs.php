@@ -39,7 +39,9 @@ if (!function_exists('get_posts')) {
         return array_values(array_filter(
             $GLOBALS['wpfb_records']['posts'],
             static fn ($p): bool => $p->post_type === ($args['post_type'] ?? 'post')
-                && (!isset($args['post_name__in']) || in_array($p->post_name, $args['post_name__in'], true)),
+                && (!isset($args['post_name__in']) || in_array($p->post_name, $args['post_name__in'], true))
+                // the status filter of WP_Query (default publish; "any" = every status but trash)
+                && (($args['post_status'] ?? 'publish') === 'any' || $p->post_status === ($args['post_status'] ?? 'publish')),
         ));
     }
 }

@@ -28,7 +28,7 @@ final class Handlers
         self::verify('latte_shop_cart');
         $op = isset($_POST['op']) ? sanitize_key(wp_unslash($_POST['op'])) : '';
         $id = isset($_POST['product_id']) ? absint(wp_unslash($_POST['product_id'])) : 0;
-        $qty = isset($_POST['qty']) ? (int) wp_unslash($_POST['qty']) : 1;
+        $qty = isset($_POST['qty']) ? intval(wp_unslash($_POST['qty'])) : 1;
         $notice = 'updated';
 
         switch ($op) {
@@ -36,7 +36,9 @@ final class Handlers
                 $notice = Cart::add($id, max(1, min(Cart::MAX_QTY, $qty))) ? 'added' : 'unavailable';
                 break;
             case 'update':
-                $qtys = isset($_POST['qtys']) && is_array($_POST['qtys']) ? wp_unslash($_POST['qtys']) : [];
+                $qtys = isset($_POST['qtys']) && is_array($_POST['qtys'])
+                    ? array_map('intval', wp_unslash($_POST['qtys']))
+                    : [];
                 foreach ($qtys as $pid => $q) {
                     Cart::set(absint($pid), max(0, min(Cart::MAX_QTY, (int) $q)));
                 }
@@ -71,6 +73,8 @@ final class Handlers
         $fields = ['name', 'email', 'phone', 'address', 'city', 'postcode', 'country', 'notes', 'payment'];
         $c = [];
         foreach ($fields as $f) {
+            // sanitized per field just below (sanitize_email / _textarea_field / _key / _text_field)
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             $raw = isset($_POST[$f]) ? (string) wp_unslash($_POST[$f]) : '';
             $c[$f] = match ($f) {
                 'email' => sanitize_email($raw),
@@ -115,7 +119,8 @@ final class Handlers
     private static function verify(string $action): void
     {
         $nonce = isset($_POST['_wpnonce']) ? sanitize_text_field(wp_unslash($_POST['_wpnonce'])) : '';
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !wp_verify_nonce($nonce, $action)) {
+        $method = isset($_SERVER['REQUEST_METHOD']) ? sanitize_key(wp_unslash($_SERVER['REQUEST_METHOD'])) : '';
+        if ($method !== 'post' || !wp_verify_nonce($nonce, $action)) {
             wp_die(
                 esc_html__('Your session expired. Please go back and try again.', 'latte-shop'),
                 '',
