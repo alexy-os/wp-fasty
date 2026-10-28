@@ -36,6 +36,7 @@
     "manifest:validate": "bun tools/manifest/validate.ts",
     "registry:build": "bun tools/builder/registry-build.ts",
     "builder:previews": "bun tools/builder/previews.ts",
+    "builder:page-previews": "bun tools/builder/page-previews.ts",
     "registry:verify": "bun tools/builder/registry-verify.ts",
     "theme:generate": "bun .workspaces/theme-builder/src/cli.ts generate",
     "theme:roundtrip": "bun .workspaces/theme-builder/src/cli.ts roundtrip",

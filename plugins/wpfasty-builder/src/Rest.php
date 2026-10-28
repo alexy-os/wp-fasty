@@ -94,6 +94,7 @@ final class Rest
         $col = (string) $r['collection'];
         $editor = $catalog->forEditor($col !== '' && $catalog->collection($col) !== null ? $col : null);
         $editor['blocks'] = Previews::attach($editor['blocks'], Sources::get((string) $r['source']));
+        $editor['collection'] = Previews::attachPages($editor['collection'], Sources::get((string) $r['source']));
         return new WP_REST_Response([
             'source' => (string) $r['source'],
             'sources' => array_map(

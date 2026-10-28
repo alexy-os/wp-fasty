@@ -14,6 +14,8 @@ use WPFastyBuilder\Source\LocalSource;
 /**
  * Block preview cards (sources/ui8kit/previews, tools/builder/previews.ts): every variant of the bundled catalog gets
  * the URLs of its light and dark WebP in the editor catalog (no dark shot: light only); a source outside the plugin (an imported registry) gets none.
+ * Template page shots (sources/ui8kit/page-previews, tools/builder/page-previews.ts): every page of every template
+ * collection gets its tall light and dark WebP with the file size; a block collection and other sources get none.
  */
 #[RunTestsInSeparateProcesses]
 final class PreviewsTest extends TestCase
@@ -94,5 +96,35 @@ final class PreviewsTest extends TestCase
         $this->assertSame($blocks, Previews::attach($blocks, $src));
         $this->assertSame($blocks, Previews::attach($blocks, null));
         $this->assertNull(Previews::dirOf($src));
+    }
+
+    public function testEveryTemplatePageGetsItsTallPreview(): void
+    {
+        $base = 'http://example.test/wp-content/plugins/wpfasty-builder/sources/ui8kit/page-previews/';
+        foreach (['latte', 'twig'] as $runtime) {
+            $src = new LocalSource('ui8kit', $this->plugin . '/sources/ui8kit/' . $runtime, $runtime);
+            $catalog = new Catalog($src->catalog());
+            $n = 0;
+            foreach ($src->catalog()['collections'] as $c) {
+                $col = Previews::attachPages($catalog->forEditor($c['id'])['collection'], $src);
+                foreach ((array) ($col['pages'] ?? []) as $p) {
+                    $key = $c['id'] . '/' . $p['id'];
+                    $preview = $p['preview'] ?? [];
+                    $this->assertSame($base . $key . '.webp', $preview['src'] ?? null, $key);
+                    $this->assertSame($base . $key . '.dark.webp', $preview['dark'] ?? null, $key);
+                    $this->assertSame(640, $preview['width'], $key);
+                    $this->assertGreaterThan(0, $preview['height'], $key);
+                    $this->assertLessThanOrEqual(2400, $preview['height'], $key);
+                    $this->assertFileExists($this->plugin . '/sources/ui8kit/page-previews/' . $key . '.dark.webp');
+                    $n++;
+                }
+            }
+            $this->assertSame(62, $n, $runtime);
+        }
+        $src = new LocalSource('ui8kit', $this->plugin . '/sources/ui8kit/latte', 'latte');
+        $this->assertNull(Previews::attachPages(null, $src));
+        $plain = ['id' => 'hero', 'label' => 'Hero', 'blocks' => ['hero']];
+        $this->assertSame($plain, Previews::attachPages($plain, $src));
+        $this->assertSame(['id' => 'x', 'pages' => [['id' => 'y']]], Previews::attachPages(['id' => 'x', 'pages' => [['id' => 'y']]], null));
     }
 }

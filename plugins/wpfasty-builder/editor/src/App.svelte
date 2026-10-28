@@ -8,6 +8,7 @@
   import Splitter from "./Splitter.svelte";
   import BlockCards from "./BlockCards.svelte";
   import NewPage from "./NewPage.svelte";
+  import TemplatePages from "./TemplatePages.svelte";
   import { MIME, type Card } from "./cards";
   import { PanelLayout } from "./layout.svelte";
   import { isTyping, shortcutOf } from "./layout";
@@ -17,7 +18,7 @@
     PanelRightOpen, Redo2, RotateCcw, Smartphone, Trash2, Undo2,
   } from "./icons";
   import { api } from "./api";
-  import type { Binding, Box, Catalog, Config, Item, Json, Obj, RecordField } from "./types";
+  import type { Binding, Box, Catalog, Config, Item, Json, Obj, RecordField, TemplatePage } from "./types";
   import { clone, getPath, human, isObj, kindOf, merge, newId, setPath } from "./util";
   import { defaultSource } from "./sources";
   import { LinkStore, setLinks } from "./links.svelte";
@@ -316,7 +317,7 @@
     }
   }
 
-  function usePage(page: NonNullable<Catalog["collection"]>["pages"] extends (infer P)[] | undefined ? P : never) {
+  function usePage(page: TemplatePage) {
     if (store.items.length && !confirm("Replace the blocks of this page with the template page?")) return;
     const next: Item[] = [];
     for (const b of page.blocks) next.push({ ...makeItem(b.block, b.variant, next), props: clone(b.props) });
@@ -588,11 +589,7 @@
       {#if catalog?.collection?.pages?.length}
         <div class="wpfb-section">
           <h2 class="wpfb-heading">Template pages</h2>
-          <div class="wpfb-chips">
-            {#each catalog.collection.pages as page (page.id)}
-              <button type="button" class="wpfb-chip" title={human(page.id)} onclick={() => usePage(page)}>{human(page.id)}</button>
-            {/each}
-          </div>
+          <TemplatePages pages={catalog.collection.pages} collection={catalog.collection.label} dark={theme.dark} onuse={usePage} />
         </div>
       {/if}
       <div class="wpfb-section is-cards">

@@ -13,6 +13,12 @@ use WPFastyBuilder\Source\LocalSource;
  * editor catalog its `preview`: the light URL (`src`), the dark one (`dark`, when shot; the editor falls back to `src`)
  * and the card size; a source without previews (an imported registry) is returned as is and the editor shows a
  * placeholder card.
+ *
+ * Template pages (collections of type template) have a tall page shot each:
+ * sources/ui8kit/page-previews/<collection>/<page>.webp and .dark.webp, listed by page-previews/manifest.json
+ * (tools/builder/page-previews.ts). attachPages() gives every page of the editor's collection its `preview`
+ * {src, dark?, width, height} (file pixels: 640 wide, half the 1280 px desktop shot), shown in the
+ * side panel the editor opens on hover / focus of a template page button.
  */
 final class Previews
 {
@@ -52,24 +58,52 @@ final class Previews
         return $blocks;
     }
 
-    /** the previews folder of a source bundled with the plugin (sources/<id>/previews), or null */
-    public static function dirOf(?object $source): ?string
+    /**
+     * @param array<string, mixed>|null $collection forEditor() collection
+     * @return array<string, mixed>|null
+     */
+    public static function attachPages(?array $collection, ?object $source): ?array
+    {
+        $dir = self::dirOf($source, 'page-previews');
+        $m = $dir !== null && $collection !== null ? self::manifest($dir, 'pages') : null;
+        if ($m === null || !is_array($collection['pages'] ?? null)) {
+            return $collection;
+        }
+        $base = plugins_url(substr($dir, strlen(Plugin::$dir) + 1), Plugin::$file) . '/';
+        foreach ($collection['pages'] as $i => $p) {
+            $e = $m[(string) ($collection['id'] ?? '') . '/' . (string) ($p['id'] ?? '')] ?? null;
+            if (!is_array($e) || !is_string($e['file'] ?? null) || $e['file'] === '') {
+                continue;
+            }
+            $preview = ['src' => $base . $e['file']];
+            if (is_string($e['dark']['file'] ?? null) && $e['dark']['file'] !== '') {
+                $preview['dark'] = $base . $e['dark']['file'];
+            }
+            $collection['pages'][$i]['preview'] = $preview + [
+                'width' => (int) ($e['width'] ?? 0), 'height' => (int) ($e['height'] ?? 0),
+            ];
+        }
+        return $collection;
+    }
+
+    /** a folder of a source bundled with the plugin (sources/<id>/previews or …/page-previews) with a manifest, or null */
+    public static function dirOf(?object $source, string $name = 'previews'): ?string
     {
         if (!$source instanceof LocalSource || Plugin::$dir === '') {
             return null;
         }
-        $dir = dirname(rtrim($source->templateRoot(), '/')) . '/previews';
+        $dir = dirname(rtrim($source->templateRoot(), '/')) . '/' . $name;
         $root = rtrim(Plugin::$dir, '/') . '/';
         return str_starts_with($dir, $root) && is_file($dir . '/manifest.json') ? $dir : null;
     }
 
-    /** @return array<string, mixed>|null "<block>/<variant>" => {file, bytes, …, dark: {file, bytes, …}} */
-    private static function manifest(string $dir): ?array
+    /** @return array<string, mixed>|null "<block>/<variant>" (or "<collection>/<page>") => {file, bytes, …, dark: {…}} */
+    private static function manifest(string $dir, string $key = 'variants'): ?array
     {
         if (!array_key_exists($dir, self::$manifests)) {
             $raw = file_get_contents($dir . '/manifest.json');
             $json = is_string($raw) ? json_decode($raw, true) : null;
-            self::$manifests[$dir] = is_array($json) && is_array($json['variants'] ?? null) ? $json['variants'] : null;
+            self::$manifests[$dir] = is_array($json) && is_array($json[$key] ?? null) ? $json[$key] : null;
         }
         return self::$manifests[$dir];
     }

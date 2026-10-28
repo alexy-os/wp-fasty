@@ -28,7 +28,9 @@ export interface BlockSpec {
   id: string; title: string; docs: string; group: string; axes: Record<string, string[]>; defaults: Obj;
   props: PropSpec[]; data: { as: string; kind: string; record: string; fields: Record<string, string> }[]; variants: Variant[];
 }
-export interface Collection { id: string; label: string; type: string; docs?: string; blocks: string[]; pages?: { id: string; blocks: { block: string; variant: string; props: Obj }[] }[] }
+export interface Collection { id: string; label: string; type: string; docs?: string; blocks: string[]; pages?: TemplatePage[] }
+/** a page of a template collection; `preview`: its tall page shot (file pixels, 640 wide), light and dark */
+export interface TemplatePage { id: string; blocks: { block: string; variant: string; props: Obj }[]; preview?: { src: string; dark?: string; width: number; height: number } }
 /** a site data source; `kinds` = data kinds it fills exactly or by an auto rule, `levels` their Compat level */
 export interface DataSource {
   id: string; label: string; kinds: string[]; levels?: Record<string, "exact" | "auto">; type: string; object: string; purchasable?: boolean;

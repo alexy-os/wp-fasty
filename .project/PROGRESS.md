@@ -3,7 +3,7 @@
 **Purpose:** Single handoff document for agents (including Cursor browser).  
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
-**Last updated:** 2026-10-28 (Cycle L9: light + dark palettes in every child theme)
+**Last updated:** 2026-10-28 (Cycle L10: template page previews in the Builder)
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
 **Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
@@ -349,6 +349,7 @@ A Parent correctness ✓
 | L7 | Dark mode: a dark preview per variant (`<block>/<variant>.dark.webp`, class `dark` + shadcn `.dark` tokens, 640×360, quality searched for 6–10 KB; manifest format 2 `dark`, `Previews::attach` → `preview.dark`, CI `--check` 474 × 2); toolbar switch (last `top-secondary` node, Builder screen only, `aria-pressed`, Lucide moon/sun) toggles `.dark` on the editor, the preview page and the cards; localStorage per user | `Admin::darkSwitch`, `editor/src/theme*.ts` | [x] |
 | L8 | New pages from the Builder: "Add New with Builder" on Pages, row action "Edit with Builder", "New page" panel (title, slug, starter: Empty / shop / folio / press landing when available) on the chooser and in the editor bar; `POST /pages` → draft + Builder draft, opens the editor; page template untouched | `Pages`, `Starters`, `NewPage.svelte` | [x] |
 | L9 | Light + dark in every child theme: `.dark` with the `:root` colour keys in latte-shop / folio / press / skin; palettes (`presets/palettes/*.json`) and example manifests carry `dark`; without `brand.dark` the generator derives one (`configure/palette.ts`, hues kept, AA); `bun run tokens:contrast` (CI) checks keys + text pairs ≥ 4.5:1; front stays light | `tokens.css`, `palette.ts`, `tools/qa/token-contrast.ts` | [x] |
+| L10 | Template page preview: hover / focus on a "Template pages" button opens a side panel (right of the left column, under the bar) with the tall page shot, light / dark, scrolls inside; 150 ms show delay, Esc closes; shots by `tools/builder/page-previews.ts` (62 × 2 WebP, 640 px wide, CI `--check`), `Previews::attachPages` | `TemplatePages.svelte`, `peek.ts` | [x] |
 
 ---
 

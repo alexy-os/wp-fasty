@@ -100,6 +100,11 @@ jobs:
           bun tools/builder/previews.ts --check
           echo "Block previews: $(bun tools/builder/previews.ts --check)" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Template page previews — a tall light and dark WebP per template page (62 × 2), 640 px wide, ≤ 40 KB
+        run: |
+          bun tools/builder/page-previews.ts --check
+          echo "Template page previews: $(bun tools/builder/page-previews.ts --check)" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Composer install (theme)
         run: composer install --no-interaction --no-progress --working-dir=themes/latte
 
