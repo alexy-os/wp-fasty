@@ -3,7 +3,7 @@
 **Purpose:** Single handoff document for agents (including Cursor browser).  
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
-**Last updated:** 2026-10-28 (Cycle L10: template page previews in the Builder)
+**Last updated:** 2026-10-28 (macros 2 and 4: record tokens, price and stock; playground zips out of git)
 **Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
 **Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
@@ -362,9 +362,9 @@ A Parent correctness ✓
 **Ядро (wpfasty-builder)**
 - [x] 0. Дропдаун макросов ссылок: иконка в поле-ссылке, 3 колонки, поиск, подсказка о результате (`GET wpfasty-builder/v1/links`, `editor/src/links.ts`, `fields/LinkPicker.svelte`)
 - [x] 1. Данные сайта: `{site:name}`, `{site:phone}`, `{site:email}`, `{site:address}`, `{site:hours}` (`Links::data()`; `name` = SettingsV04 `title`, остальные — блок контактов SettingsV04 `contact.phone|email|address`, `hours` (ui8kit/contract `8a09c8f`): опции wpfasty-types `wpfasty_contact_*`, `wpfasty_hours*`, `wpfasty_map`, страница Settings → Contact & hours (`WPFastyTypes\Contact`, санитайзеры, i18n), Mapper отдаёт их в `/codex/settings`; `{site:hours}` — «Mon–Fri 09:00–18:00; Sat 10:00–16:00»; пустое поле — пустая строка)
-- [ ] 2. Ссылки на записи, товары и термины: `{post:<slug>}`, `{product:<slug>}`, `{term:<tax>:<slug>}` (согласовать с контрактом, XGenBot)
+- [x] 2. Ссылки на записи, товары и термины: `{post:<slug>}`, `{product:<slug>}`, `{term:<tax>:<slug>}` (`WPFastyBuilder\Records`; товары — purchasable-тип, термины — таксономии Codex-манифеста wpfasty-types; все токены страницы грузятся пачкой в `Front::context` / `render-block` (`Links::prime`): один запрос на тип — записи, товары (+ мета), термины всех таксономий; не найдено, нет типа или таксономии — `#`; в пикере колонки Posts, Products, Terms вторым рядом, `GET /links` по-прежнему один на сессию; `{category:}` остаётся в Sections, Terms — остальные таксономии). Вопросы к контракту — в эпике
 - [x] 3. Действия: `{tel}`, `{mailto}`, `{whatsapp}`, `{telegram}`, `{map}` (`Links::contact()`; без исходного значения — `#` и предупреждение в редакторе; источники — `contact.phone`, `contact.email`, `contact.links` (`whatsapp` — номер из links, иначе телефон; `telegram` — handle), `{map}` — пин по `map.lat/lng`, иначе поиск по `contact.address`, провайдер `map.provider` (osm по умолчанию, google, yandex, apple))
-- [ ] 4. Цены и наличие: `{price:<product>}`, `{stock:<product>}` на пайпах `|settings:currency` и `|in-stock` (согласовать с контрактом)
+- [x] 4. Цены и наличие: `{price:<product>}`, `{stock:<product>}` на пайпах `|settings:currency` и `|in-stock` (товар читается как Codex entry: `metadata.<price>.value` в минорных единицах, эффективная цена — sale, если ниже (как `DataSources`); валюта `metadata.currency.value|settings:currency`, формат `Codex\Format::currency`; `metadata.<stock>.value|in-stock` → «In stock» / «Out of stock», пустой остаток = в наличии; нет товара или цены — пустая строка; в пикере текстовых полей колонки Prices и Stock; в href не допускаются (`Layout::safeHref`). N+1: `wp eval-file tools/perf/queries.php macros 2 6` — 8 запросов и на 2, и на 6 блоков × 5 токенов, в CI)
 - [x] 5. Дата и время: `{year}`, `{today}`, `{open-now}` по часам работы (`{year}` и `{today}` — на сервере, `date_format`, таймзона сайта; `{open-now}` — только на клиенте: в HTML пустой `<span data-wpfb-open-now>`, один инлайн-скрипт в футере с `hours`, `hours_exceptions`, `timezone_string` (иначе `gmt_offset`), пересчёт раз в минуту — кеш страницы не ломается; без часов работы ничего не выводится; в пикере редактора `{open-now}` пока нет — editor/src в параллельной задаче)
 - [ ] 6. Формы и якоря: `{form:booking}`, `{anchor:<block>}`, переживают перемещение блока
 - [ ] 7. Медиа: `{logo}`, `{media:<id>}`, переживают импорт и Playground

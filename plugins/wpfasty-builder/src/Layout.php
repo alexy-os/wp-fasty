@@ -332,7 +332,7 @@ final class Layout
     {
         return $h === '' || preg_match('#^(https?://|/|\#|mailto:|tel:)#i', $h) === 1
             || (preg_match(Links::TOKEN, $h, $m, PREG_OFFSET_CAPTURE) === 1 && $m[0][1] === 0
-                && $m[1][0] !== 'open-now'); // {open-now} is text (a client element), never a link
+                && !in_array($m[1][0], ['open-now', 'price', 'stock'], true)); // text tokens are never a link
     }
 
     /** @return array{code: string, path: string, message: string} */

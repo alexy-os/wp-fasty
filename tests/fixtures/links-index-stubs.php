@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * WordPress stubs for WPFastyBuilder\Links::index (tests/LinksRestTest.php, separate processes), backed by
  * $GLOBALS['wpfb_links']: pages (WP_Post list), terms (WP_Term list), types [name => labels name], posts_page id,
- * calls [function => count] and args [function => last args].
+ * calls [function => count], args [function => last args] and log (every call: [function, args]).
  */
 $GLOBALS['wpfb_links'] ??= ['pages' => [], 'terms' => [], 'types' => [], 'posts_page' => 0, 'calls' => [], 'args' => []];
 
@@ -33,6 +33,7 @@ function wpfb_links_call(string $fn, array $args): void
 {
     $GLOBALS['wpfb_links']['calls'][$fn] = ($GLOBALS['wpfb_links']['calls'][$fn] ?? 0) + 1;
     $GLOBALS['wpfb_links']['args'][$fn] = $args;
+    $GLOBALS['wpfb_links']['log'][] = [$fn, $args];
 }
 
 if (!function_exists('get_posts')) {
@@ -43,7 +44,8 @@ if (!function_exists('get_posts')) {
     function get_posts(array $args = []): array
     {
         wpfb_links_call('get_posts', $args);
-        return $GLOBALS['wpfb_links']['pages'];
+        $type = $args['post_type'] ?? 'page';
+        return array_values(array_filter($GLOBALS['wpfb_links']['pages'], static fn ($p): bool => $p->post_type === $type));
     }
 }
 if (!function_exists('get_terms')) {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { applyMacro, expandText, filterIndex, OPEN_NOW_PREVIEW, insertMacro, isLinkField, parseMacro, relative, resolveMacro, tokenMode, type LinkIndex } from "../src/links";
+import { applyMacro, expandText, filterIndex, OPEN_NOW_PREVIEW, productTokens, insertMacro, isLinkField, parseMacro, relative, resolveMacro, tokenMode, type LinkIndex } from "../src/links";
 
 const index: LinkIndex = {
   home: "http://x.test/",
@@ -90,7 +90,7 @@ describe("filterIndex", () => {
     expect(filterIndex(index, "ABO").pages.map((t) => t.slug)).toEqual(["about"]);
     expect(filterIndex(index, "archive").sections.map((t) => t.slug)).toEqual(["product"]);
     expect(filterIndex(index, "").site.length).toBe(2);
-    expect(filterIndex(null, "x")).toEqual({ site: [], pages: [], sections: [], contact: [], data: [] });
+    expect(filterIndex(null, "x")).toEqual({ site: [], pages: [], sections: [], contact: [], data: [], posts: [], terms: [], products: null, prices: null, stock: null });
     expect(filterIndex(index, "phone").data.map((t) => t.token)).toEqual(["{site:phone}"]);
     expect(filterIndex(index, "tel").contact.map((t) => t.token)).toEqual(["{tel}"]);
   });
@@ -145,5 +145,60 @@ describe("{open-now}", () => {
   });
   test("never an href", () => {
     expect(resolveMacro("{open-now}", hours)).toEqual({ error: "{open-now} is text, not a link: use it in a text field" });
+  });
+});
+
+describe("records: posts, products, terms, price and stock", () => {
+  const shop: LinkIndex = {
+    ...index,
+    posts: [{ token: "{post:hello-world}", label: "Hello world", slug: "hello-world", url: "http://x.test/hello-world/" }],
+    products: [
+      { token: "{product:mug}", label: "Ceramic mug", slug: "mug", url: "http://x.test/product/mug/", amount: 1800, currency: "USD", price: "$18", in_stock: true, stock: "In stock" },
+      { token: "{product:tray}", label: "Oak tray", slug: "tray", url: "http://x.test/product/tray/", amount: 6450, currency: "USD", price: "$64.50", in_stock: false, stock: "Out of stock" },
+      { token: "{product:gift}", label: "Gift card", slug: "gift", url: "http://x.test/product/gift/", amount: null, currency: "USD", price: "", in_stock: true, stock: "In stock" },
+    ],
+    terms: [{ token: "{term:product_cat:kitchen}", label: "Kitchen", slug: "kitchen", taxonomy: "product_cat", kind: "Product category", url: "http://x.test/shop/category/kitchen/" }],
+  };
+  test("parse: {term:<taxonomy>:<slug>} has two parts, the others one", () => {
+    expect(parseMacro("{term:product_cat:kitchen}#top")).toEqual({ kind: "term", arg: "product_cat", arg2: "kitchen", token: "{term:product_cat:kitchen}", prefix: "", suffix: "#top" });
+    expect(parseMacro("{post:hello-world}")).toEqual({ kind: "post", arg: "hello-world", token: "{post:hello-world}", prefix: "", suffix: "" });
+    expect(parseMacro("{posts}")?.kind).toBe("posts");
+  });
+  test("link fields: the URL of the post, product or term", () => {
+    expect(resolveMacro("{post:hello-world}#c", shop)).toEqual({ url: "http://x.test/hello-world/#c", shown: "/hello-world/#c" });
+    expect(resolveMacro("{product:tray}", shop)).toEqual({ url: "http://x.test/product/tray/", shown: "/product/tray/" });
+    expect(resolveMacro("{term:product_cat:kitchen}", shop)).toEqual({ url: "http://x.test/shop/category/kitchen/", shown: "/shop/category/kitchen/" });
+  });
+  test("link fields: missing records, missing parts, text tokens", () => {
+    expect(resolveMacro("{post:nope}", shop)).toEqual({ error: "post nope not found" });
+    expect(resolveMacro("{term:product_cat:nope}", shop)).toEqual({ error: "term product_cat:nope not found" });
+    expect(resolveMacro("{term:product_cat}", shop)).toEqual({ error: "add a slug: {term:product_cat:<slug>}" });
+    expect(resolveMacro("{term}", shop)).toEqual({ error: "add a slug: {term:<taxonomy>:<slug>}" });
+    expect(resolveMacro("{post:a:b}", shop)).toEqual({ error: "{post:a:b}: only {term:<taxonomy>:<slug>} takes two parts" });
+    expect(resolveMacro("{price:mug}", shop)).toEqual({ error: "{price:…} is text, not a link: use it in a text field" });
+    expect(resolveMacro("{stock:mug}", shop)).toEqual({ error: "{stock:…} is text, not a link: use it in a text field" });
+    // a site without a product type: products link to #
+    expect(resolveMacro("{product:mug}", { ...shop, products: null })).toEqual({ error: "this site has no product type: links to #" });
+  });
+  test("text fields: price and stock as the site shows them", () => {
+    expect(expandText("Only {price:mug} · {stock:tray}", shop)).toEqual({ text: "Only $18 · Out of stock", warnings: [] });
+    expect(expandText("{price:gift}", shop)).toEqual({ text: "", warnings: ["Gift card has no price: shows nothing"] });
+    expect(expandText("{price:nope}", shop)).toEqual({ text: "{price:nope}", warnings: ["product nope not found"] });
+    expect(expandText("{stock:mug}", { ...shop, products: null })?.warnings).toEqual(["this site has no product type: shows nothing"]);
+  });
+  test("picker columns: posts, products, terms (links); prices and stock (text); none without a product type", () => {
+    const all = filterIndex(shop, "");
+    expect(all.posts.map((t) => t.token)).toEqual(["{post:hello-world}"]);
+    expect(all.products?.map((t) => t.token)).toEqual(["{product:mug}", "{product:tray}", "{product:gift}"]);
+    expect(all.terms.map((t) => t.token)).toEqual(["{term:product_cat:kitchen}"]);
+    expect(all.prices).toEqual(productTokens(shop.products!, "price"));
+    expect(all.prices?.map((t) => [t.token, t.value])).toEqual([["{price:mug}", "$18"], ["{price:tray}", "$64.50"], ["{price:gift}", ""]]);
+    expect(all.stock?.map((t) => t.value)).toEqual(["In stock", "Out of stock", "In stock"]);
+    expect(filterIndex(shop, "tray").prices?.map((t) => t.token)).toEqual(["{price:tray}"]);
+    expect(filterIndex(shop, "kitchen").terms.length).toBe(1);
+    const none = filterIndex({ ...shop, products: null }, "");
+    expect([none.products, none.prices, none.stock]).toEqual([null, null, null]);
+    // an older server without the record lists: empty columns, no crash
+    expect(filterIndex(index, "").posts).toEqual([]);
   });
 });

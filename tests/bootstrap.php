@@ -290,7 +290,8 @@ if (!function_exists('get_option')) {
 if (!function_exists('get_permalink')) {
     function get_permalink(int|WP_Post|null $post = 0): string|false
     {
-        return 'http://example.test/blog';
+        $id = $post instanceof WP_Post ? $post->ID : (int) $post;
+        return $GLOBALS['wp_test_permalinks'][$id] ?? 'http://example.test/blog';
     }
 }
 if (!function_exists('get_search_query')) {

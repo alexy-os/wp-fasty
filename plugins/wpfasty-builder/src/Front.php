@@ -109,6 +109,8 @@ final class Front
         }
         $entry = Store::get(self::$page, self::$preview);
         $context['wpfb'] = $entry !== null ? self::bound($entry) : [];
+        // record tokens of every block ({post:}, {product:}, {term:}, {price:}, {stock:}): one query per type
+        Links::prime($entry !== null ? array_column(Layout::blocks($entry), 'props') : []);
         $context['widgets']['sidebar'] = '';
         return $context;
     }

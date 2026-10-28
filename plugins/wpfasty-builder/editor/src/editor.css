@@ -171,7 +171,7 @@
 .wpfb-field-hint p { margin: 0; }
 .wpfb-field-hint .is-error { color: var(--wpfb-danger); }
 .wpfb-field-hint .is-warning { display: flex; align-items: center; gap: 4px; color: var(--wpfb-danger); }
-.wpfb-linkpicker { position: fixed; z-index: 100002; box-sizing: border-box; display: flex; flex-direction: column; width: min(var(--wpfb-picker-w), calc(100vw - 16px)); max-height: 360px; background: var(--wpfb-surface); border: 1px solid var(--wpfb-line); border-radius: var(--wpfb-radius); box-shadow: var(--wpfb-shadow); color: var(--wpfb-text); font-size: 14px; line-height: 20px; }
+.wpfb-linkpicker { position: fixed; z-index: 100002; box-sizing: border-box; display: flex; flex-direction: column; width: min(var(--wpfb-picker-w), calc(100vw - 16px)); max-height: 400px; background: var(--wpfb-surface); border: 1px solid var(--wpfb-line); border-radius: var(--wpfb-radius); box-shadow: var(--wpfb-shadow); color: var(--wpfb-text); font-size: 14px; line-height: 20px; }
 .wpfb-linkpicker.is-up { transform: translateY(-100%); }
 .wpfb-linkpicker-search { position: relative; flex: none; padding: 8px; border-bottom: 1px solid var(--wpfb-line-soft); }
 .wpfb-linkpicker-search > .wpfb-svg { position: absolute; top: 16px; left: 16px; color: var(--wpfb-text-muted); pointer-events: none; }
@@ -179,6 +179,12 @@
 .wpfb-linkpicker-cols { display: grid; grid-template-columns: repeat(var(--wpfb-picker-cols, 3), minmax(0, 1fr)); min-height: 0; overflow-y: auto; }
 .wpfb-linkpicker-col { min-width: 0; padding: 8px 0; }
 .wpfb-linkpicker-col + .wpfb-linkpicker-col { border-left: 1px solid var(--wpfb-line-soft); }
+/* more columns than one row holds (link fields: Posts, Products, Terms under Site…Contact): rows of four, each column
+   scrolls on its own so a long list never pushes the next row out of view */
+.wpfb-linkpicker-cols[data-rows] { --wpfb-picker-list-h: 128px; }
+.wpfb-linkpicker-cols[data-rows] .wpfb-linkpicker-col:nth-child(4n + 1) { border-left: 0; }
+.wpfb-linkpicker-cols[data-rows] .wpfb-linkpicker-col:nth-child(n + 5) { border-top: 1px solid var(--wpfb-line-soft); }
+.wpfb-linkpicker-list { max-height: var(--wpfb-picker-list-h, none); overflow-y: auto; }
 .wpfb-linkpicker-head { display: flex; align-items: center; gap: 8px; padding: 0 8px 8px; color: var(--wpfb-text-muted); font-size: 12px; line-height: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 .wpfb-linkpicker-option { display: flex; flex-direction: column; padding: 4px 8px; border-radius: 0; cursor: pointer; }
 .wpfb-linkpicker-option.is-active { background: var(--wpfb-accent-soft); box-shadow: inset 2px 0 0 var(--wpfb-accent); }

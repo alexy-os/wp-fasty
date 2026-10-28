@@ -364,6 +364,11 @@ jobs:
           out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/links-queries.php" 6 2>&1) || { echo "$out"; exit 1; }
           echo "$out"
           echo "" >> "$GITHUB_STEP_SUMMARY"; echo "Builder links: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
+          # builder record tokens ({post:}, {product:}, {term:}, {price:}, {stock:}): same queries for 2 and 6 per page
+          wp theme activate latte-shop --quiet
+          out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/queries.php" macros 2 6 2>&1) || { echo "$out"; exit 1; }
+          echo "$out"
+          echo "Builder record tokens: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Builder — seed landings, smoke-render (200, no PHP notices), validate layouts with @ui8kit/contract
         run: |

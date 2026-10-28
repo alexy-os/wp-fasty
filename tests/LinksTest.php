@@ -9,6 +9,7 @@ use WPFastyBuilder\Links;
 
 require_once __DIR__ . '/fixtures/links-stubs.php';
 require_once dirname(__DIR__) . '/plugins/wpfasty-builder/src/Links.php';
+require_once dirname(__DIR__) . '/plugins/wpfasty-builder/src/Records.php';
 
 /**
  * Link tokens of builder props are resolved at render time ({home}, {posts}, {page:slug}, {category:slug}, {archive:type}).
