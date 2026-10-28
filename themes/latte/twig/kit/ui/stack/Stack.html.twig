@@ -1,2 +1,2 @@
-{# WP FastY kit — Stack: composition over UI8Kit 3 Box + presets/components/stack.json (Twig twin of kit/ui). #}
-{% include 'box/Box.html.twig' with { tag: tag|default('') in ['div', 'ul', 'ol'] ? tag : 'div', class: kit('stack', {}, class|default('')), attrs: attrs|default({}), children: children|default('') } only %}
+{# WP FastY kit — Stack: composition over UI8Kit 3 Box + the codegen-x stack recipe (presets/components/stack.json): gap, align, justify (Twig twin of kit/ui). #}
+{% include 'box/Box.html.twig' with { tag: tag|default('') in ['div', 'ul', 'ol'] ? tag : 'div', class: kit('stack', {'gap': gap|default(''), 'align': align|default(''), 'justify': justify|default('')}, class|default('')), attrs: attrs|default({}), children: children|default('') } only %}

@@ -30,17 +30,35 @@ final class PrimitivesLocatorTest extends TestCase
         );
     }
 
-    public function testKitComposesPresetsInLegacyOrder(): void
+    public function testKitComposesCodegenRecipesInComposeOrder(): void
     {
+        // base, every key (selected or default), the matching compound classes, then the extra classes (kit-compose Compose::rc)
         $this->assertSame(
-            'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium '
-            . 'ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 '
-            . 'focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 '
-            . 'bg-secondary text-secondary-foreground hover:bg-secondary/80 h-12 rounded-md px-8 w-full',
+            'inline-flex shrink-0 items-center justify-center whitespace-nowrap font-medium inset-ring transition-colors '
+            . 'disabled:pointer-events-none disabled:opacity-50 rounded bg-secondary text-secondary-foreground inset-ring-border '
+            . 'h-12 px-6 text-base w-full',
             Kit::classes('button', ['variant' => 'secondary', 'size' => 'lg'], 'w-full'),
         );
-        $this->assertSame('border-b border-border px-4 py-2 mt-2', Kit::classes('card.CardHeader', [], 'mt-2'));
+        $icon = Kit::classes('button', ['variant' => 'outline', 'layout' => 'icon']);
+        $this->assertStringEndsWith('h-10 px-4 text-sm size-10 p-0 [&>svg]:size-5 text-muted-foreground', $icon, 'compound: icon layout');
+        $this->assertSame('grid auto-rows-min items-start gap-2 mt-2', Kit::classes('card.CardHeader', [], 'mt-2'));
+        $this->assertSame('flex flex-col gap-6 items-start justify-start', Kit::classes('stack', ['gap' => '6']));
         $this->assertSame('grid grid-cols-1 md:grid-cols-2', Kit::classes('grid', ['cols' => '1-2']));
+    }
+
+    public function testCodegenRecipesAreThePinnedKitCompose(): void
+    {
+        // presets/components/<recipe>.json = codegen-x packages/kit-compose/variants at the builder source commit
+        $root = dirname(__DIR__);
+        $compose = json_decode((string) file_get_contents($root . '/plugins/wpfasty-builder/sources/ui8kit/latte/compose/compose.json'), true);
+        foreach (['alert', 'badge', 'button', 'card', 'iconbadge', 'input', 'textarea', 'label', 'link', 'stack', 'title'] as $name) {
+            $recipe = Kit::recipe($name);
+            $cgx = $compose['recipes'][$name];
+            $this->assertSame($cgx['base'], $recipe['base'], $name);
+            $this->assertSame($cgx['keys'], $recipe['keys'], $name);
+            $this->assertEquals($cgx['byKey'], $recipe['byKey'], $name);
+            $this->assertEquals($cgx['compound'] ?? [], $recipe['compound'] ?? [], $name);
+        }
     }
 
     public function testMiddleLayerRendersOverUi8Kit3Box(): void
@@ -54,9 +72,9 @@ final class PrimitivesLocatorTest extends TestCase
         $r2 = new LatteRenderer([$tpl, ...PrimitivesLocator::latteRoots($this->theme())], $cache . '/c');
         $html = (string) preg_replace('/\s+/', ' ', $r2->render('probe'));
         $this->assertStringContainsString('<section class="py-8" id="x">Hi</section>', $html);
-        $this->assertStringContainsString('<h1>T</h1>', $html);
-        $this->assertStringContainsString('bg-secondary text-secondary-foreground', $html);
-        $this->assertStringContainsString('focus:ring-ring focus:ring-offset-2', $html, 'cn keeps ring-ring (3.2.0)');
+        $this->assertStringContainsString('<h1 class="text-foreground font-semibold">T</h1>', $html);
+        $this->assertMatchesRegularExpression('/<span class="[^"]*rounded-full h-6 px-3 text-xs bg-muted text-foreground[^"]*">B<\/span>/', $html, 'badge: kit-compose span');
+        $this->assertStringContainsString('focus-visible:inset-ring-ring rounded min-h-20', $html, 'cn keeps the codegen textarea recipe');
         $this->assertMatchesRegularExpression("/<textarea[^>]*>  a\nb<\/textarea>/", $r2->render('probe'), 'exact value');
     }
 }

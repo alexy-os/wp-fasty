@@ -40,6 +40,12 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* codegen-x recipes (kit-compose) round with plain `rounded`, which reads the bare --radius theme key: here the
+   --radius token of tokens.css (reference: inlined into the utility, never re-declared on :root). */
+@theme inline reference {
+  --radius: var(--radius);
+}
+
 @layer base {
   * { border-color: var(--border); }
   body { background: var(--background); color: var(--foreground); }
