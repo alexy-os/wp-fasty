@@ -15,4 +15,4 @@
 	{else}
 		{$site['title']}
 	{/if}
-{/capture}{include 'link/Link.latte', href: $site['url'] ?? '', class: 'inline-flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground no-underline hover:text-primary', children: (string) $c_ui1, attrs: []}
+{/capture}{include 'link/Link.latte', href: $site['url'] ?? '', class: kit('link', ['variant' => 'nav', 'size' => 'md'], 'tracking-tight'), children: (string) $c_ui1, attrs: []}

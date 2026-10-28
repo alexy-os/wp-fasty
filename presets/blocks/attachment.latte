@@ -4,7 +4,7 @@
 {if $page}
 	{capture $inner}
 		{capture $titleHtml}{$page['title']}{/capture}
-		{include 'title/Title.latte', as: 1, class: 'mb-6 text-3xl font-bold tracking-tight', children: (string) $titleHtml}
+		{include 'title/Title.latte', as: 1, size: '3xl', weight: 'bold', class: 'mb-6 tracking-tight', children: (string) $titleHtml}
 
 		{if !empty($page['featuredImage']['url'])}
 			{capture $img}
@@ -23,7 +23,7 @@
 			{include 'box/Box.latte', class: 'mb-8 overflow-hidden rounded-lg', children: (string) $img}
 		{elseif !empty($page['attachment_url'])}
 			{capture $fileLink}{$labels['attachment'] ?? 'Attachment'}{/capture}
-			{include 'link/Link.latte', href: $page['attachment_url'], class: kit('link', [], 'text-primary underline'), children: (string) $fileLink}
+			{include 'link/Link.latte', href: $page['attachment_url'], class: kit('link', []), children: (string) $fileLink}
 		{/if}
 
 		{if !empty($page['content'])}

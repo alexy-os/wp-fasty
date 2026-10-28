@@ -12,14 +12,14 @@
 				{% if page.author.name ?? false %}
 					{% set authorName %}{{ page.author.name }}{% endset %}
 					{% set c_ui3 %}{{ labels.by_author }}
-						{% include 'link/Link.html.twig' with { href: page.author.url, class: kit('link', {}, 'underline-offset-2 hover:underline'), children: authorName } %}
+						{% include 'link/Link.html.twig' with { href: page.author.url, class: kit('link', {'variant': 'muted', 'size': 'sm'}), children: authorName } %}
 					{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui3, 'attrs': {}} only %}
 				{% endif %}
 				{% if page.categories ?? false %}
 					{% set c_ui4 %}{{ labels.categories }}:
 						{% for cat in page.categories %}
 							{% set catName %}{{ cat.name }}{% endset %}
-							{% include 'link/Link.html.twig' with { href: cat.url, class: kit('link', {}, 'underline-offset-2 hover:underline'), children: catName } %}{% if not loop.last %}, {% endif %}
+							{% include 'link/Link.html.twig' with { href: cat.url, class: kit('link', {'variant': 'muted', 'size': 'sm'}), children: catName } %}{% if not loop.last %}, {% endif %}
 						{% endfor %}
 					{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui4, 'attrs': {}} only %}
 				{% endif %}
@@ -30,7 +30,7 @@
 
 	{% set inner %}
 		{% set titleHtml %}{{ page.title }}{% endset %}
-		{% include 'title/Title.html.twig' with { as: 1, class: 'mb-6 text-3xl font-bold tracking-tight md:text-4xl', children: titleHtml } %}
+		{% include 'title/Title.html.twig' with { as: 1, size: '3xl', weight: 'bold', class: 'mb-6 tracking-tight md:text-4xl', children: titleHtml } %}
 
 		{{ meta }}
 
@@ -63,8 +63,8 @@
 				{% set c_ui6 %}{{ labels.tags }}:{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui6, 'attrs': {}} only %}
 				{% for tag in page.tags %}
 					{% set tagName %}{{ tag.name }}{% endset %}
-					{% set tagLink %}{% include 'link/Link.html.twig' with { href: tag.url, class: kit('link', {}, 'no-underline'), children: tagName } %}{% endset %}
-					{% include 'badge/Badge.html.twig' with { variant: 'secondary', class: 'mr-1', children: tagLink } %}
+					{% set tagLink %}{% include 'link/Link.html.twig' with { href: tag.url, class: kit('link', {'size': 'sm'}), children: tagName } %}{% endset %}
+					{% include 'badge/Badge.html.twig' with { variant: 'secondary', children: tagLink } %}
 				{% endfor %}
 			{% endset %}
 			{% include 'group/Group.html.twig' with { class: 'mt-8 flex flex-wrap items-center gap-2', children: tagBits } %}
@@ -74,11 +74,11 @@
 			{% set navBits %}
 				{% if page.prev.url ?? false %}
 					{% set prevLabel %}{{ labels.previous_post }}: {{ page.prev.title }}{% endset %}
-					{% include 'link/Link.html.twig' with { href: page.prev.url, class: kit('link', {}, 'text-sm text-primary'), children: prevLabel } %}
+					{% include 'link/Link.html.twig' with { href: page.prev.url, class: kit('link', {'size': 'sm'}), children: prevLabel } %}
 				{% endif %}
 				{% if page.next.url ?? false %}
 					{% set nextLabel %}{{ labels.next_post }}: {{ page.next.title }}{% endset %}
-					{% include 'link/Link.html.twig' with { href: page.next.url, class: kit('link', {}, 'text-sm text-primary'), children: nextLabel } %}
+					{% include 'link/Link.html.twig' with { href: page.next.url, class: kit('link', {'size': 'sm'}), children: nextLabel } %}
 				{% endif %}
 			{% endset %}
 			{% include 'group/Group.html.twig' with { class: 'mt-10 flex flex-wrap justify-between gap-4 border-t border-border pt-8', children: navBits } %}

@@ -9,7 +9,7 @@
 			{if !empty($menu['primary']['items'])}
 				{capture $c_ui2}
 					{icon('menu', 'size-5')}
-				{/capture}{include 'button/Button.latte', class: 'inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden', children: (string) $c_ui2, attrs: ['type' => 'button', 'id' => ($sheet['trigger']), 'data-ui8kit-dialog-open' => 'true', 'data-ui8kit-dialog-target' => ($sheet['panel']), 'aria-controls' => ($sheet['panel']), 'aria-haspopup' => 'dialog', 'aria-expanded' => 'false', 'aria-label' => ($labels['open_menu'])]}
+				{/capture}{include 'button/Button.latte', class: kit('button', ['variant' => 'outline', 'layout' => 'icon'], 'md:hidden'), children: (string) $c_ui2, attrs: ['type' => 'button', 'id' => ($sheet['trigger']), 'data-ui8kit-dialog-open' => 'true', 'data-ui8kit-dialog-target' => ($sheet['panel']), 'aria-controls' => ($sheet['panel']), 'aria-haspopup' => 'dialog', 'aria-expanded' => 'false', 'aria-label' => ($labels['open_menu'])]}
 			{/if}
 			{include 'brand.latte'}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex items-center gap-4', children: (string) $c_ui3, attrs: []}

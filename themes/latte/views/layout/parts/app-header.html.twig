@@ -5,7 +5,7 @@
 	{% set c_ui3 %}
 		{% set c_ui1 %}
 			{{ icon('menu', 'size-5') }}
-		{% endset %}{% include 'button/Button.html.twig' with {'class': 'inline-flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-sm md:hidden', 'children': c_ui1, 'attrs': {'type': 'button', 'id': (sheet.trigger), 'data-ui8kit-dialog-open': 'true', 'data-ui8kit-dialog-target': (sheet.panel), 'aria-controls': (sheet.panel), 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'aria-label': (labels.open_menu)}} only %}
+		{% endset %}{% include 'button/Button.html.twig' with {'class': kit('button', {'variant': 'outline', 'layout': 'icon'}, 'md:hidden'), 'children': c_ui1, 'attrs': {'type': 'button', 'id': (sheet.trigger), 'data-ui8kit-dialog-open': 'true', 'data-ui8kit-dialog-target': (sheet.panel), 'aria-controls': (sheet.panel), 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'aria-label': (labels.open_menu)}} only %}
 		{% set c_ui2 %}{{ site.title }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm font-medium text-muted-foreground md:hidden', 'children': c_ui2, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-center gap-4', 'children': c_ui3, 'attrs': {}} only %}
 	{% set c_ui4 %}

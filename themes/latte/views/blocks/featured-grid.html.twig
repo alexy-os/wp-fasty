@@ -20,11 +20,11 @@
 							decoding: 'async'
 						} %}
 					{% endset %}
-					{% include 'link/Link.html.twig' with { href: post.url, class: kit('link', {}, 'block overflow-hidden'), ariaLabel: post.title ~ "", children: thumb } %}
+					{% include 'link/Link.html.twig' with { href: post.url, class: kit('link', {'variant': 'block'}, 'overflow-hidden'), ariaLabel: post.title ~ "", children: thumb } %}
 				{% endif %}
 				{% set postTitle %}{{ post.title }}{% endset %}
 				{% set cardTitle %}
-					{% include 'link/Link.html.twig' with { href: post.url, class: kit('link', {}, 'no-underline hover:text-primary'), children: postTitle } %}
+					{% include 'link/Link.html.twig' with { href: post.url, class: kit('link', {}), children: postTitle } %}
 				{% endset %}
 				{% set headerInner %}
 					{% include 'card/CardTitle.html.twig' with { class: 'text-xl', children: cardTitle } %}
@@ -42,7 +42,7 @@
 
 	{% set sectionInner %}
 		{% set heading %}{{ labels.featured ?? 'Featured' }}{% endset %}
-		{% include 'title/Title.html.twig' with { as: 2, class: 'mb-2 text-center text-3xl font-bold tracking-tight', children: heading } %}
+		{% include 'title/Title.html.twig' with { as: 2, size: '3xl', weight: 'bold', class: 'mb-2 text-center tracking-tight', children: heading } %}
 		{% set c_ui2 %}{{ labels.latest_articles ?? 'Latest articles' }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'mb-10 text-center text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}
 		{% include 'grid/Grid.html.twig' with { class: 'grid gap-6 md:grid-cols-2 lg:grid-cols-3', children: cards } %}
 	{% endset %}

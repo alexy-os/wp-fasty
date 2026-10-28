@@ -4,7 +4,7 @@
 {% if page %}
 	{% set inner %}
 		{% set titleHtml %}{{ page.title }}{% endset %}
-		{% include 'title/Title.html.twig' with { as: 1, class: 'mb-6 text-3xl font-bold tracking-tight', children: titleHtml } %}
+		{% include 'title/Title.html.twig' with { as: 1, size: '3xl', weight: 'bold', class: 'mb-6 tracking-tight', children: titleHtml } %}
 
 		{% if page.featuredImage.url ?? false %}
 			{% set img %}
@@ -23,7 +23,7 @@
 			{% include 'box/Box.html.twig' with { class: 'mb-8 overflow-hidden rounded-lg', children: img } %}
 		{% elseif page.attachment_url ?? false %}
 			{% set fileLink %}{{ labels.attachment ?? 'Attachment' }}{% endset %}
-			{% include 'link/Link.html.twig' with { href: page.attachment_url, class: kit('link', {}, 'text-primary underline'), children: fileLink } %}
+			{% include 'link/Link.html.twig' with { href: page.attachment_url, class: kit('link', {}), children: fileLink } %}
 		{% endif %}
 
 		{% if page.content ?? false %}

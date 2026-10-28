@@ -1,10 +1,10 @@
 {** 404 — not found *}
 {capture $inner}
 	{capture $codeHtml}{$error['code']}{/capture}
-	{include 'title/Title.latte', as: 1, class: 'text-5xl font-bold tracking-tight', children: (string) $codeHtml}
+	{include 'title/Title.latte', as: 1, size: '5xl', weight: 'bold', class: 'tracking-tight', children: (string) $codeHtml}
 
 	{capture $titleHtml}{$error['title']}{/capture}
-	{include 'title/Title.latte', as: 2, class: 'mt-4 text-2xl font-semibold tracking-tight', children: (string) $titleHtml}
+	{include 'title/Title.latte', as: 2, size: '2xl', weight: 'semibold', class: 'mt-4 tracking-tight', children: (string) $titleHtml}
 
 	{capture $c_ui1}{$error['message']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'mt-4 max-w-xl text-muted-foreground', children: (string) $c_ui1, attrs: []}
 
@@ -14,7 +14,7 @@
 
 	{capture $ctaLabel}{$error['home_label']}{/capture}
 	{capture $cta}
-		{include 'link/Link.latte', href: $error['home_url'], class: kit('link', ['variant' => 'default', 'size' => 'lg'], 'font-medium'), children: (string) $ctaLabel}
+		{include 'link/Link.latte', href: $error['home_url'], class: kit('link', []), children: (string) $ctaLabel}
 	{/capture}
 	{capture $c_ui3}
 		{$cta|noescape}

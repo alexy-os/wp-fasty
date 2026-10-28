@@ -10,7 +10,7 @@
 			{foreach $posts as $post}
 				{capture $body}
 					{capture $postTitle}{$post['title']}{/capture}
-					{capture $t}{include 'link/Link.latte', href: $post['url'], class: kit('link', [], 'no-underline hover:text-primary'), children: (string) $postTitle}{/capture}
+					{capture $t}{include 'link/Link.latte', href: $post['url'], class: kit('link', []), children: (string) $postTitle}{/capture}
 					{capture $h}{include 'card/CardTitle.latte', children: (string) $t}{/capture}
 					{include 'card/CardHeader.latte', children: (string) $h}
 					{if !empty($post['excerpt'])}
@@ -22,22 +22,22 @@
 						{include 'card/CardFooter.latte', children: (string) $ft}
 					{/if}
 				{/capture}
-				{include 'card/Card.latte', class: $post['post_class'] ?? '', children: (string) $body}
+				{include 'card/Card.latte', variant: 'compact', class: $post['post_class'] ?? '', children: (string) $body}
 			{/foreach}
 		{/capture}
-		{include 'stack/Stack.latte', class: 'gap-6', children: (string) $cards}
+		{include 'stack/Stack.latte', gap: '6', children: (string) $cards}
 	{/if}
 
 	{if !empty($pagination)}
 		{capture $c_ui5}
 			{if $pagination['prev_url']}
 				{capture $prevL}{$labels['previous'] ?? 'Previous'}{/capture}
-				{include 'link/Link.latte', href: $pagination['prev_url'], class: kit('link', [], 'text-sm text-primary'), children: (string) $prevL}
+				{include 'link/Link.latte', href: $pagination['prev_url'], class: kit('link', ['size' => 'sm']), children: (string) $prevL}
 			{/if}
 			{capture $c_ui4}{$pagination['current']} / {$pagination['total']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui4, attrs: []}
 			{if $pagination['next_url']}
 				{capture $nextL}{$labels['next'] ?? 'Next'}{/capture}
-				{include 'link/Link.latte', href: $pagination['next_url'], class: kit('link', [], 'text-sm text-primary'), children: (string) $nextL}
+				{include 'link/Link.latte', href: $pagination['next_url'], class: kit('link', ['size' => 'sm']), children: (string) $nextL}
 			{/if}
 		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-10 flex justify-center gap-4', children: (string) $c_ui5, attrs: ['aria-label' => ($labels['pagination'] ?? 'Pagination')]}
 	{/if}

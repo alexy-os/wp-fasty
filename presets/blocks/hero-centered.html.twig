@@ -4,7 +4,7 @@
  #}
 {% set heroInner %}
 	{% set titleHtml %}{{ site.title }}{% endset %}
-	{% include 'title/Title.html.twig' with { as: 1, class: 'text-4xl md:text-5xl font-bold tracking-tight text-foreground', children: titleHtml } %}
+	{% include 'title/Title.html.twig' with { as: 1, size: '4xl', weight: 'bold', class: 'tracking-tight md:text-5xl', children: titleHtml } %}
 
 	{% if site.description ?? false %}
 		{% set descHtml %}{% set c_ui1 %}{{ site.description }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'mt-4 text-lg text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}{% endset %}
@@ -16,13 +16,13 @@
 		{% set learn %}{{ hero.secondary_label ?? 'Learn more' }}{% endset %}
 		{% if hero.primary_url ?? false %}
 			{% set primary %}
-				{% include 'link/Link.html.twig' with { href: hero.primary_url, class: kit('link', {'variant': 'default'}, 'inline-flex h-10 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground no-underline hover:opacity-90'), children: explore } %}
+				{% include 'link/Link.html.twig' with { href: hero.primary_url, class: kit('button', {}), children: explore } %}
 			{% endset %}
 			{{ primary }}
 		{% endif %}
 		{% if hero.secondary_url ?? false %}
 			{% set secondary %}
-				{% include 'link/Link.html.twig' with { href: hero.secondary_url, class: kit('link', {'variant': 'muted'}, 'inline-flex h-10 items-center rounded-full border border-input bg-secondary px-4 text-sm font-medium no-underline'), children: learn } %}
+				{% include 'link/Link.html.twig' with { href: hero.secondary_url, class: kit('button', {'variant': 'secondary'}), children: learn } %}
 			{% endset %}
 			{{ secondary }}
 		{% endif %}

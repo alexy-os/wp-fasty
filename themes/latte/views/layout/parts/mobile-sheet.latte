@@ -9,7 +9,7 @@
 				{capture $c_ui1}{$site['title']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-base font-semibold', children: (string) $c_ui1, attrs: ['id' => ($sheet['title'])]}
 				{capture $c_ui2}
 					{icon('x', 'size-5')}
-				{/capture}{include 'button/Button.latte', class: 'inline-flex h-9 w-9 items-center justify-center rounded-md border border-input text-sm', children: (string) $c_ui2, attrs: ['type' => 'button', 'data-ui8kit-dialog-close' => 'true', 'data-ui8kit-dialog-target' => ($sheet['panel']), 'aria-label' => ($labels['close_menu'])]}
+				{/capture}{include 'button/Button.latte', class: kit('button', ['variant' => 'outline', 'layout' => 'icon']), children: (string) $c_ui2, attrs: ['type' => 'button', 'data-ui8kit-dialog-close' => 'true', 'data-ui8kit-dialog-target' => ($sheet['panel']), 'aria-label' => ($labels['close_menu'])]}
 			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex h-16 items-center justify-between border-b border-border px-4', children: (string) $c_ui3, attrs: []}
 			{capture $c_ui4}
 				{include 'nav-items.latte', items: $menu['primary']['items']}

@@ -9,7 +9,7 @@
 				{% set c_ui1 %}{{ site.title }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'text-base font-semibold', 'children': c_ui1, 'attrs': {'id': (sheet.title)}} only %}
 				{% set c_ui2 %}
 					{{ icon('x', 'size-5') }}
-				{% endset %}{% include 'button/Button.html.twig' with {'class': 'inline-flex h-9 w-9 items-center justify-center rounded-md border border-input text-sm', 'children': c_ui2, 'attrs': {'type': 'button', 'data-ui8kit-dialog-close': 'true', 'data-ui8kit-dialog-target': (sheet.panel), 'aria-label': (labels.close_menu)}} only %}
+				{% endset %}{% include 'button/Button.html.twig' with {'class': kit('button', {'variant': 'outline', 'layout': 'icon'}), 'children': c_ui2, 'attrs': {'type': 'button', 'data-ui8kit-dialog-close': 'true', 'data-ui8kit-dialog-target': (sheet.panel), 'aria-label': (labels.close_menu)}} only %}
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex h-16 items-center justify-between border-b border-border px-4', 'children': c_ui3, 'attrs': {}} only %}
 			{% set c_ui4 %}
 				{% include 'layout/parts/nav-items.html.twig' with { items: menu.primary.items } %}

@@ -1,10 +1,10 @@
 {# 404 — not found (Twig twin of 404.latte) #}
 {% set inner %}
 	{% set codeHtml %}{{ error.code }}{% endset %}
-	{% include 'title/Title.html.twig' with { as: 1, class: 'text-5xl font-bold tracking-tight', children: codeHtml } %}
+	{% include 'title/Title.html.twig' with { as: 1, size: '5xl', weight: 'bold', class: 'tracking-tight', children: codeHtml } %}
 
 	{% set titleHtml %}{{ error.title }}{% endset %}
-	{% include 'title/Title.html.twig' with { as: 2, class: 'mt-4 text-2xl font-semibold tracking-tight', children: titleHtml } %}
+	{% include 'title/Title.html.twig' with { as: 2, size: '2xl', weight: 'semibold', class: 'mt-4 tracking-tight', children: titleHtml } %}
 
 	{% set c_ui1 %}{{ error.message }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'mt-4 max-w-xl text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}
 
@@ -14,7 +14,7 @@
 
 	{% set ctaLabel %}{{ error.home_label }}{% endset %}
 	{% set cta %}
-		{% include 'link/Link.html.twig' with { href: error.home_url, class: kit('link', {'variant': 'default', 'size': 'lg'}, 'font-medium'), children: ctaLabel } %}
+		{% include 'link/Link.html.twig' with { href: error.home_url, class: kit('link', {}), children: ctaLabel } %}
 	{% endset %}
 	{% set c_ui3 %}
 		{{ cta }}

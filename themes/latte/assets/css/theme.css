@@ -289,9 +289,6 @@
   .mt-auto {
     margin-top: auto;
   }
-  .mr-1 {
-    margin-right: var(--spacing);
-  }
   .mr-2 {
     margin-right: calc(var(--spacing) * 2);
   }
@@ -400,9 +397,6 @@
   .h-8 {
     height: calc(var(--spacing) * 8);
   }
-  .h-9 {
-    height: calc(var(--spacing) * 9);
-  }
   .h-10 {
     height: calc(var(--spacing) * 10);
   }
@@ -453,9 +447,6 @@
   }
   .w-8 {
     width: calc(var(--spacing) * 8);
-  }
-  .w-9 {
-    width: calc(var(--spacing) * 9);
   }
   .w-10 {
     width: calc(var(--spacing) * 10);
@@ -702,9 +693,6 @@
   }
   .border-destructive {
     border-color: var(--destructive);
-  }
-  .border-input {
-    border-color: var(--input);
   }
   .border-primary {
     border-color: var(--primary);
@@ -972,12 +960,6 @@
   .no-underline {
     text-decoration-line: none;
   }
-  .underline {
-    text-decoration-line: underline;
-  }
-  .underline-offset-2 {
-    text-underline-offset: 2px;
-  }
   .underline-offset-4 {
     text-underline-offset: 4px;
   }
@@ -1073,9 +1055,6 @@
     }
     .hover\:underline:hover {
       text-decoration-line: underline;
-    }
-    .hover\:opacity-90:hover {
-      opacity: 90%;
     }
   }
   .focus-visible\:ring-destructive\/20:focus-visible {

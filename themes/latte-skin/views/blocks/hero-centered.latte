@@ -4,7 +4,7 @@
  *}
 {capture $heroInner}
 	{capture $titleHtml}{$site['title']}{/capture}
-	{include 'title/Title.latte', as: 1, class: 'text-4xl md:text-6xl font-bold tracking-tight text-primary', children: (string) $titleHtml}
+	{include 'title/Title.latte', as: 1, size: '4xl', weight: 'bold', class: 'tracking-tight text-primary md:text-6xl', children: (string) $titleHtml}
 
 	{if !empty($site['description'])}
 		{capture $descHtml}{capture $c_ui1}{$site['description']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'mt-4 text-lg text-muted-foreground', children: (string) $c_ui1, attrs: []}{/capture}
@@ -16,13 +16,13 @@
 		{capture $learn}{$hero['secondary_label'] ?? 'Learn more'}{/capture}
 		{if !empty($hero['primary_url'])}
 			{capture $primary}
-				{include 'link/Link.latte', href: $hero['primary_url'], class: kit('link', ['variant' => 'default'], 'inline-flex h-10 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground no-underline'), children: (string) $explore}
+				{include 'link/Link.latte', href: $hero['primary_url'], class: kit('button', []), children: (string) $explore}
 			{/capture}
 			{$primary|noescape}
 		{/if}
 		{if !empty($hero['secondary_url'])}
 			{capture $secondary}
-				{include 'link/Link.latte', href: $hero['secondary_url'], class: kit('link', ['variant' => 'muted'], 'inline-flex h-10 items-center rounded-full border border-input bg-secondary px-4 text-sm font-medium no-underline'), children: (string) $learn}
+				{include 'link/Link.latte', href: $hero['secondary_url'], class: kit('button', ['variant' => 'secondary']), children: (string) $learn}
 			{/capture}
 			{$secondary|noescape}
 		{/if}

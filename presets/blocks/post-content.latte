@@ -12,14 +12,14 @@
 				{if !empty($page['author']['name'])}
 					{capture $authorName}{$page['author']['name']}{/capture}
 					{capture $c_ui3}{$labels['by_author']}
-						{include 'link/Link.latte', href: $page['author']['url'], class: kit('link', [], 'underline-offset-2 hover:underline'), children: (string) $authorName}
+						{include 'link/Link.latte', href: $page['author']['url'], class: kit('link', ['variant' => 'muted', 'size' => 'sm']), children: (string) $authorName}
 					{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui3, attrs: []}
 				{/if}
 				{if !empty($page['categories'])}
 					{capture $c_ui4}{$labels['categories']}:
 						{foreach $page['categories'] as $cat}
 							{capture $catName}{$cat['name']}{/capture}
-							{include 'link/Link.latte', href: $cat['url'], class: kit('link', [], 'underline-offset-2 hover:underline'), children: (string) $catName}{if !$iterator->last}, {/if}
+							{include 'link/Link.latte', href: $cat['url'], class: kit('link', ['variant' => 'muted', 'size' => 'sm']), children: (string) $catName}{if !$iterator->last}, {/if}
 						{/foreach}
 					{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui4, attrs: []}
 				{/if}
@@ -30,7 +30,7 @@
 
 	{capture $inner}
 		{capture $titleHtml}{$page['title']}{/capture}
-		{include 'title/Title.latte', as: 1, class: 'mb-6 text-3xl font-bold tracking-tight md:text-4xl', children: (string) $titleHtml}
+		{include 'title/Title.latte', as: 1, size: '3xl', weight: 'bold', class: 'mb-6 tracking-tight md:text-4xl', children: (string) $titleHtml}
 
 		{$meta|noescape}
 
@@ -63,8 +63,8 @@
 				{capture $c_ui6}{$labels['tags']}:{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui6, attrs: []}
 				{foreach $page['tags'] as $tag}
 					{capture $tagName}{$tag['name']}{/capture}
-					{capture $tagLink}{include 'link/Link.latte', href: $tag['url'], class: kit('link', [], 'no-underline'), children: (string) $tagName}{/capture}
-					{include 'badge/Badge.latte', variant: 'secondary', class: 'mr-1', children: (string) $tagLink}
+					{capture $tagLink}{include 'link/Link.latte', href: $tag['url'], class: kit('link', ['size' => 'sm']), children: (string) $tagName}{/capture}
+					{include 'badge/Badge.latte', variant: 'secondary', children: (string) $tagLink}
 				{/foreach}
 			{/capture}
 			{include 'group/Group.latte', class: 'mt-8 flex flex-wrap items-center gap-2', children: (string) $tagBits}
@@ -74,11 +74,11 @@
 			{capture $navBits}
 				{if !empty($page['prev']['url'])}
 					{capture $prevLabel}{$labels['previous_post']}: {$page['prev']['title']}{/capture}
-					{include 'link/Link.latte', href: $page['prev']['url'], class: kit('link', [], 'text-sm text-primary'), children: (string) $prevLabel}
+					{include 'link/Link.latte', href: $page['prev']['url'], class: kit('link', ['size' => 'sm']), children: (string) $prevLabel}
 				{/if}
 				{if !empty($page['next']['url'])}
 					{capture $nextLabel}{$labels['next_post']}: {$page['next']['title']}{/capture}
-					{include 'link/Link.latte', href: $page['next']['url'], class: kit('link', [], 'text-sm text-primary'), children: (string) $nextLabel}
+					{include 'link/Link.latte', href: $page['next']['url'], class: kit('link', ['size' => 'sm']), children: (string) $nextLabel}
 				{/if}
 			{/capture}
 			{include 'group/Group.latte', class: 'mt-10 flex flex-wrap justify-between gap-4 border-t border-border pt-8', children: (string) $navBits}
