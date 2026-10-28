@@ -13,6 +13,9 @@ namespace WPFastyBuilder;
  *   contact  {tel}, {mailto}, {whatsapp}, {telegram}, {map}: links built from the site data; "#" without it
  *   date     {year}, {today} (date_format), in the site time zone
  *   client   {open-now}: "Open now" / "Closed now" computed in the browser (finish() + footer()); "" without hours
+ *   records  {post:<slug>}, {product:<slug>}, {term:<taxonomy>:<slug>} (links, "#" when not found) and
+ *            {price:<product>}, {stock:<product>} (text, "" when not found): Records, loaded in one query per type
+ *            for the whole page (prime()) — products and taxonomies are those of the wpfasty-types Codex manifest
  * Site data = the Codex settings contact block (@ui8kit/contract SettingsV04 contact, hours, hours_exceptions, map),
  * stored by the wpfasty-types plugin (WPFastyTypes\Contact::block()); options already loaded, no query.
  * index() lists every token with what it gives for the editor's picker (GET wpfasty-builder/v1/links): the editor
@@ -21,8 +24,8 @@ namespace WPFastyBuilder;
 final class Links
 {
     public const TOKEN =
-        '/\{(home|posts|page|category|archive|site|tel|mailto|whatsapp|telegram|map|year|today|open-now)'
-        . '(?::([a-z0-9_-]+))?\}/';
+        '/\{(home|posts|post|page|category|archive|site|tel|mailto|whatsapp|telegram|map|year|today|open-now'
+        . '|product|term|price|stock)(?::([a-z0-9_-]+))?(?::([a-z0-9_-]+))?\}/';
     /** {site:<key>} keys, in picker order */
     public const SITE = ['name', 'phone', 'email', 'address', 'hours'];
     /** contact tokens → the site data key each one is built from */
@@ -65,8 +68,23 @@ final class Links
         }
         return (string) preg_replace_callback(self::TOKEN, static function (array $m): string {
             $key = $m[0];
-            return self::$cache[$key] ??= self::value($m[1], $m[2] ?? '');
+            $arg2 = $m[3] ?? '';
+            if ($arg2 !== '' && $m[1] !== 'term') {
+                return $key; // only {term:<taxonomy>:<slug>} takes two arguments
+            }
+            return self::$cache[$key] ??= self::value($m[1], $m[2] ?? '', $arg2);
         }, $value);
+    }
+
+    /**
+     * Loads the records every token in $props names ({post:}, {product:}, {term:}, {price:}, {stock:}), one query
+     * per type, before the blocks render (Front::context for the whole page, Rest::renderBlock for one block).
+     *
+     * @param array<mixed> $props
+     */
+    public static function prime(array $props): void
+    {
+        Records::prime($props);
     }
 
     /** Site contact block (SettingsV04 contact, hours, hours_exceptions, map); tests and previews may set one. */
@@ -310,9 +328,10 @@ final class Links
         return (string) wp_date($format !== '' ? $format : 'F j, Y');
     }
 
-    private static function value(string $kind, string $arg): string
+    private static function value(string $kind, string $arg, string $arg2 = ''): string
     {
         return match ($kind) {
+            'post', 'product', 'term', 'price', 'stock' => Records::value($kind, $arg, $arg2),
             'site' => in_array($arg, self::SITE, true) ? self::data()[$arg] : '',
             'tel', 'mailto', 'whatsapp', 'telegram', 'map' => self::contact($kind, self::data()),
             'open-now' => self::openNow() !== null ? self::OPEN_NOW : '',
@@ -349,7 +368,8 @@ final class Links
      *   pages: list<array{token: string, label: string, slug: string, url: string}>,
      *   sections: list<array{token: string, label: string, slug: string, kind: string, url: string}>,
      *   contact: list<array{token: string, label: string, url: string, source: string}>,
-     *   data: list<array{token: string, label: string, value: string}>
+     *   data: list<array{token: string, label: string, value: string}>,
+     *   posts: list<array<string, mixed>>, products: list<array<string, mixed>>|null, terms: list<array<string, mixed>>
      * }
      */
     public static function index(): array
@@ -441,7 +461,7 @@ final class Links
         return [
             'home' => $home, 'site' => $site, 'pages' => $pages, 'sections' => $sections,
             'contact' => $contact, 'data' => $values,
-        ];
+        ] + Records::index();
     }
 
     private static function str(mixed $url, string $fallback): string

@@ -13,7 +13,8 @@ use WP_REST_Response;
  * named below and the wp_rest nonce (X-WP-Nonce), which the editor receives from wp_add_inline_script.
  *   GET  /catalog?source=&collection=   edit_pages   blocks of a source (or of one collection), data sources
  *   GET  /links                         edit_pages   link-token targets of the site (Links::index): site, pages,
- *                                                    sections with the URL of each token, for the editor's link picker
+ *                                                    sections with the URL of each token, for the editor's link picker;
+ *                                                    posts, products (price, stock) and terms (Records::index)
  *   GET  /layout/<page>                 edit_page    draft entry, issues, preview URL
  *   POST /layout/<page>                 edit_page    save the draft; publish=true also needs publish_pages
  *   POST /pages                         edit_pages   create a draft page from the "New page" panel: {title, slug?,
@@ -164,6 +165,7 @@ final class Rest
             'props' => is_array($body['props'] ?? null) ? $body['props'] : [],
             'bindings' => is_array($body['bindings'] ?? null) ? $body['bindings'] : [],
         ];
+        Links::prime($input['props']);
         $out = Fragment::render(
             $catalog,
             $source,

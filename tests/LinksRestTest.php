@@ -23,6 +23,7 @@ final class LinksRestTest extends TestCase
         require_once __DIR__ . '/fixtures/links-index-stubs.php';
         require_once __DIR__ . '/fixtures/rest-stubs.php';
         require_once dirname(__DIR__) . '/plugins/wpfasty-builder/src/Links.php';
+        require_once dirname(__DIR__) . '/plugins/wpfasty-builder/src/Records.php';
         require_once dirname(__DIR__) . '/plugins/wpfasty-builder/src/Rest.php';
         $GLOBALS['wpfb_links'] = [
             'pages' => [
@@ -78,9 +79,15 @@ final class LinksRestTest extends TestCase
     {
         $data = Links::index();
         $calls = $GLOBALS['wpfb_links']['calls'];
-        // one call per list, whatever the number of items (no per-item queries: links come from the loaded objects)
-        $this->assertSame(['get_posts' => 1, 'get_terms' => 1, 'get_post_types' => 1], $calls);
-        $args = $GLOBALS['wpfb_links']['args']['get_posts'];
+        // one call per list, whatever the number of items (no per-item queries: links come from the loaded objects):
+        // pages, categories, archives and posts (Records::index; no wpfasty-types here: no products, no terms query)
+        $this->assertSame(['get_posts' => 2, 'get_terms' => 1, 'get_post_types' => 1], $calls);
+        $queries = array_values(array_filter($GLOBALS['wpfb_links']['log'], static fn ($c): bool => $c[0] === 'get_posts'));
+        $args = $queries[0][1];
+        $this->assertSame(['post', 'publish', false, false], [
+            $queries[1][1]['post_type'], $queries[1][1]['post_status'], $queries[1][1]['update_post_meta_cache'],
+            $queries[1][1]['update_post_term_cache'],
+        ]);
         $this->assertSame(['page', 'publish', 0, true, false, false], [
             $args['post_type'], $args['post_status'], $args['post_parent'], $args['no_found_rows'],
             $args['update_post_meta_cache'], $args['update_post_term_cache'],
@@ -88,6 +95,7 @@ final class LinksRestTest extends TestCase
         $this->assertSame([['public' => true, 'has_archive' => true], 'objects'], $GLOBALS['wpfb_links']['args']['get_post_types']);
         $this->assertSame(Links::MAX, $args['numberposts']);
         $this->assertIsArray($data['pages']);
+        $this->assertSame([[], null, []], [$data['posts'], $data['products'], $data['terms']]);
     }
 
     public function testContactLinksFromSiteData(): void

@@ -3,6 +3,7 @@
  * N+1 guard: DB query count of a rendered archive page must not grow with the number of posts.
  *
  * Usage: wp eval-file tools/perf/queries.php [post_type] [small] [large]
+ *        wp eval-file tools/perf/queries.php macros [small] [large]   (builder record tokens, macros-queries.php)
  * Counts $wpdb->num_queries (SAVEQUERIES is not needed).
  * Exit code 1 when the large page needs more queries than the small one.
  *
@@ -16,6 +17,11 @@ if (!defined('ABSPATH')) {
 $_SERVER['SERVER_NAME'] ??= 'localhost';
 
 $wpfasty_perf_type = $args[0] ?? 'post';
+if ($wpfasty_perf_type === 'macros') {
+    // builder record tokens on a page: wp eval-file tools/perf/queries.php macros [small] [large]
+    require __DIR__ . '/macros-queries.php';
+    return;
+}
 $wpfasty_perf_small = (int) ($args[1] ?? 2);
 $wpfasty_perf_large = (int) ($args[2] ?? 6);
 

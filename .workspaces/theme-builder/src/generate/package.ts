@@ -44,11 +44,11 @@ function demoZip(m: J, arch: J, stage: string, out: string): { images: number; m
     else writeFileSync(join(d, "landings", `${l.page.slug}.json`), JSON.stringify(l, null, 2) + "\n");
   }
   // Images: from a local preview build (playground/demo.zip, built by tools/playground-build.sh, not in git) when present,
-  // else from the cache dist/demo-images/, else fetched once at package time from the same URL as playground-build.sh
+  // else from the cache dist/.demo-images/, else fetched once at package time from the same URL as playground-build.sh
   // (1000×750) into that cache — so a package (and its Playground bundle) carries its images and CI needs no committed zip.
   // A seed that cannot be fetched is left to common.php at seeding time (wpfasty_demo_image falls back to network).
   const source = join(root, "playground/demo.zip");
-  const cache = join(root, "dist/demo-images");
+  const cache = join(root, "dist", ".demo-images");
   const missing: string[] = [];
   let images = 0;
   for (const seed of demoSeeds(seeder)) {
