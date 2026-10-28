@@ -1,0 +1,18 @@
+<!doctype html><html><body><pre id="r"></pre>
+<iframe id="f" sandbox="__SANDBOX__" src="child.html"></iframe>
+<script>
+const r = document.getElementById('r'), f = document.getElementById('f');
+f.onload = () => {
+  const doc = f.contentDocument, win = f.contentWindow;
+  r.dataset.access = doc ? 'yes' : 'no';
+  doc.addEventListener('click', (e) => { e.preventDefault(); r.dataset.click = e.target.closest('[data-wpfb-block]')?.getAttribute('data-wpfb-block') || 'none'; }, true);
+  win.addEventListener('scroll', () => { r.dataset.scroll = 'yes'; });
+  doc.querySelector('[data-wpfb-block]').click();
+  const el = doc.querySelector('[data-wpfb-block]');
+  el.innerHTML = '<img src="y" onerror="parent.document.getElementById(\'r\').dataset.injected=\'ran\'"><svg onload="parent.document.getElementById(\'r\').dataset.svg=\'ran\'"></svg>';
+  doc.documentElement.classList.toggle('dark', true);
+  r.dataset.dark = doc.documentElement.classList.contains('dark') ? 'yes' : 'no';
+  r.dataset.rect = String(Math.round(el.getBoundingClientRect().width) > 0);
+  win.scrollTo(0, 50); doc.body.style.height = '3000px'; win.scrollTo(0, 100);
+};
+</script></body></html>

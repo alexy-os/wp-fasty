@@ -1,0 +1,528 @@
+{
+  "generated": [
+    {
+      "pattern": "^og_include\\(",
+      "why": "rendered output of another generated template, which escapes its own props (Latte og_include returns the HTML the included template produced)"
+    },
+    {
+      "pattern": "^include\\(",
+      "why": "Twig include() of a generated primitive (Button/Icon/Link/Text/Box): output of an autoescaped template; inline <svg> children are generator string literals, labels are piped through |e"
+    },
+    {
+      "pattern": "^\\(?\\$?children( \\?\\? '')?\\)?$",
+      "why": "slot of a primitive or organism: callers pass a captured, already escaped fragment ({capture} / (string) $c_N); the builder never passes children from layout props (Fragment and Front render catalog templates with props only; Layout::clean strip_tags + escapes strings and drops __html)"
+    },
+    {
+      "pattern": "^\\(\\$?p(\\.|\\[')(right|actions|icon|aside|mark|action)('\\])? \\?\\? ''\\)$",
+      "subtemplate": true,
+      "why": "slot props of internal sub-templates (section-frame, page-header, panel, …): filled only by generated organisms with captured fragments ($f_N) or og_lucide(); never a catalog block template (the gate checks it), so layout props cannot reach them"
+    },
+    {
+      "pattern": "^og_html\\(",
+      "why": "TrustedHtml ({__html}) printed by og_html (Runtime::html): a non-marker value is escaped; markers come only from DataSources — the_content of the current post as is, every other {__html} (meta, records) through wp_kses_post (DataSources::trusted); layouts cannot carry __html (Layout::untrust)"
+    },
+    {
+      "pattern": "^og_lucide\\(",
+      "why": "inline SVG of a bundled Lucide icon looked up by name in icons/lucide-icons.json (unknown name → circle); attributes come from the bundled JSON"
+    }
+  ],
+  "views": [
+    {
+      "file": "presets/archetypes/folio/views/pages/front-page.html.twig",
+      "expr": "page.content",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "presets/archetypes/folio/views/pages/front-page.latte",
+      "expr": "$page['content']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "presets/archetypes/folio/views/pages/project.html.twig",
+      "expr": "page.content",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "presets/archetypes/folio/views/pages/project.latte",
+      "expr": "$page['content']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "presets/archetypes/folio/views/pages/work.html.twig",
+      "expr": "archive.description",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "presets/archetypes/folio/views/pages/work.latte",
+      "expr": "$archive['description']",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "presets/archetypes/shop/views/pages/product.html.twig",
+      "expr": "page.content",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "presets/archetypes/shop/views/pages/product.latte",
+      "expr": "$page['content']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "presets/archetypes/shop/views/pages/shop.html.twig",
+      "expr": "archive.description",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "presets/archetypes/shop/views/pages/shop.latte",
+      "expr": "$archive['description']",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "presets/blocks/archive-header.html.twig",
+      "expr": "archive.description",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "presets/blocks/archive-header.latte",
+      "expr": "$archive['description']",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "presets/blocks/attachment.html.twig",
+      "expr": "page.content",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "presets/blocks/attachment.latte",
+      "expr": "$page['content']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "presets/blocks/comments.html.twig",
+      "expr": "comments",
+      "count": 1,
+      "source": "ContextFactory::comments()",
+      "why": "wp_list_comments() markup (core escapes comment fields; comment text is kses'd on save); '' for password-protected posts"
+    },
+    {
+      "file": "presets/blocks/comments.latte",
+      "expr": "$comments",
+      "count": 1,
+      "source": "ContextFactory::comments()",
+      "why": "wp_list_comments() markup (core escapes comment fields; comment text is kses'd on save); '' for password-protected posts"
+    },
+    {
+      "file": "presets/blocks/hero-centered.latte",
+      "expr": "$descHtml",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "presets/blocks/hero-centered.latte",
+      "expr": "$primary",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "presets/blocks/hero-centered.latte",
+      "expr": "$secondary",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "presets/blocks/post-content.html.twig",
+      "expr": "page.content",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "presets/blocks/post-content.html.twig",
+      "expr": "page.link_pages",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "wp_link_pages() markup (core)"
+    },
+    {
+      "file": "presets/blocks/post-content.latte",
+      "expr": "$meta",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "presets/blocks/post-content.latte",
+      "expr": "$page['content']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "presets/blocks/post-content.latte",
+      "expr": "$page['link_pages']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "wp_link_pages() markup (core)"
+    },
+    {
+      "file": "presets/blocks/search-form.latte",
+      "expr": "$fields",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "presets/layouts/app-shell/shell.latte",
+      "expr": "$content",
+      "count": 1,
+      "source": "TemplateRenderer layout",
+      "why": "rendered HTML of the child view (an autoescaped template)"
+    },
+    {
+      "file": "themes/latte-folio/views/pages/front-page.html.twig",
+      "expr": "page.content",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "themes/latte-folio/views/pages/front-page.latte",
+      "expr": "$page['content']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "themes/latte-folio/views/pages/project.html.twig",
+      "expr": "page.content",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "themes/latte-folio/views/pages/project.latte",
+      "expr": "$page['content']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "themes/latte-folio/views/pages/work.html.twig",
+      "expr": "archive.description",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "themes/latte-folio/views/pages/work.latte",
+      "expr": "$archive['description']",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "themes/latte-shop/views/pages/product.html.twig",
+      "expr": "page.content",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "themes/latte-shop/views/pages/product.latte",
+      "expr": "$page['content']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "themes/latte-shop/views/pages/shop.html.twig",
+      "expr": "archive.description",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "themes/latte-shop/views/pages/shop.latte",
+      "expr": "$archive['description']",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "themes/latte-skin/views/blocks/hero-centered.latte",
+      "expr": "$descHtml",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "themes/latte-skin/views/blocks/hero-centered.latte",
+      "expr": "$primary",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "themes/latte-skin/views/blocks/hero-centered.latte",
+      "expr": "$secondary",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "themes/latte/views/blocks/archive-header.html.twig",
+      "expr": "archive.description",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "themes/latte/views/blocks/archive-header.latte",
+      "expr": "$archive['description']",
+      "count": 1,
+      "source": "ContextFactory archive",
+      "why": "wp_kses_post(get_the_archive_description()), '' on search"
+    },
+    {
+      "file": "themes/latte/views/blocks/attachment.html.twig",
+      "expr": "page.content",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "themes/latte/views/blocks/attachment.latte",
+      "expr": "$page['content']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "themes/latte/views/blocks/comments.html.twig",
+      "expr": "comments",
+      "count": 1,
+      "source": "ContextFactory::comments()",
+      "why": "wp_list_comments() markup (core escapes comment fields; comment text is kses'd on save); '' for password-protected posts"
+    },
+    {
+      "file": "themes/latte/views/blocks/comments.latte",
+      "expr": "$comments",
+      "count": 1,
+      "source": "ContextFactory::comments()",
+      "why": "wp_list_comments() markup (core escapes comment fields; comment text is kses'd on save); '' for password-protected posts"
+    },
+    {
+      "file": "themes/latte/views/blocks/hero-centered.latte",
+      "expr": "$descHtml",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "themes/latte/views/blocks/hero-centered.latte",
+      "expr": "$primary",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "themes/latte/views/blocks/hero-centered.latte",
+      "expr": "$secondary",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "themes/latte/views/blocks/post-content.html.twig",
+      "expr": "page.content",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "themes/latte/views/blocks/post-content.html.twig",
+      "expr": "page.link_pages",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "wp_link_pages() markup (core)"
+    },
+    {
+      "file": "themes/latte/views/blocks/post-content.latte",
+      "expr": "$meta",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "themes/latte/views/blocks/post-content.latte",
+      "expr": "$page['content']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
+    },
+    {
+      "file": "themes/latte/views/blocks/post-content.latte",
+      "expr": "$page['link_pages']",
+      "count": 1,
+      "source": "ContextFactory::page()",
+      "why": "wp_link_pages() markup (core)"
+    },
+    {
+      "file": "themes/latte/views/blocks/search-form.latte",
+      "expr": "$fields",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    },
+    {
+      "file": "themes/latte/views/layout/app-shell.html.twig",
+      "expr": "content",
+      "count": 1,
+      "source": "TemplateRenderer layout",
+      "why": "rendered HTML of the child view (an autoescaped template)"
+    },
+    {
+      "file": "themes/latte/views/layout/app-shell.latte",
+      "expr": "$content",
+      "count": 1,
+      "source": "TemplateRenderer layout",
+      "why": "rendered HTML of the child view (an autoescaped template)"
+    },
+    {
+      "file": "themes/latte/views/layout/default.html.twig",
+      "expr": "content",
+      "count": 2,
+      "source": "TemplateRenderer layout",
+      "why": "rendered HTML of the child view (an autoescaped template)"
+    },
+    {
+      "file": "themes/latte/views/layout/default.html.twig",
+      "expr": "widgets.sidebar",
+      "count": 1,
+      "source": "ContextFactory::sidebarHtml()",
+      "why": "dynamic_sidebar() output — widgets are managed by edit_theme_options users; core widgets escape, custom HTML widget needs unfiltered_html"
+    },
+    {
+      "file": "themes/latte/views/layout/default.latte",
+      "expr": "$content",
+      "count": 2,
+      "source": "TemplateRenderer layout",
+      "why": "rendered HTML of the child view (an autoescaped template)"
+    },
+    {
+      "file": "themes/latte/views/layout/default.latte",
+      "expr": "$widgets['sidebar']",
+      "count": 1,
+      "source": "ContextFactory::sidebarHtml()",
+      "why": "dynamic_sidebar() output — widgets are managed by edit_theme_options users; core widgets escape, custom HTML widget needs unfiltered_html"
+    },
+    {
+      "file": "themes/latte/views/layout/parts/app-sidebar.html.twig",
+      "expr": "widgets.sidebar",
+      "count": 1,
+      "source": "ContextFactory::sidebarHtml()",
+      "why": "dynamic_sidebar() output — widgets are managed by edit_theme_options users; core widgets escape, custom HTML widget needs unfiltered_html"
+    },
+    {
+      "file": "themes/latte/views/layout/parts/app-sidebar.latte",
+      "expr": "$widgets['sidebar']",
+      "count": 1,
+      "source": "ContextFactory::sidebarHtml()",
+      "why": "dynamic_sidebar() output — widgets are managed by edit_theme_options users; core widgets escape, custom HTML widget needs unfiltered_html"
+    },
+    {
+      "file": "themes/latte/views/layout/parts/footer.html.twig",
+      "expr": "widgets.footer",
+      "count": 1,
+      "source": "ContextFactory::sidebarHtml()",
+      "why": "dynamic_sidebar() output — widgets are managed by edit_theme_options users; core widgets escape, custom HTML widget needs unfiltered_html"
+    },
+    {
+      "file": "themes/latte/views/layout/parts/footer.latte",
+      "expr": "$widgets['footer']",
+      "count": 1,
+      "source": "ContextFactory::sidebarHtml()",
+      "why": "dynamic_sidebar() output — widgets are managed by edit_theme_options users; core widgets escape, custom HTML widget needs unfiltered_html"
+    },
+    {
+      "file": "themes/latte/views/pages/404.latte",
+      "expr": "$cta",
+      "count": 1,
+      "source": "same template",
+      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
+    }
+  ],
+  "safe": [
+    {
+      "file": "plugins/wpfasty-builder/primitives/twig/ui8kit/runtime/TwigExtension.php",
+      "name": "ui8kit_attrs",
+      "why": "attribute string; values are esc_attr'd, names come from primitive templates (literals)"
+    },
+    {
+      "file": "themes/latte/twig/ui8kit/runtime/TwigExtension.php",
+      "name": "ui8kit_attrs",
+      "why": "same runtime as the builder primitives (theme copy)"
+    },
+    {
+      "file": "plugins/wpfasty-builder/sources/ui8kit/twig/php/OrganismExtension.php",
+      "name": "og_attr_html",
+      "why": "codegen attribute serializer: escapes values, blocks javascript:/vbscript:/data: URLs (Rt::urlOrNull); the adapter (Safe::props) sanitizes URL props before render as well"
+    },
+    {
+      "file": "plugins/wpfasty-builder/sources/ui8kit/twig/php/OrganismExtension.php",
+      "name": "og_lucide",
+      "why": "bundled Lucide SVG by name"
+    },
+    {
+      "file": "plugins/wpfasty-builder/src/Front.php",
+      "name": "wpfb_block",
+      "why": "renders one catalog block through Front::block (props through Links::walk + Safe::props, template autoescaped)"
+    },
+    {
+      "file": "themes/latte/classes/Template/TwigRenderer.php",
+      "name": "kses",
+      "why": "wp_kses_post filter"
+    },
+    {
+      "file": "themes/latte/classes/Template/TwigRenderer.php",
+      "name": "apply_filters",
+      "why": "WordPress filter output (e.g. the_content) — same trust as core templates calling apply_filters"
+    },
+    {
+      "file": "themes/latte/classes/Template/TwigRenderer.php",
+      "name": "$name",
+      "why": "Twig twins of the Latte WP tags (wp_head, wp_footer, wp_body_open, language_attributes, body_class, do_action): output of the core functions, same as a PHP template echoing them"
+    }
+  ]
+}
