@@ -2,7 +2,7 @@
  * wpfasty-catalog@2: the catalog of ONE runtime (docs/agent/builder-registry.md). Both runtimes share blocks,
  * variants, props and collections; only `runtime`/`templates` and the variant template extension differ.
  */
-export const CATALOG_VERSION = "3.0.0";
+export const CATALOG_VERSION = "3.1.0";
 export type Runtime = "latte" | "twig";
 export const EXT: Record<Runtime, string> = { latte: ".latte", twig: ".html.twig" };
 

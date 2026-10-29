@@ -1551,7 +1551,13 @@
       "tag": null,
       "tagFrom": null,
       "fixedProps": {},
-      "fixedAttrs": {}
+      "fixedAttrs": {},
+      "implies": {
+        "key": "state",
+        "value": "error",
+        "prop": "ariaInvalid",
+        "set": "true"
+      }
     },
     "Range": {
       "primitive": "Input",
@@ -1577,7 +1583,13 @@
       "tag": null,
       "tagFrom": null,
       "fixedProps": {},
-      "fixedAttrs": {}
+      "fixedAttrs": {},
+      "implies": {
+        "key": "state",
+        "value": "error",
+        "prop": "ariaInvalid",
+        "set": "true"
+      }
     },
     "Select": {
       "primitive": "Select",
@@ -1591,7 +1603,13 @@
       "tag": null,
       "tagFrom": null,
       "fixedProps": {},
-      "fixedAttrs": {}
+      "fixedAttrs": {},
+      "implies": {
+        "key": "state",
+        "value": "error",
+        "prop": "ariaInvalid",
+        "set": "true"
+      }
     },
     "Checkbox": {
       "primitive": "Checkbox",

@@ -82,6 +82,10 @@ final class Compose
         if ($s['fixedAttrs'] !== []) {
             $q['attrs'] = array_merge($s['fixedAttrs'], (array) ($q['attrs'] ?? []));
         }
+        $im = $s['implies'] ?? null;
+        if ($im !== null && ($values[$im['key']] ?? null) === $im['value'] && !self::isSet($q[$im['prop']] ?? null)) {
+            $q[$im['prop']] = $im['set'];
+        }
         if (isset($s['trail'])) {
             $q['children'] = (string) ($q['children'] ?? '') . $s['trail'];
         }

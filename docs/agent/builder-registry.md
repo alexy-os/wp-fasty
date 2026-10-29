@@ -36,6 +36,9 @@ v3.0.0 (source catalogs here, **not published yet**; supersedes the unpublished 
 sha256 `d80ad33b958e574c3242676dc07094240ac673f85ed33024e4183e4b54fc013c`, `twig`
 `231703621e56fe58fe1fd8df7adcc88cba16db99318b39cb757419873ba4ee0a`.
 
+v3.1.0: re-export from codegen-x `4be6a994` (kit-compose field `state: 'error'` implies `aria-invalid`); same blocks and
+variants as v3.0.0, v3.0.0 stays published unchanged.
+
 Workflow `Published registries` (`.github/workflows/registry-published.yml`, separate from CI, never blocks it; after
 each green CI run on main, daily and on demand) compares the published `v<version>/` and `latest/` byte for byte
 (sha256, size) with `dist/registry` built from source in that CI run, runs `registry:verify` on the URLs, and imports
