@@ -685,6 +685,9 @@
   .border-border {
     border-color: var(--border);
   }
+  .border-destructive {
+    border-color: var(--destructive);
+  }
   .bg-accent {
     background-color: var(--accent);
   }
@@ -1024,6 +1027,25 @@
     .hover\:bg-accent:hover {
       background-color: var(--accent);
     }
+    .hover\:bg-primary\/90:hover {
+      background-color: var(--primary);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .hover\:bg-primary\/90:hover {
+        background-color: color-mix(in oklab, var(--primary) 90%, transparent);
+      }
+    }
+    .hover\:bg-secondary\/80:hover {
+      background-color: var(--secondary);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .hover\:bg-secondary\/80:hover {
+        background-color: color-mix(in oklab, var(--secondary) 80%, transparent);
+      }
+    }
+    .hover\:text-accent-foreground:hover {
+      color: var(--accent-foreground);
+    }
     .hover\:text-foreground:hover {
       color: var(--foreground);
     }
@@ -1039,6 +1061,9 @@
     @supports (color: color-mix(in lab, red, red)) {
       --tw-ring-color: color-mix(in oklab, var(--destructive) 20%, transparent);
     }
+  }
+  .focus-visible\:inset-ring-destructive:focus-visible {
+    --tw-inset-ring-color: var(--destructive);
   }
   .focus-visible\:inset-ring-ring:focus-visible {
     --tw-inset-ring-color: var(--ring);
@@ -1057,6 +1082,9 @@
   }
   .has-\[\:checked\]\:bg-accent:has(:is(:checked)) {
     background-color: var(--accent);
+  }
+  .aria-invalid\:inset-ring-destructive[aria-invalid="true"] {
+    --tw-inset-ring-color: var(--destructive);
   }
   @media (prefers-reduced-motion: reduce) {
     .motion-reduce\:animate-none {

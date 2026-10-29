@@ -14,12 +14,12 @@
         },
         "byKey": {
             "variant": {
-                "default": "bg-primary text-primary-foreground inset-ring-primary",
-                "outline": "bg-card text-foreground inset-ring-border",
-                "ghost": "bg-transparent text-foreground inset-ring-transparent",
-                "secondary": "bg-secondary text-secondary-foreground inset-ring-border",
+                "default": "bg-primary text-primary-foreground inset-ring-primary hover:bg-primary/90",
+                "outline": "bg-card text-foreground inset-ring-border hover:bg-accent hover:text-accent-foreground",
+                "ghost": "bg-transparent text-foreground inset-ring-transparent hover:bg-accent hover:text-accent-foreground",
+                "secondary": "bg-secondary text-secondary-foreground inset-ring-border hover:bg-secondary/80",
                 "destructive": "bg-destructive text-destructive-foreground hover:bg-destructive-hover inset-ring-transparent focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
-                "link": "text-foreground inset-ring-transparent underline-offset-4 hover:underline"
+                "link": "text-primary inset-ring-transparent underline-offset-4 hover:underline"
             },
             "size": {
                 "sm": "h-8 px-3 text-sm",
@@ -85,11 +85,11 @@
                 "lg": "gap-2 text-2xl font-semibold"
             },
             "variant": {
-                "block": "flex w-full text-foreground",
-                "default": "text-foreground hover:underline",
-                "external": "text-foreground hover:underline",
+                "block": "flex w-full text-foreground hover:text-primary",
+                "default": "text-primary hover:underline",
+                "external": "text-primary hover:underline",
                 "muted": "text-muted-foreground hover:text-foreground",
-                "nav": "text-foreground"
+                "nav": "text-foreground hover:text-primary"
             }
         },
         "compound": [],
@@ -156,14 +156,16 @@
         "parts": {}
     },
     "input": {
-        "base": "w-full min-w-0 bg-background text-foreground inset-ring inset-ring-input outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:inset-ring-ring rounded",
+        "base": "w-full min-w-0 bg-background text-foreground inset-ring inset-ring-input outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:inset-ring-ring rounded aria-invalid:inset-ring-destructive",
         "keys": [
             "size",
-            "variant"
+            "variant",
+            "state"
         ],
         "defaults": {
             "size": "default",
-            "variant": "default"
+            "variant": "default",
+            "state": "default"
         },
         "byKey": {
             "size": {
@@ -174,20 +176,26 @@
             "variant": {
                 "default": "",
                 "ghost": "bg-muted inset-ring-transparent"
+            },
+            "state": {
+                "default": "",
+                "error": "inset-ring-destructive focus-visible:inset-ring-destructive"
             }
         },
         "compound": [],
         "parts": {}
     },
     "textarea": {
-        "base": "w-full min-w-0 bg-background text-foreground inset-ring inset-ring-input outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:inset-ring-ring rounded",
+        "base": "w-full min-w-0 bg-background text-foreground inset-ring inset-ring-input outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:inset-ring-ring rounded aria-invalid:inset-ring-destructive",
         "keys": [
             "size",
-            "variant"
+            "variant",
+            "state"
         ],
         "defaults": {
             "size": "default",
-            "variant": "default"
+            "variant": "default",
+            "state": "default"
         },
         "byKey": {
             "size": {
@@ -198,6 +206,10 @@
             "variant": {
                 "default": "",
                 "ghost": "bg-muted inset-ring-transparent"
+            },
+            "state": {
+                "default": "",
+                "error": "inset-ring-destructive focus-visible:inset-ring-destructive"
             }
         },
         "compound": [],
@@ -544,8 +556,8 @@
             "variant": {
                 "default": "bg-card text-card-foreground inset-ring-border",
                 "destructive": "bg-muted text-destructive inset-ring-destructive",
-                "success": "bg-muted text-foreground inset-ring-border",
-                "warning": "bg-muted text-foreground inset-ring-border"
+                "success": "bg-card text-primary inset-ring-primary",
+                "warning": "bg-accent text-accent-foreground inset-ring-border"
             }
         },
         "compound": [],

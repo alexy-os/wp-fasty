@@ -35,7 +35,7 @@ final class PrimitivesLocatorTest extends TestCase
         // base, every key (selected or default), the matching compound classes, then the extra classes (kit-compose Compose::rc)
         $this->assertSame(
             'inline-flex shrink-0 items-center justify-center whitespace-nowrap font-medium inset-ring transition-colors '
-            . 'disabled:pointer-events-none disabled:opacity-50 rounded bg-secondary text-secondary-foreground inset-ring-border '
+            . 'disabled:pointer-events-none disabled:opacity-50 rounded bg-secondary text-secondary-foreground inset-ring-border hover:bg-secondary/80 '
             . 'h-12 px-6 text-base w-full',
             Kit::classes('button', ['variant' => 'secondary', 'size' => 'lg'], 'w-full'),
         );
@@ -74,7 +74,7 @@ final class PrimitivesLocatorTest extends TestCase
         $this->assertStringContainsString('<section class="py-8" id="x">Hi</section>', $html);
         $this->assertStringContainsString('<h1 class="text-foreground font-semibold">T</h1>', $html);
         $this->assertMatchesRegularExpression('/<span class="[^"]*rounded-full h-6 px-3 text-xs bg-muted text-foreground[^"]*">B<\/span>/', $html, 'badge: kit-compose span');
-        $this->assertStringContainsString('focus-visible:inset-ring-ring rounded min-h-20', $html, 'cn keeps the codegen textarea recipe');
+        $this->assertStringContainsString('focus-visible:inset-ring-ring rounded aria-invalid:inset-ring-destructive min-h-20', $html, 'cn keeps the codegen textarea recipe');
         $this->assertMatchesRegularExpression("/<textarea[^>]*>  a\nb<\/textarea>/", $r2->render('probe'), 'exact value');
     }
 }
