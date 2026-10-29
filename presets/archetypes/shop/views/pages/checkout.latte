@@ -37,7 +37,7 @@
 						{capture $c_ui23}
 							{capture $lbl}{$label}{if $req} *{/if}{/capture}
 							{include 'label/Label.latte', htmlFor: 'co-' . $field, class: kit('label', []), children: (string) $lbl}
-							{include 'input/Input.latte', id: 'co-' . $field, type: $type, name: $field, value: (string) ($v[$field] ?? ''), required: $req, class: kit('input', [], in_array($field, $checkout['errors'], true) ? 'border-destructive' : ''), attrs: ['autocomplete' => $ac ?: null]}
+							{include 'input/Input.latte', id: 'co-' . $field, type: $type, name: $field, value: (string) ($v[$field] ?? ''), required: $req, ariaInvalid: in_array($field, $checkout['errors'], true) ? 'true' : null, class: kit('input', [], in_array($field, $checkout['errors'], true) ? 'border-destructive' : ''), attrs: ['autocomplete' => $ac ?: null]}
 						{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui23, attrs: []}
 					{/foreach}
 				{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-4 md:grid-cols-2', children: (string) $c_ui24, attrs: []}
