@@ -89,6 +89,7 @@ final class LatteRenderSmokeTest extends TestCase
                 'skip_to_content' => 'Skip to content',
                 'open_menu' => 'Open menu',
                 'close_menu' => 'Close menu',
+                'dark_mode' => 'Dark mode',
                 'primary_nav' => 'Primary',
                 'footer_nav' => 'Footer',
                 'sidebar' => 'Sidebar',

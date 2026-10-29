@@ -8,7 +8,10 @@
 		{% endset %}{% include 'button/Button.html.twig' with {'class': kit('button', {'variant': 'outline', 'layout': 'icon'}, 'md:hidden'), 'children': c_ui1, 'attrs': {'type': 'button', 'id': (sheet.trigger), 'data-ui8kit-dialog-open': 'true', 'data-ui8kit-dialog-target': (sheet.panel), 'aria-controls': (sheet.panel), 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'aria-label': (labels.open_menu)}} only %}
 		{% set c_ui2 %}{{ site.title }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm font-medium text-muted-foreground md:hidden', 'children': c_ui2, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-center gap-4', 'children': c_ui3, 'attrs': {}} only %}
-	{% set c_ui4 %}
-		{% include 'blocks/search-form.html.twig' %}
-	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'hidden md:block', 'children': c_ui4, 'attrs': {}} only %}
+	{% set c_ui6 %}
+		{% set c_ui4 %}
+			{% include 'blocks/search-form.html.twig' %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'hidden md:block', 'children': c_ui4, 'attrs': {}} only %}
+		{% include 'layout/parts/theme-toggle.html.twig' %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-center gap-4', 'children': c_ui6, 'attrs': {}} only %}
 {% endset %}{% include 'box/Box.html.twig' with {'tag': 'header', 'class': 'site-header flex h-16 items-center justify-between border-b border-border bg-background px-4 md:px-6', 'children': c_ui5, 'attrs': {}} only %}

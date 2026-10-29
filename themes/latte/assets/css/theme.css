@@ -1356,6 +1356,12 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
+  .dark\:block:is(.dark *) {
+    display: block;
+  }
+  .dark\:hidden:is(.dark *) {
+    display: none;
+  }
   .dark\:focus-visible\:ring-destructive\/40:is(.dark *):focus-visible {
     --tw-ring-color: var(--destructive);
     @supports (color: color-mix(in lab, red, red)) {

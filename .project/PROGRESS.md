@@ -441,6 +441,7 @@ bun run dev:wp -- theme activate latte-skin
 
 | Date | Decision |
 |------|----------|
+| 2026-10-29 | Dark mode toggle in the parent header (rightmost, all children inherit): inline head script (`wp_print_inline_script_tag`, wp_head prio 1, before CSS) sets `.dark` from localStorage `wpfasty-color-scheme` else prefers-color-scheme; `assets/js/theme-toggle.js` (defer, footer) toggles + aria-pressed; Lucide sun/moon; no Customizer option (theme has no Customizer section yet) |
 | 2026-10-28 | Output safety of builder blocks is codegen-x's (organism runtime allowlist, codegen-x `832d7f17`); wp-fasty keeps its input guards (adapter `Safe`, `Layout::clean`, kses, REST limit, sandbox) as the first layer and drops a guard only where a shared-vector test proves codegen-x does the same |
 | 2026-07 | YM deleted; `themes/latte` is reference parent |
 | 2026-07 | Child skins = WP child themes, no Composer |

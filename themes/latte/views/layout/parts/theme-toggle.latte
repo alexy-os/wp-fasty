@@ -1,0 +1,5 @@
+{** Dark mode toggle — rightmost header control; assets/js/theme-toggle.js flips `dark` on <html> and aria-pressed. *}
+{capture $c_ui1}
+	{icon('moon', 'dark:hidden')}
+	{icon('sun', 'hidden dark:block')}
+{/capture}{include 'button/Button.latte', class: kit('button', ['variant' => 'ghost', 'layout' => 'icon']), children: (string) $c_ui1, attrs: ['type' => 'button', 'data-wpfasty-theme-toggle' => 'true', 'aria-pressed' => 'false', 'aria-label' => ($labels['dark_mode'])]}

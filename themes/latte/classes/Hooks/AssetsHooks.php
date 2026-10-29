@@ -9,6 +9,21 @@ final class AssetsHooks extends AbstractHooks
     public function register(): void
     {
         $this->addAction('wp_enqueue_scripts', 'enqueue');
+        $this->addAction('wp_head', 'printColorSchemeScript', 1);
+    }
+
+    /**
+     * Sets `dark` on <html> before any stylesheet prints (wp_print_styles runs at priority 8) so there is no flash:
+     * stored choice first, then prefers-color-scheme. Static string, no user data.
+     */
+    public function printColorSchemeScript(): void
+    {
+        wp_print_inline_script_tag(
+            '(function(){var d;try{var s=localStorage.getItem("wpfasty-color-scheme");'
+            . 'd=s?s==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;}catch(e){d=false;}'
+            . 'document.documentElement.classList.toggle("dark",d);})();',
+            ['id' => 'latte-color-scheme']
+        );
     }
 
     public function enqueue(): void
@@ -56,6 +71,17 @@ final class AssetsHooks extends AbstractHooks
                 [],
                 $parentVer,
                 true
+            );
+        }
+
+        $toggleJs = get_template_directory() . '/assets/js/theme-toggle.js';
+        if (is_file($toggleJs)) {
+            wp_enqueue_script(
+                'latte-theme-toggle',
+                get_template_directory_uri() . '/assets/js/theme-toggle.js',
+                [],
+                $parentVer,
+                ['in_footer' => true, 'strategy' => 'defer']
             );
         }
 

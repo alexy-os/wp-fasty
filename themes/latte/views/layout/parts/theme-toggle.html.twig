@@ -1,0 +1,5 @@
+{# Dark mode toggle — rightmost header control; assets/js/theme-toggle.js flips `dark` on <html> and aria-pressed. Twig twin of theme-toggle.latte. #}
+{% set c_ui1 %}
+	{{ icon('moon', 'dark:hidden') }}
+	{{ icon('sun', 'hidden dark:block') }}
+{% endset %}{% include 'button/Button.html.twig' with {'class': kit('button', {'variant': 'ghost', 'layout': 'icon'}), 'children': c_ui1, 'attrs': {'type': 'button', 'data-wpfasty-theme-toggle': 'true', 'aria-pressed': 'false', 'aria-label': (labels.dark_mode)}} only %}

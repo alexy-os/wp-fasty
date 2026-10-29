@@ -208,6 +208,7 @@ final class ContextFactory
             'skip_to_content' => __('Skip to content', 'latte'),
             'open_menu' => __('Open menu', 'latte'),
             'close_menu' => __('Close menu', 'latte'),
+            'dark_mode' => __('Dark mode', 'latte'),
             'primary_nav' => __('Primary', 'latte'),
             'mobile_nav' => __('Mobile menu', 'latte'),
             'search_site' => __('Site search', 'latte'),
