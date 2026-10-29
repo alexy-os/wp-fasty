@@ -38,14 +38,14 @@
 						{% set c_ui23 %}
 							{% set lbl %}{{ label }}{% if req %} *{% endif %}{% endset %}
 							{% include 'label/Label.html.twig' with { htmlFor: 'co-' ~ field, class: kit('label', {}), children: lbl } %}
-							{% include 'input/Input.html.twig' with { id: 'co-' ~ field, type: type, name: field, value: (v[field] ?? '') ~ '', required: req, ariaInvalid: field in checkout.errors ? 'true' : null, class: kit('input', {}, field in checkout.errors ? 'border-destructive' : ''), attrs: {'autocomplete': (ac) ?: null} } %}
+							{% include 'compose/Input.html.twig' with { id: 'co-' ~ field, type: type, name: field, value: (v[field] ?? '') ~ '', required: req, state: field in checkout.errors ? 'error' : null, attrs: {'autocomplete': (ac) ?: null} } only %}
 						{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui23, 'attrs': {}} only %}
 					{% endfor %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-4 md:grid-cols-2', 'children': c_ui24, 'attrs': {}} only %}
 				{% set c_ui25 %}
 					{% set addrLbl %}{{ labels.address }} *{% endset %}
 					{% include 'label/Label.html.twig' with { htmlFor: 'co-address', class: kit('label', {}), children: addrLbl } %}
-					{% include 'textarea/Textarea.html.twig' with { id: 'co-address', name: 'address', value: (v.address ?? '') ~ '', rows: '2', required: true, class: kit('textarea', {}) } %}
+					{% include 'compose/Textarea.html.twig' with { id: 'co-address', name: 'address', value: (v.address ?? '') ~ '', rows: '2', required: true, state: 'address' in checkout.errors ? 'error' : null } only %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui25, 'attrs': {}} only %}
 				{% set c_ui31 %}
 					{% set c_ui26 %}{{ labels.payment }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'legend', 'class': 'mb-2 text-sm font-medium', 'children': c_ui26, 'attrs': {}} only %}
@@ -62,7 +62,7 @@
 				{% set c_ui32 %}
 					{% set notesLbl %}Order notes{% endset %}
 					{% include 'label/Label.html.twig' with { htmlFor: 'co-notes', class: kit('label', {}), children: notesLbl } %}
-					{% include 'textarea/Textarea.html.twig' with { id: 'co-notes', name: 'notes', value: (v.notes ?? '') ~ '', rows: '3', class: kit('textarea', {}) } %}
+					{% include 'compose/Textarea.html.twig' with { id: 'co-notes', name: 'notes', value: (v.notes ?? '') ~ '', rows: '3' } only %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui32, 'attrs': {}} only %}
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-6 rounded-xl border border-border bg-card p-6', 'children': c_ui33, 'attrs': {}} only %}
 			{% set c_ui39 %}

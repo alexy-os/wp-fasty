@@ -37,14 +37,14 @@
 						{capture $c_ui23}
 							{capture $lbl}{$label}{if $req} *{/if}{/capture}
 							{include 'label/Label.latte', htmlFor: 'co-' . $field, class: kit('label', []), children: (string) $lbl}
-							{include 'input/Input.latte', id: 'co-' . $field, type: $type, name: $field, value: (string) ($v[$field] ?? ''), required: $req, ariaInvalid: in_array($field, $checkout['errors'], true) ? 'true' : null, class: kit('input', [], in_array($field, $checkout['errors'], true) ? 'border-destructive' : ''), attrs: ['autocomplete' => $ac ?: null]}
+							{include 'compose/Input.latte', id: 'co-' . $field, type: $type, name: $field, value: (string) ($v[$field] ?? ''), required: $req, state: in_array($field, $checkout['errors'], true) ? 'error' : null, attrs: ['autocomplete' => $ac ?: null]}
 						{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui23, attrs: []}
 					{/foreach}
 				{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-4 md:grid-cols-2', children: (string) $c_ui24, attrs: []}
 				{capture $c_ui25}
 					{capture $addrLbl}{$labels['address']} *{/capture}
 					{include 'label/Label.latte', htmlFor: 'co-address', class: kit('label', []), children: (string) $addrLbl}
-					{include 'textarea/Textarea.latte', id: 'co-address', name: 'address', value: (string) ($v['address'] ?? ''), rows: '2', required: true, class: kit('textarea', [])}
+					{include 'compose/Textarea.latte', id: 'co-address', name: 'address', value: (string) ($v['address'] ?? ''), rows: '2', required: true, state: in_array('address', $checkout['errors'], true) ? 'error' : null}
 				{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui25, attrs: []}
 				{capture $c_ui31}
 					{capture $c_ui26}{$labels['payment']}{/capture}{include 'text/Text.latte', tag: 'legend', class: 'mb-2 text-sm font-medium', children: (string) $c_ui26, attrs: []}
@@ -61,7 +61,7 @@
 				{capture $c_ui32}
 					{capture $notesLbl}Order notes{/capture}
 					{include 'label/Label.latte', htmlFor: 'co-notes', class: kit('label', []), children: (string) $notesLbl}
-					{include 'textarea/Textarea.latte', id: 'co-notes', name: 'notes', value: (string) ($v['notes'] ?? ''), rows: '3', class: kit('textarea', [])}
+					{include 'compose/Textarea.latte', id: 'co-notes', name: 'notes', value: (string) ($v['notes'] ?? ''), rows: '3'}
 				{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui32, attrs: []}
 			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-6 rounded-xl border border-border bg-card p-6', children: (string) $c_ui33, attrs: []}
 			{capture $c_ui39}

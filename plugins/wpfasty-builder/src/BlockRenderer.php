@@ -48,7 +48,14 @@ final class BlockRenderer
             return false;
         }
         $root = self::bundled($runtime);
-        $files = [...(glob($root . '/compose/*.php') ?: [])];
+        // compose/*.php declare CodegenX\Compose\{Latte,Twig}\<file>; the parent theme ships the same classes
+        // (ui8kit/compose, twig/ui8kit/compose: kit-compose form fields, same commit and compose.json), so a class
+        // already defined or autoloadable is used, not redeclared (like Primitives::loadRuntime)
+        $ns = $runtime === 'twig' ? 'CodegenX\\Compose\\Twig\\' : 'CodegenX\\Compose\\Latte\\';
+        $files = array_values(array_filter(
+            glob($root . '/compose/*.php') ?: [],
+            static fn (string $f): bool => !class_exists($ns . basename($f, '.php'))
+        ));
         foreach (['CnMerge', 'Runtime', 'OrganismExtension'] as $f) {
             $files[] = "$root/php/$f.php";
         }

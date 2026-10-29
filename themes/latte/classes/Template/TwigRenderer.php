@@ -48,6 +48,10 @@ final class TwigRenderer implements RendererInterface
             // UI8Kit 3 (twig/ui8kit/runtime): ui8kit_attrs, ui8kit_classes, …; classes of our kit via kit().
             $this->twig->addExtension(new \UI8Kit\Twig\TwigExtension());
         }
+        if (class_exists(\CodegenX\Compose\Twig\ComposeExtension::class)) {
+            // kit-compose form fields (twig/ui8kit/compose): compose_props() for compose/Input.html.twig & co.
+            $this->twig->addExtension(new \CodegenX\Compose\Twig\ComposeExtension());
+        }
         $this->twig->addFunction(new TwigFunction('kit', [Kit::class, 'classes']));
         $this->registerCommonSubset();
     }

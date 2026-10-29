@@ -25,9 +25,27 @@ final class PrimitivesLocatorTest extends TestCase
     public function testLatteRootsPutKitBeforeUi8Kit3(): void
     {
         $this->assertSame(
-            [$this->theme() . '/kit/ui', $this->theme() . '/ui8kit/ui'],
+            [$this->theme() . '/kit/ui', $this->theme() . '/ui8kit/ui', $this->theme() . '/ui8kit'],
             PrimitivesLocator::latteRoots($this->theme()),
         );
+    }
+
+    public function testComposeFieldsMapStateErrorToAriaInvalid(): void
+    {
+        // kit-compose form fields (ui8kit/compose, tools/builder/export-ui8kit.ts): state error → recipe + aria-invalid
+        $this->assertFileExists($this->theme() . '/ui8kit/compose/Input.latte');
+        $this->assertFileExists($this->theme() . '/twig/ui8kit/compose/Input.html.twig');
+        foreach ([\CodegenX\Compose\Latte\Compose::class, \CodegenX\Compose\Twig\Compose::class] as $compose) {
+            foreach (['Input', 'Textarea', 'Select'] as $field) {
+                $err = $compose::props($field, ['state' => 'error', 'class' => 'x']);
+                $this->assertSame('true', $err['ariaInvalid'] ?? null, "{$compose} {$field}");
+                $this->assertStringContainsString('inset-ring-destructive', $err['class']);
+                $this->assertStringEndsWith(' x', $err['class']);
+                $this->assertArrayNotHasKey('state', $err);
+                $ok = $compose::props($field, ['state' => null]);
+                $this->assertArrayNotHasKey('ariaInvalid', $ok, "{$compose} {$field} without state");
+            }
+        }
     }
 
     public function testKitComposesCodegenRecipesInComposeOrder(): void

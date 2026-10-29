@@ -25,7 +25,9 @@ final class PrimitivesLocator
     /**
      * Latte root chain of the primitives: our kit compositions (`kit/ui`, middle layer over Box/Text with
      * presets) before the UI8Kit 3 primitives installed by `npx ui8kit@3 add --all` (`ui8kit/ui`, PSR-4
-     * `UI8Kit\\Latte\\` → `ui8kit/runtime/`). Without a UI8Kit 3 install: the legacy package directory.
+     * `UI8Kit\\Latte\\` → `ui8kit/runtime/`), then `ui8kit/` itself for the kit-compose form fields
+     * (`compose/Input.latte` & co with `state`, exported by tools/builder/export-ui8kit.ts; they include `../ui/…`).
+     * Without a UI8Kit 3 install: the legacy package directory.
      *
      * @return list<string>
      */
@@ -33,7 +35,7 @@ final class PrimitivesLocator
     {
         $themeDir ??= get_template_directory();
         if (is_dir($themeDir . '/ui8kit/ui') && is_dir($themeDir . '/kit/ui')) {
-            return [$themeDir . '/kit/ui', $themeDir . '/ui8kit/ui'];
+            return [$themeDir . '/kit/ui', $themeDir . '/ui8kit/ui', $themeDir . '/ui8kit'];
         }
         $legacy = self::resolve($themeDir);
 
@@ -42,7 +44,8 @@ final class PrimitivesLocator
 
     /**
      * Twig root chain: our kit compositions (`twig/kit/ui`) before the UI8Kit 3 Twig primitives (`twig/ui8kit/ui`,
-     * `npx ui8kit@3 add --all` in `twig/`, PSR-4 `UI8Kit\\Twig\\` → `twig/ui8kit/runtime/`). Without a UI8Kit 3
+     * `npx ui8kit@3 add --all` in `twig/`, PSR-4 `UI8Kit\\Twig\\` → `twig/ui8kit/runtime/`), then `twig/ui8kit/` for
+     * `compose/Input.html.twig` & co (they include `ui/…`, `compose_props()` of ComposeExtension). Without a UI8Kit 3
      * install: the legacy codegen Twig directory.
      *
      * @return list<string>
@@ -51,7 +54,7 @@ final class PrimitivesLocator
     {
         $themeDir ??= get_template_directory();
         if (is_dir($themeDir . '/twig/ui8kit/ui') && is_dir($themeDir . '/twig/kit/ui')) {
-            return [$themeDir . '/twig/kit/ui', $themeDir . '/twig/ui8kit/ui'];
+            return [$themeDir . '/twig/kit/ui', $themeDir . '/twig/ui8kit/ui', $themeDir . '/twig/ui8kit'];
         }
         $legacy = self::resolveTwig($themeDir);
 

@@ -1,0 +1,1759 @@
+{
+  "recipes": {
+    "alert": {
+      "base": "flex min-h-8 items-center gap-2 px-2 text-xs font-semibold inset-ring rounded",
+      "keys": [
+        "variant"
+      ],
+      "defaults": {
+        "variant": "default"
+      },
+      "byKey": {
+        "variant": {
+          "default": "bg-card text-card-foreground inset-ring-border",
+          "destructive": "bg-muted text-destructive inset-ring-destructive",
+          "success": "bg-card text-primary inset-ring-primary",
+          "warning": "bg-accent text-accent-foreground inset-ring-border"
+        }
+      },
+      "compound": []
+    },
+    "badge": {
+      "base": "inline-flex shrink-0 items-center justify-center whitespace-nowrap font-medium inset-ring rounded-full",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default"
+      },
+      "byKey": {
+        "size": {
+          "sm": "h-5 px-2 text-xs",
+          "default": "h-6 px-3 text-xs",
+          "lg": "h-8 px-4 text-sm"
+        },
+        "variant": {
+          "default": "bg-primary text-primary-foreground inset-ring-primary",
+          "secondary": "bg-muted text-foreground inset-ring-transparent",
+          "outline": "bg-transparent text-foreground inset-ring-border",
+          "destructive": "bg-destructive text-destructive-foreground inset-ring-transparent focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40"
+        }
+      },
+      "compound": []
+    },
+    "block": {
+      "base": "",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "box": {
+      "base": "",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "button": {
+      "base": "inline-flex shrink-0 items-center justify-center whitespace-nowrap font-medium inset-ring transition-colors disabled:pointer-events-none disabled:opacity-50 rounded",
+      "keys": [
+        "variant",
+        "size",
+        "layout"
+      ],
+      "defaults": {
+        "variant": "default",
+        "size": "default",
+        "layout": "default"
+      },
+      "byKey": {
+        "variant": {
+          "default": "bg-primary text-primary-foreground inset-ring-primary hover:bg-primary/90",
+          "outline": "bg-card text-foreground inset-ring-border hover:bg-accent hover:text-accent-foreground",
+          "ghost": "bg-transparent text-foreground inset-ring-transparent hover:bg-accent hover:text-accent-foreground",
+          "secondary": "bg-secondary text-secondary-foreground inset-ring-border hover:bg-secondary/80",
+          "destructive": "bg-destructive text-destructive-foreground hover:bg-destructive-hover inset-ring-transparent focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
+          "link": "text-primary inset-ring-transparent underline-offset-4 hover:underline"
+        },
+        "size": {
+          "sm": "h-8 px-3 text-sm",
+          "default": "h-10 px-4 text-sm",
+          "lg": "h-12 px-6 text-base"
+        },
+        "layout": {
+          "default": "",
+          "icon": ""
+        }
+      },
+      "compound": [
+        {
+          "layout": "icon",
+          "size": "sm",
+          "class": "size-8 p-0 [&>svg]:size-4"
+        },
+        {
+          "layout": "icon",
+          "size": "default",
+          "class": "size-10 p-0 [&>svg]:size-5"
+        },
+        {
+          "layout": "icon",
+          "size": "lg",
+          "class": "size-12 p-0 [&>svg]:size-6"
+        },
+        {
+          "variant": "outline",
+          "layout": "icon",
+          "class": "text-muted-foreground"
+        },
+        {
+          "variant": "ghost",
+          "layout": "icon",
+          "class": "text-muted-foreground"
+        }
+      ]
+    },
+    "button-plain": {
+      "base": "",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "card": {
+      "base": "flex flex-col gap-8 bg-card p-6 text-card-foreground inset-ring inset-ring-border rounded",
+      "keys": [
+        "variant"
+      ],
+      "defaults": {
+        "variant": "default"
+      },
+      "byKey": {
+        "variant": {
+          "default": "",
+          "muted": "bg-muted",
+          "ghost": "bg-transparent",
+          "compact": "gap-4 p-4"
+        }
+      },
+      "compound": []
+    },
+    "checkbox": {
+      "base": "peer shrink-0 appearance-none bg-background inset-ring inset-ring-input checked:bg-primary checked:inset-ring-primary checkbox-glyph disabled:cursor-not-allowed disabled:opacity-50",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default"
+      },
+      "byKey": {
+        "size": {
+          "default": "size-5",
+          "sm": "size-4"
+        },
+        "variant": {
+          "default": "",
+          "ghost": "bg-muted"
+        }
+      },
+      "compound": []
+    },
+    "container": {
+      "base": "",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "dialog": {
+      "base": "m-auto open:flex open:flex-col bg-background text-foreground inset-ring inset-ring-border shadow-lg backdrop:bg-foreground/20 rounded",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default"
+      },
+      "byKey": {
+        "size": {
+          "default": "w-70",
+          "full": "h-full w-full",
+          "lg": "w-100",
+          "xl": "w-140"
+        },
+        "variant": {
+          "card": "bg-card text-card-foreground",
+          "default": "",
+          "sheet": "min-h-screen rounded-none"
+        }
+      },
+      "compound": []
+    },
+    "disclosure": {
+      "base": "group",
+      "keys": [
+        "variant"
+      ],
+      "defaults": {
+        "variant": "default"
+      },
+      "byKey": {
+        "variant": {
+          "card": "rounded bg-card inset-ring inset-ring-border",
+          "default": "rounded inset-ring inset-ring-border",
+          "ghost": "",
+          "item": "border-b border-border last:border-b-0"
+        }
+      },
+      "compound": []
+    },
+    "fieldset": {
+      "base": "grid",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default"
+      },
+      "byKey": {
+        "size": {
+          "default": "gap-2",
+          "lg": "gap-4",
+          "sm": "gap-2"
+        },
+        "variant": {
+          "card": "rounded p-4 inset-ring inset-ring-border",
+          "default": "",
+          "inline": "flex flex-wrap items-start gap-4"
+        }
+      },
+      "compound": []
+    },
+    "form": {
+      "base": "grid gap-4",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "form-description": {
+      "base": "text-xs font-semibold text-muted-foreground",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "form-item": {
+      "base": "flex flex-col gap-2",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "form-message": {
+      "base": "text-xs font-semibold text-destructive",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "grid": {
+      "base": "grid",
+      "keys": [
+        "cols"
+      ],
+      "defaults": {
+        "cols": "1"
+      },
+      "byKey": {
+        "cols": {
+          "1": "grid-cols-1",
+          "2": "grid-cols-2",
+          "3": "grid-cols-3",
+          "4": "grid-cols-4",
+          "5": "grid-cols-5",
+          "6": "grid-cols-6",
+          "7": "grid-cols-7",
+          "8": "grid-cols-8",
+          "9": "grid-cols-9",
+          "10": "grid-cols-10",
+          "11": "grid-cols-11",
+          "12": "grid-cols-12",
+          "1-2": "grid-cols-1 md:grid-cols-2",
+          "1-3": "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+          "1-4": "grid-cols-1 sm:grid-cols-2 md:grid-cols-4",
+          "2-3": "grid-cols-2 md:grid-cols-3",
+          "2-4": "grid-cols-2 md:grid-cols-4",
+          "2-6": "grid-cols-2 md:grid-cols-6",
+          "3-6": "grid-cols-3 md:grid-cols-6"
+        }
+      },
+      "compound": []
+    },
+    "group": {
+      "base": "flex min-w-0",
+      "keys": [
+        "gap",
+        "align",
+        "justify"
+      ],
+      "defaults": {
+        "gap": "auto",
+        "align": "center",
+        "justify": "start"
+      },
+      "byKey": {
+        "gap": {
+          "0": "gap-0",
+          "2": "gap-2",
+          "4": "gap-4",
+          "6": "gap-6",
+          "8": "gap-8",
+          "10": "gap-10",
+          "12": "gap-12",
+          "auto": ""
+        },
+        "align": {
+          "start": "items-start",
+          "center": "items-center",
+          "end": "items-end",
+          "stretch": "items-stretch",
+          "baseline": "items-baseline"
+        },
+        "justify": {
+          "start": "justify-start",
+          "center": "justify-center",
+          "end": "justify-end",
+          "between": "justify-between"
+        }
+      },
+      "compound": []
+    },
+    "icon": {
+      "base": "inline-block shrink-0",
+      "keys": [
+        "size",
+        "type"
+      ],
+      "defaults": {
+        "size": "default",
+        "type": "class"
+      },
+      "byKey": {
+        "size": {
+          "xs": "size-3",
+          "default": "size-4",
+          "md": "size-5",
+          "lg": "size-6"
+        },
+        "type": {
+          "class": "",
+          "svg": "",
+          "text": ""
+        }
+      },
+      "compound": []
+    },
+    "iconbadge": {
+      "base": "inline-flex shrink-0 items-center justify-center font-bold rounded",
+      "keys": [
+        "variant",
+        "size"
+      ],
+      "defaults": {
+        "variant": "default",
+        "size": "default"
+      },
+      "byKey": {
+        "variant": {
+          "default": "bg-muted text-muted-foreground",
+          "primary": "bg-primary text-primary-foreground",
+          "accent": "bg-accent text-accent-foreground",
+          "secondary": "bg-secondary text-secondary-foreground",
+          "outline": "text-foreground inset-ring inset-ring-border",
+          "destructive": "bg-destructive text-destructive-foreground"
+        },
+        "size": {
+          "xs": "size-6 text-xs",
+          "sm": "size-8 text-xs",
+          "default": "size-10 text-xs",
+          "lg": "size-12 text-sm",
+          "xl": "size-20 text-base"
+        }
+      },
+      "compound": []
+    },
+    "image": {
+      "base": "block max-w-full",
+      "keys": [
+        "aspect",
+        "fit",
+        "position",
+        "size",
+        "variant"
+      ],
+      "defaults": {
+        "aspect": "auto",
+        "fit": "cover",
+        "position": "center",
+        "size": "auto",
+        "variant": "default"
+      },
+      "byKey": {
+        "aspect": {
+          "auto": "aspect-auto",
+          "square": "aspect-square",
+          "video": "aspect-video"
+        },
+        "fit": {
+          "contain": "object-contain",
+          "cover": "object-cover",
+          "fill": "object-fill",
+          "none": "object-none",
+          "scale-down": "object-scale-down"
+        },
+        "position": {
+          "bottom": "object-bottom",
+          "center": "object-center",
+          "left": "object-left",
+          "left-bottom": "object-left-bottom",
+          "left-top": "object-left-top",
+          "right": "object-right",
+          "right-bottom": "object-right-bottom",
+          "right-top": "object-right-top",
+          "top": "object-top"
+        },
+        "size": {
+          "auto": "",
+          "default": "",
+          "full": "h-full w-full",
+          "xs": "size-6",
+          "sm": "size-8",
+          "md": "size-12",
+          "lg": "size-16",
+          "xl": "size-20"
+        },
+        "variant": {
+          "default": "",
+          "logo": "object-contain"
+        }
+      },
+      "compound": []
+    },
+    "inline": {
+      "base": "",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "input": {
+      "base": "w-full min-w-0 bg-background text-foreground inset-ring inset-ring-input outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:inset-ring-ring rounded aria-invalid:inset-ring-destructive",
+      "keys": [
+        "size",
+        "variant",
+        "state"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default",
+        "state": "default"
+      },
+      "byKey": {
+        "size": {
+          "sm": "h-8 px-3 text-base md:text-sm",
+          "default": "h-10 px-3 text-base md:text-sm",
+          "lg": "h-12 px-4 text-base"
+        },
+        "variant": {
+          "default": "",
+          "ghost": "bg-muted inset-ring-transparent"
+        },
+        "state": {
+          "default": "",
+          "error": "inset-ring-destructive focus-visible:inset-ring-destructive"
+        }
+      },
+      "compound": []
+    },
+    "label": {
+      "base": "text-xs font-bold text-foreground",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "legend": {
+      "base": "font-bold",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default"
+      },
+      "byKey": {
+        "size": {
+          "sm": "text-xs",
+          "default": "text-sm",
+          "lg": "text-base"
+        },
+        "variant": {
+          "default": "",
+          "muted": "text-muted-foreground"
+        }
+      },
+      "compound": []
+    },
+    "link": {
+      "base": "inline-flex items-center underline-offset-4",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default"
+      },
+      "byKey": {
+        "size": {
+          "sm": "gap-2 text-sm font-medium",
+          "default": "gap-2 text-base font-semibold",
+          "md": "gap-2 text-xl font-semibold",
+          "lg": "gap-2 text-2xl font-semibold"
+        },
+        "variant": {
+          "block": "flex w-full text-foreground hover:text-primary",
+          "default": "text-primary hover:underline",
+          "external": "text-primary hover:underline",
+          "muted": "text-muted-foreground hover:text-foreground",
+          "nav": "text-foreground hover:text-primary"
+        }
+      },
+      "compound": []
+    },
+    "link-plain": {
+      "base": "",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "list": {
+      "base": "",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "lucide-icon": {
+      "base": "inline-block shrink-0",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "meter": {
+      "base": "w-full appearance-none overflow-hidden bg-muted progress-bar rounded",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default"
+      },
+      "byKey": {
+        "size": {
+          "sm": "h-1",
+          "default": "h-2",
+          "lg": "h-3"
+        },
+        "variant": {
+          "default": "[--bar:var(--color-primary)]",
+          "muted": "[--bar:var(--color-muted-foreground)]"
+        }
+      },
+      "compound": []
+    },
+    "progress": {
+      "base": "w-full appearance-none overflow-hidden bg-muted progress-bar rounded",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default"
+      },
+      "byKey": {
+        "size": {
+          "sm": "h-1",
+          "default": "h-2",
+          "lg": "h-3"
+        },
+        "variant": {
+          "default": "[--bar:var(--color-primary)]",
+          "muted": "[--bar:var(--color-muted-foreground)]"
+        }
+      },
+      "compound": []
+    },
+    "prose": {
+      "base": "w-full min-w-0 mx-auto break-words [&>*+*]:mt-4 [&>:first-child]:mt-0 [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:mt-6 [&_h3]:text-xl [&_h3]:font-semibold [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li+li]:mt-2 [&_blockquote]:border-l-4 [&_blockquote]:border-border [&_blockquote]:pl-4 [&_blockquote]:text-muted-foreground [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded [&_code]:rounded [&_code]:bg-muted [&_code]:px-2 [&_pre]:overflow-x-auto [&_pre]:rounded [&_pre]:bg-muted [&_pre]:p-4 [&_table]:w-full [&_table]:border-collapse [&_th]:border-b [&_th]:border-border [&_th]:py-2 [&_th]:pr-4 [&_th]:text-left [&_th]:font-semibold [&_td]:border-b [&_td]:border-border [&_td]:py-2 [&_td]:pr-4 [&_figcaption]:mt-2 [&_figcaption]:text-sm [&_figcaption]:text-muted-foreground [&_.wp-caption-text]:mt-2 [&_.wp-caption-text]:text-sm [&_.wp-caption-text]:text-muted-foreground [&_.wp-element-caption]:mt-2 [&_.wp-element-caption]:text-sm [&_.wp-element-caption]:text-muted-foreground [&_.aligncenter]:mx-auto [&_.alignwide]:w-full [&_.alignfull]:w-full",
+      "keys": [
+        "size",
+        "width"
+      ],
+      "defaults": {
+        "size": "base",
+        "width": "narrow"
+      },
+      "byKey": {
+        "size": {
+          "sm": "text-sm leading-6",
+          "base": "text-base leading-6",
+          "lg": "text-lg leading-8"
+        },
+        "width": {
+          "narrow": "max-w-2xl",
+          "wide": "max-w-4xl",
+          "none": "max-w-none"
+        }
+      },
+      "compound": []
+    },
+    "radio": {
+      "base": "shrink-0 appearance-none rounded-full bg-background inset-ring inset-ring-input checked:bg-primary checked:inset-ring-primary radio-glyph disabled:cursor-not-allowed disabled:opacity-50",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default"
+      },
+      "byKey": {
+        "size": {
+          "default": "size-5 [--dot:10px]",
+          "sm": "size-4 [--dot:8px]"
+        },
+        "variant": {
+          "default": "",
+          "ghost": "bg-muted"
+        }
+      },
+      "compound": []
+    },
+    "range": {
+      "base": "h-5 w-full cursor-pointer appearance-none bg-transparent accent-primary disabled:cursor-not-allowed disabled:opacity-50 [&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:rounded [&::-webkit-slider-runnable-track]:bg-muted [&::-webkit-slider-thumb]:-mt-1 [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded [&::-webkit-slider-thumb]:bg-primary [&::-moz-range-track]:h-1 [&::-moz-range-track]:rounded [&::-moz-range-track]:bg-muted [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-primary",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "select": {
+      "base": "w-full min-w-0 bg-background text-foreground inset-ring inset-ring-input outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:inset-ring-ring rounded aria-invalid:inset-ring-destructive",
+      "keys": [
+        "size",
+        "variant",
+        "state"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default",
+        "state": "default"
+      },
+      "byKey": {
+        "size": {
+          "sm": "h-8 px-3 text-sm",
+          "default": "h-10 px-3 text-sm",
+          "lg": "h-12 px-4 text-base"
+        },
+        "variant": {
+          "default": "",
+          "ghost": "bg-muted inset-ring-transparent"
+        },
+        "state": {
+          "default": "",
+          "error": "inset-ring-destructive focus-visible:inset-ring-destructive"
+        }
+      },
+      "compound": []
+    },
+    "separator": {
+      "base": "shrink-0 border-0 bg-border",
+      "keys": [
+        "orientation",
+        "variant"
+      ],
+      "defaults": {
+        "orientation": "horizontal",
+        "variant": "default"
+      },
+      "byKey": {
+        "orientation": {
+          "horizontal": "h-px w-full",
+          "vertical": "h-full w-px"
+        },
+        "variant": {
+          "default": "",
+          "spaced": "my-6"
+        }
+      },
+      "compound": []
+    },
+    "sheet": {
+      "base": "fixed inset-0 z-50 open:flex",
+      "keys": [
+        "side"
+      ],
+      "defaults": {
+        "side": "right"
+      },
+      "byKey": {
+        "side": {
+          "left": "flex-row justify-start",
+          "right": "flex-row justify-end"
+        }
+      },
+      "compound": []
+    },
+    "sheettrigger": {
+      "base": "inline-flex shrink-0 cursor-pointer items-center justify-center rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+      "keys": [
+        "variant",
+        "size"
+      ],
+      "defaults": {
+        "variant": "default",
+        "size": "default"
+      },
+      "byKey": {
+        "variant": {
+          "default": "bg-muted text-foreground hover:bg-accent",
+          "ghost": "bg-transparent text-foreground hover:bg-muted",
+          "contrast": "bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20",
+          "current": "bg-transparent text-current hover:bg-current/10"
+        },
+        "size": {
+          "sm": "size-8",
+          "default": "size-10",
+          "lg": "size-12"
+        }
+      },
+      "compound": []
+    },
+    "skeleton": {
+      "base": "animate-pulse bg-muted motion-reduce:animate-none rounded",
+      "keys": [
+        "shape"
+      ],
+      "defaults": {
+        "shape": "line"
+      },
+      "byKey": {
+        "shape": {
+          "line": "h-4 w-full",
+          "block": "h-20 w-full"
+        }
+      },
+      "compound": []
+    },
+    "stack": {
+      "base": "flex flex-col",
+      "keys": [
+        "gap",
+        "align",
+        "justify"
+      ],
+      "defaults": {
+        "gap": "auto",
+        "align": "start",
+        "justify": "start"
+      },
+      "byKey": {
+        "gap": {
+          "0": "gap-0",
+          "2": "gap-2",
+          "4": "gap-4",
+          "6": "gap-6",
+          "8": "gap-8",
+          "10": "gap-10",
+          "12": "gap-12",
+          "auto": ""
+        },
+        "align": {
+          "start": "items-start",
+          "center": "items-center",
+          "end": "items-end",
+          "stretch": "items-stretch",
+          "baseline": "items-baseline"
+        },
+        "justify": {
+          "start": "justify-start",
+          "center": "justify-center",
+          "end": "justify-end",
+          "between": "justify-between"
+        }
+      },
+      "compound": []
+    },
+    "summary": {
+      "base": "flex cursor-pointer list-none items-center justify-between gap-2 [&::-webkit-details-marker]:hidden",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default"
+      },
+      "byKey": {
+        "size": {
+          "sm": "text-xs font-semibold",
+          "default": "text-sm font-semibold",
+          "lg": "text-base font-semibold"
+        },
+        "variant": {
+          "card": "py-2 pr-4 pl-4",
+          "default": "py-2 pr-4 pl-4",
+          "ghost": "py-2",
+          "item": "py-4 text-muted-foreground hover:text-foreground group-open:text-foreground"
+        }
+      },
+      "compound": []
+    },
+    "switch": {
+      "base": "relative shrink-0 appearance-none bg-muted inset-ring inset-ring-input checked:bg-primary checked:inset-ring-primary switch-knob disabled:cursor-not-allowed disabled:opacity-50 rounded-full",
+      "keys": [
+        "size"
+      ],
+      "defaults": {
+        "size": "default"
+      },
+      "byKey": {
+        "size": {
+          "default": "h-5 w-9 [--knob:12px] [--pad:4px]",
+          "sm": "h-4 w-8 [--knob:12px] [--pad:2px]"
+        }
+      },
+      "compound": []
+    },
+    "table": {
+      "base": "",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "table-cell": {
+      "base": "px-2 py-2 align-middle",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "table-head-cell": {
+      "base": "px-2 py-2 text-left align-middle font-semibold",
+      "keys": [],
+      "defaults": {},
+      "byKey": {},
+      "compound": []
+    },
+    "text": {
+      "base": "",
+      "keys": [
+        "size",
+        "weight"
+      ],
+      "defaults": {
+        "size": "inherit",
+        "weight": "inherit"
+      },
+      "byKey": {
+        "size": {
+          "xs": "text-xs",
+          "sm": "text-sm",
+          "base": "text-base",
+          "lg": "text-lg",
+          "xl": "text-xl",
+          "2xl": "text-2xl",
+          "3xl": "text-3xl",
+          "4xl": "text-4xl",
+          "5xl": "text-5xl",
+          "inherit": ""
+        },
+        "weight": {
+          "regular": "font-normal",
+          "medium": "font-medium",
+          "semibold": "font-semibold",
+          "bold": "font-bold",
+          "inherit": ""
+        }
+      },
+      "compound": []
+    },
+    "textarea": {
+      "base": "w-full min-w-0 bg-background text-foreground inset-ring inset-ring-input outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:inset-ring-ring rounded aria-invalid:inset-ring-destructive",
+      "keys": [
+        "size",
+        "variant",
+        "state"
+      ],
+      "defaults": {
+        "size": "default",
+        "variant": "default",
+        "state": "default"
+      },
+      "byKey": {
+        "size": {
+          "sm": "min-h-16 px-3 py-2 text-base md:text-sm",
+          "default": "min-h-20 px-3 py-2 text-base md:text-sm",
+          "lg": "min-h-24 px-4 py-3 text-base"
+        },
+        "variant": {
+          "default": "",
+          "ghost": "bg-muted inset-ring-transparent"
+        },
+        "state": {
+          "default": "",
+          "error": "inset-ring-destructive focus-visible:inset-ring-destructive"
+        }
+      },
+      "compound": []
+    },
+    "themetoggle": {
+      "base": "inline-flex shrink-0 cursor-pointer items-center justify-center rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+      "keys": [
+        "variant",
+        "size"
+      ],
+      "defaults": {
+        "variant": "default",
+        "size": "default"
+      },
+      "byKey": {
+        "variant": {
+          "default": "bg-muted text-foreground hover:bg-accent",
+          "ghost": "bg-transparent text-foreground hover:bg-muted",
+          "contrast": "bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20",
+          "current": "bg-transparent text-current hover:bg-current/10"
+        },
+        "size": {
+          "sm": "size-8",
+          "default": "size-10",
+          "lg": "size-12"
+        }
+      },
+      "compound": []
+    },
+    "title": {
+      "base": "text-foreground",
+      "keys": [
+        "size",
+        "weight"
+      ],
+      "defaults": {
+        "size": "inherit",
+        "weight": "semibold"
+      },
+      "byKey": {
+        "size": {
+          "xs": "text-xs",
+          "sm": "text-sm",
+          "base": "text-base",
+          "lg": "text-lg",
+          "xl": "text-xl",
+          "2xl": "text-2xl",
+          "3xl": "text-3xl",
+          "4xl": "text-4xl",
+          "5xl": "text-5xl",
+          "inherit": ""
+        },
+        "weight": {
+          "regular": "font-normal",
+          "medium": "font-medium",
+          "semibold": "font-semibold",
+          "bold": "font-bold"
+        }
+      },
+      "compound": []
+    }
+  },
+  "compositions": {
+    "Box": {
+      "primitive": "Box",
+      "recipe": "box",
+      "keys": [],
+      "extra": "",
+      "tag": null,
+      "tagFrom": {
+        "heading": false,
+        "fallback": "div"
+      },
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Block": {
+      "primitive": "Box",
+      "recipe": "block",
+      "keys": [],
+      "extra": "",
+      "tag": null,
+      "tagFrom": {
+        "heading": false,
+        "fallback": "div"
+      },
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Stack": {
+      "primitive": "Box",
+      "recipe": "stack",
+      "keys": [
+        "gap",
+        "align",
+        "justify"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": {
+        "heading": false,
+        "fallback": "div"
+      },
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Group": {
+      "primitive": "Box",
+      "recipe": "group",
+      "keys": [
+        "gap",
+        "align",
+        "justify"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": {
+        "heading": false,
+        "fallback": "div"
+      },
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Grid": {
+      "primitive": "Box",
+      "recipe": "grid",
+      "keys": [
+        "cols"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": {
+        "heading": false,
+        "fallback": "div"
+      },
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "GridCol": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "",
+      "tag": "div",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Container": {
+      "primitive": "Box",
+      "recipe": "container",
+      "keys": [],
+      "extra": "",
+      "tag": null,
+      "tagFrom": {
+        "heading": false,
+        "fallback": "div"
+      },
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Inline": {
+      "primitive": "Text",
+      "recipe": "inline",
+      "keys": [],
+      "extra": "",
+      "tag": "span",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "List": {
+      "primitive": "Box",
+      "recipe": "list",
+      "keys": [],
+      "extra": "",
+      "tag": null,
+      "tagFrom": {
+        "heading": false,
+        "fallback": "ul"
+      },
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "ListItem": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "",
+      "tag": "li",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Skeleton": {
+      "primitive": "Box",
+      "recipe": "skeleton",
+      "keys": [
+        "shape"
+      ],
+      "extra": "",
+      "tag": "div",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {
+        "aria-hidden": "true"
+      }
+    },
+    "Prose": {
+      "primitive": "Box",
+      "recipe": "prose",
+      "keys": [
+        "size",
+        "width"
+      ],
+      "extra": "",
+      "tag": "div",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Alert": {
+      "primitive": "Box",
+      "recipe": "alert",
+      "keys": [
+        "variant"
+      ],
+      "extra": "",
+      "tag": "div",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {
+        "role": "alert",
+        "data-slot": "alert"
+      }
+    },
+    "Card": {
+      "primitive": "Box",
+      "recipe": "card",
+      "keys": [
+        "variant"
+      ],
+      "extra": "",
+      "tag": "div",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {
+        "data-slot": "card"
+      }
+    },
+    "CardHeader": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "grid auto-rows-min items-start gap-2",
+      "tag": "div",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "CardTitle": {
+      "primitive": "Text",
+      "recipe": null,
+      "keys": [],
+      "extra": "font-semibold leading-none",
+      "tag": null,
+      "tagFrom": {
+        "heading": true,
+        "fallback": "h3"
+      },
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "CardDescription": {
+      "primitive": "Text",
+      "recipe": null,
+      "keys": [],
+      "extra": "text-sm text-muted-foreground",
+      "tag": "p",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "CardContent": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "",
+      "tag": "div",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "CardFooter": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "flex items-center",
+      "tag": "div",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Table": {
+      "primitive": "Box",
+      "recipe": "table",
+      "keys": [],
+      "extra": "",
+      "tag": "table",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "TableCaption": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "",
+      "tag": "caption",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "TableHead": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "",
+      "tag": "thead",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "TableBody": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "",
+      "tag": "tbody",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "TableFoot": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "",
+      "tag": "tfoot",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "TableRow": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "",
+      "tag": "tr",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "TableHeadCell": {
+      "primitive": "Box",
+      "recipe": "table-head-cell",
+      "keys": [],
+      "extra": "",
+      "tag": "th",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "TableCell": {
+      "primitive": "Box",
+      "recipe": "table-cell",
+      "keys": [],
+      "extra": "",
+      "tag": "td",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "TableColGroup": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "",
+      "tag": "colgroup",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "TableCol": {
+      "primitive": "Box",
+      "recipe": null,
+      "keys": [],
+      "extra": "",
+      "tag": "col",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Fieldset": {
+      "primitive": "Box",
+      "recipe": "fieldset",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "extra": "",
+      "tag": "fieldset",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Legend": {
+      "primitive": "Text",
+      "recipe": "legend",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "extra": "",
+      "tag": "legend",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "FormItem": {
+      "primitive": "Box",
+      "recipe": "form-item",
+      "keys": [],
+      "extra": "",
+      "tag": "div",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "FormDescription": {
+      "primitive": "Text",
+      "recipe": "form-description",
+      "keys": [],
+      "extra": "",
+      "tag": "p",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "FormMessage": {
+      "primitive": "Text",
+      "recipe": "form-message",
+      "keys": [],
+      "extra": "",
+      "tag": "p",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Text": {
+      "primitive": "Text",
+      "recipe": "text",
+      "keys": [
+        "size",
+        "weight"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": {
+        "heading": false,
+        "fallback": "p"
+      },
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Title": {
+      "primitive": "Text",
+      "recipe": "title",
+      "keys": [
+        "size",
+        "weight"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": {
+        "heading": true,
+        "fallback": "h2"
+      },
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Badge": {
+      "primitive": "Text",
+      "recipe": "badge",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "extra": "",
+      "tag": "span",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {
+        "data-slot": "badge"
+      }
+    },
+    "IconBadge": {
+      "primitive": "Text",
+      "recipe": "iconbadge",
+      "keys": [
+        "variant",
+        "size"
+      ],
+      "extra": "",
+      "tag": "span",
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "LucideIcon": {
+      "primitive": "Icon",
+      "recipe": "lucide-icon",
+      "keys": [],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Icon": {
+      "primitive": "Icon",
+      "recipe": "icon",
+      "keys": [
+        "size",
+        "type"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Button": {
+      "primitive": "Button",
+      "recipe": "button",
+      "keys": [
+        "variant",
+        "size",
+        "layout"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {
+        "data-slot": "button"
+      }
+    },
+    "ButtonPlain": {
+      "primitive": "Button",
+      "recipe": "button-plain",
+      "keys": [],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Link": {
+      "primitive": "Link",
+      "recipe": "link",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "LinkPlain": {
+      "primitive": "Link",
+      "recipe": "link-plain",
+      "keys": [],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Label": {
+      "primitive": "Label",
+      "recipe": "label",
+      "keys": [],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Form": {
+      "primitive": "Form",
+      "recipe": "form",
+      "keys": [],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Input": {
+      "primitive": "Input",
+      "recipe": "input",
+      "keys": [
+        "size",
+        "variant",
+        "state"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {},
+      "implies": {
+        "key": "state",
+        "value": "error",
+        "prop": "ariaInvalid",
+        "set": "true"
+      }
+    },
+    "Range": {
+      "primitive": "Input",
+      "recipe": "range",
+      "keys": [],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {
+        "type": "range"
+      },
+      "fixedAttrs": {}
+    },
+    "Textarea": {
+      "primitive": "Textarea",
+      "recipe": "textarea",
+      "keys": [
+        "size",
+        "variant",
+        "state"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {},
+      "implies": {
+        "key": "state",
+        "value": "error",
+        "prop": "ariaInvalid",
+        "set": "true"
+      }
+    },
+    "Select": {
+      "primitive": "Select",
+      "recipe": "select",
+      "keys": [
+        "size",
+        "variant",
+        "state"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {},
+      "implies": {
+        "key": "state",
+        "value": "error",
+        "prop": "ariaInvalid",
+        "set": "true"
+      }
+    },
+    "Checkbox": {
+      "primitive": "Checkbox",
+      "recipe": "checkbox",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Radio": {
+      "primitive": "Radio",
+      "recipe": "radio",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Switch": {
+      "primitive": "Switch",
+      "recipe": "switch",
+      "keys": [
+        "size"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Image": {
+      "primitive": "Image",
+      "recipe": "image",
+      "keys": [
+        "aspect",
+        "fit",
+        "position",
+        "size",
+        "variant"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Separator": {
+      "primitive": "Separator",
+      "recipe": "separator",
+      "keys": [
+        "orientation",
+        "variant"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Dialog": {
+      "primitive": "Dialog",
+      "recipe": "dialog",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Sheet": {
+      "primitive": "Dialog",
+      "recipe": "sheet",
+      "keys": [
+        "side"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Disclosure": {
+      "primitive": "Disclosure",
+      "recipe": "disclosure",
+      "keys": [
+        "variant"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Summary": {
+      "primitive": "Summary",
+      "recipe": "summary",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {},
+      "trail": "<span class=\"size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180\" aria-hidden=\"true\" data-slot=\"summary-indicator\"></span>"
+    },
+    "Meter": {
+      "primitive": "Meter",
+      "recipe": "meter",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    },
+    "Progress": {
+      "primitive": "Progress",
+      "recipe": "progress",
+      "keys": [
+        "size",
+        "variant"
+      ],
+      "extra": "",
+      "tag": null,
+      "tagFrom": null,
+      "fixedProps": {},
+      "fixedAttrs": {}
+    }
+  }
+}
