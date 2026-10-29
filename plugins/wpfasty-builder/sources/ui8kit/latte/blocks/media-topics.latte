@@ -30,7 +30,7 @@
         {=og_include('compose/Stack.latte', ['gap' => '0', 'class' => 'min-w-0 flex-1', 'children' => (string) $c_5])|noescape}
         {=og_include('icons/LucideIcon.latte', ['name' => 'arrow-right', 'size' => 16])|noescape}
       {/capture}
-      {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_c, ['href']), 'className' => og_cnv(['rounded bg-card inset-ring inset-ring-border flex w-full items-center gap-4 p-4']), 'variant' => 'block', 'testid' => 'media-topic', 'block' => true], 'children' => $c_6])|noescape}
+      {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_c, ['href']), 'className' => og_cnv(['rounded bg-card inset-ring inset-ring-border flex w-full items-center gap-4 p-4']), 'variant' => 'block', 'testid' => 'media-topic', 'block' => true], 'children' => og_markup($c_6)])|noescape}
     {/if}
   {/foreach}
 {/capture}

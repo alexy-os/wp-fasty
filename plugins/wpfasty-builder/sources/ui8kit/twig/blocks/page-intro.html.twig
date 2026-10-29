@@ -17,4 +17,4 @@
     {{ include('blocks/action-group.html.twig', {'p': {'primary': v_cta, 'primaryHref': v_href, 'align': v_align}}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_text, 'heading': {'level': v_level}, 'align': v_align, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': c_1}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_text, 'heading': {'level': v_level}, 'align': v_align, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_1)}, with_context = false) }}

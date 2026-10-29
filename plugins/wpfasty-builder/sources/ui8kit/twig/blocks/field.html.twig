@@ -11,7 +11,7 @@
     {{ og_text(v_label) }}
   {%- endset -%}
   {{ include('compose/Label.html.twig', {'class': 'text-xs font-bold text-foreground', 'htmlFor': og_s(v_htmlFor), 'children': c_1}, with_context = false) }}
-  {{ (children ?? '')|raw }}
+  {{ og_slot((children ?? null))|raw }}
   {%- if og_t(v_error) %}
     {%- set c_2 -%}
       {{ og_text(v_error) }}

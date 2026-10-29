@@ -47,7 +47,7 @@
                 {capture $c_6}
                   {=og_text(og_at($v_statuses, og_get($v_o, ['status'])))}
                 {/capture}
-                {=og_include('blocks/pill.latte', ['p' => ['tone' => (og_t(og_eq(og_get($v_o, ['status']), 'paid')) ? 'green' : (og_t(og_eq(og_get($v_o, ['status']), 'shipped')) ? 'blue' : (og_t(og_eq(og_get($v_o, ['status']), 'pending')) ? 'amber' : 'gray')))], 'children' => $c_6])|noescape}
+                {=og_include('blocks/pill.latte', ['p' => ['tone' => (og_t(og_eq(og_get($v_o, ['status']), 'paid')) ? 'green' : (og_t(og_eq(og_get($v_o, ['status']), 'shipped')) ? 'blue' : (og_t(og_eq(og_get($v_o, ['status']), 'pending')) ? 'amber' : 'gray')))], 'children' => og_markup($c_6)])|noescape}
               {/capture}
               {=og_include('compose/CardContent.latte', ['class' => 'flex flex-wrap items-center justify-between gap-4', 'children' => (string) $c_7])|noescape}
             {/capture}
@@ -63,4 +63,4 @@
     {=og_include('compose/Stack.latte', ['gap' => '4', 'align' => 'stretch', 'children' => (string) $c_10])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_11])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_11)])|noescape}

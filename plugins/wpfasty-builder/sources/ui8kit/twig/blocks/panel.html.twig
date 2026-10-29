@@ -27,6 +27,6 @@
     {%- endset -%}
     {{ include('compose/Box.html.twig', {'class': 'flex items-start justify-between gap-4', 'children': c_4}, with_context = false) }}
   {%- endif %}
-  {{ (children ?? '')|raw }}
+  {{ og_slot((children ?? null))|raw }}
 {%- endset -%}
 {{ include('compose/Box.html.twig', {'class': og_s(og_cnv(['flex min-w-0 flex-col gap-4 rounded bg-card p-6 inset-ring inset-ring-border', (p.className ?? '')])), 'attrs': og_attrs(['role', 'group', 'aria-labelledby', (og_t(og_and([v_title, v_id])) ? og_tpl('{0}-t', [v_id]) : null)]), 'children': c_5}, with_context = false) }}

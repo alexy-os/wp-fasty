@@ -18,5 +18,6 @@
   array $attrs = [],
   $size = null,
   $variant = null,
+  $state = null,
 }
-{include '../ui/input/Input.latte', ...\CodegenX\Compose\Latte\Compose::props('Input', ['class' => $class, 'type' => $type, 'id' => $id, 'name' => $name, 'value' => $value, 'placeholder' => $placeholder, 'min' => $min, 'max' => $max, 'step' => $step, 'required' => $required, 'disabled' => $disabled, 'readOnly' => $readOnly, 'ariaInvalid' => $ariaInvalid, 'ariaDescribedBy' => $ariaDescribedBy, 'attrs' => $attrs, 'size' => $size, 'variant' => $variant])}
+{include '../ui/input/Input.latte', ...\CodegenX\Compose\Latte\Compose::props('Input', ['class' => $class, 'type' => $type, 'id' => $id, 'name' => $name, 'value' => $value, 'placeholder' => $placeholder, 'min' => $min, 'max' => $max, 'step' => $step, 'required' => $required, 'disabled' => $disabled, 'readOnly' => $readOnly, 'ariaInvalid' => $ariaInvalid, 'ariaDescribedBy' => $ariaDescribedBy, 'attrs' => $attrs, 'size' => $size, 'variant' => $variant, 'state' => $state])}

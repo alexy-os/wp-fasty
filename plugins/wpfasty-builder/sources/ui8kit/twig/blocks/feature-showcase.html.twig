@@ -41,7 +41,7 @@
                 {{ og_text(v_more) }}
                 {{ include('icons/LucideIcon.html.twig', {'name': 'arrow-right', 'size': 16}, with_context = false) }}
               {%- endset -%}
-              {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_f, ['href']), 'className': og_cnv(['mt-auto gap-2 pt-2 text-sm font-medium']), 'size': 'sm', 'testid': 'read'}, 'children': c_4}, with_context = false) }}
+              {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_f, ['href']), 'className': og_cnv(['mt-auto gap-2 pt-2 text-sm font-medium']), 'size': 'sm', 'testid': 'read'}, 'children': og_markup(c_4)}, with_context = false) }}
             {%- endif %}
           {%- endset -%}
           {{ include('compose/CardContent.html.twig', {'class': 'flex flex-1 flex-col gap-2', 'children': c_5}, with_context = false) }}
@@ -52,4 +52,4 @@
     {{ include('compose/Box.html.twig', {'class': og_s((og_t(og_eq(v_cols, '4')) ? 'grid grid-cols-1 gap-6 text-start sm:grid-cols-2 lg:grid-cols-4' : 'grid grid-cols-1 gap-6 text-start sm:grid-cols-2 lg:grid-cols-3')), 'children': c_7}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'tone': v_tone, 'align': 'center', 'landmarkLabel': v_landmarkLabel}, 'children': c_8}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'tone': v_tone, 'align': 'center', 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_8)}, with_context = false) }}

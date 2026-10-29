@@ -59,7 +59,7 @@
                 {=og_include('compose/Text.latte', ['size' => 'xs', 'class' => 'text-muted-foreground', 'children' => (string) $c_6])|noescape}
               {/if}
             {/capture}
-            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_c, ['href']), 'className' => og_cnv([og_cnv(['text-sm', $v_linkShape, (og_t(og_eq(og_get($v_c, ['id']), $v_current)) ? $v_currentLook : $v_otherLook)])]), 'current' => og_eq(og_get($v_c, ['id']), $v_current), 'testid' => 'item', 'block' => true], 'children' => $c_7])|noescape}
+            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_c, ['href']), 'className' => og_cnv([og_cnv(['text-sm', $v_linkShape, (og_t(og_eq(og_get($v_c, ['id']), $v_current)) ? $v_currentLook : $v_otherLook)])]), 'current' => og_eq(og_get($v_c, ['id']), $v_current), 'testid' => 'item', 'block' => true], 'children' => og_markup($c_7)])|noescape}
           {/capture}
           {=og_include('compose/ListItem.latte', ['children' => (string) $c_8])|noescape}
         {/foreach}

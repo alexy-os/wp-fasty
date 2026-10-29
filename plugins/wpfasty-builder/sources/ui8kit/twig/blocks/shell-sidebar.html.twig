@@ -32,14 +32,14 @@
                 {%- endset -%}
                 {{ include('compose/Inline.html.twig', {'class': og_s((og_t(v_named) ? '' : 'sr-only')), 'children': c_3}, with_context = false) }}
               {%- endset -%}
-              {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_l, ['href']), 'className': og_cnv([og_cnv(['flex items-center gap-4 rounded py-2 text-sm', (og_t(v_named) ? 'px-4' : 'justify-center px-2'), (og_t(og_eq(og_get(v_l, ['id']), og_get(v_nav, ['current']))) ? 'bg-muted font-medium' : '')])]), 'current': og_eq(og_get(v_l, ['id']), og_get(v_nav, ['current'])), 'size': 'sm', 'testid': 'item'}, 'children': c_4}, with_context = false) }}
+              {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_l, ['href']), 'className': og_cnv([og_cnv(['flex items-center gap-4 rounded py-2 text-sm', (og_t(v_named) ? 'px-4' : 'justify-center px-2'), (og_t(og_eq(og_get(v_l, ['id']), og_get(v_nav, ['current']))) ? 'bg-muted font-medium' : '')])]), 'current': og_eq(og_get(v_l, ['id']), og_get(v_nav, ['current'])), 'size': 'sm', 'testid': 'item'}, 'children': og_markup(c_4)}, with_context = false) }}
             {%- endset -%}
             {{ include('compose/ListItem.html.twig', {'children': c_5}, with_context = false) }}
           {%- endfor %}
         {%- endset -%}
         {{ include('compose/List.html.twig', {'class': 'm-0 flex list-none flex-col gap-2 p-0', 'attrs': og_attrs(['data-testid', 'items']), 'children': c_6}, with_context = false) }}
       {%- endset -%}
-      {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get(v_nav, ['label']), v_landmarkLabel])) : og_get(v_nav, ['label'])), 'className': og_cnv(['flex-1'])}, 'children': c_7}, with_context = false) }}
+      {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get(v_nav, ['label']), v_landmarkLabel])) : og_get(v_nav, ['label'])), 'className': og_cnv(['flex-1'])}, 'children': og_markup(c_7)}, with_context = false) }}
     {%- endif %}
     {%- if og_t(og_eq(v_mode, 'collapsed')) %}
       {%- set c_8 -%}
@@ -66,14 +66,14 @@
                 {%- endset -%}
                 {{ include('compose/Inline.html.twig', {'class': og_s((og_t(true) ? '' : 'sr-only')), 'children': c_11}, with_context = false) }}
               {%- endset -%}
-              {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_s, ['href']), 'className': og_cnv([og_cnv(['flex items-center gap-4 rounded py-2 text-sm', (og_t(true) ? 'px-4' : 'justify-center px-2'), (og_t(og_eq(og_get(v_s, ['id']), og_get(v_nav, ['subCurrent']))) ? 'bg-muted font-medium' : '')])]), 'current': og_eq(og_get(v_s, ['id']), og_get(v_nav, ['subCurrent'])), 'size': 'sm', 'testid': 'item'}, 'children': c_12}, with_context = false) }}
+              {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_s, ['href']), 'className': og_cnv([og_cnv(['flex items-center gap-4 rounded py-2 text-sm', (og_t(true) ? 'px-4' : 'justify-center px-2'), (og_t(og_eq(og_get(v_s, ['id']), og_get(v_nav, ['subCurrent']))) ? 'bg-muted font-medium' : '')])]), 'current': og_eq(og_get(v_s, ['id']), og_get(v_nav, ['subCurrent'])), 'size': 'sm', 'testid': 'item'}, 'children': og_markup(c_12)}, with_context = false) }}
             {%- endset -%}
             {{ include('compose/ListItem.html.twig', {'children': c_13}, with_context = false) }}
           {%- endfor %}
         {%- endset -%}
         {{ include('compose/List.html.twig', {'class': 'm-0 flex list-none flex-col gap-2 p-0', 'children': c_14}, with_context = false) }}
       {%- endset -%}
-      {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get(v_nav, ['subTitle']), v_landmarkLabel])) : og_get(v_nav, ['subTitle']))}, 'children': c_15}, with_context = false) }}
+      {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get(v_nav, ['subTitle']), v_landmarkLabel])) : og_get(v_nav, ['subTitle']))}, 'children': og_markup(c_15)}, with_context = false) }}
     {%- endset -%}
     {{ include('compose/Box.html.twig', {'class': og_s(og_cnv(['flex w-56 flex-col gap-4 px-4 py-6', (og_t(og_eq(v_side, 'end')) ? 'border-r border-border' : 'border-l border-border')])), 'attrs': og_attrs(['data-testid', 'subnav']), 'children': c_16}, with_context = false) }}
   {%- endif %}

@@ -10,5 +10,5 @@
   {%- set c_1 -%}
     {{ include('blocks/nav-links.html.twig', {'p': {'links': v_links, 'current': v_current}}, with_context = false) }}
   {%- endset -%}
-  {{ include('blocks/nav-block.html.twig', {'p': {'label': v_label, 'className': og_cnv(['order-last w-full overflow-x-auto md:order-none md:w-auto [&>div]:flex-nowrap md:[&>div]:flex-wrap [&_a]:shrink-0']), 'testid': 'site-nav', 'landmarkLabel': v_landmarkLabel}, 'children': c_1}, with_context = false) }}
+  {{ include('blocks/nav-block.html.twig', {'p': {'label': v_label, 'className': og_cnv(['order-last w-full overflow-x-auto md:order-none md:w-auto [&>div]:flex-nowrap md:[&>div]:flex-wrap [&_a]:shrink-0']), 'testid': 'site-nav', 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_1)}, with_context = false) }}
 {%- endif %}

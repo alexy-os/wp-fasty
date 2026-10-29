@@ -12,7 +12,7 @@
       {=og_include('compose/Inline.latte', ['class' => 'flex w-7 shrink-0 items-center pr-2', 'attrs' => og_attrs(['data-slot', 'dropdown-item-icon']), 'children' => (string) $c_1])|noescape}
     {/if}
     {capture $c_2}
-      {=($children ?? '')|noescape}
+      {=og_slot(($children ?? null))|noescape}
     {/capture}
     {=og_include('compose/Inline.latte', ['class' => og_s(og_cnv(['text-xs', 'min-w-0 flex-1 truncate px-1 font-bold'])), 'attrs' => og_attrs(['data-slot', 'dropdown-item-label']), 'children' => (string) $c_2])|noescape}
     {if og_t(((($p['right'] ?? null) !== null)))}

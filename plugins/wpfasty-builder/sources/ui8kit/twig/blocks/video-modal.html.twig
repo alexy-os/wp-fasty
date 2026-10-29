@@ -62,4 +62,4 @@
   {%- endset -%}
   {{ include('compose/Stack.html.twig', {'gap': '4', 'align': 'stretch', 'class': og_s(og_cnv(['mx-auto w-full', (og_t(og_eq(v_size, 'wide')) ? 'max-w-4xl' : 'max-w-2xl'), 'rounded bg-card inset-ring inset-ring-border p-4 shadow-lg'])), 'attrs': og_attrs(['role', 'dialog', 'aria-label', v_title, 'data-testid', 'video-modal']), 'children': c_12}, with_context = false) }}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': c_13}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_13)}, with_context = false) }}

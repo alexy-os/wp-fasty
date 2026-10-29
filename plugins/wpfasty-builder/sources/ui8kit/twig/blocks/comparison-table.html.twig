@@ -73,4 +73,4 @@
     {{ include('compose/Box.html.twig', {'class': 'relative w-full overflow-x-auto', 'children': c_15}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': c_16}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_16)}, with_context = false) }}

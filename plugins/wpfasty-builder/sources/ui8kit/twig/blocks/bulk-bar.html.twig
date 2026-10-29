@@ -14,7 +14,7 @@
   {%- endset -%}
   {{ include('compose/Inline.html.twig', {'attrs': og_attrs(['data-testid', 'bulk-count']), 'children': c_2}, with_context = false) }}
   {%- set c_3 -%}
-    {{ (children ?? '')|raw }}
+    {{ og_slot((children ?? null))|raw }}
   {%- endset -%}
   {{ include('compose/Inline.html.twig', {'class': 'ml-auto flex flex-wrap items-center gap-2', 'children': c_3}, with_context = false) }}
 {%- endset -%}

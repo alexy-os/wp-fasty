@@ -18,7 +18,7 @@
   {capture $c_1}
     {=og_include('blocks/empty-state.latte', ['p' => ['icon' => 'package', 'title' => og_get($v_labels, ['empty'])]])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_1])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_1)])|noescape}
 {else}
   {capture $f_14}
     {=og_include('blocks/product-gallery.latte', ['p' => ['name' => og_get($v_product, ['name']), 'image' => og_get($v_product, ['image']), 'thumbs' => $v_thumbs]])|noescape}
@@ -78,5 +78,5 @@
     {/capture}
     {=og_include('compose/Stack.latte', ['gap' => '4', 'align' => 'stretch', 'attrs' => og_attrs(['data-testid', 'buy-box']), 'children' => (string) $c_13])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => og_get($v_product, ['name']), 'lead' => og_get($v_product, ['summary']), 'heading' => ['level' => $v_level], 'layout' => (og_t(og_eq($v_layout, 'split')) ? 'split' : 'stack'), 'media' => ['show' => true, 'side' => $v_mediaSide, 'align' => 'start'], 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_14)], 'children' => $c_15])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => og_get($v_product, ['name']), 'lead' => og_get($v_product, ['summary']), 'heading' => ['level' => $v_level], 'layout' => (og_t(og_eq($v_layout, 'split')) ? 'split' : 'stack'), 'media' => ['show' => true, 'side' => $v_mediaSide, 'align' => 'start'], 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_14)], 'children' => og_markup($c_15)])|noescape}
 {/if}

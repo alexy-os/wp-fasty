@@ -73,4 +73,4 @@
     {=og_include('compose/Stack.latte', ['gap' => '4', 'align' => 'stretch', 'class' => og_s((og_t(og_eq($v_layout, 'card')) ? 'rounded bg-card p-6 inset-ring inset-ring-border' : '')), 'attrs' => og_attrs(['data-testid', 'checklist']), 'children' => (string) $c_11])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'measure' => '2xl', 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_12])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'measure' => '2xl', 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_12)])|noescape}

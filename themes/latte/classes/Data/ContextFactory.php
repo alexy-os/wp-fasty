@@ -568,6 +568,10 @@ final class ContextFactory
             'total' => $max,
             'prev_url' => $paged > 1 ? get_pagenum_link($paged - 1) : null,
             'next_url' => $paged < $max ? get_pagenum_link($paged + 1) : null,
+            // link mode of the builder Pager (codegen-x pageUrl / firstUrl): page {0}, page 1; unescaped (the
+            // builder passes them through its Safe URL check, esc_url would drop the braces)
+            'url' => str_replace('987654321', '{0}', (string) get_pagenum_link(987654321, false)),
+            'first_url' => (string) get_pagenum_link(1, false),
         ];
     }
 }

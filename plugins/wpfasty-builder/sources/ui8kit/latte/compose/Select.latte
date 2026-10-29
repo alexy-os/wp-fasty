@@ -15,5 +15,6 @@
   string $children = '',
   $size = null,
   $variant = null,
+  $state = null,
 }
-{include '../ui/select/Select.latte', ...\CodegenX\Compose\Latte\Compose::props('Select', ['class' => $class, 'id' => $id, 'name' => $name, 'value' => $value, 'multiple' => $multiple, 'required' => $required, 'disabled' => $disabled, 'options' => $options, 'ariaInvalid' => $ariaInvalid, 'ariaDescribedBy' => $ariaDescribedBy, 'attrs' => $attrs, 'children' => $children, 'size' => $size, 'variant' => $variant])}
+{include '../ui/select/Select.latte', ...\CodegenX\Compose\Latte\Compose::props('Select', ['class' => $class, 'id' => $id, 'name' => $name, 'value' => $value, 'multiple' => $multiple, 'required' => $required, 'disabled' => $disabled, 'options' => $options, 'ariaInvalid' => $ariaInvalid, 'ariaDescribedBy' => $ariaDescribedBy, 'attrs' => $attrs, 'children' => $children, 'size' => $size, 'variant' => $variant, 'state' => $state])}

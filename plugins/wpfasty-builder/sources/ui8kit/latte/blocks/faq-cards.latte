@@ -38,7 +38,7 @@
       {/capture}
       {=og_include('compose/Box.latte', ['class' => 'mt-auto', 'children' => (string) $c_7])|noescape}
     {/capture}
-    {=og_include('blocks/article-block.latte', ['p' => ['className' => og_cnv(['rounded bg-card inset-ring inset-ring-border flex flex-col gap-4 p-6']), 'testid' => 'faq-card'], 'children' => $c_8])|noescape}
+    {=og_include('blocks/article-block.latte', ['p' => ['className' => og_cnv(['rounded bg-card inset-ring inset-ring-border flex flex-col gap-4 p-6']), 'testid' => 'faq-card'], 'children' => og_markup($c_8)])|noescape}
   {/foreach}
 {/capture}
 {=og_include('compose/Box.latte', ['class' => og_s((og_t(og_eq($v_cards, 'grid4')) ? 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4' : 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3')), 'attrs' => og_attrs(['data-testid', 'faq']), 'children' => (string) $c_9])|noescape}

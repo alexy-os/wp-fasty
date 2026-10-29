@@ -15,5 +15,6 @@
   array $attrs = [],
   $size = null,
   $variant = null,
+  $state = null,
 }
-{include '../ui/textarea/Textarea.latte', ...\CodegenX\Compose\Latte\Compose::props('Textarea', ['class' => $class, 'id' => $id, 'name' => $name, 'value' => $value, 'placeholder' => $placeholder, 'rows' => $rows, 'required' => $required, 'disabled' => $disabled, 'readOnly' => $readOnly, 'ariaInvalid' => $ariaInvalid, 'ariaDescribedBy' => $ariaDescribedBy, 'attrs' => $attrs, 'size' => $size, 'variant' => $variant])}
+{include '../ui/textarea/Textarea.latte', ...\CodegenX\Compose\Latte\Compose::props('Textarea', ['class' => $class, 'id' => $id, 'name' => $name, 'value' => $value, 'placeholder' => $placeholder, 'rows' => $rows, 'required' => $required, 'disabled' => $disabled, 'readOnly' => $readOnly, 'ariaInvalid' => $ariaInvalid, 'ariaDescribedBy' => $ariaDescribedBy, 'attrs' => $attrs, 'size' => $size, 'variant' => $variant, 'state' => $state])}

@@ -54,4 +54,4 @@
   {%- endset -%}
   {{ include('compose/Block.html.twig', {'tag': 'div', 'class': 'w-full', 'attrs': og_attrs(['role', 'status', 'aria-label', v_label, 'data-testid', 'skeleton', 'data-shape', v_shape]), 'children': c_8}, with_context = false) }}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': c_9}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_9)}, with_context = false) }}

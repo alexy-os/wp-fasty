@@ -5,9 +5,9 @@
 {%- set v_boxed = (p.boxed ?? false) -%}
 {%- if og_t(v_boxed) %}
   {%- set c_1 -%}
-    {{ (children ?? '')|raw }}
+    {{ og_slot((children ?? null))|raw }}
   {%- endset -%}
   {{ include('compose/Card.html.twig', {'variant': 'muted', 'children': c_1}, with_context = false) }}
 {%- else %}
-  {{ (children ?? '')|raw }}
+  {{ og_slot((children ?? null))|raw }}
 {%- endif %}

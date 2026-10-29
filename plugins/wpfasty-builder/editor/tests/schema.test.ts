@@ -126,13 +126,13 @@ describe("bundled catalogs", () => {
       expect(cfg.fields.level?.type).toBeDefined();
       for (const v of rt.variants) expect(v.current?.map((c) => c.path.join("."))).toContain("content");
     });
-    test(`${runtime}: posts — the pager the adapter fills (page, pages, texts) is not editable, its mode is`, () => {
+    test(`${runtime}: posts — the pager the adapter fills (page, pages, texts, url, firstUrl) is not editable, its mode is`, () => {
       const { blocks, records } = catalog(runtime);
       const posts = blocks.find((b) => b.id === "posts")!;
-      expect(posts.variants.map((v) => v.id)).toContain("listPaged");
+      expect(posts.variants.map((v) => v.id)).toEqual(expect.arrayContaining(["listPaged", "listLinks"]));
       const pager = blockConfig(posts, records).fields.pager as Extract<Field, { type: "object" }>;
       expect(Object.keys(pager.objectFields)).toEqual(["mode"]);
-      expect(records.PostPager?.map((f) => f.name)).toEqual(["mode", "page", "pages", "label", "summary", "previous", "next", "pageLabel"]);
+      expect(records.PostPager?.map((f) => f.name)).toEqual(["mode", "page", "pages", "label", "summary", "previous", "next", "pageLabel", "url", "firstUrl"]);
     });
   }
 });

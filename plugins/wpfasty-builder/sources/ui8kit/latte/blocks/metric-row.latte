@@ -48,4 +48,4 @@
     {=og_include('compose/Grid.latte', ['cols' => og_s((og_t(og_eq($v_cols, '2')) ? '1-2' : '1-4')), 'class' => 'gap-4', 'attrs' => og_attrs(['data-testid', 'items']), 'children' => (string) $c_7])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_8])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_8)])|noescape}

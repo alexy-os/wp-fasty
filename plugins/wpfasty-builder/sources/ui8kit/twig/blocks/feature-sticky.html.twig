@@ -42,4 +42,4 @@
     {{ include('compose/Grid.html.twig', {'cols': '1-2', 'class': 'items-start gap-8', 'attrs': og_attrs(['data-testid', 'sticky']), 'children': c_6}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': c_7}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_7)}, with_context = false) }}

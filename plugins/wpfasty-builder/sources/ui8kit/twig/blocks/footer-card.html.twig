@@ -35,7 +35,7 @@
                       {%- set c_5 -%}
                         {{ og_text(og_get(v_item, ['name'])) }}
                       {%- endset -%}
-                      {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_item, ['href']), 'className': og_cnv(['text-xs leading-5 text-muted-foreground'])}, 'children': c_5}, with_context = false) }}
+                      {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_item, ['href']), 'className': og_cnv(['text-xs leading-5 text-muted-foreground'])}, 'children': og_markup(c_5)}, with_context = false) }}
                     {%- endset -%}
                     {{ include('compose/ListItem.html.twig', {'children': c_6}, with_context = false) }}
                   {%- endfor %}
@@ -47,7 +47,7 @@
           {%- endset -%}
           {{ include('compose/Group.html.twig', {'gap': '0', 'align': 'start', 'class': og_s(og_cnv(['flex w-full flex-nowrap justify-between', og_preset('blocks/presets/defaults.json', ['footer', 'groups'])])), 'attrs': og_attrs(['data-testid', 'footer-groups']), 'children': c_9}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [v_label, v_landmarkLabel])) : v_label), 'className': og_cnv(['min-w-0 flex-1'])}, 'children': c_10}, with_context = false) }}
+        {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [v_label, v_landmarkLabel])) : v_label), 'className': og_cnv(['min-w-0 flex-1'])}, 'children': og_markup(c_10)}, with_context = false) }}
       {%- endif %}
     {%- endset -%}
     {{ include('compose/Box.html.twig', {'class': og_s(og_cnv(['flex w-full flex-row items-start overflow-hidden bg-muted p-10', og_preset('blocks/presets/defaults.json', ['footer', 'card'])])), 'attrs': og_attrs(['data-testid', 'footer-card']), 'children': c_11}, with_context = false) }}

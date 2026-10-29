@@ -50,4 +50,4 @@
     {=og_include('compose/Grid.latte', ['cols' => og_s((og_t(og_eq($v_layout, 'beside')) ? '1-2' : '1')), 'class' => 'items-center gap-8', 'children' => (string) $c_8])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'align' => 'center', 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_9])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'align' => 'center', 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_9)])|noescape}

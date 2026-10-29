@@ -21,7 +21,7 @@
             {/capture}
             {=og_include('compose/Inline.latte', ['class' => og_s((og_t(og_eq($v_labels, 'hide')) ? 'sr-only' : '')), 'children' => (string) $c_1])|noescape}
           {/capture}
-          {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_tab, ['href']), 'className' => og_cnv([og_cnv(['flex flex-col items-center gap-2 py-2 text-xs', (og_t(og_eq(og_get($v_tab, ['id']), $v_current)) ? 'font-semibold text-primary' : 'text-muted-foreground')])]), 'current' => og_eq(og_get($v_tab, ['id']), $v_current), 'testid' => 'item'], 'children' => $c_2])|noescape}
+          {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_tab, ['href']), 'className' => og_cnv([og_cnv(['flex flex-col items-center gap-2 py-2 text-xs', (og_t(og_eq(og_get($v_tab, ['id']), $v_current)) ? 'font-semibold text-primary' : 'text-muted-foreground')])]), 'current' => og_eq(og_get($v_tab, ['id']), $v_current), 'testid' => 'item'], 'children' => og_markup($c_2)])|noescape}
         {/capture}
         {=og_include('compose/ListItem.latte', ['children' => (string) $c_3])|noescape}
       {/foreach}

@@ -14,7 +14,7 @@
         {%- set c_1 -%}
           {{ og_text(og_get(v_l, ['name'])) }}
         {%- endset -%}
-        {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_l, ['href']), 'className': og_cnv(['text-sm']), 'current': og_eq(og_get(v_l, ['id']), v_current), 'testid': 'nav-link'}, 'children': c_1}, with_context = false) }}
+        {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_l, ['href']), 'className': og_cnv(['text-sm']), 'current': og_eq(og_get(v_l, ['id']), v_current), 'testid': 'nav-link'}, 'children': og_markup(c_1)}, with_context = false) }}
       {%- endif %}
     {%- endfor %}
   {%- endset -%}

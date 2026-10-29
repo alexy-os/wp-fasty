@@ -50,19 +50,19 @@
               {{ og_text(og_get(v_labels, ['case'])) }}
               {{ include('icons/LucideIcon.html.twig', {'name': 'arrow-right', 'size': 16}, with_context = false) }}
             {%- endset -%}
-            {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_p, ['href']), 'className': og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])}, 'children': c_8}, with_context = false) }}
+            {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_p, ['href']), 'className': og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])}, 'children': og_markup(c_8)}, with_context = false) }}
             {%- set c_9 -%}
               {{ og_text(og_get(v_labels, ['view'])) }}
               {{ include('icons/LucideIcon.html.twig', {'name': 'external-link', 'size': 16}, with_context = false) }}
             {%- endset -%}
-            {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_p, ['href']), 'className': og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])}, 'children': c_9}, with_context = false) }}
+            {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_p, ['href']), 'className': og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])}, 'children': og_markup(c_9)}, with_context = false) }}
           {%- endset -%}
           {{ include('compose/Group.html.twig', {'gap': '4', 'class': 'pt-2', 'children': c_10}, with_context = false) }}
         {%- endif %}
       {%- endset -%}
       {{ include('compose/Stack.html.twig', {'gap': '2', 'align': 'stretch', 'class': og_s((og_t(v_over) ? 'absolute right-4 bottom-4 left-4 rounded bg-background p-4' : '')), 'children': c_11}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/article-block.html.twig', {'p': {'className': og_cnv([og_cnv(['flex flex-col gap-4', (og_t(v_over) ? 'relative' : 'rounded bg-card inset-ring inset-ring-border p-4'), (og_t(og_and([og_eq(v_layout, 'bento'), og_eq(v_i, 0)])) ? 'sm:col-span-2 lg:row-span-2' : '')])]), 'testid': 'item'}, 'children': c_12}, with_context = false) }}
+    {{ include('blocks/article-block.html.twig', {'p': {'className': og_cnv([og_cnv(['flex flex-col gap-4', (og_t(v_over) ? 'relative' : 'rounded bg-card inset-ring inset-ring-border p-4'), (og_t(og_and([og_eq(v_layout, 'bento'), og_eq(v_i, 0)])) ? 'sm:col-span-2 lg:row-span-2' : '')])]), 'testid': 'item'}, 'children': og_markup(c_12)}, with_context = false) }}
   {%- endfor %}
 {%- endset -%}
 {{ include('compose/Box.html.twig', {'class': og_s((og_t(og_eq(v_layout, 'compact')) ? 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4' : 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3')), 'attrs': og_attrs(['data-testid', 'items']), 'children': c_13}, with_context = false) }}

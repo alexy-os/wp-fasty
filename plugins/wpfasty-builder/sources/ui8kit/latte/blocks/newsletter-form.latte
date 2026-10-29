@@ -39,4 +39,4 @@
   {/capture}
   {=og_include('compose/Form.latte', ['method' => 'dialog', 'class' => og_s(og_cnv(['w-full max-w-md', (og_t(og_eq($v_align, 'center')) ? 'mx-auto' : '')])), 'attrs' => og_attrs(['data-testid', 'newsletter-form']), 'children' => (string) $c_5])|noescape}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_text, 'tone' => $v_tone, 'align' => $v_align, 'layout' => (og_t(og_eq($v_layout, 'split')) ? 'split' : 'stack'), 'media' => ['show' => og_eq($v_layout, 'split')], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_6)], 'children' => $c_7])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_text, 'tone' => $v_tone, 'align' => $v_align, 'layout' => (og_t(og_eq($v_layout, 'split')) ? 'split' : 'stack'), 'media' => ['show' => og_eq($v_layout, 'split')], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_6)], 'children' => og_markup($c_7)])|noescape}

@@ -97,7 +97,7 @@
           {%- endset -%}
           {{ include('compose/Group.html.twig', {'gap': '4', 'align': 'center', 'children': c_18}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/figure-block.html.twig', {'p': {'className': og_cnv(['flex flex-col gap-4']), 'testid': 'hero-quote'}, 'children': c_19}, with_context = false) }}
+        {{ include('blocks/figure-block.html.twig', {'p': {'className': og_cnv(['flex flex-col gap-4']), 'testid': 'hero-quote'}, 'children': og_markup(c_19)}, with_context = false) }}
       {%- endif %}
     {%- endfor %}
     {%- set c_23 -%}

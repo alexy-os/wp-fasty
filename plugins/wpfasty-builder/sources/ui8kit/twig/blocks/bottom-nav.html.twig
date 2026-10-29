@@ -21,7 +21,7 @@
             {%- endset -%}
             {{ include('compose/Inline.html.twig', {'class': og_s((og_t(og_eq(v_labels, 'hide')) ? 'sr-only' : '')), 'children': c_1}, with_context = false) }}
           {%- endset -%}
-          {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_tab, ['href']), 'className': og_cnv([og_cnv(['flex flex-col items-center gap-2 py-2 text-xs', (og_t(og_eq(og_get(v_tab, ['id']), v_current)) ? 'font-semibold text-primary' : 'text-muted-foreground')])]), 'current': og_eq(og_get(v_tab, ['id']), v_current), 'testid': 'item'}, 'children': c_2}, with_context = false) }}
+          {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_tab, ['href']), 'className': og_cnv([og_cnv(['flex flex-col items-center gap-2 py-2 text-xs', (og_t(og_eq(og_get(v_tab, ['id']), v_current)) ? 'font-semibold text-primary' : 'text-muted-foreground')])]), 'current': og_eq(og_get(v_tab, ['id']), v_current), 'testid': 'item'}, 'children': og_markup(c_2)}, with_context = false) }}
         {%- endset -%}
         {{ include('compose/ListItem.html.twig', {'children': c_3}, with_context = false) }}
       {%- endfor %}

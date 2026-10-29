@@ -26,10 +26,10 @@
         {capture $c_1}
           {=og_text(og_get($v_tab, ['title']))}
         {/capture}
-        {=og_include('blocks/switcher-item.latte', ['p' => ['active' => og_eq(og_get($v_tab, ['value']), og_get($v_filter, ['category']))], 'children' => $c_1])|noescape}
+        {=og_include('blocks/switcher-item.latte', ['p' => ['active' => og_eq(og_get($v_tab, ['value']), og_get($v_filter, ['category']))], 'children' => og_markup($c_1)])|noescape}
       {/foreach}
     {/capture}
-    {=og_include('blocks/switcher.latte', ['p' => ['label' => og_get($v_filter, ['label'])], 'children' => $c_2])|noescape}
+    {=og_include('blocks/switcher.latte', ['p' => ['label' => og_get($v_filter, ['label'])], 'children' => og_markup($c_2)])|noescape}
   {/if}
   {if og_t(og_eq(og_len($v_shown), 0))}
     {=og_include('blocks/empty-state.latte', ['p' => ['icon' => 'circle-question-mark', 'title' => $v_empty]])|noescape}
@@ -76,4 +76,4 @@
     {=og_include('compose/Grid.latte', ['cols' => og_s((og_t(og_eq($v_cols, '2')) ? '1-2' : '1')), 'class' => 'items-start gap-x-8', 'attrs' => og_attrs(['data-testid', 'faq']), 'children' => (string) $c_12])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'measure' => (og_t(og_eq($v_layout, 'chat')) ? '2xl' : 'default'), 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_13])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'measure' => (og_t(og_eq($v_layout, 'chat')) ? '2xl' : 'default'), 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_13)])|noescape}

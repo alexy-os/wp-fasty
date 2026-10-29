@@ -147,4 +147,42 @@ final class PagerTest extends TestCase
         }
         self::assertSame($by['latte'], $by['twig'], 'posts/listPaged: Latte = Twig');
     }
+
+    /** link mode (codegen-x 000ee4a6 pageUrl / firstUrl): the adapter's addresses, through Safe; a hostile one is dropped */
+    public function testUrlsOfTheLinkMode(): void
+    {
+        self::assertSame('http://example.test/page/{0}', Pager::template());
+        self::assertSame(['url' => 'http://example.test/page/{0}', 'firstUrl' => 'http://example.test/page/1'], Pager::urls());
+        $ctx = ['pagination' => ['current' => 2, 'total' => 3, 'url' => '/blog/page/{0}/?s=a', 'first_url' => '/blog/?s=a']];
+        self::assertSame(['url' => '/blog/page/{0}/?s=a', 'firstUrl' => '/blog/?s=a'], Pager::urls($ctx));
+        $bad = Pager::urls(['pagination' => ['url' => 'javascript:alert({0})', 'first_url' => '//evil.test/']]);
+        self::assertSame(['url' => '', 'firstUrl' => ''], $bad);
+        self::assertArrayNotHasKey('url', Pager::value(2, 5, $bad), 'no address: buttons');
+        self::assertArrayNotHasKey('url', Pager::value(2, 5, ['url' => '/x', 'firstUrl' => '/']), 'no {0}: buttons');
+        self::assertArrayNotHasKey('url', Pager::value(2, 5), 'editor preview: buttons');
+        $v = Pager::value(2, 5, Pager::urls());
+        self::assertSame('http://example.test/page/{0}', $v['url']);
+        self::assertSame('http://example.test/page/1', $v['firstUrl']);
+    }
+
+    /** links mode renders <a href> for every page and previous / next, Latte = Twig */
+    public function testPagerLinksRender(): void
+    {
+        $dom = require dirname(__DIR__) . '/tools/parity/normalize-dom.php';
+        $by = [];
+        foreach (['latte', 'twig'] as $engine) {
+            [$catalog, $r] = self::runtime($engine);
+            $blocks = [['id' => 'paged', 'block' => 'posts', 'variant' => 'listPaged']];
+            [$entry] = Layout::normalize(['blocks' => $blocks], 'ui8kit', $catalog, [], ['id' => 'l', 'slug' => 'l', 'title' => 'L']);
+            $one = self::page($engine, $catalog, $r, $entry, ['paged' => ['pager' => Pager::value(2, 5, ['url' => '/j/page/{0}/', 'firstUrl' => '/j/'])]])['paged'];
+            foreach (['/j/', '/j/page/3/', '/j/page/5/'] as $href) {
+                self::assertStringContainsString('href="' . $href . '"', $one, "$engine: $href");
+            }
+            self::assertStringNotContainsString('href="/j/page/1/"', $one, "$engine: page 1 is firstUrl");
+            self::assertStringNotContainsString('href="/j/page/2/"', $one, "$engine: the current page is no link");
+            self::assertSame(1, preg_match('#<a[^>]*aria-label="Next page"|<a[^>]*href="/j/page/3/"[^>]*aria-label="Next page"#', $one) | preg_match('#aria-label="Next page"[^>]*href="/j/page/3/"#', $one), "$engine: next is a link");
+            $by[$engine] = $dom($one);
+        }
+        self::assertSame($by['latte'], $by['twig'], 'pager links: Latte = Twig');
+    }
 }

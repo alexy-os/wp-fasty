@@ -23,61 +23,61 @@
           {%- set c_1 -%}
             {{ include('compose/Input.html.twig', {'type': 'text', 'name': 'name', 'attrs': og_attrs(['autocomplete', 'name', 'id', og_tpl('{0}-name', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
           {%- endset -%}
-          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['name']), 'htmlFor': og_tpl('{0}-name', [v_id])}, 'children': c_1}, with_context = false) }}
+          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['name']), 'htmlFor': og_tpl('{0}-name', [v_id])}, 'children': og_markup(c_1)}, with_context = false) }}
           {%- set c_2 -%}
             {{ include('compose/Input.html.twig', {'type': 'tel', 'name': 'phone', 'attrs': og_attrs(['autocomplete', 'tel', 'id', og_tpl('{0}-phone', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
           {%- endset -%}
-          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['phone']), 'htmlFor': og_tpl('{0}-phone', [v_id])}, 'children': c_2}, with_context = false) }}
+          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['phone']), 'htmlFor': og_tpl('{0}-phone', [v_id])}, 'children': og_markup(c_2)}, with_context = false) }}
           {%- set c_3 -%}
             {{ include('compose/Input.html.twig', {'type': 'email', 'name': 'email', 'attrs': og_attrs(['autocomplete', 'email', 'id', og_tpl('{0}-email', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
           {%- endset -%}
-          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['email']), 'htmlFor': og_tpl('{0}-email', [v_id])}, 'children': c_3}, with_context = false) }}
+          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['email']), 'htmlFor': og_tpl('{0}-email', [v_id])}, 'children': og_markup(c_3)}, with_context = false) }}
         {%- endset -%}
         {{ include('compose/Grid.html.twig', {'cols': '1-2', 'class': 'gap-4', 'children': c_4}, with_context = false) }}
       {%- endset -%}
-      {{ include('blocks/checkout-step.html.twig', {'p': {'number': '1', 'title': og_get(v_labels, ['contacts']), 'text': og_get(v_labels, ['contactsText']), 'layout': v_layout}, 'children': c_5}, with_context = false) }}
+      {{ include('blocks/checkout-step.html.twig', {'p': {'number': '1', 'title': og_get(v_labels, ['contacts']), 'text': og_get(v_labels, ['contactsText']), 'layout': v_layout}, 'children': og_markup(c_5)}, with_context = false) }}
       {%- set c_13 -%}
         {%- set c_6 -%}
           {{ include('compose/Input.html.twig', {'type': 'text', 'name': 'street', 'attrs': og_attrs(['autocomplete', 'address-line1', 'id', og_tpl('{0}-street', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['street']), 'htmlFor': og_tpl('{0}-street', [v_id])}, 'children': c_6}, with_context = false) }}
+        {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['street']), 'htmlFor': og_tpl('{0}-street', [v_id])}, 'children': og_markup(c_6)}, with_context = false) }}
         {%- set c_11 -%}
           {%- set c_7 -%}
             {{ include('compose/Input.html.twig', {'type': 'text', 'name': 'house', 'attrs': og_attrs(['id', og_tpl('{0}-house', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
           {%- endset -%}
-          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['house']), 'htmlFor': og_tpl('{0}-house', [v_id])}, 'children': c_7}, with_context = false) }}
+          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['house']), 'htmlFor': og_tpl('{0}-house', [v_id])}, 'children': og_markup(c_7)}, with_context = false) }}
           {%- set c_8 -%}
             {{ include('compose/Input.html.twig', {'type': 'text', 'name': 'flat', 'attrs': og_attrs(['id', og_tpl('{0}-flat', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
           {%- endset -%}
-          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['flat']), 'htmlFor': og_tpl('{0}-flat', [v_id])}, 'children': c_8}, with_context = false) }}
+          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['flat']), 'htmlFor': og_tpl('{0}-flat', [v_id])}, 'children': og_markup(c_8)}, with_context = false) }}
           {%- set c_9 -%}
             {{ include('compose/Input.html.twig', {'type': 'text', 'name': 'entrance', 'attrs': og_attrs(['id', og_tpl('{0}-entrance', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
           {%- endset -%}
-          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['entrance']), 'htmlFor': og_tpl('{0}-entrance', [v_id])}, 'children': c_9}, with_context = false) }}
+          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['entrance']), 'htmlFor': og_tpl('{0}-entrance', [v_id])}, 'children': og_markup(c_9)}, with_context = false) }}
           {%- set c_10 -%}
             {{ include('compose/Input.html.twig', {'type': 'text', 'name': 'floor', 'attrs': og_attrs(['id', og_tpl('{0}-floor', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
           {%- endset -%}
-          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['floor']), 'htmlFor': og_tpl('{0}-floor', [v_id])}, 'children': c_10}, with_context = false) }}
+          {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['floor']), 'htmlFor': og_tpl('{0}-floor', [v_id])}, 'children': og_markup(c_10)}, with_context = false) }}
         {%- endset -%}
         {{ include('compose/Grid.html.twig', {'cols': '2-4', 'class': 'gap-4', 'children': c_11}, with_context = false) }}
         {%- set c_12 -%}
           {{ include('compose/Textarea.html.twig', {'rows': 4, 'name': 'comment', 'attrs': og_attrs(['id', og_tpl('{0}-comment', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['comment']), 'htmlFor': og_tpl('{0}-comment', [v_id])}, 'children': c_12}, with_context = false) }}
+        {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['comment']), 'htmlFor': og_tpl('{0}-comment', [v_id])}, 'children': og_markup(c_12)}, with_context = false) }}
       {%- endset -%}
-      {{ include('blocks/checkout-step.html.twig', {'p': {'number': '2', 'title': og_get(v_labels, ['address']), 'text': og_get(v_labels, ['addressText']), 'layout': v_layout}, 'children': c_13}, with_context = false) }}
+      {{ include('blocks/checkout-step.html.twig', {'p': {'number': '2', 'title': og_get(v_labels, ['address']), 'text': og_get(v_labels, ['addressText']), 'layout': v_layout}, 'children': og_markup(c_13)}, with_context = false) }}
       {%- set c_14 -%}
         {%- if og_t(og_gt(og_len(v_days), 0)) %}
           {{ include('blocks/slot-grid.html.twig', {'p': {'days': v_days, 'name': og_tpl('{0}-slot', [v_id]), 'item': 'plain'}}, with_context = false) }}
         {%- endif %}
       {%- endset -%}
-      {{ include('blocks/checkout-step.html.twig', {'p': {'number': '3', 'title': og_get(v_labels, ['slot']), 'text': og_get(v_labels, ['slotText']), 'layout': v_layout}, 'children': c_14}, with_context = false) }}
+      {{ include('blocks/checkout-step.html.twig', {'p': {'number': '3', 'title': og_get(v_labels, ['slot']), 'text': og_get(v_labels, ['slotText']), 'layout': v_layout}, 'children': og_markup(c_14)}, with_context = false) }}
       {%- set c_15 -%}
         {%- if og_t(og_gt(og_len(v_payments), 0)) %}
           {{ include('blocks/payment-options.html.twig', {'p': {'payments': v_payments, 'name': og_tpl('{0}-payment', [v_id]), 'checked': 'payment-card'}}, with_context = false) }}
         {%- endif %}
       {%- endset -%}
-      {{ include('blocks/checkout-step.html.twig', {'p': {'number': '4', 'title': og_get(v_labels, ['payment']), 'text': og_get(v_labels, ['paymentText']), 'layout': v_layout}, 'children': c_15}, with_context = false) }}
+      {{ include('blocks/checkout-step.html.twig', {'p': {'number': '4', 'title': og_get(v_labels, ['payment']), 'text': og_get(v_labels, ['paymentText']), 'layout': v_layout}, 'children': og_markup(c_15)}, with_context = false) }}
       {{ include('blocks/checkout-submit.html.twig', {'p': {'id': v_id, 'consent': og_get(v_labels, ['consent']), 'submit': og_get(v_labels, ['submit']), 'legal': og_get(v_labels, ['legal'])}}, with_context = false) }}
     {%- endset -%}
     {{ include('compose/Form.html.twig', {'method': 'dialog', 'class': og_s((og_t(og_eq(v_summary, 'aside')) ? 'flex flex-col gap-6 lg:col-span-2' : 'flex flex-col gap-6 lg:col-span-3')), 'attrs': og_attrs(['data-testid', 'checkout-form']), 'children': c_16}, with_context = false) }}
@@ -90,4 +90,4 @@
   {%- endset -%}
   {{ include('compose/Box.html.twig', {'class': 'grid grid-cols-1 items-start gap-8 lg:grid-cols-3', 'children': c_18}, with_context = false) }}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': c_19}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_19)}, with_context = false) }}

@@ -30,15 +30,15 @@
             {%- set c_3 -%}
               {{ include('compose/Input.html.twig', {'type': 'text', 'name': 'name', 'attrs': og_attrs(['autocomplete', 'name', 'id', og_tpl('{0}-name', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
             {%- endset -%}
-            {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['name']), 'htmlFor': og_tpl('{0}-name', [v_id])}, 'children': c_3}, with_context = false) }}
+            {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['name']), 'htmlFor': og_tpl('{0}-name', [v_id])}, 'children': og_markup(c_3)}, with_context = false) }}
             {%- set c_4 -%}
               {{ include('compose/Input.html.twig', {'type': 'email', 'name': 'email', 'attrs': og_attrs(['autocomplete', 'email', 'id', og_tpl('{0}-email', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
             {%- endset -%}
-            {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['email']), 'htmlFor': og_tpl('{0}-email', [v_id])}, 'children': c_4}, with_context = false) }}
+            {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['email']), 'htmlFor': og_tpl('{0}-email', [v_id])}, 'children': og_markup(c_4)}, with_context = false) }}
             {%- set c_5 -%}
               {{ include('compose/Textarea.html.twig', {'rows': 4, 'name': 'bio', 'attrs': og_attrs(['id', og_tpl('{0}-bio', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
             {%- endset -%}
-            {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['bio']), 'htmlFor': og_tpl('{0}-bio', [v_id])}, 'children': c_5}, with_context = false) }}
+            {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['bio']), 'htmlFor': og_tpl('{0}-bio', [v_id])}, 'children': og_markup(c_5)}, with_context = false) }}
           {%- endset -%}
           {{ include('compose/Stack.html.twig', {'gap': '4', 'align': 'stretch', 'children': c_6}, with_context = false) }}
           {%- if og_t(og_eq(v_prefs, 'show')) %}
@@ -82,7 +82,7 @@
       {%- endset -%}
       {{ include('compose/Form.html.twig', {'method': 'dialog', 'class': 'gap-6', 'attrs': og_attrs(['data-testid', 'profile-form']), 'children': c_17}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/panel.html.twig', {'p': {'title': v_title, 'description': v_text, 'id': v_id, 'className': og_cnv([og_cnv([(og_t(og_eq(v_tone, 'muted')) ? 'bg-muted' : '')])])}, 'children': c_18}, with_context = false) }}
+    {{ include('blocks/panel.html.twig', {'p': {'title': v_title, 'description': v_text, 'id': v_id, 'className': og_cnv([og_cnv([(og_t(og_eq(v_tone, 'muted')) ? 'bg-muted' : '')])])}, 'children': og_markup(c_18)}, with_context = false) }}
   {%- endset -%}
   {{ include('compose/Container.html.twig', {'class': 'mx-auto w-full max-w-6xl px-4 py-8', 'attrs': og_attrs(['data-slot', 'container']), 'children': c_19}, with_context = false) }}
 {%- endset -%}

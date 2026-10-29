@@ -35,7 +35,7 @@
               {%- set c_3 -%}
                 {{ og_text(v_brand) }}
               {%- endset -%}
-              {{ include('blocks/menu-entry.html.twig', {'p': {'href': v_brandHref, 'className': og_cnv(['text-lg font-medium']), 'testid': 'brand'}, 'children': c_3}, with_context = false) }}
+              {{ include('blocks/menu-entry.html.twig', {'p': {'href': v_brandHref, 'className': og_cnv(['text-lg font-medium']), 'testid': 'brand'}, 'children': og_markup(c_3)}, with_context = false) }}
             {%- endset -%}
             {{ include('compose/Box.html.twig', {'class': 'text-center', 'children': c_4}, with_context = false) }}
             {%- set c_6 -%}
@@ -49,12 +49,12 @@
           {%- endset -%}
           {{ include('compose/Grid.html.twig', {'cols': '1-3', 'class': 'w-full items-center gap-4', 'children': c_7}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [v_label, v_landmarkLabel])) : v_label), 'className': og_cnv(['w-full']), 'testid': 'site-nav'}, 'children': c_8}, with_context = false) }}
+        {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [v_label, v_landmarkLabel])) : v_label), 'className': og_cnv(['w-full']), 'testid': 'site-nav'}, 'children': og_markup(c_8)}, with_context = false) }}
       {%- else %}
         {%- set c_9 -%}
           {{ og_text(v_brand) }}
         {%- endset -%}
-        {{ include('blocks/menu-entry.html.twig', {'p': {'href': v_brandHref, 'className': og_cnv(['text-lg font-medium']), 'testid': 'brand'}, 'children': c_9}, with_context = false) }}
+        {{ include('blocks/menu-entry.html.twig', {'p': {'href': v_brandHref, 'className': og_cnv(['text-lg font-medium']), 'testid': 'brand'}, 'children': og_markup(c_9)}, with_context = false) }}
         {%- if og_t(og_eq(v_layout, 'search')) %}
           {{ include('blocks/search-palette.html.twig', {'p': {'label': og_get(v_search, ['label']), 'shortcut': og_get(v_search, ['shortcut'])}}, with_context = false) }}
         {%- endif %}

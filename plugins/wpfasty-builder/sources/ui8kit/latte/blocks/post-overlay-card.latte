@@ -31,7 +31,7 @@
       {=og_text(og_get($v_labels, ['read']))}
       {=og_include('icons/LucideIcon.latte', ['name' => 'arrow-right', 'size' => 16])|noescape}
     {/capture}
-    {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_p, ['href']), 'className' => og_cnv(['gap-2 text-sm font-medium']), 'size' => 'sm', 'testid' => 'read'], 'children' => $c_6])|noescape}
+    {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_p, ['href']), 'className' => og_cnv(['gap-2 text-sm font-medium']), 'size' => 'sm', 'testid' => 'read'], 'children' => og_markup($c_6)])|noescape}
   {/capture}
   {=og_include('compose/Stack.latte', ['gap' => '2', 'align' => 'start', 'class' => 'absolute bottom-4 left-4 right-4 rounded bg-background p-4', 'children' => (string) $c_7])|noescape}
 {/capture}

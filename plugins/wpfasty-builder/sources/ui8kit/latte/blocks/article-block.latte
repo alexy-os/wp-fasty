@@ -4,6 +4,6 @@
     Props (p): testid, className; children: markup. *}
 {var $v_testid = ($p['testid'] ?? null)}
 {capture $c_1}
-  {=($children ?? '')|noescape}
+  {=og_slot(($children ?? null))|noescape}
 {/capture}
 {=og_include('compose/Block.latte', ['tag' => 'article', 'class' => og_s(og_cnv([($p['className'] ?? '')])), 'attrs' => og_attrs(['data-testid', $v_testid]), 'children' => (string) $c_1])|noescape}

@@ -59,7 +59,7 @@
                 {{ include('compose/Text.html.twig', {'size': 'xs', 'class': 'text-muted-foreground', 'children': c_6}, with_context = false) }}
               {%- endif %}
             {%- endset -%}
-            {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_c, ['href']), 'className': og_cnv([og_cnv(['text-sm', v_linkShape, (og_t(og_eq(og_get(v_c, ['id']), v_current)) ? v_currentLook : v_otherLook)])]), 'current': og_eq(og_get(v_c, ['id']), v_current), 'testid': 'item', 'block': true}, 'children': c_7}, with_context = false) }}
+            {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_c, ['href']), 'className': og_cnv([og_cnv(['text-sm', v_linkShape, (og_t(og_eq(og_get(v_c, ['id']), v_current)) ? v_currentLook : v_otherLook)])]), 'current': og_eq(og_get(v_c, ['id']), v_current), 'testid': 'item', 'block': true}, 'children': og_markup(c_7)}, with_context = false) }}
           {%- endset -%}
           {{ include('compose/ListItem.html.twig', {'children': c_8}, with_context = false) }}
         {%- endfor %}

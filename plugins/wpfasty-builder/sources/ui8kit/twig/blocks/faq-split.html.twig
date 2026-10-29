@@ -20,7 +20,7 @@
     {%- set c_1 -%}
       {{ include('blocks/faq-cards.html.twig', {'p': {'items': v_items, 'labels': v_labels, 'cards': v_cards}}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': c_1}, with_context = false) }}
+    {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_1)}, with_context = false) }}
   {%- endif %}
   {%- if og_t(og_eq(v_layout, 'head')) %}
     {%- set f_4 -%}
@@ -35,7 +35,7 @@
       {%- endset -%}
       {{ include('compose/Box.html.twig', {'children': c_3}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'layout': 'split', 'media': {'show': true, 'side': 'end', 'align': 'start'}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_4)}, 'children': c_5}, with_context = false) }}
+    {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'layout': 'split', 'media': {'show': true, 'side': 'end', 'align': 'start'}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_4)}, 'children': og_markup(c_5)}, with_context = false) }}
   {%- endif %}
   {%- if og_t(og_eq(v_layout, 'aside')) %}
     {%- set f_6 -%}
@@ -44,7 +44,7 @@
     {%- set c_7 -%}
       {{ include('blocks/faq-disclosures.html.twig', {'p': {'items': v_items, 'name': og_tpl('{0}-faq', [v_id])}}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'layout': 'split', 'media': {'show': true, 'side': 'end', 'align': 'start'}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_6)}, 'children': c_7}, with_context = false) }}
+    {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'layout': 'split', 'media': {'show': true, 'side': 'end', 'align': 'start'}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_6)}, 'children': og_markup(c_7)}, with_context = false) }}
   {%- endif %}
   {%- if og_t(og_eq(v_layout, 'media')) %}
     {%- set f_10 -%}
@@ -60,7 +60,7 @@
       {%- endset -%}
       {{ include('compose/Box.html.twig', {'children': c_9}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'layout': 'split', 'media': {'show': true, 'side': v_mediaSide, 'align': 'start'}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_10)}, 'children': c_11}, with_context = false) }}
+    {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'layout': 'split', 'media': {'show': true, 'side': v_mediaSide, 'align': 'start'}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_10)}, 'children': og_markup(c_11)}, with_context = false) }}
   {%- endif %}
   {%- if og_t(og_eq(v_layout, 'search')) %}
     {%- set f_12 -%}
@@ -69,6 +69,6 @@
     {%- set c_13 -%}
       {{ include('blocks/faq-finder.html.twig', {'p': {'items': v_items, 'labels': v_labels, 'topics': v_topics}}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'layout': 'split', 'media': {'show': true, 'side': v_mediaSide}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_12)}, 'children': c_13}, with_context = false) }}
+    {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'layout': 'split', 'media': {'show': true, 'side': v_mediaSide}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_12)}, 'children': og_markup(c_13)}, with_context = false) }}
   {%- endif %}
 {%- endif %}

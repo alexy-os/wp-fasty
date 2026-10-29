@@ -53,7 +53,7 @@
               {/capture}
               {=og_include('compose/List.latte', ['class' => 'm-0 flex list-none flex-col gap-4 p-0', 'attrs' => og_attrs(['data-testid', 'items']), 'children' => (string) $c_7])|noescape}
             {/capture}
-            {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_activity, ['title']), 'description' => og_get($v_activity, ['text']), 'id' => og_tpl('{0}-list', [$v_id])], 'children' => $c_8])|noescape}
+            {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_activity, ['title']), 'description' => og_get($v_activity, ['text']), 'id' => og_tpl('{0}-list', [$v_id])], 'children' => og_markup($c_8)])|noescape}
           {/if}
           {=og_include('blocks/app-main.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'metrics' => $v_metrics, 'chart' => $v_chart, 'density' => 'compact']])|noescape}
         {/capture}

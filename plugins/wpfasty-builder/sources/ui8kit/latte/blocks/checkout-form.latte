@@ -23,61 +23,61 @@
           {capture $c_1}
             {=og_include('compose/Input.latte', ['type' => 'text', 'name' => 'name', 'attrs' => og_attrs(['autocomplete', 'name', 'id', og_tpl('{0}-name', [$v_id]), 'data-testid', 'field'])])|noescape}
           {/capture}
-          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['name']), 'htmlFor' => og_tpl('{0}-name', [$v_id])], 'children' => $c_1])|noescape}
+          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['name']), 'htmlFor' => og_tpl('{0}-name', [$v_id])], 'children' => og_markup($c_1)])|noescape}
           {capture $c_2}
             {=og_include('compose/Input.latte', ['type' => 'tel', 'name' => 'phone', 'attrs' => og_attrs(['autocomplete', 'tel', 'id', og_tpl('{0}-phone', [$v_id]), 'data-testid', 'field'])])|noescape}
           {/capture}
-          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['phone']), 'htmlFor' => og_tpl('{0}-phone', [$v_id])], 'children' => $c_2])|noescape}
+          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['phone']), 'htmlFor' => og_tpl('{0}-phone', [$v_id])], 'children' => og_markup($c_2)])|noescape}
           {capture $c_3}
             {=og_include('compose/Input.latte', ['type' => 'email', 'name' => 'email', 'attrs' => og_attrs(['autocomplete', 'email', 'id', og_tpl('{0}-email', [$v_id]), 'data-testid', 'field'])])|noescape}
           {/capture}
-          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['email']), 'htmlFor' => og_tpl('{0}-email', [$v_id])], 'children' => $c_3])|noescape}
+          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['email']), 'htmlFor' => og_tpl('{0}-email', [$v_id])], 'children' => og_markup($c_3)])|noescape}
         {/capture}
         {=og_include('compose/Grid.latte', ['cols' => '1-2', 'class' => 'gap-4', 'children' => (string) $c_4])|noescape}
       {/capture}
-      {=og_include('blocks/checkout-step.latte', ['p' => ['number' => '1', 'title' => og_get($v_labels, ['contacts']), 'text' => og_get($v_labels, ['contactsText']), 'layout' => $v_layout], 'children' => $c_5])|noescape}
+      {=og_include('blocks/checkout-step.latte', ['p' => ['number' => '1', 'title' => og_get($v_labels, ['contacts']), 'text' => og_get($v_labels, ['contactsText']), 'layout' => $v_layout], 'children' => og_markup($c_5)])|noescape}
       {capture $c_13}
         {capture $c_6}
           {=og_include('compose/Input.latte', ['type' => 'text', 'name' => 'street', 'attrs' => og_attrs(['autocomplete', 'address-line1', 'id', og_tpl('{0}-street', [$v_id]), 'data-testid', 'field'])])|noescape}
         {/capture}
-        {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['street']), 'htmlFor' => og_tpl('{0}-street', [$v_id])], 'children' => $c_6])|noescape}
+        {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['street']), 'htmlFor' => og_tpl('{0}-street', [$v_id])], 'children' => og_markup($c_6)])|noescape}
         {capture $c_11}
           {capture $c_7}
             {=og_include('compose/Input.latte', ['type' => 'text', 'name' => 'house', 'attrs' => og_attrs(['id', og_tpl('{0}-house', [$v_id]), 'data-testid', 'field'])])|noescape}
           {/capture}
-          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['house']), 'htmlFor' => og_tpl('{0}-house', [$v_id])], 'children' => $c_7])|noescape}
+          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['house']), 'htmlFor' => og_tpl('{0}-house', [$v_id])], 'children' => og_markup($c_7)])|noescape}
           {capture $c_8}
             {=og_include('compose/Input.latte', ['type' => 'text', 'name' => 'flat', 'attrs' => og_attrs(['id', og_tpl('{0}-flat', [$v_id]), 'data-testid', 'field'])])|noescape}
           {/capture}
-          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['flat']), 'htmlFor' => og_tpl('{0}-flat', [$v_id])], 'children' => $c_8])|noescape}
+          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['flat']), 'htmlFor' => og_tpl('{0}-flat', [$v_id])], 'children' => og_markup($c_8)])|noescape}
           {capture $c_9}
             {=og_include('compose/Input.latte', ['type' => 'text', 'name' => 'entrance', 'attrs' => og_attrs(['id', og_tpl('{0}-entrance', [$v_id]), 'data-testid', 'field'])])|noescape}
           {/capture}
-          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['entrance']), 'htmlFor' => og_tpl('{0}-entrance', [$v_id])], 'children' => $c_9])|noescape}
+          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['entrance']), 'htmlFor' => og_tpl('{0}-entrance', [$v_id])], 'children' => og_markup($c_9)])|noescape}
           {capture $c_10}
             {=og_include('compose/Input.latte', ['type' => 'text', 'name' => 'floor', 'attrs' => og_attrs(['id', og_tpl('{0}-floor', [$v_id]), 'data-testid', 'field'])])|noescape}
           {/capture}
-          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['floor']), 'htmlFor' => og_tpl('{0}-floor', [$v_id])], 'children' => $c_10])|noescape}
+          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['floor']), 'htmlFor' => og_tpl('{0}-floor', [$v_id])], 'children' => og_markup($c_10)])|noescape}
         {/capture}
         {=og_include('compose/Grid.latte', ['cols' => '2-4', 'class' => 'gap-4', 'children' => (string) $c_11])|noescape}
         {capture $c_12}
           {=og_include('compose/Textarea.latte', ['rows' => 4, 'name' => 'comment', 'attrs' => og_attrs(['id', og_tpl('{0}-comment', [$v_id]), 'data-testid', 'field'])])|noescape}
         {/capture}
-        {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['comment']), 'htmlFor' => og_tpl('{0}-comment', [$v_id])], 'children' => $c_12])|noescape}
+        {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['comment']), 'htmlFor' => og_tpl('{0}-comment', [$v_id])], 'children' => og_markup($c_12)])|noescape}
       {/capture}
-      {=og_include('blocks/checkout-step.latte', ['p' => ['number' => '2', 'title' => og_get($v_labels, ['address']), 'text' => og_get($v_labels, ['addressText']), 'layout' => $v_layout], 'children' => $c_13])|noescape}
+      {=og_include('blocks/checkout-step.latte', ['p' => ['number' => '2', 'title' => og_get($v_labels, ['address']), 'text' => og_get($v_labels, ['addressText']), 'layout' => $v_layout], 'children' => og_markup($c_13)])|noescape}
       {capture $c_14}
         {if og_t(og_gt(og_len($v_days), 0))}
           {=og_include('blocks/slot-grid.latte', ['p' => ['days' => $v_days, 'name' => og_tpl('{0}-slot', [$v_id]), 'item' => 'plain']])|noescape}
         {/if}
       {/capture}
-      {=og_include('blocks/checkout-step.latte', ['p' => ['number' => '3', 'title' => og_get($v_labels, ['slot']), 'text' => og_get($v_labels, ['slotText']), 'layout' => $v_layout], 'children' => $c_14])|noescape}
+      {=og_include('blocks/checkout-step.latte', ['p' => ['number' => '3', 'title' => og_get($v_labels, ['slot']), 'text' => og_get($v_labels, ['slotText']), 'layout' => $v_layout], 'children' => og_markup($c_14)])|noescape}
       {capture $c_15}
         {if og_t(og_gt(og_len($v_payments), 0))}
           {=og_include('blocks/payment-options.latte', ['p' => ['payments' => $v_payments, 'name' => og_tpl('{0}-payment', [$v_id]), 'checked' => 'payment-card']])|noescape}
         {/if}
       {/capture}
-      {=og_include('blocks/checkout-step.latte', ['p' => ['number' => '4', 'title' => og_get($v_labels, ['payment']), 'text' => og_get($v_labels, ['paymentText']), 'layout' => $v_layout], 'children' => $c_15])|noescape}
+      {=og_include('blocks/checkout-step.latte', ['p' => ['number' => '4', 'title' => og_get($v_labels, ['payment']), 'text' => og_get($v_labels, ['paymentText']), 'layout' => $v_layout], 'children' => og_markup($c_15)])|noescape}
       {=og_include('blocks/checkout-submit.latte', ['p' => ['id' => $v_id, 'consent' => og_get($v_labels, ['consent']), 'submit' => og_get($v_labels, ['submit']), 'legal' => og_get($v_labels, ['legal'])]])|noescape}
     {/capture}
     {=og_include('compose/Form.latte', ['method' => 'dialog', 'class' => og_s((og_t(og_eq($v_summary, 'aside')) ? 'flex flex-col gap-6 lg:col-span-2' : 'flex flex-col gap-6 lg:col-span-3')), 'attrs' => og_attrs(['data-testid', 'checkout-form']), 'children' => (string) $c_16])|noescape}
@@ -90,4 +90,4 @@
   {/capture}
   {=og_include('compose/Box.latte', ['class' => 'grid grid-cols-1 items-start gap-8 lg:grid-cols-3', 'children' => (string) $c_18])|noescape}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_19])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_19)])|noescape}

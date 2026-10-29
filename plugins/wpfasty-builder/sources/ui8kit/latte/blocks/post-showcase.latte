@@ -19,7 +19,7 @@
   {capture $c_1}
     {=og_include('blocks/empty-state.latte', ['p' => ['icon' => 'newspaper', 'title' => $v_empty]])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_1])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_1)])|noescape}
 {elseif og_t(og_eq($v_layout, 'intro'))}
   {capture $f_3}
     {capture $c_4}
@@ -39,7 +39,7 @@
     {/capture}
     {=og_include('compose/Link.latte', ['href' => og_url(og_s(og_get($v_action, ['href']))), 'size' => 'sm', 'attrs' => og_attrs(['data-testid', 'section-action']), 'children' => (string) $c_2])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_3)], 'children' => $c_5])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_3)], 'children' => og_markup($c_5)])|noescape}
 {elseif og_t(og_eq($v_layout, 'featured'))}
   {capture $f_6}
     {=og_include('blocks/media-frame.latte', ['p' => ['alt' => $v_title, 'ratio' => '4/3']])|noescape}
@@ -52,7 +52,7 @@
       {/if}
     {/foreach}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_6)], 'children' => $c_7])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_6)], 'children' => og_markup($c_7)])|noescape}
 {else}
   {capture $c_9}
     {capture $c_8}
@@ -65,5 +65,5 @@
     {/capture}
     {=og_include('compose/Box.latte', ['class' => og_s((og_t(og_eq($v_cols, '2')) ? 'grid grid-cols-1 gap-6 md:grid-cols-2' : 'grid grid-cols-1 gap-6 md:grid-cols-3')), 'children' => (string) $c_8])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_9])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_9)])|noescape}
 {/if}

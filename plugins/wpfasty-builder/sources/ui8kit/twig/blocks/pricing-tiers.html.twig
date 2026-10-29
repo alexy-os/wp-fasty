@@ -21,13 +21,13 @@
         {%- set c_1 -%}
           {{ og_text(og_get(v_billingLabels, ['monthly'])) }}
         {%- endset -%}
-        {{ include('blocks/switcher-item.html.twig', {'p': {'active': og_eq(v_billing, 'monthly')}, 'children': c_1}, with_context = false) }}
+        {{ include('blocks/switcher-item.html.twig', {'p': {'active': og_eq(v_billing, 'monthly')}, 'children': og_markup(c_1)}, with_context = false) }}
         {%- set c_2 -%}
           {{ og_text(og_get(v_billingLabels, ['annual'])) }}
         {%- endset -%}
-        {{ include('blocks/switcher-item.html.twig', {'p': {'active': og_eq(v_billing, 'annual')}, 'children': c_2}, with_context = false) }}
+        {{ include('blocks/switcher-item.html.twig', {'p': {'active': og_eq(v_billing, 'annual')}, 'children': og_markup(c_2)}, with_context = false) }}
       {%- endset -%}
-      {{ include('blocks/switcher.html.twig', {'p': {'label': og_get(v_billingLabels, ['label'])}, 'children': c_3}, with_context = false) }}
+      {{ include('blocks/switcher.html.twig', {'p': {'label': og_get(v_billingLabels, ['label'])}, 'children': og_markup(c_3)}, with_context = false) }}
       {%- set c_4 -%}
         {{ og_text(og_get(v_billingLabels, ['save'])) }}
       {%- endset -%}
@@ -46,4 +46,4 @@
     {{ include('compose/Grid.html.twig', {'cols': og_s((og_t(og_eq(v_layout, 'stack')) ? '1' : og_fit_cols(v_cols, og_len(v_plans)))), 'class': 'gap-4', 'attrs': og_attrs(['data-testid', 'tiers']), 'children': c_6}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'measure': (og_t(og_eq(v_layout, 'stack')) ? 'md' : 'default'), 'landmarkLabel': v_landmarkLabel}, 'children': c_7}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'measure': (og_t(og_eq(v_layout, 'stack')) ? 'md' : 'default'), 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_7)}, with_context = false) }}

@@ -53,7 +53,7 @@
               {%- endset -%}
               {{ include('compose/List.html.twig', {'class': 'm-0 flex list-none flex-col gap-4 p-0', 'attrs': og_attrs(['data-testid', 'items']), 'children': c_7}, with_context = false) }}
             {%- endset -%}
-            {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_activity, ['title']), 'description': og_get(v_activity, ['text']), 'id': og_tpl('{0}-list', [v_id])}, 'children': c_8}, with_context = false) }}
+            {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_activity, ['title']), 'description': og_get(v_activity, ['text']), 'id': og_tpl('{0}-list', [v_id])}, 'children': og_markup(c_8)}, with_context = false) }}
           {%- endif %}
           {{ include('blocks/app-main.html.twig', {'p': {'id': v_id, 'title': v_title, 'metrics': v_metrics, 'chart': v_chart, 'density': 'compact'}}, with_context = false) }}
         {%- endset -%}

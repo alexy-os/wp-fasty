@@ -31,13 +31,13 @@
         {%- set c_4 -%}
           {{ include('blocks/bar-chart.html.twig', {'p': {'bars': og_get(v_chart, ['series']), 'label': og_get(v_chart, ['summary']), 'height': 144}}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_chart, ['title']), 'description': og_get(v_chart, ['text']), 'id': og_tpl('{0}-chart', [v_id]), 'className': og_cnv(['h-full'])}, 'children': c_4}, with_context = false) }}
+        {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_chart, ['title']), 'description': og_get(v_chart, ['text']), 'id': og_tpl('{0}-chart', [v_id]), 'className': og_cnv(['h-full'])}, 'children': og_markup(c_4)}, with_context = false) }}
       {%- endif %}
       {%- if og_t(og_gt(og_len(og_get(v_activity, ['events'])), 0)) %}
         {%- set c_5 -%}
           {{ include('blocks/timeline.html.twig', {'p': {'items': og_get(v_activity, ['events'])}}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_activity, ['title']), 'description': og_get(v_activity, ['text']), 'id': og_tpl('{0}-feed', [v_id]), 'className': og_cnv(['h-full'])}, 'children': c_5}, with_context = false) }}
+        {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_activity, ['title']), 'description': og_get(v_activity, ['text']), 'id': og_tpl('{0}-feed', [v_id]), 'className': og_cnv(['h-full'])}, 'children': og_markup(c_5)}, with_context = false) }}
       {%- endif %}
     {%- endset -%}
     {{ include('compose/Grid.html.twig', {'cols': '1-2', 'class': 'items-stretch gap-4', 'children': c_6}, with_context = false) }}
@@ -45,7 +45,7 @@
     {%- set c_7 -%}
       {{ include('blocks/bar-chart.html.twig', {'p': {'bars': og_get(v_chart, ['series']), 'label': og_get(v_chart, ['summary']), 'height': 144}}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_chart, ['title']), 'description': og_get(v_chart, ['text']), 'id': og_tpl('{0}-chart', [v_id]), 'className': og_cnv(['h-full'])}, 'children': c_7}, with_context = false) }}
+    {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_chart, ['title']), 'description': og_get(v_chart, ['text']), 'id': og_tpl('{0}-chart', [v_id]), 'className': og_cnv(['h-full'])}, 'children': og_markup(c_7)}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
 {{ include('compose/Stack.html.twig', {'gap': og_s((og_t(og_eq(v_density, 'compact')) ? '4' : '6')), 'align': 'stretch', 'class': 'min-w-0', 'attrs': og_attrs(['data-testid', 'app-main']), 'children': c_8}, with_context = false) }}

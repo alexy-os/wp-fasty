@@ -4,6 +4,6 @@
     Props (p): testid, className; children: markup. -#}
 {%- set v_testid = (p.testid ?? null) -%}
 {%- set c_1 -%}
-  {{ (children ?? '')|raw }}
+  {{ og_slot((children ?? null))|raw }}
 {%- endset -%}
 {{ include('compose/Block.html.twig', {'tag': 'article', 'class': og_s(og_cnv([(p.className ?? '')])), 'attrs': og_attrs(['data-testid', v_testid]), 'children': c_1}, with_context = false) }}

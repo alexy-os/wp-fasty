@@ -74,12 +74,12 @@
                   {capture $c_13}
                     {=og_text(og_get($v_g, ['title']))}
                   {/capture}
-                  {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_g, ['href']), 'className' => og_cnv(['text-sm']), 'testid' => 'group'], 'children' => $c_13])|noescape}
+                  {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_g, ['href']), 'className' => og_cnv(['text-sm']), 'testid' => 'group'], 'children' => og_markup($c_13)])|noescape}
                 {/foreach}
               {/capture}
               {=og_include('compose/Group.latte', ['gap' => '4', 'class' => 'flex-wrap', 'children' => (string) $c_14])|noescape}
             {/capture}
-            {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [$v_label, $v_landmarkLabel])) : $v_label)], 'children' => $c_15])|noescape}
+            {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [$v_label, $v_landmarkLabel])) : $v_label)], 'children' => og_markup($c_15)])|noescape}
           {/if}
         {/capture}
         {=og_include('compose/Group.latte', ['gap' => '6', 'align' => 'center', 'justify' => 'between', 'class' => 'flex-wrap', 'children' => (string) $c_16])|noescape}
@@ -93,7 +93,7 @@
           {capture $c_18}
             {=og_text(og_get($v_status, ['label']))}
           {/capture}
-          {=og_include('blocks/pill.latte', ['p' => ['tone' => 'green', 'icon' => 'circle-check'], 'children' => $c_18])|noescape}
+          {=og_include('blocks/pill.latte', ['p' => ['tone' => 'green', 'icon' => 'circle-check'], 'children' => og_markup($c_18)])|noescape}
         {/if}
       {/capture}
       {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'justify' => 'between', 'class' => 'flex-wrap border-t border-border pt-6', 'children' => (string) $c_19])|noescape}

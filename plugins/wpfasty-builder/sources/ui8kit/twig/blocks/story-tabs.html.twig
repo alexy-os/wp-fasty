@@ -17,7 +17,7 @@
   {%- set c_1 -%}
     {{ include('blocks/empty-state.html.twig', {'p': {'icon': 'milestone', 'title': v_empty}}, with_context = false) }}
   {%- endset -%}
-  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': c_1}, with_context = false) }}
+  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_1)}, with_context = false) }}
 {%- elseif og_t(og_eq(v_layout, 'years')) %}
   {%- set c_6 -%}
     {%- set c_5 -%}
@@ -43,7 +43,7 @@
       {%- endif %}
     {%- endfor %}
   {%- endset -%}
-  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': c_6}, with_context = false) }}
+  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'heading': {'badge': v_badge}, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_6)}, with_context = false) }}
 {%- else %}
   {%- set f_7 -%}
     {%- set c_11 -%}

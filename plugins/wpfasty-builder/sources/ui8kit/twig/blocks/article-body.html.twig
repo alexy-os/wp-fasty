@@ -38,7 +38,7 @@
           {%- endset -%}
           {{ include('compose/Stack.html.twig', {'gap': '2', 'children': c_5}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [v_tocTitle, v_landmarkLabel])) : v_tocTitle), 'className': og_cnv(['md:sticky md:top-4']), 'testid': 'toc'}, 'children': c_6}, with_context = false) }}
+        {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [v_tocTitle, v_landmarkLabel])) : v_tocTitle), 'className': og_cnv(['md:sticky md:top-4']), 'testid': 'toc'}, 'children': og_markup(c_6)}, with_context = false) }}
       {%- endif %}
       {%- set c_11 -%}
         {%- for v_s in og_l(v_sections) %}
@@ -68,4 +68,4 @@
     {{ include('compose/Grid.html.twig', {'cols': '1', 'class': og_s(og_cnv(['items-start gap-8', (og_t(og_eq(v_layout, 'toc')) ? 'md:grid-cols-[14rem_minmax(0,1fr)]' : '')])), 'children': c_12}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': c_13}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_13)}, with_context = false) }}

@@ -97,7 +97,7 @@
           {/capture}
           {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'children' => (string) $c_18])|noescape}
         {/capture}
-        {=og_include('blocks/figure-block.latte', ['p' => ['className' => og_cnv(['flex flex-col gap-4']), 'testid' => 'hero-quote'], 'children' => $c_19])|noescape}
+        {=og_include('blocks/figure-block.latte', ['p' => ['className' => og_cnv(['flex flex-col gap-4']), 'testid' => 'hero-quote'], 'children' => og_markup($c_19)])|noescape}
       {/if}
     {/foreach}
     {capture $c_23}

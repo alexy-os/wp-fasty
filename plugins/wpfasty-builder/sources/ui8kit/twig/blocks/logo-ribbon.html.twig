@@ -23,4 +23,4 @@
   {%- endset -%}
   {{ include('compose/Stack.html.twig', {'gap': '6', 'align': 'center', 'attrs': og_attrs(['data-testid', 'logos-block']), 'children': c_3}, with_context = false) }}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'tone': v_tone, 'density': v_density, 'measure': 'fill', 'align': 'center', 'className': og_cnv(['py-0']), 'landmarkLabel': v_landmarkLabel}, 'children': c_4}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'tone': v_tone, 'density': v_density, 'measure': 'fill', 'align': 'center', 'className': og_cnv(['py-0']), 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_4)}, with_context = false) }}

@@ -78,7 +78,7 @@
               {%- set c_16 -%}
                 {{ og_text(og_get(v_labels, ['apply'])) }}
               {%- endset -%}
-              {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_j, ['href']), 'className': og_cnv(['font-medium'])}, 'children': c_16}, with_context = false) }}
+              {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_j, ['href']), 'className': og_cnv(['font-medium'])}, 'children': og_markup(c_16)}, with_context = false) }}
             {%- endset -%}
             {{ include('compose/TableCell.html.twig', {'class': 'pr-4 text-right', 'children': c_17}, with_context = false) }}
           {%- endset -%}
@@ -143,7 +143,7 @@
             {{ og_text(og_get(v_labels, ['apply'])) }}
             {{ include('icons/LucideIcon.html.twig', {'name': 'arrow-right', 'size': 16}, with_context = false) }}
           {%- endset -%}
-          {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_j, ['href']), 'className': og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])}, 'children': c_33}, with_context = false) }}
+          {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_j, ['href']), 'className': og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])}, 'children': og_markup(c_33)}, with_context = false) }}
         {%- endset -%}
         {{ include('compose/Group.html.twig', {'gap': '4', 'align': 'center', 'justify': 'between', 'class': 'mt-auto', 'children': c_34}, with_context = false) }}
       {%- endset -%}

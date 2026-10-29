@@ -10,17 +10,17 @@
 {%- set v_block = (p.block ?? false) -%}
 {%- if og_t(v_href) %}
   {%- set c_1 -%}
-    {{ (children ?? '')|raw }}
+    {{ og_slot((children ?? null))|raw }}
   {%- endset -%}
   {{ include('compose/Link.html.twig', {'href': og_url(og_s(v_href)), 'variant': og_s(v_variant), 'size': og_s(v_size), 'ariaCurrent': og_s((og_t(v_current) ? 'page' : null)), 'class': og_s((p.className ?? '')), 'attrs': og_attrs(['data-testid', v_testid]), 'children': c_1}, with_context = false) }}
 {%- elseif og_t(v_block) %}
   {%- set c_2 -%}
-    {{ (children ?? '')|raw }}
+    {{ og_slot((children ?? null))|raw }}
   {%- endset -%}
   {{ include('compose/Box.html.twig', {'class': og_s((p.className ?? '')), 'attrs': og_attrs(['aria-current', (og_t(v_current) ? 'page' : null), 'data-testid', v_testid]), 'children': c_2}, with_context = false) }}
 {%- else %}
   {%- set c_3 -%}
-    {{ (children ?? '')|raw }}
+    {{ og_slot((children ?? null))|raw }}
   {%- endset -%}
   {{ include('compose/Inline.html.twig', {'class': og_s((p.className ?? '')), 'attrs': og_attrs(['aria-current', (og_t(v_current) ? 'page' : null), 'data-testid', v_testid]), 'children': c_3}, with_context = false) }}
 {%- endif %}

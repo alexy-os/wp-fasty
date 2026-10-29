@@ -38,7 +38,7 @@
                   {%- set c_4 -%}
                     {{ og_text(og_get(v_j, ['title'])) }}
                   {%- endset -%}
-                  {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_j, ['href']), 'className': og_cnv(['font-medium'])}, 'children': c_4}, with_context = false) }}
+                  {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_j, ['href']), 'className': og_cnv(['font-medium'])}, 'children': og_markup(c_4)}, with_context = false) }}
                   {%- set c_5 -%}
                     {{ og_text(og_tpl('{0}, {1}', [og_get(v_j, ['location']), og_get(v_j, ['type'])])) }}
                   {%- endset -%}
@@ -63,4 +63,4 @@
     {{ include('blocks/job-cards.html.twig', {'p': {'jobs': v_jobs, 'departments': v_departments, 'labels': v_labels, 'layout': v_layout, 'salary': v_salary}}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'tone': v_tone, 'measure': (og_t(og_eq(v_layout, 'grouped')) ? '3xl' : 'default'), 'landmarkLabel': v_landmarkLabel}, 'children': c_12}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'tone': v_tone, 'measure': (og_t(og_eq(v_layout, 'grouped')) ? '3xl' : 'default'), 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_12)}, with_context = false) }}

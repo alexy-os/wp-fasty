@@ -31,13 +31,13 @@
         {capture $c_4}
           {=og_include('blocks/bar-chart.latte', ['p' => ['bars' => og_get($v_chart, ['series']), 'label' => og_get($v_chart, ['summary']), 'height' => 144]])|noescape}
         {/capture}
-        {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_chart, ['title']), 'description' => og_get($v_chart, ['text']), 'id' => og_tpl('{0}-chart', [$v_id]), 'className' => og_cnv(['h-full'])], 'children' => $c_4])|noescape}
+        {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_chart, ['title']), 'description' => og_get($v_chart, ['text']), 'id' => og_tpl('{0}-chart', [$v_id]), 'className' => og_cnv(['h-full'])], 'children' => og_markup($c_4)])|noescape}
       {/if}
       {if og_t(og_gt(og_len(og_get($v_activity, ['events'])), 0))}
         {capture $c_5}
           {=og_include('blocks/timeline.latte', ['p' => ['items' => og_get($v_activity, ['events'])]])|noescape}
         {/capture}
-        {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_activity, ['title']), 'description' => og_get($v_activity, ['text']), 'id' => og_tpl('{0}-feed', [$v_id]), 'className' => og_cnv(['h-full'])], 'children' => $c_5])|noescape}
+        {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_activity, ['title']), 'description' => og_get($v_activity, ['text']), 'id' => og_tpl('{0}-feed', [$v_id]), 'className' => og_cnv(['h-full'])], 'children' => og_markup($c_5)])|noescape}
       {/if}
     {/capture}
     {=og_include('compose/Grid.latte', ['cols' => '1-2', 'class' => 'items-stretch gap-4', 'children' => (string) $c_6])|noescape}
@@ -45,7 +45,7 @@
     {capture $c_7}
       {=og_include('blocks/bar-chart.latte', ['p' => ['bars' => og_get($v_chart, ['series']), 'label' => og_get($v_chart, ['summary']), 'height' => 144]])|noescape}
     {/capture}
-    {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_chart, ['title']), 'description' => og_get($v_chart, ['text']), 'id' => og_tpl('{0}-chart', [$v_id]), 'className' => og_cnv(['h-full'])], 'children' => $c_7])|noescape}
+    {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_chart, ['title']), 'description' => og_get($v_chart, ['text']), 'id' => og_tpl('{0}-chart', [$v_id]), 'className' => og_cnv(['h-full'])], 'children' => og_markup($c_7)])|noescape}
   {/if}
 {/capture}
 {=og_include('compose/Stack.latte', ['gap' => og_s((og_t(og_eq($v_density, 'compact')) ? '4' : '6')), 'align' => 'stretch', 'class' => 'min-w-0', 'attrs' => og_attrs(['data-testid', 'app-main']), 'children' => (string) $c_8])|noescape}

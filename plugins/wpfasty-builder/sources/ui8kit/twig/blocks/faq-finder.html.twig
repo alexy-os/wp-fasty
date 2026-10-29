@@ -29,7 +29,7 @@
             {%- set c_4 -%}
               {{ og_text(og_get(v_q, ['question'])) }}
             {%- endset -%}
-            {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_q, ['href']), 'className': og_cnv(['text-sm font-medium']), 'size': 'sm'}, 'children': c_4}, with_context = false) }}
+            {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_q, ['href']), 'className': og_cnv(['text-sm font-medium']), 'size': 'sm'}, 'children': og_markup(c_4)}, with_context = false) }}
           {%- endset -%}
           {{ include('compose/ListItem.html.twig', {'attrs': og_attrs(['data-testid', 'faq-popular']), 'children': c_5}, with_context = false) }}
         {%- endif %}

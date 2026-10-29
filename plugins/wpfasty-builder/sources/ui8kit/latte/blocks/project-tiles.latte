@@ -50,19 +50,19 @@
               {=og_text(og_get($v_labels, ['case']))}
               {=og_include('icons/LucideIcon.latte', ['name' => 'arrow-right', 'size' => 16])|noescape}
             {/capture}
-            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_p, ['href']), 'className' => og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])], 'children' => $c_8])|noescape}
+            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_p, ['href']), 'className' => og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])], 'children' => og_markup($c_8)])|noescape}
             {capture $c_9}
               {=og_text(og_get($v_labels, ['view']))}
               {=og_include('icons/LucideIcon.latte', ['name' => 'external-link', 'size' => 16])|noescape}
             {/capture}
-            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_p, ['href']), 'className' => og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])], 'children' => $c_9])|noescape}
+            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_p, ['href']), 'className' => og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])], 'children' => og_markup($c_9)])|noescape}
           {/capture}
           {=og_include('compose/Group.latte', ['gap' => '4', 'class' => 'pt-2', 'children' => (string) $c_10])|noescape}
         {/if}
       {/capture}
       {=og_include('compose/Stack.latte', ['gap' => '2', 'align' => 'stretch', 'class' => og_s((og_t($v_over) ? 'absolute right-4 bottom-4 left-4 rounded bg-background p-4' : '')), 'children' => (string) $c_11])|noescape}
     {/capture}
-    {=og_include('blocks/article-block.latte', ['p' => ['className' => og_cnv([og_cnv(['flex flex-col gap-4', (og_t($v_over) ? 'relative' : 'rounded bg-card inset-ring inset-ring-border p-4'), (og_t(og_and([og_eq($v_layout, 'bento'), og_eq($v_i, 0)])) ? 'sm:col-span-2 lg:row-span-2' : '')])]), 'testid' => 'item'], 'children' => $c_12])|noescape}
+    {=og_include('blocks/article-block.latte', ['p' => ['className' => og_cnv([og_cnv(['flex flex-col gap-4', (og_t($v_over) ? 'relative' : 'rounded bg-card inset-ring inset-ring-border p-4'), (og_t(og_and([og_eq($v_layout, 'bento'), og_eq($v_i, 0)])) ? 'sm:col-span-2 lg:row-span-2' : '')])]), 'testid' => 'item'], 'children' => og_markup($c_12)])|noescape}
   {/foreach}
 {/capture}
 {=og_include('compose/Box.latte', ['class' => og_s((og_t(og_eq($v_layout, 'compact')) ? 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4' : 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3')), 'attrs' => og_attrs(['data-testid', 'items']), 'children' => (string) $c_13])|noescape}

@@ -49,4 +49,4 @@
     {=og_include('compose/List.latte', ['tag' => 'ol', 'class' => og_s(og_cnv(['grid gap-6', (og_t(og_eq($v_layout, 'row')) ? 'sm:grid-cols-2 md:grid-cols-4' : '')])), 'attrs' => og_attrs(['data-testid', 'items']), 'children' => (string) $c_7])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'align' => $v_align, 'measure' => (og_t(og_eq($v_layout, 'row')) ? 'default' : '2xl'), 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_8])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'align' => $v_align, 'measure' => (og_t(og_eq($v_layout, 'row')) ? 'default' : '2xl'), 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_8)])|noescape}

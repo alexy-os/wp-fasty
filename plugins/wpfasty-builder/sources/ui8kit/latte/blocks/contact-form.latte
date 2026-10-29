@@ -21,22 +21,22 @@
         {capture $c_1}
           {=og_include('compose/Input.latte', ['type' => 'text', 'name' => 'name', 'attrs' => og_attrs(['autocomplete', 'name', 'id', og_tpl('{0}-name', [$v_id]), 'data-testid', 'field'])])|noescape}
         {/capture}
-        {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['name']), 'htmlFor' => og_tpl('{0}-name', [$v_id])], 'children' => $c_1])|noescape}
+        {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['name']), 'htmlFor' => og_tpl('{0}-name', [$v_id])], 'children' => og_markup($c_1)])|noescape}
       {/if}
       {capture $c_2}
         {=og_include('compose/Input.latte', ['type' => 'email', 'name' => 'email', 'attrs' => og_attrs(['autocomplete', 'email', 'id', og_tpl('{0}-email', [$v_id]), 'data-testid', 'field'])])|noescape}
       {/capture}
-      {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['email']), 'htmlFor' => og_tpl('{0}-email', [$v_id])], 'children' => $c_2])|noescape}
+      {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['email']), 'htmlFor' => og_tpl('{0}-email', [$v_id])], 'children' => og_markup($c_2)])|noescape}
       {if og_t(og_eq($v_fields, 'full'))}
         {capture $c_3}
           {=og_include('compose/Input.latte', ['type' => 'text', 'name' => 'subject', 'attrs' => og_attrs(['id', og_tpl('{0}-subject', [$v_id]), 'data-testid', 'field'])])|noescape}
         {/capture}
-        {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['subject']), 'htmlFor' => og_tpl('{0}-subject', [$v_id])], 'children' => $c_3])|noescape}
+        {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['subject']), 'htmlFor' => og_tpl('{0}-subject', [$v_id])], 'children' => og_markup($c_3)])|noescape}
       {/if}
       {capture $c_4}
         {=og_include('compose/Textarea.latte', ['rows' => 4, 'name' => 'message', 'attrs' => og_attrs(['id', og_tpl('{0}-message', [$v_id]), 'data-testid', 'field'])])|noescape}
       {/capture}
-      {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['message']), 'htmlFor' => og_tpl('{0}-message', [$v_id])], 'children' => $c_4])|noescape}
+      {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['message']), 'htmlFor' => og_tpl('{0}-message', [$v_id])], 'children' => og_markup($c_4)])|noescape}
       {if og_t(og_eq($v_terms, 'show'))}
         {capture $c_6}
           {=og_include('compose/Checkbox.latte', ['name' => 'consent', 'attrs' => og_attrs(['id', og_tpl('{0}-consent', [$v_id])])])|noescape}
@@ -78,4 +78,4 @@
   {/capture}
   {=og_include('compose/Grid.latte', ['cols' => og_s((og_t(og_eq($v_layout, 'split')) ? '1-2' : '1')), 'class' => 'items-start gap-8', 'children' => (string) $c_14])|noescape}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_text, 'heading' => ['level' => $v_level], 'tone' => $v_tone, 'density' => (og_t(og_eq($v_page, 'full')) ? 'roomy' : 'default'), 'align' => (og_t(og_eq($v_page, 'full')) ? 'center' : 'start'), 'measure' => (og_t(og_eq($v_layout, 'single')) ? 'xl' : 'default'), 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_15])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_text, 'heading' => ['level' => $v_level], 'tone' => $v_tone, 'density' => (og_t(og_eq($v_page, 'full')) ? 'roomy' : 'default'), 'align' => (og_t(og_eq($v_page, 'full')) ? 'center' : 'start'), 'measure' => (og_t(og_eq($v_layout, 'single')) ? 'xl' : 'default'), 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_15)])|noescape}

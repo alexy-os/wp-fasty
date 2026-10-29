@@ -47,7 +47,7 @@
       {=og_include('compose/Grid.latte', ['cols' => '1-3', 'class' => 'gap-4', 'attrs' => og_attrs(['data-testid', 'perks']), 'children' => (string) $c_6])|noescape}
     {/if}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge, 'level' => $v_level], 'tone' => $v_tone, 'density' => 'roomy', 'measure' => '3xl', 'className' => og_cnv([(og_t(og_eq('image', 'image')) ? 'relative isolate overflow-hidden' : '')]), 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_7])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge, 'level' => $v_level], 'tone' => $v_tone, 'density' => 'roomy', 'measure' => '3xl', 'className' => og_cnv([(og_t(og_eq('image', 'image')) ? 'relative isolate overflow-hidden' : '')]), 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_7)])|noescape}
 {else}
   {capture $f_14}
     {=og_include('blocks/offer-media.latte', ['p' => ['alt' => $v_title, 'card' => $v_card]])|noescape}
@@ -83,5 +83,5 @@
       {=og_include('compose/Grid.latte', ['cols' => '1-3', 'class' => 'gap-4', 'attrs' => og_attrs(['data-testid', 'perks']), 'children' => (string) $c_13])|noescape}
     {/if}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge, 'level' => $v_level], 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_14)], 'children' => $c_15])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge, 'level' => $v_level], 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_14)], 'children' => og_markup($c_15)])|noescape}
 {/if}

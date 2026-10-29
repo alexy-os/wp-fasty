@@ -74,12 +74,12 @@
                   {%- set c_13 -%}
                     {{ og_text(og_get(v_g, ['title'])) }}
                   {%- endset -%}
-                  {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_g, ['href']), 'className': og_cnv(['text-sm']), 'testid': 'group'}, 'children': c_13}, with_context = false) }}
+                  {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_g, ['href']), 'className': og_cnv(['text-sm']), 'testid': 'group'}, 'children': og_markup(c_13)}, with_context = false) }}
                 {%- endfor %}
               {%- endset -%}
               {{ include('compose/Group.html.twig', {'gap': '4', 'class': 'flex-wrap', 'children': c_14}, with_context = false) }}
             {%- endset -%}
-            {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [v_label, v_landmarkLabel])) : v_label)}, 'children': c_15}, with_context = false) }}
+            {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [v_label, v_landmarkLabel])) : v_label)}, 'children': og_markup(c_15)}, with_context = false) }}
           {%- endif %}
         {%- endset -%}
         {{ include('compose/Group.html.twig', {'gap': '6', 'align': 'center', 'justify': 'between', 'class': 'flex-wrap', 'children': c_16}, with_context = false) }}
@@ -93,7 +93,7 @@
           {%- set c_18 -%}
             {{ og_text(og_get(v_status, ['label'])) }}
           {%- endset -%}
-          {{ include('blocks/pill.html.twig', {'p': {'tone': 'green', 'icon': 'circle-check'}, 'children': c_18}, with_context = false) }}
+          {{ include('blocks/pill.html.twig', {'p': {'tone': 'green', 'icon': 'circle-check'}, 'children': og_markup(c_18)}, with_context = false) }}
         {%- endif %}
       {%- endset -%}
       {{ include('compose/Group.html.twig', {'gap': '4', 'align': 'center', 'justify': 'between', 'class': 'flex-wrap border-t border-border pt-6', 'children': c_19}, with_context = false) }}

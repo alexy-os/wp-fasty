@@ -38,7 +38,7 @@
                   {capture $c_4}
                     {=og_text(og_get($v_j, ['title']))}
                   {/capture}
-                  {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_j, ['href']), 'className' => og_cnv(['font-medium'])], 'children' => $c_4])|noescape}
+                  {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_j, ['href']), 'className' => og_cnv(['font-medium'])], 'children' => og_markup($c_4)])|noescape}
                   {capture $c_5}
                     {=og_text(og_tpl('{0}, {1}', [og_get($v_j, ['location']), og_get($v_j, ['type'])]))}
                   {/capture}
@@ -63,4 +63,4 @@
     {=og_include('blocks/job-cards.latte', ['p' => ['jobs' => $v_jobs, 'departments' => $v_departments, 'labels' => $v_labels, 'layout' => $v_layout, 'salary' => $v_salary]])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'tone' => $v_tone, 'measure' => (og_t(og_eq($v_layout, 'grouped')) ? '3xl' : 'default'), 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_12])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'tone' => $v_tone, 'measure' => (og_t(og_eq($v_layout, 'grouped')) ? '3xl' : 'default'), 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_12)])|noescape}

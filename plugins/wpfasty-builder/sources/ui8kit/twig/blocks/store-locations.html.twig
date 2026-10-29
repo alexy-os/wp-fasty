@@ -88,4 +88,4 @@
     {{ include('compose/Box.html.twig', {'class': og_s(og_cnv(['grid grid-cols-1 gap-8', (og_t(og_eq(v_layout, 'map')) ? 'items-start md:grid-cols-2' : '')])), 'children': c_17}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': c_18}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_18)}, with_context = false) }}

@@ -17,4 +17,4 @@
     {=og_include('blocks/action-group.latte', ['p' => ['primary' => $v_cta, 'primaryHref' => $v_href, 'align' => $v_align]])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_text, 'heading' => ['level' => $v_level], 'align' => $v_align, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_1])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_text, 'heading' => ['level' => $v_level], 'align' => $v_align, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_1)])|noescape}

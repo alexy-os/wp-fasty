@@ -4,6 +4,6 @@
     Props (p): measure; children: markup. *}
 {var $v_measure = ($p['measure'] ?? 'default')}
 {capture $c_1}
-  {=($children ?? '')|noescape}
+  {=og_slot(($children ?? null))|noescape}
 {/capture}
 {=og_include('compose/Stack.latte', ['gap' => '6', 'align' => 'stretch', 'class' => og_s(og_recipe('blocks/recipes/section-column.variants.json', ['measure' => $v_measure])), 'children' => (string) $c_1])|noescape}

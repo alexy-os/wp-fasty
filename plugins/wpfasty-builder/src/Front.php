@@ -141,7 +141,7 @@ final class Front
                         $page = Pager::request();
                         [$records, $pages] = DataSources::paged($bind, $kinds[(string) $path], $slot, $page);
                         $out[(string) $b['id']][(string) $path] = $records;
-                        $out[(string) $b['id']][$pager['path']] = Pager::value($page, $pages);
+                        $out[(string) $b['id']][$pager['path']] = Pager::value($page, $pages, Pager::urls());
                         continue;
                     }
                     $out[(string) $b['id']][(string) $path] = DataSources::resolve(
@@ -153,7 +153,9 @@ final class Front
             }
             if ($pager !== null && !array_key_exists($pager['path'], $out[(string) $b['id']] ?? [])) {
                 // no own query: the main query (ContextFactory pagination, else max_num_pages); a page has one page
-                $out[(string) $b['id']][$pager['path']] = $paged ? Pager::value(...Pager::main($context)) : null;
+                $out[(string) $b['id']][$pager['path']] = $paged
+                    ? Pager::value(...[...Pager::main($context), Pager::urls($context)])
+                    : null;
             }
             // the record of the current route (the queried post: richtext title, the_content…), read once per page
             $current = $catalog?->currentValues(

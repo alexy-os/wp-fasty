@@ -4,6 +4,6 @@
     Props (p): label, className; children: markup. *}
 {var $v_label = ($p['label'] ?? null)}
 {capture $c_1}
-  {=($children ?? '')|noescape}
+  {=og_slot(($children ?? null))|noescape}
 {/capture}
 {=og_include('compose/Box.latte', ['class' => og_s(og_cnv(['flex items-center gap-2', ($p['className'] ?? '')])), 'attrs' => og_attrs(['role', 'tablist', 'aria-label', $v_label, 'data-slot', 'icon-tabs']), 'children' => (string) $c_1])|noescape}

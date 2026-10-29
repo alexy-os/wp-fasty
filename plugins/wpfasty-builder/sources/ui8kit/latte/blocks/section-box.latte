@@ -5,9 +5,9 @@
 {var $v_boxed = ($p['boxed'] ?? false)}
 {if og_t($v_boxed)}
   {capture $c_1}
-    {=($children ?? '')|noescape}
+    {=og_slot(($children ?? null))|noescape}
   {/capture}
   {=og_include('compose/Card.latte', ['variant' => 'muted', 'children' => (string) $c_1])|noescape}
 {else}
-  {=($children ?? '')|noescape}
+  {=og_slot(($children ?? null))|noescape}
 {/if}

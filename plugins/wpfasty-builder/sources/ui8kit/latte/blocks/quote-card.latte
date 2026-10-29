@@ -63,4 +63,4 @@
     {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'children' => (string) $c_11])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/figure-block.latte', ['p' => ['className' => og_cnv([og_cnv(['m-0 flex flex-col gap-4', (og_t(og_eq(og_get($v_item, ['kind']), 'plain')) ? '' : 'rounded p-6 inset-ring inset-ring-border bg-card'), (og_t(og_eq($v_layout, 'masonry')) ? 'mb-4 break-inside-avoid' : (og_t(og_eq($v_layout, 'strip')) ? 'w-80 shrink-0 snap-start' : 'h-full'))])]), 'testid' => 'item'], 'children' => $c_12])|noescape}
+{=og_include('blocks/figure-block.latte', ['p' => ['className' => og_cnv([og_cnv(['m-0 flex flex-col gap-4', (og_t(og_eq(og_get($v_item, ['kind']), 'plain')) ? '' : 'rounded p-6 inset-ring inset-ring-border bg-card'), (og_t(og_eq($v_layout, 'masonry')) ? 'mb-4 break-inside-avoid' : (og_t(og_eq($v_layout, 'strip')) ? 'w-80 shrink-0 snap-start' : 'h-full'))])]), 'testid' => 'item'], 'children' => og_markup($c_12)])|noescape}

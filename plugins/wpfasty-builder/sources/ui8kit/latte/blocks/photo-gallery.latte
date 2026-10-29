@@ -79,10 +79,10 @@
             {=og_include('compose/Box.latte', ['class' => 'text-sm text-muted-foreground', 'attrs' => og_attrs(['data-testid', 'caption']), 'children' => (string) $c_13])|noescape}
           {/if}
         {/capture}
-        {=og_include('blocks/figure-block.latte', ['p' => ['className' => og_cnv([og_cnv(['flex flex-col gap-2', (og_t(og_eq($v_layout, 'masonry')) ? 'mb-4 break-inside-avoid' : ''), (og_t(og_and([og_eq($v_layout, 'mosaic'), og_eq($v_i, 0)])) ? 'col-span-2 row-span-2' : ''), (og_t(og_eq($v_layout, 'cards')) ? 'rounded bg-card inset-ring inset-ring-border p-4' : '')])]), 'testid' => 'item'], 'children' => $c_14])|noescape}
+        {=og_include('blocks/figure-block.latte', ['p' => ['className' => og_cnv([og_cnv(['flex flex-col gap-2', (og_t(og_eq($v_layout, 'masonry')) ? 'mb-4 break-inside-avoid' : ''), (og_t(og_and([og_eq($v_layout, 'mosaic'), og_eq($v_i, 0)])) ? 'col-span-2 row-span-2' : ''), (og_t(og_eq($v_layout, 'cards')) ? 'rounded bg-card inset-ring inset-ring-border p-4' : '')])]), 'testid' => 'item'], 'children' => og_markup($c_14)])|noescape}
       {/foreach}
     {/capture}
     {=og_include('compose/Box.latte', ['class' => og_s((og_t(og_eq($v_layout, 'masonry')) ? 'columns-1 gap-4 sm:columns-2 lg:columns-3' : (og_t(og_eq($v_layout, 'mosaic')) ? 'grid grid-cols-2 gap-4 md:grid-cols-4' : 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'))), 'attrs' => og_attrs(['data-testid', 'items']), 'children' => (string) $c_15])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_16])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_16)])|noescape}

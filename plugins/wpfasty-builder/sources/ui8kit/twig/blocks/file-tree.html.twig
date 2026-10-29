@@ -4,6 +4,6 @@
     Props (p): label, className; children: markup. -#}
 {%- set v_label = (p.label ?? null) -%}
 {%- set c_1 -%}
-  {{ (children ?? '')|raw }}
+  {{ og_slot((children ?? null))|raw }}
 {%- endset -%}
 {{ include('compose/Box.html.twig', {'class': og_s(og_cnv(['flex flex-col gap-2 p-2', (p.className ?? '')])), 'attrs': og_attrs(['role', 'tree', 'aria-label', v_label, 'data-slot', 'file-tree']), 'children': c_1}, with_context = false) }}

@@ -23,10 +23,10 @@
           {%- set c_1 -%}
             {{ og_text(og_get(v_f, ['title'])) }}
           {%- endset -%}
-          {{ include('blocks/switcher-item.html.twig', {'p': {'active': og_or([og_eq(og_get(v_f, ['id']), v_active), og_and([og_eq(v_active, ''), og_eq(v_i, 0)])])}, 'children': c_1}, with_context = false) }}
+          {{ include('blocks/switcher-item.html.twig', {'p': {'active': og_or([og_eq(og_get(v_f, ['id']), v_active), og_and([og_eq(v_active, ''), og_eq(v_i, 0)])])}, 'children': og_markup(c_1)}, with_context = false) }}
         {%- endfor %}
       {%- endset -%}
-      {{ include('blocks/switcher.html.twig', {'p': {'label': v_tabsLabel, 'className': og_cnv(['w-fit max-w-full flex-wrap'])}, 'children': c_2}, with_context = false) }}
+      {{ include('blocks/switcher.html.twig', {'p': {'label': v_tabsLabel, 'className': og_cnv(['w-fit max-w-full flex-wrap'])}, 'children': og_markup(c_2)}, with_context = false) }}
       {%- for v_f in og_l(v_features) %}
         {%- set v_i = loop.index0 -%}
         {%- if og_t(og_or([og_eq(og_get(v_f, ['id']), v_active), og_and([og_eq(v_active, ''), og_eq(v_i, 0)])])) %}
@@ -52,4 +52,4 @@
     {{ include('compose/Stack.html.twig', {'gap': '6', 'align': 'stretch', 'children': c_7}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': c_8}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_8)}, with_context = false) }}

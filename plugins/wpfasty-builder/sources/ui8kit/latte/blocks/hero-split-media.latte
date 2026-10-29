@@ -23,7 +23,7 @@
           {/capture}
           {=og_include('compose/Text.latte', ['size' => 'xs', 'class' => 'text-muted-foreground', 'children' => (string) $c_1])|noescape}
         {/capture}
-        {=og_include('blocks/figure-block.latte', ['p' => ['className' => og_cnv(['flex flex-col gap-2']), 'testid' => 'hero-tile'], 'children' => $c_2])|noescape}
+        {=og_include('blocks/figure-block.latte', ['p' => ['className' => og_cnv(['flex flex-col gap-2']), 'testid' => 'hero-tile'], 'children' => og_markup($c_2)])|noescape}
       {/if}
     {/foreach}
   {/capture}

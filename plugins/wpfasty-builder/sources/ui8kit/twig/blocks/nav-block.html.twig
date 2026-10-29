@@ -6,6 +6,6 @@
 {%- set v_testid = (p.testid ?? null) -%}
 {%- set v_landmarkLabel = (p.landmarkLabel ?? null) -%}
 {%- set c_1 -%}
-  {{ (children ?? '')|raw }}
+  {{ og_slot((children ?? null))|raw }}
 {%- endset -%}
 {{ include('compose/Block.html.twig', {'tag': 'nav', 'class': og_s(og_cnv([(p.className ?? '')])), 'attrs': og_attrs(['aria-label', og_coalesce([v_landmarkLabel, v_label]), 'data-testid', v_testid]), 'children': c_1}, with_context = false) }}

@@ -100,4 +100,4 @@
   {/capture}
   {=og_include('compose/Stack.latte', ['gap' => '8', 'align' => 'stretch', 'children' => (string) $c_20])|noescape}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'tone' => $v_tone, 'density' => $v_density, 'measure' => 'fill', 'className' => og_cnv(['py-0']), 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_21])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'tone' => $v_tone, 'density' => $v_density, 'measure' => 'fill', 'className' => og_cnv(['py-0']), 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_21)])|noescape}

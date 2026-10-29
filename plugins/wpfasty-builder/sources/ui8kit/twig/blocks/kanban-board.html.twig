@@ -43,7 +43,7 @@
                     {%- set c_5 -%}
                       {{ og_text(og_get(v_c, ['tag'])) }}
                     {%- endset -%}
-                    {{ include('blocks/pill.html.twig', {'p': {'tone': 'blue', 'icon': 'tag'}, 'children': c_5}, with_context = false) }}
+                    {{ include('blocks/pill.html.twig', {'p': {'tone': 'blue', 'icon': 'tag'}, 'children': og_markup(c_5)}, with_context = false) }}
                     {%- set c_6 -%}
                       {{ og_text(og_get(v_c, ['who'])) }}
                     {%- endset -%}
@@ -63,4 +63,4 @@
     {{ include('compose/Grid.html.twig', {'cols': og_s((og_t(og_eq(v_cols, '2')) ? '1-2' : '1-3')), 'class': 'items-start gap-4', 'attrs': og_attrs(['data-testid', 'lanes']), 'children': c_11}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': c_12}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_12)}, with_context = false) }}

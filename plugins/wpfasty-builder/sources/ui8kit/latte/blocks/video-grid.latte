@@ -55,10 +55,10 @@
             {=og_include('compose/Text.latte', ['tag' => 'figcaption', 'attrs' => og_attrs(['data-testid', 'caption']), 'children' => (string) $c_8])|noescape}
           {/if}
         {/capture}
-        {=og_include('blocks/figure-block.latte', ['p' => ['className' => og_cnv(['m-0 flex flex-col gap-4']), 'testid' => 'item'], 'children' => $c_9])|noescape}
+        {=og_include('blocks/figure-block.latte', ['p' => ['className' => og_cnv(['m-0 flex flex-col gap-4']), 'testid' => 'item'], 'children' => og_markup($c_9)])|noescape}
       {/foreach}
     {/capture}
     {=og_include('compose/Grid.latte', ['cols' => og_s($v_cols), 'class' => 'gap-4', 'attrs' => og_attrs(['data-testid', 'items']), 'children' => (string) $c_10])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_11])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_11)])|noescape}

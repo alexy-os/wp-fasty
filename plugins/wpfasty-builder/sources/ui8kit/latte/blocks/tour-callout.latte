@@ -48,4 +48,4 @@
   {/capture}
   {=og_include('compose/Block.latte', ['tag' => 'div', 'class' => og_s(og_cnv(['flex gap-4', (og_t(og_eq($v_placement, 'end')) ? 'flex-col items-start md:flex-row md:items-center' : (og_t(og_eq($v_placement, 'above')) ? 'flex-col-reverse items-start' : 'flex-col items-start'))])), 'attrs' => og_attrs(['data-testid', 'tour', 'data-placement', $v_placement]), 'children' => (string) $c_9])|noescape}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_10])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_10)])|noescape}

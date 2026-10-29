@@ -33,14 +33,14 @@
               {/capture}
               {=og_include('compose/Inline.latte', ['class' => og_s((og_t(og_eq($v_width, 'compact')) ? 'sr-only' : '')), 'children' => (string) $c_3])|noescape}
             {/capture}
-            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_l, ['href']), 'className' => og_cnv([og_cnv(['flex items-center gap-4 rounded px-4 text-sm', 'py-2', (og_t(og_eq(og_get($v_l, ['id']), $v_current)) ? 'bg-muted font-semibold' : '')])]), 'current' => og_eq(og_get($v_l, ['id']), $v_current), 'testid' => 'item'], 'children' => $c_4])|noescape}
+            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_l, ['href']), 'className' => og_cnv([og_cnv(['flex items-center gap-4 rounded px-4 text-sm', 'py-2', (og_t(og_eq(og_get($v_l, ['id']), $v_current)) ? 'bg-muted font-semibold' : '')])]), 'current' => og_eq(og_get($v_l, ['id']), $v_current), 'testid' => 'item'], 'children' => og_markup($c_4)])|noescape}
           {/capture}
           {=og_include('compose/ListItem.latte', ['children' => (string) $c_5])|noescape}
         {/foreach}
       {/capture}
       {=og_include('compose/List.latte', ['class' => og_s(og_cnv(['m-0 flex list-none flex-col p-0', (og_t(og_eq($v_density, 'compact')) ? 'gap-0' : 'gap-2')])), 'attrs' => og_attrs(['data-testid', 'items']), 'children' => (string) $c_6])|noescape}
     {/capture}
-    {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [$v_label, $v_landmarkLabel])) : $v_label), 'className' => og_cnv(['flex-1'])], 'children' => $c_7])|noescape}
+    {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [$v_label, $v_landmarkLabel])) : $v_label), 'className' => og_cnv(['flex-1'])], 'children' => og_markup($c_7)])|noescape}
   {/if}
   {if og_t(og_eq($v_user, 'show'))}
     {capture $c_11}

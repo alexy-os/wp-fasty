@@ -6,6 +6,6 @@
 {var $v_testid = ($p['testid'] ?? null)}
 {var $v_landmarkLabel = ($p['landmarkLabel'] ?? null)}
 {capture $c_1}
-  {=($children ?? '')|noescape}
+  {=og_slot(($children ?? null))|noescape}
 {/capture}
 {=og_include('compose/Block.latte', ['tag' => 'nav', 'class' => og_s(og_cnv([($p['className'] ?? '')])), 'attrs' => og_attrs(['aria-label', og_coalesce([$v_landmarkLabel, $v_label]), 'data-testid', $v_testid]), 'children' => (string) $c_1])|noescape}

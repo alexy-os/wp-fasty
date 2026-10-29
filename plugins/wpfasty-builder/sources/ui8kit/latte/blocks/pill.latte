@@ -10,7 +10,7 @@
     {if og_t($v_icon)}
       {=og_include('icons/LucideIcon.latte', ['name' => og_s($v_icon), 'size' => 12])|noescape}
     {/if}
-    {=($children ?? '')|noescape}
+    {=og_slot(($children ?? null))|noescape}
   {/capture}
   {=og_include('compose/Inline.latte', ['class' => og_s(og_cnv(['inline-flex h-6 shrink-0 items-center gap-1 rounded-full px-3 text-xs font-medium whitespace-nowrap inset-ring', og_at($k_PILL, $v_tone), ($p['className'] ?? '')])), 'attrs' => og_attrs(['data-slot', 'pill']), 'children' => (string) $c_1])|noescape}
 {/capture}

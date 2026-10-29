@@ -31,7 +31,7 @@
           {%- endif %}
           {%- set c_2 -%}
             {{ include('blocks/section-header.html.twig', {'p': {'titleId': v_titleId, 'title': v_title, 'heading': v_heading, 'action': v_action, 'lead': v_lead, 'center': v_center}}, with_context = false) }}
-            {{ (children ?? '')|raw }}
+            {{ og_slot((children ?? null))|raw }}
           {%- endset -%}
           {{ include('compose/Stack.html.twig', {'gap': '6', 'align': 'stretch', 'children': c_2}, with_context = false) }}
           {%- if og_t(og_and([og_get(v_media, ['show']), not (og_eq(og_get(v_media, ['side']), 'start'))])) %}
@@ -45,7 +45,7 @@
       {%- else %}
         {%- set c_6 -%}
           {{ include('blocks/section-header.html.twig', {'p': {'titleId': v_titleId, 'title': v_title, 'heading': v_heading, 'action': v_action, 'lead': v_lead, 'center': v_center}}, with_context = false) }}
-          {{ (children ?? '')|raw }}
+          {{ og_slot((children ?? null))|raw }}
           {%- if og_t(og_get(v_media, ['show'])) %}
             {%- set c_5 -%}
               {{ og_slot((p.aside ?? null))|raw }}
@@ -53,10 +53,10 @@
             {{ include('compose/Box.html.twig', {'class': 'w-full', 'attrs': og_attrs(['data-slot', 'media']), 'children': c_5}, with_context = false) }}
           {%- endif %}
         {%- endset -%}
-        {{ include('blocks/section-column.html.twig', {'p': {'measure': v_measure}, 'children': c_6}, with_context = false) }}
+        {{ include('blocks/section-column.html.twig', {'p': {'measure': v_measure}, 'children': og_markup(c_6)}, with_context = false) }}
       {%- endif %}
     {%- endset -%}
-    {{ include('blocks/section-box.html.twig', {'p': {'boxed': v_boxed}, 'children': c_7}, with_context = false) }}
+    {{ include('blocks/section-box.html.twig', {'p': {'boxed': v_boxed}, 'children': og_markup(c_7)}, with_context = false) }}
   {%- endset -%}
   {{ include('compose/Container.html.twig', {'class': og_s((og_t(og_eq(v_measure, 'landing')) ? og_cnv(['mx-auto w-full px-4', og_preset('blocks/presets/defaults.json', ['section', 'landing'])]) : (og_t(og_eq(v_measure, 'fill')) ? 'w-full' : 'mx-auto w-full max-w-6xl px-4'))), 'attrs': og_attrs(['data-slot', 'container']), 'children': c_8}, with_context = false) }}
 {%- endset -%}

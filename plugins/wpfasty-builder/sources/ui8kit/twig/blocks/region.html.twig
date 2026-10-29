@@ -5,6 +5,6 @@
 {%- set v_tag = (p.tag ?? null) -%}
 {%- set v_landmarkLabel = (p.landmarkLabel ?? null) -%}
 {%- set c_1 -%}
-  {{ (children ?? '')|raw }}
+  {{ og_slot((children ?? null))|raw }}
 {%- endset -%}
 {{ include('compose/Block.html.twig', {'tag': og_s(v_tag), 'class': og_s((p.className ?? '')), 'attrs': og_attrs(['aria-label', v_landmarkLabel]), 'children': c_1}, with_context = false) }}

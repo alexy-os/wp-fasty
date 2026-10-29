@@ -32,7 +32,7 @@
         {capture $c_3}
           {=og_text(og_get($v_meta, ['category']))}
         {/capture}
-        {=og_include('blocks/pill.latte', ['p' => ['tone' => 'blue'], 'children' => $c_3])|noescape}
+        {=og_include('blocks/pill.latte', ['p' => ['tone' => 'blue'], 'children' => og_markup($c_3)])|noescape}
       {/if}
     {/capture}
     {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'class' => 'flex-wrap', 'attrs' => og_attrs(['data-testid', 'richtext-meta']), 'children' => (string) $c_4])|noescape}
@@ -77,4 +77,4 @@
     {=og_include('compose/Prose.latte', ['size' => 'base', 'width' => og_s((og_t(og_eq($v_layout, 'wide')) ? 'wide' : (og_t(og_eq($v_layout, 'hero')) ? 'narrow' : 'none'))), 'attrs' => og_attrs(['data-testid', 'richtext-content']), 'children' => (string) $c_11])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'heading' => ['level' => $v_level], 'tone' => $v_tone, 'density' => $v_density, 'measure' => (og_t(og_or([og_eq($v_layout, 'narrow'), og_eq($v_layout, 'media')])) ? '2xl' : (og_t(og_eq($v_layout, 'card')) ? '3xl' : 'default')), 'boxed' => og_eq($v_layout, 'card'), 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_12])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'heading' => ['level' => $v_level], 'tone' => $v_tone, 'density' => $v_density, 'measure' => (og_t(og_or([og_eq($v_layout, 'narrow'), og_eq($v_layout, 'media')])) ? '2xl' : (og_t(og_eq($v_layout, 'card')) ? '3xl' : 'default')), 'boxed' => og_eq($v_layout, 'card'), 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_12)])|noescape}

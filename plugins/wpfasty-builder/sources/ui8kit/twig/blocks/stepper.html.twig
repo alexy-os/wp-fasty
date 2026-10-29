@@ -77,4 +77,4 @@
     {{ include('compose/Stack.html.twig', {'gap': '6', 'align': 'stretch', 'attrs': og_attrs(['data-testid', 'stepper']), 'children': c_13}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'measure': '3xl', 'landmarkLabel': v_landmarkLabel}, 'children': c_14}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'measure': '3xl', 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_14)}, with_context = false) }}

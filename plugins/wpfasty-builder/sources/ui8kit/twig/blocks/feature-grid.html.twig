@@ -35,7 +35,7 @@
       {{ include('blocks/feature-cards.html.twig', {'p': {'features': v_features, 'cols': v_cols, 'item': v_item}}, with_context = false) }}
     {%- endif %}
   {%- endset -%}
-  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'tone': v_tone, 'density': v_density, 'measure': 'fill', 'className': og_cnv(['py-0']), 'landmarkLabel': v_landmarkLabel}, 'children': c_4}, with_context = false) }}
+  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'tone': v_tone, 'density': v_density, 'measure': 'fill', 'className': og_cnv(['py-0']), 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_4)}, with_context = false) }}
 {%- else %}
   {%- set c_5 -%}
     {%- if og_t(og_eq(og_len(v_features), 0)) %}
@@ -46,5 +46,5 @@
       {{ include('blocks/feature-cards.html.twig', {'p': {'features': v_features, 'cols': v_cols, 'item': v_item}}, with_context = false) }}
     {%- endif %}
   {%- endset -%}
-  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'action': v_action, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': c_5}, with_context = false) }}
+  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'action': v_action, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_5)}, with_context = false) }}
 {%- endif %}

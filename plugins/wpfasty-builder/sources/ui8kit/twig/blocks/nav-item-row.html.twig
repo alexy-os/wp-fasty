@@ -8,7 +8,7 @@
   {%- set c_2 -%}
     {{ og_slot((p.icon ?? null))|raw }}
     {%- set c_1 -%}
-      {{ (children ?? '')|raw }}
+      {{ og_slot((children ?? null))|raw }}
     {%- endset -%}
     {{ include('compose/Inline.html.twig', {'class': 'min-w-0 flex-1 truncate in-data-[nav=collapsed]:hidden', 'attrs': og_attrs(['data-slot', 'nav-item-label']), 'children': c_1}, with_context = false) }}
   {%- endset -%}

@@ -11,17 +11,17 @@
     {capture $c_1}
       {=og_include('compose/Input.latte', ['type' => 'text', 'name' => 'name', 'attrs' => og_attrs(['autocomplete', 'name', 'id', og_tpl('{0}-name', [$v_id]), 'data-testid', 'field'])])|noescape}
     {/capture}
-    {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['name']), 'htmlFor' => og_tpl('{0}-name', [$v_id])], 'children' => $c_1])|noescape}
+    {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['name']), 'htmlFor' => og_tpl('{0}-name', [$v_id])], 'children' => og_markup($c_1)])|noescape}
   {/if}
   {capture $c_2}
     {=og_include('compose/Input.latte', ['type' => 'email', 'name' => 'email', 'attrs' => og_attrs(['autocomplete', 'email', 'id', og_tpl('{0}-email', [$v_id]), 'data-testid', 'field'])])|noescape}
   {/capture}
-  {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['email']), 'htmlFor' => og_tpl('{0}-email', [$v_id])], 'children' => $c_2])|noescape}
+  {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['email']), 'htmlFor' => og_tpl('{0}-email', [$v_id])], 'children' => og_markup($c_2)])|noescape}
   {if og_t(og_and([!(og_eq($v_mode, 'reset')), !(og_eq($v_mode, 'magic'))]))}
     {capture $c_3}
       {=og_include('compose/Input.latte', ['type' => 'password', 'name' => 'password', 'attrs' => og_attrs(['autocomplete', (og_t(og_eq($v_mode, 'signup')) ? 'new-password' : 'current-password'), 'id', og_tpl('{0}-password', [$v_id]), 'data-testid', 'field'])])|noescape}
     {/capture}
-    {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['password']), 'htmlFor' => og_tpl('{0}-password', [$v_id])], 'children' => $c_3])|noescape}
+    {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['password']), 'htmlFor' => og_tpl('{0}-password', [$v_id])], 'children' => og_markup($c_3)])|noescape}
   {/if}
   {if og_t(og_eq($v_mode, 'signin'))}
     {capture $c_7}

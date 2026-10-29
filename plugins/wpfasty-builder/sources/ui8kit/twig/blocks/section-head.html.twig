@@ -9,7 +9,7 @@
 {%- if og_t(og_has(v_expanded)) %}
   {%- set c_3 -%}
     {%- set c_1 -%}
-      {{ (children ?? '')|raw }}
+      {{ og_slot((children ?? null))|raw }}
     {%- endset -%}
     {{ include('compose/Inline.html.twig', {'attrs': og_attrs(['data-slot', 'section-head-title']), 'children': c_1}, with_context = false) }}
     {%- if og_t(((p.right ?? null) is not null)) %}
@@ -23,7 +23,7 @@
 {%- else %}
   {%- set c_6 -%}
     {%- set c_4 -%}
-      {{ (children ?? '')|raw }}
+      {{ og_slot((children ?? null))|raw }}
     {%- endset -%}
     {{ include('compose/Inline.html.twig', {'attrs': og_attrs(['data-slot', 'section-head-title']), 'children': c_4}, with_context = false) }}
     {%- if og_t(((p.right ?? null) is not null)) %}

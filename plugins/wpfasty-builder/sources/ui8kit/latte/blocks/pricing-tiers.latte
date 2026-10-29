@@ -21,13 +21,13 @@
         {capture $c_1}
           {=og_text(og_get($v_billingLabels, ['monthly']))}
         {/capture}
-        {=og_include('blocks/switcher-item.latte', ['p' => ['active' => og_eq($v_billing, 'monthly')], 'children' => $c_1])|noescape}
+        {=og_include('blocks/switcher-item.latte', ['p' => ['active' => og_eq($v_billing, 'monthly')], 'children' => og_markup($c_1)])|noescape}
         {capture $c_2}
           {=og_text(og_get($v_billingLabels, ['annual']))}
         {/capture}
-        {=og_include('blocks/switcher-item.latte', ['p' => ['active' => og_eq($v_billing, 'annual')], 'children' => $c_2])|noescape}
+        {=og_include('blocks/switcher-item.latte', ['p' => ['active' => og_eq($v_billing, 'annual')], 'children' => og_markup($c_2)])|noescape}
       {/capture}
-      {=og_include('blocks/switcher.latte', ['p' => ['label' => og_get($v_billingLabels, ['label'])], 'children' => $c_3])|noescape}
+      {=og_include('blocks/switcher.latte', ['p' => ['label' => og_get($v_billingLabels, ['label'])], 'children' => og_markup($c_3)])|noescape}
       {capture $c_4}
         {=og_text(og_get($v_billingLabels, ['save']))}
       {/capture}
@@ -46,4 +46,4 @@
     {=og_include('compose/Grid.latte', ['cols' => og_s((og_t(og_eq($v_layout, 'stack')) ? '1' : og_fit_cols($v_cols, og_len($v_plans)))), 'class' => 'gap-4', 'attrs' => og_attrs(['data-testid', 'tiers']), 'children' => (string) $c_6])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'measure' => (og_t(og_eq($v_layout, 'stack')) ? 'md' : 'default'), 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_7])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'measure' => (og_t(og_eq($v_layout, 'stack')) ? 'md' : 'default'), 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_7)])|noescape}

@@ -53,4 +53,4 @@
     {{ include('compose/Grid.html.twig', {'cols': '1-4', 'class': og_s(og_cnv(['gap-4', (og_t(og_eq(v_layout, 'strip')) ? 'rounded bg-muted p-6' : '')])), 'attrs': og_attrs(['data-testid', 'items']), 'children': c_9}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': c_10}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_10)}, with_context = false) }}

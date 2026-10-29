@@ -26,10 +26,10 @@
         {%- set c_1 -%}
           {{ og_text(og_get(v_tab, ['title'])) }}
         {%- endset -%}
-        {{ include('blocks/switcher-item.html.twig', {'p': {'active': og_eq(og_get(v_tab, ['value']), og_get(v_filter, ['category']))}, 'children': c_1}, with_context = false) }}
+        {{ include('blocks/switcher-item.html.twig', {'p': {'active': og_eq(og_get(v_tab, ['value']), og_get(v_filter, ['category']))}, 'children': og_markup(c_1)}, with_context = false) }}
       {%- endfor %}
     {%- endset -%}
-    {{ include('blocks/switcher.html.twig', {'p': {'label': og_get(v_filter, ['label'])}, 'children': c_2}, with_context = false) }}
+    {{ include('blocks/switcher.html.twig', {'p': {'label': og_get(v_filter, ['label'])}, 'children': og_markup(c_2)}, with_context = false) }}
   {%- endif %}
   {%- if og_t(og_eq(og_len(v_shown), 0)) %}
     {{ include('blocks/empty-state.html.twig', {'p': {'icon': 'circle-question-mark', 'title': v_empty}}, with_context = false) }}
@@ -76,4 +76,4 @@
     {{ include('compose/Grid.html.twig', {'cols': og_s((og_t(og_eq(v_cols, '2')) ? '1-2' : '1')), 'class': 'items-start gap-x-8', 'attrs': og_attrs(['data-testid', 'faq']), 'children': c_12}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'measure': (og_t(og_eq(v_layout, 'chat')) ? '2xl' : 'default'), 'landmarkLabel': v_landmarkLabel}, 'children': c_13}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'measure': (og_t(og_eq(v_layout, 'chat')) ? '2xl' : 'default'), 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_13)}, with_context = false) }}

@@ -9,7 +9,7 @@
 {if og_t(og_has($v_expanded))}
   {capture $c_3}
     {capture $c_1}
-      {=($children ?? '')|noescape}
+      {=og_slot(($children ?? null))|noescape}
     {/capture}
     {=og_include('compose/Inline.latte', ['attrs' => og_attrs(['data-slot', 'section-head-title']), 'children' => (string) $c_1])|noescape}
     {if og_t(((($p['right'] ?? null) !== null)))}
@@ -23,7 +23,7 @@
 {else}
   {capture $c_6}
     {capture $c_4}
-      {=($children ?? '')|noescape}
+      {=og_slot(($children ?? null))|noescape}
     {/capture}
     {=og_include('compose/Inline.latte', ['attrs' => og_attrs(['data-slot', 'section-head-title']), 'children' => (string) $c_4])|noescape}
     {if og_t(((($p['right'] ?? null) !== null)))}

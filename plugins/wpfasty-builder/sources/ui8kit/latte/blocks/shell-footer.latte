@@ -18,14 +18,14 @@
             {capture $c_2}
               {=og_text(og_get($v_f, ['name']))}
             {/capture}
-            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_f, ['href']), 'className' => og_cnv(['text-xs text-muted-foreground']), 'variant' => 'muted', 'size' => 'sm'], 'children' => $c_2])|noescape}
+            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_f, ['href']), 'className' => og_cnv(['text-xs text-muted-foreground']), 'variant' => 'muted', 'size' => 'sm'], 'children' => og_markup($c_2)])|noescape}
           {/capture}
           {=og_include('compose/ListItem.latte', ['children' => (string) $c_3])|noescape}
         {/foreach}
       {/capture}
       {=og_include('compose/List.latte', ['class' => 'm-0 flex list-none items-center gap-4 p-0', 'children' => (string) $c_4])|noescape}
     {/capture}
-    {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get($v_nav, ['footerLabel']), $v_landmarkLabel])) : og_get($v_nav, ['footerLabel']))], 'children' => $c_5])|noescape}
+    {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get($v_nav, ['footerLabel']), $v_landmarkLabel])) : og_get($v_nav, ['footerLabel']))], 'children' => og_markup($c_5)])|noescape}
   {/if}
 {/capture}
 {=og_include('compose/Block.latte', ['tag' => 'footer', 'class' => og_s(og_cnv(['flex shrink-0 flex-wrap items-center justify-between gap-4 border-t border-border px-6 py-4', (og_t(og_eq($v_place, 'full')) ? 'bg-card' : '')])), 'attrs' => og_attrs(['data-testid', 'footer', 'data-place', $v_place, 'aria-label', $v_landmarkLabel]), 'children' => (string) $c_6])|noescape}

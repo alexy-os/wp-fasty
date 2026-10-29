@@ -5,7 +5,7 @@
 {var $v_label = ($p['label'] ?? null)}
 {capture $c_3}
   {capture $c_1}
-    {=($children ?? '')|noescape}
+    {=og_slot(($children ?? null))|noescape}
   {/capture}
   {=og_include('compose/Inline.latte', ['class' => 'flex min-w-0 flex-wrap items-center gap-2', 'children' => (string) $c_1])|noescape}
   {capture $c_2}

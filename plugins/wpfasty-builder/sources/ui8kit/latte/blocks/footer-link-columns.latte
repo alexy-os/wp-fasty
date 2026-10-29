@@ -22,7 +22,7 @@
                   {capture $c_2}
                     {=og_text(og_get($v_item, ['name']))}
                   {/capture}
-                  {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_item, ['href']), 'className' => og_cnv(['text-sm text-muted-foreground']), 'variant' => 'muted', 'size' => 'sm'], 'children' => $c_2])|noescape}
+                  {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_item, ['href']), 'className' => og_cnv(['text-sm text-muted-foreground']), 'variant' => 'muted', 'size' => 'sm'], 'children' => og_markup($c_2)])|noescape}
                 {/capture}
                 {=og_include('compose/ListItem.latte', ['children' => (string) $c_3])|noescape}
               {/foreach}

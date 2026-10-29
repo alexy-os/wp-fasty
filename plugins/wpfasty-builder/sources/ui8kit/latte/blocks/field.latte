@@ -11,7 +11,7 @@
     {=og_text($v_label)}
   {/capture}
   {=og_include('compose/Label.latte', ['class' => 'text-xs font-bold text-foreground', 'htmlFor' => og_s($v_htmlFor), 'children' => (string) $c_1])|noescape}
-  {=($children ?? '')|noescape}
+  {=og_slot(($children ?? null))|noescape}
   {if og_t($v_error)}
     {capture $c_2}
       {=og_text($v_error)}

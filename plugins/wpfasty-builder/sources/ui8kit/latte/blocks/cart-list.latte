@@ -58,4 +58,4 @@
     {=og_include('compose/Stack.latte', ['gap' => '4', 'align' => 'stretch', 'attrs' => og_attrs(['data-testid', 'cart-cards']), 'children' => (string) $c_9])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_10])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_10)])|noescape}

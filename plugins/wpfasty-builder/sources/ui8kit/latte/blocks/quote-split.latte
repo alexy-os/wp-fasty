@@ -19,7 +19,7 @@
   {capture $c_1}
     {=og_include('blocks/empty-state.latte', ['p' => ['icon' => 'quote', 'title' => $v_empty]])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_1])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_1)])|noescape}
 {elseif og_t(og_or([og_eq($v_layout, 'compact'), og_eq($v_layout, 'bento')]))}
   {capture $c_3}
     {if og_t(og_eq($v_layout, 'bento'))}
@@ -33,7 +33,7 @@
     {/capture}
     {=og_include('compose/Box.latte', ['class' => og_s((og_t(og_eq($v_layout, 'bento')) ? 'grid grid-cols-1 gap-4 lg:grid-cols-2' : 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4')), 'children' => (string) $c_2])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_3])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_3)])|noescape}
 {else}
   {capture $f_5}
     {if og_t(og_eq($v_layout, 'rating'))}
@@ -69,5 +69,5 @@
       {=og_include('blocks/action-group.latte', ['p' => ['primary' => og_get($v_actions, ['cta']), 'primaryHref' => og_get($v_actions, ['href']), 'secondary' => (og_t(og_eq(og_get($v_actions, ['mode']), 'two')) ? og_get($v_actions, ['secondary']) : null), 'secondaryHref' => og_get($v_actions, ['secondaryHref'])]])|noescape}
     {/if}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_5)], 'children' => $c_6])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'layout' => 'split', 'media' => ['show' => true, 'side' => $v_mediaSide], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_5)], 'children' => og_markup($c_6)])|noescape}
 {/if}

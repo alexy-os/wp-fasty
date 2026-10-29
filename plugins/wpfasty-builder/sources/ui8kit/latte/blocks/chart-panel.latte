@@ -29,7 +29,7 @@
         {=og_include('compose/Stack.latte', ['gap' => og_s((og_t(og_eq($v_size, 'compact')) ? '0' : '2')), 'align' => 'stretch', 'attrs' => og_attrs(['data-testid', 'items']), 'children' => (string) $c_1])|noescape}
       {/if}
     {/capture}
-    {=og_include('blocks/panel.latte', ['p' => ['title' => $v_title, 'description' => $v_text, 'id' => $v_id, 'className' => og_cnv([(og_t(og_eq($v_tone, 'muted')) ? 'bg-muted' : '')])], 'children' => $c_2])|noescape}
+    {=og_include('blocks/panel.latte', ['p' => ['title' => $v_title, 'description' => $v_text, 'id' => $v_id, 'className' => og_cnv([(og_t(og_eq($v_tone, 'muted')) ? 'bg-muted' : '')])], 'children' => og_markup($c_2)])|noescape}
   {/capture}
   {=og_include('compose/Container.latte', ['class' => 'mx-auto w-full max-w-6xl px-4 py-8', 'attrs' => og_attrs(['data-slot', 'container']), 'children' => (string) $c_3])|noescape}
 {/capture}

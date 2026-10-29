@@ -23,10 +23,10 @@
         {%- set c_1 -%}
           {{ og_text(og_get(v_tab, ['title'])) }}
         {%- endset -%}
-        {{ include('blocks/switcher-item.html.twig', {'p': {'active': og_eq(og_get(v_tab, ['value']), og_get(v_filter, ['topic']))}, 'children': c_1}, with_context = false) }}
+        {{ include('blocks/switcher-item.html.twig', {'p': {'active': og_eq(og_get(v_tab, ['value']), og_get(v_filter, ['topic']))}, 'children': og_markup(c_1)}, with_context = false) }}
       {%- endfor %}
     {%- endset -%}
-    {{ include('blocks/switcher.html.twig', {'p': {'label': og_get(v_filter, ['label'])}, 'children': c_2}, with_context = false) }}
+    {{ include('blocks/switcher.html.twig', {'p': {'label': og_get(v_filter, ['label'])}, 'children': og_markup(c_2)}, with_context = false) }}
   {%- endif %}
   {%- if og_t(og_gt(og_len(og_where(v_posts, 'category', og_get(v_filter, ['topic']))), 0)) %}
     {%- if og_t(og_eq(v_layout, 'magazine')) %}
@@ -59,9 +59,9 @@
   {%- endif %}
   {%- if og_t(og_and([og_eq(og_get(v_pager, ['mode']), 'pages'), og_gt(og_len(og_where(v_posts, 'category', og_get(v_filter, ['topic']))), 0)])) %}
     {%- set c_6 -%}
-      {{ include('blocks/pager.html.twig', {'p': {'page': og_coalesce([og_get(v_pager, ['page']), 1]), 'pages': og_coalesce([og_get(v_pager, ['pages']), 1]), 'summary': og_tpl(og_get(v_pager, ['summary']), [og_coalesce([og_get(v_pager, ['page']), 1]), og_coalesce([og_get(v_pager, ['pages']), 1])]), 'previousLabel': og_coalesce([og_get(v_pager, ['previous']), '']), 'nextLabel': og_coalesce([og_get(v_pager, ['next']), '']), 'numbered': true, 'pageLabel': og_get(v_pager, ['pageLabel'])}}, with_context = false) }}
+      {{ include('blocks/pager.html.twig', {'p': {'page': og_coalesce([og_get(v_pager, ['page']), 1]), 'pages': og_coalesce([og_get(v_pager, ['pages']), 1]), 'summary': og_tpl(og_get(v_pager, ['summary']), [og_coalesce([og_get(v_pager, ['page']), 1]), og_coalesce([og_get(v_pager, ['pages']), 1])]), 'previousLabel': og_coalesce([og_get(v_pager, ['previous']), '']), 'nextLabel': og_coalesce([og_get(v_pager, ['next']), '']), 'numbered': true, 'pageLabel': og_get(v_pager, ['pageLabel']), 'pageUrl': og_get(v_pager, ['url']), 'firstUrl': og_get(v_pager, ['firstUrl'])}}, with_context = false) }}
     {%- endset -%}
     {{ include('compose/Block.html.twig', {'tag': 'nav', 'attrs': og_attrs(['aria-label', (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get(v_pager, ['label']), v_landmarkLabel])) : og_get(v_pager, ['label'])), 'data-testid', 'posts-pager']), 'children': c_6}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'action': v_action, 'tone': v_tone, 'density': (og_t(og_eq(v_density, 'compact')) ? 'compact' : 'default'), 'measure': (og_t(og_eq(v_meta, 'news')) ? 'fill' : 'default'), 'className': og_cnv([(og_t(og_eq(v_meta, 'news')) ? 'py-0' : '')]), 'landmarkLabel': v_landmarkLabel}, 'children': c_7}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'action': v_action, 'tone': v_tone, 'density': (og_t(og_eq(v_density, 'compact')) ? 'compact' : 'default'), 'measure': (og_t(og_eq(v_meta, 'news')) ? 'fill' : 'default'), 'className': og_cnv([(og_t(og_eq(v_meta, 'news')) ? 'py-0' : '')]), 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_7)}, with_context = false) }}

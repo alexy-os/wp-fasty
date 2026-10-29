@@ -18,14 +18,14 @@
             {%- set c_2 -%}
               {{ og_text(og_get(v_f, ['name'])) }}
             {%- endset -%}
-            {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_f, ['href']), 'className': og_cnv(['text-xs text-muted-foreground']), 'variant': 'muted', 'size': 'sm'}, 'children': c_2}, with_context = false) }}
+            {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_f, ['href']), 'className': og_cnv(['text-xs text-muted-foreground']), 'variant': 'muted', 'size': 'sm'}, 'children': og_markup(c_2)}, with_context = false) }}
           {%- endset -%}
           {{ include('compose/ListItem.html.twig', {'children': c_3}, with_context = false) }}
         {%- endfor %}
       {%- endset -%}
       {{ include('compose/List.html.twig', {'class': 'm-0 flex list-none items-center gap-4 p-0', 'children': c_4}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get(v_nav, ['footerLabel']), v_landmarkLabel])) : og_get(v_nav, ['footerLabel']))}, 'children': c_5}, with_context = false) }}
+    {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get(v_nav, ['footerLabel']), v_landmarkLabel])) : og_get(v_nav, ['footerLabel']))}, 'children': og_markup(c_5)}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
 {{ include('compose/Block.html.twig', {'tag': 'footer', 'class': og_s(og_cnv(['flex shrink-0 flex-wrap items-center justify-between gap-4 border-t border-border px-6 py-4', (og_t(og_eq(v_place, 'full')) ? 'bg-card' : '')])), 'attrs': og_attrs(['data-testid', 'footer', 'data-place', v_place, 'aria-label', v_landmarkLabel]), 'children': c_6}, with_context = false) }}

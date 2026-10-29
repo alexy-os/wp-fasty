@@ -78,7 +78,7 @@
               {capture $c_16}
                 {=og_text(og_get($v_labels, ['apply']))}
               {/capture}
-              {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_j, ['href']), 'className' => og_cnv(['font-medium'])], 'children' => $c_16])|noescape}
+              {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_j, ['href']), 'className' => og_cnv(['font-medium'])], 'children' => og_markup($c_16)])|noescape}
             {/capture}
             {=og_include('compose/TableCell.latte', ['class' => 'pr-4 text-right', 'children' => (string) $c_17])|noescape}
           {/capture}
@@ -143,7 +143,7 @@
             {=og_text(og_get($v_labels, ['apply']))}
             {=og_include('icons/LucideIcon.latte', ['name' => 'arrow-right', 'size' => 16])|noescape}
           {/capture}
-          {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_j, ['href']), 'className' => og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])], 'children' => $c_33])|noescape}
+          {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_j, ['href']), 'className' => og_cnv(['inline-flex items-center gap-2 text-sm font-medium'])], 'children' => og_markup($c_33)])|noescape}
         {/capture}
         {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'justify' => 'between', 'class' => 'mt-auto', 'children' => (string) $c_34])|noescape}
       {/capture}

@@ -11,17 +11,17 @@
     {%- set c_1 -%}
       {{ include('compose/Input.html.twig', {'type': 'text', 'name': 'name', 'attrs': og_attrs(['autocomplete', 'name', 'id', og_tpl('{0}-name', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['name']), 'htmlFor': og_tpl('{0}-name', [v_id])}, 'children': c_1}, with_context = false) }}
+    {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['name']), 'htmlFor': og_tpl('{0}-name', [v_id])}, 'children': og_markup(c_1)}, with_context = false) }}
   {%- endif %}
   {%- set c_2 -%}
     {{ include('compose/Input.html.twig', {'type': 'email', 'name': 'email', 'attrs': og_attrs(['autocomplete', 'email', 'id', og_tpl('{0}-email', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
   {%- endset -%}
-  {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['email']), 'htmlFor': og_tpl('{0}-email', [v_id])}, 'children': c_2}, with_context = false) }}
+  {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['email']), 'htmlFor': og_tpl('{0}-email', [v_id])}, 'children': og_markup(c_2)}, with_context = false) }}
   {%- if og_t(og_and([not (og_eq(v_mode, 'reset')), not (og_eq(v_mode, 'magic'))])) %}
     {%- set c_3 -%}
       {{ include('compose/Input.html.twig', {'type': 'password', 'name': 'password', 'attrs': og_attrs(['autocomplete', (og_t(og_eq(v_mode, 'signup')) ? 'new-password' : 'current-password'), 'id', og_tpl('{0}-password', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['password']), 'htmlFor': og_tpl('{0}-password', [v_id])}, 'children': c_3}, with_context = false) }}
+    {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['password']), 'htmlFor': og_tpl('{0}-password', [v_id])}, 'children': og_markup(c_3)}, with_context = false) }}
   {%- endif %}
   {%- if og_t(og_eq(v_mode, 'signin')) %}
     {%- set c_7 -%}

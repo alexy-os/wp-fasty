@@ -30,17 +30,17 @@
         {capture $c_3}
           {=og_include('blocks/bar-chart.latte', ['p' => ['bars' => og_get($v_chart, ['series']), 'label' => og_get($v_chart, ['summary']), 'height' => 144]])|noescape}
         {/capture}
-        {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_chart, ['title']), 'description' => og_get($v_chart, ['text']), 'id' => og_tpl('{0}-chart', [$v_id]), 'className' => og_cnv(['h-full'])], 'children' => $c_3])|noescape}
+        {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_chart, ['title']), 'description' => og_get($v_chart, ['text']), 'id' => og_tpl('{0}-chart', [$v_id]), 'className' => og_cnv(['h-full'])], 'children' => og_markup($c_3)])|noescape}
       {/if}
       {if og_t(og_gt(og_len(og_get($v_activity, ['events'])), 0))}
         {capture $c_4}
           {=og_include('blocks/timeline.latte', ['p' => ['items' => og_get($v_activity, ['events'])]])|noescape}
         {/capture}
-        {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_activity, ['title']), 'description' => og_get($v_activity, ['text']), 'id' => og_tpl('{0}-feed', [$v_id]), 'className' => og_cnv(['h-full'])], 'children' => $c_4])|noescape}
+        {=og_include('blocks/panel.latte', ['p' => ['title' => og_get($v_activity, ['title']), 'description' => og_get($v_activity, ['text']), 'id' => og_tpl('{0}-feed', [$v_id]), 'className' => og_cnv(['h-full'])], 'children' => og_markup($c_4)])|noescape}
       {/if}
     {/capture}
     {=og_include('compose/Grid.latte', ['cols' => og_s((og_t(og_eq($v_layout, 'split')) ? '1-2' : '1')), 'class' => 'items-stretch gap-4', 'attrs' => og_attrs(['data-testid', 'panels']), 'children' => (string) $c_5])|noescape}
   {/capture}
   {=og_include('compose/Stack.latte', ['gap' => '6', 'align' => 'stretch', 'children' => (string) $c_6])|noescape}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_7])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_7)])|noescape}

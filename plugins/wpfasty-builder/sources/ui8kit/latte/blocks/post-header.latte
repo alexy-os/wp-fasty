@@ -35,14 +35,14 @@
       {capture $c_4}
         {=og_text(og_get($v_post, ['category']))}
       {/capture}
-      {=og_include('blocks/pill.latte', ['p' => ['tone' => 'blue'], 'children' => $c_4])|noescape}
+      {=og_include('blocks/pill.latte', ['p' => ['tone' => 'blue'], 'children' => og_markup($c_4)])|noescape}
     {/capture}
     {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'justify' => og_s((og_t(og_eq($v_layout, 'center')) ? 'center' : 'start')), 'class' => 'flex-wrap', 'attrs' => og_attrs(['data-testid', 'post-meta']), 'children' => (string) $c_5])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => og_get($v_post, ['title']), 'lead' => og_get($v_post, ['excerpt']), 'heading' => ['level' => $v_level], 'align' => $v_layout, 'tone' => $v_tone, 'media' => ['show' => og_eq($v_cover, 'show')], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_6)], 'children' => $c_7])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => og_get($v_post, ['title']), 'lead' => og_get($v_post, ['excerpt']), 'heading' => ['level' => $v_level], 'align' => $v_layout, 'tone' => $v_tone, 'media' => ['show' => og_eq($v_cover, 'show')], 'landmarkLabel' => $v_landmarkLabel, 'aside' => og_markup($f_6)], 'children' => og_markup($c_7)])|noescape}
 {else}
   {capture $c_8}
     {=og_include('blocks/empty-state.latte', ['p' => ['icon' => 'file-text', 'title' => og_get($v_labels, ['empty'])]])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'heading' => ['level' => $v_level], 'align' => $v_layout, 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_8])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'heading' => ['level' => $v_level], 'align' => $v_layout, 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_8)])|noescape}
 {/if}

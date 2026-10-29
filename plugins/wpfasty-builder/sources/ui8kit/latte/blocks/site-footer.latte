@@ -18,15 +18,15 @@
         {capture $c_2}
           {=og_text(og_get($v_labels, ['home']))}
         {/capture}
-        {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_routes, ['home']), 'className' => og_cnv(['font-semibold'])], 'children' => $c_2])|noescape}
+        {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_routes, ['home']), 'className' => og_cnv(['font-semibold'])], 'children' => og_markup($c_2)])|noescape}
         {capture $c_3}
           {=og_text(og_get($v_labels, ['pricing']))}
         {/capture}
-        {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_routes, ['pricing']), 'className' => og_cnv(['font-semibold'])], 'children' => $c_3])|noescape}
+        {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_routes, ['pricing']), 'className' => og_cnv(['font-semibold'])], 'children' => og_markup($c_3)])|noescape}
       {/capture}
       {=og_include('compose/Group.latte', ['gap' => '4', 'children' => (string) $c_4])|noescape}
     {/capture}
-    {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get($v_labels, ['nav']), $v_landmarkLabel])) : og_get($v_labels, ['nav']))], 'children' => $c_5])|noescape}
+    {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get($v_labels, ['nav']), $v_landmarkLabel])) : og_get($v_labels, ['nav']))], 'children' => og_markup($c_5)])|noescape}
   {/capture}
   {=og_include('compose/Container.latte', ['class' => og_s(og_cnv(['mx-auto w-full max-w-6xl px-4', 'flex flex-wrap items-center gap-4', (og_t(og_eq($v_density, 'compact')) ? 'py-4' : 'py-6'), (og_t(og_eq($v_layout, 'centered')) ? 'flex-col text-center' : 'justify-between')])), 'attrs' => og_attrs(['data-slot', 'container']), 'children' => (string) $c_6])|noescape}
 {/capture}

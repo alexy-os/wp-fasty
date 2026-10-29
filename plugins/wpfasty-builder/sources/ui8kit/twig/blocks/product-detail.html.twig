@@ -18,7 +18,7 @@
   {%- set c_1 -%}
     {{ include('blocks/empty-state.html.twig', {'p': {'icon': 'package', 'title': og_get(v_labels, ['empty'])}}, with_context = false) }}
   {%- endset -%}
-  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': c_1}, with_context = false) }}
+  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_1)}, with_context = false) }}
 {%- else %}
   {%- set f_14 -%}
     {{ include('blocks/product-gallery.html.twig', {'p': {'name': og_get(v_product, ['name']), 'image': og_get(v_product, ['image']), 'thumbs': v_thumbs}}, with_context = false) }}
@@ -78,5 +78,5 @@
     {%- endset -%}
     {{ include('compose/Stack.html.twig', {'gap': '4', 'align': 'stretch', 'attrs': og_attrs(['data-testid', 'buy-box']), 'children': c_13}, with_context = false) }}
   {%- endset -%}
-  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': og_get(v_product, ['name']), 'lead': og_get(v_product, ['summary']), 'heading': {'level': v_level}, 'layout': (og_t(og_eq(v_layout, 'split')) ? 'split' : 'stack'), 'media': {'show': true, 'side': v_mediaSide, 'align': 'start'}, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_14)}, 'children': c_15}, with_context = false) }}
+  {{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': og_get(v_product, ['name']), 'lead': og_get(v_product, ['summary']), 'heading': {'level': v_level}, 'layout': (og_t(og_eq(v_layout, 'split')) ? 'split' : 'stack'), 'media': {'show': true, 'side': v_mediaSide, 'align': 'start'}, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_14)}, 'children': og_markup(c_15)}, with_context = false) }}
 {%- endif %}

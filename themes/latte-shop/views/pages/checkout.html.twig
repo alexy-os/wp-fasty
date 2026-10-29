@@ -38,7 +38,7 @@
 						{% set c_ui23 %}
 							{% set lbl %}{{ label }}{% if req %} *{% endif %}{% endset %}
 							{% include 'label/Label.html.twig' with { htmlFor: 'co-' ~ field, class: kit('label', {}), children: lbl } %}
-							{% include 'input/Input.html.twig' with { id: 'co-' ~ field, type: type, name: field, value: (v[field] ?? '') ~ '', required: req, class: kit('input', {}, field in checkout.errors ? 'border-destructive' : ''), attrs: {'autocomplete': (ac) ?: null} } %}
+							{% include 'input/Input.html.twig' with { id: 'co-' ~ field, type: type, name: field, value: (v[field] ?? '') ~ '', required: req, ariaInvalid: field in checkout.errors ? 'true' : null, class: kit('input', {}, field in checkout.errors ? 'border-destructive' : ''), attrs: {'autocomplete': (ac) ?: null} } %}
 						{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui23, 'attrs': {}} only %}
 					{% endfor %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-4 md:grid-cols-2', 'children': c_ui24, 'attrs': {}} only %}

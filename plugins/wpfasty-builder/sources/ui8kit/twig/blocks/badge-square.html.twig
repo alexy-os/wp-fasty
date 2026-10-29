@@ -4,6 +4,6 @@
     Props (p): size, className; children: markup. -#}
 {%- set v_size = (p.size ?? 'default') -%}
 {%- set c_1 -%}
-  {{ (children ?? '')|raw }}
+  {{ og_slot((children ?? null))|raw }}
 {%- endset -%}
 {{ include('compose/Inline.html.twig', {'class': og_s(og_cnv([og_recipe('blocks/recipes/badge-square.variants.json', {'size': v_size}), (p.className ?? '')])), 'attrs': og_attrs(['data-slot', 'badge-square']), 'children': c_1}, with_context = false) }}

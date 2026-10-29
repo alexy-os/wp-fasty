@@ -5,7 +5,7 @@
 {%- set v_label = (p.label ?? null) -%}
 {%- set c_3 -%}
   {%- set c_1 -%}
-    {{ (children ?? '')|raw }}
+    {{ og_slot((children ?? null))|raw }}
   {%- endset -%}
   {{ include('compose/Inline.html.twig', {'class': 'flex min-w-0 flex-wrap items-center gap-2', 'children': c_1}, with_context = false) }}
   {%- set c_2 -%}

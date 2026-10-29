@@ -30,17 +30,17 @@
         {%- set c_3 -%}
           {{ include('blocks/bar-chart.html.twig', {'p': {'bars': og_get(v_chart, ['series']), 'label': og_get(v_chart, ['summary']), 'height': 144}}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_chart, ['title']), 'description': og_get(v_chart, ['text']), 'id': og_tpl('{0}-chart', [v_id]), 'className': og_cnv(['h-full'])}, 'children': c_3}, with_context = false) }}
+        {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_chart, ['title']), 'description': og_get(v_chart, ['text']), 'id': og_tpl('{0}-chart', [v_id]), 'className': og_cnv(['h-full'])}, 'children': og_markup(c_3)}, with_context = false) }}
       {%- endif %}
       {%- if og_t(og_gt(og_len(og_get(v_activity, ['events'])), 0)) %}
         {%- set c_4 -%}
           {{ include('blocks/timeline.html.twig', {'p': {'items': og_get(v_activity, ['events'])}}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_activity, ['title']), 'description': og_get(v_activity, ['text']), 'id': og_tpl('{0}-feed', [v_id]), 'className': og_cnv(['h-full'])}, 'children': c_4}, with_context = false) }}
+        {{ include('blocks/panel.html.twig', {'p': {'title': og_get(v_activity, ['title']), 'description': og_get(v_activity, ['text']), 'id': og_tpl('{0}-feed', [v_id]), 'className': og_cnv(['h-full'])}, 'children': og_markup(c_4)}, with_context = false) }}
       {%- endif %}
     {%- endset -%}
     {{ include('compose/Grid.html.twig', {'cols': og_s((og_t(og_eq(v_layout, 'split')) ? '1-2' : '1')), 'class': 'items-stretch gap-4', 'attrs': og_attrs(['data-testid', 'panels']), 'children': c_5}, with_context = false) }}
   {%- endset -%}
   {{ include('compose/Stack.html.twig', {'gap': '6', 'align': 'stretch', 'children': c_6}, with_context = false) }}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': c_7}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_7)}, with_context = false) }}

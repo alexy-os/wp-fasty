@@ -17,7 +17,7 @@
   {capture $c_1}
     {=og_include('blocks/empty-state.latte', ['p' => ['icon' => 'milestone', 'title' => $v_empty]])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_1])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_1)])|noescape}
 {elseif og_t(og_eq($v_layout, 'years'))}
   {capture $c_6}
     {capture $c_5}
@@ -43,7 +43,7 @@
       {/if}
     {/foreach}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_6])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'heading' => ['badge' => $v_badge], 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_6)])|noescape}
 {else}
   {capture $f_7}
     {capture $c_11}

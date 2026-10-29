@@ -30,14 +30,14 @@
               {/capture}
               {=og_include('compose/Inline.latte', ['class' => og_s((og_t(true) ? '' : 'sr-only')), 'children' => (string) $c_3])|noescape}
             {/capture}
-            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_l, ['href']), 'className' => og_cnv([og_cnv(['flex items-center gap-4 rounded py-2 text-sm', (og_t(true) ? 'px-4' : 'justify-center px-2'), (og_t(og_eq(og_get($v_l, ['id']), og_get($v_nav, ['current']))) ? 'bg-muted font-medium' : '')])]), 'current' => og_eq(og_get($v_l, ['id']), og_get($v_nav, ['current'])), 'size' => 'sm', 'testid' => 'item'], 'children' => $c_4])|noescape}
+            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_l, ['href']), 'className' => og_cnv([og_cnv(['flex items-center gap-4 rounded py-2 text-sm', (og_t(true) ? 'px-4' : 'justify-center px-2'), (og_t(og_eq(og_get($v_l, ['id']), og_get($v_nav, ['current']))) ? 'bg-muted font-medium' : '')])]), 'current' => og_eq(og_get($v_l, ['id']), og_get($v_nav, ['current'])), 'size' => 'sm', 'testid' => 'item'], 'children' => og_markup($c_4)])|noescape}
           {/capture}
           {=og_include('compose/ListItem.latte', ['children' => (string) $c_5])|noescape}
         {/foreach}
       {/capture}
       {=og_include('compose/List.latte', ['class' => 'm-0 flex list-none items-center gap-2 p-0', 'children' => (string) $c_6])|noescape}
     {/capture}
-    {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get($v_nav, ['label']), $v_landmarkLabel])) : og_get($v_nav, ['label'])), 'className' => og_cnv(['hidden lg:block'])], 'children' => $c_7])|noescape}
+    {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get($v_nav, ['label']), $v_landmarkLabel])) : og_get($v_nav, ['label'])), 'className' => og_cnv(['hidden lg:block'])], 'children' => og_markup($c_7)])|noescape}
   {/if}
   {if og_t(og_eq($v_search, 'show'))}
     {if og_t(og_eq($v_links, 'show'))}

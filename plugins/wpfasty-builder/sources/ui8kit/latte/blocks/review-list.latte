@@ -46,9 +46,9 @@
         {/capture}
         {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'class' => 'mt-auto', 'children' => (string) $c_6])|noescape}
       {/capture}
-      {=og_include('blocks/article-block.latte', ['p' => ['className' => og_cnv([og_cnv(['flex h-full flex-col gap-4', (og_t(og_eq($v_item, 'card')) ? 'rounded bg-card p-6 inset-ring inset-ring-border' : 'border-b border-border pb-4')])]), 'testid' => 'item'], 'children' => $c_7])|noescape}
+      {=og_include('blocks/article-block.latte', ['p' => ['className' => og_cnv([og_cnv(['flex h-full flex-col gap-4', (og_t(og_eq($v_item, 'card')) ? 'rounded bg-card p-6 inset-ring inset-ring-border' : 'border-b border-border pb-4')])]), 'testid' => 'item'], 'children' => og_markup($c_7)])|noescape}
     {/foreach}
   {/capture}
   {=og_include('compose/Grid.latte', ['cols' => og_s((og_t(og_eq($v_layout, 'grid')) ? '1-3' : '1')), 'class' => 'gap-4', 'attrs' => og_attrs(['data-testid', 'items']), 'children' => (string) $c_8])|noescape}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'measure' => (og_t(og_eq($v_layout, 'list')) ? '2xl' : 'default'), 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_9])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'measure' => (og_t(og_eq($v_layout, 'list')) ? '2xl' : 'default'), 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_9)])|noescape}

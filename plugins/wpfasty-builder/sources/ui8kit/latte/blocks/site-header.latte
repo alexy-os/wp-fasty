@@ -20,21 +20,21 @@
     {capture $c_2}
       {=og_text(og_get($v_labels, ['brand']))}
     {/capture}
-    {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_routes, ['home']), 'className' => og_cnv(['text-lg font-medium']), 'testid' => 'brand'], 'children' => $c_2])|noescape}
+    {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_routes, ['home']), 'className' => og_cnv(['text-lg font-medium']), 'testid' => 'brand'], 'children' => og_markup($c_2)])|noescape}
     {capture $c_6}
       {capture $c_5}
         {capture $c_3}
           {=og_text(og_get($v_labels, ['home']))}
         {/capture}
-        {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_routes, ['home']), 'className' => og_cnv(['font-semibold']), 'current' => og_eq($v_current, 'home'), 'testid' => 'nav-link'], 'children' => $c_3])|noescape}
+        {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_routes, ['home']), 'className' => og_cnv(['font-semibold']), 'current' => og_eq($v_current, 'home'), 'testid' => 'nav-link'], 'children' => og_markup($c_3)])|noescape}
         {capture $c_4}
           {=og_text(og_get($v_labels, ['pricing']))}
         {/capture}
-        {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_routes, ['pricing']), 'className' => og_cnv(['font-semibold']), 'current' => og_eq($v_current, 'pricing'), 'testid' => 'nav-link'], 'children' => $c_4])|noescape}
+        {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_routes, ['pricing']), 'className' => og_cnv(['font-semibold']), 'current' => og_eq($v_current, 'pricing'), 'testid' => 'nav-link'], 'children' => og_markup($c_4)])|noescape}
       {/capture}
       {=og_include('compose/Group.latte', ['gap' => '4', 'align' => 'center', 'children' => (string) $c_5])|noescape}
     {/capture}
-    {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get($v_labels, ['nav']), $v_landmarkLabel])) : og_get($v_labels, ['nav'])), 'testid' => 'site-nav'], 'children' => $c_6])|noescape}
+    {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get($v_labels, ['nav']), $v_landmarkLabel])) : og_get($v_labels, ['nav'])), 'testid' => 'site-nav'], 'children' => og_markup($c_6)])|noescape}
     {capture $c_9}
       {capture $c_7}
         {=og_text(og_get($v_labels, ['theme']))}

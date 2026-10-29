@@ -30,7 +30,7 @@
             {/capture}
             {=og_include('compose/Select.latte', ['name' => og_s(og_tpl('{0}-zone', [$v_id])), 'attrs' => og_attrs(['id', og_tpl('{0}-zone', [$v_id])]), 'children' => (string) $c_2])|noescape}
           {/capture}
-          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['zone']), 'htmlFor' => og_tpl('{0}-zone', [$v_id])], 'children' => $c_3])|noescape}
+          {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_labels, ['zone']), 'htmlFor' => og_tpl('{0}-zone', [$v_id])], 'children' => og_markup($c_3)])|noescape}
           {capture $c_13}
             {capture $c_6}
               {capture $c_4}
@@ -86,4 +86,4 @@
     {=og_include('compose/Box.latte', ['class' => 'grid grid-cols-1 items-start gap-8 lg:grid-cols-3', 'children' => (string) $c_18])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_19])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'lead' => $v_lead, 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_19)])|noescape}

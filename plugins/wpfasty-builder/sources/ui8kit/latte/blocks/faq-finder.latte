@@ -29,7 +29,7 @@
             {capture $c_4}
               {=og_text(og_get($v_q, ['question']))}
             {/capture}
-            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_q, ['href']), 'className' => og_cnv(['text-sm font-medium']), 'size' => 'sm'], 'children' => $c_4])|noescape}
+            {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_q, ['href']), 'className' => og_cnv(['text-sm font-medium']), 'size' => 'sm'], 'children' => og_markup($c_4)])|noescape}
           {/capture}
           {=og_include('compose/ListItem.latte', ['attrs' => og_attrs(['data-testid', 'faq-popular']), 'children' => (string) $c_5])|noescape}
         {/if}

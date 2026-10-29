@@ -61,4 +61,4 @@
     {{ include('compose/Box.html.twig', {'class': og_s(og_cnv(['grid grid-cols-1 gap-4', (og_t(og_eq(v_layout, 'stacked')) ? 'md:grid-cols-3' : '')])), 'attrs': og_attrs(['data-testid', 'values']), 'children': c_9}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'tone': v_tone, 'density': v_density, 'layout': (og_t(og_eq(v_layout, 'split')) ? 'split' : 'stack'), 'media': {'show': true, 'side': 'start'}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_10)}, 'children': c_12}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'tone': v_tone, 'density': v_density, 'layout': (og_t(og_eq(v_layout, 'split')) ? 'split' : 'stack'), 'media': {'show': true, 'side': 'start'}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_10)}, 'children': og_markup(c_12)}, with_context = false) }}

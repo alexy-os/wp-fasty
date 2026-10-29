@@ -8,7 +8,7 @@
   {capture $c_2}
     {=og_slot(($p['icon'] ?? null))|noescape}
     {capture $c_1}
-      {=($children ?? '')|noescape}
+      {=og_slot(($children ?? null))|noescape}
     {/capture}
     {=og_include('compose/Inline.latte', ['class' => 'min-w-0 flex-1 truncate in-data-[nav=collapsed]:hidden', 'attrs' => og_attrs(['data-slot', 'nav-item-label']), 'children' => (string) $c_1])|noescape}
   {/capture}

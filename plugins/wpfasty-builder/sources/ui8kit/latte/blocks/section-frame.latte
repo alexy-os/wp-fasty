@@ -31,7 +31,7 @@
           {/if}
           {capture $c_2}
             {=og_include('blocks/section-header.latte', ['p' => ['titleId' => $v_titleId, 'title' => $v_title, 'heading' => $v_heading, 'action' => $v_action, 'lead' => $v_lead, 'center' => $v_center]])|noescape}
-            {=($children ?? '')|noescape}
+            {=og_slot(($children ?? null))|noescape}
           {/capture}
           {=og_include('compose/Stack.latte', ['gap' => '6', 'align' => 'stretch', 'children' => (string) $c_2])|noescape}
           {if og_t(og_and([og_get($v_media, ['show']), !(og_eq(og_get($v_media, ['side']), 'start'))]))}
@@ -45,7 +45,7 @@
       {else}
         {capture $c_6}
           {=og_include('blocks/section-header.latte', ['p' => ['titleId' => $v_titleId, 'title' => $v_title, 'heading' => $v_heading, 'action' => $v_action, 'lead' => $v_lead, 'center' => $v_center]])|noescape}
-          {=($children ?? '')|noescape}
+          {=og_slot(($children ?? null))|noescape}
           {if og_t(og_get($v_media, ['show']))}
             {capture $c_5}
               {=og_slot(($p['aside'] ?? null))|noescape}
@@ -53,10 +53,10 @@
             {=og_include('compose/Box.latte', ['class' => 'w-full', 'attrs' => og_attrs(['data-slot', 'media']), 'children' => (string) $c_5])|noescape}
           {/if}
         {/capture}
-        {=og_include('blocks/section-column.latte', ['p' => ['measure' => $v_measure], 'children' => $c_6])|noescape}
+        {=og_include('blocks/section-column.latte', ['p' => ['measure' => $v_measure], 'children' => og_markup($c_6)])|noescape}
       {/if}
     {/capture}
-    {=og_include('blocks/section-box.latte', ['p' => ['boxed' => $v_boxed], 'children' => $c_7])|noescape}
+    {=og_include('blocks/section-box.latte', ['p' => ['boxed' => $v_boxed], 'children' => og_markup($c_7)])|noescape}
   {/capture}
   {=og_include('compose/Container.latte', ['class' => og_s((og_t(og_eq($v_measure, 'landing')) ? og_cnv(['mx-auto w-full px-4', og_preset('blocks/presets/defaults.json', ['section', 'landing'])]) : (og_t(og_eq($v_measure, 'fill')) ? 'w-full' : 'mx-auto w-full max-w-6xl px-4'))), 'attrs' => og_attrs(['data-slot', 'container']), 'children' => (string) $c_8])|noescape}
 {/capture}

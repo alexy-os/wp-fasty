@@ -36,7 +36,7 @@
               {%- set c_4 -%}
                 {{ og_text(v_open) }}
               {%- endset -%}
-              {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_c, ['href']), 'className': og_cnv(['font-semibold']), 'testid': 'open'}, 'children': c_4}, with_context = false) }}
+              {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_c, ['href']), 'className': og_cnv(['font-semibold']), 'testid': 'open'}, 'children': og_markup(c_4)}, with_context = false) }}
             {%- endif %}
           {%- endset -%}
           {{ include('compose/CardContent.html.twig', {'class': og_s(og_cnv(['flex flex-1 gap-4', (og_t(og_eq(v_layout, 'list')) ? 'items-center' : 'flex-col')])), 'children': c_5}, with_context = false) }}
@@ -47,4 +47,4 @@
     {{ include('compose/Grid.html.twig', {'cols': og_s((og_t(og_eq(v_layout, 'list')) ? '1' : v_cols)), 'class': 'gap-4', 'attrs': og_attrs(['data-testid', 'items']), 'children': c_7}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': c_8}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_8)}, with_context = false) }}

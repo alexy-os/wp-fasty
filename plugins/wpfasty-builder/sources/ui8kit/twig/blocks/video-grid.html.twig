@@ -55,10 +55,10 @@
             {{ include('compose/Text.html.twig', {'tag': 'figcaption', 'attrs': og_attrs(['data-testid', 'caption']), 'children': c_8}, with_context = false) }}
           {%- endif %}
         {%- endset -%}
-        {{ include('blocks/figure-block.html.twig', {'p': {'className': og_cnv(['m-0 flex flex-col gap-4']), 'testid': 'item'}, 'children': c_9}, with_context = false) }}
+        {{ include('blocks/figure-block.html.twig', {'p': {'className': og_cnv(['m-0 flex flex-col gap-4']), 'testid': 'item'}, 'children': og_markup(c_9)}, with_context = false) }}
       {%- endfor %}
     {%- endset -%}
     {{ include('compose/Grid.html.twig', {'cols': og_s(v_cols), 'class': 'gap-4', 'attrs': og_attrs(['data-testid', 'items']), 'children': c_10}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': c_11}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_11)}, with_context = false) }}

@@ -54,4 +54,4 @@
     {{ include('blocks/project-tiles.html.twig', {'p': {'projects': v_projects, 'labels': v_labels, 'layout': v_layout}}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'tone': v_tone, 'density': v_density, 'layout': (og_t(og_eq(v_layout, 'list')) ? 'split' : 'stack'), 'media': {'show': og_eq(v_layout, 'list'), 'align': 'start'}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_8)}, 'children': c_10}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_lead, 'tone': v_tone, 'density': v_density, 'layout': (og_t(og_eq(v_layout, 'list')) ? 'split' : 'stack'), 'media': {'show': og_eq(v_layout, 'list'), 'align': 'start'}, 'landmarkLabel': v_landmarkLabel, 'aside': og_markup(f_8)}, 'children': og_markup(c_10)}, with_context = false) }}

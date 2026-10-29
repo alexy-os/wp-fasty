@@ -30,7 +30,7 @@
         {{ include('compose/Stack.html.twig', {'gap': '0', 'class': 'min-w-0 flex-1', 'children': c_5}, with_context = false) }}
         {{ include('icons/LucideIcon.html.twig', {'name': 'arrow-right', 'size': 16}, with_context = false) }}
       {%- endset -%}
-      {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_c, ['href']), 'className': og_cnv(['rounded bg-card inset-ring inset-ring-border flex w-full items-center gap-4 p-4']), 'variant': 'block', 'testid': 'media-topic', 'block': true}, 'children': c_6}, with_context = false) }}
+      {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_c, ['href']), 'className': og_cnv(['rounded bg-card inset-ring inset-ring-border flex w-full items-center gap-4 p-4']), 'variant': 'block', 'testid': 'media-topic', 'block': true}, 'children': og_markup(c_6)}, with_context = false) }}
     {%- endif %}
   {%- endfor %}
 {%- endset -%}

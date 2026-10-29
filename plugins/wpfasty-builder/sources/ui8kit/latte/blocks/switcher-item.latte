@@ -6,6 +6,6 @@
 {var $v_size = ($p['size'] ?? 'default')}
 {var $v_layout = ($p['layout'] ?? 'text')}
 {capture $c_1}
-  {=($children ?? '')|noescape}
+  {=og_slot(($children ?? null))|noescape}
 {/capture}
 {=og_include('compose/ButtonPlain.latte', ['type' => 'button', 'class' => og_s(og_cnv([og_recipe('blocks/recipes/switcher-item.variants.json', ['size' => $v_size, 'layout' => $v_layout, 'state' => (og_t($v_active) ? 'active' : 'default')]), ($p['className'] ?? '')])), 'attrs' => og_attrs(['role', 'tab', 'aria-selected', $v_active, 'tabindex', (og_t($v_active) ? 0 : -1), 'data-slot', 'switcher-item', 'data-state', (og_t($v_active) ? 'active' : 'default')]), 'children' => (string) $c_1])|noescape}

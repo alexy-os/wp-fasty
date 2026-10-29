@@ -18,7 +18,7 @@
           {capture $c_2}
             {=og_text(og_get($v_p, ['title']))}
           {/capture}
-          {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_p, ['href']), 'className' => og_cnv(['text-sm font-medium']), 'size' => 'sm'], 'children' => $c_2])|noescape}
+          {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_p, ['href']), 'className' => og_cnv(['text-sm font-medium']), 'size' => 'sm'], 'children' => og_markup($c_2)])|noescape}
           {capture $c_3}
             {=og_text(og_tpl('{0} · {1}', [og_get($v_p, ['date']), og_tpl(og_get($v_labels, ['minutes']), [og_get($v_p, ['minutes'])])]))}
           {/capture}

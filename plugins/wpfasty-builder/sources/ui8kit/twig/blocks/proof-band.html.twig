@@ -50,4 +50,4 @@
     {{ include('compose/Grid.html.twig', {'cols': og_s((og_t(og_eq(v_layout, 'beside')) ? '1-2' : '1')), 'class': 'items-center gap-8', 'children': c_8}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'align': 'center', 'landmarkLabel': v_landmarkLabel}, 'children': c_9}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'align': 'center', 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_9)}, with_context = false) }}

@@ -53,11 +53,11 @@
             {capture $c_7}
               {=og_include('compose/Input.latte', ['type' => 'text', 'name' => og_s(og_tpl('{0}-a', [$v_id])), 'attrs' => og_attrs(['id', og_tpl('{0}-a', [$v_id]), 'data-testid', 'field'])])|noescape}
             {/capture}
-            {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_s, ['fieldA']), 'htmlFor' => og_tpl('{0}-a', [$v_id])], 'children' => $c_7])|noescape}
+            {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_s, ['fieldA']), 'htmlFor' => og_tpl('{0}-a', [$v_id])], 'children' => og_markup($c_7)])|noescape}
             {capture $c_8}
               {=og_include('compose/Input.latte', ['type' => 'text', 'name' => og_s(og_tpl('{0}-b', [$v_id])), 'attrs' => og_attrs(['id', og_tpl('{0}-b', [$v_id]), 'data-testid', 'field'])])|noescape}
             {/capture}
-            {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_s, ['fieldB']), 'htmlFor' => og_tpl('{0}-b', [$v_id])], 'children' => $c_8])|noescape}
+            {=og_include('blocks/field.latte', ['p' => ['label' => og_get($v_s, ['fieldB']), 'htmlFor' => og_tpl('{0}-b', [$v_id])], 'children' => og_markup($c_8)])|noescape}
           {/capture}
           {=og_include('compose/Box.latte', ['class' => 'grid gap-4', 'children' => (string) $c_9])|noescape}
         {/capture}

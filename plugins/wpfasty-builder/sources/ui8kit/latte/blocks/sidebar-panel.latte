@@ -5,6 +5,6 @@
 {var $v_variant = ($p['variant'] ?? null)}
 {var $v_landmarkLabel = ($p['landmarkLabel'] ?? null)}
 {capture $c_1}
-  {=($children ?? '')|noescape}
+  {=og_slot(($children ?? null))|noescape}
 {/capture}
 {=og_include('compose/Block.latte', ['tag' => 'aside', 'class' => og_s(og_cnv([og_recipe('blocks/recipes/sidebar-panel.variants.json', ['variant' => $v_variant]), ($p['className'] ?? '')])), 'attrs' => og_attrs(['data-slot', 'sidebar-panel', 'data-variant', og_coalesce([$v_variant, 'chat']), 'aria-label', $v_landmarkLabel]), 'children' => (string) $c_1])|noescape}

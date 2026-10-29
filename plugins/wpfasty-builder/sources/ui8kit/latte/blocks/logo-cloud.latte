@@ -16,7 +16,7 @@
   {capture $c_1}
     {=og_include('blocks/empty-state.latte', ['p' => ['icon' => 'building-2', 'title' => $v_empty]])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'align' => 'center', 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_1])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'align' => 'center', 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_1)])|noescape}
 {elseif og_t(og_eq($v_layout, 'row'))}
   {=og_include('blocks/logo-ribbon.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'logos' => $v_logos, 'tone' => $v_tone, 'density' => $v_density, 'landmarkLabel' => $v_landmarkLabel]])|noescape}
 {else}
@@ -35,5 +35,5 @@
     {/capture}
     {=og_include('compose/Grid.latte', ['cols' => og_s((og_t(og_eq($v_cols, '2')) ? '2' : (og_t(og_eq($v_cols, '3')) ? '2-3' : (og_t(og_eq($v_cols, '4')) ? '2-4' : '3-6')))), 'class' => 'gap-4', 'attrs' => og_attrs(['data-testid', 'items']), 'children' => (string) $c_4])|noescape}
   {/capture}
-  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'align' => 'center', 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_5])|noescape}
+  {=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'density' => $v_density, 'align' => 'center', 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_5)])|noescape}
 {/if}

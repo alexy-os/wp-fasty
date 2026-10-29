@@ -35,4 +35,4 @@
     {{ include('compose/Grid.html.twig', {'cols': og_s((og_t(og_eq(v_layout, 'grid')) ? v_cols : '1')), 'class': 'gap-4', 'attrs': og_attrs(['data-testid', 'items']), 'children': c_2}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'align': (og_t(og_eq(v_layout, 'single')) ? 'center' : 'start'), 'measure': (og_t(og_eq(v_layout, 'grid')) ? 'default' : '2xl'), 'landmarkLabel': v_landmarkLabel}, 'children': c_3}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'tone': v_tone, 'density': v_density, 'align': (og_t(og_eq(v_layout, 'single')) ? 'center' : 'start'), 'measure': (og_t(og_eq(v_layout, 'grid')) ? 'default' : '2xl'), 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_3)}, with_context = false) }}

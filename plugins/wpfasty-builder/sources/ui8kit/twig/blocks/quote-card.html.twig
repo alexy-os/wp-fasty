@@ -63,4 +63,4 @@
     {{ include('compose/Group.html.twig', {'gap': '4', 'align': 'center', 'children': c_11}, with_context = false) }}
   {%- endif %}
 {%- endset -%}
-{{ include('blocks/figure-block.html.twig', {'p': {'className': og_cnv([og_cnv(['m-0 flex flex-col gap-4', (og_t(og_eq(og_get(v_item, ['kind']), 'plain')) ? '' : 'rounded p-6 inset-ring inset-ring-border bg-card'), (og_t(og_eq(v_layout, 'masonry')) ? 'mb-4 break-inside-avoid' : (og_t(og_eq(v_layout, 'strip')) ? 'w-80 shrink-0 snap-start' : 'h-full'))])]), 'testid': 'item'}, 'children': c_12}, with_context = false) }}
+{{ include('blocks/figure-block.html.twig', {'p': {'className': og_cnv([og_cnv(['m-0 flex flex-col gap-4', (og_t(og_eq(og_get(v_item, ['kind']), 'plain')) ? '' : 'rounded p-6 inset-ring inset-ring-border bg-card'), (og_t(og_eq(v_layout, 'masonry')) ? 'mb-4 break-inside-avoid' : (og_t(og_eq(v_layout, 'strip')) ? 'w-80 shrink-0 snap-start' : 'h-full'))])]), 'testid': 'item'}, 'children': og_markup(c_12)}, with_context = false) }}

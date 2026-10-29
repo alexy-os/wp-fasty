@@ -72,4 +72,4 @@
   {/capture}
   {=og_include('compose/Box.latte', ['class' => og_s((og_t(og_eq($v_layout, 'split')) ? 'grid grid-cols-1 items-start gap-8 lg:grid-cols-3' : 'grid grid-cols-1 gap-8')), 'children' => (string) $c_13])|noescape}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_14])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'tone' => $v_tone, 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_14)])|noescape}

@@ -77,4 +77,4 @@
     {=og_include('compose/Stack.latte', ['gap' => '6', 'align' => 'stretch', 'attrs' => og_attrs(['data-testid', 'stepper']), 'children' => (string) $c_13])|noescape}
   {/if}
 {/capture}
-{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'measure' => '3xl', 'landmarkLabel' => $v_landmarkLabel], 'children' => $c_14])|noescape}
+{=og_include('blocks/section-frame.latte', ['p' => ['id' => $v_id, 'title' => $v_title, 'measure' => '3xl', 'landmarkLabel' => $v_landmarkLabel], 'children' => og_markup($c_14)])|noescape}

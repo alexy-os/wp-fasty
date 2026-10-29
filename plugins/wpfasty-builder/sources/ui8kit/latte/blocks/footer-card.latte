@@ -35,7 +35,7 @@
                       {capture $c_5}
                         {=og_text(og_get($v_item, ['name']))}
                       {/capture}
-                      {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_item, ['href']), 'className' => og_cnv(['text-xs leading-5 text-muted-foreground'])], 'children' => $c_5])|noescape}
+                      {=og_include('blocks/menu-entry.latte', ['p' => ['href' => og_get($v_item, ['href']), 'className' => og_cnv(['text-xs leading-5 text-muted-foreground'])], 'children' => og_markup($c_5)])|noescape}
                     {/capture}
                     {=og_include('compose/ListItem.latte', ['children' => (string) $c_6])|noescape}
                   {/foreach}
@@ -47,7 +47,7 @@
           {/capture}
           {=og_include('compose/Group.latte', ['gap' => '0', 'align' => 'start', 'class' => og_s(og_cnv(['flex w-full flex-nowrap justify-between', og_preset('blocks/presets/defaults.json', ['footer', 'groups'])])), 'attrs' => og_attrs(['data-testid', 'footer-groups']), 'children' => (string) $c_9])|noescape}
         {/capture}
-        {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [$v_label, $v_landmarkLabel])) : $v_label), 'className' => og_cnv(['min-w-0 flex-1'])], 'children' => $c_10])|noescape}
+        {=og_include('blocks/nav-block.latte', ['p' => ['label' => (og_t($v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [$v_label, $v_landmarkLabel])) : $v_label), 'className' => og_cnv(['min-w-0 flex-1'])], 'children' => og_markup($c_10)])|noescape}
       {/if}
     {/capture}
     {=og_include('compose/Box.latte', ['class' => og_s(og_cnv(['flex w-full flex-row items-start overflow-hidden bg-muted p-10', og_preset('blocks/presets/defaults.json', ['footer', 'card'])])), 'attrs' => og_attrs(['data-testid', 'footer-card']), 'children' => (string) $c_11])|noescape}

@@ -23,7 +23,7 @@
   {%- set c_2 -%}
     {{ og_text(v_brand) }}
   {%- endset -%}
-  {{ include('blocks/menu-entry.html.twig', {'p': {'href': v_brandHref, 'className': og_cnv([og_cnv([og_preset('blocks/presets/defaults.json', ['text', 'small']), 'font-medium leading-6 text-background'])]), 'testid': 'brand'}, 'children': c_2}, with_context = false) }}
+  {{ include('blocks/menu-entry.html.twig', {'p': {'href': v_brandHref, 'className': og_cnv([og_cnv([og_preset('blocks/presets/defaults.json', ['text', 'small']), 'font-medium leading-6 text-background'])]), 'testid': 'brand'}, 'children': og_markup(c_2)}, with_context = false) }}
   {%- if og_t(og_and([v_links, og_gt(og_len(v_links), 0)])) %}
     {%- set c_6 -%}
       {%- set c_5 -%}
@@ -43,7 +43,7 @@
       {%- endset -%}
       {{ include('compose/Group.html.twig', {'gap': '8', 'align': 'center', 'class': 'flex-wrap', 'children': c_5}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [v_navLabel, v_landmarkLabel])) : v_navLabel), 'testid': 'site-nav'}, 'children': c_6}, with_context = false) }}
+    {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [v_navLabel, v_landmarkLabel])) : v_navLabel), 'testid': 'site-nav'}, 'children': og_markup(c_6)}, with_context = false) }}
   {%- endif %}
   {%- set c_9 -%}
     {%- if og_t(v_login) %}

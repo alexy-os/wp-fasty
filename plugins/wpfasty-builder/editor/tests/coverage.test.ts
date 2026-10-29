@@ -66,7 +66,7 @@ for (const runtime of ["latte", "twig"]) {
     const uses = usesOf(cat);
 
     test("the sources are all there", () => {
-      expect(uses.filter((u) => u.where === "card").length).toBe(481);
+      expect(uses.filter((u) => u.where === "card").length).toBe(482);
       expect(new Set(uses.filter((u) => u.where.startsWith("template page")).map((u) => u.where)).size).toBe(63);
       expect(uses.filter((u) => u.where.startsWith("starter")).length).toBeGreaterThan(0);
       expect(uses.filter((u) => u.where.startsWith("landing")).length).toBeGreaterThan(0);

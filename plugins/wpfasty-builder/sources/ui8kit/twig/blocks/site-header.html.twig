@@ -20,21 +20,21 @@
     {%- set c_2 -%}
       {{ og_text(og_get(v_labels, ['brand'])) }}
     {%- endset -%}
-    {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_routes, ['home']), 'className': og_cnv(['text-lg font-medium']), 'testid': 'brand'}, 'children': c_2}, with_context = false) }}
+    {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_routes, ['home']), 'className': og_cnv(['text-lg font-medium']), 'testid': 'brand'}, 'children': og_markup(c_2)}, with_context = false) }}
     {%- set c_6 -%}
       {%- set c_5 -%}
         {%- set c_3 -%}
           {{ og_text(og_get(v_labels, ['home'])) }}
         {%- endset -%}
-        {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_routes, ['home']), 'className': og_cnv(['font-semibold']), 'current': og_eq(v_current, 'home'), 'testid': 'nav-link'}, 'children': c_3}, with_context = false) }}
+        {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_routes, ['home']), 'className': og_cnv(['font-semibold']), 'current': og_eq(v_current, 'home'), 'testid': 'nav-link'}, 'children': og_markup(c_3)}, with_context = false) }}
         {%- set c_4 -%}
           {{ og_text(og_get(v_labels, ['pricing'])) }}
         {%- endset -%}
-        {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_routes, ['pricing']), 'className': og_cnv(['font-semibold']), 'current': og_eq(v_current, 'pricing'), 'testid': 'nav-link'}, 'children': c_4}, with_context = false) }}
+        {{ include('blocks/menu-entry.html.twig', {'p': {'href': og_get(v_routes, ['pricing']), 'className': og_cnv(['font-semibold']), 'current': og_eq(v_current, 'pricing'), 'testid': 'nav-link'}, 'children': og_markup(c_4)}, with_context = false) }}
       {%- endset -%}
       {{ include('compose/Group.html.twig', {'gap': '4', 'align': 'center', 'children': c_5}, with_context = false) }}
     {%- endset -%}
-    {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get(v_labels, ['nav']), v_landmarkLabel])) : og_get(v_labels, ['nav'])), 'testid': 'site-nav'}, 'children': c_6}, with_context = false) }}
+    {{ include('blocks/nav-block.html.twig', {'p': {'label': (og_t(v_landmarkLabel) ? og_uniq(og_tpl('{0}, {1}', [og_get(v_labels, ['nav']), v_landmarkLabel])) : og_get(v_labels, ['nav'])), 'testid': 'site-nav'}, 'children': og_markup(c_6)}, with_context = false) }}
     {%- set c_9 -%}
       {%- set c_7 -%}
         {{ og_text(og_get(v_labels, ['theme'])) }}

@@ -21,22 +21,22 @@
         {%- set c_1 -%}
           {{ include('compose/Input.html.twig', {'type': 'text', 'name': 'name', 'attrs': og_attrs(['autocomplete', 'name', 'id', og_tpl('{0}-name', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['name']), 'htmlFor': og_tpl('{0}-name', [v_id])}, 'children': c_1}, with_context = false) }}
+        {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['name']), 'htmlFor': og_tpl('{0}-name', [v_id])}, 'children': og_markup(c_1)}, with_context = false) }}
       {%- endif %}
       {%- set c_2 -%}
         {{ include('compose/Input.html.twig', {'type': 'email', 'name': 'email', 'attrs': og_attrs(['autocomplete', 'email', 'id', og_tpl('{0}-email', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
       {%- endset -%}
-      {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['email']), 'htmlFor': og_tpl('{0}-email', [v_id])}, 'children': c_2}, with_context = false) }}
+      {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['email']), 'htmlFor': og_tpl('{0}-email', [v_id])}, 'children': og_markup(c_2)}, with_context = false) }}
       {%- if og_t(og_eq(v_fields, 'full')) %}
         {%- set c_3 -%}
           {{ include('compose/Input.html.twig', {'type': 'text', 'name': 'subject', 'attrs': og_attrs(['id', og_tpl('{0}-subject', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
         {%- endset -%}
-        {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['subject']), 'htmlFor': og_tpl('{0}-subject', [v_id])}, 'children': c_3}, with_context = false) }}
+        {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['subject']), 'htmlFor': og_tpl('{0}-subject', [v_id])}, 'children': og_markup(c_3)}, with_context = false) }}
       {%- endif %}
       {%- set c_4 -%}
         {{ include('compose/Textarea.html.twig', {'rows': 4, 'name': 'message', 'attrs': og_attrs(['id', og_tpl('{0}-message', [v_id]), 'data-testid', 'field'])}, with_context = false) }}
       {%- endset -%}
-      {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['message']), 'htmlFor': og_tpl('{0}-message', [v_id])}, 'children': c_4}, with_context = false) }}
+      {{ include('blocks/field.html.twig', {'p': {'label': og_get(v_labels, ['message']), 'htmlFor': og_tpl('{0}-message', [v_id])}, 'children': og_markup(c_4)}, with_context = false) }}
       {%- if og_t(og_eq(v_terms, 'show')) %}
         {%- set c_6 -%}
           {{ include('compose/Checkbox.html.twig', {'name': 'consent', 'attrs': og_attrs(['id', og_tpl('{0}-consent', [v_id])])}, with_context = false) }}
@@ -78,4 +78,4 @@
   {%- endset -%}
   {{ include('compose/Grid.html.twig', {'cols': og_s((og_t(og_eq(v_layout, 'split')) ? '1-2' : '1')), 'class': 'items-start gap-8', 'children': c_14}, with_context = false) }}
 {%- endset -%}
-{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_text, 'heading': {'level': v_level}, 'tone': v_tone, 'density': (og_t(og_eq(v_page, 'full')) ? 'roomy' : 'default'), 'align': (og_t(og_eq(v_page, 'full')) ? 'center' : 'start'), 'measure': (og_t(og_eq(v_layout, 'single')) ? 'xl' : 'default'), 'landmarkLabel': v_landmarkLabel}, 'children': c_15}, with_context = false) }}
+{{ include('blocks/section-frame.html.twig', {'p': {'id': v_id, 'title': v_title, 'lead': v_text, 'heading': {'level': v_level}, 'tone': v_tone, 'density': (og_t(og_eq(v_page, 'full')) ? 'roomy' : 'default'), 'align': (og_t(og_eq(v_page, 'full')) ? 'center' : 'start'), 'measure': (og_t(og_eq(v_layout, 'single')) ? 'xl' : 'default'), 'landmarkLabel': v_landmarkLabel}, 'children': og_markup(c_15)}, with_context = false) }}
