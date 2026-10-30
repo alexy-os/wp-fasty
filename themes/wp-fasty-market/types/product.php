@@ -96,12 +96,12 @@ return [
     'columns' => [
         'price' => [
             'label' => __('Price', 'wp-fasty-market'),
-            'value' => static fn (int $id): string => WpfastyMarket\Front::column($id, 'price'),
+            'value' => static fn (int $id): string => WpFastyMarket\Front::column($id, 'price'),
         ],
         'stock' => [
             'label' => __('Stock', 'wp-fasty-market'),
-            'value' => static fn (int $id): string => WpfastyMarket\Front::column($id, 'stock'),
+            'value' => static fn (int $id): string => WpFastyMarket\Front::column($id, 'stock'),
         ],
     ],
-    'context' => [WpfastyMarket\Front::class, 'productViewModel'],
+    'context' => [WpFastyMarket\Front::class, 'productViewModel'],
 ];

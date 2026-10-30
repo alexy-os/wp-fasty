@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-30T16:37:04+00:00\n"
+"POT-Creation-Date: 2026-10-30T17:06:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wp-fasty-market\n"
@@ -136,7 +136,7 @@ msgid "Update cart"
 msgstr ""
 
 #: inc/front.php:380
-#: inc/front.php:540
+#: inc/front.php:546
 msgid "Your cart is empty."
 msgstr ""
 
@@ -319,7 +319,7 @@ msgid "Compatibility"
 msgstr ""
 
 #: inc/front.php:428
-#: inc/front.php:509
+#: inc/front.php:515
 msgid "Rating"
 msgstr ""
 
@@ -352,7 +352,7 @@ msgid "Live preview"
 msgstr ""
 
 #: inc/front.php:436
-#: inc/front.php:513
+#: inc/front.php:519
 msgid "License"
 msgstr ""
 
@@ -554,75 +554,75 @@ msgstr ""
 msgid "This feature is temporarily unavailable. Please try again later."
 msgstr ""
 
-#: inc/front.php:498
+#: inc/front.php:501
 msgid "Back to site"
 msgstr ""
 
-#: inc/front.php:499
+#: inc/front.php:502
 msgid "Downloads"
 msgstr ""
 
-#: inc/front.php:500
+#: inc/front.php:503
 msgid "Download"
 msgstr ""
 
-#: inc/front.php:501
+#: inc/front.php:504
 msgid "Download links appear here and in your email as soon as the payment is confirmed."
 msgstr ""
 
-#: inc/front.php:502
+#: inc/front.php:508
 msgid "Link valid until"
 msgstr ""
 
-#: inc/front.php:503
+#: inc/front.php:509
 msgid "downloads left"
 msgstr ""
 
-#: inc/front.php:504
+#: inc/front.php:510
 msgid "Verified buyer"
 msgstr ""
 
-#: inc/front.php:505
+#: inc/front.php:511
 msgid "Write a review"
 msgstr ""
 
-#: inc/front.php:506
+#: inc/front.php:512
 msgid "Only buyers can review: use the email of your paid order."
 msgstr ""
 
-#: inc/front.php:507
+#: inc/front.php:513
 msgid "Name"
 msgstr ""
 
-#: inc/front.php:508
+#: inc/front.php:514
 msgid "Order email"
 msgstr ""
 
-#: inc/front.php:510
+#: inc/front.php:516
 msgid "Your review"
 msgstr ""
 
-#: inc/front.php:511
+#: inc/front.php:517
 msgid "Send review"
 msgstr ""
 
-#: inc/front.php:512
+#: inc/front.php:518
 msgid "No reviews yet."
 msgstr ""
 
-#: inc/front.php:524
+#: inc/front.php:530
 msgid "Added to your cart."
 msgstr ""
 
-#: inc/front.php:529
+#: inc/front.php:535
 msgid "Item removed."
 msgstr ""
 
-#: inc/front.php:531
+#: inc/front.php:537
 msgid "Cart updated."
 msgstr ""
 
-#: inc/front.php:535
+#: inc/front.php:541
 msgid "Sorry, this item is unavailable."
 msgstr ""
 

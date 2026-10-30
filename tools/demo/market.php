@@ -8,7 +8,7 @@
 require __DIR__ . '/common.php';
 
 wpfasty_demo_cleanup_defaults();
-$front = 'WpfastyMarket\\Front';
+$front = class_exists('WpFastyMarket\\Front') ? 'WpFastyMarket\\Front' : 'WpfastyMarket\\Front';
 update_option('blogname', 'WP FastY');
 update_option('blogdescription', 'Маркетплейс готовых сайтов, тем и плагинов WordPress');
 update_option('wpfasty_currency', 'RUB');

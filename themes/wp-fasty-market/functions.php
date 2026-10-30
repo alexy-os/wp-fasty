@@ -19,7 +19,7 @@ foreach (['fixtures', 'front'] as $file) {
     require_once __DIR__ . "/inc/{$file}.php";
 }
 
-WpfastyMarket\Front::register();
+WpFastyMarket\Front::register();
 
 add_action('after_setup_theme', static function (): void {
     load_child_theme_textdomain('wp-fasty-market', get_stylesheet_directory() . '/languages');

@@ -16,7 +16,7 @@
 
 declare(strict_types=1);
 
-namespace WpfastyMarket;
+namespace WpFastyMarket;
 
 // phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only display params.
 
@@ -494,11 +494,17 @@ final class Front
             'next' => __('Next', 'wp-fasty-market'),
             'pagination' => __('Pagination', 'wp-fasty-market'),
             'unavailable_title' => __('Temporarily unavailable', 'wp-fasty-market'),
-            'unavailable_text' => __('This feature is temporarily unavailable. Please try again later.', 'wp-fasty-market'),
+            'unavailable_text' => __(
+                'This feature is temporarily unavailable. Please try again later.',
+                'wp-fasty-market'
+            ),
             'back_to_site' => __('Back to site', 'wp-fasty-market'),
             'downloads' => __('Downloads', 'wp-fasty-market'),
             'download' => __('Download', 'wp-fasty-market'),
-            'downloads_pending' => __('Download links appear here and in your email as soon as the payment is confirmed.', 'wp-fasty-market'),
+            'downloads_pending' => __(
+                'Download links appear here and in your email as soon as the payment is confirmed.',
+                'wp-fasty-market'
+            ),
             'link_expires' => __('Link valid until', 'wp-fasty-market'),
             'downloads_left' => __('downloads left', 'wp-fasty-market'),
             'verified_buyer' => __('Verified buyer', 'wp-fasty-market'),

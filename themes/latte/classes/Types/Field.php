@@ -20,7 +20,13 @@ final class Field
      * Digital-goods kinds owned by the ModulY `types` module (≥ 0.2). Without it the theme keeps working and stores
      * them as the nearest basic kind; the module's own Field (aliased to this class while enabled) types them fully.
      */
-    public const MODULE_TYPES = ['enum' => 'string', 'semver' => 'string', 'file' => 'integer', 'user' => 'integer', 'license_tiers' => 'text'];
+    public const MODULE_TYPES = [
+        'enum' => 'string',
+        'semver' => 'string',
+        'file' => 'integer',
+        'user' => 'integer',
+        'license_tiers' => 'text',
+    ];
 
     /** REST schema pattern of a `date` field value. */
     public const DATE_PATTERN = '^\\d{4}-\\d{2}-\\d{2}$';

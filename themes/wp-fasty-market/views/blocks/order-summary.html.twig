@@ -1,0 +1,11 @@
+{# Order totals card. Params: $cart, $labels, $showCheckout (default true) #}
+{% set box %}
+	{% set dl %}
+		{% set row %}{% set a %}{{ labels['subtotal'] }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dt', 'class': 'text-muted-foreground', 'children': a, 'attrs': []} only %}{% set b %}{{ cart['subtotal_display'] }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dd', 'children': b, 'attrs': []} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex justify-between', 'children': row, 'attrs': []} only %}
+		{% set row %}{% set a %}{{ labels['total'] }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dt', 'children': a, 'attrs': []} only %}{% set b %}{{ cart['total_display'] }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dd', 'class': 'font-heading text-2xl', 'children': b, 'attrs': []} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-baseline justify-between border-t border-border pt-4 font-semibold', 'children': row, 'attrs': []} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dl', 'class': 'flex flex-col gap-2 text-sm', 'children': dl, 'attrs': []} only %}
+	{% set note %}{{ icon('mail', 'size-4') }}{{ labels['digital_delivery'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'flex gap-2 rounded-lg bg-muted p-4 text-xs text-muted-foreground', 'children': note, 'attrs': []} only %}
+	{% if showCheckout ?? true %}
+		{% set go %}{{ icon('credit-card') }}{{ labels['checkout'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['checkout_url'] ?? '', 'class': 'inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-primary px-6 text-sm font-semibold text-primary-foreground no-underline hover:bg-primary/90', 'children': go, 'attrs': []} only %}
+	{% endif %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'aside', 'class': 'flex h-fit flex-col gap-4 rounded-xl border border-border bg-card p-6', 'children': box, 'attrs': []} only %}

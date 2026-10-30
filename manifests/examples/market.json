@@ -8,7 +8,7 @@
     "slug": "wp-fasty-market",
     "textDomain": "wp-fasty-market",
     "prefix": "market",
-    "namespace": "WpfastyMarket",
+    "namespace": "WpFastyMarket",
     "description": "WP FastY — marketplace of ready-made WordPress sites, themes and plugins: catalog with filters, item pages with live preview, licenses, changelog and verified reviews, author pages. Presentation only: cart, checkout, orders, downloads and consents come from ModulY modules. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons).",
     "version": "1.0.0",
     "uri": "https://wpfasty.ru",

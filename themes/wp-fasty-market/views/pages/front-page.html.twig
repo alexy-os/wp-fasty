@@ -1,0 +1,76 @@
+{# WP FastY — marketplace home: hero with search, categories, popular, new, authors, trust. #}
+{% include 'blocks/notice.html.twig' %}
+{% set catIcons = {'sites': 'briefcase', 'themes': 'layers', 'plugins': 'package'} %}
+
+{% set hero %}
+	{% set heroInner %}
+		{% set k %}{{ icon('sparkles', 'size-4') }}{{ labels['hero_kicker'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'badge inline-flex w-fit items-center gap-2 rounded-full border border-primary px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary', 'children': k, 'attrs': []} only %}
+		{% set h %}{{ labels['hero_title'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'max-w-4xl font-heading text-4xl font-extrabold leading-none tracking-tighter md:text-6xl', 'children': h, 'attrs': []} only %}
+		{% set p %}{{ labels['hero_text'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'max-w-2xl text-lg text-secondary-foreground/70', 'children': p, 'attrs': []} only %}
+		{% include 'blocks/search-bar.html.twig' %}
+		{% if not ((shop['categories']) is empty) %}
+			{% set tags %}
+				{% set pl %}{{ labels['popular_tags'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-secondary-foreground/70', 'children': pl, 'attrs': []} only %}
+				{% for cat in shop['categories'] %}
+					{% set n %}{{ cat['name'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': cat['url'] ?? '', 'class': 'rounded-full border border-secondary-foreground/20 px-4 py-2 text-secondary-foreground no-underline hover:border-primary hover:text-primary', 'children': n, 'attrs': []} only %}
+				{% endfor %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-wrap items-center gap-2 text-sm', 'children': tags, 'attrs': []} only %}
+		{% endif %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'relative flex flex-col gap-6 overflow-hidden rounded-2xl border border-border bg-secondary px-6 py-12 text-secondary-foreground md:px-16 md:py-20', 'children': heroInner, 'attrs': []} only %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 pt-8 md:px-6', 'children': hero, 'attrs': []} only %}
+
+{% if not ((shop['categories']) is empty) %}
+	{% set cats %}
+		{% set grid %}
+			{% for cat in shop['categories'] %}
+				{% set tile %}
+					{% set ic %}{{ icon(catIcons[cat['slug']] ?? 'folder', 'size-6') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex size-12 items-center justify-center rounded-xl bg-accent text-accent-foreground', 'children': ic, 'attrs': []} only %}
+					{% set tx %}
+						{% set n %}{{ labels['cat_' ~ cat['slug']] ?? cat['name'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'font-heading text-lg font-bold', 'children': n, 'attrs': []} only %}
+						{% set d %}{{ labels['cat_' ~ cat['slug'] ~ '_text'] ?? '' }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-sm text-muted-foreground', 'children': d, 'attrs': []} only %}
+					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-1 flex-col gap-2', 'children': tx, 'attrs': []} only %}
+					{% set ar %}{{ icon('arrow-up-right', 'size-5') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-muted-foreground group-hover:text-primary', 'children': ar, 'attrs': []} only %}
+				{% endset %}{% include 'link/Link.html.twig' with {'href': cat['url'] ?? '', 'class': 'group flex items-start gap-4 rounded-xl border border-border bg-card p-6 text-foreground no-underline transition-colors hover:border-primary', 'children': tile, 'attrs': []} only %}
+			{% endfor %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-4 md:grid-cols-3', 'children': grid, 'attrs': []} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 pt-8 md:px-6', 'children': cats, 'attrs': []} only %}
+{% endif %}
+
+{% include 'blocks/product-grid.html.twig' with {'title': labels['popular'], 'products': popular ?? []} %}
+{% include 'blocks/product-grid.html.twig' with {'title': labels['newest'], 'products': newest ?? []} %}
+
+{% if not ((authors) is empty) %}
+	{% set sec %}
+		{% set head %}
+			{% set h %}{{ labels['authors'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'font-heading text-2xl font-bold tracking-tight md:text-3xl', 'children': h, 'attrs': []} only %}
+			{% set p %}{{ labels['authors_text'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': p, 'attrs': []} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mb-6 flex flex-col gap-2', 'children': head, 'attrs': []} only %}
+		{% set grid %}
+			{% for a in authors %}
+				{% set tile %}
+					{% set av %}{{ ((a['name'])|slice(0, 1)) }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary font-heading text-lg font-bold text-secondary-foreground', 'children': av, 'attrs': {'aria-hidden': 'true'}} only %}
+					{% set tx %}
+						{% set n %}{{ a['name'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'font-semibold text-foreground', 'children': n, 'attrs': []} only %}
+						{% set r %}{{ a['role'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs font-semibold uppercase tracking-wide text-primary', 'children': r, 'attrs': []} only %}
+						{% set s %}{{ a['items'] }} {{ labels['items'] }} · {{ a['sales'] }} {{ labels['sales'] }} · ★ {{ a['rating'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs text-muted-foreground', 'children': s, 'attrs': []} only %}
+					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex min-w-0 flex-col gap-2', 'children': tx, 'attrs': []} only %}
+				{% endset %}{% include 'link/Link.html.twig' with {'href': a['url'] ?? '', 'class': 'flex items-center gap-4 rounded-xl border border-border bg-card p-4 no-underline transition-colors hover:border-primary', 'children': tile, 'attrs': []} only %}
+			{% endfor %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-4 sm:grid-cols-2 lg:grid-cols-4', 'children': grid, 'attrs': []} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 py-12 md:px-6', 'children': sec, 'attrs': []} only %}
+{% endif %}
+
+{% set trust %}
+	{% set panel %}
+		{% set h %}{{ labels['trust_title'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'font-heading text-2xl font-bold tracking-tight md:text-3xl', 'children': h, 'attrs': []} only %}
+		{% set list %}
+			{% for c_row in [['shield-check', 'trust_review'], ['rotate-ccw', 'trust_updates'], ['message-circle', 'trust_support'], ['credit-card', 'trust_pay']] %}{% set ic = c_row[0] %}{% set key = c_row[1] %}
+				{% set li %}
+					{% set i %}{{ icon(ic, 'size-5') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground', 'children': i, 'attrs': []} only %}
+					{% set t %}{{ labels[key] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h3', 'class': 'font-semibold', 'children': t, 'attrs': []} only %}
+					{% set d %}{{ labels[key ~ '_text'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-sm text-muted-foreground', 'children': d, 'attrs': []} only %}
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex flex-col gap-2', 'children': li, 'attrs': []} only %}
+			{% endfor %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'grid gap-8 sm:grid-cols-2 lg:grid-cols-4', 'children': list, 'attrs': []} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-8 rounded-2xl border border-border bg-muted p-8 md:p-12', 'children': panel, 'attrs': []} only %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 pb-8 md:px-6', 'children': trust, 'attrs': []} only %}

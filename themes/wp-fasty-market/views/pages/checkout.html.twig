@@ -1,0 +1,113 @@
+{# WP FastY — checkout for digital goods (no postal address), or order confirmation when ?order&key match. #}
+{% set legal = ((shop['legal'])|reduce((c_acc, c_row) => c_acc|merge({(c_row['slug']): c_row['url']}), {})) %}
+{% set screen %}
+	{% if not ((order) is empty) %}
+		{% set done %}
+			{% set hd %}
+				{% set i %}{{ icon('circle-check', 'size-12') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-primary', 'children': i, 'attrs': []} only %}
+				{% set h %}{{ labels['order_received'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'font-heading text-3xl font-extrabold tracking-tight', 'children': h, 'attrs': []} only %}
+				{% set p %}{{ labels['order_number'] }} #{{ order['id'] }} · {{ order['email'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': p, 'attrs': []} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col items-center gap-4 text-center', 'children': hd, 'attrs': []} only %}
+			{% set list %}
+				{% for item in order['items'] %}
+					{% set li %}{% set a %}{{ item['title'] }}{% if not ((item['tier_label']) is empty) %} — {{ item['tier_label'] }}{% endif %} × {{ item['qty'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': a, 'attrs': []} only %}{% set b %}{{ item['line_display'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'font-semibold', 'children': b, 'attrs': []} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4', 'children': li, 'attrs': []} only %}
+				{% endfor %}
+				{% set li %}{% set a %}{{ labels['total'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': a, 'attrs': []} only %}{% set b %}{{ order['total_display'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': b, 'attrs': []} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4 text-lg font-semibold', 'children': li, 'attrs': []} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', 'children': list, 'attrs': []} only %}
+			{% if (order['downloads'] is defined) %}
+				{% set dl %}
+					{% set dh %}{{ icon('download', 'size-5 text-primary') }}{{ labels['downloads'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'flex items-center gap-2 font-heading text-lg font-bold', 'children': dh, 'attrs': []} only %}
+					{% if ((order['downloads']) is empty) %}
+						{% set dp %}{{ labels['downloads_pending'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-sm text-muted-foreground', 'children': dp, 'attrs': {'role': 'status'}} only %}
+					{% else %}
+						{% set dli %}
+							{% for file in order['downloads'] %}
+								{% set row %}
+									{% set ft %}
+										{% set fn %}{{ file['title'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'font-medium', 'children': fn, 'attrs': []} only %}
+										{% set fm %}{{ labels['link_expires'] }}: {{ file['expires'] }} · {{ file['remaining'] }} {{ labels['downloads_left'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs text-muted-foreground', 'children': fm, 'attrs': []} only %}
+									{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex min-w-0 flex-col gap-2', 'children': ft, 'attrs': []} only %}
+									{% set db %}{{ icon('download', 'size-4') }}{{ labels['download'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': file['url'], 'class': kit('button', [], 'shrink-0 gap-2 rounded-lg no-underline'), 'children': db, 'attrs': {'rel': 'nofollow'}} only %}
+								{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex flex-wrap items-center justify-between gap-4 p-4', 'children': row, 'attrs': []} only %}
+							{% endfor %}
+						{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col divide-y divide-border rounded-xl border border-border', 'children': dli, 'attrs': []} only %}
+					{% endif %}
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', 'children': dl, 'attrs': {'id': 'downloads'}} only %}
+			{% endif %}
+			{% set back %}{{ labels['continue_shopping'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': 'mx-auto inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': back, 'attrs': []} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mx-auto flex max-w-2xl flex-col gap-6', 'children': done, 'attrs': []} only %}
+	{% elseif ((shop['checkout_available']) is empty) %}
+		{% include 'blocks/unavailable.html.twig' %}
+	{% elseif ((cart['items']) is empty) %}
+		{% set empty %}
+			{% set p %}{{ labels['empty_cart'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': p, 'attrs': []} only %}
+			{% set a %}{{ labels['continue_shopping'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': 'inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': a, 'attrs': []} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center', 'children': empty, 'attrs': []} only %}
+	{% else %}
+		{% set h %}{{ labels['checkout'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'mb-8 font-heading text-3xl font-extrabold tracking-tight', 'children': h, 'attrs': []} only %}
+		{% if not ((checkout['errors']) is empty) %}
+			{% set err %}{% set e %}{{ icon('x') }}{{ labels['required'] }}: {{ ((checkout['errors'])|join(', ')) }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex items-center gap-2', 'children': e, 'attrs': []} only %}{% endset %}
+			{% set al %}{% include 'alert/Alert.html.twig' with {'variant': 'destructive', 'role': 'alert', 'class': 'px-4 py-2', 'children': err} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mb-6', 'children': al, 'attrs': []} only %}
+		{% endif %}
+		{% set v = checkout['values'] %}
+		{% set form %}
+			{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': 'latte_shop_checkout'}} only %}
+			{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop['checkout_nonce'])}} only %}
+			{% set left %}
+				{% set details %}
+					{% set st %}{% set n %}1{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex size-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground', 'children': n, 'attrs': []} only %}{{ labels['your_details'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'flex items-center gap-4 font-heading text-lg font-bold', 'children': st, 'attrs': []} only %}
+					{% set fields %}
+						{% for c_row in checkout['fields'] %}{% set field = c_row[0] %}{% set label = c_row[1] %}{% set type = c_row[2] %}{% set ac = c_row[3] %}{% set req = c_row[4] %}
+							{% set fld %}
+								{% set lbl %}{{ label }}{% if req %} *{% endif %}{% endset %}
+								{% include 'label/Label.html.twig' with {'htmlFor': 'co-' ~ field, 'class': kit('label', []), 'children': lbl} only %}
+								{% include 'input/Input.html.twig' with {'id': 'co-' ~ field, 'type': type, 'name': field, 'value': (v[field] ?? ''), 'required': req, 'class': kit('input', [], ((field) in (checkout['errors'])) ? 'rounded-lg border-destructive' : 'rounded-lg'), 'attrs': {'autocomplete': ac ? : null}} only %}
+							{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': (field == 'name' ? 'flex flex-col gap-2 md:col-span-2' : 'flex flex-col gap-2'), 'children': fld, 'attrs': []} only %}
+						{% endfor %}
+					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-4 md:grid-cols-2', 'children': fields, 'attrs': []} only %}
+					{% set dn %}{{ icon('mail', 'size-4') }}{{ labels['digital_delivery'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'flex gap-2 text-xs text-muted-foreground', 'children': dn, 'attrs': []} only %}
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-6 rounded-xl border border-border bg-card p-6', 'children': details, 'attrs': []} only %}
+
+				{% set pay %}
+					{% set st %}{% set n %}2{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex size-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground', 'children': n, 'attrs': []} only %}{{ labels['payment'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'legend', 'class': 'mb-4 flex items-center gap-4 font-heading text-lg font-bold', 'children': st, 'attrs': []} only %}
+					{% set opts %}
+						{% for pm in checkout['payments'] %}
+							{% set opt %}
+								{% include 'radio/Radio.html.twig' with {'name': 'payment', 'value': pm['id'], 'checked': (v['payment'] ?? 'card') == pm['id'], 'class': 'size-4 accent-primary'} only %}
+								{% set i %}{{ icon(pm['icon'], 'size-5') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-primary', 'children': i, 'attrs': []} only %}
+								{% set l %}{{ pm['label'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm font-medium', 'children': l, 'attrs': []} only %}
+							{% endset %}{% include 'label/Label.html.twig' with {'class': 'flex cursor-pointer items-center gap-4 rounded-lg border border-border p-4 hover:border-primary', 'children': opt} only %}
+						{% endfor %}
+					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-4 md:grid-cols-3', 'children': opts, 'attrs': []} only %}
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'fieldset', 'class': 'flex flex-col rounded-xl border border-border bg-card p-6', 'children': pay, 'attrs': []} only %}
+
+				{% if not ((checkout['consents']) is empty) %}
+				{% set consentDocs = {'consent_offer': ['oferta'], 'consent_pd': ['consent', 'privacy'], 'consent_news': ['newsletter-consent']} %}
+				{% set consents %}
+					{% for cn in checkout['consents'] %}
+						{% set key = cn['name'] %}
+						{% set docs = consentDocs[key] ?? [] %}
+						{% set req = cn['required'] %}
+						{% set row %}
+							{% include 'checkbox/Checkbox.html.twig' with {'id': 'co-' ~ key, 'name': key, 'value': '1', 'required': req, 'class': 'mt-2 size-4 shrink-0 accent-primary'} only %}
+							{% set tx %}{{ labels[key] ?? key }}{% for doc in docs %}{% if loop.first %} ({% else %}, {% endif %}<a class="text-primary underline underline-offset-4" href="{{ (legal[doc] ?? '')|safe_url }}" target="_blank" rel="noopener">{{ labels['legal_' ~ doc] }}</a>{% if loop.last %}){% endif %}{% endfor %}{% if req %} *{% endif %}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': ('text-sm' ~ (((key) in (checkout['errors'])) ? ' text-destructive' : '')), 'children': tx, 'attrs': []} only %}
+						{% endset %}{% include 'label/Label.html.twig' with {'htmlFor': 'co-' ~ key, 'class': 'flex cursor-pointer items-start gap-2', 'children': row} only %}
+					{% endfor %}
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', 'children': consents, 'attrs': []} only %}
+				{% endif %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-6 lg:col-span-2', 'children': left, 'attrs': []} only %}
+
+			{% set right %}
+				{% set items %}
+					{% for item in cart['items'] %}
+						{% set li %}{% set a %}{{ item['title'] }}{% if not ((item['tier_label']) is empty) %} — {{ item['tier_label'] }}{% endif %} × {{ item['qty'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': a, 'attrs': []} only %}{% set b %}{{ item['line_display'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'font-semibold', 'children': b, 'attrs': []} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4', 'children': li, 'attrs': []} only %}
+					{% endfor %}
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm', 'children': items, 'attrs': []} only %}
+				{% include 'blocks/order-summary.html.twig' with {'cart': cart, 'labels': labels, 'showCheckout': false} %}
+				{% set place %}{{ icon('shield-check', 'size-4') }}{{ labels['place_order'] }}{% endset %}
+				{% include 'button/Button.html.twig' with {'type': 'submit', 'class': kit('button', {'size': 'lg'}, 'w-full rounded-lg font-semibold'), 'children': place} only %}
+				{% set n %}{{ labels['refund_note'] }} {{ labels['demo_notice'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-xs text-muted-foreground', 'children': n, 'attrs': []} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-4', 'children': right, 'attrs': []} only %}
+		{% endset %}{% include 'form/Form.html.twig' with {'action': shop['action'] ?? '', 'class': 'grid gap-8 lg:grid-cols-3', 'children': form, 'attrs': {'method': 'post'}} only %}
+	{% endif %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 py-12 md:px-6', 'children': screen, 'attrs': []} only %}

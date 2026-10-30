@@ -494,11 +494,17 @@ final class Front
             'next' => __('Next', 'wpfasty-market'),
             'pagination' => __('Pagination', 'wpfasty-market'),
             'unavailable_title' => __('Temporarily unavailable', 'wpfasty-market'),
-            'unavailable_text' => __('This feature is temporarily unavailable. Please try again later.', 'wpfasty-market'),
+            'unavailable_text' => __(
+                'This feature is temporarily unavailable. Please try again later.',
+                'wpfasty-market'
+            ),
             'back_to_site' => __('Back to site', 'wpfasty-market'),
             'downloads' => __('Downloads', 'wpfasty-market'),
             'download' => __('Download', 'wpfasty-market'),
-            'downloads_pending' => __('Download links appear here and in your email as soon as the payment is confirmed.', 'wpfasty-market'),
+            'downloads_pending' => __(
+                'Download links appear here and in your email as soon as the payment is confirmed.',
+                'wpfasty-market'
+            ),
             'link_expires' => __('Link valid until', 'wpfasty-market'),
             'downloads_left' => __('downloads left', 'wpfasty-market'),
             'verified_buyer' => __('Verified buyer', 'wpfasty-market'),
