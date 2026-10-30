@@ -38,6 +38,7 @@ has-[:checked]:bg-accent
 has-[:checked]:border-primary
 hidden
 hover:border-primary
+hover:text-foreground
 hover:underline
 https:
 inline-flex

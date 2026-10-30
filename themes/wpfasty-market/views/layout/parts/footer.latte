@@ -18,6 +18,7 @@
 			{foreach $legal_menu as $doc}
 				{capture $l}{capture $n}{$doc['title']}{/capture}{include 'link/Link.latte', href: $doc['url'], class: 'text-sm text-muted-foreground no-underline hover:text-foreground', children: (string) $n, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $l, attrs: []}
 			{/foreach}
+			{include 'blocks/slot.latte', name: 'footer.links'}
 		{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2', children: (string) $list, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'flex flex-col gap-4', children: (string) $docs, attrs: ['aria-label' => ($labels['footer_docs'])]}
 	{capture $seller}

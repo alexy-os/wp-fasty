@@ -19,6 +19,7 @@
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-6 md:grid-cols-3 text-sm text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}
 		{% endif %}
 
+		{% if slots['footer.links']|default([]) %}{% set c_fl %}{% include 'blocks/slot.html.twig' with {'name': 'footer.links'} %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-wrap gap-4', 'children': c_fl, 'attrs': {}} only %}{% endif %}
 		{% set c_ui3 %}
 			&copy; {{ site.year }} {{ site.title }}
 		{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-sm text-muted-foreground', 'children': c_ui3, 'attrs': {}} only %}

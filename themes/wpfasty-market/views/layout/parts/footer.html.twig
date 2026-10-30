@@ -18,6 +18,7 @@
 			{% for doc in legal_menu %}
 				{% set l %}{% set n %}{{ doc.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': doc.url, 'class': 'text-sm text-muted-foreground no-underline hover:text-foreground', 'children': n, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'children': l, 'attrs': {}} only %}
 			{% endfor %}
+			{% include 'blocks/slot.html.twig' with {'name': 'footer.links'} %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col gap-2', 'children': list, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'flex flex-col gap-4', 'children': docs, 'attrs': {'aria-label': labels.footer_docs}} only %}
 	{% set seller %}
