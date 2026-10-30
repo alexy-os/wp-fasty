@@ -68,7 +68,7 @@ rm -rf "$STAGE"
 # default ../wpmodules/dist); otherwise the public release assets of $WPMODULES_RELEASE (default "edge", rebuilt by
 # wpmodules CI on every push to main) are downloaded and checked against their SHA256SUMS.
 MD="${WPMODULES_DIST:-$ROOT/../wpmodules/dist}"
-MODULES="cart orders"
+MODULES="types cart orders"
 if [ -d "$MD/modules" ]; then
   cp "$MD"/moduly-*.zip "$OUT/moduly.zip"
   for id in $MODULES; do cp "$MD"/modules/$id-*.zip "$OUT/moduly-$id.zip"; done

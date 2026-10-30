@@ -8,7 +8,7 @@ Everything runs in the visitor's browser — no server.
 - Latte Press (classic blog): see `urls.txt` → `press`
 - Latte Folio (portfolio): `folio`
 - Latte Shop (no WooCommerce): `shop` — cart and checkout come from the ModulY plugin (phpfasty/wpmodules): the blueprint installs
-  `moduly.zip`, then the signed `cart` and `orders` modules through ModulY's validated installer (quarantine, JSON Schema,
+  `moduly.zip`, then the signed `types`, `cart` and `orders` modules through ModulY's validated installer (quarantine, JSON Schema,
   sha256 + ed25519 signature, static scan) and enables them
 - Latte Shop + ModulY, modules not installed: `shop-modules` — opens Plugins → Modules (ModulY); the read-only catalog works,
   and the module zips can be downloaded from `/wp-content/uploads/moduly/cart.zip` and `orders-0.1.0.zip` and uploaded
@@ -39,7 +39,7 @@ Rebuild 2026-10-24 (@ui8kit/registry 3.3.0): all four blueprints booted locally 
 Rebuild 2026-10-25 (builder IDE layout, a7aa983; built from 6966742): all four blueprints booted locally from the new zips (`@wp-playground/cli` 3.1.60 server, Node 24, PHP 8.5, WP_DEBUG + log on) — press, folio, shop, shop-twig front page, archive and single entry 200 with no PHP notices and an empty debug.log; shop and shop-twig builder editor opens with both column separators (keyboard resize/reset) and collapsible columns (bar buttons, `[`/`]`, F focus mode), no JS errors; gist updated, raw URLs match the zips by sha256.
 Rebuild 2026-10-28 (block previews, site contacts, builder tokens; built from 1c85f36): six URLs — press, folio, shop, shop-twig, shop-builder, shop-twig-builder; the press blueprint now installs wpfasty-types too (its demo seeds site contacts, read through `WPFastyTypes\Contact`). All six booted on playground.wordpress.net: front pages render; in shop-builder and shop-twig-builder the editor opens with the block cards and loads the WebP previews from the plugin (`sources/ui8kit/previews/`, 474 per build), and `GET /links` returns the demo contacts (tel, mailto, WhatsApp, Telegram, OSM map; phone, email, address, hours). Builder zips: wpfasty-builder.zip 3.6 MB, wpfasty-builder-twig.zip 3.2 MB (previews ≈ 2.7 MB of it). Gist updated, raw URLs 200 and match the zips by sha256.
 
-ModulY zips (`moduly.zip`, `moduly-cart.zip`, `moduly-orders.zip`) are the signed public release assets of phpfasty/wpmodules
+ModulY zips (`moduly.zip`, `moduly-cart.zip`, `moduly-orders.zip`, `moduly-types.zip`) are the signed public release assets of phpfasty/wpmodules
 (release `edge`, rebuilt by its CI on every push to main; `v*` tags give versioned releases). `tools/playground-build.sh`
 downloads them (sha256 checked against `SHA256SUMS`) unless a local wpmodules build exists (`$WPMODULES_DIST`, default
 `../wpmodules/dist`). The Playground workflow also runs every 2 hours, so a new wpmodules build reaches the gist with no

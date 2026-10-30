@@ -75,6 +75,14 @@
       }
     },
     {
+      "step": "writeFile",
+      "path": "/tmp/moduly-types.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-types.zip.b64"
+      }
+    },
+    {
       "step": "runPHP",
       "code": "<?php foreach (glob('/tmp/*.zip.b64') as $f) { file_put_contents(substr($f, 0, -4), base64_decode(file_get_contents($f))); }"
     },
@@ -126,11 +134,11 @@
     },
     {
       "step": "runPHP",
-      "code": "<?php @mkdir('/wordpress/wp-content/uploads/moduly', 0755, true); copy('/tmp/moduly-cart.zip', '/wordpress/wp-content/uploads/moduly/cart.zip'); copy('/tmp/moduly-orders.zip', '/wordpress/wp-content/uploads/moduly/orders.zip');"
+      "code": "<?php @mkdir('/wordpress/wp-content/uploads/moduly', 0755, true); copy('/tmp/moduly-cart.zip', '/wordpress/wp-content/uploads/moduly/cart.zip'); copy('/tmp/moduly-orders.zip', '/wordpress/wp-content/uploads/moduly/orders.zip'); copy('/tmp/moduly-types.zip', '/wordpress/wp-content/uploads/moduly/types.zip');"
     },
     {
       "step": "runPHP",
-      "code": "<?php require_once '/wordpress/wp-load.php'; $p = PhpFasty\\Moduly\\Wp\\Plugin::instance(); if (!$p) { throw new Exception('ModulY did not boot'); } foreach (['cart', 'orders'] as $id) { $p->modules->install('/tmp/moduly-' . $id . '.zip', true); }"
+      "code": "<?php require_once '/wordpress/wp-load.php'; $p = PhpFasty\\Moduly\\Wp\\Plugin::instance(); if (!$p) { throw new Exception('ModulY did not boot'); } foreach (['types', 'cart', 'orders'] as $id) { $p->modules->install('/tmp/moduly-' . $id . '.zip', true); }"
     },
     {
       "step": "setSiteOptions",
