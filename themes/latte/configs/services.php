@@ -27,7 +27,12 @@ return function (Container $container): void {
         $templateDir = get_template_directory();
         $stylesheetDir = get_stylesheet_directory();
 
-        $roots = [$stylesheetDir . '/views', $templateDir . '/views'];
+        $baseDir = latte_base_theme_dir();
+        $roots = array_values(array_filter([
+            $stylesheetDir . '/views',
+            $baseDir !== '' ? $baseDir . '/views' : '',
+            $templateDir . '/views',
+        ]));
         $engine = Engines::requested();
         // Only the requested engine's primitives are located (a build never loads the other runtime).
         $primitives = [
@@ -61,6 +66,7 @@ return function (Container $container): void {
     // Declarative post-type modules: child `types/*.php` first, then parent `types/*.php`.
     $container->singleton('types.registry', static fn () => new Registry(array_values(array_unique([
         get_stylesheet_directory() . '/types',
+        ...(latte_base_theme_dir() !== '' ? [latte_base_theme_dir() . '/types'] : []),
         get_template_directory() . '/types',
     ]))));
     $container->addTag('types.registry', ContainerInterface::TAG_BOOTABLE);

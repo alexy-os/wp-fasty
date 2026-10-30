@@ -24,3 +24,4 @@
 		{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $c_ui3, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'div', class: 'container mx-auto space-y-8 px-4 md:px-6', children: (string) $c_ui4, attrs: []}
 {/capture}{include 'box/Box.latte', tag: 'footer', class: 'site-footer mt-16 border-t border-border bg-card py-10', children: (string) $c_ui5, attrs: []}
+{include 'blocks/slot.latte', name: 'footer'}

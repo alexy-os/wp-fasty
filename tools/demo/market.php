@@ -1,14 +1,17 @@
 <?php
 
 /**
- * WP FastY marketplace demo: 13 items (sites / themes / plugins), legal pages, menus.
- * Run: wp eval-file tools/demo/market.php  (images from tools/demo/images/market-*.jpg; legal from $WPFASTY_LEGAL_JSON).
+ * WP FastY marketplace demo (theme wpfasty-market on Latte Shop + ModulY modules): 13 items by 4 demo authors
+ * (WordPress users), 7 legal pages with fake ООО «ИТ Гараж» details (tools/demo/legal.json, «Демо-данные»), menus.
+ * The home page is a Builder layout (tools/builder/landings/market.json, seeded by the blueprint).
+ * Run: wp eval-file tools/demo/market.php  (images from tools/demo/images/market-*.jpg; legal.json next to this file
+ * or $WPFASTY_LEGAL_JSON).
  */
 
 require __DIR__ . '/common.php';
 
 wpfasty_demo_cleanup_defaults();
-$front = class_exists('WpFastyMarket\\Front') ? 'WpFastyMarket\\Front' : 'WpfastyMarket\\Front';
+$front = 'LatteShop\\Front';
 update_option('blogname', 'WP FastY');
 update_option('blogdescription', 'Маркетплейс готовых сайтов, тем и плагинов WordPress');
 update_option('wpfasty_currency', 'RUB');
@@ -50,6 +53,29 @@ function wpfasty_demo_zip(string $slug): ?int
     return $id ?: null;
 }
 
+// Demo authors: WordPress users (author archive = common Latte Shop author page).
+$authors = [];
+foreach ([
+    'fasty-studio' => ['FastY Studio', 'Команда WP FastY: готовые сайты и темы на UI8Kit.', '2019-03-01'],
+    'nordcode' => ['NordCode', 'Сайты для бизнеса и SaaS, плагины производительности.', '2021-05-01'],
+    'pixel-forge' => ['Pixel Forge', 'Дизайн-студия: портфолио, школы и формы.', '2020-09-01'],
+    'volga-dev' => ['Volga Dev', 'Небольшая студия из Казани: рестораны, блоги и запись.', '2025-01-15'],
+] as $login => [$name, $bio, $since]) {
+    $user = get_user_by('login', $login);
+    $uid = $user ? $user->ID : wp_insert_user([
+        'user_login' => $login, 'user_pass' => wp_generate_password(24), 'user_email' => $login . '@example.com',
+        'display_name' => $name, 'role' => 'author', 'user_registered' => $since . ' 00:00:00',
+    ]);
+    if (!is_wp_error($uid)) {
+        wp_update_user(['ID' => $uid, 'display_name' => $name, 'nickname' => $name, 'description' => $bio, 'user_nicename' => $login]);
+        $authors[$login] = (int) $uid;
+    }
+}
+$byProduct = ['fasty-agency' => 'fasty-studio', 'fasty-store' => 'fasty-studio', 'clinic-pro' => 'nordcode', 'edu-campus' => 'pixel-forge',
+    'restoran' => 'volga-dev', 'latte-magazine' => 'fasty-studio', 'folio-noir' => 'pixel-forge', 'saas-launch' => 'nordcode',
+    'minimal-blog' => 'volga-dev', 'fasty-seo' => 'fasty-studio', 'form-forge' => 'pixel-forge', 'cache-turbo' => 'nordcode',
+    'booking-kit' => 'volga-dev'];
+
 $order = 0;
 foreach ($items as [$slug, $title, $cat, $price, $sale, $rating, $reviews, $badge, $excerpt]) {
     $id = wpfasty_demo_post($slug, [
@@ -59,6 +85,7 @@ foreach ($items as [$slug, $title, $cat, $price, $sale, $rating, $reviews, $badg
         'post_content' => '<h2>Что внутри</h2><ul><li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li><li>Светлая и тёмная палитры на дизайн-токенах.</li><li>Демо-контент и пошаговая инструкция по установке.</li><li>Совместимость с актуальными WordPress и PHP.</li></ul>',
         'menu_order' => $order++,
         'post_date' => gmdate('Y-m-d H:i:s', time() - $order * DAY_IN_SECONDS * 3),
+        'post_author' => $authors[$byProduct[$slug] ?? ''] ?? 1,
     ]);
     wp_set_object_terms($id, [$cats[$cat]], 'product_cat');
     // Digital product fields (ModulY types 0.2): license tiers in cents, private download file, real reviews only.
@@ -70,7 +97,7 @@ foreach ($items as [$slug, $title, $cat, $price, $sale, $rating, $reviews, $badg
     $meta = ['_shop_price' => $price * 100, '_shop_sale_price' => $sale ? $sale * 100 : null, '_shop_sku' => strtoupper($slug),
         '_shop_stock' => null, '_shop_rating' => null, '_shop_reviews' => null, '_shop_badge' => $badge,
         '_shop_version' => '1.' . ($order % 5) . '.0', '_shop_requires_wp' => '6.5', '_shop_requires_php' => '8.2',
-        '_shop_changelog' => "1.0.0 — первый релиз", '_shop_preview_url' => home_url('/'), '_shop_support_months' => 6,
+        '_shop_changelog' => '1.' . ($order % 5) . ".0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз", '_shop_preview_url' => home_url('/'), '_shop_support_months' => 6,
         '_shop_sales_count' => $reviews, '_shop_licenses' => $licenses,
         '_shop_download_file' => wpfasty_demo_zip($slug)];
     unset($rating);
@@ -84,15 +111,40 @@ foreach ($items as [$slug, $title, $cat, $price, $sale, $rating, $reviews, $badg
 }
 
 $front::ensurePages();
-$home = wpfasty_demo_post('home', ['post_type' => 'page', 'post_title' => 'WP FastY', 'post_content' => '']);
-update_option('show_on_front', 'page');
-update_option('page_on_front', $home);
-
-$legal = getenv('WPFASTY_LEGAL_JSON');
-if ($legal && is_file($legal)) {
-    foreach ((array) json_decode((string) file_get_contents($legal), true) as $slug => $doc) {
-        wpfasty_demo_post($slug, ['post_type' => 'page', 'post_title' => $doc['title'], 'post_content' => $doc['html']]);
+foreach (['cart' => 'Корзина', 'checkout' => 'Оформление заказа'] as $slug => $title) {
+    $page = get_page_by_path($slug);
+    if ($page) {
+        wp_update_post(['ID' => $page->ID, 'post_title' => $title]);
     }
+}
+// The home page is a Builder layout (landings/market.json); without the Builder a plain page keeps the front static.
+if (!get_page_by_path('home')) {
+    $home = wpfasty_demo_post('home', ['post_type' => 'page', 'post_title' => 'WP FastY', 'post_content' => '']);
+    update_option('show_on_front', 'page');
+    update_option('page_on_front', $home);
+}
+
+// Legal documents with clearly fake details (Демо-данные) + seller details for the footer.
+$legalFile = getenv('WPFASTY_LEGAL_JSON') ?: __DIR__ . '/legal.json';
+$legal = is_file($legalFile) ? (array) json_decode((string) file_get_contents($legalFile), true) : [];
+update_option('wpfasty_company', (array) ($legal['company'] ?? []));
+$legalLinks = [];
+foreach ((array) ($legal['pages'] ?? []) as $slug => $doc) {
+    $existing = get_page_by_path($slug);
+    $pid = $existing
+        ? wp_update_post(['ID' => $existing->ID, 'post_title' => $doc['title'], 'post_content' => $doc['html'], 'post_status' => 'publish'])
+        : wpfasty_demo_post($slug, ['post_type' => 'page', 'post_title' => $doc['title'], 'post_content' => $doc['html']]);
+    if ($slug === 'privacy-policy') {
+        update_option('wp_page_for_privacy_policy', (int) $pid);
+    }
+    $legalLinks[] = [$doc['title'], (string) get_permalink((int) $pid)];
+}
+if ($legalLinks !== []) {
+    wpfasty_demo_menu('Документы', 'legal', $legalLinks);
+}
+$author = get_page_by_path('author');
+if ($author) {
+    wp_delete_post($author->ID, true);
 }
 
 wpfasty_demo_menu('Primary', 'primary', [
@@ -100,7 +152,6 @@ wpfasty_demo_menu('Primary', 'primary', [
     ['Сайты', get_term_link($cats['sites'])],
     ['Темы', get_term_link($cats['themes'])],
     ['Плагины', get_term_link($cats['plugins'])],
-    ['Авторы', $front::pageUrl('author')],
 ]);
 flush_rewrite_rules();
 wpfasty_demo_log('WP FastY market demo ready.');

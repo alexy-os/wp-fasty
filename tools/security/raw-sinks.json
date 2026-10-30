@@ -508,34 +508,6 @@
       "count": 1,
       "source": "same template",
       "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
-      "file": "themes/wp-fasty-market/views/pages/product.html.twig",
-      "expr": "page['content']",
-      "count": 1,
-      "source": "ContextFactory::page()",
-      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
-    },
-    {
-      "file": "themes/wp-fasty-market/views/pages/product.latte",
-      "expr": "$page['content']",
-      "count": 1,
-      "source": "ContextFactory::page()",
-      "why": "apply_filters('the_content') of the post (core filters; authors without unfiltered_html are kses'd on save), the password form while post_password_required()"
-    },
-    {
-      "file": "themes/wp-fasty-market/views/pages/shop.html.twig",
-      "expr": "archive['description']",
-      "count": 1,
-      "source": "ContextFactory archive",
-      "why": "wp_kses_post(get_the_archive_description()), '' on search"
-    },
-    {
-      "file": "themes/wp-fasty-market/views/pages/shop.latte",
-      "expr": "$archive['description']",
-      "count": 1,
-      "source": "ContextFactory archive",
-      "why": "wp_kses_post(get_the_archive_description()), '' on search"
     }
   ],
   "safe": [

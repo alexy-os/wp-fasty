@@ -43,7 +43,8 @@ return [
             'rewrite' => ['slug' => 'shop/category', 'with_front' => false],
         ],
     ],
-    'fields' => [
+    // Modules add their fields (licenses, downloads, …) through `wpfasty_shop_product_fields`.
+    'fields' => (array) apply_filters('wpfasty_shop_product_fields', [
         'price' => ['type' => 'money', 'label' => __('Price', 'latte-shop')],
         'sale_price' => ['type' => 'money', 'label' => __('Sale price', 'latte-shop')],
         'sku' => ['type' => 'string', 'label' => __('SKU', 'latte-shop')],
@@ -51,10 +52,17 @@ return [
         'rating' => ['type' => 'number', 'label' => __('Rating (0-5)', 'latte-shop')],
         'reviews' => ['type' => 'integer', 'label' => __('Reviews', 'latte-shop')],
         'badge' => ['type' => 'string', 'label' => __('Badge (empty = sale when discounted)', 'latte-shop')],
-    ],
+    ]),
     'metabox' => ['title' => __('Product data', 'latte-shop'), 'context' => 'side', 'priority' => 'high'],
     'supports' => [
-        'purchasable' => ['price_field' => 'price', 'sale_field' => 'sale_price', 'stock_field' => 'stock'],
+        'purchasable' => [
+            'price_field' => 'price',
+            'sale_field' => 'sale_price',
+            'stock_field' => 'stock',
+            // Read only when a module declares the field (licenses) / the store sells downloads (cart `digital_only`).
+            'license_field' => 'licenses',
+            'digital' => LatteShop\Front::digitalOnly(),
+        ],
     ],
     'views' => ['single' => 'pages/product', 'archive' => 'pages/shop', 'card' => 'blocks/product-card'],
     'archive' => [

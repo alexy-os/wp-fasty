@@ -1,532 +1,1530 @@
 {
-    "uri": "/shop/",
-    "view": "pages/shop",
-    "page": true,
-    "context": {
-        "site": {
-            "title": "WP FastY",
-            "url": "http://127.0.0.1:8099/",
-            "theme_url": "http://127.0.0.1:8099/wp-content/themes/latte",
-            "stylesheet_url": "http://127.0.0.1:8099/wp-content/themes/wp-fasty-market",
-            "lang": "ru-RU",
-            "description": "Маркетплейс готовых сайтов, тем и плагинов WordPress",
-            "charset": "UTF-8",
-            "year": "2026",
-            "logo": null
-        },
-        "menu": {
-            "primary": {
-                "items": [
-                    {
-                        "title": "Каталог",
-                        "url": "http://127.0.0.1:8099/shop/",
-                        "id": 70,
-                        "current": false,
-                        "children": []
-                    },
-                    {
-                        "title": "Сайты",
-                        "url": "http://127.0.0.1:8099/shop/category/sites/",
-                        "id": 71,
-                        "current": false,
-                        "children": []
-                    },
-                    {
-                        "title": "Темы",
-                        "url": "http://127.0.0.1:8099/shop/category/themes/",
-                        "id": 72,
-                        "current": false,
-                        "children": []
-                    },
-                    {
-                        "title": "Плагины",
-                        "url": "http://127.0.0.1:8099/shop/category/plugins/",
-                        "id": 73,
-                        "current": false,
-                        "children": []
-                    },
-                    {
-                        "title": "Авторы",
-                        "url": "http://127.0.0.1:8099/author/",
-                        "id": 74,
-                        "current": false,
-                        "children": []
-                    }
-                ]
-            },
-            "footer": {
-                "items": []
-            }
-        },
-        "shell": "classic",
-        "sheet": {
-            "trigger": "classic-mobile-sheet-trigger",
-            "panel": "classic-mobile-sheet-panel",
-            "title": "classic-mobile-sheet-title"
-        },
-        "labels": {
-            "featured": "Featured",
-            "latest_articles": "Latest articles",
-            "no_posts": "No posts found.",
-            "previous": "Назад",
-            "next": "Дальше",
-            "skip_to_content": "Skip to content",
-            "open_menu": "Open menu",
-            "close_menu": "Close menu",
-            "dark_mode": "Dark mode",
-            "primary_nav": "Primary",
-            "mobile_nav": "Mobile menu",
-            "search_site": "Найти",
-            "search_mobile": "Mobile menu search",
-            "search_404": "Search again",
-            "footer_nav": "Footer",
-            "sidebar": "Sidebar",
-            "pagination": "Страницы",
-            "posted_on": "Posted on",
-            "by_author": "By",
-            "categories": "Categories",
-            "tags": "Tags",
-            "previous_post": "Previous post",
-            "next_post": "Next post",
-            "attachment": "Attachment",
-            "pages": "Pages:",
-            "add_to_cart": "В корзину",
-            "buy_now": "Купить сейчас",
-            "cart": "Корзина",
-            "checkout": "Оформление заказа",
-            "subtotal": "Подытог",
-            "total": "Итого",
-            "qty": "Количество",
-            "remove": "Удалить",
-            "update_cart": "Обновить корзину",
-            "empty_cart": "Корзина пуста.",
-            "continue_shopping": "Продолжить покупки",
-            "place_order": "Оплатить и скачать",
-            "out_of_stock": "Недоступно",
-            "sale": "Скидка",
-            "all_products": "Все товары",
-            "order_received": "Спасибо! Ссылки на скачивание отправлены на ваш email.",
-            "order_number": "Заказ",
-            "payment": "Способ оплаты",
-            "demo_notice": "Демо-магазин — реальная оплата не списывается.",
-            "no_products": "Ничего не найдено. Попробуйте другой фильтр.",
-            "breadcrumb": "Навигационная цепочка",
-            "hero_kicker": "Маркетплейс продуктов для WordPress",
-            "hero_title": "Готовые сайты, темы и плагины WordPress, которые запускаются быстро",
-            "hero_text": "Проверены вручную, написаны на чистом коде, обновляются под свежие PHP и WordPress.",
-            "search_placeholder": "Искать сайты, темы и плагины",
-            "search": "Найти",
-            "popular_tags": "Популярное:",
-            "cat_sites": "Готовые сайты",
-            "cat_sites_text": "Сайты с контентом — запуск за один день",
-            "cat_themes": "Темы",
-            "cat_themes_text": "Дизайн-системы для блогов, магазинов и портфолио",
-            "cat_plugins": "Плагины",
-            "cat_plugins_text": "SEO, формы, скорость и оплата без лишнего веса",
-            "items": "товаров",
-            "popular": "Популярное на неделе",
-            "newest": "Новое",
-            "view_all": "Смотреть все",
-            "authors": "Топ авторов",
-            "authors_text": "Независимые студии и разработчики, которые продают на WP FastY.",
-            "sales": "продаж",
-            "since": "Автор с",
-            "trust_title": "Почему покупают на WP FastY",
-            "trust_review": "Каждый товар проверен вручную",
-            "trust_review_text": "Код, безопасность и скорость проверяем до публикации.",
-            "trust_updates": "Обновления навсегда",
-            "trust_updates_text": "Скачивайте каждую новую версию в личном кабинете.",
-            "trust_support": "6 месяцев поддержки автора",
-            "trust_support_text": "Продлить поддержку можно в любой момент на странице товара.",
-            "trust_pay": "Безопасная оплата в рублях",
-            "trust_pay_text": "Карты, СБП и счёт для юрлиц. Чеки по 54-ФЗ.",
-            "filters": "Фильтры",
-            "category": "Категория",
-            "price": "Цена",
-            "compatibility": "Совместимость",
-            "rating": "Рейтинг",
-            "rating_4": "От 4 звёзд",
-            "rating_any": "Любой рейтинг",
-            "sort_by": "Сортировка",
-            "apply": "Применить",
-            "reset": "Сбросить",
-            "results": "результатов",
-            "live_preview": "Live Preview",
-            "license": "Лицензия",
-            "license_regular": "Regular — обычная",
-            "license_regular_text": "Один конечный продукт, пользователи не платят за доступ.",
-            "license_extended": "Extended — расширенная",
-            "license_extended_text": "Один конечный продукт, за доступ к которому можно брать плату.",
-            "included": "Включено: будущие обновления и 6 месяцев поддержки.",
-            "version": "Версия",
-            "updated": "Обновлено",
-            "wp_version": "WordPress",
-            "php_version": "PHP",
-            "changelog": "История изменений",
-            "description": "Описание",
-            "support": "Поддержка",
-            "support_text": "Автор отвечает в течение рабочего дня. Ошибки и вопросы по функциям входят в поддержку.",
-            "reviews": "Отзывы",
-            "by": "от",
-            "author_items": "Товары автора",
-            "gallery": "Скриншоты",
-            "your_details": "Ваши данные",
-            "digital_delivery": "Цифровая доставка: ссылки на скачивание придут на email сразу после оплаты.",
-            "consent_offer": "Принимаю условия публичной оферты и лицензионного договора",
-            "consent_pd": "Даю согласие на обработку персональных данных",
-            "required": "Проверьте поля",
-            "secure": "Безопасная оплата",
-            "refund_note": "Возврат — по правилам возврата цифровых товаров.",
-            "footer_about": "WP FastY — маркетплейс готовых сайтов, тем и плагинов для WordPress.",
-            "footer_market": "Маркетплейс",
-            "footer_docs": "Документы",
-            "footer_company": "Продавец",
-            "ogrn": "ОГРН",
-            "inn": "ИНН",
-            "address": "Адрес",
-            "legal_oferta": "Публичная оферта и лицензионный договор",
-            "legal_privacy": "Политика конфиденциальности",
-            "legal_consent": "Согласие на обработку персональных данных",
-            "legal_newsletter-consent": "Согласие на рассылку",
-            "legal_cookies": "Политика cookie",
-            "legal_refund": "Правила возврата",
-            "legal_requisites": "Реквизиты",
-            "consent_news": "Хочу получать новости и предложения по email (необязательно)",
-            "cookie_text": "Мы используем необходимые cookie для работы магазина и — с вашего согласия — аналитические.",
-            "cookie_accept": "Принять все",
-            "cookie_necessary": "Только необходимые",
-            "cookie_settings": "Настройки cookie",
-            "rights": "Все права защищены.",
-            "unavailable_title": "Временно недоступно",
-            "unavailable_text": "Функция временно недоступна. Попробуйте позже.",
-            "back_to_site": "Вернуться на сайт",
-            "downloads": "Загрузки",
-            "download": "Скачать",
-            "downloads_pending": "Ссылки на скачивание появятся здесь и в письме сразу после подтверждения оплаты.",
-            "link_expires": "Ссылка действует до",
-            "downloads_left": "скачиваний осталось",
-            "verified_buyer": "Проверенный покупатель",
-            "write_review": "Написать отзыв",
-            "review_note": "Отзыв могут оставить только покупатели: укажите email оплаченного заказа.",
-            "your_name": "Имя",
-            "your_email": "Email заказа",
-            "your_rating": "Рейтинг",
-            "review_text": "Ваш отзыв",
-            "submit_review": "Отправить отзыв",
-            "no_reviews": "Отзывов пока нет.",
-            "license_tier": "Лицензия"
-        },
-        "search": {
-            "action": "http://127.0.0.1:8099/",
-            "query": "",
-            "placeholder": "Искать сайты, темы и плагины",
-            "submit": "Найти",
-            "label": "Найти"
-        },
-        "widgets": {
-            "sidebar": "",
-            "footer": ""
-        },
-        "archive": {
+  "uri": "/shop/",
+  "view": "pages/shop",
+  "page": true,
+  "context": {
+    "site": {
+      "title": "WP FastY",
+      "url": "https://market.example/",
+      "theme_url": "https://market.example/wp-content/themes/latte",
+      "stylesheet_url": "https://market.example/wp-content/themes/wpfasty-market",
+      "lang": "ru-RU",
+      "description": "Маркетплейс готовых сайтов, тем и плагинов WordPress",
+      "charset": "UTF-8",
+      "year": "2026",
+      "logo": null
+    },
+    "menu": {
+      "primary": {
+        "items": [
+          {
             "title": "Каталог",
-            "description": "",
-            "search_query": null,
-            "type": "post_type"
+            "url": "https://market.example/shop/",
+            "id": 93,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Сайты",
+            "url": "https://market.example/shop/category/sites/",
+            "id": 94,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Темы",
+            "url": "https://market.example/shop/category/themes/",
+            "id": 95,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Плагины",
+            "url": "https://market.example/shop/category/plugins/",
+            "id": 96,
+            "current": false,
+            "children": []
+          }
+        ]
+      },
+      "footer": {
+        "items": []
+      },
+      "legal": {
+        "items": [
+          {
+            "title": "Публичная оферта и лицензионный договор",
+            "url": "https://market.example/oferta/",
+            "id": 86,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Политика обработки персональных данных",
+            "url": "https://market.example/privacy-policy/",
+            "id": 87,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Согласие на обработку персональных данных",
+            "url": "https://market.example/consent/",
+            "id": 88,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Согласие на получение рассылки",
+            "url": "https://market.example/newsletter-consent/",
+            "id": 89,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Политика использования cookie",
+            "url": "https://market.example/cookies/",
+            "id": 90,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Условия возврата",
+            "url": "https://market.example/refund/",
+            "id": 91,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Реквизиты продавца",
+            "url": "https://market.example/requisites/",
+            "id": 92,
+            "current": false,
+            "children": []
+          }
+        ]
+      }
+    },
+    "shell": "classic",
+    "sheet": {
+      "trigger": "classic-mobile-sheet-trigger",
+      "panel": "classic-mobile-sheet-panel",
+      "title": "classic-mobile-sheet-title"
+    },
+    "labels": {
+      "featured": "Избранное",
+      "latest_articles": "Последние статьи",
+      "no_posts": "Ничего не найдено.",
+      "previous": "Назад",
+      "next": "Дальше",
+      "skip_to_content": "Перейти к содержимому",
+      "open_menu": "Открыть меню",
+      "close_menu": "Закрыть меню",
+      "dark_mode": "Тёмная тема",
+      "primary_nav": "Основное меню",
+      "mobile_nav": "Мобильное меню",
+      "search_site": "Поиск по сайту",
+      "search_mobile": "Поиск в меню",
+      "search_404": "Искать снова",
+      "footer_nav": "Подвал",
+      "sidebar": "Боковая панель",
+      "pagination": "Страницы",
+      "posted_on": "Опубликовано",
+      "by_author": "Автор",
+      "categories": "Рубрики",
+      "tags": "Метки",
+      "previous_post": "Предыдущая запись",
+      "next_post": "Следующая запись",
+      "attachment": "Вложение",
+      "pages": "Страницы:",
+      "add_to_cart": "В корзину",
+      "buy_now": "Купить сейчас",
+      "cart": "Корзина",
+      "checkout": "Оформление заказа",
+      "subtotal": "Подытог",
+      "shipping": "Доставка",
+      "total": "Итого",
+      "qty": "Количество",
+      "remove": "Удалить",
+      "update_cart": "Обновить корзину",
+      "empty_cart": "Корзина пуста.",
+      "continue_shopping": "Продолжить покупки",
+      "place_order": "Оформить заказ",
+      "out_of_stock": "Нет в наличии",
+      "sale": "Скидка",
+      "all_products": "Все",
+      "shop_now": "В каталог",
+      "order_received": "Спасибо — заказ принят.",
+      "order_number": "Заказ",
+      "address": "Адрес",
+      "check_fields": "Проверьте поля",
+      "payment": "Оплата",
+      "demo_notice": "Демо-магазин — реальная оплата не списывается.",
+      "unavailable_title": "Временно недоступно",
+      "unavailable_text": "Функция временно недоступна. Попробуйте позже.",
+      "back_to_site": "Вернуться на сайт",
+      "no_products": "Товары не найдены.",
+      "breadcrumb": "Навигационная цепочка",
+      "author_items": "товаров",
+      "author_since": "автор с",
+      "account": "Аккаунт",
+      "account_search": "Поиск",
+      "returns": "Возврат в течение 30 дней",
+      "instant_download": "Скачивание сразу после оплаты",
+      "updates_included": "Обновления включены",
+      "pay_options": "Оплата при получении или переводом",
+      "free_shipping_over": "Быстрая доставка",
+      "footer_about": "Готовые сайты, темы и плагины для WordPress. Быстрые, доступные, без конструкторов страниц.",
+      "footer_market": "Каталог",
+      "footer_docs": "Документы",
+      "footer_company": "Продавец",
+      "ogrn": "ОГРН",
+      "inn": "ИНН",
+      "rights": "Все права защищены."
+    },
+    "search": {
+      "action": "https://market.example/",
+      "query": "",
+      "placeholder": "Поиск…",
+      "submit": "Поиск",
+      "label": "Поиск"
+    },
+    "widgets": {
+      "sidebar": "",
+      "footer": ""
+    },
+    "archive": {
+      "title": "Каталог",
+      "description": "",
+      "search_query": null,
+      "type": "post_type"
+    },
+    "posts": [
+      {
+        "id": 8,
+        "title": "FastY Agency — сайт digital-агентства",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "fasty-agency",
+        "url": "https://market.example/product/fasty-agency/",
+        "excerpt": "Готовый сайт агентства: кейсы, услуги, команда, блог и заявки. Импорт за 10 минут.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-fasty-agency-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Fasty Agency",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
         },
-        "posts": [
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-fasty-agency-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Fasty Agency",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "FastY Studio",
+          "url": "https://market.example/author/fasty-studio/"
+        },
+        "post_class": "post-8 product type-product status-publish has-post-thumbnail hentry product_cat-sites",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "27.10.2026",
+          "iso": "2026-10-27T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "1490000",
+          "sale_price": "1190000",
+          "sku": "FASTY-AGENCY",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "Хит",
+          "version": "1.1.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.1.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "27",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":1190000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":5950000}]"
+        },
+        "terms": {
+          "product_cat": [
             {
-                "id": 8,
-                "title": "FastY Agency — сайт digital-агентства",
-                "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
-                "slug": "fasty-agency",
-                "url": "http://127.0.0.1:8099/product/fasty-agency/",
-                "excerpt": "Готовый сайт агентства: кейсы, услуги, команда, блог и заявки. Импорт за 10 минут.",
-                "featuredImage": {
-                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/market-fasty-agency-1.jpg",
-                    "width": "1024",
-                    "height": "576",
-                    "alt": "Market Fasty Agency",
-                    "srcset": "",
-                    "sizes": "(max-width: 1024px) 100vw, 1024px"
-                },
-                "thumbnail": {
-                    "url": "http://127.0.0.1:8099/wp-content/uploads/2026/10/market-fasty-agency-1.jpg",
-                    "width": "300",
-                    "height": "169",
-                    "alt": "Market Fasty Agency",
-                    "srcset": "",
-                    "sizes": "(max-width: 300px) 100vw, 300px"
-                },
-                "categories": [],
-                "tags": [],
-                "author": null,
-                "post_class": "post-8 product type-product status-publish has-post-thumbnail hentry product_cat-sites",
-                "link_pages": "",
-                "prev": null,
-                "next": null,
-                "mime_type": "",
-                "is_attachment": false,
-                "date": {
-                    "display": "27.10.2026",
-                    "iso": "2026-10-27T16:40:36+03:00"
-                },
-                "fields": {
-                    "price": "1490000",
-                    "sale_price": "1190000",
-                    "sku": "FASTY-AGENCY",
-                    "stock": "",
-                    "rating": "5",
-                    "reviews": "1",
-                    "badge": "Хит",
-                    "version": "1.1.0",
-                    "requires_wp": "6.5",
-                    "requires_php": "8.2",
-                    "changelog": "1.0.0 — первый релиз",
-                    "preview_url": "http://127.0.0.1:8099/",
-                    "support_months": "6",
-                    "sales_count": "312",
-                    "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":1190000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":5950000}]",
-                    "author": ""
-                },
-                "terms": {
-                    "product_cat": [
-                        {
-                            "name": "Готовые сайты",
-                            "slug": "sites",
-                            "url": "http://127.0.0.1:8099/shop/category/sites/"
-                        }
-                    ]
-                },
-                "product": {
-                    "price": "11 900,00 ₽",
-                    "regular": "14 900,00 ₽",
-                    "on_sale": true,
-                    "sku": "FASTY-AGENCY",
-                    "stock": null,
-                    "in_stock": true,
-                    "purchasable": true,
-                    "licenses": [
-                        {
-                            "tier": "regular",
-                            "label": "Обычная",
-                            "price": "11 900,00 ₽",
-                            "price_cents": 1190000
-                        },
-                        {
-                            "tier": "extended",
-                            "label": "Расширенная",
-                            "price": "59 500,00 ₽",
-                            "price_cents": 5950000
-                        }
-                    ],
-                    "reviews_available": true,
-                    "reviews_list": [
-                        {
-                            "author": "Ivan",
-                            "date": "30.10.2026",
-                            "text": "Отличная тема, всё работает из коробки",
-                            "rating": 5,
-                            "verified": true
-                        }
-                    ],
-                    "price_cents": 1190000,
-                    "review_action": "http://127.0.0.1:8099/wp-comments-post.php"
-                },
-                "product_cats": [
-                    {
-                        "name": "Готовые сайты",
-                        "slug": "sites",
-                        "url": "http://127.0.0.1:8099/shop/category/sites/"
-                    }
-                ],
-                "rating": 5,
-                "reviews": 1,
-                "badge": "Хит",
-                "digital": {
-                    "version": "1.1.0",
-                    "wp": "6.5",
-                    "php": "8.2",
-                    "sales": 312,
-                    "support_months": 6,
-                    "updated": "2026-10-30",
-                    "author": {
-                        "name": "FastY Studio",
-                        "slug": "fasty-studio",
-                        "role": "Elite author",
-                        "items": 42,
-                        "sales": 18240,
-                        "rating": 4.9,
-                        "since": "2019",
-                        "url": "http://127.0.0.1:8099/author/?a=fasty-studio"
-                    },
-                    "preview_url": "http://127.0.0.1:8099/",
-                    "licenses": [
-                        {
-                            "id": "regular",
-                            "label": "Обычная",
-                            "price": "11 900,00 ₽"
-                        },
-                        {
-                            "id": "extended",
-                            "label": "Расширенная",
-                            "price": "59 500,00 ₽"
-                        }
-                    ],
-                    "changelog": [],
-                    "reviews": [
-                        {
-                            "name": "Ivan",
-                            "rating": 5,
-                            "text": "Отличная тема, всё работает из коробки",
-                            "verified": true
-                        }
-                    ],
-                    "reviews_available": true,
-                    "review_action": "http://127.0.0.1:8099/wp-comments-post.php"
-                }
+              "name": "Готовые сайты",
+              "slug": "sites",
+              "url": "https://market.example/shop/category/sites/"
             }
+          ]
+        },
+        "product": {
+          "price": "11 900,00 ₽",
+          "regular": "14 900,00 ₽",
+          "on_sale": true,
+          "sku": "FASTY-AGENCY",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 1190000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "11 900,00 ₽",
+              "price_cents": 1190000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "59 500,00 ₽",
+              "price_cents": 5950000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [
+            {
+              "author": "Ivan",
+              "date": "30.10.2026",
+              "text": "Отличная тема, всё работает из коробки",
+              "rating": 5,
+              "verified": true
+            }
+          ],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Готовые сайты",
+            "slug": "sites",
+            "url": "https://market.example/shop/category/sites/"
+          }
         ],
-        "pagination": null,
-        "shop": {
-            "enabled": true,
-            "url": "http://127.0.0.1:8099/shop/",
-            "cart_url": "http://127.0.0.1:8099/cart/",
-            "checkout_url": "http://127.0.0.1:8099/checkout/",
-            "action": "http://127.0.0.1:8099/wp-admin/admin-post.php",
-            "cart_nonce": "26fa464928",
-            "checkout_nonce": "4fcd3fbd7e",
-            "count": 0,
-            "free_shipping": "",
-            "digital": true,
-            "cart_available": true,
-            "orders": true,
-            "checkout_available": true,
-            "search_url": "http://127.0.0.1:8099/",
-            "notice": null,
-            "categories": [
-                {
-                    "name": "Готовые сайты",
-                    "slug": "sites",
-                    "url": "http://127.0.0.1:8099/shop/category/sites/"
-                },
-                {
-                    "name": "Темы",
-                    "slug": "themes",
-                    "url": "http://127.0.0.1:8099/shop/category/themes/"
-                },
-                {
-                    "name": "Плагины",
-                    "slug": "plugins",
-                    "url": "http://127.0.0.1:8099/shop/category/plugins/"
-                }
-            ],
-            "current_cat": "",
-            "sort": "popular",
-            "price": "any",
-            "rating": 0,
-            "sorts": [
-                {
-                    "id": "popular",
-                    "label": "Хиты продаж"
-                },
-                {
-                    "id": "new",
-                    "label": "Новинки"
-                },
-                {
-                    "id": "rating",
-                    "label": "Лучший рейтинг"
-                },
-                {
-                    "id": "price-asc",
-                    "label": "Сначала дешевле"
-                },
-                {
-                    "id": "price-desc",
-                    "label": "Сначала дороже"
-                }
-            ],
-            "prices": [
-                {
-                    "id": "any",
-                    "label": "Любая цена"
-                },
-                {
-                    "id": "free-50",
-                    "label": "До 5 000 ₽"
-                },
-                {
-                    "id": "50-100",
-                    "label": "5 000 – 10 000 ₽"
-                },
-                {
-                    "id": "100-plus",
-                    "label": "От 10 000 ₽"
-                }
-            ],
-            "compat": [
-                {
-                    "id": "wp-6.5",
-                    "label": "WordPress 6.5+"
-                },
-                {
-                    "id": "wp-6.4",
-                    "label": "WordPress 6.4+"
-                },
-                {
-                    "id": "php-8.2",
-                    "label": "PHP 8.2+"
-                },
-                {
-                    "id": "php-8.1",
-                    "label": "PHP 8.1+"
-                }
-            ],
-            "legal": [
-                {
-                    "slug": "oferta",
-                    "url": "http://127.0.0.1:8099/oferta/"
-                },
-                {
-                    "slug": "privacy",
-                    "url": "http://127.0.0.1:8099/privacy/"
-                },
-                {
-                    "slug": "consent",
-                    "url": "http://127.0.0.1:8099/consent/"
-                },
-                {
-                    "slug": "newsletter-consent",
-                    "url": "http://127.0.0.1:8099/newsletter-consent/"
-                },
-                {
-                    "slug": "cookies",
-                    "url": "http://127.0.0.1:8099/cookies/"
-                },
-                {
-                    "slug": "refund",
-                    "url": "http://127.0.0.1:8099/refund/"
-                },
-                {
-                    "slug": "requisites",
-                    "url": "http://127.0.0.1:8099/requisites/"
-                }
-            ],
-            "author_url": "http://127.0.0.1:8099/author/"
-        },
-        "company": {
-            "name": "ООО «ИТ Гараж»",
-            "name_en": "IT Garage Ltd",
-            "ogrn": "0000",
-            "inn": "[ИНН]",
-            "address": "[АДРЕС]",
-            "email": "support@localhost"
-        },
-        "cookie_consent": {
-            "enabled": true,
-            "cookie": "wpfasty_cookie_consent",
-            "policy_url": "",
-            "analytics": false
+        "seller": {
+          "name": "FastY Studio",
+          "url": "https://market.example/author/fasty-studio/"
         }
-    }
+      },
+      {
+        "id": 9,
+        "title": "FastY Store — интернет-магазин под ключ",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "fasty-store",
+        "url": "https://market.example/product/fasty-store/",
+        "excerpt": "Магазин без WooCommerce: каталог, корзина, оформление заказа и личный кабинет.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-fasty-store-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Fasty Store",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        },
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-fasty-store-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Fasty Store",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "FastY Studio",
+          "url": "https://market.example/author/fasty-studio/"
+        },
+        "post_class": "post-9 product type-product status-publish has-post-thumbnail hentry product_cat-sites",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "24.10.2026",
+          "iso": "2026-10-24T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "1990000",
+          "sale_price": "",
+          "sku": "FASTY-STORE",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "",
+          "version": "1.2.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.2.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "29",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":1990000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":9950000}]"
+        },
+        "terms": {
+          "product_cat": [
+            {
+              "name": "Готовые сайты",
+              "slug": "sites",
+              "url": "https://market.example/shop/category/sites/"
+            }
+          ]
+        },
+        "product": {
+          "price": "19 900,00 ₽",
+          "regular": "",
+          "on_sale": false,
+          "sku": "FASTY-STORE",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 1990000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "19 900,00 ₽",
+              "price_cents": 1990000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "99 500,00 ₽",
+              "price_cents": 9950000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Готовые сайты",
+            "slug": "sites",
+            "url": "https://market.example/shop/category/sites/"
+          }
+        ],
+        "seller": {
+          "name": "FastY Studio",
+          "url": "https://market.example/author/fasty-studio/"
+        }
+      },
+      {
+        "id": 10,
+        "title": "Clinic Pro — сайт медицинского центра",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "clinic-pro",
+        "url": "https://market.example/product/clinic-pro/",
+        "excerpt": "Врачи, услуги, прайс, онлайн-запись и отзывы пациентов.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-clinic-pro-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Clinic Pro",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        },
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-clinic-pro-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Clinic Pro",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "NordCode",
+          "url": "https://market.example/author/nordcode/"
+        },
+        "post_class": "post-10 product type-product status-publish has-post-thumbnail hentry product_cat-sites",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "21.10.2026",
+          "iso": "2026-10-21T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "1290000",
+          "sale_price": "",
+          "sku": "CLINIC-PRO",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "",
+          "version": "1.3.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.3.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "31",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":1290000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":6450000}]"
+        },
+        "terms": {
+          "product_cat": [
+            {
+              "name": "Готовые сайты",
+              "slug": "sites",
+              "url": "https://market.example/shop/category/sites/"
+            }
+          ]
+        },
+        "product": {
+          "price": "12 900,00 ₽",
+          "regular": "",
+          "on_sale": false,
+          "sku": "CLINIC-PRO",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 1290000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "12 900,00 ₽",
+              "price_cents": 1290000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "64 500,00 ₽",
+              "price_cents": 6450000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Готовые сайты",
+            "slug": "sites",
+            "url": "https://market.example/shop/category/sites/"
+          }
+        ],
+        "seller": {
+          "name": "NordCode",
+          "url": "https://market.example/author/nordcode/"
+        }
+      },
+      {
+        "id": 11,
+        "title": "Edu Campus — онлайн-школа",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "edu-campus",
+        "url": "https://market.example/product/edu-campus/",
+        "excerpt": "Курсы, преподаватели, расписание и лендинги для набора.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-edu-campus-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Edu Campus",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        },
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-edu-campus-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Edu Campus",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "Pixel Forge",
+          "url": "https://market.example/author/pixel-forge/"
+        },
+        "post_class": "post-11 product type-product status-publish has-post-thumbnail hentry product_cat-sites",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "18.10.2026",
+          "iso": "2026-10-18T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "1690000",
+          "sale_price": "",
+          "sku": "EDU-CAMPUS",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "",
+          "version": "1.4.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.4.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "33",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":1690000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":8450000}]"
+        },
+        "terms": {
+          "product_cat": [
+            {
+              "name": "Готовые сайты",
+              "slug": "sites",
+              "url": "https://market.example/shop/category/sites/"
+            }
+          ]
+        },
+        "product": {
+          "price": "16 900,00 ₽",
+          "regular": "",
+          "on_sale": false,
+          "sku": "EDU-CAMPUS",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 1690000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "16 900,00 ₽",
+              "price_cents": 1690000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "84 500,00 ₽",
+              "price_cents": 8450000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Готовые сайты",
+            "slug": "sites",
+            "url": "https://market.example/shop/category/sites/"
+          }
+        ],
+        "seller": {
+          "name": "Pixel Forge",
+          "url": "https://market.example/author/pixel-forge/"
+        }
+      },
+      {
+        "id": 12,
+        "title": "Restoran — сайт ресторана",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "restoran",
+        "url": "https://market.example/product/restoran/",
+        "excerpt": "Меню, бронирование столов, банкеты и доставка.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-restoran-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Restoran",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        },
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-restoran-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Restoran",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "Volga Dev",
+          "url": "https://market.example/author/volga-dev/"
+        },
+        "post_class": "post-12 product type-product status-publish has-post-thumbnail hentry product_cat-sites",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "15.10.2026",
+          "iso": "2026-10-15T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "990000",
+          "sale_price": "",
+          "sku": "RESTORAN",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "Новинка",
+          "version": "1.0.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.0.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "35",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":990000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":4950000}]"
+        },
+        "terms": {
+          "product_cat": [
+            {
+              "name": "Готовые сайты",
+              "slug": "sites",
+              "url": "https://market.example/shop/category/sites/"
+            }
+          ]
+        },
+        "product": {
+          "price": "9 900,00 ₽",
+          "regular": "",
+          "on_sale": false,
+          "sku": "RESTORAN",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 990000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "9 900,00 ₽",
+              "price_cents": 990000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "49 500,00 ₽",
+              "price_cents": 4950000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Готовые сайты",
+            "slug": "sites",
+            "url": "https://market.example/shop/category/sites/"
+          }
+        ],
+        "seller": {
+          "name": "Volga Dev",
+          "url": "https://market.example/author/volga-dev/"
+        }
+      },
+      {
+        "id": 13,
+        "title": "Latte Magazine — тема для медиа",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "latte-magazine",
+        "url": "https://market.example/product/latte-magazine/",
+        "excerpt": "Быстрая журнальная тема: рубрики, авторы, подборки и рекламные места.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-latte-magazine-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Latte Magazine",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        },
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-latte-magazine-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Latte Magazine",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "FastY Studio",
+          "url": "https://market.example/author/fasty-studio/"
+        },
+        "post_class": "post-13 product type-product status-publish has-post-thumbnail hentry product_cat-themes",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "12.10.2026",
+          "iso": "2026-10-12T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "590000",
+          "sale_price": "490000",
+          "sku": "LATTE-MAGAZINE",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "Хит",
+          "version": "1.1.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.1.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "37",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":490000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":2450000}]"
+        },
+        "terms": {
+          "product_cat": [
+            {
+              "name": "Темы",
+              "slug": "themes",
+              "url": "https://market.example/shop/category/themes/"
+            }
+          ]
+        },
+        "product": {
+          "price": "4 900,00 ₽",
+          "regular": "5 900,00 ₽",
+          "on_sale": true,
+          "sku": "LATTE-MAGAZINE",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 490000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "4 900,00 ₽",
+              "price_cents": 490000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "24 500,00 ₽",
+              "price_cents": 2450000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Темы",
+            "slug": "themes",
+            "url": "https://market.example/shop/category/themes/"
+          }
+        ],
+        "seller": {
+          "name": "FastY Studio",
+          "url": "https://market.example/author/fasty-studio/"
+        }
+      },
+      {
+        "id": 14,
+        "title": "Folio Noir — тема портфолио",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "folio-noir",
+        "url": "https://market.example/product/folio-noir/",
+        "excerpt": "Тёмное портфолио для дизайнеров и студий с кейсами на всю ширину.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-folio-noir-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Folio Noir",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        },
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-folio-noir-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Folio Noir",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "Pixel Forge",
+          "url": "https://market.example/author/pixel-forge/"
+        },
+        "post_class": "post-14 product type-product status-publish has-post-thumbnail hentry product_cat-themes",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "09.10.2026",
+          "iso": "2026-10-09T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "490000",
+          "sale_price": "",
+          "sku": "FOLIO-NOIR",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "",
+          "version": "1.2.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.2.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "39",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":490000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":2450000}]"
+        },
+        "terms": {
+          "product_cat": [
+            {
+              "name": "Темы",
+              "slug": "themes",
+              "url": "https://market.example/shop/category/themes/"
+            }
+          ]
+        },
+        "product": {
+          "price": "4 900,00 ₽",
+          "regular": "",
+          "on_sale": false,
+          "sku": "FOLIO-NOIR",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 490000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "4 900,00 ₽",
+              "price_cents": 490000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "24 500,00 ₽",
+              "price_cents": 2450000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Темы",
+            "slug": "themes",
+            "url": "https://market.example/shop/category/themes/"
+          }
+        ],
+        "seller": {
+          "name": "Pixel Forge",
+          "url": "https://market.example/author/pixel-forge/"
+        }
+      },
+      {
+        "id": 15,
+        "title": "SaaS Launch — тема для стартапа",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "saas-launch",
+        "url": "https://market.example/product/saas-launch/",
+        "excerpt": "Лендинг продукта, тарифы, документация и changelog.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-saas-launch-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Saas Launch",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        },
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-saas-launch-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Saas Launch",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "NordCode",
+          "url": "https://market.example/author/nordcode/"
+        },
+        "post_class": "post-15 product type-product status-publish has-post-thumbnail hentry product_cat-themes",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "06.10.2026",
+          "iso": "2026-10-06T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "690000",
+          "sale_price": "",
+          "sku": "SAAS-LAUNCH",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "",
+          "version": "1.3.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.3.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "41",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":690000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":3450000}]"
+        },
+        "terms": {
+          "product_cat": [
+            {
+              "name": "Темы",
+              "slug": "themes",
+              "url": "https://market.example/shop/category/themes/"
+            }
+          ]
+        },
+        "product": {
+          "price": "6 900,00 ₽",
+          "regular": "",
+          "on_sale": false,
+          "sku": "SAAS-LAUNCH",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 690000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "6 900,00 ₽",
+              "price_cents": 690000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "34 500,00 ₽",
+              "price_cents": 3450000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Темы",
+            "slug": "themes",
+            "url": "https://market.example/shop/category/themes/"
+          }
+        ],
+        "seller": {
+          "name": "NordCode",
+          "url": "https://market.example/author/nordcode/"
+        }
+      },
+      {
+        "id": 16,
+        "title": "Minimal Blog — тема для блога",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "minimal-blog",
+        "url": "https://market.example/product/minimal-blog/",
+        "excerpt": "Читабельная типографика, тёмная тема и мгновенная загрузка.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-minimal-blog-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Minimal Blog",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        },
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-minimal-blog-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Minimal Blog",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "Volga Dev",
+          "url": "https://market.example/author/volga-dev/"
+        },
+        "post_class": "post-16 product type-product status-publish has-post-thumbnail hentry product_cat-themes",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "03.10.2026",
+          "iso": "2026-10-03T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "290000",
+          "sale_price": "",
+          "sku": "MINIMAL-BLOG",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "",
+          "version": "1.4.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.4.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "43",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":290000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":1450000}]"
+        },
+        "terms": {
+          "product_cat": [
+            {
+              "name": "Темы",
+              "slug": "themes",
+              "url": "https://market.example/shop/category/themes/"
+            }
+          ]
+        },
+        "product": {
+          "price": "2 900,00 ₽",
+          "regular": "",
+          "on_sale": false,
+          "sku": "MINIMAL-BLOG",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 290000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "2 900,00 ₽",
+              "price_cents": 290000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "14 500,00 ₽",
+              "price_cents": 1450000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Темы",
+            "slug": "themes",
+            "url": "https://market.example/shop/category/themes/"
+          }
+        ],
+        "seller": {
+          "name": "Volga Dev",
+          "url": "https://market.example/author/volga-dev/"
+        }
+      },
+      {
+        "id": 17,
+        "title": "FastY SEO — плагин SEO и схемы",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "fasty-seo",
+        "url": "https://market.example/product/fasty-seo/",
+        "excerpt": "Мета-теги, sitemap, Schema.org и хлебные крошки без лишних запросов.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-fasty-seo-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Fasty Seo",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        },
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-fasty-seo-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Fasty Seo",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "FastY Studio",
+          "url": "https://market.example/author/fasty-studio/"
+        },
+        "post_class": "post-17 product type-product status-publish has-post-thumbnail hentry product_cat-plugins",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "30.09.2026",
+          "iso": "2026-09-30T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "390000",
+          "sale_price": "",
+          "sku": "FASTY-SEO",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "Хит",
+          "version": "1.0.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.0.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "45",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":390000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":1950000}]"
+        },
+        "terms": {
+          "product_cat": [
+            {
+              "name": "Плагины",
+              "slug": "plugins",
+              "url": "https://market.example/shop/category/plugins/"
+            }
+          ]
+        },
+        "product": {
+          "price": "3 900,00 ₽",
+          "regular": "",
+          "on_sale": false,
+          "sku": "FASTY-SEO",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 390000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "3 900,00 ₽",
+              "price_cents": 390000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "19 500,00 ₽",
+              "price_cents": 1950000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Плагины",
+            "slug": "plugins",
+            "url": "https://market.example/shop/category/plugins/"
+          }
+        ],
+        "seller": {
+          "name": "FastY Studio",
+          "url": "https://market.example/author/fasty-studio/"
+        }
+      },
+      {
+        "id": 18,
+        "title": "Form Forge — конструктор форм 152-ФЗ",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "form-forge",
+        "url": "https://market.example/product/form-forge/",
+        "excerpt": "Формы с раздельными согласиями, журналом и хранением в РФ.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-form-forge-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Form Forge",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        },
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-form-forge-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Form Forge",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "Pixel Forge",
+          "url": "https://market.example/author/pixel-forge/"
+        },
+        "post_class": "post-18 product type-product status-publish has-post-thumbnail hentry product_cat-plugins",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "27.09.2026",
+          "iso": "2026-09-27T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "450000",
+          "sale_price": "360000",
+          "sku": "FORM-FORGE",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "",
+          "version": "1.1.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.1.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "47",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":360000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":1800000}]"
+        },
+        "terms": {
+          "product_cat": [
+            {
+              "name": "Плагины",
+              "slug": "plugins",
+              "url": "https://market.example/shop/category/plugins/"
+            }
+          ]
+        },
+        "product": {
+          "price": "3 600,00 ₽",
+          "regular": "4 500,00 ₽",
+          "on_sale": true,
+          "sku": "FORM-FORGE",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 360000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "3 600,00 ₽",
+              "price_cents": 360000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "18 000,00 ₽",
+              "price_cents": 1800000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Плагины",
+            "slug": "plugins",
+            "url": "https://market.example/shop/category/plugins/"
+          }
+        ],
+        "seller": {
+          "name": "Pixel Forge",
+          "url": "https://market.example/author/pixel-forge/"
+        }
+      },
+      {
+        "id": 19,
+        "title": "Cache Turbo — ускорение сайта",
+        "content": "<h2>Что внутри</h2>\n<ul>\n<li>Чистый код на UI8Kit, без привязки к конструктору страниц.</li>\n<li>Светлая и тёмная палитры на дизайн-токенах.</li>\n<li>Демо-контент и пошаговая инструкция по установке.</li>\n<li>Совместимость с актуальными WordPress и PHP.</li>\n</ul>\n",
+        "slug": "cache-turbo",
+        "url": "https://market.example/product/cache-turbo/",
+        "excerpt": "Страничный кеш, критический CSS и отложенные скрипты.",
+        "featuredImage": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-cache-turbo-1.jpg",
+          "width": "1024",
+          "height": "576",
+          "alt": "Market Cache Turbo",
+          "srcset": "",
+          "sizes": "(max-width: 1024px) 100vw, 1024px"
+        },
+        "thumbnail": {
+          "url": "https://market.example/wp-content/uploads/2026/10/market-cache-turbo-1.jpg",
+          "width": "300",
+          "height": "169",
+          "alt": "Market Cache Turbo",
+          "srcset": "",
+          "sizes": "(max-width: 300px) 100vw, 300px"
+        },
+        "categories": [],
+        "tags": [],
+        "author": {
+          "name": "NordCode",
+          "url": "https://market.example/author/nordcode/"
+        },
+        "post_class": "post-19 product type-product status-publish has-post-thumbnail hentry product_cat-plugins",
+        "link_pages": "",
+        "prev": null,
+        "next": null,
+        "mime_type": "",
+        "is_attachment": false,
+        "date": {
+          "display": "24.09.2026",
+          "iso": "2026-09-24T19:55:57+03:00"
+        },
+        "fields": {
+          "price": "550000",
+          "sale_price": "",
+          "sku": "CACHE-TURBO",
+          "stock": "",
+          "rating": "",
+          "reviews": "",
+          "badge": "",
+          "version": "1.2.0",
+          "requires_wp": "6.5",
+          "requires_php": "8.2",
+          "changelog": "1.2.0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз",
+          "preview_url": "https://market.example/",
+          "download_file": "49",
+          "licenses": "[{\"tier\":\"regular\",\"label\":\"Обычная\",\"price\":550000},{\"tier\":\"extended\",\"label\":\"Расширенная\",\"price\":2750000}]"
+        },
+        "terms": {
+          "product_cat": [
+            {
+              "name": "Плагины",
+              "slug": "plugins",
+              "url": "https://market.example/shop/category/plugins/"
+            }
+          ]
+        },
+        "product": {
+          "price": "5 500,00 ₽",
+          "regular": "",
+          "on_sale": false,
+          "sku": "CACHE-TURBO",
+          "stock": null,
+          "in_stock": true,
+          "purchasable": true,
+          "price_cents": 550000,
+          "licenses": [
+            {
+              "tier": "regular",
+              "label": "Обычная",
+              "price": "5 500,00 ₽",
+              "price_cents": 550000
+            },
+            {
+              "tier": "extended",
+              "label": "Расширенная",
+              "price": "27 500,00 ₽",
+              "price_cents": 2750000
+            }
+          ],
+          "reviews_available": true,
+          "reviews_list": [],
+          "review_action": "https://market.example/wp-comments-post.php"
+        },
+        "product_cats": [
+          {
+            "name": "Плагины",
+            "slug": "plugins",
+            "url": "https://market.example/shop/category/plugins/"
+          }
+        ],
+        "seller": {
+          "name": "NordCode",
+          "url": "https://market.example/author/nordcode/"
+        }
+      }
+    ],
+    "pagination": {
+      "current": 1,
+      "total": 2,
+      "prev_url": null,
+      "next_url": "https://market.example/shop/page/2/?zzdump=shop",
+      "url": "https://market.example/shop/page/{0}/?zzdump=shop",
+      "first_url": "https://market.example/shop/?zzdump=shop"
+    },
+    "shop": {
+      "enabled": true,
+      "url": "https://market.example/shop/",
+      "cart_url": "https://market.example/cart/",
+      "checkout_url": "https://market.example/checkout/",
+      "action": "https://market.example/wp-admin/admin-post.php",
+      "cart_nonce": "0000000000",
+      "checkout_nonce": "0000000000",
+      "count": 1,
+      "free_shipping": "",
+      "digital": true,
+      "cart_available": true,
+      "orders": true,
+      "checkout_available": true,
+      "account_url": "https://market.example/wp-login.php?redirect_to=http%3A%2F%2Flocalhost%3A8081%2Fcart%2F",
+      "notice": null,
+      "categories": [
+        {
+          "name": "Готовые сайты",
+          "slug": "sites",
+          "url": "https://market.example/shop/category/sites/"
+        },
+        {
+          "name": "Плагины",
+          "slug": "plugins",
+          "url": "https://market.example/shop/category/plugins/"
+        },
+        {
+          "name": "Темы",
+          "slug": "themes",
+          "url": "https://market.example/shop/category/themes/"
+        }
+      ],
+      "current_cat": ""
+    },
+    "company": {
+      "name": "ООО «ИТ Гараж»",
+      "ogrn": "0000000000000",
+      "inn": "0000000000",
+      "kpp": "000000000",
+      "address": "000000, г. Москва, ул. Демонстрационная, д. 0 (демо-адрес)",
+      "email": "legal@example.com"
+    },
+    "legal_menu": [
+      {
+        "title": "Публичная оферта и лицензионный договор",
+        "url": "https://market.example/oferta/"
+      },
+      {
+        "title": "Политика обработки персональных данных",
+        "url": "https://market.example/privacy-policy/"
+      },
+      {
+        "title": "Согласие на обработку персональных данных",
+        "url": "https://market.example/consent/"
+      },
+      {
+        "title": "Согласие на получение рассылки",
+        "url": "https://market.example/newsletter-consent/"
+      },
+      {
+        "title": "Политика использования cookie",
+        "url": "https://market.example/cookies/"
+      },
+      {
+        "title": "Условия возврата",
+        "url": "https://market.example/refund/"
+      },
+      {
+        "title": "Реквизиты продавца",
+        "url": "https://market.example/requisites/"
+      }
+    ],
+    "slots": {}
+  }
 }

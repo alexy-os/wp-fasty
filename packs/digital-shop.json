@@ -1,0 +1,42 @@
+{
+  "$comment": "Pack: what makes a digital-goods store (WP FastY Market). Installed in this order by playground/market.json.",
+  "id": "digital-shop",
+  "name": "WP FastY — digital shop",
+  "version": "1.0.0",
+  "license": "AGPL-3.0-or-later",
+  "locale": "ru_RU",
+  "themes": [
+    { "slug": "latte", "role": "parent", "path": "themes/latte" },
+    { "slug": "latte-shop", "role": "base", "path": "themes/latte-shop", "note": "layered by the child's `Extends: latte-shop` header (WordPress allows two theme generations)" },
+    { "slug": "wpfasty-market", "role": "active", "path": "themes/wpfasty-market" }
+  ],
+  "plugins": [
+    { "slug": "wpfasty-types", "path": "plugins/wpfasty-types" },
+    { "slug": "wpfasty-builder", "path": "plugins/wpfasty-builder" },
+    { "slug": "moduly", "source": "https://github.com/phpfasty/wpmodules" }
+  ],
+  "modules": [
+    { "id": "types", "version": "^0.2" },
+    { "id": "cart", "version": "^0.2", "settings": { "digital_only": true } },
+    { "id": "orders", "version": "^0.2" },
+    { "id": "downloads", "version": "^0.1.1" },
+    { "id": "consent-log", "version": "^0.1.1" },
+    { "id": "cookie-consent", "version": "^0.1.1" },
+    { "id": "reviews", "version": "^0.1.1" },
+    { "id": "licenses", "version": "^0.1" }
+  ],
+  "content": {
+    "demo": "tools/demo/market.php",
+    "legal": "tools/demo/legal.json",
+    "landings": ["tools/builder/landings/market.json"],
+    "frontPage": "landing:market"
+  },
+  "slots": {
+    "product.purchase": ["licenses"],
+    "product.after": ["licenses", "downloads", "reviews"],
+    "checkout.consents": ["consent-log"],
+    "checkout.order": ["downloads"],
+    "footer": ["cookie-consent"]
+  },
+  "playground": "playground/market.json"
+}

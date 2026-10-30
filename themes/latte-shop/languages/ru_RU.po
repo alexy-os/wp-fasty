@@ -1,0 +1,234 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "Add to cart"
+msgstr "В корзину"
+
+msgid "Buy now"
+msgstr "Купить сейчас"
+
+msgid "Cart"
+msgstr "Корзина"
+
+msgid "Checkout"
+msgstr "Оформление заказа"
+
+msgid "Subtotal"
+msgstr "Подытог"
+
+msgid "Shipping"
+msgstr "Доставка"
+
+msgid "Total"
+msgstr "Итого"
+
+msgid "Quantity"
+msgstr "Количество"
+
+msgid "Remove"
+msgstr "Удалить"
+
+msgid "Update cart"
+msgstr "Обновить корзину"
+
+msgid "Your cart is empty."
+msgstr "Корзина пуста."
+
+msgid "Continue shopping"
+msgstr "Продолжить покупки"
+
+msgid "Place order"
+msgstr "Оформить заказ"
+
+msgid "Out of stock"
+msgstr "Нет в наличии"
+
+msgid "Sale"
+msgstr "Скидка"
+
+msgid "All"
+msgstr "Все"
+
+msgid "Shop now"
+msgstr "В каталог"
+
+msgid "Featured products"
+msgstr "Рекомендуемые товары"
+
+msgid "Thank you — your order has been received."
+msgstr "Спасибо — заказ принят."
+
+msgid "Order"
+msgstr "Заказ"
+
+msgid "Address"
+msgstr "Адрес"
+
+msgid "Please check"
+msgstr "Проверьте поля"
+
+msgid "Payment"
+msgstr "Оплата"
+
+msgid "Demo store — no real payment is taken."
+msgstr "Демо-магазин — реальная оплата не списывается."
+
+msgid "Temporarily unavailable"
+msgstr "Временно недоступно"
+
+msgid "This feature is temporarily unavailable. Please try again later."
+msgstr "Функция временно недоступна. Попробуйте позже."
+
+msgid "Back to site"
+msgstr "Вернуться на сайт"
+
+msgid "No products found."
+msgstr "Товары не найдены."
+
+msgid "Breadcrumb"
+msgstr "Навигационная цепочка"
+
+msgid "items"
+msgstr "товаров"
+
+msgid "author since"
+msgstr "автор с"
+
+msgid "by"
+msgstr "автор"
+
+msgid "Account"
+msgstr "Аккаунт"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "30-day easy returns"
+msgstr "Возврат в течение 30 дней"
+
+msgid "Instant download after payment"
+msgstr "Скачивание сразу после оплаты"
+
+msgid "Updates included"
+msgstr "Обновления включены"
+
+msgid "Pay on delivery or by bank transfer"
+msgstr "Оплата при получении или переводом"
+
+msgid "Free shipping over %s"
+msgstr "Бесплатная доставка от %s"
+
+msgid "Fast delivery"
+msgstr "Быстрая доставка"
+
+msgid "Full name"
+msgstr "Имя и фамилия"
+
+msgid "Email for download links"
+msgstr "Email для ссылок на скачивание"
+
+msgid "Phone"
+msgstr "Телефон"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Country"
+msgstr "Страна"
+
+msgid "City"
+msgstr "Город"
+
+msgid "Postcode"
+msgstr "Индекс"
+
+msgid "Acceptance of the offer"
+msgstr "Согласие с офертой"
+
+msgid "Consent to personal data processing"
+msgstr "Согласие на обработку персональных данных"
+
+msgid "Bank card"
+msgstr "Банковская карта"
+
+msgid "Faster Payments System (SBP)"
+msgstr "СБП"
+
+msgid "Invoice for companies"
+msgstr "Счёт для юрлиц"
+
+msgid "Cash on delivery"
+msgstr "Оплата при получении"
+
+msgid "Bank transfer"
+msgstr "Банковский перевод"
+
+msgid "Added to your cart."
+msgstr "Добавлено в корзину."
+
+msgid "Item removed."
+msgstr "Товар удалён."
+
+msgid "Cart updated."
+msgstr "Корзина обновлена."
+
+msgid "Sorry, this product is unavailable."
+msgstr "Извините, товар недоступен."
+
+msgid "This theme needs the \"WP FastY Types\" plugin (plugins/wpfasty-types) to register its content types."
+msgstr "Теме нужен плагин «WP FastY Types» (plugins/wpfasty-types) для регистрации типов записей."
+
+msgid "Products"
+msgstr "Товары"
+
+msgid "Product"
+msgstr "Товар"
+
+msgid "Add product"
+msgstr "Добавить товар"
+
+msgid "Edit product"
+msgstr "Редактировать товар"
+
+msgid "Product categories"
+msgstr "Категории товаров"
+
+msgid "Product category"
+msgstr "Категория товара"
+
+msgid "Price"
+msgstr "Цена"
+
+msgid "Sale price"
+msgstr "Цена со скидкой"
+
+msgid "SKU"
+msgstr "Артикул"
+
+msgid "Stock (empty = unlimited)"
+msgstr "Остаток (пусто = без лимита)"
+
+msgid "Rating (0-5)"
+msgstr "Рейтинг (0–5)"
+
+msgid "Reviews"
+msgstr "Отзывы"
+
+msgid "Badge (empty = sale when discounted)"
+msgstr "Бейдж (пусто = «Скидка» при скидке)"
+
+msgid "Product data"
+msgstr "Данные товара"
+
+msgid "Shop"
+msgstr "Каталог"
+
+msgid "Stock"
+msgstr "Остаток"
+
+msgid "Orders"
+msgstr "Заказы"
+

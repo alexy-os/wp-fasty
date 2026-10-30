@@ -1,0 +1,303 @@
+{
+  "uri": "/privacy-policy/",
+  "view": "pages/page",
+  "page": true,
+  "context": {
+    "site": {
+      "title": "WP FastY",
+      "url": "https://market.example/",
+      "theme_url": "https://market.example/wp-content/themes/latte",
+      "stylesheet_url": "https://market.example/wp-content/themes/wpfasty-market",
+      "lang": "ru-RU",
+      "description": "Маркетплейс готовых сайтов, тем и плагинов WordPress",
+      "charset": "UTF-8",
+      "year": "2026",
+      "logo": null
+    },
+    "menu": {
+      "primary": {
+        "items": [
+          {
+            "title": "Каталог",
+            "url": "https://market.example/shop/",
+            "id": 93,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Сайты",
+            "url": "https://market.example/shop/category/sites/",
+            "id": 94,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Темы",
+            "url": "https://market.example/shop/category/themes/",
+            "id": 95,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Плагины",
+            "url": "https://market.example/shop/category/plugins/",
+            "id": 96,
+            "current": false,
+            "children": []
+          }
+        ]
+      },
+      "footer": {
+        "items": []
+      },
+      "legal": {
+        "items": [
+          {
+            "title": "Публичная оферта и лицензионный договор",
+            "url": "https://market.example/oferta/",
+            "id": 86,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Политика обработки персональных данных",
+            "url": "https://market.example/privacy-policy/",
+            "id": 87,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Согласие на обработку персональных данных",
+            "url": "https://market.example/consent/",
+            "id": 88,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Согласие на получение рассылки",
+            "url": "https://market.example/newsletter-consent/",
+            "id": 89,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Политика использования cookie",
+            "url": "https://market.example/cookies/",
+            "id": 90,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Условия возврата",
+            "url": "https://market.example/refund/",
+            "id": 91,
+            "current": false,
+            "children": []
+          },
+          {
+            "title": "Реквизиты продавца",
+            "url": "https://market.example/requisites/",
+            "id": 92,
+            "current": false,
+            "children": []
+          }
+        ]
+      }
+    },
+    "shell": "classic",
+    "sheet": {
+      "trigger": "classic-mobile-sheet-trigger",
+      "panel": "classic-mobile-sheet-panel",
+      "title": "classic-mobile-sheet-title"
+    },
+    "labels": {
+      "featured": "Избранное",
+      "latest_articles": "Последние статьи",
+      "no_posts": "Ничего не найдено.",
+      "previous": "Назад",
+      "next": "Дальше",
+      "skip_to_content": "Перейти к содержимому",
+      "open_menu": "Открыть меню",
+      "close_menu": "Закрыть меню",
+      "dark_mode": "Тёмная тема",
+      "primary_nav": "Основное меню",
+      "mobile_nav": "Мобильное меню",
+      "search_site": "Поиск по сайту",
+      "search_mobile": "Поиск в меню",
+      "search_404": "Искать снова",
+      "footer_nav": "Подвал",
+      "sidebar": "Боковая панель",
+      "pagination": "Страницы",
+      "posted_on": "Опубликовано",
+      "by_author": "Автор",
+      "categories": "Рубрики",
+      "tags": "Метки",
+      "previous_post": "Предыдущая запись",
+      "next_post": "Следующая запись",
+      "attachment": "Вложение",
+      "pages": "Страницы:",
+      "add_to_cart": "В корзину",
+      "buy_now": "Купить сейчас",
+      "cart": "Корзина",
+      "checkout": "Оформление заказа",
+      "subtotal": "Подытог",
+      "shipping": "Доставка",
+      "total": "Итого",
+      "qty": "Количество",
+      "remove": "Удалить",
+      "update_cart": "Обновить корзину",
+      "empty_cart": "Корзина пуста.",
+      "continue_shopping": "Продолжить покупки",
+      "place_order": "Оформить заказ",
+      "out_of_stock": "Нет в наличии",
+      "sale": "Скидка",
+      "all_products": "Все",
+      "shop_now": "В каталог",
+      "order_received": "Спасибо — заказ принят.",
+      "order_number": "Заказ",
+      "address": "Адрес",
+      "check_fields": "Проверьте поля",
+      "payment": "Оплата",
+      "demo_notice": "Демо-магазин — реальная оплата не списывается.",
+      "unavailable_title": "Временно недоступно",
+      "unavailable_text": "Функция временно недоступна. Попробуйте позже.",
+      "back_to_site": "Вернуться на сайт",
+      "no_products": "Товары не найдены.",
+      "breadcrumb": "Навигационная цепочка",
+      "author_items": "товаров",
+      "author_since": "автор с",
+      "account": "Аккаунт",
+      "account_search": "Поиск",
+      "returns": "Возврат в течение 30 дней",
+      "instant_download": "Скачивание сразу после оплаты",
+      "updates_included": "Обновления включены",
+      "pay_options": "Оплата при получении или переводом",
+      "free_shipping_over": "Быстрая доставка",
+      "footer_about": "Готовые сайты, темы и плагины для WordPress. Быстрые, доступные, без конструкторов страниц.",
+      "footer_market": "Каталог",
+      "footer_docs": "Документы",
+      "footer_company": "Продавец",
+      "ogrn": "ОГРН",
+      "inn": "ИНН",
+      "rights": "Все права защищены."
+    },
+    "search": {
+      "action": "https://market.example/",
+      "query": "",
+      "placeholder": "Поиск…",
+      "submit": "Поиск",
+      "label": "Поиск"
+    },
+    "widgets": {
+      "sidebar": "",
+      "footer": ""
+    },
+    "page": {
+      "id": 3,
+      "title": "Политика обработки персональных данных",
+      "content": "<p class=\"demo-note\"><strong>Демо-данные.</strong> Реквизиты ООО «ИТ Гараж» на этой странице вымышлены (ОГРН 0000000000000, ИНН 0000000000, КПП 000000000) и показаны только для демонстрации шаблона. Документ не является офертой.</p>\n<h3>1. Общие положения</h3>\n<p>1.1. Политика издана во исполнение ч. 2 ст. 18.1 Федерального закона от 27.07.2006 № 152-ФЗ и определяет порядок обработки ПДн пользователей сайта WP FastY оператором ООО «ИТ Гараж».</p>\n<p>1.2. Политика публикуется на сайте и доступна неограниченному кругу лиц.</p>\n<h3>2. Цели, категории, основания, сроки</h3>\n<table>\n<tr>\n<td>Цель</td>\n<td>ПДн</td>\n<td>Основание</td>\n<td>Срок</td>\n</tr>\n<tr>\n<td>Регистрация, личный кабинет</td>\n<td></td>\n</tr>\n</table>\n<p>эш пароля | п.5 ч.1 ст.6 (договор) | до удаления аккаунта + N |</p>\n<table>\n<tr>\n<td>Исполнение заказа, выдача лицензии</td>\n<td>ФИО (по желанию), email, данные заказа</td>\n<td>п.5 ч.1 ст.6</td>\n<td>срок договора + 5 лет (налоговый учёт)</td>\n</tr>\n<tr>\n<td>Направление кассового чека</td>\n<td>email/телефон</td>\n<td>п.2 ч.1 ст.6 (54-ФЗ)</td>\n<td>срок</td>\n</tr>\n<tr>\n<td>Ответы на обращения</td>\n<td>имя, email, текст</td>\n<td>согласие</td>\n<td>1 год</td>\n</tr>\n<tr>\n<td>Рекламная рассылка</td>\n<td>email, имя</td>\n<td>согласие (отдельное)</td>\n<td>до отзыва</td>\n</tr>\n<tr>\n<td>Веб-аналитика (Яндекс.Метрика)</td>\n<td>cookie, ID, IP, данные устройства, действия на сайте</td>\n<td>согласие (cookie-баннер)</td>\n<td>срок</td>\n</tr>\n</table>\n<h3>3. Действия и способы</h3>\n</p>\n<p>ранение, уточнение, извлечение, использование, передача (предоставление, доступ), блокирование, удаление, уничтожение; автоматизированная обработка.</p>\n<h3>4. Передача третьим лицам (поручение, ч.3 ст.6)</h3>\n</p>\n<p> ООО «Демо-ОФД»; ООО «Яндекс» (Метрика) — при согласии. Трансграничная передача не осуществляется.</p>\n<h3>5. Локализация</h3>\n</p>\n<p> на территории РФ (ч.5 ст.18).</p>\n<h3>6. Права субъекта</h3>\n</p>\n<p> дней (может быть продлён на 5).</p>\n<h3>7. Защита</h3>\n<p>Ответственный за организацию обработки ПДн: Иванов Иван Иванович (демо). Меры по ст. 18.1, 19: локальные акты, ограничение доступа, TLS, резервное копирование, учёт инцидентов; о неправомерной передаче (утечке) — уведомление РКН в 24/72 ч.</p>\n<h3>8. Заключительные положения</h3>\n<p>Оператор внесён в реестр операторов РКН: номер / «уведомление будет подано». Изменения публикуются на этой странице.</p>\n",
+      "slug": "privacy-policy",
+      "url": "https://market.example/privacy-policy/",
+      "excerpt": "Демо-данные. Реквизиты ООО «ИТ Гараж» на этой странице вымышлены (ОГРН 0000000000000, ИНН 0000000000, КПП 000000000) и показаны только для демонстрации шаблона. Документ не является офертой. 1. Общие положения 1.1. Политика издана во исполнение ч. 2 ст. 18.1 Федерального закона от…",
+      "featuredImage": null,
+      "thumbnail": null,
+      "categories": [],
+      "tags": [],
+      "author": {
+        "name": "admin",
+        "url": "https://market.example/author/admin/"
+      },
+      "post_class": "post-3 page type-page status-publish hentry",
+      "link_pages": "",
+      "prev": null,
+      "next": null,
+      "mime_type": "",
+      "is_attachment": false,
+      "date": {
+        "display": "30.10.2026",
+        "iso": "2026-10-30T19:20:33+03:00"
+      }
+    },
+    "hero": {
+      "primary_label": "Смотреть",
+      "primary_url": "https://market.example/",
+      "secondary_label": "Подробнее",
+      "secondary_url": "https://market.example/"
+    },
+    "comments": "",
+    "shop": {
+      "enabled": true,
+      "url": "https://market.example/shop/",
+      "cart_url": "https://market.example/cart/",
+      "checkout_url": "https://market.example/checkout/",
+      "action": "https://market.example/wp-admin/admin-post.php",
+      "cart_nonce": "0000000000",
+      "checkout_nonce": "0000000000",
+      "count": 1,
+      "free_shipping": "",
+      "digital": true,
+      "cart_available": true,
+      "orders": true,
+      "checkout_available": true,
+      "account_url": "https://market.example/wp-login.php?redirect_to=http%3A%2F%2Flocalhost%3A8081%2Fcart%2F",
+      "notice": null,
+      "categories": [
+        {
+          "name": "Готовые сайты",
+          "slug": "sites",
+          "url": "https://market.example/shop/category/sites/"
+        },
+        {
+          "name": "Плагины",
+          "slug": "plugins",
+          "url": "https://market.example/shop/category/plugins/"
+        },
+        {
+          "name": "Темы",
+          "slug": "themes",
+          "url": "https://market.example/shop/category/themes/"
+        }
+      ],
+      "current_cat": ""
+    },
+    "company": {
+      "name": "ООО «ИТ Гараж»",
+      "ogrn": "0000000000000",
+      "inn": "0000000000",
+      "kpp": "000000000",
+      "address": "000000, г. Москва, ул. Демонстрационная, д. 0 (демо-адрес)",
+      "email": "legal@example.com"
+    },
+    "legal_menu": [
+      {
+        "title": "Публичная оферта и лицензионный договор",
+        "url": "https://market.example/oferta/"
+      },
+      {
+        "title": "Политика обработки персональных данных",
+        "url": "https://market.example/privacy-policy/"
+      },
+      {
+        "title": "Согласие на обработку персональных данных",
+        "url": "https://market.example/consent/"
+      },
+      {
+        "title": "Согласие на получение рассылки",
+        "url": "https://market.example/newsletter-consent/"
+      },
+      {
+        "title": "Политика использования cookie",
+        "url": "https://market.example/cookies/"
+      },
+      {
+        "title": "Условия возврата",
+        "url": "https://market.example/refund/"
+      },
+      {
+        "title": "Реквизиты продавца",
+        "url": "https://market.example/requisites/"
+      }
+    ],
+    "slots": {}
+  }
+}

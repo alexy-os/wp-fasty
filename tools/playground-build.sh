@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build WordPress Playground preview artifacts into playground/:
-#   latte.zip (parent, vendored), latte-press.zip, latte-folio.zip, latte-shop.zip, wp-fasty-market.zip, wpfasty-types.zip,
+#   latte.zip (parent, vendored), latte-press.zip, latte-folio.zip, latte-shop.zip, wpfasty-market.zip, wpfasty-types.zip,
 #   wpfasty-builder.zip, demo.zip (seeders, images, builder landings);
 #   Twig shop: twig.zip (Twig parent, no Latte), latte-shop-twig.zip (generated Twig twin of latte-shop, only .html.twig
 #   views), wpfasty-builder-twig.zip (Twig runtime only)
@@ -17,7 +17,7 @@ cp dist/twig.zip "$OUT/twig.zip"
 # Files on disk that git does not track (stale build leftovers) never go into a preview zip.
 untracked() { git ls-files --others --exclude-standard -- "$1" | sed "s#^$1/##"; }
 
-for t in latte-press latte-folio latte-shop wp-fasty-market; do
+for t in latte-press latte-folio latte-shop wpfasty-market; do
   rm -f "$OUT/$t.zip"
   (cd themes && zip -qr "$OUT/$t.zip" "$t" -x "*/~cache/*" "*/node_modules/*")
 done
@@ -44,7 +44,7 @@ rm -rf "$TWIN"
 
 STAGE="$(mktemp -d)"
 mkdir -p "$STAGE/wpfasty-demo/images"
-cp tools/demo/*.php "$STAGE/wpfasty-demo/"
+cp tools/demo/*.php tools/demo/*.json "$STAGE/wpfasty-demo/"
 # Builder landings (WPFastyBuilder\Seeder::landing in the blueprints).
 mkdir -p "$STAGE/wpfasty-demo/landings"
 cp tools/builder/landings/*.json "$STAGE/wpfasty-demo/landings/"
@@ -70,7 +70,7 @@ rm -rf "$STAGE"
 # default ../wpmodules/dist); otherwise the public release assets of $WPMODULES_RELEASE (default "edge", rebuilt by
 # wpmodules CI on every push to main) are downloaded and checked against their SHA256SUMS.
 MD="${WPMODULES_DIST:-$ROOT/../wpmodules/dist}"
-MODULES="types cart orders downloads consent-log cookie-consent reviews"
+MODULES="types cart orders downloads consent-log cookie-consent reviews licenses"
 if [ -d "$MD/modules" ]; then
   cp "$MD"/moduly-*.zip "$OUT/moduly.zip"
   for id in $MODULES; do cp "$MD"/modules/$id-*.zip "$OUT/moduly-$id.zip"; done

@@ -1,0 +1,31 @@
+{
+  "page": { "title": "WP FastY", "slug": "home" },
+  "front": true,
+  "layout": {
+    "source": "ui8kit",
+    "collection": "commerce-shop",
+    "blocks": [
+      { "id": "intro", "block": "pagehead", "variant": "center",
+        "props": { "title": "Готовые сайты, темы и плагины для WordPress", "text": "Быстрые, доступные и без конструкторов страниц. Скачивание сразу после оплаты, обновления и поддержка автора.", "cta": "Смотреть каталог", "href": "{archive:product}" } },
+      { "id": "categories", "block": "categories", "variant": "tiles",
+        "props": { "label": "Разделы каталога" },
+        "bindings": { "categories": { "source": "product_cats", "limit": 3 } } },
+      { "id": "popular", "block": "products", "variant": "grid4",
+        "props": { "title": "Популярное", "rating": "show", "action": "none" },
+        "bindings": { "products": { "source": "products", "limit": 4 } } },
+      { "id": "why", "block": "features", "variant": "grid",
+        "props": { "title": "Почему WP FastY", "item": "card",
+          "features": [
+            { "id": "why-review", "title": "Ручная проверка", "text": "Код, безопасность и скорость проверяются до публикации.", "icon": "shield-check" },
+            { "id": "why-license", "title": "Понятные лицензии", "text": "Обычная и расширенная лицензии с прозрачными условиями.", "icon": "file-text" },
+            { "id": "why-download", "title": "Мгновенное скачивание", "text": "Подписанные ссылки сразу после оплаты и в письме.", "icon": "zap" }
+          ],
+          "action": { "label": "Весь каталог", "href": "{archive:product}" } } },
+      { "id": "sale", "block": "products", "variant": "grid3",
+        "props": { "title": "Со скидкой", "rating": "show", "action": "none" },
+        "bindings": { "products": { "source": "products", "limit": 3, "sale": true } } },
+      { "id": "authors", "block": "cta", "variant": "banner",
+        "props": { "title": "Продаёте свои темы и плагины?", "text": "Станьте автором WP FastY: проверка, витрина и выплаты — на нас.", "actions": { "cta": "Условия", "href": "{page:oferta}", "mode": "one" } } }
+    ]
+  }
+}

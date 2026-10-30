@@ -7,7 +7,7 @@
     <file>themes/latte-press</file>
     <file>themes/latte-folio</file>
     <file>themes/latte-shop</file>
-    <file>themes/wp-fasty-market</file>
+    <file>themes/wpfasty-market</file>
     <file>plugins/wpfasty-types</file>
     <file>plugins/wpfasty-builder</file>
     <file>tools/parity</file>
@@ -56,7 +56,6 @@
         </properties>
         <!-- Child themes ship small inc/*.php files (no Composer autoload). -->
         <exclude-pattern>themes/latte-*/inc/*</exclude-pattern>
-        <exclude-pattern>themes/wp-fasty-market/inc/*</exclude-pattern>
     </rule>
 
     <!-- tools/security: CLI test harnesses (fuzz matrix, DOM check), long payload / format lines, run as scripts -->
@@ -129,7 +128,7 @@
     <rule ref="WordPress.WP.EnqueuedResources" />
 
     <!-- Configure text domains for internationalization -->
-    <config name="text_domain" value="latte,latte-press,latte-folio,latte-shop,wp-fasty-market,wpfasty-types,wpfasty-builder"/>
+    <config name="text_domain" value="latte,latte-press,latte-folio,latte-shop,wpfasty-market,wpfasty-types,wpfasty-builder"/>
 
     <!-- Enable parallel processing -->
     <arg name="parallel" value="8" />

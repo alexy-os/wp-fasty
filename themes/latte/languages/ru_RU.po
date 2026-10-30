@@ -1,0 +1,132 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "Sidebar search"
+msgstr "Поиск в боковой панели"
+
+msgid "Primary"
+msgstr "Основное меню"
+
+msgid "Footer"
+msgstr "Подвал"
+
+msgid "Sidebar"
+msgstr "Боковая панель"
+
+msgid "Widgets in the content sidebar."
+msgstr "Виджеты боковой панели."
+
+msgid "Widgets in the site footer."
+msgstr "Виджеты подвала сайта."
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "About"
+msgstr "О нас"
+
+msgid "Blog"
+msgstr "Блог"
+
+msgid "Latte"
+msgstr "Latte"
+
+msgid "Search results for “%s”"
+msgstr "Результаты поиска «%s»"
+
+msgid "Page not found"
+msgstr "Страница не найдена"
+
+msgid "The page you are looking for could not be found."
+msgstr "Запрошенная страница не найдена."
+
+msgid "Back to home"
+msgstr "На главную"
+
+msgid "Search…"
+msgstr "Поиск…"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Featured"
+msgstr "Избранное"
+
+msgid "Latest articles"
+msgstr "Последние статьи"
+
+msgid "No posts found."
+msgstr "Ничего не найдено."
+
+msgid "Previous"
+msgstr "Назад"
+
+msgid "Next"
+msgstr "Дальше"
+
+msgid "Skip to content"
+msgstr "Перейти к содержимому"
+
+msgid "Open menu"
+msgstr "Открыть меню"
+
+msgid "Close menu"
+msgstr "Закрыть меню"
+
+msgid "Dark mode"
+msgstr "Тёмная тема"
+
+msgid "Mobile menu"
+msgstr "Мобильное меню"
+
+msgid "Site search"
+msgstr "Поиск по сайту"
+
+msgid "Mobile menu search"
+msgstr "Поиск в меню"
+
+msgid "Search again"
+msgstr "Искать снова"
+
+msgid "Pagination"
+msgstr "Страницы"
+
+msgid "Posted on"
+msgstr "Опубликовано"
+
+msgid "By"
+msgstr "Автор"
+
+msgid "Categories"
+msgstr "Рубрики"
+
+msgid "Tags"
+msgstr "Метки"
+
+msgid "Previous post"
+msgstr "Предыдущая запись"
+
+msgid "Next post"
+msgstr "Следующая запись"
+
+msgid "Attachment"
+msgstr "Вложение"
+
+msgid "Pages:"
+msgstr "Страницы:"
+
+msgid "Explore"
+msgstr "Смотреть"
+
+msgid "Learn more"
+msgstr "Подробнее"
+
+msgid "Pages"
+msgstr "Страницы"
+
+msgid "Theme engine unavailable"
+msgstr "Шаблонизатор недоступен"
+

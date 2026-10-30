@@ -14,12 +14,15 @@ if (!defined('ABSPATH')) {
 
 // Presentation only: cart, checkout, orders and prices come from the ModulY modules "cart" and "orders"
 // (wpfasty_shop_* filters, see inc/front.php). Without them products are shown as a catalog.
+// Loaded at once (not on after_setup_theme): the base-theme layer can request strings earlier,
+// which would cache a no-op domain.
+load_textdomain('latte-shop', __DIR__ . '/languages/' . determine_locale() . '.mo');
+
 require_once __DIR__ . '/inc/front.php';
 
 LatteShop\Front::register();
 
 add_action('after_setup_theme', static function (): void {
-    load_child_theme_textdomain('latte-shop', get_stylesheet_directory() . '/languages');
     add_theme_support('wpfasty-full-width');
 });
 

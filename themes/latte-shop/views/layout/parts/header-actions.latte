@@ -1,4 +1,6 @@
-{** Latte Shop — cart link with live count. *}
+{** Latte Shop — header icon actions: search (mobile: opens the menu sheet with the search field), account, cart with live count. *}
+{capture $c_s}{icon('search', 'size-5')}{/capture}{include 'button/Button.latte', class: kit('button', ['variant' => 'outline', 'layout' => 'icon'], 'md:hidden'), children: (string) $c_s, attrs: ['type' => 'button', 'data-ui8kit-dialog-open' => 'true', 'data-ui8kit-dialog-target' => ($sheet['panel'] ?? ''), 'aria-controls' => ($sheet['panel'] ?? ''), 'aria-haspopup' => 'dialog', 'aria-label' => ($labels['search_site'] ?? ($labels['account_search'] ?? ''))]}
+{if !empty($shop['account_url'])}{capture $c_a}{icon('user', 'size-5')}{/capture}{include 'link/Link.latte', href: $shop['account_url'], class: kit('button', ['variant' => 'outline', 'layout' => 'icon']), children: (string) $c_a, attrs: ['aria-label' => ($labels['account'] ?? '')]}{/if}
 {capture $c_ui2}
 	{icon('shopping-bag', 'size-5')}
 	{if $shop['count'] > 0}
