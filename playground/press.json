@@ -15,7 +15,7 @@
       "path": "/tmp/latte.zip.b64",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/latte.zip.b64"
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/latte.zip.b64"
       }
     },
     {
@@ -23,7 +23,7 @@
       "path": "/tmp/latte-press.zip.b64",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/latte-press.zip.b64"
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/latte-press.zip.b64"
       }
     },
     {
@@ -31,7 +31,7 @@
       "path": "/tmp/demo.zip.b64",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/demo.zip.b64"
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/demo.zip.b64"
       }
     },
     {
@@ -39,7 +39,7 @@
       "path": "/tmp/wpfasty-types.zip.b64",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/wpfasty-types.zip.b64"
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wpfasty-types.zip.b64"
       }
     },
     {
@@ -47,7 +47,7 @@
       "path": "/tmp/wpfasty-builder.zip.b64",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/wpfasty-builder.zip.b64"
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wpfasty-builder.zip.b64"
       }
     },
     {

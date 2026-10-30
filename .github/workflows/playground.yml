@@ -70,7 +70,7 @@ jobs:
         run: |
           # the token goes through a credential helper reading the env, never into a URL, argv or the log
           git config --global credential.helper '!f() { echo username=x-access-token; echo "password=$GIST_TOKEN"; }; f'
-          git clone -q https://gist.github.com/ce9f531eeb05bb8aee9dadcd3b0c1ecc.git "$RUNNER_TEMP/gist"
+          git clone -q https://gist.github.com/534c59bcd01563580218570cfac273ca.git "$RUNNER_TEMP/gist"
 
       - name: Publish changed zips, check raw URLs (200 + sha256)
         env:

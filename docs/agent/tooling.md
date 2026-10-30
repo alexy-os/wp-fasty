@@ -46,7 +46,7 @@ job `wordpress` (WP 7.1.3 + MariaDB: Theme Check 20260901 on the unpacked zip an
 
 ## Previews
 `playground/{press,folio,shop,shop-twig}.json` blueprints (`shop-twig`: Twig twin of latte-shop on `twig.zip`); zips are published base64 in the secret gist
-`alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc`; links in `playground/urls.txt`. See `playground/README.md`.
+`alexy-os/534c59bcd01563580218570cfac273ca`; links in `playground/urls.txt`. See `playground/README.md`.
 
 ## Theme Check
 Latest results are appended here by whoever runs it (date, WP version, counts per theme).

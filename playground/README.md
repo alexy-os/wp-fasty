@@ -1,7 +1,7 @@
 # Live previews (WordPress Playground)
 
 The zips are not in git (`playground/*.zip` is gitignored): the **Playground** workflow builds them in CI with
-`tools/playground-build.sh` and mirrors them (base64) in a secret gist: https://gist.github.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc
+`tools/playground-build.sh` and mirrors them (base64) in a secret gist: https://gist.github.com/alexy-os/534c59bcd01563580218570cfac273ca (since 2026-10-30; the old gist ce9f531eeb05bb8aee9dadcd3b0c1ecc hit the GitHub size quota and is no longer updated)
 and the blueprints (`press.json`, `folio.json`, `shop.json`, `shop-twig.json`) are passed inline in the Playground URL fragment.
 Everything runs in the visitor's browser — no server.
 

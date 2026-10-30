@@ -15,7 +15,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 GIST="${1:?gist checkout dir}"
 PUSH="${2:-}"
-OWNER_ID="alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc"
+OWNER_ID="alexy-os/534c59bcd01563580218570cfac273ca"
 RAW="https://gist.githubusercontent.com/$OWNER_ID/raw"
 
 fingerprint() { # stdin: zip bytes → sha256 of normalized entries
