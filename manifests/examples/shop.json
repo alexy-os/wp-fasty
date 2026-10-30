@@ -221,6 +221,7 @@
     "blocks/notice",
     "blocks/order-summary",
     "blocks/product-card",
+    "blocks/unavailable",
     "layout/parts/header-actions",
     "pages/cart",
     "pages/checkout",
