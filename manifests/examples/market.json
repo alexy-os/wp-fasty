@@ -9,11 +9,11 @@
     "textDomain": "wp-fasty-market",
     "prefix": "market",
     "namespace": "WpfastyMarket",
-    "description": "WP FastY — marketplace of ready-made WordPress sites, themes and plugins. Catalog with filters, item pages with live preview, licenses, changelog and reviews, author pages, signed-cookie cart and digital checkout that creates Orders. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons). Seller: IT Garage Ltd.",
+    "description": "WP FastY — marketplace of ready-made WordPress sites, themes and plugins: catalog with filters, item pages with live preview, licenses, changelog and verified reviews, author pages. Presentation only: cart, checkout, orders, downloads and consents come from ModulY modules. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons).",
     "version": "1.0.0",
     "uri": "https://wpfasty.ru",
     "author": {
-      "name": "IT Garage Ltd",
+      "name": "WP FastY",
       "uri": "https://wpfasty.ru"
     },
     "requires": {
@@ -21,7 +21,7 @@
       "php": "8.2"
     },
     "testedUpTo": "7.1",
-    "license": "GPL-2.0-or-later",
+    "license": "AGPL-3.0-or-later",
     "tags": [
       "e-commerce",
       "grid-layout",
@@ -136,11 +136,53 @@
         "badge": {
           "type": "string",
           "label": "Badge (empty = sale when discounted)"
+        },
+        "version": {
+          "type": "semver",
+          "label": "Version"
+        },
+        "requires_wp": {
+          "type": "semver",
+          "label": "Requires WordPress"
+        },
+        "requires_php": {
+          "type": "semver",
+          "label": "Requires PHP"
+        },
+        "changelog": {
+          "type": "text",
+          "label": "Changelog (version|date|notes per line)"
+        },
+        "preview_url": {
+          "type": "url",
+          "label": "Live preview URL"
+        },
+        "support_months": {
+          "type": "integer",
+          "label": "Support (months)"
+        },
+        "sales_count": {
+          "type": "integer",
+          "label": "Sales"
+        },
+        "licenses": {
+          "type": "license_tiers",
+          "label": "Licenses (tier|Label|price per line)"
+        },
+        "download_file": {
+          "type": "file",
+          "label": "Download file (attachment ID)",
+          "rest": false,
+          "private": true
+        },
+        "author": {
+          "type": "user",
+          "label": "Author (user ID)"
         }
       },
       "metabox": {
         "title": "Product data",
-        "position": "side",
+        "position": "main",
         "priority": "high"
       },
       "taxonomies": {
@@ -161,7 +203,9 @@
         "purchasable": {
           "price": "price",
           "sale": "sale_price",
-          "stock": "stock"
+          "stock": "stock",
+          "license": "licenses",
+          "digital": true
         }
       },
       "archive": {
@@ -194,35 +238,17 @@
           "label": "Stock"
         }
       ]
-    },
-    {
-      "name": "shop_order",
-      "labels": {
-        "singular": "Order",
-        "plural": "Orders",
-        "edit": "Order"
-      },
-      "public": false,
-      "adminParent": "product",
-      "createInAdmin": false,
-      "archiveSlug": false,
-      "rest": false,
-      "supports": [
-        "title"
-      ],
-      "metabox": false,
-      "capabilities": {
-        "orderable": {}
-      }
     }
   ],
   "templates": {},
   "views": [
+    "blocks/cookie-banner",
     "blocks/notice",
     "blocks/order-summary",
     "blocks/product-card",
     "blocks/product-grid",
     "blocks/search-bar",
+    "blocks/unavailable",
     "layout/parts/brand",
     "layout/parts/footer",
     "layout/parts/header-actions",

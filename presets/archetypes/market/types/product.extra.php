@@ -12,12 +12,12 @@ return [
     'columns' => [
         'price' => [
             'label' => __('Price', '{{theme.textDomain}}'),
-            'value' => static fn (int $id): string => WpfastyMarket\Money::format(WpfastyMarket\Catalog::price($id)),
+            'value' => static fn (int $id): string => WpfastyMarket\Front::column($id, 'price'),
         ],
-        'stock' => ['label' => __('Stock', '{{theme.textDomain}}'), 'value' => static function (int $id): string {
-            $stock = WpfastyMarket\Catalog::stock($id);
-            return $stock === null ? '∞' : (string) $stock;
-        }],
+        'stock' => [
+            'label' => __('Stock', '{{theme.textDomain}}'),
+            'value' => static fn (int $id): string => WpfastyMarket\Front::column($id, 'stock'),
+        ],
     ],
-    'context' => [WpfastyMarket\Catalog::class, 'viewModel'],
+    'context' => [WpfastyMarket\Front::class, 'productViewModel'],
 ];

@@ -1,7 +1,15 @@
 <?php
 
 /**
- * Front-end: view routing, market pages, catalog sorting/filters, context.
+ * Front-end (presentation only): view routing, market pages, catalog sorting/filters, labels and view-models.
+ * Prices, license tiers, cart, checkout, orders, downloads, consents and reviews come from ModulY modules through
+ * filters with safe defaults (disable scenario: without a module its forms are hidden / "temporarily unavailable"):
+ *   wpfasty_shop_state    (array $shop)                  URLs, nonces, cart count          — cart, orders
+ *   wpfasty_shop_cart     (array $cart)                  priced cart, license tiers         — cart
+ *   wpfasty_shop_product  (array $product, int $postId)  price / licenses / reviews         — cart, reviews
+ *   wpfasty_shop_checkout (array $checkout)              errors, kept values, consents      — orders, consent-log
+ *   wpfasty_shop_order    (?array $order)                confirmation + download links      — orders, downloads
+ *   wpfasty_cookie_consent (array $state)                cookie banner on/off                — cookie-consent
  *
  * @package WP_FastY_Market
  */
@@ -29,6 +37,8 @@ final class Front
         add_filter('wpfasty_context', [self::class, 'context']);
         add_action('after_switch_theme', [self::class, 'ensurePages']);
         add_action('pre_get_posts', [self::class, 'catalogQuery']);
+        // Store configuration for the orders module: payment methods offered by this digital store.
+        add_filter('wpfasty_shop_payment_methods', static fn (): array => array_column(self::payments(), 'id'));
         add_action('template_redirect', static function (): void {
             if (is_page(['cart', 'checkout'])) {
                 nocache_headers();
@@ -117,7 +127,6 @@ final class Front
      */
     public static function context(array $context): array
     {
-        $summary = Cart::summary();
         $filter = wpfasty_term_filter('product_cat');
         $rank = ['sites' => 0, 'themes' => 1, 'plugins' => 2];
         usort(
@@ -125,15 +134,23 @@ final class Front
             static fn (array $a, array $b): int => ($rank[$a['slug']] ?? 9) <=> ($rank[$b['slug']] ?? 9)
         );
 
-        $context['shop'] = [
+        $shop = (array) apply_filters('wpfasty_shop_state', [
+            'enabled' => false,
             'url' => self::shopUrl(),
             'cart_url' => self::pageUrl('cart'),
             'checkout_url' => self::pageUrl('checkout'),
             'action' => admin_url('admin-post.php'),
+            'cart_nonce' => '',
+            'checkout_nonce' => '',
+            'count' => 0,
+            'free_shipping' => '',
+        ]);
+        // Availability flags for the views (disable scenario): the cart module sets `enabled`, the orders module the
+        // checkout nonce. Without them the views hide the buy buttons and show "temporarily unavailable".
+        $shop['cart_available'] = !empty($shop['enabled']);
+        $shop['checkout_available'] = $shop['cart_available'] && (string) ($shop['checkout_nonce'] ?? '') !== '';
+        $context['shop'] = $shop + [
             'search_url' => home_url('/'),
-            'cart_nonce' => wp_create_nonce('wpfasty_market_cart'),
-            'checkout_nonce' => wp_create_nonce('wpfasty_market_checkout'),
-            'count' => $summary['count'],
             'notice' => self::notice(),
             'categories' => $filter['items'],
             'current_cat' => $filter['current'],
@@ -174,11 +191,19 @@ final class Front
             'email' => 'support@' . wp_parse_url(home_url(), PHP_URL_HOST),
         ]);
 
+        $context['cookie_consent'] = (array) apply_filters('wpfasty_cookie_consent', ['enabled' => false]);
+
         if (is_page(['cart', 'checkout'])) {
-            $context['cart'] = $summary + [
-                'subtotal_display' => Money::format($summary['subtotal']),
-                'total_display' => Money::format($summary['total']),
-            ];
+            $context['cart'] = (array) apply_filters('wpfasty_shop_cart', [
+                'items' => [],
+                'count' => 0,
+                'subtotal' => 0,
+                'shipping' => 0,
+                'total' => 0,
+                'subtotal_display' => '',
+                'shipping_display' => '',
+                'total_display' => '',
+            ]);
         }
 
         if (is_page('author')) {
@@ -192,30 +217,19 @@ final class Front
         }
 
         if (is_page('checkout')) {
-            $orderId = isset($_GET['order']) ? absint(wp_unslash($_GET['order'])) : 0;
-            $key = isset($_GET['key']) ? sanitize_text_field(wp_unslash($_GET['key'])) : '';
-            $context['order'] = $orderId > 0 ? Orders::find($orderId, $key) : null;
-
-            $token = isset($_GET['co']) ? sanitize_key(wp_unslash($_GET['co'])) : '';
-            $old = $token !== '' ? get_transient('wpfasty_market_co_' . $token) : false;
-            $context['checkout'] = [
-                'errors' => isset($_GET['co_errors'])
-                    ? array_values(array_intersect(
-                        explode(',', sanitize_text_field(wp_unslash($_GET['co_errors']))),
-                        ['name', 'email', 'consent_offer', 'consent_pd', 'payment', 'server']
-                    ))
-                    : [],
-                'values' => is_array($old) ? $old : ['payment' => 'card'],
+            $order = apply_filters('wpfasty_shop_order', null);
+            $context['order'] = is_array($order) ? $order : null;
+            $context['checkout'] = (array) apply_filters('wpfasty_shop_checkout', [
+                'errors' => [],
+                'values' => ['payment' => 'card'],
+                'consents' => [],
+            ]) + [
                 'fields' => [
                     ['name', __('Full name', 'wp-fasty-market'), 'text', 'name', true],
                     ['email', __('Email for download links', 'wp-fasty-market'), 'email', 'email', true],
                     ['phone', __('Phone', 'wp-fasty-market'), 'tel', 'tel', false],
                 ],
-                'payments' => [
-                    ['id' => 'card', 'label' => __('Bank card', 'wp-fasty-market'), 'icon' => 'credit-card'],
-                    ['id' => 'sbp', 'label' => __('Faster Payments System (SBP)', 'wp-fasty-market'), 'icon' => 'send'],
-                    ['id' => 'bank', 'label' => __('Invoice for companies', 'wp-fasty-market'), 'icon' => 'briefcase'],
-                ],
+                'payments' => self::payments(),
             ];
         }
 
@@ -240,6 +254,111 @@ final class Front
         $context['labels']['search_site'] = $context['labels']['search'];
 
         return $context;
+    }
+
+    /** @return list<array{id: string, label: string, icon: string}> */
+    public static function payments(): array
+    {
+        return [
+            ['id' => 'card', 'label' => __('Bank card', 'wp-fasty-market'), 'icon' => 'credit-card'],
+            ['id' => 'sbp', 'label' => __('Faster Payments System (SBP)', 'wp-fasty-market'), 'icon' => 'send'],
+            ['id' => 'bank', 'label' => __('Invoice for companies', 'wp-fasty-market'), 'icon' => 'briefcase'],
+        ];
+    }
+
+    /**
+     * Product view-model (module `context` of types/product.php): prices, licenses and reviews from the modules,
+     * digital-goods details from the product fields.
+     *
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    public static function productViewModel(array $data, \WP_Post $post): array
+    {
+        $fields = (array) ($data['fields'] ?? []);
+        $data['product'] = self::product($post->ID, (string) ($fields['sku'] ?? ''));
+        $data['product_cats'] = $data['terms']['product_cat'] ?? [];
+        $data['rating'] = (float) ($fields['rating'] ?? 0);
+        $data['reviews'] = (int) ($fields['reviews'] ?? 0);
+        $data['badge'] = (string) ($fields['badge'] ?? '');
+        $data['digital'] = self::digital($fields, $post, $data['product']);
+        return $data;
+    }
+
+    /** @return array<string, mixed> */
+    public static function product(int $postId, string $sku = ''): array
+    {
+        return (array) apply_filters('wpfasty_shop_product', [
+            'price' => '',
+            'regular' => '',
+            'on_sale' => false,
+            'sku' => $sku,
+            'stock' => null,
+            'in_stock' => true,
+            'purchasable' => false,
+            'licenses' => [],
+            'reviews_available' => false,
+            'reviews_list' => [],
+        ], $postId);
+    }
+
+    /**
+     * Digital-goods details from the product fields (types/product.php); author profiles of the demo authors come
+     * from Fixtures when the `author` field has no user.
+     *
+     * @param array<string, mixed> $fields
+     * @param array<string, mixed> $product
+     * @return array<string, mixed>
+     */
+    private static function digital(array $fields, \WP_Post $post, array $product): array
+    {
+        $changelog = [];
+        foreach (preg_split('/\R/', (string) ($fields['changelog'] ?? '')) ?: [] as $line) {
+            $parts = array_map('trim', explode('|', $line, 3));
+            if (count($parts) === 3 && $parts[0] !== '') {
+                $changelog[] = ['version' => $parts[0], 'date' => $parts[1], 'notes' => $parts[2]];
+            }
+        }
+        $userId = (int) ($fields['author'] ?? 0);
+        $user = $userId > 0 ? get_userdata($userId) : false;
+        $author = $user instanceof \WP_User
+            ? ['name' => $user->display_name, 'slug' => $user->user_nicename, 'role' => '', 'items' => 0,
+                'url' => (string) get_author_posts_url($user->ID)]
+            : Fixtures::productAuthor($post->post_name);
+        return [
+            'version' => (string) ($fields['version'] ?? ''),
+            'wp' => (string) ($fields['requires_wp'] ?? ''),
+            'php' => (string) ($fields['requires_php'] ?? ''),
+            'sales' => (int) ($fields['sales_count'] ?? 0),
+            'support_months' => (int) ($fields['support_months'] ?? 0),
+            'updated' => $changelog[0]['date'] ?? get_the_modified_date('Y-m-d', $post),
+            'author' => $author,
+            'preview_url' => (string) ($fields['preview_url'] ?? ''),
+            'licenses' => array_map(static fn (array $l): array => [
+                'id' => (string) ($l['tier'] ?? ''),
+                'label' => (string) ($l['label'] ?? ''),
+                'price' => (string) ($l['price'] ?? ''),
+            ], (array) ($product['licenses'] ?? [])),
+            'changelog' => $changelog,
+            'reviews' => array_map(static fn (array $r): array => [
+                'name' => (string) ($r['author'] ?? ''),
+                'rating' => max(0, min(5, (int) ($r['rating'] ?? 0))),
+                'text' => (string) ($r['text'] ?? ''),
+                'verified' => !empty($r['verified']),
+            ], (array) ($product['reviews_list'] ?? [])),
+            'reviews_available' => !empty($product['reviews_available']),
+            'review_action' => (string) ($product['review_action'] ?? ''),
+        ];
+    }
+
+    /** Admin list column value (types/product.php `columns`). */
+    public static function column(int $postId, string $column): string
+    {
+        $product = self::product($postId);
+        if ($column === 'stock') {
+            return $product['stock'] === null ? '∞' : (string) $product['stock'];
+        }
+        return (string) ($product[$column] ?? '');
     }
 
     /**
@@ -374,6 +493,24 @@ final class Front
             'previous' => __('Previous', 'wp-fasty-market'),
             'next' => __('Next', 'wp-fasty-market'),
             'pagination' => __('Pagination', 'wp-fasty-market'),
+            'unavailable_title' => __('Temporarily unavailable', 'wp-fasty-market'),
+            'unavailable_text' => __('This feature is temporarily unavailable. Please try again later.', 'wp-fasty-market'),
+            'back_to_site' => __('Back to site', 'wp-fasty-market'),
+            'downloads' => __('Downloads', 'wp-fasty-market'),
+            'download' => __('Download', 'wp-fasty-market'),
+            'downloads_pending' => __('Download links appear here and in your email as soon as the payment is confirmed.', 'wp-fasty-market'),
+            'link_expires' => __('Link valid until', 'wp-fasty-market'),
+            'downloads_left' => __('downloads left', 'wp-fasty-market'),
+            'verified_buyer' => __('Verified buyer', 'wp-fasty-market'),
+            'write_review' => __('Write a review', 'wp-fasty-market'),
+            'review_note' => __('Only buyers can review: use the email of your paid order.', 'wp-fasty-market'),
+            'your_name' => __('Name', 'wp-fasty-market'),
+            'your_email' => __('Order email', 'wp-fasty-market'),
+            'your_rating' => __('Rating', 'wp-fasty-market'),
+            'review_text' => __('Your review', 'wp-fasty-market'),
+            'submit_review' => __('Send review', 'wp-fasty-market'),
+            'no_reviews' => __('No reviews yet.', 'wp-fasty-market'),
+            'license_tier' => __('License', 'wp-fasty-market'),
         ];
     }
 

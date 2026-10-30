@@ -299,6 +299,71 @@
             "id": "badge",
             "label": "Badge (empty = sale when discounted)",
             "type": "string"
+          },
+          {
+            "id": "version",
+            "label": "Version",
+            "type": "string"
+          },
+          {
+            "id": "requires_wp",
+            "label": "Requires WordPress",
+            "type": "string"
+          },
+          {
+            "id": "requires_php",
+            "label": "Requires PHP",
+            "type": "string"
+          },
+          {
+            "id": "changelog",
+            "label": "Changelog (version|date|notes per line)",
+            "type": "textarea"
+          },
+          {
+            "id": "preview_url",
+            "label": "Live preview URL",
+            "type": "string",
+            "rules": [
+              {
+                "name": "fastygo.codex/uri"
+              }
+            ]
+          },
+          {
+            "id": "support_months",
+            "label": "Support (months)",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          },
+          {
+            "id": "sales_count",
+            "label": "Sales",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          },
+          {
+            "id": "licenses",
+            "label": "Licenses (tier|Label|price per line)",
+            "type": "textarea"
+          },
+          {
+            "id": "author",
+            "label": "Author (user ID)",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
           }
         ],
         "capabilities": [

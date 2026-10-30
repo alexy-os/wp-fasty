@@ -33,9 +33,9 @@
 				{if !empty($d['preview_url'])}
 					{capture $eye}{icon('eye', 'size-4')}{/capture}{include 'link/Link.latte', href: $d['preview_url'], class: 'inline-flex size-10 items-center justify-center rounded-lg border border-border text-foreground no-underline hover:border-primary hover:text-primary', children: (string) $eye, attrs: ['aria-label' => (($labels['live_preview']) . ': ' . ($product['title'])), 'target' => '_blank', 'rel' => 'noopener']}
 				{/if}
-				{if $product['product']['purchasable']}
+				{if $product['product']['purchasable'] && !empty($shop['cart_available'])}
 					{capture $f}
-						{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => 'wpfasty_market_cart']}
+						{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => 'latte_shop_cart']}
 						{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'op', 'value' => 'add']}
 						{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'product_id', 'value' => ($product['id'])]}
 						{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['cart_nonce'])]}

@@ -54,10 +54,37 @@ return [
             'type' => 'string',
             'label' => __('Badge (empty = sale when discounted)', 'wp-fasty-market'),
         ],
+        'version' => ['type' => 'semver', 'label' => __('Version', 'wp-fasty-market')],
+        'requires_wp' => ['type' => 'semver', 'label' => __('Requires WordPress', 'wp-fasty-market')],
+        'requires_php' => ['type' => 'semver', 'label' => __('Requires PHP', 'wp-fasty-market')],
+        'changelog' => [
+            'type' => 'text',
+            'label' => __('Changelog (version|date|notes per line)', 'wp-fasty-market'),
+        ],
+        'preview_url' => ['type' => 'url', 'label' => __('Live preview URL', 'wp-fasty-market')],
+        'support_months' => ['type' => 'integer', 'label' => __('Support (months)', 'wp-fasty-market')],
+        'sales_count' => ['type' => 'integer', 'label' => __('Sales', 'wp-fasty-market')],
+        'licenses' => [
+            'type' => 'license_tiers',
+            'label' => __('Licenses (tier|Label|price per line)', 'wp-fasty-market'),
+        ],
+        'download_file' => [
+            'type' => 'file',
+            'label' => __('Download file (attachment ID)', 'wp-fasty-market'),
+            'show_in_rest' => false,
+            'private' => true,
+        ],
+        'author' => ['type' => 'user', 'label' => __('Author (user ID)', 'wp-fasty-market')],
     ],
-    'metabox' => ['title' => __('Product data', 'wp-fasty-market'), 'context' => 'side', 'priority' => 'high'],
+    'metabox' => ['title' => __('Product data', 'wp-fasty-market'), 'priority' => 'high'],
     'supports' => [
-        'purchasable' => ['price_field' => 'price', 'sale_field' => 'sale_price', 'stock_field' => 'stock'],
+        'purchasable' => [
+            'price_field' => 'price',
+            'sale_field' => 'sale_price',
+            'stock_field' => 'stock',
+            'license_field' => 'licenses',
+            'digital' => true,
+        ],
     ],
     'views' => ['single' => 'pages/product', 'archive' => 'pages/shop', 'card' => 'blocks/product-card'],
     'archive' => [
@@ -69,12 +96,12 @@ return [
     'columns' => [
         'price' => [
             'label' => __('Price', 'wp-fasty-market'),
-            'value' => static fn (int $id): string => WpfastyMarket\Money::format(WpfastyMarket\Catalog::price($id)),
+            'value' => static fn (int $id): string => WpfastyMarket\Front::column($id, 'price'),
         ],
-        'stock' => ['label' => __('Stock', 'wp-fasty-market'), 'value' => static function (int $id): string {
-            $stock = WpfastyMarket\Catalog::stock($id);
-            return $stock === null ? '∞' : (string) $stock;
-        }],
+        'stock' => [
+            'label' => __('Stock', 'wp-fasty-market'),
+            'value' => static fn (int $id): string => WpfastyMarket\Front::column($id, 'stock'),
+        ],
     ],
-    'context' => [WpfastyMarket\Catalog::class, 'viewModel'],
+    'context' => [WpfastyMarket\Front::class, 'productViewModel'],
 ];

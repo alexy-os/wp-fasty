@@ -21,7 +21,7 @@
 			{foreach $shop['legal'] as $doc}
 				{capture $l}{capture $n}{$labels['legal_' . $doc['slug']]}{/capture}{include 'link/Link.latte', href: $doc['url'] ?? '', class: 'text-sm text-muted-foreground no-underline hover:text-foreground', children: (string) $n, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $l, attrs: []}
 			{/foreach}
-			{capture $l}{capture $n}{$labels['cookie_settings']}{/capture}{include 'button/Button.latte', type: 'button', class: 'cursor-pointer text-left text-sm text-muted-foreground hover:text-foreground', children: (string) $n, attrs: ['data-cookie-open' => 'true']}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $l, attrs: []}
+			{if !empty($cookie_consent['enabled'])}{capture $l}{capture $n}{$labels['cookie_settings']}{/capture}{include 'button/Button.latte', type: 'button', class: 'cursor-pointer text-left text-sm text-muted-foreground hover:text-foreground', children: (string) $n, attrs: ['data-cookie-open' => 'true']}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $l, attrs: []}{/if}
 		{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2', children: (string) $list, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'flex flex-col gap-4', children: (string) $docs, attrs: ['aria-label' => ($labels['footer_docs'])]}
 
@@ -41,4 +41,4 @@
 {/capture}
 {capture $wrap}{include 'box/Box.latte', tag: 'div', class: 'container mx-auto flex flex-col gap-8 px-4 md:px-6', children: (string) $inner, attrs: []}{/capture}
 {include 'box/Box.latte', tag: 'footer', class: 'site-footer mt-16 border-t border-border bg-card py-12', children: (string) $wrap, attrs: []}
-{include 'blocks/cookie-banner.latte', legalUrls: array_column($shop['legal'], 'url', 'slug')}
+{if !empty($cookie_consent['enabled'])}{include 'blocks/cookie-banner.latte', legalUrls: array_column($shop['legal'], 'url', 'slug')}{/if}

@@ -14,7 +14,7 @@
     "readme.txt": "templates/readme.txt.tpl",
     "style.body": "templates/style.body.css"
   },
-  "requiresTypes": ["product", "shop_order"],
+  "requiresTypes": ["product"],
   "demo": "tools/demo/market.php",
   "landings": []
 }

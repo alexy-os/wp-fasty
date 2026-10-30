@@ -12,28 +12,18 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-foreach (['money', 'fixtures', 'catalog', 'cart', 'orders', 'handlers', 'front'] as $file) {
+// Presentation only: prices, license tiers, cart, checkout, orders, downloads, consents and reviews come from the
+// ModulY modules (wpfasty_shop_* / wpfasty_cookie_consent filters, see inc/front.php). Without them the theme shows
+// a read-only catalog and "temporarily unavailable" on the cart and checkout pages.
+foreach (['fixtures', 'front'] as $file) {
     require_once __DIR__ . "/inc/{$file}.php";
 }
 
-WpfastyMarket\Orders::register();
-WpfastyMarket\Handlers::register();
 WpfastyMarket\Front::register();
 
 add_action('after_setup_theme', static function (): void {
     load_child_theme_textdomain('wp-fasty-market', get_stylesheet_directory() . '/languages');
     add_theme_support('wpfasty-full-width');
-});
-
-// Cookie consent banner script (self-hosted, no external requests).
-add_action('wp_enqueue_scripts', static function (): void {
-    wp_enqueue_script(
-        'wp-fasty-market-cookie-consent',
-        get_stylesheet_directory_uri() . '/assets/js/cookie-consent.js',
-        [],
-        (string) wp_get_theme()->get('Version'),
-        ['in_footer' => true, 'strategy' => 'defer']
-    );
 });
 
 // Post types are plugin territory (wordpress.org): they are registered by the companion plugin.

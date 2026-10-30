@@ -685,3 +685,51 @@ msgstr "Остаток"
 #: types/shop_order.php:20
 msgid "Orders"
 msgstr "Заказы"
+
+msgid "Back to site"
+msgstr "Вернуться на сайт"
+
+msgid "Download"
+msgstr "Скачать"
+
+msgid "Download links appear here and in your email as soon as the payment is confirmed."
+msgstr "Ссылки на скачивание появятся здесь и в письме сразу после подтверждения оплаты."
+
+msgid "Downloads"
+msgstr "Загрузки"
+
+msgid "Link valid until"
+msgstr "Ссылка действует до"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "No reviews yet."
+msgstr "Отзывов пока нет."
+
+msgid "Only buyers can review: use the email of your paid order."
+msgstr "Отзыв могут оставить только покупатели: укажите email оплаченного заказа."
+
+msgid "Order email"
+msgstr "Email заказа"
+
+msgid "Send review"
+msgstr "Отправить отзыв"
+
+msgid "Temporarily unavailable"
+msgstr "Временно недоступно"
+
+msgid "This feature is temporarily unavailable. Please try again later."
+msgstr "Функция временно недоступна. Попробуйте позже."
+
+msgid "Verified buyer"
+msgstr "Проверенный покупатель"
+
+msgid "Write a review"
+msgstr "Написать отзыв"
+
+msgid "Your review"
+msgstr "Ваш отзыв"
+
+msgid "downloads left"
+msgstr "скачиваний осталось"
