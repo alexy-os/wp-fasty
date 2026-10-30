@@ -126,7 +126,7 @@
     },
     {
       "step": "runPHP",
-      "code": "<?php @mkdir('/wordpress/wp-content/uploads/moduly', 0755, true); copy('/tmp/moduly-cart.zip', '/wordpress/wp-content/uploads/moduly/cart-0.1.0.zip'); copy('/tmp/moduly-orders.zip', '/wordpress/wp-content/uploads/moduly/orders-0.1.0.zip');"
+      "code": "<?php @mkdir('/wordpress/wp-content/uploads/moduly', 0755, true); copy('/tmp/moduly-cart.zip', '/wordpress/wp-content/uploads/moduly/cart.zip'); copy('/tmp/moduly-orders.zip', '/wordpress/wp-content/uploads/moduly/orders.zip');"
     },
     {
       "step": "setSiteOptions",

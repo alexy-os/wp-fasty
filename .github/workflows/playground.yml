@@ -7,6 +7,9 @@ name: Playground
 
 on:
   workflow_dispatch:
+  # ModulY zips come from phpfasty/wpmodules release assets (edge); pick up new builds without a cross-repo token.
+  schedule:
+    - cron: '17 */2 * * *'
   push:
     branches: [main]
     paths:

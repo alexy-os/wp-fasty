@@ -64,14 +64,23 @@ done < "$STAGE/seeds.txt"
 rm -f "$OUT/demo.zip"
 (cd "$STAGE" && zip -qr "$OUT/demo.zip" wpfasty-demo)
 rm -rf "$STAGE"
-# ModulY (phpfasty/wpmodules, private repo): the plugin + signed cart/orders module zips come from a wpmodules
-# build (`bash tools/build.sh` there) — $WPMODULES_DIST, default ../wpmodules/dist. CI here cannot fetch them; when the
-# folder is missing the three zips are skipped and the published gist copies stay as they are.
+# ModulY (public phpfasty/wpmodules): plugin + signed module zips. A local wpmodules build wins ($WPMODULES_DIST,
+# default ../wpmodules/dist); otherwise the public release assets of $WPMODULES_RELEASE (default "edge", rebuilt by
+# wpmodules CI on every push to main) are downloaded and checked against their SHA256SUMS.
 MD="${WPMODULES_DIST:-$ROOT/../wpmodules/dist}"
+MODULES="cart orders"
 if [ -d "$MD/modules" ]; then
   cp "$MD"/moduly-*.zip "$OUT/moduly.zip"
-  cp "$MD"/modules/cart-*.zip "$OUT/moduly-cart.zip"
-  cp "$MD"/modules/orders-*.zip "$OUT/moduly-orders.zip"
+  for id in $MODULES; do cp "$MD"/modules/$id-*.zip "$OUT/moduly-$id.zip"; done
+else
+  REL="https://github.com/phpfasty/wpmodules/releases/download/${WPMODULES_RELEASE:-edge}"
+  DL="$(mktemp -d)"
+  curl -fsSL --retry 3 -o "$DL/SHA256SUMS" "$REL/SHA256SUMS"
+  for f in moduly $MODULES; do curl -fsSL --retry 3 -o "$DL/$f.zip" "$REL/$f.zip"; done
+  (cd "$DL" && grep -E " (moduly|$(echo $MODULES | tr ' ' '|'))\.zip$" SHA256SUMS | sha256sum -c -)
+  cp "$DL/moduly.zip" "$OUT/moduly.zip"
+  for id in $MODULES; do cp "$DL/$id.zip" "$OUT/moduly-$id.zip"; done
+  rm -rf "$DL"
 fi
 ls -la "$OUT"/*.zip
 
