@@ -1151,9 +1151,6 @@
   .uppercase {
     text-transform: uppercase;
   }
-  .not-italic {
-    font-style: normal;
-  }
   .no-underline {
     text-decoration-line: none;
   }
