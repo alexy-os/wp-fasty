@@ -19,6 +19,7 @@
 			{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-6 md:grid-cols-3 text-sm text-muted-foreground', children: (string) $c_ui2, attrs: []}
 		{/if}
 
+		{if !empty($slots['footer.links'])}{capture $c_fl}{include 'blocks/slot.latte', name: 'footer.links'}{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-wrap gap-4', children: (string) $c_fl, attrs: []}{/if}
 		{capture $c_ui3}
 			&copy; {$site['year']} {$site['title']}
 		{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $c_ui3, attrs: []}

@@ -10,7 +10,7 @@
     return document.getElementById(id);
   }
 
-  function setOpen(el, open) {
+  function setOpen(el, open, focusSel) {
     if (!el) return;
     el.hidden = !open;
     el.setAttribute("data-state", open ? "open" : "closed");
@@ -20,7 +20,8 @@
       btn.setAttribute("aria-expanded", open ? "true" : "false");
     });
     if (open) {
-      var focusable = el.querySelector(
+      // data-ui8kit-dialog-focus on the trigger: what gets focus (e.g. the search field of the menu sheet).
+      var focusable = (focusSel && el.querySelector(focusSel)) || el.querySelector(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
       if (focusable) focusable.focus();
@@ -31,7 +32,7 @@
     var openBtn = event.target.closest('[data-ui8kit-dialog-open="true"]');
     if (openBtn) {
       var openId = openBtn.getAttribute("data-ui8kit-dialog-target");
-      setOpen(panel(openId), true);
+      setOpen(panel(openId), true, openBtn.getAttribute("data-ui8kit-dialog-focus"));
       return;
     }
     var closeBtn = event.target.closest('[data-ui8kit-dialog-close="true"]');
