@@ -128,7 +128,7 @@
           }
         },
         "testedUpTo": { "$ref": "#/$defs/semver", "default": "7.1" },
-        "license": { "const": "GPL-2.0-or-later", "default": "GPL-2.0-or-later" },
+        "license": { "const": "AGPL-3.0-or-later", "default": "AGPL-3.0-or-later" },
         "tags": {
           "type": "array",
           "uniqueItems": true,

@@ -13,7 +13,7 @@
     "version": "1.0.0",
     "uri": "https://github.com/alexy-os/wp-fasty",
     "author": {
-      "name": "alexy-os",
+      "name": "AlexY OS",
       "uri": "https://github.com/alexy-os"
     },
     "requires": {
@@ -21,7 +21,7 @@
       "php": "8.2"
     },
     "testedUpTo": "7.1",
-    "license": "GPL-2.0-or-later",
+    "license": "AGPL-3.0-or-later",
     "tags": [
       "blog",
       "one-column",

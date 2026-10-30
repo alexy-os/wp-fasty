@@ -229,7 +229,7 @@ function parity(m: J, err: (msg: string) => void): void {
     ["Description", t.description, h("Description")],
     ["Version", t.version ?? "1.0.0", h("Version")],
     ["Theme URI", t.uri ?? "https://github.com/alexy-os/wp-fasty", h("Theme URI")],
-    ["Author", t.author?.name ?? "alexy-os", h("Author")],
+    ["Author", t.author?.name ?? "AlexY OS", h("Author")],
     ["Author URI", t.author?.uri ?? "https://github.com/alexy-os", h("Author URI")],
     ["Requires at least", t.requires?.platform ?? "6.4", h("Requires at least")],
     ["Requires PHP", t.requires?.php ?? "8.2", h("Requires PHP")],

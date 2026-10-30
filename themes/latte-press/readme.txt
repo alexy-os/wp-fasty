@@ -4,8 +4,8 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.2
 Stable tag: 1.0.0
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License: AGPLv3 or later
+License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
 A classic, readable blog child theme of Latte: sidebar widgets, threaded comments, featured images, menus and custom logo.
 
@@ -15,18 +15,18 @@ Child theme of Latte (parent theme required). Colors come from design tokens (to
 
 == Copyright ==
 
-Latte Press WordPress Theme, Copyright 2026 alexy-os
-Latte Press is distributed under the terms of the GNU GPL v2 or later.
+Latte Press WordPress Theme, Copyright 2026 AlexY OS
+Latte Press is distributed under the terms of the GNU AGPL v3 or later.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+GNU Affero General Public License for more details.
 
 == Resources ==
 
 * Lucide icons (via the parent theme) — ISC License — https://lucide.dev/license
-* All other code and CSS — GPLv2 or later — theme author
+* All other code and CSS — AGPLv3 or later — theme author
 * No images are bundled with this theme.
 
 == Changelog ==

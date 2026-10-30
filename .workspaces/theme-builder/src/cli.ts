@@ -140,7 +140,7 @@ async function scaffoldSkin(preset: ThemePreset): Promise<void> {
     const style = `/*
 Theme Name: ${preset.name}
 Theme URI: https://github.com/alexy-os/wp-fasty
-Author: alexy-os
+Author: AlexY OS
 Author URI: https://github.com/alexy-os
 Description: Child skin for ${parent} — no Composer.
 Version: 1.0.0
@@ -148,8 +148,8 @@ Requires at least: 6.4
 Tested up to: 6.7
 Requires PHP: 8.2
 Template: ${parent}
-License: GNU General Public License v2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License: GNU Affero General Public License v3 or later
+License URI: https://www.gnu.org/licenses/agpl-3.0.html
 Text Domain: ${preset.textDomain}
 Tags: blog, custom-menu, featured-images
 */
@@ -349,7 +349,7 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
     name: `alexy-os/${slug}`,
     description: `${engine === "twig" ? "Twig" : preset.name} — WP FastY theme with vendored UI8Kit ${engine === "twig" ? "Twig" : "Latte"} primitives`,
     type: "wordpress-theme",
-    license: "GPL-2.0-or-later",
+    license: "AGPL-3.0-or-later",
     require,
     ...(repositories.length ? { repositories } : {}),
     autoload: {

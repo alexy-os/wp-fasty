@@ -68,6 +68,7 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
   write(dir, "style.css", styleCss(m, tpl("style.body")));
   write(dir, "functions.php", render(tpl("functions.php"), vars));
   write(dir, "readme.txt", render(tpl("readme.txt"), vars));
+  cpSync(join(root, "presets/LICENSE.agpl-3.0.txt"), join(dir, "LICENSE"));
   write(dir, "assets/css/tokens.css", tokensCss(m, arch.palette));
   for (const pt of m.postTypes ?? []) {
     const extraFile = join(adir, "types", `${pt.name}.extra.php`);

@@ -5,7 +5,7 @@ export type J = Record<string, any>;
 
 export const DEFAULTS = {
   uri: "https://github.com/alexy-os/wp-fasty",
-  author: { name: "alexy-os", uri: "https://github.com/alexy-os" },
+  author: { name: "AlexY OS", uri: "https://github.com/alexy-os" },
   requires: { platform: "6.4", php: "8.2" },
   testedUpTo: "7.1",
   version: "1.0.0",
@@ -50,8 +50,8 @@ export function styleCss(m: J, body: string): string {
     ["Tested up to", v.testedUpTo],
     ["Requires PHP", v.requires.php],
     ["Template", parentSlug(m)],
-    ["License", "GNU General Public License v2 or later"],
-    ["License URI", "https://www.gnu.org/licenses/gpl-2.0.html"],
+    ["License", "GNU Affero General Public License v3 or later"],
+    ["License URI", "https://www.gnu.org/licenses/agpl-3.0.html"],
     ["Text Domain", t.textDomain],
     ["Tags", (t.tags ?? []).join(", ")],
   ];

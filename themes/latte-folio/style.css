@@ -1,7 +1,7 @@
 /*
 Theme Name: Latte Folio
 Theme URI: https://github.com/alexy-os/wp-fasty
-Author: alexy-os
+Author: AlexY OS
 Author URI: https://github.com/alexy-os
 Description: Portfolio theme — Projects post type with types, client/year/role meta, filterable work grid and case-study pages. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons).
 Version: 1.0.0
@@ -9,8 +9,8 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.2
 Template: latte
-License: GNU General Public License v2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License: GNU Affero General Public License v3 or later
+License URI: https://www.gnu.org/licenses/agpl-3.0.html
 Text Domain: latte-folio
 Tags: portfolio, grid-layout, custom-menu, featured-images, translation-ready
 */

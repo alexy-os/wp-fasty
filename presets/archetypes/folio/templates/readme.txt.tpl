@@ -1,11 +1,11 @@
 === {{theme.name}} ===
-Contributors: {{author.name}}
+Contributors: alexy-os
 Requires at least: {{requires.platform}}
 Tested up to: {{testedUpTo}}
 Requires PHP: {{requires.php}}
 Stable tag: {{theme.version}}
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License: AGPLv3 or later
+License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
 Portfolio child theme of Latte: projects, project types, filterable work grid and case-study pages.
 
@@ -18,17 +18,17 @@ Child theme of Latte (parent theme required). Colors come from design tokens (to
 == Copyright ==
 
 {{theme.name}} WordPress Theme, Copyright {{copyrightYear}} {{author.name}}
-{{theme.name}} is distributed under the terms of the GNU GPL v2 or later.
+{{theme.name}} is distributed under the terms of the GNU AGPL v3 or later.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+GNU Affero General Public License for more details.
 
 == Resources ==
 
 * Lucide icons (via the parent theme) — ISC License — https://lucide.dev/license
-* All other code and CSS — GPLv2 or later — theme author
+* All other code and CSS — AGPLv3 or later — theme author
 * No images are bundled with this theme.
 
 == Changelog ==

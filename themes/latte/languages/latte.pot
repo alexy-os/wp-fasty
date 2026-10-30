@@ -1,5 +1,5 @@
-# Copyright (C) 2026 alexy-os
-# This file is distributed under the GNU General Public License v2 or later.
+# Copyright (C) 2026 AlexY OS
+# This file is distributed under the GNU Affero General Public License v3 or later.
 msgid ""
 msgstr ""
 "Project-Id-Version: Latte 1.1.0\n"
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-29T20:59:09+00:00\n"
+"POT-Creation-Date: 2026-10-30T13:16:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: latte\n"
@@ -32,7 +32,7 @@ msgstr ""
 
 #. Author of the theme
 #: style.css
-msgid "alexy-os"
+msgid "AlexY OS"
 msgstr ""
 
 #. Author URI of the theme
