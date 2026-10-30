@@ -7,7 +7,12 @@ Everything runs in the visitor's browser — no server.
 
 - Latte Press (classic blog): see `urls.txt` → `press`
 - Latte Folio (portfolio): `folio`
-- Latte Shop (no WooCommerce): `shop`
+- Latte Shop (no WooCommerce): `shop` — cart and checkout come from the ModulY plugin (phpfasty/wpmodules): the blueprint installs
+  `moduly.zip`, then the signed `cart` and `orders` modules through ModulY's validated installer (quarantine, JSON Schema,
+  sha256 + ed25519 signature, static scan) and enables them
+- Latte Shop + ModulY, modules not installed: `shop-modules` — opens Plugins → Modules (ModulY); the read-only catalog works,
+  and the module zips can be downloaded from `/wp-content/uploads/moduly/cart-0.1.0.zip` and `orders-0.1.0.zip` and uploaded
+  in that screen (cart first: orders requires cart ^0.1)
 - Builder editor: `shop-builder` / `shop-twig-builder` in `urls.txt` — the same blueprints opening wp-admin → Pages → Builder (pick a page, e.g. the front-page landing)
 - Latte Shop Twig (the same shop on the Twig engine — `twig.zip` parent, generated twin `latte-shop-twig` with only `.html.twig` views, Twig-only `wpfasty-builder-twig.zip`; no Latte library or views on the site): `shop-twig`
 
@@ -16,7 +21,7 @@ Self-contained alternative (no gist; verified 2026-10-20 with `@wp-playground/cl
 Rebuild: automatic. The **Playground** workflow (`.github/workflows/playground.yml`) runs on every push to `main` that
 touches what goes into the zips (themes, plugins, demo seeders, landings, blueprints, presets, the generator, the two
 scripts) and on demand: `gh workflow run playground.yml --repo alexy-os/wp-fasty` (or Actions → Playground → Run
-workflow). It builds the ten zips with `tools/playground-build.sh` (the same script as locally) and publishes them with
+workflow). It builds the theme/plugin zips with `tools/playground-build.sh` (the same script as locally) and publishes them with
 `tools/playground-publish.sh`: a zip is rewritten as `<name>.zip.b64` only when its content changed (timestamps, `.pot`
 dates and Composer's per-build ids ignored), one gist commit by Grok Designer, then every raw URL is checked — 200 and
 the zip's sha256. One run at a time (`concurrency`); the gist token is the repository secret `PLAYGROUND_GIST_TOKEN`.
@@ -33,3 +38,10 @@ Rebuild 2026-10-24 (builder editor, Cycle L): shop and shop-twig booted locally 
 Rebuild 2026-10-24 (@ui8kit/registry 3.3.0): all four blueprints booted locally from the new zips (Playground CLI, Node 24, PHP 8.5) — press, folio, shop, shop-twig pages 200 with no PHP notices; gist updated.
 Rebuild 2026-10-25 (builder IDE layout, a7aa983; built from 6966742): all four blueprints booted locally from the new zips (`@wp-playground/cli` 3.1.60 server, Node 24, PHP 8.5, WP_DEBUG + log on) — press, folio, shop, shop-twig front page, archive and single entry 200 with no PHP notices and an empty debug.log; shop and shop-twig builder editor opens with both column separators (keyboard resize/reset) and collapsible columns (bar buttons, `[`/`]`, F focus mode), no JS errors; gist updated, raw URLs match the zips by sha256.
 Rebuild 2026-10-28 (block previews, site contacts, builder tokens; built from 1c85f36): six URLs — press, folio, shop, shop-twig, shop-builder, shop-twig-builder; the press blueprint now installs wpfasty-types too (its demo seeds site contacts, read through `WPFastyTypes\Contact`). All six booted on playground.wordpress.net: front pages render; in shop-builder and shop-twig-builder the editor opens with the block cards and loads the WebP previews from the plugin (`sources/ui8kit/previews/`, 474 per build), and `GET /links` returns the demo contacts (tel, mailto, WhatsApp, Telegram, OSM map; phone, email, address, hours). Builder zips: wpfasty-builder.zip 3.6 MB, wpfasty-builder-twig.zip 3.2 MB (previews ≈ 2.7 MB of it). Gist updated, raw URLs 200 and match the zips by sha256.
+
+ModulY zips (`moduly.zip`, `moduly-cart.zip`, `moduly-orders.zip`) come from a phpfasty/wpmodules build (`bash tools/build.sh`
+there, signing key `MODULY_SIGNING_KEY`); `tools/playground-build.sh` copies them from `$WPMODULES_DIST` (default
+`../wpmodules/dist`) when present. The CI workflow here cannot read the private repo, so it skips them and the gist copies stay.
+Rebuild 2026-10-30 (ModulY 0.1.0, cart/orders modules): shop and shop-modules booted locally with `@wp-playground/cli` (Node 24,
+PHP 8.4): modules installed and enabled (signed by phpfasty), add to cart → cart → checkout → order #34 created; in shop-modules
+both zips uploaded through the admin screen, then add to cart works. Screens: ui8kit3/shots/moduly/.

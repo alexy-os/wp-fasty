@@ -1,0 +1,146 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/wp-admin/plugins.php?page=moduly",
+  "preferredVersions": {
+    "php": "8.5",
+    "wp": "latest"
+  },
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin"
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/latte.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/latte.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/latte-shop.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/latte-shop.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/demo.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/demo.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wpfasty-types.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/wpfasty-types.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wpfasty-builder.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/wpfasty-builder.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/moduly.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-cart.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/moduly-cart.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-orders.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/ce9f531eeb05bb8aee9dadcd3b0c1ecc/raw/moduly-orders.zip.b64"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php foreach (glob('/tmp/*.zip.b64') as $f) { file_put_contents(substr($f, 0, -4), base64_decode(file_get_contents($f))); }"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/latte.zip",
+      "extractToPath": "/wordpress/wp-content/themes"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/latte-shop.zip",
+      "extractToPath": "/wordpress/wp-content/themes"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/demo.zip",
+      "extractToPath": "/wordpress/wp-content"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wpfasty-types.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "wpfasty-types/wpfasty-types.php"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wpfasty-builder.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "wpfasty-builder/wpfasty-builder.php"
+    },
+    {
+      "step": "activateTheme",
+      "themeFolderName": "latte-shop"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/moduly.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "moduly/moduly.php"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php @mkdir('/wordpress/wp-content/uploads/moduly', 0755, true); copy('/tmp/moduly-cart.zip', '/wordpress/wp-content/uploads/moduly/cart-0.1.0.zip'); copy('/tmp/moduly-orders.zip', '/wordpress/wp-content/uploads/moduly/orders-0.1.0.zip');"
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "permalink_structure": "/%postname%/"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; require '/wordpress/wp-content/wpfasty-demo/shop.php'; flush_rewrite_rules();"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; $files = glob('/wordpress/wp-content/wpfasty-demo/landings/shop*.json'); usort($files, static fn ($a, $b) => strlen($a) <=> strlen($b)); foreach ($files as $f) { $r = WPFastyBuilder\\Seeder::landing(json_decode(file_get_contents($f), true)); if (is_wp_error($r)) { throw new Exception(basename($f) . ': ' . $r->get_error_message()); } }"
+    }
+  ]
+}

@@ -64,12 +64,21 @@ done < "$STAGE/seeds.txt"
 rm -f "$OUT/demo.zip"
 (cd "$STAGE" && zip -qr "$OUT/demo.zip" wpfasty-demo)
 rm -rf "$STAGE"
+# ModulY (phpfasty/wpmodules, private repo): the plugin + signed cart/orders module zips come from a wpmodules
+# build (`bash tools/build.sh` there) — $WPMODULES_DIST, default ../wpmodules/dist. CI here cannot fetch them; when the
+# folder is missing the three zips are skipped and the published gist copies stay as they are.
+MD="${WPMODULES_DIST:-$ROOT/../wpmodules/dist}"
+if [ -d "$MD/modules" ]; then
+  cp "$MD"/moduly-*.zip "$OUT/moduly.zip"
+  cp "$MD"/modules/cart-*.zip "$OUT/moduly-cart.zip"
+  cp "$MD"/modules/orders-*.zip "$OUT/moduly-orders.zip"
+fi
 ls -la "$OUT"/*.zip
 
 # Inline-blueprint preview URLs (playground/urls.txt).
 # <site>-builder: the same blueprint opening the builder's page list in wp-admin (the blueprint logs in).
 {
-  for t in press folio shop shop-twig; do
+  for t in press folio shop shop-twig shop-modules; do
     printf '%s https://playground.wordpress.net/#%s\n' "$t" "$(php -r 'echo rawurlencode(json_encode(json_decode(file_get_contents($argv[1])), JSON_UNESCAPED_SLASHES));' "$OUT/$t.json")"
   done
   for t in shop shop-twig; do

@@ -40,6 +40,6 @@ When a post type module (`types/<name>.php`, ADR-001 §3) declares `fields`, the
 - `money` fields are stored as **integer minor units** (cents): `_shop_price = 4800` is $48.00. The admin metabox shows and
   accepts a decimal (48.00) and converts (`Field::fromInput` / `toInput`). Orders also store cents and `_order_currency`.
 - Currency: option `wpfasty_currency` (ISO 4217, default `USD`), registered by `plugins/wpfasty-types` (Settings → General,
-  REST `/wp/v2/settings`). the ModulY `cart` module (`PhpFasty\Modules\Cart\Money::format()`) uses it (symbol filter `latte_shop_currency_symbol`).
+  REST `/wp/v2/settings`). the ModulY `cart` module (`PhpFasty\Module\Cart\Money::format()`) uses it (symbol filter `latte_shop_currency_symbol`).
 - Field meta is registered with real types (`integer`/`number`/`boolean`/`string`) and `show_in_rest`; a field that is not set
   comes back as `null` in REST (not 0), so stock "unlimited" differs from stock 0. `shop_order` stays private (no REST).

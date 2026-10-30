@@ -31,7 +31,7 @@
 					{capture $addIcon}{icon('plus')}{/capture}
 					{include 'button/Button.latte', type: 'submit', ariaLabel: $labels['add_to_cart'] . ': ' . $product['title'], class: kit('button', ['layout' => 'icon']), children: (string) $addIcon}
 				{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', children: (string) $c_ui9, attrs: ['method' => 'post']}
-			{else}
+			{elseif $shop['enabled']}
 				{capture $c_ui10}{$labels['out_of_stock']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-xs text-muted-foreground', children: (string) $c_ui10, attrs: []}
 			{/if}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mt-auto flex items-center justify-between gap-2 pt-2', children: (string) $c_ui11, attrs: []}
