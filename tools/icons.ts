@@ -13,7 +13,7 @@ const ICONS = [
   "circle-check", "clock", "credit-card", "external-link", "folder", "image", "mail", "map-pin",
   "menu", "message-circle", "minus", "package", "plus", "search", "shopping-bag", "shopping-cart",
   "tag", "trash-2", "truck", "user", "x", "briefcase", "layers", "sparkles", "shield-check", "rotate-ccw",
-  "send", "star", "eye", "sun", "moon",
+  "send", "star", "eye", "sun", "moon", "circle-alert",
 ];
 
 await rm(out, { recursive: true, force: true });

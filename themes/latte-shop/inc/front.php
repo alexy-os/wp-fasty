@@ -90,6 +90,10 @@ final class Front
             'count' => 0,
             'free_shipping' => '',
         ]);
+        // Availability flags for the views (disable scenario): the cart module sets `enabled`, the orders module the
+        // checkout nonce. Without them the views show "temporarily unavailable" instead of a form that cannot work.
+        $shop['cart_available'] = !empty($shop['enabled']);
+        $shop['checkout_available'] = $shop['cart_available'] && (string) ($shop['checkout_nonce'] ?? '') !== '';
         $context['shop'] = $shop + [
             'notice' => self::notice(),
             'categories' => $filter['items'],
@@ -158,6 +162,9 @@ final class Front
             'address' => __('Address', 'latte-shop'),
             'payment' => __('Payment', 'latte-shop'),
             'demo_notice' => __('Demo store — no real payment is taken.', 'latte-shop'),
+            'unavailable_title' => __('Temporarily unavailable', 'latte-shop'),
+            'unavailable_text' => __('This feature is temporarily unavailable. Please try again later.', 'latte-shop'),
+            'back_to_site' => __('Back to site', 'latte-shop'),
             'no_products' => __('No products found.', 'latte-shop'),
             'breadcrumb' => __('Breadcrumb', 'latte-shop'),
             'returns' => __('30-day easy returns', 'latte-shop'),

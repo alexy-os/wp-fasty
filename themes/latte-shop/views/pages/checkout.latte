@@ -1,6 +1,8 @@
 {** Latte Shop — checkout form, or order confirmation when ?order&key match. *}
 {capture $c_ui41}
-	{if !empty($order)}
+	{if empty($shop['checkout_available'])}
+		{include 'blocks/unavailable.latte'}
+	{elseif !empty($order)}
 		{capture $c_ui16}
 			{capture $c_ui4}
 				{capture $c_ui1}{icon('circle-check', 'size-12')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-primary', children: (string) $c_ui1, attrs: []}

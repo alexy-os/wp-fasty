@@ -1,6 +1,8 @@
 {# Latte Shop — checkout form, or order confirmation when ?order&key match (Twig twin of checkout.latte). #}
 {% set c_ui41 %}
-	{% if order ?? false %}
+	{% if not shop.checkout_available %}
+		{% include 'blocks/unavailable.html.twig' %}
+	{% elseif order ?? false %}
 		{% set c_ui16 %}
 			{% set c_ui4 %}
 				{% set c_ui1 %}{{ icon('circle-check', 'size-12') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-primary', 'children': c_ui1, 'attrs': {}} only %}

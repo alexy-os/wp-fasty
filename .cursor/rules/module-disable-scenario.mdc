@@ -1,0 +1,23 @@
+---
+description: ModulY modules (cart, orders, types, …) can be disabled at any time — themes, plugins and modules must handle it, with a test
+alwaysApply: true
+---
+
+# Disable scenario is mandatory for every module
+
+Shop logic, post types and other features live in ModulY modules (phpfasty/wpmodules). An admin, ModulY after a fatal,
+or safe mode can disable a module while pages, forms, menus and bookmarks still point at it. Every change here MUST
+keep that safe:
+
+1. **Endpoints** — a module declares its admin-post actions and REST prefixes in `module.json` → `endpoints`;
+   ModulY answers them while the module is off (503 + Retry-After, no-cache, escaped i18n page with "Back to site").
+   Never post to an endpoint the theme cannot prove is available.
+2. **Forms / UI (themes)** — availability comes from the context (ContextFactory / `wpfasty_shop_state` flags with safe
+   defaults: `enabled => false`; latte-shop: `shop.cart_available`, `shop.checkout_available`). Templates never call WP;
+   when a flag is off they hide the form/button and include `blocks/unavailable` (message + link back). Latte and Twig
+   twins change together; the shop archetype copy too (`theme:roundtrip`).
+3. **Cron / queues** — unscheduled in `deactivate()`, rescheduled in `activate()`; a stray run while disabled is a no-op.
+4. **Data is kept** — disabling or removing a module never deletes posts, meta, options or tables (ADR-002).
+5. **Test required** — every feature that depends on a module ships a test for the disabled state
+   (here: `tests/ShopDisableScenarioTest.php`; in wpmodules: `tests/UnavailableTest.php` + the CI "Disable scenario" step).
+   No test → not mergeable.

@@ -2,7 +2,9 @@
 {include 'blocks/notice.latte'}
 {capture $c_ui21}
 	{capture $c_ui1}{$labels['cart']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'mb-8 text-3xl font-bold tracking-tight', children: (string) $c_ui1, attrs: []}
-	{if empty($cart['items'])}
+	{if empty($shop['cart_available'])}
+		{include 'blocks/unavailable.latte'}
+	{elseif empty($cart['items'])}
 		{capture $c_ui5}
 			{capture $c_ui2}{icon('shopping-cart', 'size-8')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-muted-foreground', children: (string) $c_ui2, attrs: []}
 			{capture $c_ui3}{$labels['empty_cart']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_ui3, attrs: []}
@@ -43,7 +45,7 @@
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['cart_nonce'])]}
 				{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', children: (string) $c_ui19, attrs: ['id' => ('remove-' . ($item['id'])), 'method' => 'post', 'hidden' => true]}
 			{/foreach}
-			{include 'blocks/order-summary.latte', cart: $cart, labels: $labels}
+			{include 'blocks/order-summary.latte', cart: $cart, labels: $labels, showCheckout: !empty($shop['checkout_available'])}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-8 lg:grid-cols-[1fr_360px]', children: (string) $c_ui20, attrs: []}
 	{/if}
 {/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 py-12 md:px-6', children: (string) $c_ui21, attrs: []}

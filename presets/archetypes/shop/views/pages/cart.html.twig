@@ -2,7 +2,9 @@
 {% include 'blocks/notice.html.twig' %}
 {% set c_ui21 %}
 	{% set c_ui1 %}{{ labels.cart }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'mb-8 text-3xl font-bold tracking-tight', 'children': c_ui1, 'attrs': {}} only %}
-	{% if not cart.items %}
+	{% if not shop.cart_available %}
+		{% include 'blocks/unavailable.html.twig' %}
+	{% elseif not cart.items %}
 		{% set c_ui5 %}
 			{% set c_ui2 %}{{ icon('shopping-cart', 'size-8') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}
 			{% set c_ui3 %}{{ labels.empty_cart }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui3, 'attrs': {}} only %}
@@ -43,7 +45,7 @@
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop.cart_nonce)}} only %}
 				{% endset %}{% include 'form/Form.html.twig' with {'action': shop.action|default(''), 'children': c_ui19, 'attrs': {'id': ('remove-' ~ (item.id)), 'method': 'post', 'hidden': true}} only %}
 			{% endfor %}
-			{% include 'blocks/order-summary.html.twig' with { cart: cart, labels: labels } %}
+			{% include 'blocks/order-summary.html.twig' with { cart: cart, labels: labels, showCheckout: shop.checkout_available ?? false } %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-8 lg:grid-cols-[1fr_360px]', 'children': c_ui20, 'attrs': {}} only %}
 	{% endif %}
 {% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 py-12 md:px-6', 'children': c_ui21, 'attrs': {}} only %}
