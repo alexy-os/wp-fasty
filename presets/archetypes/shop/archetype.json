@@ -8,6 +8,7 @@
   "copyrightYear": 2026,
   "views": "views",
   "inc": "inc",
+  "static": "static",
   "templates": {
     "functions.php": "templates/functions.php.tpl",
     "readme.txt": "templates/readme.txt.tpl",

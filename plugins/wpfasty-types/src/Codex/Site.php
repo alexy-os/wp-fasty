@@ -34,6 +34,10 @@ final class Site
         $dirs = function_exists('get_stylesheet_directory')
             ? array_unique([get_stylesheet_directory(), get_template_directory()])
             : [];
+        // Themes layered between child and parent (Latte "Extends:" base theme) add their dirs here.
+        if (function_exists('apply_filters')) {
+            $dirs = array_values(array_unique((array) apply_filters('wpfasty_theme_dirs', $dirs)));
+        }
         foreach ($dirs as $dir) {
             $site = self::fromDir((string) $dir . '/types');
             if ($site !== null) {

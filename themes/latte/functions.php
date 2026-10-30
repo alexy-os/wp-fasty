@@ -13,6 +13,7 @@ if (!defined('ABSPATH')) {
 }
 
 require_once __DIR__ . '/includes/api.php';
+require_once __DIR__ . '/includes/base-theme.php';
 
 if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
     add_action('admin_notices', static function (): void {
@@ -27,6 +28,9 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
+
+latte_base_theme_hooks();
+latte_load_base_theme();
 
 WPFasty\Core\Application::getInstance();
 

@@ -51,7 +51,7 @@ $suites = [
     'press' => ['themes/latte-press/views', 'themes/latte/views'],
     'folio' => ['themes/latte-folio/views', 'themes/latte/views'],
     'shop' => ['themes/latte-shop/views', 'themes/latte/views'],
-    'market' => ['themes/wp-fasty-market/views', 'themes/latte/views'],
+    'market' => ['themes/wpfasty-market/views', 'themes/latte-shop/views', 'themes/latte/views'],
     'builder' => [],
     'blocks' => [],
 ];
@@ -106,7 +106,7 @@ $builder = static function () use (
         $fns[$rt] = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
     }
     $catalog = $catalogs['latte'];
-    $contexts = ['press' => 'latte/page', 'folio' => 'folio/front', 'shop' => 'shop/front'];
+    $contexts = ['press' => 'latte/page', 'folio' => 'folio/front', 'shop' => 'shop/front', 'market' => 'market/shop'];
     $files = glob($root . '/tools/builder/landings/*.json') ?: [];
     sort($files);
     if (!$files) {

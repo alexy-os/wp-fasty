@@ -1,0 +1,2 @@
+{** Extension point: views registered for slot $name (context `slots`, filter wpfasty_slots). *}
+{foreach ($slots[$name] ?? []) as $slot}{include ($slot['view'] . '.latte'), slot: $slot['data'], name: null}{/foreach}

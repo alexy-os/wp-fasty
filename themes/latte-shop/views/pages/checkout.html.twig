@@ -13,9 +13,10 @@
 				{% for item in order.items %}
 					{% set c_ui7 %}{% set c_ui5 %}{{ item.title }} × {{ item.qty }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui5, 'attrs': {}} only %}{% set c_ui6 %}{{ item.line_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'font-semibold', 'children': c_ui6, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4', 'children': c_ui7, 'attrs': {}} only %}
 				{% endfor %}
-				{% set c_ui10 %}{% set c_ui8 %}{{ labels.shipping }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui8, 'attrs': {}} only %}{% set c_ui9 %}{{ order.shipping_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui9, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4 text-sm text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}
+				{% if order.shipping is not defined or order.shipping != 0 %}{% set c_ui10 %}{% set c_ui8 %}{{ labels.shipping }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui8, 'attrs': {}} only %}{% set c_ui9 %}{{ order.shipping_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui9, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4 text-sm text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}{% endif %}
 				{% set c_ui13 %}{% set c_ui11 %}{{ labels.total }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui11, 'attrs': {}} only %}{% set c_ui12 %}{{ order.total_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui12, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4 text-lg font-semibold', 'children': c_ui13, 'attrs': {}} only %}
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', 'children': c_ui14, 'attrs': {}} only %}
+			{% include 'blocks/slot.html.twig' with {'name': 'checkout.order'} %}
 			{% set c_ui15 %}{{ labels.continue_shopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': 'mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui15, 'attrs': {}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mx-auto flex max-w-2xl flex-col gap-6', 'children': c_ui16, 'attrs': {}} only %}
 	{% elseif not cart.items %}
@@ -26,7 +27,7 @@
 	{% else %}
 		{% set c_ui20 %}{{ labels.checkout }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'mb-8 text-3xl font-bold tracking-tight', 'children': c_ui20, 'attrs': {}} only %}
 		{% if checkout.errors ?? false %}
-			{% set errText %}{% set c_ui21 %}{{ icon('x') }}Please check: {{ checkout.errors|join(', ') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex items-center gap-2', 'children': c_ui21, 'attrs': {}} only %}{% endset %}
+			{% set errText %}{% set c_ui21 %}{{ icon('x') }}{{ labels.check_fields }}: {{ (checkout.error_labels ?? checkout.errors)|join(', ') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex items-center gap-2', 'children': c_ui21, 'attrs': {}} only %}{% endset %}
 			{% set c_ui22 %}{% include 'alert/Alert.html.twig' with { variant: 'destructive', role: 'alert', class: 'px-4 py-2', children: errText } %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mb-6', 'children': c_ui22, 'attrs': {}} only %}
 		{% endif %}
 		{% set v = checkout.values %}
@@ -48,7 +49,7 @@
 					{% set addrLbl %}{{ labels.address }} *{% endset %}
 					{% include 'label/Label.html.twig' with { htmlFor: 'co-address', class: kit('label', {}), children: addrLbl } %}
 					{% include 'compose/Textarea.html.twig' with { id: 'co-address', name: 'address', value: (v.address ?? '') ~ '', rows: '2', required: true, state: 'address' in checkout.errors ? 'error' : null } only %}
-				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui25, 'attrs': {}} only %}
+				{% endset %}{% if not checkout.digital|default(false) %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui25, 'attrs': {}} only %}{% endif %}
 				{% set c_ui31 %}
 					{% set c_ui26 %}{{ labels.payment }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'legend', 'class': 'mb-2 text-sm font-medium', 'children': c_ui26, 'attrs': {}} only %}
 					{% set c_ui30 %}
@@ -74,6 +75,7 @@
 					{% endfor %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm', 'children': c_ui37, 'attrs': {}} only %}
 				{% include 'blocks/order-summary.html.twig' with { cart: cart, labels: labels, showCheckout: false } %}
+				{% include 'blocks/slot.html.twig' with {'name': 'checkout.consents'} %}
 				{% set place %}{{ icon('check') }}{{ labels.place_order }}{% endset %}
 				{% include 'button/Button.html.twig' with { type: 'submit', class: kit('button', {'size': 'lg'}, 'w-full'), children: place } %}
 				{% set c_ui38 %}{{ labels.demo_notice }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-xs text-muted-foreground', 'children': c_ui38, 'attrs': {}} only %}

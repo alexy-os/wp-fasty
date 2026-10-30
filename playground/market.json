@@ -1,6 +1,6 @@
 {
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
-  "landingPage": "/shop/",
+  "landingPage": "/",
   "preferredVersions": {
     "php": "8.5",
     "wp": "latest"
@@ -24,10 +24,18 @@
     },
     {
       "step": "writeFile",
-      "path": "/tmp/wp-fasty-market.zip.b64",
+      "path": "/tmp/latte-shop.zip.b64",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wp-fasty-market.zip.b64"
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/latte-shop.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wpfasty-market.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wpfasty-market.zip.b64"
       }
     },
     {
@@ -44,6 +52,14 @@
       "data": {
         "resource": "url",
         "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wpfasty-types.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wpfasty-builder.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wpfasty-builder.zip.b64"
       }
     },
     {
@@ -111,6 +127,14 @@
       }
     },
     {
+      "step": "writeFile",
+      "path": "/tmp/moduly-licenses.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-licenses.zip.b64"
+      }
+    },
+    {
       "step": "runPHP",
       "code": "<?php foreach (glob('/tmp/*.zip.b64') as $f) { file_put_contents(substr($f, 0, -4), base64_decode(file_get_contents($f))); }"
     },
@@ -121,7 +145,12 @@
     },
     {
       "step": "unzip",
-      "zipPath": "/tmp/wp-fasty-market.zip",
+      "zipPath": "/tmp/latte-shop.zip",
+      "extractToPath": "/wordpress/wp-content/themes"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wpfasty-market.zip",
       "extractToPath": "/wordpress/wp-content/themes"
     },
     {
@@ -139,8 +168,17 @@
       "pluginPath": "wpfasty-types/wpfasty-types.php"
     },
     {
+      "step": "unzip",
+      "zipPath": "/tmp/wpfasty-builder.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "wpfasty-builder/wpfasty-builder.php"
+    },
+    {
       "step": "activateTheme",
-      "themeFolderName": "wp-fasty-market"
+      "themeFolderName": "wpfasty-market"
     },
     {
       "step": "unzip",
@@ -153,7 +191,7 @@
     },
     {
       "step": "runPHP",
-      "code": "<?php require_once '/wordpress/wp-load.php'; $p = PhpFasty\\Moduly\\Wp\\Plugin::instance(); if (!$p) { throw new Exception('ModulY did not boot'); } foreach (['types', 'cart', 'orders', 'downloads', 'consent-log', 'cookie-consent', 'reviews'] as $id) { $p->modules->install('/tmp/moduly-' . $id . '.zip', true); } $s = (array) get_option('moduly_settings', []); $s['cart'] = array_merge((array) ($s['cart'] ?? []), ['digital_only' => true]); update_option('moduly_settings', $s);"
+      "code": "<?php require_once '/wordpress/wp-load.php'; $p = PhpFasty\\Moduly\\Wp\\Plugin::instance(); if (!$p) { throw new Exception('ModulY did not boot'); } foreach (['types', 'cart', 'orders', 'downloads', 'consent-log', 'cookie-consent', 'reviews', 'licenses'] as $id) { $p->modules->install('/tmp/moduly-' . $id . '.zip', true); } $s = (array) get_option('moduly_settings', []); $s['cart'] = array_merge((array) ($s['cart'] ?? []), ['digital_only' => true]); update_option('moduly_settings', $s);"
     },
     {
       "step": "setSiteOptions",
@@ -164,6 +202,10 @@
     {
       "step": "runPHP",
       "code": "<?php require_once '/wordpress/wp-load.php'; wp_set_current_user(1); require '/wordpress/wp-content/wpfasty-demo/market.php'; flush_rewrite_rules();"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; wp_set_current_user(1); $files = glob('/wordpress/wp-content/wpfasty-demo/landings/market*.json'); usort($files, static fn ($a, $b) => strlen($a) <=> strlen($b)); foreach ($files as $f) { $r = WPFastyBuilder\\Seeder::landing(json_decode(file_get_contents($f), true)); if (is_wp_error($r)) { throw new Exception(basename($f) . ': ' . $r->get_error_message()); } } flush_rewrite_rules();"
     },
     {
       "step": "runPHP",

@@ -1,0 +1,19 @@
+/*
+Theme Name: WP FastY Market
+Theme URI: https://github.com/alexy-os/wp-fasty
+Author: WP FastY
+Author URI: https://github.com/alexy-os/wp-fasty
+Description: WP FastY brand for the Latte Shop digital store: tokens, logo and footer only. Catalog, product, cart, checkout and author pages are the common Latte Shop templates; licenses, downloads, reviews, checkout consents and the cookie banner are injected by ModulY modules through Latte Shop extension points. Requires Latte (parent) and Latte Shop (base, "Extends").
+Version: 2.0.0
+Requires at least: 6.4
+Tested up to: 7.1
+Requires PHP: 8.2
+Template: latte
+Extends: latte-shop
+License: GNU Affero General Public License v3 or later
+License URI: https://www.gnu.org/licenses/agpl-3.0.html
+Text Domain: wpfasty-market
+Tags: e-commerce, grid-layout, custom-menu, featured-images, translation-ready
+*/
+
+/* Brand lives in assets/css/tokens.css (:root + .dark). Markup uses Tailwind utilities on tokens only. */

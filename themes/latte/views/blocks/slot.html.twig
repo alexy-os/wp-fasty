@@ -1,0 +1,2 @@
+{# Extension point: views registered for slot name (context `slots`, filter wpfasty_slots). #}
+{% for slot_item in slots[name]|default([]) %}{% include slot_item.view ~ '.html.twig' with {'slot': slot_item.data} only %}{% endfor %}

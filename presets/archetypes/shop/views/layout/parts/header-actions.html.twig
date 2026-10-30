@@ -1,4 +1,6 @@
-{# Latte Shop — cart link with live count (Twig twin of header-actions.latte). #}
+{# Latte Shop — header icon actions: search (mobile: opens the menu sheet with the search field), account, cart with live count (Twig twin of header-actions.latte). #}
+{% set c_s %}{{ icon('search', 'size-5') }}{% endset %}{% include 'button/Button.html.twig' with {'class': kit('button', {'variant': 'outline', 'layout': 'icon'}, 'md:hidden'), 'children': c_s, 'attrs': {'type': 'button', 'data-ui8kit-dialog-open': 'true', 'data-ui8kit-dialog-target': sheet.panel|default(''), 'aria-controls': sheet.panel|default(''), 'aria-haspopup': 'dialog', 'aria-label': labels.search_site|default(labels.account_search|default(''))}} only %}
+{% if shop.account_url|default('') %}{% set c_a %}{{ icon('user', 'size-5') }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.account_url, 'class': kit('button', {'variant': 'outline', 'layout': 'icon'}), 'children': c_a, 'attrs': {'aria-label': labels.account|default('')}} only %}{% endif %}
 {% set c_ui2 %}
 	{{ icon('shopping-bag', 'size-5') }}
 	{% if shop.count > 0 %}

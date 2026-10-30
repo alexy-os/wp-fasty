@@ -22,12 +22,13 @@
 							{if $item['image']}{include 'image/Image.latte', src: $item['image'] ?? '', class: 'size-16 rounded-lg object-cover', attrs: ['alt' => '', 'loading' => 'lazy']}{else}{capture $c_ui6}{icon('package')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'flex size-16 items-center justify-center rounded-lg bg-muted text-muted-foreground', children: (string) $c_ui6, attrs: []}{/if}
 							{capture $c_ui9}
 								{capture $c_ui7}{$item['title']}{/capture}{include 'link/Link.latte', href: $item['url'] ?? '', class: kit('link', ['size' => 'sm']), children: (string) $c_ui7, attrs: []}
+								{if !empty($item['tier_label'])}{capture $c_tl}{$item['tier_label']}{/capture}{include 'text/Text.latte', tag: 'span', class: kit('badge', ['variant' => 'secondary'], 'w-fit'), children: (string) $c_tl, attrs: []}{/if}
 								{capture $c_ui8}{$item['unit_display']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui8, attrs: []}
 							{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex min-w-0 flex-1 flex-col gap-2', children: (string) $c_ui9, attrs: []}
-							{capture $c_ui10}{$labels['qty']}{/capture}{include 'label/Label.latte', class: 'sr-only', children: (string) $c_ui10, attrs: ['for' => ('qty-' . ($item['id']))]}
-							{capture $c_ui11}{include 'input/Input.latte', id: 'qty-' . $item['id'], type: 'number', name: 'qtys[' . $item['id'] . ']', value: (string) $item['qty'], min: '0', max: '99', class: kit('input', [])}{/capture}{include 'box/Box.latte', tag: 'div', class: 'w-20 shrink-0', children: (string) $c_ui11, attrs: []}
+							{if !empty($item['digital'])}{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => ('qtys[' . ($item['key'] ?? $item['id']) . ']'), 'value' => '1']}{else}{capture $c_ui10}{$labels['qty']}{/capture}{include 'label/Label.latte', class: 'sr-only', children: (string) $c_ui10, attrs: ['for' => ('qty-' . ($item['id']))]}
+							{capture $c_ui11}{include 'input/Input.latte', id: 'qty-' . $item['id'], type: 'number', name: 'qtys[' . ($item['key'] ?? $item['id']) . ']', value: (string) $item['qty'], min: '0', max: '99', class: kit('input', [])}{/capture}{include 'box/Box.latte', tag: 'div', class: 'w-20 shrink-0', children: (string) $c_ui11, attrs: []}{/if}
 							{capture $c_ui12}{$item['line_display']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'w-24 text-right font-semibold', children: (string) $c_ui12, attrs: []}
-							{capture $c_ui13}{icon('trash-2')}{/capture}{include 'button/Button.latte', class: kit('button', ['variant' => 'ghost', 'layout' => 'icon']), children: (string) $c_ui13, attrs: ['type' => 'submit', 'form' => ('remove-' . ($item['id'])), 'aria-label' => (($labels['remove']) . ': ' . ($item['title']))]}
+							{capture $c_ui13}{icon('trash-2')}{/capture}{include 'button/Button.latte', class: kit('button', ['variant' => 'ghost', 'layout' => 'icon']), children: (string) $c_ui13, attrs: ['type' => 'submit', 'form' => ('remove-' . str_replace('~', '--', (string) ($item['key'] ?? $item['id']))), 'aria-label' => (($labels['remove']) . ': ' . ($item['title']))]}
 						{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex items-center gap-4 p-4', children: (string) $c_ui14, attrs: []}
 					{/foreach}
 				{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', children: (string) $c_ui15, attrs: []}
@@ -42,8 +43,9 @@
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => 'latte_shop_cart']}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'op', 'value' => 'remove']}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'product_id', 'value' => ($item['id'])]}
+					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'key', 'value' => ($item['key'] ?? $item['id'])]}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['cart_nonce'])]}
-				{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', children: (string) $c_ui19, attrs: ['id' => ('remove-' . ($item['id'])), 'method' => 'post', 'hidden' => true]}
+				{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', children: (string) $c_ui19, attrs: ['id' => ('remove-' . str_replace('~', '--', (string) ($item['key'] ?? $item['id']))), 'method' => 'post', 'hidden' => true]}
 			{/foreach}
 			{include 'blocks/order-summary.latte', cart: $cart, labels: $labels, showCheckout: !empty($shop['checkout_available'])}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-8 lg:grid-cols-[1fr_360px]', children: (string) $c_ui20, attrs: []}

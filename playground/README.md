@@ -14,10 +14,11 @@ Everything runs in the visitor's browser — no server.
   and the module zips can be downloaded from `/wp-content/uploads/moduly/cart.zip` and `orders-0.1.0.zip` and uploaded
   in that screen (cart first: orders requires cart ^0.1)
 - WP FastY Market (Latte, ru_RU): `market` or `?blueprint-url=https://raw.githubusercontent.com/alexy-os/wp-fasty/main/playground/market.json` —
-  wp-fasty-market theme + wpfasty-types + ModulY with signed modules types → cart → orders → downloads → consent-log →
-  cookie-consent → reviews (cart digital_only), demo catalog with license tiers (regular / extended ×5), preview, author,
-  verified reviews from a seeded paid order; lands on `/shop/`. The download is a demo stub zip; legal pages are not seeded
-  (`WPFASTY_LEGAL_JSON` is unset), so footer document links are placeholders
+  pack `packs/digital-shop.json`: latte → latte-shop (base, `Extends:`) → wpfasty-market (brand child: tokens, logo, footer) +
+  wpfasty-types + wpfasty-builder + ModulY with signed modules types → cart → orders → downloads → consent-log →
+  cookie-consent → reviews → licenses (cart digital_only). Demo catalog with license tiers, live preview, author pages,
+  verified reviews from a seeded paid order, 7 legal pages with fake details (`tools/demo/legal.json`, «Демо-данные»);
+  the home page is the Builder landing `tools/builder/landings/market.json`; lands on `/`. The download is a demo stub zip
 - Builder editor: `shop-builder` / `shop-twig-builder` in `urls.txt` — the same blueprints opening wp-admin → Pages → Builder (pick a page, e.g. the front-page landing)
 - Latte Shop Twig (the same shop on the Twig engine — `twig.zip` parent, generated twin `latte-shop-twig` with only `.html.twig` views, Twig-only `wpfasty-builder-twig.zip`; no Latte library or views on the site): `shop-twig`
 

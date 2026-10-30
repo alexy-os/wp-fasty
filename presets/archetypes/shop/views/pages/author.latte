@@ -1,0 +1,19 @@
+{** Latte Shop — author storefront (WordPress author archive of products): profile, stats, items. *}
+{if !empty($author)}
+{capture $c_page}
+{capture $c_hero}
+	{capture $c_av}{$author['initial']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex size-24 shrink-0 items-center justify-center rounded-2xl bg-primary text-4xl font-bold text-primary-foreground', children: (string) $c_av, attrs: ['aria-hidden' => 'true']}
+	{capture $c_tx}
+		{capture $c_h}{$author['name']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'text-3xl font-bold tracking-tight md:text-4xl', children: (string) $c_h, attrs: []}
+		{if !empty($author['bio'])}{capture $c_bio}{$author['bio']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_bio, attrs: []}{/if}
+		{capture $c_st}{icon('package', 'size-4')}{$author['items']} {$labels['author_items']}{if !empty($author['since'])} · {$labels['author_since']} {$author['since']}{/if}{/capture}{include 'text/Text.latte', tag: 'p', class: 'flex items-center gap-2 text-sm text-muted-foreground', children: (string) $c_st, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-1 flex-col gap-2', children: (string) $c_tx, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-8 flex flex-col gap-6 rounded-2xl border border-border bg-card p-8 md:flex-row md:items-center', children: (string) $c_hero, attrs: []}
+{capture $c_grid}
+	{foreach $products as $product}
+		{include 'blocks/product-card.latte', product: $product, shop: $shop, labels: $labels, headingTag: 'h2'}
+	{/foreach}
+{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8 lg:grid-cols-4', children: (string) $c_grid, attrs: []}
+{include 'blocks/slot.latte', name: 'author.after'}
+{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 py-12 md:px-6', children: (string) $c_page, attrs: []}
+{/if}

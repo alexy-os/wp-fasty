@@ -1,0 +1,30 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "Legal documents (footer)"
+msgstr "Юридические документы (подвал)"
+
+msgid "Ready-made WordPress sites, themes and plugins. Fast, accessible, no page builders."
+msgstr "Готовые сайты, темы и плагины для WordPress. Быстрые, доступные, без конструкторов страниц."
+
+msgid "Catalog"
+msgstr "Каталог"
+
+msgid "Documents"
+msgstr "Документы"
+
+msgid "Seller"
+msgstr "Продавец"
+
+msgid "OGRN"
+msgstr "ОГРН"
+
+msgid "INN"
+msgstr "ИНН"
+
+msgid "All rights reserved."
+msgstr "Все права защищены."
+

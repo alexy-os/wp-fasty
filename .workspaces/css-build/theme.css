@@ -6,6 +6,7 @@
 @import "tailwindcss";
 
 @source "../../themes";
+@source "./moduly-classes.txt";
 /* UI8Kit 3 runtime (tailwind-merge tables name every utility) and CLI rules are not markup: classes come from
    the kit presets (themes/latte/kit/presets.json) and the views. */
 @source not "../../themes/latte/ui8kit/runtime/**";

@@ -12,7 +12,7 @@
 				{% endset %}{% include 'button/Button.html.twig' with {'class': kit('button', {'variant': 'outline', 'layout': 'icon'}, 'md:hidden'), 'children': c_ui2, 'attrs': {'type': 'button', 'id': (sheet.trigger), 'data-ui8kit-dialog-open': 'true', 'data-ui8kit-dialog-target': (sheet.panel), 'aria-controls': (sheet.panel), 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'aria-label': (labels.open_menu)}} only %}
 			{% endif %}
 			{% include 'layout/parts/brand.html.twig' %}
-		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-center gap-4', 'children': c_ui3, 'attrs': {}} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-center gap-2 md:gap-4', 'children': c_ui3, 'attrs': {}} only %}
 
 		{% if menu.primary.items ?? false %}
 			{% set c_ui4 %}
@@ -30,7 +30,7 @@
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'hidden md:block', 'children': c_ui5, 'attrs': {}} only %}
 			{% include 'layout/parts/header-actions.html.twig' %}
 			{% include 'layout/parts/theme-toggle.html.twig' %}
-		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-center gap-4', 'children': c_ui6, 'attrs': {}} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-center gap-2 md:gap-4', 'children': c_ui6, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'container mx-auto flex h-16 items-center justify-between gap-4 px-4 md:px-6', 'children': c_ui7, 'attrs': {}} only %}
 {% endset %}{% include 'box/Box.html.twig' with {'tag': 'header', 'class': 'site-header border-b border-border bg-background', 'children': c_ui8, 'attrs': {}} only %}
 

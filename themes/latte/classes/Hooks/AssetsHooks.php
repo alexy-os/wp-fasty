@@ -89,12 +89,24 @@ final class AssetsHooks extends AbstractHooks
             return;
         }
 
+        $tokenDeps = ['latte-tokens'];
+        $baseDir = function_exists('latte_base_theme_dir') ? latte_base_theme_dir() : '';
+        if ($baseDir !== '' && is_file($baseDir . '/assets/css/tokens.css')) {
+            wp_enqueue_style(
+                'latte-base-tokens',
+                latte_base_theme_uri() . '/assets/css/tokens.css',
+                ['latte-tokens'],
+                $childVer
+            );
+            $tokenDeps[] = 'latte-base-tokens';
+        }
+
         $childTokens = get_stylesheet_directory() . '/assets/css/tokens.css';
         if (is_file($childTokens)) {
             wp_enqueue_style(
                 'latte-skin-tokens',
                 get_stylesheet_directory_uri() . '/assets/css/tokens.css',
-                ['latte-tokens'],
+                $tokenDeps,
                 $childVer
             );
         }

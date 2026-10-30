@@ -33,7 +33,7 @@ for n in sorted(i.filename for i in z.infolist() if not i.is_dir()):
 print(h.hexdigest())'
 }
 
-NAMES="moduly moduly-cart moduly-orders moduly-types moduly-downloads moduly-consent-log moduly-cookie-consent moduly-reviews wp-fasty-market demo latte latte-folio latte-press latte-shop latte-shop-twig twig wpfasty-builder wpfasty-builder-twig wpfasty-types"
+NAMES="moduly moduly-cart moduly-orders moduly-types moduly-downloads moduly-consent-log moduly-cookie-consent moduly-reviews moduly-licenses wpfasty-market demo latte latte-folio latte-press latte-shop latte-shop-twig twig wpfasty-builder wpfasty-builder-twig wpfasty-types"
 for n in $NAMES; do [ -s "$ROOT/playground/$n.zip" ] || { echo "::error::playground/$n.zip missing — run tools/playground-build.sh"; exit 1; }; done
 
 changed=()

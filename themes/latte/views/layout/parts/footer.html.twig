@@ -24,3 +24,4 @@
 		{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-sm text-muted-foreground', 'children': c_ui3, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'container mx-auto space-y-8 px-4 md:px-6', 'children': c_ui4, 'attrs': {}} only %}
 {% endset %}{% include 'box/Box.html.twig' with {'tag': 'footer', 'class': 'site-footer mt-16 border-t border-border bg-card py-10', 'children': c_ui5, 'attrs': {}} only %}
+{% include 'blocks/slot.html.twig' with {'name': 'footer'} %}
