@@ -35,6 +35,21 @@ $items = [
     ['cache-turbo', 'Cache Turbo — ускорение сайта', 'plugins', 5500, null, 4.7, 233, null, 'Страничный кеш, критический CSS и отложенные скрипты.'],
     ['booking-kit', 'Booking Kit — онлайн-запись', 'plugins', 7900, null, 4.6, 18, 'Новинка', 'Слоты, напоминания и оплата брони для услуг и событий.'],
 ];
+/** A tiny demo archive as an attachment; the downloads module moves it into the private dir. */
+function wpfasty_demo_zip(string $slug): ?int
+{
+    $found = get_posts(['post_type' => 'attachment', 'name' => 'download-' . $slug, 'fields' => 'ids', 'post_status' => 'any', 'numberposts' => 1]);
+    if ($found) {
+        return (int) $found[0];
+    }
+    $upload = wp_upload_bits($slug . '.zip', null, "PK\x05\x06" . str_repeat("\0", 18));
+    if (!empty($upload['error'])) {
+        return null;
+    }
+    $id = wp_insert_attachment(['post_title' => $slug . '.zip', 'post_name' => 'download-' . $slug, 'post_mime_type' => 'application/zip', 'post_status' => 'inherit'], $upload['file']);
+    return $id ?: null;
+}
+
 $order = 0;
 foreach ($items as [$slug, $title, $cat, $price, $sale, $rating, $reviews, $badge, $excerpt]) {
     $id = wpfasty_demo_post($slug, [
@@ -46,8 +61,19 @@ foreach ($items as [$slug, $title, $cat, $price, $sale, $rating, $reviews, $badg
         'post_date' => gmdate('Y-m-d H:i:s', time() - $order * DAY_IN_SECONDS * 3),
     ]);
     wp_set_object_terms($id, [$cats[$cat]], 'product_cat');
+    // Digital product fields (ModulY types 0.2): license tiers in cents, private download file, real reviews only.
+    $base = ($sale ?: $price) * 100;
+    $licenses = wp_json_encode([
+        ['tier' => 'regular', 'label' => 'Обычная', 'price' => $base],
+        ['tier' => 'extended', 'label' => 'Расширенная', 'price' => $base * 5],
+    ]);
     $meta = ['_shop_price' => $price * 100, '_shop_sale_price' => $sale ? $sale * 100 : null, '_shop_sku' => strtoupper($slug),
-        '_shop_stock' => null, '_shop_rating' => $rating, '_shop_reviews' => $reviews, '_shop_badge' => $badge];
+        '_shop_stock' => null, '_shop_rating' => null, '_shop_reviews' => null, '_shop_badge' => $badge,
+        '_shop_version' => '1.' . ($order % 5) . '.0', '_shop_requires_wp' => '6.5', '_shop_requires_php' => '8.2',
+        '_shop_changelog' => "1.0.0 — первый релиз", '_shop_preview_url' => home_url('/'), '_shop_support_months' => 6,
+        '_shop_sales_count' => $reviews, '_shop_licenses' => $licenses,
+        '_shop_download_file' => wpfasty_demo_zip($slug)];
+    unset($rating);
     foreach ($meta as $key => $value) {
         $value === null ? delete_post_meta($id, $key) : update_post_meta($id, $key, $value);
     }
