@@ -90,8 +90,8 @@
 						{% set req = cn['required'] %}
 						{% set row %}
 							{% include 'checkbox/Checkbox.html.twig' with {'id': 'co-' ~ key, 'name': key, 'value': '1', 'required': req, 'class': 'mt-2 size-4 shrink-0 accent-primary'} only %}
-							{% set tx %}{{ labels[key] ?? key }}{% for doc in docs %}{% if loop.first %} ({% else %}, {% endif %}<a class="text-primary underline underline-offset-4" href="{{ (legal[doc] ?? '')|safe_url }}" target="_blank" rel="noopener">{{ labels['legal_' ~ doc] }}</a>{% if loop.last %}){% endif %}{% endfor %}{% if req %} *{% endif %}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': ('text-sm' ~ (((key) in (checkout['errors'])) ? ' text-destructive' : '')), 'children': tx, 'attrs': []} only %}
-						{% endset %}{% include 'label/Label.html.twig' with {'htmlFor': 'co-' ~ key, 'class': 'flex cursor-pointer items-start gap-2', 'children': row} only %}
+							{% set tx %}{{ labels[key] ?? key }}{% for doc in docs %}{% if loop.first %} ({% else %}, {% endif %}{% set dl %}{{ labels['legal_' ~ doc] }}{% endset %}{% include 'link/Link.html.twig' with {'href': legal[doc] ?? '', 'class': 'text-primary underline underline-offset-4', 'children': dl, 'attrs': {'target': '_blank', 'rel': 'noopener'}} only %}{% if loop.last %}){% endif %}{% endfor %}{% if req %} *{% endif %}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': ('text-sm' ~ (((key) in (checkout['errors'])) ? ' text-destructive' : '')), 'children': tx, 'attrs': []} only %}
+						{% endset %}{% include 'label/Label.html.twig' with {'class': 'flex cursor-pointer items-start gap-2', 'children': row} only %}
 					{% endfor %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', 'children': consents, 'attrs': []} only %}
 				{% endif %}

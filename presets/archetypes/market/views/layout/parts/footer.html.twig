@@ -32,7 +32,7 @@
 			{% set r %}{{ labels['ogrn'] }} {{ company['ogrn'] }} · {{ labels['inn'] }} {{ company['inn'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': r, 'attrs': []} only %}
 			{% set r %}{{ labels['address'] }}: {{ company['address'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': r, 'attrs': []} only %}
 			{% set r %}{{ icon('mail', 'size-4') }}{{ company['email'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': 'mailto:' ~ company['email'], 'class': 'inline-flex items-center gap-2 text-muted-foreground no-underline hover:text-foreground', 'children': r, 'attrs': []} only %}
-		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'address', 'class': 'flex flex-col gap-2 text-sm not-italic text-muted-foreground', 'children': req, 'attrs': []} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2 text-sm text-muted-foreground', 'children': req, 'attrs': []} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-4', 'children': seller, 'attrs': []} only %}
 {% endset %}
 {% set inner %}

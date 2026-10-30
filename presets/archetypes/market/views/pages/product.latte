@@ -69,7 +69,7 @@
 						{capture $list}
 							{foreach $d['reviews'] as $rev}
 								{capture $li}
-									{capture $who}{capture $nm}{$rev['name']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'font-semibold', children: (string) $nm, attrs: []}{capture $st}{str_repeat('★', $rev['rating'])}{str_repeat('☆', 5 - $rev['rating'])}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-primary', children: (string) $st, attrs: ['aria-label' => ($rev['rating'] . '/5')]}{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex items-center justify-between gap-4', children: (string) $who, attrs: []}
+									{capture $who}{capture $nm}{$rev['name']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'font-semibold', children: (string) $nm, attrs: []}{capture $st}{str_repeat('★', $rev['rating'])}{str_repeat('☆', 5 - $rev['rating'])}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-primary', children: (string) $st, attrs: ['role' => 'img', 'aria-label' => ($rev['rating'] . '/5')]}{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex items-center justify-between gap-4', children: (string) $who, attrs: []}
 									{if $rev['verified']}{capture $vb}{icon('badge-check', 'size-4')}{$labels['verified_buyer']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex items-center gap-2 text-xs font-semibold text-primary', children: (string) $vb, attrs: []}{/if}
 									{capture $tx}{$rev['text']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $tx, attrs: []}
 								{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex flex-col gap-2 rounded-lg bg-muted p-4', children: (string) $li, attrs: []}
@@ -109,7 +109,7 @@
 
 		{capture $right}
 			{capture $buy}
-				{capture $lt}{$labels['license']}{/capture}{include 'text/Text.latte', tag: 'legend', class: 'mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground', children: (string) $lt, attrs: []}
+				{capture $lt}{$labels['license']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground', children: (string) $lt, attrs: []}
 				{if empty($d['licenses'])}
 					{capture $lp}{$page['product']['price']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'font-heading text-2xl font-bold', children: (string) $lp, attrs: []}
 				{/if}
@@ -120,7 +120,7 @@
 							{capture $ln}{$labels['license_' . $lic['id']] ?? $lic['label']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'font-semibold', children: (string) $ln, attrs: []}
 							{if isset($labels['license_' . $lic['id'] . '_text'])}{capture $ld}{$labels['license_' . $lic['id'] . '_text']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-xs text-muted-foreground', children: (string) $ld, attrs: []}{/if}
 							{capture $lp}{$lic['price']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'font-heading text-2xl font-bold', children: (string) $lp, attrs: []}
-						{/capture}{include 'box/Box.latte', tag: 'span', class: 'flex flex-1 flex-col gap-1', children: (string) $lx, attrs: ['data-control' => 'option']}
+						{/capture}{include 'text/Text.latte', tag: 'span', class: 'flex flex-1 flex-col gap-1', children: (string) $lx, attrs: ['data-control' => 'option']}
 					{/capture}{include 'label/Label.latte', class: 'flex cursor-pointer items-start gap-4 rounded-lg border border-border p-4 hover:border-primary', children: (string) $opt}
 				{/foreach}
 				{capture $inc}{icon('check', 'size-4 text-primary')}{$labels['included']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'flex gap-2 text-xs text-muted-foreground', children: (string) $inc, attrs: []}
@@ -142,7 +142,7 @@
 				{if !empty($d['preview_url'])}
 					{capture $lp}{icon('external-link', 'size-4')}{$labels['live_preview']}{/capture}{include 'link/Link.latte', href: $d['preview_url'], class: 'inline-flex items-center justify-center gap-2 text-sm font-semibold text-primary no-underline hover:underline', children: (string) $lp, attrs: ['target' => '_blank', 'rel' => 'noopener']}
 				{/if}
-			{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', class: 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $buy, attrs: ['method' => 'post']}
+			{/capture}{if !empty($shop['cart_available']) && $page['product']['purchasable']}{include 'form/Form.latte', action: $shop['action'] ?? '', class: 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $buy, attrs: ['method' => 'post']}{else}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $buy, attrs: []}{/if}
 
 			{capture $spec}
 				{capture $h}{$labels['compatibility']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'font-heading text-base font-bold', children: (string) $h, attrs: []}

@@ -90,8 +90,8 @@
 						{var $req = $cn['required']}
 						{capture $row}
 							{include 'checkbox/Checkbox.latte', id: 'co-' . $key, name: $key, value: '1', required: $req, class: 'mt-2 size-4 shrink-0 accent-primary'}
-							{capture $tx}{$labels[$key] ?? $key}{foreach $docs as $doc}{if $iterator->first} ({else}, {/if}<a class="text-primary underline underline-offset-4" href="{$legal[$doc] ?? ''}" target="_blank" rel="noopener">{$labels['legal_' . $doc]}</a>{if $iterator->last}){/if}{/foreach}{if $req} *{/if}{/capture}{include 'text/Text.latte', tag: 'span', class: ('text-sm' . (in_array($key, $checkout['errors'], true) ? ' text-destructive' : '')), children: (string) $tx, attrs: []}
-						{/capture}{include 'label/Label.latte', htmlFor: 'co-' . $key, class: 'flex cursor-pointer items-start gap-2', children: (string) $row}
+							{capture $tx}{$labels[$key] ?? $key}{foreach $docs as $doc}{if $iterator->first} ({else}, {/if}{capture $dl}{$labels['legal_' . $doc]}{/capture}{include 'link/Link.latte', href: $legal[$doc] ?? '', class: 'text-primary underline underline-offset-4', children: (string) $dl, attrs: ['target' => '_blank', 'rel' => 'noopener']}{if $iterator->last}){/if}{/foreach}{if $req} *{/if}{/capture}{include 'text/Text.latte', tag: 'span', class: ('text-sm' . (in_array($key, $checkout['errors'], true) ? ' text-destructive' : '')), children: (string) $tx, attrs: []}
+						{/capture}{include 'label/Label.latte', class: 'flex cursor-pointer items-start gap-2', children: (string) $row}
 					{/foreach}
 				{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $consents, attrs: []}
 				{/if}

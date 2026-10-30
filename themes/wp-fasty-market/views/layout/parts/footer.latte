@@ -32,7 +32,7 @@
 			{capture $r}{$labels['ogrn']} {$company['ogrn']} · {$labels['inn']} {$company['inn']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $r, attrs: []}
 			{capture $r}{$labels['address']}: {$company['address']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $r, attrs: []}
 			{capture $r}{icon('mail', 'size-4')}{$company['email']}{/capture}{include 'link/Link.latte', href: 'mailto:' . $company['email'], class: 'inline-flex items-center gap-2 text-muted-foreground no-underline hover:text-foreground', children: (string) $r, attrs: []}
-		{/capture}{include 'box/Box.latte', tag: 'address', class: 'flex flex-col gap-2 text-sm not-italic text-muted-foreground', children: (string) $req, attrs: []}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2 text-sm text-muted-foreground', children: (string) $req, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4', children: (string) $seller, attrs: []}
 {/capture}
 {capture $inner}
