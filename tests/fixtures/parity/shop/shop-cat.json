@@ -80,7 +80,10 @@
             "breadcrumb": "Breadcrumb",
             "returns": "30-day easy returns",
             "pay_options": "Pay on delivery or by bank transfer",
-            "free_shipping_over": "Free shipping over $100.00"
+            "free_shipping_over": "Free shipping over $100.00",
+            "unavailable_title": "Temporarily unavailable",
+            "unavailable_text": "This feature is temporarily unavailable. Please try again later.",
+            "back_to_site": "Back to site"
         },
         "search": {
             "action": "http://127.0.0.1:8099/",
@@ -777,7 +780,9 @@
                 }
             ],
             "current_cat": "perf-alpha",
-            "free_shipping": "$100.00"
+            "free_shipping": "$100.00",
+            "cart_available": false,
+            "checkout_available": false
         }
     }
 }

@@ -49,7 +49,7 @@
 						{capture $c_ui15}{$page['product']['stock']} in stock{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $c_ui15, attrs: []}
 					{/if}
 				{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', class: 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $c_ui16, attrs: ['method' => 'post']}
-			{elseif $shop['enabled']}
+			{elseif !empty($shop['enabled'])}
 				{capture $oos}{$labels['out_of_stock']}{/capture}
 				{include 'alert/Alert.latte', variant: 'destructive', children: (string) $oos}
 			{/if}
