@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-30T20:22:12+00:00\n"
+"POT-Creation-Date: 2026-10-30T20:23:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: latte-shop\n"
@@ -84,7 +84,7 @@ msgid "Update cart"
 msgstr ""
 
 #: inc/front.php:172
-#: inc/front.php:398
+#: inc/front.php:399
 msgid "Your cart is empty."
 msgstr ""
 
@@ -127,7 +127,7 @@ msgid "Order"
 msgstr ""
 
 #: inc/front.php:182
-#: inc/front.php:274
+#: inc/front.php:275
 msgid "Address"
 msgstr ""
 
@@ -136,7 +136,7 @@ msgid "Please check"
 msgstr ""
 
 #: inc/front.php:184
-#: inc/front.php:275
+#: inc/front.php:276
 msgid "Payment"
 msgstr ""
 
@@ -210,77 +210,77 @@ msgstr ""
 msgid "Fast delivery"
 msgstr ""
 
-#: inc/front.php:250
-#: inc/front.php:255
+#: inc/front.php:251
+#: inc/front.php:256
 msgid "Full name"
 msgstr ""
 
-#: inc/front.php:251
+#: inc/front.php:252
 msgid "Email for download links"
 msgstr ""
 
-#: inc/front.php:252
-#: inc/front.php:257
+#: inc/front.php:253
+#: inc/front.php:258
 msgid "Phone"
 msgstr ""
 
-#: inc/front.php:256
+#: inc/front.php:257
 msgid "Email"
 msgstr ""
 
-#: inc/front.php:258
+#: inc/front.php:259
 msgid "Country"
 msgstr ""
 
-#: inc/front.php:259
+#: inc/front.php:260
 msgid "City"
 msgstr ""
 
-#: inc/front.php:260
+#: inc/front.php:261
 msgid "Postcode"
 msgstr ""
 
-#: inc/front.php:276
+#: inc/front.php:277
 msgid "Acceptance of the offer"
 msgstr ""
 
-#: inc/front.php:277
+#: inc/front.php:278
 msgid "Consent to personal data processing"
 msgstr ""
 
-#: inc/front.php:295
+#: inc/front.php:296
 msgid "Bank card"
 msgstr ""
 
-#: inc/front.php:296
+#: inc/front.php:297
 msgid "Faster Payments System (SBP)"
 msgstr ""
 
-#: inc/front.php:297
+#: inc/front.php:298
 msgid "Invoice for companies"
 msgstr ""
 
-#: inc/front.php:300
+#: inc/front.php:301
 msgid "Cash on delivery"
 msgstr ""
 
-#: inc/front.php:301
+#: inc/front.php:302
 msgid "Bank transfer"
 msgstr ""
 
-#: inc/front.php:386
+#: inc/front.php:387
 msgid "Added to your cart."
 msgstr ""
 
-#: inc/front.php:388
+#: inc/front.php:389
 msgid "Item removed."
 msgstr ""
 
-#: inc/front.php:389
+#: inc/front.php:390
 msgid "Cart updated."
 msgstr ""
 
-#: inc/front.php:393
+#: inc/front.php:394
 msgid "Sorry, this product is unavailable."
 msgstr ""
 
