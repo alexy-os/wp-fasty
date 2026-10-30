@@ -1,0 +1,85 @@
+{** WP FastY — checkout for digital goods (no postal address), or order confirmation when ?order&key match. *}
+{var $legal = array_column($shop['legal'], 'url', 'slug')}
+{capture $screen}
+	{if !empty($order)}
+		{capture $done}
+			{capture $hd}
+				{capture $i}{icon('circle-check', 'size-12')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-primary', children: (string) $i, attrs: []}
+				{capture $h}{$labels['order_received']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'font-heading text-3xl font-extrabold tracking-tight', children: (string) $h, attrs: []}
+				{capture $p}{$labels['order_number']} #{$order['id']} · {$order['email']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $p, attrs: []}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col items-center gap-4 text-center', children: (string) $hd, attrs: []}
+			{capture $list}
+				{foreach $order['items'] as $item}
+					{capture $li}{capture $a}{$item['title']} × {$item['qty']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $a, attrs: []}{capture $b}{$item['line_display']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'font-semibold', children: (string) $b, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4 p-4', children: (string) $li, attrs: []}
+				{/foreach}
+				{capture $li}{capture $a}{$labels['total']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $a, attrs: []}{capture $b}{$order['total_display']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $b, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4 p-4 text-lg font-semibold', children: (string) $li, attrs: []}
+			{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', children: (string) $list, attrs: []}
+			{capture $back}{$labels['continue_shopping']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'mx-auto inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $back, attrs: []}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mx-auto flex max-w-2xl flex-col gap-6', children: (string) $done, attrs: []}
+	{elseif empty($cart['items'])}
+		{capture $empty}
+			{capture $p}{$labels['empty_cart']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $p, attrs: []}
+			{capture $a}{$labels['continue_shopping']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $a, attrs: []}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center', children: (string) $empty, attrs: []}
+	{else}
+		{capture $h}{$labels['checkout']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'mb-8 font-heading text-3xl font-extrabold tracking-tight', children: (string) $h, attrs: []}
+		{if !empty($checkout['errors'])}
+			{capture $err}{capture $e}{icon('x')}{$labels['required']}: {implode(', ', $checkout['errors'])}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex items-center gap-2', children: (string) $e, attrs: []}{/capture}
+			{capture $al}{include 'alert/Alert.latte', variant: 'destructive', role: 'alert', class: 'px-4 py-2', children: (string) $err}{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-6', children: (string) $al, attrs: []}
+		{/if}
+		{var $v = $checkout['values']}
+		{capture $form}
+			{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => 'wpfasty_market_checkout']}
+			{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['checkout_nonce'])]}
+			{capture $left}
+				{capture $details}
+					{capture $st}{capture $n}1{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex size-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground', children: (string) $n, attrs: []}{$labels['your_details']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'flex items-center gap-4 font-heading text-lg font-bold', children: (string) $st, attrs: []}
+					{capture $fields}
+						{foreach $checkout['fields'] as [$field, $label, $type, $ac, $req]}
+							{capture $fld}
+								{capture $lbl}{$label}{if $req} *{/if}{/capture}
+								{include 'label/Label.latte', htmlFor: 'co-' . $field, class: kit('label', []), children: (string) $lbl}
+								{include 'input/Input.latte', id: 'co-' . $field, type: $type, name: $field, value: (string) ($v[$field] ?? ''), required: $req, class: kit('input', [], in_array($field, $checkout['errors'], true) ? 'rounded-lg border-destructive' : 'rounded-lg'), attrs: ['autocomplete' => $ac ?: null]}
+							{/capture}{include 'box/Box.latte', tag: 'div', class: ($field === 'name' ? 'flex flex-col gap-2 md:col-span-2' : 'flex flex-col gap-2'), children: (string) $fld, attrs: []}
+						{/foreach}
+					{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-4 md:grid-cols-2', children: (string) $fields, attrs: []}
+					{capture $dn}{icon('mail', 'size-4')}{$labels['digital_delivery']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'flex gap-2 text-xs text-muted-foreground', children: (string) $dn, attrs: []}
+				{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-6 rounded-xl border border-border bg-card p-6', children: (string) $details, attrs: []}
+
+				{capture $pay}
+					{capture $st}{capture $n}2{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex size-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground', children: (string) $n, attrs: []}{$labels['payment']}{/capture}{include 'text/Text.latte', tag: 'legend', class: 'mb-4 flex items-center gap-4 font-heading text-lg font-bold', children: (string) $st, attrs: []}
+					{capture $opts}
+						{foreach $checkout['payments'] as $pm}
+							{capture $opt}
+								{include 'radio/Radio.latte', name: 'payment', value: $pm['id'], checked: ($v['payment'] ?? 'card') === $pm['id'], class: 'size-4 accent-primary'}
+								{capture $i}{icon($pm['icon'], 'size-5')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-primary', children: (string) $i, attrs: []}
+								{capture $l}{$pm['label']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm font-medium', children: (string) $l, attrs: []}
+							{/capture}{include 'label/Label.latte', class: 'flex cursor-pointer items-center gap-4 rounded-lg border border-border p-4 hover:border-primary', children: (string) $opt}
+						{/foreach}
+					{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-4 md:grid-cols-3', children: (string) $opts, attrs: []}
+				{/capture}{include 'box/Box.latte', tag: 'fieldset', class: 'flex flex-col rounded-xl border border-border bg-card p-6', children: (string) $pay, attrs: []}
+
+				{capture $consents}
+					{foreach [['consent_offer', ['oferta'], true], ['consent_pd', ['consent', 'privacy'], true], ['consent_news', ['newsletter-consent'], false]] as [$key, $docs, $req]}
+						{capture $row}
+							{include 'checkbox/Checkbox.latte', id: 'co-' . $key, name: $key, value: '1', required: $req, class: 'mt-2 size-4 shrink-0 accent-primary'}
+							{capture $tx}{$labels[$key]}{foreach $docs as $doc}{if $iterator->first} ({else}, {/if}<a class="text-primary underline underline-offset-4" href="{$legal[$doc] ?? ''}" target="_blank" rel="noopener">{$labels['legal_' . $doc]}</a>{if $iterator->last}){/if}{/foreach}{if $req} *{/if}{/capture}{include 'text/Text.latte', tag: 'span', class: ('text-sm' . (in_array($key, $checkout['errors'], true) ? ' text-destructive' : '')), children: (string) $tx, attrs: []}
+						{/capture}{include 'label/Label.latte', htmlFor: 'co-' . $key, class: 'flex cursor-pointer items-start gap-2', children: (string) $row}
+					{/foreach}
+				{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $consents, attrs: []}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-6 lg:col-span-2', children: (string) $left, attrs: []}
+
+			{capture $right}
+				{capture $items}
+					{foreach $cart['items'] as $item}
+						{capture $li}{capture $a}{$item['title']} × {$item['qty']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $a, attrs: []}{capture $b}{$item['line_display']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'font-semibold', children: (string) $b, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4', children: (string) $li, attrs: []}
+					{/foreach}
+				{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm', children: (string) $items, attrs: []}
+				{include 'blocks/order-summary.latte', cart: $cart, labels: $labels, showCheckout: false}
+				{capture $place}{icon('shield-check', 'size-4')}{$labels['place_order']}{/capture}
+				{include 'button/Button.latte', type: 'submit', class: kit('button', ['size' => 'lg'], 'w-full rounded-lg font-semibold'), children: (string) $place}
+				{capture $n}{$labels['refund_note']} {$labels['demo_notice']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-xs text-muted-foreground', children: (string) $n, attrs: []}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4', children: (string) $right, attrs: []}
+		{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', class: 'grid gap-8 lg:grid-cols-3', children: (string) $form, attrs: ['method' => 'post']}
+	{/if}
+{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 py-12 md:px-6', children: (string) $screen, attrs: []}

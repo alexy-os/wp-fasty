@@ -1,0 +1,76 @@
+{** WP FastY — marketplace home: hero with search, categories, popular, new, authors, trust. *}
+{include 'blocks/notice.latte'}
+{var $catIcons = ['sites' => 'briefcase', 'themes' => 'layers', 'plugins' => 'package']}
+
+{capture $hero}
+	{capture $heroInner}
+		{capture $k}{icon('sparkles', 'size-4')}{$labels['hero_kicker']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'badge inline-flex w-fit items-center gap-2 rounded-full border border-primary px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary', children: (string) $k, attrs: []}
+		{capture $h}{$labels['hero_title']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'max-w-4xl font-heading text-4xl font-extrabold leading-none tracking-tighter md:text-6xl', children: (string) $h, attrs: []}
+		{capture $p}{$labels['hero_text']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'max-w-2xl text-lg text-secondary-foreground/70', children: (string) $p, attrs: []}
+		{include 'blocks/search-bar.latte'}
+		{if !empty($shop['categories'])}
+			{capture $tags}
+				{capture $pl}{$labels['popular_tags']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-secondary-foreground/70', children: (string) $pl, attrs: []}
+				{foreach $shop['categories'] as $cat}
+					{capture $n}{$cat['name']}{/capture}{include 'link/Link.latte', href: $cat['url'] ?? '', class: 'rounded-full border border-secondary-foreground/20 px-4 py-2 text-secondary-foreground no-underline hover:border-primary hover:text-primary', children: (string) $n, attrs: []}
+				{/foreach}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-wrap items-center gap-2 text-sm', children: (string) $tags, attrs: []}
+		{/if}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'relative flex flex-col gap-6 overflow-hidden rounded-2xl border border-border bg-secondary px-6 py-12 text-secondary-foreground md:px-16 md:py-20', children: (string) $heroInner, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 pt-8 md:px-6', children: (string) $hero, attrs: []}
+
+{if !empty($shop['categories'])}
+	{capture $cats}
+		{capture $grid}
+			{foreach $shop['categories'] as $cat}
+				{capture $tile}
+					{capture $ic}{icon($catIcons[$cat['slug']] ?? 'folder', 'size-6')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex size-12 items-center justify-center rounded-xl bg-accent text-accent-foreground', children: (string) $ic, attrs: []}
+					{capture $tx}
+						{capture $n}{$labels['cat_' . $cat['slug']] ?? $cat['name']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'font-heading text-lg font-bold', children: (string) $n, attrs: []}
+						{capture $d}{$labels['cat_' . $cat['slug'] . '_text'] ?? ''}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $d, attrs: []}
+					{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-1 flex-col gap-2', children: (string) $tx, attrs: []}
+					{capture $ar}{icon('arrow-up-right', 'size-5')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-muted-foreground group-hover:text-primary', children: (string) $ar, attrs: []}
+				{/capture}{include 'link/Link.latte', href: $cat['url'] ?? '', class: 'group flex items-start gap-4 rounded-xl border border-border bg-card p-6 text-foreground no-underline transition-colors hover:border-primary', children: (string) $tile, attrs: []}
+			{/foreach}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-4 md:grid-cols-3', children: (string) $grid, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 pt-8 md:px-6', children: (string) $cats, attrs: []}
+{/if}
+
+{include 'blocks/product-grid.latte', title: $labels['popular'], products: $popular ?? []}
+{include 'blocks/product-grid.latte', title: $labels['newest'], products: $newest ?? []}
+
+{if !empty($authors)}
+	{capture $sec}
+		{capture $head}
+			{capture $h}{$labels['authors']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'font-heading text-2xl font-bold tracking-tight md:text-3xl', children: (string) $h, attrs: []}
+			{capture $p}{$labels['authors_text']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $p, attrs: []}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-6 flex flex-col gap-2', children: (string) $head, attrs: []}
+		{capture $grid}
+			{foreach $authors as $a}
+				{capture $tile}
+					{capture $av}{mb_substr($a['name'], 0, 1)}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary font-heading text-lg font-bold text-secondary-foreground', children: (string) $av, attrs: ['aria-hidden' => 'true']}
+					{capture $tx}
+						{capture $n}{$a['name']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'font-semibold text-foreground', children: (string) $n, attrs: []}
+						{capture $r}{$a['role']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-xs font-semibold uppercase tracking-wide text-primary', children: (string) $r, attrs: []}
+						{capture $s}{$a['items']} {$labels['items']} · {$a['sales']} {$labels['sales']} · ★ {$a['rating']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-xs text-muted-foreground', children: (string) $s, attrs: []}
+					{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex min-w-0 flex-col gap-2', children: (string) $tx, attrs: []}
+				{/capture}{include 'link/Link.latte', href: $a['url'] ?? '', class: 'flex items-center gap-4 rounded-xl border border-border bg-card p-4 no-underline transition-colors hover:border-primary', children: (string) $tile, attrs: []}
+			{/foreach}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-4 sm:grid-cols-2 lg:grid-cols-4', children: (string) $grid, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 py-12 md:px-6', children: (string) $sec, attrs: []}
+{/if}
+
+{capture $trust}
+	{capture $panel}
+		{capture $h}{$labels['trust_title']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'font-heading text-2xl font-bold tracking-tight md:text-3xl', children: (string) $h, attrs: []}
+		{capture $list}
+			{foreach [['shield-check', 'trust_review'], ['rotate-ccw', 'trust_updates'], ['message-circle', 'trust_support'], ['credit-card', 'trust_pay']] as [$ic, $key]}
+				{capture $li}
+					{capture $i}{icon($ic, 'size-5')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground', children: (string) $i, attrs: []}
+					{capture $t}{$labels[$key]}{/capture}{include 'text/Text.latte', tag: 'h3', class: 'font-semibold', children: (string) $t, attrs: []}
+					{capture $d}{$labels[$key . '_text']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $d, attrs: []}
+				{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex flex-col gap-2', children: (string) $li, attrs: []}
+			{/foreach}
+		{/capture}{include 'box/Box.latte', tag: 'ul', class: 'grid gap-8 sm:grid-cols-2 lg:grid-cols-4', children: (string) $list, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-8 rounded-2xl border border-border bg-muted p-8 md:p-12', children: (string) $panel, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 pb-8 md:px-6', children: (string) $trust, attrs: []}

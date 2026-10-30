@@ -1,0 +1,47 @@
+{
+  "manifest_digest": "codex-manifest/v2:sha256:7099a293af75c757f885741ee14b9df23ee2a841e10b15b337072efc2e3740ed",
+  "taxonomies": [
+    {
+      "id": "category",
+      "role": "category"
+    },
+    {
+      "id": "post_tag",
+      "role": "tag"
+    },
+    {
+      "id": "product_cat",
+      "role": "category"
+    }
+  ],
+  "wp": {
+    "kinds": {
+      "post": {
+        "post_type": "post"
+      },
+      "page": {
+        "post_type": "page"
+      },
+      "product": {
+        "post_type": "product",
+        "meta": {
+          "price": "_shop_price",
+          "sale_price": "_shop_sale_price",
+          "sku": "_shop_sku",
+          "stock": "_shop_stock",
+          "rating": "_shop_rating",
+          "reviews": "_shop_reviews",
+          "badge": "_shop_badge"
+        },
+        "purchasable": {
+          "price": "price",
+          "sale": "sale_price",
+          "stock": "stock"
+        }
+      }
+    },
+    "settings": {
+      "currency": "wpfasty_currency"
+    }
+  }
+}

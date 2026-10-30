@@ -1,0 +1,246 @@
+{
+  "$schema": "../../schema/site.manifest.schema.json",
+  "manifestVersion": "0.2",
+  "engine": "latte",
+  "archetype": "market",
+  "theme": {
+    "name": "WP FastY Market",
+    "slug": "wp-fasty-market",
+    "textDomain": "wp-fasty-market",
+    "prefix": "market",
+    "namespace": "WpfastyMarket",
+    "description": "WP FastY — marketplace of ready-made WordPress sites, themes and plugins. Catalog with filters, item pages with live preview, licenses, changelog and reviews, author pages, signed-cookie cart and digital checkout that creates Orders. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons). Seller: IT Garage Ltd.",
+    "version": "1.0.0",
+    "uri": "https://wpfasty.ru",
+    "author": {
+      "name": "IT Garage Ltd",
+      "uri": "https://wpfasty.ru"
+    },
+    "requires": {
+      "platform": "6.4",
+      "php": "8.2"
+    },
+    "testedUpTo": "7.1",
+    "license": "GPL-2.0-or-later",
+    "tags": [
+      "e-commerce",
+      "grid-layout",
+      "custom-menu",
+      "featured-images",
+      "translation-ready"
+    ]
+  },
+  "parent": {
+    "preset": "latte",
+    "layout": "classic",
+    "style": "default"
+  },
+  "features": {
+    "comments": false,
+    "fullWidth": true
+  },
+  "brand": {
+    "radius": "0.625rem",
+    "fonts": {
+      "body": "\"Inter\", ui-sans-serif, system-ui, sans-serif",
+      "display": "\"Manrope\", \"Inter\", ui-sans-serif, system-ui, sans-serif"
+    },
+    "light": {
+      "background": "oklch(0.985 0.004 80)",
+      "foreground": "oklch(0.21 0.015 270)",
+      "card": "oklch(1 0 0)",
+      "card-foreground": "oklch(0.21 0.015 270)",
+      "primary": "oklch(0.55 0.19 36)",
+      "primary-foreground": "oklch(0.99 0.005 80)",
+      "secondary": "oklch(0.24 0.02 270)",
+      "secondary-foreground": "oklch(0.97 0.01 80)",
+      "muted": "oklch(0.955 0.006 80)",
+      "muted-foreground": "oklch(0.47 0.015 270)",
+      "accent": "oklch(0.95 0.035 50)",
+      "accent-foreground": "oklch(0.4 0.13 36)",
+      "destructive": "oklch(0.55 0.21 25)",
+      "border": "oklch(0.9 0.008 80)",
+      "input": "oklch(0.86 0.01 80)",
+      "ring": "oklch(0.55 0.19 36)"
+    },
+    "dark": {
+      "background": "oklch(0.16 0.012 270)",
+      "foreground": "oklch(0.96 0.006 80)",
+      "card": "oklch(0.2 0.014 270)",
+      "card-foreground": "oklch(0.96 0.006 80)",
+      "primary": "oklch(0.72 0.17 45)",
+      "primary-foreground": "oklch(0.18 0.03 40)",
+      "secondary": "oklch(0.25 0.02 270)",
+      "secondary-foreground": "oklch(0.96 0.006 80)",
+      "muted": "oklch(0.24 0.012 270)",
+      "muted-foreground": "oklch(0.72 0.015 270)",
+      "accent": "oklch(0.3 0.05 45)",
+      "accent-foreground": "oklch(0.92 0.06 60)",
+      "destructive": "oklch(0.66 0.19 25)",
+      "border": "oklch(0.3 0.014 270)",
+      "input": "oklch(0.36 0.016 270)",
+      "ring": "oklch(0.72 0.17 45)"
+    }
+  },
+  "settings": {
+    "currency": "RUB"
+  },
+  "postTypes": [
+    {
+      "name": "product",
+      "labels": {
+        "singular": "Product",
+        "plural": "Products",
+        "addNew": "Add product",
+        "edit": "Edit product"
+      },
+      "public": true,
+      "slug": "product",
+      "archiveSlug": "shop",
+      "icon": "cart",
+      "rest": true,
+      "supports": [
+        "title",
+        "editor",
+        "excerpt",
+        "thumbnail",
+        "order"
+      ],
+      "metaPrefix": "shop",
+      "fields": {
+        "price": {
+          "type": "money",
+          "label": "Price",
+          "required": true
+        },
+        "sale_price": {
+          "type": "money",
+          "label": "Sale price"
+        },
+        "sku": {
+          "type": "string",
+          "label": "SKU"
+        },
+        "stock": {
+          "type": "integer",
+          "label": "Stock (empty = unlimited)"
+        },
+        "rating": {
+          "type": "number",
+          "label": "Rating (0-5)"
+        },
+        "reviews": {
+          "type": "integer",
+          "label": "Reviews"
+        },
+        "badge": {
+          "type": "string",
+          "label": "Badge (empty = sale when discounted)"
+        }
+      },
+      "metabox": {
+        "title": "Product data",
+        "position": "side",
+        "priority": "high"
+      },
+      "taxonomies": {
+        "product_cat": {
+          "role": "category",
+          "labels": {
+            "singular": "Product category",
+            "plural": "Product categories"
+          },
+          "public": true,
+          "hierarchical": true,
+          "rest": true,
+          "adminColumn": true,
+          "slug": "shop/category"
+        }
+      },
+      "capabilities": {
+        "purchasable": {
+          "price": "price",
+          "sale": "sale_price",
+          "stock": "stock"
+        }
+      },
+      "archive": {
+        "perPage": 12,
+        "orderBy": [
+          {
+            "field": "order",
+            "direction": "asc"
+          },
+          {
+            "field": "date",
+            "direction": "desc"
+          }
+        ],
+        "title": "Catalog",
+        "titlePrefix": false
+      },
+      "views": {
+        "single": "pages/product",
+        "archive": "pages/shop",
+        "card": "blocks/product-card"
+      },
+      "adminColumns": [
+        {
+          "field": "price",
+          "label": "Price"
+        },
+        {
+          "field": "stock",
+          "label": "Stock"
+        }
+      ]
+    },
+    {
+      "name": "shop_order",
+      "labels": {
+        "singular": "Order",
+        "plural": "Orders",
+        "edit": "Order"
+      },
+      "public": false,
+      "adminParent": "product",
+      "createInAdmin": false,
+      "archiveSlug": false,
+      "rest": false,
+      "supports": [
+        "title"
+      ],
+      "metabox": false,
+      "capabilities": {
+        "orderable": {}
+      }
+    }
+  ],
+  "templates": {},
+  "views": [
+    "blocks/notice",
+    "blocks/order-summary",
+    "blocks/product-card",
+    "blocks/product-grid",
+    "blocks/search-bar",
+    "layout/parts/brand",
+    "layout/parts/footer",
+    "layout/parts/header-actions",
+    "pages/author",
+    "pages/cart",
+    "pages/checkout",
+    "pages/front-page",
+    "pages/product",
+    "pages/shop"
+  ],
+  "builder": {
+    "enabled": false,
+    "landings": []
+  },
+  "output": {
+    "wporg": true,
+    "typesPlugin": "companion",
+    "includeDemo": true,
+    "playground": false
+  }
+}

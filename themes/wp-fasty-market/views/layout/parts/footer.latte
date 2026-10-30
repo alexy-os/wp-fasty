@@ -1,0 +1,44 @@
+{** WP FastY — footer: brand, marketplace links, legal documents, seller details. *}
+{capture $cols}
+	{capture $about}
+		{include 'brand.latte'}
+		{capture $t}{$labels['footer_about']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'max-w-xs text-sm text-muted-foreground', children: (string) $t, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4', children: (string) $about, attrs: []}
+
+	{capture $market}
+		{capture $h}{$labels['footer_market']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-sm font-semibold', children: (string) $h, attrs: []}
+		{capture $list}
+			{foreach $shop['categories'] as $cat}
+				{capture $l}{capture $n}{$cat['name']}{/capture}{include 'link/Link.latte', href: $cat['url'] ?? '', class: 'text-sm text-muted-foreground no-underline hover:text-foreground', children: (string) $n, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $l, attrs: []}
+			{/foreach}
+			{capture $l}{capture $n}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'text-sm text-muted-foreground no-underline hover:text-foreground', children: (string) $n, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $l, attrs: []}
+		{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2', children: (string) $list, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'flex flex-col gap-4', children: (string) $market, attrs: ['aria-label' => ($labels['footer_market'])]}
+
+	{capture $docs}
+		{capture $h}{$labels['footer_docs']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-sm font-semibold', children: (string) $h, attrs: []}
+		{capture $list}
+			{foreach $shop['legal'] as $doc}
+				{capture $l}{capture $n}{$labels['legal_' . $doc['slug']]}{/capture}{include 'link/Link.latte', href: $doc['url'] ?? '', class: 'text-sm text-muted-foreground no-underline hover:text-foreground', children: (string) $n, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $l, attrs: []}
+			{/foreach}
+			{capture $l}{capture $n}{$labels['cookie_settings']}{/capture}{include 'button/Button.latte', type: 'button', class: 'cursor-pointer text-left text-sm text-muted-foreground hover:text-foreground', children: (string) $n, attrs: ['data-cookie-open' => 'true']}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $l, attrs: []}
+		{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2', children: (string) $list, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'flex flex-col gap-4', children: (string) $docs, attrs: ['aria-label' => ($labels['footer_docs'])]}
+
+	{capture $seller}
+		{capture $h}{$labels['footer_company']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-sm font-semibold', children: (string) $h, attrs: []}
+		{capture $req}
+			{capture $r}{$company['name']} ({$company['name_en']}){/capture}{include 'text/Text.latte', tag: 'span', class: 'font-medium text-foreground', children: (string) $r, attrs: []}
+			{capture $r}{$labels['ogrn']} {$company['ogrn']} · {$labels['inn']} {$company['inn']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $r, attrs: []}
+			{capture $r}{$labels['address']}: {$company['address']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $r, attrs: []}
+			{capture $r}{icon('mail', 'size-4')}{$company['email']}{/capture}{include 'link/Link.latte', href: 'mailto:' . $company['email'], class: 'inline-flex items-center gap-2 text-muted-foreground no-underline hover:text-foreground', children: (string) $r, attrs: []}
+		{/capture}{include 'box/Box.latte', tag: 'address', class: 'flex flex-col gap-2 text-sm not-italic text-muted-foreground', children: (string) $req, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4', children: (string) $seller, attrs: []}
+{/capture}
+{capture $inner}
+	{include 'box/Box.latte', tag: 'div', class: 'grid gap-8 sm:grid-cols-2 lg:grid-cols-4', children: (string) $cols, attrs: []}
+	{capture $copy}&copy; {$site['year']} {$site['title']} · {$company['name']}. {$labels['rights']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'border-t border-border pt-6 text-xs text-muted-foreground', children: (string) $copy, attrs: []}
+{/capture}
+{capture $wrap}{include 'box/Box.latte', tag: 'div', class: 'container mx-auto flex flex-col gap-8 px-4 md:px-6', children: (string) $inner, attrs: []}{/capture}
+{include 'box/Box.latte', tag: 'footer', class: 'site-footer mt-16 border-t border-border bg-card py-12', children: (string) $wrap, attrs: []}
+{include 'blocks/cookie-banner.latte', legalUrls: array_column($shop['legal'], 'url', 'slug')}

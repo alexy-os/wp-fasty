@@ -80,6 +80,8 @@ export function generate(manifestPath: string, out: string | undefined, opts: { 
   write(dir, "types/codex.delivery.json", codex.delivery);
   if (arch.inc && existsSync(join(adir, arch.inc))) cpSync(join(adir, arch.inc), join(dir, "inc"), { recursive: true });
   if (arch.views && existsSync(join(adir, arch.views))) cpSync(join(adir, arch.views), join(dir, "views"), { recursive: true });
+  // Optional verbatim root files of the archetype (LICENSE, bundled translations such as languages/ru_RU.po/.mo).
+  if (arch.static && existsSync(join(adir, arch.static))) cpSync(join(adir, arch.static), dir, { recursive: true });
   // engine twig: the site's renderer is Twig (ADR-001: `wpfasty_renderer`); there is no Latte fallback.
   if (m.engine === "twig") {
     writeFileSync(join(dir, "functions.php"), readFileSync(join(dir, "functions.php"), "utf8") + TWIG_SWITCH);

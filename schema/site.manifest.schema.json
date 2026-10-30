@@ -16,7 +16,7 @@
     },
     "archetype": {
       "description": "Child-theme code family the generator copies (PHP behaviour, view models, views). blank = parent preset only.",
-      "enum": ["press", "folio", "shop", "blank"]
+      "enum": ["press", "folio", "shop", "market", "blank"]
     },
     "theme": { "$ref": "#/$defs/theme" },
     "parent": { "$ref": "#/$defs/parent" },

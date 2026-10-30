@@ -1,0 +1,361 @@
+{
+  "name": "wp-fasty-market",
+  "version": "1.0.0",
+  "resources": [
+    {
+      "record": {
+        "id": "media",
+        "label": "Media",
+        "scope": "global",
+        "fields": [
+          {
+            "id": "title",
+            "label": "Title",
+            "type": "text",
+            "localized": true
+          },
+          {
+            "id": "content",
+            "label": "Description",
+            "type": "richtext",
+            "localized": true
+          },
+          {
+            "id": "author_id",
+            "label": "Uploaded by",
+            "type": "string",
+            "ui_hint": "user"
+          },
+          {
+            "id": "published_at",
+            "label": "Published",
+            "type": "datetime"
+          },
+          {
+            "id": "alt",
+            "label": "Alt",
+            "type": "string"
+          },
+          {
+            "id": "attached_to",
+            "label": "Attached to",
+            "type": "string",
+            "ui_hint": "entry"
+          },
+          {
+            "id": "caption",
+            "label": "Caption",
+            "type": "textarea"
+          },
+          {
+            "id": "file",
+            "label": "File",
+            "type": "string",
+            "required": true,
+            "rules": [
+              {
+                "name": "fastygo.codex/uri"
+              }
+            ]
+          },
+          {
+            "id": "height",
+            "label": "Height",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          },
+          {
+            "id": "mime",
+            "label": "Mime",
+            "type": "string",
+            "required": true
+          },
+          {
+            "id": "size",
+            "label": "File size",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          },
+          {
+            "id": "width",
+            "label": "Width",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "record": {
+        "id": "page",
+        "label": "Pages",
+        "scope": "global",
+        "fields": [
+          {
+            "id": "title",
+            "label": "Title",
+            "type": "text",
+            "localized": true
+          },
+          {
+            "id": "content",
+            "label": "Content",
+            "type": "richtext",
+            "localized": true
+          },
+          {
+            "id": "excerpt",
+            "label": "Excerpt",
+            "type": "textarea",
+            "localized": true
+          },
+          {
+            "id": "author_id",
+            "label": "Author",
+            "type": "string",
+            "ui_hint": "user"
+          },
+          {
+            "id": "featured_media_id",
+            "label": "Featured image",
+            "type": "string",
+            "ui_hint": "media"
+          },
+          {
+            "id": "order",
+            "label": "Order",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          },
+          {
+            "id": "published_at",
+            "label": "Published",
+            "type": "datetime"
+          }
+        ]
+      }
+    },
+    {
+      "record": {
+        "id": "post",
+        "label": "Posts",
+        "scope": "global",
+        "fields": [
+          {
+            "id": "title",
+            "label": "Title",
+            "type": "text",
+            "localized": true
+          },
+          {
+            "id": "content",
+            "label": "Content",
+            "type": "richtext",
+            "localized": true
+          },
+          {
+            "id": "excerpt",
+            "label": "Excerpt",
+            "type": "textarea",
+            "localized": true
+          },
+          {
+            "id": "author_id",
+            "label": "Author",
+            "type": "string",
+            "ui_hint": "user"
+          },
+          {
+            "id": "featured_media_id",
+            "label": "Featured image",
+            "type": "string",
+            "ui_hint": "media"
+          },
+          {
+            "id": "published_at",
+            "label": "Published",
+            "type": "datetime"
+          }
+        ]
+      },
+      "taxonomies": [
+        "category",
+        "post_tag"
+      ]
+    },
+    {
+      "record": {
+        "id": "product",
+        "label": "Products",
+        "scope": "global",
+        "fields": [
+          {
+            "id": "title",
+            "label": "Title",
+            "type": "text",
+            "localized": true
+          },
+          {
+            "id": "content",
+            "label": "Content",
+            "type": "richtext",
+            "localized": true
+          },
+          {
+            "id": "excerpt",
+            "label": "Excerpt",
+            "type": "textarea",
+            "localized": true
+          },
+          {
+            "id": "featured_media_id",
+            "label": "Featured image",
+            "type": "string",
+            "ui_hint": "media"
+          },
+          {
+            "id": "order",
+            "label": "Order",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          },
+          {
+            "id": "published_at",
+            "label": "Published",
+            "type": "datetime"
+          },
+          {
+            "id": "price",
+            "label": "Price",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/money"
+              }
+            ],
+            "required": true
+          },
+          {
+            "id": "sale_price",
+            "label": "Sale price",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/money"
+              }
+            ]
+          },
+          {
+            "id": "sku",
+            "label": "SKU",
+            "type": "string"
+          },
+          {
+            "id": "stock",
+            "label": "Stock (empty = unlimited)",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          },
+          {
+            "id": "rating",
+            "label": "Rating (0-5)",
+            "type": "number"
+          },
+          {
+            "id": "reviews",
+            "label": "Reviews",
+            "type": "number",
+            "rules": [
+              {
+                "name": "fastygo.codex/integer"
+              }
+            ]
+          },
+          {
+            "id": "badge",
+            "label": "Badge (empty = sale when discounted)",
+            "type": "string"
+          }
+        ],
+        "capabilities": [
+          "purchasable"
+        ]
+      },
+      "taxonomies": [
+        "product_cat"
+      ]
+    },
+    {
+      "record": {
+        "id": "user",
+        "label": "Users",
+        "scope": "global",
+        "fields": [
+          {
+            "id": "title",
+            "label": "Name",
+            "type": "text",
+            "localized": true
+          },
+          {
+            "id": "content",
+            "label": "Biographical info",
+            "type": "textarea",
+            "localized": true
+          },
+          {
+            "id": "login",
+            "label": "Username",
+            "type": "string",
+            "sensitive": true
+          },
+          {
+            "id": "roles",
+            "label": "Roles",
+            "type": "collection",
+            "items": {
+              "id": "item",
+              "label": "Role",
+              "type": "string"
+            },
+            "sensitive": true
+          },
+          {
+            "id": "url",
+            "label": "Website",
+            "type": "string",
+            "rules": [
+              {
+                "name": "fastygo.codex/uri"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
