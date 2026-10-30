@@ -66,12 +66,12 @@ return [
     'columns' => [
         'price' => [
             'label' => __('Price', 'latte-shop'),
-            'value' => static fn (int $id): string => LatteShop\Money::format(LatteShop\Catalog::price($id)),
+            'value' => static fn (int $id): string => LatteShop\Front::column($id, 'price'),
         ],
-        'stock' => ['label' => __('Stock', 'latte-shop'), 'value' => static function (int $id): string {
-            $stock = LatteShop\Catalog::stock($id);
-            return $stock === null ? '∞' : (string) $stock;
-        }],
+        'stock' => [
+            'label' => __('Stock', 'latte-shop'),
+            'value' => static fn (int $id): string => LatteShop\Front::column($id, 'stock'),
+        ],
     ],
-    'context' => [LatteShop\Catalog::class, 'viewModel'],
+    'context' => [LatteShop\Front::class, 'productViewModel'],
 ];

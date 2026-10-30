@@ -110,9 +110,11 @@ final class Plugin
     /**
      * Data migration when a field's declared type changes (e.g. folio `year` string → integer): every stored value
      * of that meta key is rewritten through the field's own toStorage() — "2024" → 2024 — and a value the new type
-     * cannot hold is deleted ("no value", never 0, Q9). Runs once per type change; one query per changed key.
+     * cannot hold is left untouched (forward-only, ADR-002: migrations never delete data; reads treat it as "no
+     * value", never 0, Q9) and is reported via `wpfasty_types_migrate_invalid`. Runs once per type change; one query
+     * per changed key.
      *
-     * @return array<string, int> meta key → rows rewritten or deleted
+     * @return array<string, int> meta key → rows rewritten
      */
     public function migrate(): array
     {
@@ -146,8 +148,7 @@ final class Plugin
                     $raw = (string) $row->meta_value;
                     $value = $field->type === 'date' ? Field::date($raw) : $field->toStorage($raw);
                     if ($value === null || $value === '') {
-                        delete_post_meta((int) $row->post_id, $field->metaKey);
-                        $n++;
+                        do_action('wpfasty_types_migrate_invalid', (int) $row->post_id, $field->metaKey, $raw);
                     } elseif ((string) (is_bool($value) ? (int) $value : $value) !== $raw) {
                         update_post_meta((int) $row->post_id, $field->metaKey, $value);
                         $n++;

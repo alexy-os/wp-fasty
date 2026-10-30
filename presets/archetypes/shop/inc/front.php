@@ -1,7 +1,14 @@
 <?php
 
 /**
- * Front-end: view routing, shop pages, product view-model, context.
+ * Front-end (presentation only): view routing, shop pages, labels and view-models. Cart, checkout, orders and
+ * prices come from the ModulY modules `cart` and `orders` through filters; without them the shop renders as a
+ * catalog with nothing to buy:
+ *   wpfasty_shop_state    (array $shop)                  URLs, nonces, cart count, free-shipping amount
+ *   wpfasty_shop_cart     (array $cart)                  priced cart with display strings
+ *   wpfasty_shop_product  (array $product, int $postId)  price / sale / stock / purchasable
+ *   wpfasty_shop_checkout (array $checkout)              errors + kept values of the last attempt
+ *   wpfasty_shop_order    (?array $order)                order confirmation (?order=&key=)
  *
  * @package Latte_Shop
  */
@@ -70,47 +77,44 @@ final class Front
      */
     public static function context(array $context): array
     {
-        $summary = Cart::summary();
         $filter = wpfasty_term_filter('product_cat');
 
-        $context['shop'] = [
+        $shop = (array) apply_filters('wpfasty_shop_state', [
+            'enabled' => false,
             'url' => self::shopUrl(),
             'cart_url' => self::pageUrl('cart'),
             'checkout_url' => self::pageUrl('checkout'),
             'action' => admin_url('admin-post.php'),
-            'cart_nonce' => wp_create_nonce('latte_shop_cart'),
-            'checkout_nonce' => wp_create_nonce('latte_shop_checkout'),
-            'count' => $summary['count'],
+            'cart_nonce' => '',
+            'checkout_nonce' => '',
+            'count' => 0,
+            'free_shipping' => '',
+        ]);
+        $context['shop'] = $shop + [
             'notice' => self::notice(),
             'categories' => $filter['items'],
             'current_cat' => $filter['current'],
-            'free_shipping' => Money::format((int) apply_filters('latte_shop_free_shipping_cents', 10000)),
         ];
         if (is_page(['cart', 'checkout'])) {
-            $context['cart'] = $summary + [
-                'subtotal_display' => Money::format($summary['subtotal']),
-                'shipping_display' => $summary['shipping'] === 0
-                    ? __('Free', 'latte-shop')
-                    : Money::format($summary['shipping']),
-                'total_display' => Money::format($summary['total']),
-            ];
+            $context['cart'] = (array) apply_filters('wpfasty_shop_cart', [
+                'items' => [],
+                'count' => 0,
+                'subtotal' => 0,
+                'shipping' => 0,
+                'total' => 0,
+                'subtotal_display' => '',
+                'shipping_display' => '',
+                'total_display' => '',
+            ]);
         }
 
         if (is_page('checkout')) {
-            $orderId = isset($_GET['order']) ? absint(wp_unslash($_GET['order'])) : 0;
-            $key = isset($_GET['key']) ? sanitize_text_field(wp_unslash($_GET['key'])) : '';
-            $context['order'] = $orderId > 0 ? Orders::find($orderId, $key) : null;
-
-            $token = isset($_GET['co']) ? sanitize_key(wp_unslash($_GET['co'])) : '';
-            $old = $token !== '' ? get_transient('latte_shop_co_' . $token) : false;
-            $context['checkout'] = [
-                'errors' => isset($_GET['co_errors'])
-                    ? array_values(array_intersect(
-                        explode(',', sanitize_text_field(wp_unslash($_GET['co_errors']))),
-                        ['name', 'email', 'address', 'city', 'postcode', 'country', 'payment', 'server']
-                    ))
-                    : [],
-                'values' => is_array($old) ? $old : ['payment' => 'cod', 'country' => ''],
+            $order = apply_filters('wpfasty_shop_order', null);
+            $context['order'] = is_array($order) ? $order : null;
+            $context['checkout'] = (array) apply_filters('wpfasty_shop_checkout', [
+                'errors' => [],
+                'values' => ['payment' => 'cod', 'country' => ''],
+            ]) + [
                 'fields' => [
                     ['name', __('Full name', 'latte-shop'), 'text', 'name', true],
                     ['email', __('Email', 'latte-shop'), 'email', 'email', true],
@@ -158,14 +162,53 @@ final class Front
             'breadcrumb' => __('Breadcrumb', 'latte-shop'),
             'returns' => __('30-day easy returns', 'latte-shop'),
             'pay_options' => __('Pay on delivery or by bank transfer', 'latte-shop'),
-            'free_shipping_over' => sprintf(
-                /* translators: %s: order amount for free shipping */
-                __('Free shipping over %s', 'latte-shop'),
-                $context['shop']['free_shipping']
-            ),
+            'free_shipping_over' => $context['shop']['free_shipping'] !== ''
+                ? sprintf(
+                    /* translators: %s: order amount for free shipping */
+                    __('Free shipping over %s', 'latte-shop'),
+                    $context['shop']['free_shipping']
+                )
+                : __('Fast delivery', 'latte-shop'),
         ];
 
         return $context;
+    }
+
+    /**
+     * Product view-model (module `context` of types/product.php): prices and stock from the cart module.
+     *
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    public static function productViewModel(array $data, \WP_Post $post): array
+    {
+        $data['product'] = self::product($post->ID, (string) ($data['fields']['sku'] ?? ''));
+        $data['product_cats'] = $data['terms']['product_cat'] ?? [];
+        return $data;
+    }
+
+    /** @return array<string, mixed> */
+    public static function product(int $postId, string $sku = ''): array
+    {
+        return (array) apply_filters('wpfasty_shop_product', [
+            'price' => '',
+            'regular' => '',
+            'on_sale' => false,
+            'sku' => $sku,
+            'stock' => null,
+            'in_stock' => true,
+            'purchasable' => false,
+        ], $postId);
+    }
+
+    /** Admin list column value (types/product.php `columns`). */
+    public static function column(int $postId, string $column): string
+    {
+        $product = self::product($postId);
+        if ($column === 'stock') {
+            return $product['stock'] === null ? '∞' : (string) $product['stock'];
+        }
+        return (string) ($product[$column] ?? '');
     }
 
     private static function notice(): ?array

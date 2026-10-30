@@ -12,12 +12,10 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-foreach (['money', 'catalog', 'cart', 'orders', 'handlers', 'front'] as $file) {
-    require_once __DIR__ . "/inc/{$file}.php";
-}
+// Presentation only: cart, checkout, orders and prices come from the ModulY modules "cart" and "orders"
+// (wpfasty_shop_* filters, see inc/front.php). Without them products are shown as a catalog.
+require_once __DIR__ . '/inc/front.php';
 
-LatteShop\Orders::register();
-LatteShop\Handlers::register();
 LatteShop\Front::register();
 
 add_action('after_setup_theme', static function (): void {
