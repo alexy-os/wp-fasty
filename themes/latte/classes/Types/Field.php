@@ -16,6 +16,12 @@ final class Field
 {
     public const TYPES = ['string', 'text', 'url', 'email', 'integer', 'number', 'money', 'boolean', 'date'];
 
+    /**
+     * Digital-goods kinds owned by the ModulY `types` module (≥ 0.2). Without it the theme keeps working and stores
+     * them as the nearest basic kind; the module's own Field (aliased to this class while enabled) types them fully.
+     */
+    public const MODULE_TYPES = ['enum' => 'string', 'semver' => 'string', 'file' => 'integer', 'user' => 'integer', 'license_tiers' => 'text'];
+
     /** REST schema pattern of a `date` field value. */
     public const DATE_PATTERN = '^\\d{4}-\\d{2}-\\d{2}$';
 
@@ -38,6 +44,7 @@ final class Field
     public static function fromArray(string $name, array $def, string $prefix): self
     {
         $type = (string) ($def['type'] ?? 'string');
+        $type = self::MODULE_TYPES[$type] ?? $type;
         if (!in_array($type, self::TYPES, true)) {
             throw new \InvalidArgumentException(sprintf('Unknown field type "%s" for "%s"', $type, $name));
         }

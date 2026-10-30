@@ -147,7 +147,8 @@ export function typePhp(pt: J, m: J, extra = ""): string {
     }]));
   if (fields.length)
     def.fields = Object.fromEntries(fields.map(([k, f]) => [k, {
-      type: f.type, label: { php: tr(f.label, d) }, ...(f.rest === false ? { show_in_rest: false } : {}),
+      type: f.type, label: { php: tr(f.label, d) }, ...(f.rest === false || f.private ? { show_in_rest: false } : {}),
+      ...(f.private ? { private: true } : {}),
       ...(f.metaKey ? { meta_key: f.metaKey } : {}),
       ...(f.options ? {
         options: f.options.map((o: J) => o.value),
@@ -163,7 +164,8 @@ export function typePhp(pt: J, m: J, extra = ""): string {
   const caps = pt.capabilities ?? {};
   if (caps.purchasable) {
     const p = caps.purchasable;
-    def.supports = { purchasable: { price_field: p.price, ...(p.sale ? { sale_field: p.sale } : {}), ...(p.stock ? { stock_field: p.stock } : {}) } };
+    def.supports = { purchasable: { price_field: p.price, ...(p.sale ? { sale_field: p.sale } : {}), ...(p.stock ? { stock_field: p.stock } : {}),
+      ...(p.license ? { license_field: p.license } : {}), ...(p.digital ? { digital: true } : {}) } };
   } else if (Object.keys(caps).length) def.supports = Object.keys(caps);
   if (pt.views) def.views = pt.views;
   if (pt.archive) {
