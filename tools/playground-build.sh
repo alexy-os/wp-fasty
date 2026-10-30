@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build WordPress Playground preview artifacts into playground/:
-#   latte.zip (parent, vendored), latte-press.zip, latte-folio.zip, latte-shop.zip, wpfasty-types.zip,
+#   latte.zip (parent, vendored), latte-press.zip, latte-folio.zip, latte-shop.zip, wp-fasty-market.zip, wpfasty-types.zip,
 #   wpfasty-builder.zip, demo.zip (seeders, images, builder landings);
 #   Twig shop: twig.zip (Twig parent, no Latte), latte-shop-twig.zip (generated Twig twin of latte-shop, only .html.twig
 #   views), wpfasty-builder-twig.zip (Twig runtime only)
@@ -17,7 +17,7 @@ cp dist/twig.zip "$OUT/twig.zip"
 # Files on disk that git does not track (stale build leftovers) never go into a preview zip.
 untracked() { git ls-files --others --exclude-standard -- "$1" | sed "s#^$1/##"; }
 
-for t in latte-press latte-folio latte-shop; do
+for t in latte-press latte-folio latte-shop wp-fasty-market; do
   rm -f "$OUT/$t.zip"
   (cd themes && zip -qr "$OUT/$t.zip" "$t" -x "*/~cache/*" "*/node_modules/*")
 done
@@ -61,6 +61,8 @@ foreach (glob("tools/demo/*.php") as $f) {
 while read -r seed; do
   curl -sSL --max-time 30 -o "$STAGE/wpfasty-demo/images/$seed.jpg" "https://picsum.photos/seed/$seed/1000/750.jpg" || true
 done < "$STAGE/seeds.txt"
+# Images committed with the demos (market-*.jpg) win over the fetched seeds.
+cp tools/demo/images/*.jpg "$STAGE/wpfasty-demo/images/"
 rm -f "$OUT/demo.zip"
 (cd "$STAGE" && zip -qr "$OUT/demo.zip" wpfasty-demo)
 rm -rf "$STAGE"
@@ -68,7 +70,7 @@ rm -rf "$STAGE"
 # default ../wpmodules/dist); otherwise the public release assets of $WPMODULES_RELEASE (default "edge", rebuilt by
 # wpmodules CI on every push to main) are downloaded and checked against their SHA256SUMS.
 MD="${WPMODULES_DIST:-$ROOT/../wpmodules/dist}"
-MODULES="types cart orders"
+MODULES="types cart orders downloads consent-log cookie-consent reviews"
 if [ -d "$MD/modules" ]; then
   cp "$MD"/moduly-*.zip "$OUT/moduly.zip"
   for id in $MODULES; do cp "$MD"/modules/$id-*.zip "$OUT/moduly-$id.zip"; done
@@ -87,7 +89,7 @@ ls -la "$OUT"/*.zip
 # Inline-blueprint preview URLs (playground/urls.txt).
 # <site>-builder: the same blueprint opening the builder's page list in wp-admin (the blueprint logs in).
 {
-  for t in press folio shop shop-twig shop-modules; do
+  for t in press folio shop shop-twig shop-modules market; do
     printf '%s https://playground.wordpress.net/#%s\n' "$t" "$(php -r 'echo rawurlencode(json_encode(json_decode(file_get_contents($argv[1])), JSON_UNESCAPED_SLASHES));' "$OUT/$t.json")"
   done
   for t in shop shop-twig; do

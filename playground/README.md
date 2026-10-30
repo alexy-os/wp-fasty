@@ -13,6 +13,11 @@ Everything runs in the visitor's browser — no server.
 - Latte Shop + ModulY, modules not installed: `shop-modules` — opens Plugins → Modules (ModulY); the read-only catalog works,
   and the module zips can be downloaded from `/wp-content/uploads/moduly/cart.zip` and `orders-0.1.0.zip` and uploaded
   in that screen (cart first: orders requires cart ^0.1)
+- WP FastY Market (Latte, ru_RU): `market` or `?blueprint-url=https://raw.githubusercontent.com/alexy-os/wp-fasty/main/playground/market.json` —
+  wp-fasty-market theme + wpfasty-types + ModulY with signed modules types → cart → orders → downloads → consent-log →
+  cookie-consent → reviews (cart digital_only), demo catalog with license tiers (regular / extended ×5), preview, author,
+  verified reviews from a seeded paid order; lands on `/shop/`. The download is a demo stub zip; legal pages are not seeded
+  (`WPFASTY_LEGAL_JSON` is unset), so footer document links are placeholders
 - Builder editor: `shop-builder` / `shop-twig-builder` in `urls.txt` — the same blueprints opening wp-admin → Pages → Builder (pick a page, e.g. the front-page landing)
 - Latte Shop Twig (the same shop on the Twig engine — `twig.zip` parent, generated twin `latte-shop-twig` with only `.html.twig` views, Twig-only `wpfasty-builder-twig.zip`; no Latte library or views on the site): `shop-twig`
 
