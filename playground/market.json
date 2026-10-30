@@ -1,0 +1,173 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/shop/",
+  "preferredVersions": {
+    "php": "8.5",
+    "wp": "latest"
+  },
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin"
+    },
+    {
+      "step": "setSiteLanguage",
+      "language": "ru_RU"
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/latte.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/latte.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wp-fasty-market.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wp-fasty-market.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/demo.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/demo.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wpfasty-types.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wpfasty-types.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-types.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-types.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-cart.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-cart.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-orders.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-orders.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-downloads.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-downloads.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-consent-log.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-consent-log.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-cookie-consent.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-cookie-consent.zip.b64"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-reviews.zip.b64",
+      "data": {
+        "resource": "url",
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-reviews.zip.b64"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php foreach (glob('/tmp/*.zip.b64') as $f) { file_put_contents(substr($f, 0, -4), base64_decode(file_get_contents($f))); }"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/latte.zip",
+      "extractToPath": "/wordpress/wp-content/themes"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wp-fasty-market.zip",
+      "extractToPath": "/wordpress/wp-content/themes"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/demo.zip",
+      "extractToPath": "/wordpress/wp-content"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wpfasty-types.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "wpfasty-types/wpfasty-types.php"
+    },
+    {
+      "step": "activateTheme",
+      "themeFolderName": "wp-fasty-market"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/moduly.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "moduly/moduly.php"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; $p = PhpFasty\\Moduly\\Wp\\Plugin::instance(); if (!$p) { throw new Exception('ModulY did not boot'); } foreach (['types', 'cart', 'orders', 'downloads', 'consent-log', 'cookie-consent', 'reviews'] as $id) { $p->modules->install('/tmp/moduly-' . $id . '.zip', true); } $s = (array) get_option('moduly_settings', []); $s['cart'] = array_merge((array) ($s['cart'] ?? []), ['digital_only' => true]); update_option('moduly_settings', $s);"
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "permalink_structure": "/%postname%/"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; wp_set_current_user(1); require '/wordpress/wp-content/wpfasty-demo/market.php'; flush_rewrite_rules();"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; wp_set_current_user(1);\n// Demo buyer: one paid order, then verified reviews (rating 1-5) on the products it contains.\n$email = 'buyer@example.com';\n$reviews = ['fasty-agency' => [5, 'Анна', 'Поставила за вечер, демо-контент импортировался без ошибок.'], 'latte-magazine' => [5, 'Игорь', 'Быстрая тема, PageSpeed 98 из коробки.'], 'fasty-seo' => [4, 'Мария', 'Всё нужное есть, хотелось бы больше настроек схемы.']];\n$items = [];\nforeach (array_keys($reviews) as $slug) { $p = get_page_by_path($slug, OBJECT, 'product'); if ($p) { $items[] = ['id' => $p->ID, 'title' => $p->post_title, 'sku' => strtoupper($slug), 'qty' => 1, 'unit' => 0, 'line' => 0, 'tier' => 'regular', 'tier_label' => 'Обычная', 'digital' => true]; } }\n$order = wp_insert_post(['post_type' => 'shop_order', 'post_status' => 'private', 'post_title' => 'Demo order']);\nforeach (['_order_name' => 'Demo Buyer', '_order_email' => $email, '_order_items' => $items, '_order_status' => 'paid', '_order_payment' => 'card'] as $k => $v) { update_post_meta($order, $k, $v); }\nforeach ($reviews as $slug => [$rating, $name, $text]) { $p = get_page_by_path($slug, OBJECT, 'product'); if (!$p) { continue; } $c = wp_insert_comment(['comment_post_ID' => $p->ID, 'comment_author' => $name, 'comment_author_email' => $email, 'comment_content' => $text, 'comment_approved' => 1, 'comment_type' => 'comment']); update_comment_meta($c, 'rating', $rating); update_comment_meta($c, 'verified', 1); if (class_exists('PhpFasty\\\\Module\\\\Reviews\\\\Reviews')) { PhpFasty\\Module\\Reviews\\Reviews::recount($p->ID); } }"
+    }
+  ]
+}
