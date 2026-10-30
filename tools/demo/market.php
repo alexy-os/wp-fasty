@@ -66,7 +66,7 @@ foreach ($items as [$slug, $title, $cat, $price, $sale, $rating, $reviews, $badg
     $licenses = wp_json_encode([
         ['tier' => 'regular', 'label' => 'Обычная', 'price' => $base],
         ['tier' => 'extended', 'label' => 'Расширенная', 'price' => $base * 5],
-    ]);
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     $meta = ['_shop_price' => $price * 100, '_shop_sale_price' => $sale ? $sale * 100 : null, '_shop_sku' => strtoupper($slug),
         '_shop_stock' => null, '_shop_rating' => null, '_shop_reviews' => null, '_shop_badge' => $badge,
         '_shop_version' => '1.' . ($order % 5) . '.0', '_shop_requires_wp' => '6.5', '_shop_requires_php' => '8.2',
