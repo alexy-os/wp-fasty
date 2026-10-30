@@ -114,10 +114,10 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "name": { "type": "string", "default": "alexy-os" },
+            "name": { "type": "string", "default": "AlexY OS" },
             "uri": { "type": "string", "format": "uri", "default": "https://github.com/alexy-os" }
           },
-          "default": { "name": "alexy-os", "uri": "https://github.com/alexy-os" }
+          "default": { "name": "AlexY OS", "uri": "https://github.com/alexy-os" }
         },
         "requires": {
           "type": "object",
