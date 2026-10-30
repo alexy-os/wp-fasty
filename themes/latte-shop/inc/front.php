@@ -34,6 +34,7 @@ final class Front
     {
         add_filter('wpfasty_resolve_view', [self::class, 'view']);
         add_filter('wpfasty_context', [self::class, 'context']);
+        add_filter('wpfasty_types', [self::class, 'types']);
         add_action('after_switch_theme', [self::class, 'ensurePages']);
         // Payment ids the orders module accepts follow the methods shown at checkout.
         add_filter('wpfasty_shop_payment_methods', static fn (array $ids): array => self::digitalOnly()
@@ -206,6 +207,30 @@ final class Front
         ];
 
         return $context;
+    }
+
+    /**
+     * Product type extension: modules add fields (licenses, downloads, …) through `wpfasty_shop_product_fields`;
+     * the cart reads license tiers from `licenses` and treats products as downloads in a digital store.
+     *
+     * @param array<mixed> $defs
+     * @return array<mixed>
+     */
+    public static function types(array $defs): array
+    {
+        foreach ($defs as $i => $def) {
+            if (!is_array($def) || ($def['name'] ?? '') !== 'product') {
+                continue;
+            }
+            $def['fields'] = (array) apply_filters('wpfasty_shop_product_fields', (array) ($def['fields'] ?? []));
+            $buy = (array) ($def['supports']['purchasable'] ?? []);
+            if ($buy !== []) {
+                $buy += ['license_field' => 'licenses', 'digital' => self::digitalOnly()];
+                $def['supports']['purchasable'] = $buy;
+            }
+            $defs[$i] = $def;
+        }
+        return $defs;
     }
 
     /**

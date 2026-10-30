@@ -13,9 +13,10 @@
 				{foreach $order['items'] as $item}
 					{capture $c_ui7}{capture $c_ui5}{$item['title']} × {$item['qty']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui5, attrs: []}{capture $c_ui6}{$item['line_display']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'font-semibold', children: (string) $c_ui6, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4 p-4', children: (string) $c_ui7, attrs: []}
 				{/foreach}
-				{capture $c_ui10}{capture $c_ui8}{$labels['shipping']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui8, attrs: []}{capture $c_ui9}{$order['shipping_display']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui9, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4 p-4 text-sm text-muted-foreground', children: (string) $c_ui10, attrs: []}
+				{if ($order['shipping'] ?? 1) !== 0}{capture $c_ui10}{capture $c_ui8}{$labels['shipping']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui8, attrs: []}{capture $c_ui9}{$order['shipping_display']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui9, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4 p-4 text-sm text-muted-foreground', children: (string) $c_ui10, attrs: []}{/if}
 				{capture $c_ui13}{capture $c_ui11}{$labels['total']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui11, attrs: []}{capture $c_ui12}{$order['total_display']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui12, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4 p-4 text-lg font-semibold', children: (string) $c_ui13, attrs: []}
 			{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', children: (string) $c_ui14, attrs: []}
+			{include 'blocks/slot.latte', name: 'checkout.order'}
 			{capture $c_ui15}{$labels['continue_shopping']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui15, attrs: []}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mx-auto flex max-w-2xl flex-col gap-6', children: (string) $c_ui16, attrs: []}
 	{elseif empty($cart['items'])}
@@ -26,7 +27,7 @@
 	{else}
 		{capture $c_ui20}{$labels['checkout']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'mb-8 text-3xl font-bold tracking-tight', children: (string) $c_ui20, attrs: []}
 		{if !empty($checkout['errors'])}
-			{capture $errText}{capture $c_ui21}{icon('x')}Please check: {implode(', ', $checkout['errors'])}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex items-center gap-2', children: (string) $c_ui21, attrs: []}{/capture}
+			{capture $errText}{capture $c_ui21}{icon('x')}{$labels['check_fields']}: {implode(', ', $checkout['error_labels'] ?? $checkout['errors'])}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex items-center gap-2', children: (string) $c_ui21, attrs: []}{/capture}
 			{capture $c_ui22}{include 'alert/Alert.latte', variant: 'destructive', role: 'alert', class: 'px-4 py-2', children: (string) $errText}{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-6', children: (string) $c_ui22, attrs: []}
 		{/if}
 		{var $v = $checkout['values']}
@@ -47,7 +48,7 @@
 					{capture $addrLbl}{$labels['address']} *{/capture}
 					{include 'label/Label.latte', htmlFor: 'co-address', class: kit('label', []), children: (string) $addrLbl}
 					{include 'compose/Textarea.latte', id: 'co-address', name: 'address', value: (string) ($v['address'] ?? ''), rows: '2', required: true, state: in_array('address', $checkout['errors'], true) ? 'error' : null}
-				{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui25, attrs: []}
+				{/capture}{if empty($checkout['digital'])}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui25, attrs: []}{/if}
 				{capture $c_ui31}
 					{capture $c_ui26}{$labels['payment']}{/capture}{include 'text/Text.latte', tag: 'legend', class: 'mb-2 text-sm font-medium', children: (string) $c_ui26, attrs: []}
 					{capture $c_ui30}
@@ -73,6 +74,7 @@
 					{/foreach}
 				{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm', children: (string) $c_ui37, attrs: []}
 				{include 'blocks/order-summary.latte', cart: $cart, labels: $labels, showCheckout: false}
+				{include 'blocks/slot.latte', name: 'checkout.consents'}
 				{capture $place}{icon('check')}{$labels['place_order']}{/capture}
 				{include 'button/Button.latte', type: 'submit', class: kit('button', ['size' => 'lg'], 'w-full'), children: (string) $place}
 				{capture $c_ui38}{$labels['demo_notice']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-xs text-muted-foreground', children: (string) $c_ui38, attrs: []}

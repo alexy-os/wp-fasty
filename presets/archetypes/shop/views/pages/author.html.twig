@@ -1,0 +1,19 @@
+{# Latte Shop — author storefront (WordPress author archive of products): profile, stats, items. #}
+{% if author is not empty %}
+{% set c_page %}
+{% set c_hero %}
+	{% set c_av %}{{ author.initial }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex size-24 shrink-0 items-center justify-center rounded-2xl bg-primary text-4xl font-bold text-primary-foreground', 'children': c_av, 'attrs': {'aria-hidden': 'true'}} only %}
+	{% set c_tx %}
+		{% set c_h %}{{ author.name }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'text-3xl font-bold tracking-tight md:text-4xl', 'children': c_h, 'attrs': {}} only %}
+		{% if author.bio is not empty %}{% set c_bio %}{{ author.bio }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_bio, 'attrs': {}} only %}{% endif %}
+		{% set c_st %}{{ icon('package', 'size-4') }}{{ author.items }} {{ labels.author_items }}{% if author.since is not empty %} · {{ labels.author_since }} {{ author.since }}{% endif %}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'flex items-center gap-2 text-sm text-muted-foreground', 'children': c_st, 'attrs': {}} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-1 flex-col gap-2', 'children': c_tx, 'attrs': {}} only %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mb-8 flex flex-col gap-6 rounded-2xl border border-border bg-card p-8 md:flex-row md:items-center', 'children': c_hero, 'attrs': {}} only %}
+{% set c_grid %}
+	{% for product in products %}
+		{% include 'blocks/product-card.html.twig' with {'product': product, 'shop': shop, 'labels': labels, 'headingTag': 'h2'} %}
+	{% endfor %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8 lg:grid-cols-4', 'children': c_grid, 'attrs': {}} only %}
+{% include 'blocks/slot.html.twig' with {'name': 'author.after'} %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 py-12 md:px-6', 'children': c_page, 'attrs': {}} only %}
+{% endif %}

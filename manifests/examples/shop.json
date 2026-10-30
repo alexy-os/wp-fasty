@@ -223,6 +223,7 @@
     "blocks/product-card",
     "blocks/unavailable",
     "layout/parts/header-actions",
+    "pages/author",
     "pages/cart",
     "pages/checkout",
     "pages/front-page",
