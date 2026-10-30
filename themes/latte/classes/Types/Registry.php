@@ -225,7 +225,8 @@ final class Registry implements BootableServiceInterface
     public static function termFilter(string $taxonomy): array
     {
         $items = [];
-        foreach (get_terms(['taxonomy' => $taxonomy, 'hide_empty' => true]) ?: [] as $term) {
+        $terms = taxonomy_exists($taxonomy) ? get_terms(['taxonomy' => $taxonomy, 'hide_empty' => true]) : [];
+        foreach (is_array($terms) ? $terms : [] as $term) {
             if ($term instanceof \WP_Term) {
                 $items[] = ['name' => $term->name, 'slug' => $term->slug, 'url' => (string) get_term_link($term)];
             }

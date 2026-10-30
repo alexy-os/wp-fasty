@@ -61,6 +61,16 @@ function latte_base_theme_hooks(): void
         }
     }
 
+    // Post type files of the base theme for registries built outside Latte's services (ModulY types module).
+    add_filter('wpfasty_type_dirs', static function (array $dirs): array {
+        $base = latte_base_theme_dir();
+        if ($base === '' || in_array($base . '/types', $dirs, true)) {
+            return $dirs;
+        }
+        array_splice($dirs, min(1, count($dirs)), 0, [$base . '/types']);
+        return $dirs;
+    });
+
     // Codex / Builder look up the base theme's types/ after the child's (wpfasty-types Site::current()).
     add_filter('wpfasty_theme_dirs', static function (array $dirs): array {
         $base = latte_base_theme_dir();
