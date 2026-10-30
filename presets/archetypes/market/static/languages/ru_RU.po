@@ -1,0 +1,735 @@
+# Copyright (C) 2026 IT Garage Ltd
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP FastY Market 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/wp-fasty-market\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-30T09:44:51+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: wp-fasty-market\n"
+
+#. Theme Name of the theme
+#: style.css
+msgid "WP FastY Market"
+msgstr "WP FastY Market"
+
+#. Theme URI of the theme
+#. Author URI of the theme
+#: style.css
+msgid "https://wpfasty.ru"
+msgstr "https://wpfasty.ru"
+
+#. Description of the theme
+#: style.css
+msgid "WP FastY — marketplace of ready-made WordPress sites, themes and plugins. Catalog with filters, item pages with live preview, licenses, changelog and reviews, author pages, signed-cookie cart and digital checkout that creates Orders. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons). Seller: IT Garage Ltd."
+msgstr "WP FastY — маркетплейс готовых сайтов, тем и плагинов WordPress. Каталог с фильтрами, карточки с Live Preview, лицензиями, changelog и отзывами, страницы авторов, корзина в подписанной cookie и цифровой checkout, создающий заказы. Дочерняя тема Latte. Продавец: ООО «ИТ Гараж»."
+
+#. Author of the theme
+#: style.css
+msgid "IT Garage Ltd"
+msgstr "IT Garage Ltd"
+
+#: functions.php:46
+msgid "This theme needs the \"WP FastY Types\" plugin (plugins/wpfasty-types) to register its content types."
+msgstr "Теме нужен плагин «WP FastY Types» (plugins/wpfasty-types) для регистрации типов записей."
+
+#: inc/fixtures.php:126
+msgid "PHP 8.5 compatibility, faster first paint, new header layouts."
+msgstr "Совместимость с PHP 8.5, быстрее первая отрисовка, новые варианты шапки."
+
+#: inc/fixtures.php:128
+msgid "Initial release."
+msgstr "Первый релиз."
+
+#: inc/fixtures.php:134
+msgid "Installed in ten minutes, the demo import matched the preview exactly."
+msgstr "Поставил за десять минут, демо-импорт совпал с превью один в один."
+
+#: inc/fixtures.php:142
+msgid "Clean code, no page builder lock-in, support answered within a day."
+msgstr "Чистый код, без привязки к конструктору, поддержка ответила за день."
+
+#: inc/fixtures.php:150
+msgid "Great design system. I would like more color presets."
+msgstr "Отличная дизайн-система. Хотелось бы больше цветовых пресетов."
+
+#: inc/front.php:144
+msgid "Best sellers"
+msgstr "Хиты продаж"
+
+#: inc/front.php:145
+msgid "Newest"
+msgstr "Новинки"
+
+#: inc/front.php:146
+msgid "Top rated"
+msgstr "Лучший рейтинг"
+
+#: inc/front.php:147
+msgid "Price: low to high"
+msgstr "Сначала дешевле"
+
+#: inc/front.php:148
+msgid "Price: high to low"
+msgstr "Сначала дороже"
+
+#: inc/front.php:151
+msgid "Any price"
+msgstr "Любая цена"
+
+#: inc/front.php:152
+msgid "Up to 5,000"
+msgstr "До 5 000 ₽"
+
+#: inc/front.php:153
+msgid "5,000 – 10,000"
+msgstr "5 000 – 10 000 ₽"
+
+#: inc/front.php:154
+msgid "10,000 and more"
+msgstr "От 10 000 ₽"
+
+#: inc/front.php:210
+msgid "Full name"
+msgstr "Имя и фамилия"
+
+#: inc/front.php:211
+msgid "Email for download links"
+msgstr "Email для ссылок на скачивание"
+
+#: inc/front.php:212
+msgid "Phone"
+msgstr "Телефон"
+
+#: inc/front.php:215
+msgid "Bank card"
+msgstr "Банковская карта"
+
+#: inc/front.php:216
+msgid "Faster Payments System (SBP)"
+msgstr "СБП"
+
+#: inc/front.php:217
+msgid "Invoice for companies"
+msgstr "Счёт для юрлиц"
+
+#: inc/front.php:252
+msgid "Add to cart"
+msgstr "В корзину"
+
+#: inc/front.php:253
+msgid "Buy now"
+msgstr "Купить сейчас"
+
+#: inc/front.php:254
+msgid "Cart"
+msgstr "Корзина"
+
+#: inc/front.php:255
+msgid "Checkout"
+msgstr "Оформление заказа"
+
+#: inc/front.php:256
+msgid "Subtotal"
+msgstr "Подытог"
+
+#: inc/front.php:257
+#: inc/orders.php:25
+#: inc/orders.php:127
+#: inc/orders.php:146
+msgid "Total"
+msgstr "Итого"
+
+#: inc/front.php:258
+msgid "Quantity"
+msgstr "Количество"
+
+#: inc/front.php:259
+msgid "Remove"
+msgstr "Удалить"
+
+#: inc/front.php:260
+msgid "Update cart"
+msgstr "Обновить корзину"
+
+#: inc/front.php:261
+#: inc/front.php:403
+msgid "Your cart is empty."
+msgstr "Корзина пуста."
+
+#: inc/front.php:262
+msgid "Continue shopping"
+msgstr "Продолжить покупки"
+
+#: inc/front.php:263
+msgid "Pay and download"
+msgstr "Оплатить и скачать"
+
+#: inc/front.php:264
+msgid "Unavailable"
+msgstr "Недоступно"
+
+#: inc/front.php:265
+msgid "Sale"
+msgstr "Скидка"
+
+#: inc/front.php:266
+msgid "All items"
+msgstr "Все товары"
+
+#: inc/front.php:267
+msgid "Thank you! Download links have been sent to your email."
+msgstr "Спасибо! Ссылки на скачивание отправлены на ваш email."
+
+#: inc/front.php:268
+#: inc/orders.php:23
+#: types/shop_order.php:21
+#: types/shop_order.php:22
+msgid "Order"
+msgstr "Заказ"
+
+#: inc/front.php:269
+msgid "Payment method"
+msgstr "Способ оплаты"
+
+#: inc/front.php:270
+msgid "Demo store — no real payment is taken."
+msgstr "Демо-магазин — реальная оплата не списывается."
+
+#: inc/front.php:271
+msgid "Nothing found. Try another filter."
+msgstr "Ничего не найдено. Попробуйте другой фильтр."
+
+#: inc/front.php:272
+msgid "Breadcrumb"
+msgstr "Навигационная цепочка"
+
+#: inc/front.php:273
+msgid "Marketplace of WordPress products"
+msgstr "Маркетплейс продуктов для WordPress"
+
+#: inc/front.php:274
+msgid "Ready-made WordPress sites, themes and plugins that launch fast"
+msgstr "Готовые сайты, темы и плагины WordPress, которые запускаются быстро"
+
+#: inc/front.php:275
+msgid "Reviewed by humans, built on clean code, updated for the latest PHP and WordPress."
+msgstr "Проверены вручную, написаны на чистом коде, обновляются под свежие PHP и WordPress."
+
+#: inc/front.php:279
+msgid "Search sites, themes and plugins"
+msgstr "Искать сайты, темы и плагины"
+
+#: inc/front.php:280
+msgid "Search"
+msgstr "Найти"
+
+#: inc/front.php:281
+msgid "Popular:"
+msgstr "Популярное:"
+
+#: inc/front.php:282
+msgid "Ready-made sites"
+msgstr "Готовые сайты"
+
+#: inc/front.php:283
+msgid "Full sites with content, ready to launch in a day"
+msgstr "Сайты с контентом — запуск за один день"
+
+#: inc/front.php:284
+msgid "Themes"
+msgstr "Темы"
+
+#: inc/front.php:285
+msgid "Design systems for blogs, shops and portfolios"
+msgstr "Дизайн-системы для блогов, магазинов и портфолио"
+
+#: inc/front.php:286
+msgid "Plugins"
+msgstr "Плагины"
+
+#: inc/front.php:287
+msgid "SEO, forms, speed and payments without bloat"
+msgstr "SEO, формы, скорость и оплата без лишнего веса"
+
+#: inc/front.php:288
+msgid "items"
+msgstr "товаров"
+
+#: inc/front.php:289
+msgid "Popular this week"
+msgstr "Популярное на неделе"
+
+#: inc/front.php:290
+msgid "New arrivals"
+msgstr "Новое"
+
+#: inc/front.php:291
+msgid "View all"
+msgstr "Смотреть все"
+
+#: inc/front.php:292
+msgid "Top authors"
+msgstr "Топ авторов"
+
+#: inc/front.php:293
+msgid "Independent studios and developers who sell on WP FastY."
+msgstr "Независимые студии и разработчики, которые продают на WP FastY."
+
+#: inc/front.php:294
+msgid "sales"
+msgstr "продаж"
+
+#: inc/front.php:295
+msgid "Author since"
+msgstr "Автор с"
+
+#: inc/front.php:296
+msgid "Why buy on WP FastY"
+msgstr "Почему покупают на WP FastY"
+
+#: inc/front.php:297
+msgid "Every item is reviewed by hand"
+msgstr "Каждый товар проверен вручную"
+
+#: inc/front.php:298
+msgid "Code, security and performance are checked before release."
+msgstr "Код, безопасность и скорость проверяем до публикации."
+
+#: inc/front.php:299
+msgid "Lifetime updates"
+msgstr "Обновления навсегда"
+
+#: inc/front.php:300
+msgid "Download every new version from your account."
+msgstr "Скачивайте каждую новую версию в личном кабинете."
+
+#: inc/front.php:301
+msgid "6 months of author support"
+msgstr "6 месяцев поддержки автора"
+
+#: inc/front.php:302
+msgid "Extend support at any time from the item page."
+msgstr "Продлить поддержку можно в любой момент на странице товара."
+
+#: inc/front.php:303
+msgid "Secure payment in rubles"
+msgstr "Безопасная оплата в рублях"
+
+#: inc/front.php:304
+msgid "Cards, SBP and invoices for companies. Receipts under 54-FZ."
+msgstr "Карты, СБП и счёт для юрлиц. Чеки по 54-ФЗ."
+
+#: inc/front.php:305
+msgid "Filters"
+msgstr "Фильтры"
+
+#: inc/front.php:306
+msgid "Category"
+msgstr "Категория"
+
+#: inc/front.php:307
+#: types/product.php:47
+#: types/product.php:71
+msgid "Price"
+msgstr "Цена"
+
+#: inc/front.php:308
+msgid "Compatibility"
+msgstr "Совместимость"
+
+#: inc/front.php:309
+msgid "Rating"
+msgstr "Рейтинг"
+
+#: inc/front.php:310
+msgid "4 stars and up"
+msgstr "От 4 звёзд"
+
+#: inc/front.php:311
+msgid "Any rating"
+msgstr "Любой рейтинг"
+
+#: inc/front.php:312
+msgid "Sort by"
+msgstr "Сортировка"
+
+#: inc/front.php:313
+msgid "Apply"
+msgstr "Применить"
+
+#: inc/front.php:314
+msgid "Reset"
+msgstr "Сбросить"
+
+#: inc/front.php:315
+msgid "results"
+msgstr "результатов"
+
+#: inc/front.php:316
+msgid "Live preview"
+msgstr "Live Preview"
+
+#: inc/front.php:317
+msgid "License"
+msgstr "Лицензия"
+
+#: inc/front.php:318
+msgid "Regular license"
+msgstr "Regular — обычная"
+
+#: inc/front.php:319
+msgid "One end product, end users are not charged."
+msgstr "Один конечный продукт, пользователи не платят за доступ."
+
+#: inc/front.php:320
+msgid "Extended license"
+msgstr "Extended — расширенная"
+
+#: inc/front.php:321
+msgid "One end product that end users can be charged for."
+msgstr "Один конечный продукт, за доступ к которому можно брать плату."
+
+#: inc/front.php:322
+msgid "Included: future updates and 6 months of support."
+msgstr "Включено: будущие обновления и 6 месяцев поддержки."
+
+#: inc/front.php:323
+msgid "Version"
+msgstr "Версия"
+
+#: inc/front.php:324
+msgid "Last update"
+msgstr "Обновлено"
+
+#: inc/front.php:325
+msgid "WordPress"
+msgstr "WordPress"
+
+#: inc/front.php:326
+msgid "PHP"
+msgstr "PHP"
+
+#: inc/front.php:327
+msgid "Changelog"
+msgstr "История изменений"
+
+#: inc/front.php:328
+msgid "Description"
+msgstr "Описание"
+
+#: inc/front.php:329
+msgid "Support"
+msgstr "Поддержка"
+
+#: inc/front.php:330
+msgid "The author replies within one business day. Bugs and feature questions are covered."
+msgstr "Автор отвечает в течение рабочего дня. Ошибки и вопросы по функциям входят в поддержку."
+
+#: inc/front.php:334
+#: types/product.php:52
+msgid "Reviews"
+msgstr "Отзывы"
+
+#: inc/front.php:335
+msgid "by"
+msgstr "от"
+
+#: inc/front.php:336
+msgid "Items by this author"
+msgstr "Товары автора"
+
+#: inc/front.php:337
+msgid "Screenshots"
+msgstr "Скриншоты"
+
+#: inc/front.php:338
+msgid "Your details"
+msgstr "Ваши данные"
+
+#: inc/front.php:339
+msgid "Digital delivery: download links arrive by email right after payment."
+msgstr "Цифровая доставка: ссылки на скачивание придут на email сразу после оплаты."
+
+#: inc/front.php:343
+msgid "I accept the public offer and license agreement"
+msgstr "Принимаю условия публичной оферты и лицензионного договора"
+
+#: inc/front.php:344
+msgid "I consent to the processing of my personal data"
+msgstr "Даю согласие на обработку персональных данных"
+
+#: inc/front.php:345
+msgid "Required"
+msgstr "Проверьте поля"
+
+#: inc/front.php:346
+msgid "Secure checkout"
+msgstr "Безопасная оплата"
+
+#: inc/front.php:347
+msgid "Refunds follow the refund policy for digital goods."
+msgstr "Возврат — по правилам возврата цифровых товаров."
+
+#: inc/front.php:348
+msgid "WP FastY is a marketplace of ready-made WordPress sites, themes and plugins."
+msgstr "WP FastY — маркетплейс готовых сайтов, тем и плагинов для WordPress."
+
+#: inc/front.php:352
+msgid "Marketplace"
+msgstr "Маркетплейс"
+
+#: inc/front.php:353
+msgid "Documents"
+msgstr "Документы"
+
+#: inc/front.php:354
+msgid "Seller"
+msgstr "Продавец"
+
+#: inc/front.php:355
+msgid "OGRN"
+msgstr "ОГРН"
+
+#: inc/front.php:356
+msgid "INN"
+msgstr "ИНН"
+
+#: inc/front.php:357
+msgid "Address"
+msgstr "Адрес"
+
+#: inc/front.php:358
+msgid "Public offer and license agreement"
+msgstr "Публичная оферта и лицензионный договор"
+
+#: inc/front.php:359
+msgid "Privacy policy"
+msgstr "Политика конфиденциальности"
+
+#: inc/front.php:360
+msgid "Consent to personal data processing"
+msgstr "Согласие на обработку персональных данных"
+
+#: inc/front.php:361
+msgid "Consent to newsletters"
+msgstr "Согласие на рассылку"
+
+#: inc/front.php:362
+msgid "Cookie policy"
+msgstr "Политика cookie"
+
+#: inc/front.php:363
+msgid "Refund policy"
+msgstr "Правила возврата"
+
+#: inc/front.php:364
+msgid "Seller details"
+msgstr "Реквизиты"
+
+#: inc/front.php:365
+msgid "I want to receive news and offers by email (optional)"
+msgstr "Хочу получать новости и предложения по email (необязательно)"
+
+#: inc/front.php:366
+msgid "We use necessary cookies to run the store and, with your consent, analytics cookies."
+msgstr "Мы используем необходимые cookie для работы магазина и — с вашего согласия — аналитические."
+
+#: inc/front.php:370
+msgid "Accept all"
+msgstr "Принять все"
+
+#: inc/front.php:371
+msgid "Necessary only"
+msgstr "Только необходимые"
+
+#: inc/front.php:372
+msgid "Cookie settings"
+msgstr "Настройки cookie"
+
+#: inc/front.php:373
+msgid "All rights reserved."
+msgstr "Все права защищены."
+
+#: inc/front.php:374
+msgid "Previous"
+msgstr "Назад"
+
+#: inc/front.php:375
+msgid "Next"
+msgstr "Дальше"
+
+#: inc/front.php:376
+msgid "Pagination"
+msgstr "Страницы"
+
+#: inc/front.php:387
+msgid "Added to your cart."
+msgstr "Добавлено в корзину."
+
+#: inc/front.php:392
+msgid "Item removed."
+msgstr "Товар удалён."
+
+#: inc/front.php:394
+msgid "Cart updated."
+msgstr "Корзина обновлена."
+
+#: inc/front.php:398
+msgid "Sorry, this item is unavailable."
+msgstr "Извините, товар недоступен."
+
+#: inc/handlers.php:49
+msgid "Unknown cart action."
+msgstr "Неизвестное действие с корзиной."
+
+#: inc/handlers.php:143
+msgid "Your session expired. Please go back and try again."
+msgstr "Сессия истекла. Вернитесь назад и попробуйте снова."
+
+#: inc/orders.php:24
+msgid "Customer"
+msgstr "Покупатель"
+
+#: inc/orders.php:26
+#: inc/orders.php:151
+msgid "Status"
+msgstr "Статус"
+
+#: inc/orders.php:27
+msgid "Date"
+msgstr "Дата"
+
+#. translators: %d order id
+#: inc/orders.php:87
+#, php-format
+msgid "New order #%d"
+msgstr "Новый заказ №%d"
+
+#: inc/orders.php:121
+msgid "Order details"
+msgstr "Детали заказа"
+
+#: inc/orders.php:125
+msgid "Item"
+msgstr "Товар"
+
+#: inc/orders.php:126
+msgid "Qty"
+msgstr "Кол-во"
+
+#: types/product.php:21
+msgid "Products"
+msgstr "Товары"
+
+#: types/product.php:22
+msgid "Product"
+msgstr "Товар"
+
+#: types/product.php:23
+msgid "Add product"
+msgstr "Добавить товар"
+
+#: types/product.php:24
+msgid "Edit product"
+msgstr "Редактировать товар"
+
+#: types/product.php:36
+msgid "Product categories"
+msgstr "Категории товаров"
+
+#: types/product.php:37
+msgid "Product category"
+msgstr "Категория товара"
+
+#: types/product.php:48
+msgid "Sale price"
+msgstr "Цена со скидкой"
+
+#: types/product.php:49
+msgid "SKU"
+msgstr "Артикул"
+
+#: types/product.php:50
+msgid "Stock (empty = unlimited)"
+msgstr "Остаток (пусто = без лимита)"
+
+#: types/product.php:51
+msgid "Rating (0-5)"
+msgstr "Рейтинг (0–5)"
+
+#: types/product.php:55
+msgid "Badge (empty = sale when discounted)"
+msgstr "Бейдж (пусто = «Скидка» при скидке)"
+
+#: types/product.php:58
+msgid "Product data"
+msgstr "Данные товара"
+
+#: types/product.php:66
+msgid "Catalog"
+msgstr "Каталог"
+
+#: types/product.php:74
+msgid "Stock"
+msgstr "Остаток"
+
+#: types/shop_order.php:20
+msgid "Orders"
+msgstr "Заказы"
+
+msgid "Back to site"
+msgstr "Вернуться на сайт"
+
+msgid "Download"
+msgstr "Скачать"
+
+msgid "Download links appear here and in your email as soon as the payment is confirmed."
+msgstr "Ссылки на скачивание появятся здесь и в письме сразу после подтверждения оплаты."
+
+msgid "Downloads"
+msgstr "Загрузки"
+
+msgid "Link valid until"
+msgstr "Ссылка действует до"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "No reviews yet."
+msgstr "Отзывов пока нет."
+
+msgid "Only buyers can review: use the email of your paid order."
+msgstr "Отзыв могут оставить только покупатели: укажите email оплаченного заказа."
+
+msgid "Order email"
+msgstr "Email заказа"
+
+msgid "Send review"
+msgstr "Отправить отзыв"
+
+msgid "Temporarily unavailable"
+msgstr "Временно недоступно"
+
+msgid "This feature is temporarily unavailable. Please try again later."
+msgstr "Функция временно недоступна. Попробуйте позже."
+
+msgid "Verified buyer"
+msgstr "Проверенный покупатель"
+
+msgid "Write a review"
+msgstr "Написать отзыв"
+
+msgid "Your review"
+msgstr "Ваш отзыв"
+
+msgid "downloads left"
+msgstr "скачиваний осталось"

@@ -1,0 +1,19 @@
+{# WP FastY — author storefront (?a=slug): profile, stats, items. Author data is fixture-backed until wpfasty-types has an Author type. #}
+{% if not ((author) is empty) %}
+	{% set hero %}
+		{% set inner %}
+			{% set av %}{{ ((author['name'])|slice(0, 1)) }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex size-24 shrink-0 items-center justify-center rounded-2xl bg-primary font-heading text-4xl font-extrabold text-primary-foreground', 'children': av, 'attrs': {'aria-hidden': 'true'}} only %}
+			{% set tx %}
+				{% set r %}{{ author['role'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs font-semibold uppercase tracking-widest text-primary', 'children': r, 'attrs': []} only %}
+				{% set h %}{{ author['name'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'font-heading text-4xl font-extrabold tracking-tight', 'children': h, 'attrs': []} only %}
+				{% set s %}{{ labels['since'] }} {{ author['since'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-secondary-foreground/70', 'children': s, 'attrs': []} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-1 flex-col gap-2', 'children': tx, 'attrs': []} only %}
+			{% set stats %}
+				{% for c_row in [[author['items'], labels['items']], [author['sales'], labels['sales']], ['★ ' ~ author['rating'], labels['rating']]] %}{% set val = c_row[0] %}{% set lbl = c_row[1] %}
+					{% set dd %}{% set a %}{{ val }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dd', 'class': 'font-heading text-2xl font-bold', 'children': a, 'attrs': []} only %}{% set b %}{{ lbl }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dt', 'class': 'text-xs text-secondary-foreground/70', 'children': b, 'attrs': []} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col-reverse', 'children': dd, 'attrs': []} only %}
+				{% endfor %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dl', 'class': 'flex gap-8', 'children': stats, 'attrs': []} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-6 rounded-2xl bg-secondary p-8 text-secondary-foreground md:flex-row md:items-center md:p-12', 'children': inner, 'attrs': []} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 pt-8 md:px-6', 'children': hero, 'attrs': []} only %}
+	{% include 'blocks/product-grid.html.twig' with {'title': labels['author_items'], 'products': products ?? []} %}
+{% endif %}

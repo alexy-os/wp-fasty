@@ -1,0 +1,41 @@
+/* WP FastY Market — WP FastY signal palette: warm paper, graphite ink, signal orange. All colors are tokens. */
+:root {
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Manrope", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --background: oklch(0.985 0.004 80);
+  --foreground: oklch(0.21 0.015 270);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.015 270);
+  --primary: oklch(0.55 0.19 36);
+  --primary-foreground: oklch(0.99 0.005 80);
+  --secondary: oklch(0.24 0.02 270);
+  --secondary-foreground: oklch(0.97 0.01 80);
+  --muted: oklch(0.955 0.006 80);
+  --muted-foreground: oklch(0.47 0.015 270);
+  --accent: oklch(0.95 0.035 50);
+  --accent-foreground: oklch(0.4 0.13 36);
+  --destructive: oklch(0.55 0.21 25);
+  --border: oklch(0.9 0.008 80);
+  --input: oklch(0.86 0.01 80);
+  --ring: oklch(0.55 0.19 36);
+  --radius: 0.625rem;
+}
+
+.dark {
+  --background: oklch(0.16 0.012 270);
+  --foreground: oklch(0.96 0.006 80);
+  --card: oklch(0.2 0.014 270);
+  --card-foreground: oklch(0.96 0.006 80);
+  --primary: oklch(0.72 0.17 45);
+  --primary-foreground: oklch(0.18 0.03 40);
+  --secondary: oklch(0.25 0.02 270);
+  --secondary-foreground: oklch(0.96 0.006 80);
+  --muted: oklch(0.24 0.012 270);
+  --muted-foreground: oklch(0.72 0.015 270);
+  --accent: oklch(0.3 0.05 45);
+  --accent-foreground: oklch(0.92 0.06 60);
+  --destructive: oklch(0.66 0.19 25);
+  --border: oklch(0.3 0.014 270);
+  --input: oklch(0.36 0.016 270);
+  --ring: oklch(0.72 0.17 45);
+}

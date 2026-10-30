@@ -1,0 +1,85 @@
+{** WP FastY — catalog: filters sidebar (category, price, compatibility, rating), sort, item grid, pager. *}
+{include 'blocks/notice.latte'}
+{capture $head}
+	{capture $crumbs}
+		{capture $h}{$archive['title']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'font-heading text-3xl font-bold tracking-tight md:text-4xl', children: (string) $h, attrs: []}
+		{if !empty($archive['description'])}{capture $d}{$archive['description']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'max-w-2xl text-muted-foreground', children: (string) $d, attrs: []}{/if}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $crumbs, attrs: []}
+	{include 'blocks/search-bar.latte'}
+{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto flex flex-col gap-6 px-4 pb-8 pt-12 md:px-6', children: (string) $head, attrs: []}
+
+{capture $body}
+	{capture $side}
+		{capture $f}
+			{capture $ft}{icon('tag', 'size-4')}{$labels['filters']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'flex items-center gap-2 font-heading text-lg font-bold', children: (string) $ft, attrs: []}
+
+			{capture $grp}
+				{capture $lg}{$labels['category']}{/capture}{include 'text/Text.latte', tag: 'h3', class: 'text-xs font-semibold uppercase tracking-widest text-muted-foreground', children: (string) $lg, attrs: []}
+				{capture $list}
+					{capture $li}{capture $n}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: ($shop['current_cat'] === '' ? 'flex rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground no-underline' : 'flex rounded-lg px-3 py-2 text-sm text-foreground no-underline hover:bg-muted'), children: (string) $n, attrs: ['data-control' => 'chip']}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $li, attrs: []}
+					{foreach $shop['categories'] as $cat}
+						{capture $li}{capture $n}{$cat['name']}{/capture}{include 'link/Link.latte', href: $cat['url'] ?? '', class: ($shop['current_cat'] === $cat['slug'] ? 'flex rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground no-underline' : 'flex rounded-lg px-3 py-2 text-sm text-foreground no-underline hover:bg-muted'), children: (string) $n, attrs: ['data-control' => 'chip']}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $li, attrs: []}
+					{/foreach}
+				{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col', children: (string) $list, attrs: []}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $grp, attrs: []}
+
+			{capture $grp}
+				{capture $lg}{$labels['price']}{/capture}{include 'text/Text.latte', tag: 'legend', class: 'mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground', children: (string) $lg, attrs: []}
+				{foreach $shop['prices'] as $opt}
+					{capture $row}{include 'radio/Radio.latte', name: 'price', value: $opt['id'], checked: $shop['price'] === $opt['id'], class: 'size-4 accent-primary'}{$opt['label']}{/capture}{include 'label/Label.latte', class: 'flex cursor-pointer items-center gap-2 py-2 text-sm', children: (string) $row}
+				{/foreach}
+			{/capture}{include 'box/Box.latte', tag: 'fieldset', class: 'flex flex-col', children: (string) $grp, attrs: []}
+
+			{capture $grp}
+				{capture $lg}{$labels['compatibility']}{/capture}{include 'text/Text.latte', tag: 'legend', class: 'mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground', children: (string) $lg, attrs: []}
+				{foreach $shop['compat'] as $opt}
+					{capture $row}{include 'checkbox/Checkbox.latte', name: 'compat[]', value: $opt['id'], class: 'size-4 accent-primary'}{$opt['label']}{/capture}{include 'label/Label.latte', class: 'flex cursor-pointer items-center gap-2 py-2 text-sm', children: (string) $row}
+				{/foreach}
+			{/capture}{include 'box/Box.latte', tag: 'fieldset', class: 'flex flex-col', children: (string) $grp, attrs: []}
+
+			{capture $grp}
+				{capture $lg}{$labels['rating']}{/capture}{include 'text/Text.latte', tag: 'legend', class: 'mb-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground', children: (string) $lg, attrs: []}
+				{foreach [[0, 'rating_any'], [4, 'rating_4']] as [$val, $key]}
+					{capture $row}{include 'radio/Radio.latte', name: 'rating', value: (string) $val, checked: $shop['rating'] === $val, class: 'size-4 accent-primary'}{$labels[$key]}{/capture}{include 'label/Label.latte', class: 'flex cursor-pointer items-center gap-2 py-2 text-sm', children: (string) $row}
+				{/foreach}
+			{/capture}{include 'box/Box.latte', tag: 'fieldset', class: 'flex flex-col', children: (string) $grp, attrs: []}
+
+			{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'sort', 'value' => ($shop['sort'])]}
+			{capture $btns}
+				{capture $ap}{$labels['apply']}{/capture}{include 'button/Button.latte', type: 'submit', class: kit('button', [], 'flex-1 rounded-lg'), children: (string) $ap}
+				{capture $rs}{$labels['reset']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: kit('button', ['variant' => 'outline'], 'rounded-lg no-underline'), children: (string) $rs, attrs: []}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex gap-2', children: (string) $btns, attrs: []}
+		{/capture}{include 'form/Form.latte', action: '', class: 'flex flex-col gap-6 rounded-xl border border-border bg-card p-6', children: (string) $f, attrs: ['method' => 'get', 'aria-label' => ($labels['filters'])]}
+	{/capture}{include 'box/Box.latte', tag: 'aside', class: 'lg:col-span-1', children: (string) $side, attrs: []}
+
+	{capture $main}
+		{capture $bar}
+			{capture $cnt}{count($posts ?? [])} {$labels['results']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $cnt, attrs: []}
+			{capture $sf}
+				{capture $sl}{$labels['sort_by']}{/capture}{include 'label/Label.latte', htmlFor: 'market-sort', class: 'text-sm text-muted-foreground', children: (string) $sl}
+				{capture $opts}
+					{foreach $shop['sorts'] as $s}{capture $o}{$s['label']}{/capture}{include 'select/SelectOption.latte', value: $s['id'], selected: $shop['sort'] === $s['id'], children: (string) $o}{/foreach}
+				{/capture}{include 'select/Select.latte', id: 'market-sort', name: 'sort', class: 'h-10 rounded-lg border border-input bg-card px-4 text-sm text-foreground', children: (string) $opts}
+				{if $shop['price'] !== 'any'}{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'price', 'value' => ($shop['price'])]}{/if}
+				{if $shop['rating'] > 0}{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'rating', 'value' => ($shop['rating'])]}{/if}
+				{capture $noscript}{$labels['apply']}{/capture}{include 'button/Button.latte', type: 'submit', class: kit('button', ['variant' => 'outline', 'size' => 'sm'], 'rounded-lg'), children: (string) $noscript}
+			{/capture}{include 'form/Form.latte', action: '', class: 'flex items-center gap-2', children: (string) $sf, attrs: ['method' => 'get']}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-6 flex flex-wrap items-center justify-between gap-4', children: (string) $bar, attrs: []}
+		{if empty($posts)}
+			{capture $e}{$labels['no_products']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground', children: (string) $e, attrs: []}
+		{else}
+			{capture $grid}
+				{foreach $posts as $product}
+					{include 'blocks/product-card.latte', product: $product, shop: $shop, labels: $labels, headingTag: 'h2'}
+				{/foreach}
+			{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-6 sm:grid-cols-2 xl:grid-cols-3', children: (string) $grid, attrs: []}
+			{if !empty($pagination)}
+				{capture $pg}
+					{if $pagination['prev_url']}{capture $pv}{icon('arrow-left')}{$labels['previous']}{/capture}{include 'link/Link.latte', href: $pagination['prev_url'] ?? '', class: kit('button', ['variant' => 'outline'], 'rounded-lg no-underline'), children: (string) $pv, attrs: []}{/if}
+					{capture $cur}{$pagination['current']} / {$pagination['total']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $cur, attrs: []}
+					{if $pagination['next_url']}{capture $nx}{$labels['next']}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: $pagination['next_url'] ?? '', class: kit('button', ['variant' => 'outline'], 'rounded-lg no-underline'), children: (string) $nx, attrs: []}{/if}
+				{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-10 flex items-center justify-center gap-4', children: (string) $pg, attrs: ['aria-label' => ($labels['pagination'] ?? 'Pagination')]}
+			{/if}
+		{/if}
+	{/capture}{include 'box/Box.latte', tag: 'div', class: 'lg:col-span-3', children: (string) $main, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto grid gap-8 px-4 pb-16 md:px-6 lg:grid-cols-4', children: (string) $body, attrs: []}

@@ -51,6 +51,7 @@ $suites = [
     'press' => ['themes/latte-press/views', 'themes/latte/views'],
     'folio' => ['themes/latte-folio/views', 'themes/latte/views'],
     'shop' => ['themes/latte-shop/views', 'themes/latte/views'],
+    'market' => ['themes/wp-fasty-market/views', 'themes/latte/views'],
     'builder' => [],
     'blocks' => [],
 ];

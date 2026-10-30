@@ -1,0 +1,7 @@
+{# "Temporarily unavailable" (disable scenario: cart/orders module not active). Context: labels, shop.url #}
+{% set c_ui4 %}
+	{% set c_ui1 %}{{ icon('circle-alert', 'size-8') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-muted-foreground', 'children': c_ui1, 'attrs': []} only %}
+	{% set c_ui2 %}{{ labels['unavailable_title'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'text-xl font-semibold', 'children': c_ui2, 'attrs': []} only %}
+	{% set c_ui3 %}{{ labels['unavailable_text'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui3, 'attrs': []} only %}
+	{% set backLabel %}{{ icon('arrow-left') }}{{ labels['back_to_site'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': kit('button', [], 'gap-2'), 'children': backLabel, 'attrs': []} only %}
+{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col items-center gap-4 rounded-2xl border border-dashed border-border py-16 text-center', 'children': c_ui4, 'attrs': {'role': 'status'}} only %}

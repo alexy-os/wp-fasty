@@ -4,7 +4,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadData, root } from "./node";
 
-const data = { ...loadData(), fieldTypes: ["string", "text", "url", "email", "integer", "number", "money", "boolean", "date"] };
+const data = { ...loadData(), fieldTypes: ["string", "text", "url", "email", "integer", "number", "money", "boolean", "date", "semver", "file", "user", "license_tiers"] };
 const built = await Bun.build({ entrypoints: [join(import.meta.dir, "browser.ts")], target: "browser", minify: true });
 if (!built.success) throw new AggregateError(built.logs, "bundle failed");
 const js = (await built.outputs[0].text()).replace(/<\/script/gi, "<\\/script");

@@ -16,7 +16,7 @@
     },
     "archetype": {
       "description": "Child-theme code family the generator copies (PHP behaviour, view models, views). blank = parent preset only.",
-      "enum": ["press", "folio", "shop", "blank"]
+      "enum": ["press", "folio", "shop", "market", "blank"]
     },
     "theme": { "$ref": "#/$defs/theme" },
     "parent": { "$ref": "#/$defs/parent" },
@@ -214,8 +214,8 @@
       "required": ["type", "label"],
       "properties": {
         "type": {
-          "description": "1:1 with WPFasty\\Types\\Field::TYPES. money = integer minor units (cents); date = YYYY-MM-DD.",
-          "enum": ["string", "text", "url", "email", "integer", "number", "money", "boolean", "date"]
+          "description": "1:1 with WPFasty\\Types\\Field::TYPES. money = integer minor units (cents); date = YYYY-MM-DD. Digital goods (ModulY types ≥ 0.2; the theme fallback stores them as string/integer/text): semver, file (attachment id, keep private), user (user id), license_tiers (JSON [{tier,label,price}] in minor units).",
+          "enum": ["string", "text", "url", "email", "integer", "number", "money", "boolean", "date", "semver", "file", "user", "license_tiers"]
         },
         "label": { "type": "string", "minLength": 1 },
         "rest": { "type": "boolean", "default": true, "description": "Expose in the REST API (typed)." },
@@ -324,7 +324,9 @@
               "properties": {
                 "price": { "type": "string", "description": "money field" },
                 "sale": { "type": "string", "description": "money field" },
-                "stock": { "type": "string", "description": "integer field; empty = unlimited" }
+                "stock": { "type": "string", "description": "integer field; empty = unlimited" },
+                "license": { "type": "string", "description": "license_tiers field: the cart sells the product under one of its tiers (ModulY cart ≥ 0.2)" },
+                "digital": { "type": "boolean", "default": false, "description": "Downloadable product: no shipping, no postal address at checkout." }
               }
             },
             "orderable": { "type": "object", "additionalProperties": false, "properties": {} }

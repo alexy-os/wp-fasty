@@ -1,0 +1,7 @@
+{** "Temporarily unavailable" (disable scenario: cart/orders module not active). Context: labels, shop.url *}
+{capture $c_ui4}
+	{capture $c_ui1}{icon('circle-alert', 'size-8')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-muted-foreground', children: (string) $c_ui1, attrs: []}
+	{capture $c_ui2}{$labels['unavailable_title']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-xl font-semibold', children: (string) $c_ui2, attrs: []}
+	{capture $c_ui3}{$labels['unavailable_text']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_ui3, attrs: []}
+	{capture $backLabel}{icon('arrow-left')}{$labels['back_to_site']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: kit('button', [], 'gap-2'), children: (string) $backLabel, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col items-center gap-4 rounded-2xl border border-dashed border-border py-16 text-center', children: (string) $c_ui4, attrs: ['role' => 'status']}

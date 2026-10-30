@@ -1,0 +1,9 @@
+{# WP FastY — brand lockup: signal mark + wordmark (logo image wins when set). #}
+{% set brand %}
+	{% if not ((site['logo']['url']) is empty) %}
+		{% include 'image/Image.html.twig' with {'src': site['logo']['url'], 'alt': site['logo']['alt'] ?? site['title'], 'class': kit('image', [], 'h-8 w-auto'), 'loading': 'eager', 'decoding': 'async'} only %}
+	{% else %}
+		{% set mark %}{{ icon('sparkles', 'size-4') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground', 'children': mark, 'attrs': {'aria-hidden': 'true'}} only %}
+		{% set word %}{{ site['title'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'font-heading text-lg font-bold tracking-tight', 'children': word, 'attrs': []} only %}
+	{% endif %}
+{% endset %}{% include 'link/Link.html.twig' with {'href': site['url'] ?? '', 'class': 'inline-flex items-center gap-2 text-foreground no-underline hover:text-primary', 'children': brand, 'attrs': []} only %}

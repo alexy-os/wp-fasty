@@ -67,6 +67,9 @@ function field(id: string, f: J): J {
     case "money": out.type = "number"; out.rules = [{ name: PROFILE.rule.money }]; break;
     case "boolean": out.type = "boolean"; break;
     case "date": out.type = "string"; out.ui_hint = "date"; break; // YYYY-MM-DD, not an RFC 3339 instant
+    case "semver": out.type = "string"; break;
+    case "file": case "user": out.type = "number"; out.rules = [{ name: PROFILE.rule.integer }]; break;
+    case "license_tiers": out.type = "textarea"; break; // JSON list of {tier, label, price} (minor units)
     default: out.type = "string";
   }
   if (f.options) { out.type = "select"; out.options = f.options.map((o: J) => ({ value: o.value, label: o.label })); }
@@ -141,7 +144,7 @@ export function codexDelivery(m: J, cm: J): J {
     const meta = Object.entries<J>(pt.fields ?? {}).filter(([, f]) => f.rest !== false);
     if (meta.length) k.meta = Object.fromEntries(meta.map(([id, f]) => [id, f.metaKey ?? `_${prefix}_${id}`]));
     const p = pt.capabilities?.purchasable;
-    if (p) k.purchasable = { price: p.price, ...(p.sale ? { sale: p.sale } : {}), ...(p.stock ? { stock: p.stock } : {}) };
+    if (p) k.purchasable = { price: p.price, ...(p.sale ? { sale: p.sale } : {}), ...(p.stock ? { stock: p.stock } : {}), ...(p.license ? { license: p.license } : {}) };
     kinds[pt.name] = k;
   }
   taxonomies.sort((a, b) => (a.id < b.id ? -1 : 1));

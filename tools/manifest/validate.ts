@@ -81,6 +81,7 @@ function semantic(m: J, err: (msg: string) => void): void {
       need("purchasable", "price", "money", true);
       need("purchasable", "sale", "money", false);
       need("purchasable", "stock", "integer", false);
+      need("purchasable", "license", "license_tiers", false);
       if (!m.settings?.currency) err(`${at}: purchasable needs settings.currency (money fields are minor units of it)`);
     }
     for (const c of pt.adminColumns ?? []) if (!fields[c.field]) err(`${at}: adminColumns → unknown field "${c.field}"`);
@@ -175,7 +176,7 @@ function fromPhp(d: J): J {
       adminColumn: x.show_admin_column ?? false, slug: x.rewrite?.slug,
     }])),
     capabilities: Object.keys(caps).length ? Object.fromEntries(Object.entries<J>(caps).map(([k, c]) => [k,
-      k === "purchasable" ? strip({ price: c.price_field, sale: c.sale_field, stock: c.stock_field }) : {}])) : undefined,
+      k === "purchasable" ? strip({ price: c.price_field, sale: c.sale_field, stock: c.stock_field, license: c.license_field, digital: c.digital }) : {}])) : undefined,
     archive: d.archive ? strip({
       perPage: d.archive.per_page,
       orderBy: d.archive.orderby ? Object.entries<string>(d.archive.orderby).map(([f, dir]) =>

@@ -1,0 +1,20 @@
+{
+  "$comment": "Archetype package: WP FastY digital-goods marketplace (ready-made sites, themes, plugins). Consumed by `bun run theme:generate`.",
+  "id": "market",
+  "sourceTextDomain": "wpfasty-market",
+  "sourceNamespace": "WpfastyMarket",
+  "summary": "digital-goods marketplace child theme of Latte (ready-made WordPress sites, themes and plugins)",
+  "palette": "WP FastY signal palette: warm paper, graphite ink, signal orange",
+  "copyrightYear": 2026,
+  "views": "views",
+  "inc": "inc",
+  "static": "static",
+  "templates": {
+    "functions.php": "templates/functions.php.tpl",
+    "readme.txt": "templates/readme.txt.tpl",
+    "style.body": "templates/style.body.css"
+  },
+  "requiresTypes": ["product"],
+  "demo": "tools/demo/market.php",
+  "landings": []
+}

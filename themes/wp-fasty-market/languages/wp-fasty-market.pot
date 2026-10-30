@@ -1,0 +1,719 @@
+# Copyright (C) 2026 WP FastY
+# This file is distributed under the GNU Affero General Public License v3 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP FastY Market 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/wp-fasty-market\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-30T17:16:29+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: wp-fasty-market\n"
+
+#. Theme Name of the theme
+#: style.css
+msgid "WP FastY Market"
+msgstr ""
+
+#. Theme URI of the theme
+#. Author URI of the theme
+#: style.css
+msgid "https://wpfasty.ru"
+msgstr ""
+
+#. Description of the theme
+#: style.css
+msgid "WP FastY — marketplace of ready-made WordPress sites, themes and plugins: catalog with filters, item pages with live preview, licenses, changelog and verified reviews, author pages. Presentation only: cart, checkout, orders, downloads and consents come from ModulY modules. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons)."
+msgstr ""
+
+#. Author of the theme
+#: style.css
+msgid "WP FastY"
+msgstr ""
+
+#: functions.php:36
+msgid "This theme needs the \"WP FastY Types\" plugin (plugins/wpfasty-types) to register its content types."
+msgstr ""
+
+#: inc/front.php:161
+msgid "Best sellers"
+msgstr ""
+
+#: inc/front.php:162
+msgid "Newest"
+msgstr ""
+
+#: inc/front.php:163
+msgid "Top rated"
+msgstr ""
+
+#: inc/front.php:164
+msgid "Price: low to high"
+msgstr ""
+
+#: inc/front.php:165
+msgid "Price: high to low"
+msgstr ""
+
+#: inc/front.php:168
+msgid "Any price"
+msgstr ""
+
+#: inc/front.php:169
+msgid "Up to 5,000"
+msgstr ""
+
+#: inc/front.php:170
+msgid "5,000 – 10,000"
+msgstr ""
+
+#: inc/front.php:171
+msgid "10,000 and more"
+msgstr ""
+
+#: inc/front.php:228
+msgid "Full name"
+msgstr ""
+
+#: inc/front.php:229
+msgid "Email for download links"
+msgstr ""
+
+#: inc/front.php:230
+msgid "Phone"
+msgstr ""
+
+#: inc/front.php:263
+msgid "Bank card"
+msgstr ""
+
+#: inc/front.php:264
+msgid "Faster Payments System (SBP)"
+msgstr ""
+
+#: inc/front.php:265
+msgid "Invoice for companies"
+msgstr ""
+
+#: inc/front.php:371
+msgid "Add to cart"
+msgstr ""
+
+#: inc/front.php:372
+msgid "Buy now"
+msgstr ""
+
+#: inc/front.php:373
+msgid "Cart"
+msgstr ""
+
+#: inc/front.php:374
+msgid "Checkout"
+msgstr ""
+
+#: inc/front.php:375
+msgid "Subtotal"
+msgstr ""
+
+#: inc/front.php:376
+msgid "Total"
+msgstr ""
+
+#: inc/front.php:377
+msgid "Quantity"
+msgstr ""
+
+#: inc/front.php:378
+msgid "Remove"
+msgstr ""
+
+#: inc/front.php:379
+msgid "Update cart"
+msgstr ""
+
+#: inc/front.php:380
+#: inc/front.php:546
+msgid "Your cart is empty."
+msgstr ""
+
+#: inc/front.php:381
+msgid "Continue shopping"
+msgstr ""
+
+#: inc/front.php:382
+msgid "Pay and download"
+msgstr ""
+
+#: inc/front.php:383
+msgid "Unavailable"
+msgstr ""
+
+#: inc/front.php:384
+msgid "Sale"
+msgstr ""
+
+#: inc/front.php:385
+msgid "All items"
+msgstr ""
+
+#: inc/front.php:386
+msgid "Thank you! Download links have been sent to your email."
+msgstr ""
+
+#: inc/front.php:387
+msgid "Order"
+msgstr ""
+
+#: inc/front.php:388
+msgid "Payment method"
+msgstr ""
+
+#: inc/front.php:389
+msgid "Demo store — no real payment is taken."
+msgstr ""
+
+#: inc/front.php:390
+msgid "Nothing found. Try another filter."
+msgstr ""
+
+#: inc/front.php:391
+msgid "Breadcrumb"
+msgstr ""
+
+#: inc/front.php:392
+msgid "Marketplace of WordPress products"
+msgstr ""
+
+#: inc/front.php:393
+msgid "Ready-made WordPress sites, themes and plugins that launch fast"
+msgstr ""
+
+#: inc/front.php:394
+msgid "Reviewed by humans, built on clean code, updated for the latest PHP and WordPress."
+msgstr ""
+
+#: inc/front.php:398
+msgid "Search sites, themes and plugins"
+msgstr ""
+
+#: inc/front.php:399
+msgid "Search"
+msgstr ""
+
+#: inc/front.php:400
+msgid "Popular:"
+msgstr ""
+
+#: inc/front.php:401
+msgid "Ready-made sites"
+msgstr ""
+
+#: inc/front.php:402
+msgid "Full sites with content, ready to launch in a day"
+msgstr ""
+
+#: inc/front.php:403
+msgid "Themes"
+msgstr ""
+
+#: inc/front.php:404
+msgid "Design systems for blogs, shops and portfolios"
+msgstr ""
+
+#: inc/front.php:405
+msgid "Plugins"
+msgstr ""
+
+#: inc/front.php:406
+msgid "SEO, forms, speed and payments without bloat"
+msgstr ""
+
+#: inc/front.php:407
+msgid "items"
+msgstr ""
+
+#: inc/front.php:408
+msgid "Popular this week"
+msgstr ""
+
+#: inc/front.php:409
+msgid "New arrivals"
+msgstr ""
+
+#: inc/front.php:410
+msgid "View all"
+msgstr ""
+
+#: inc/front.php:411
+msgid "Top authors"
+msgstr ""
+
+#: inc/front.php:412
+msgid "Independent studios and developers who sell on WP FastY."
+msgstr ""
+
+#: inc/front.php:413
+msgid "sales"
+msgstr ""
+
+#: inc/front.php:414
+msgid "Author since"
+msgstr ""
+
+#: inc/front.php:415
+msgid "Why buy on WP FastY"
+msgstr ""
+
+#: inc/front.php:416
+msgid "Every item is reviewed by hand"
+msgstr ""
+
+#: inc/front.php:417
+msgid "Code, security and performance are checked before release."
+msgstr ""
+
+#: inc/front.php:418
+msgid "Lifetime updates"
+msgstr ""
+
+#: inc/front.php:419
+msgid "Download every new version from your account."
+msgstr ""
+
+#: inc/front.php:420
+msgid "6 months of author support"
+msgstr ""
+
+#: inc/front.php:421
+msgid "Extend support at any time from the item page."
+msgstr ""
+
+#: inc/front.php:422
+msgid "Secure payment in rubles"
+msgstr ""
+
+#: inc/front.php:423
+msgid "Cards, SBP and invoices for companies. Receipts under 54-FZ."
+msgstr ""
+
+#: inc/front.php:424
+msgid "Filters"
+msgstr ""
+
+#: inc/front.php:425
+msgid "Category"
+msgstr ""
+
+#: inc/front.php:426
+#: types/product.php:47
+#: types/product.php:98
+msgid "Price"
+msgstr ""
+
+#: inc/front.php:427
+msgid "Compatibility"
+msgstr ""
+
+#: inc/front.php:428
+#: inc/front.php:515
+msgid "Rating"
+msgstr ""
+
+#: inc/front.php:429
+msgid "4 stars and up"
+msgstr ""
+
+#: inc/front.php:430
+msgid "Any rating"
+msgstr ""
+
+#: inc/front.php:431
+msgid "Sort by"
+msgstr ""
+
+#: inc/front.php:432
+msgid "Apply"
+msgstr ""
+
+#: inc/front.php:433
+msgid "Reset"
+msgstr ""
+
+#: inc/front.php:434
+msgid "results"
+msgstr ""
+
+#: inc/front.php:435
+msgid "Live preview"
+msgstr ""
+
+#: inc/front.php:436
+#: inc/front.php:519
+msgid "License"
+msgstr ""
+
+#: inc/front.php:437
+msgid "Regular license"
+msgstr ""
+
+#: inc/front.php:438
+msgid "One end product, end users are not charged."
+msgstr ""
+
+#: inc/front.php:439
+msgid "Extended license"
+msgstr ""
+
+#: inc/front.php:440
+msgid "One end product that end users can be charged for."
+msgstr ""
+
+#: inc/front.php:441
+msgid "Included: future updates and 6 months of support."
+msgstr ""
+
+#: inc/front.php:442
+#: types/product.php:57
+msgid "Version"
+msgstr ""
+
+#: inc/front.php:443
+msgid "Last update"
+msgstr ""
+
+#: inc/front.php:444
+msgid "WordPress"
+msgstr ""
+
+#: inc/front.php:445
+msgid "PHP"
+msgstr ""
+
+#: inc/front.php:446
+msgid "Changelog"
+msgstr ""
+
+#: inc/front.php:447
+msgid "Description"
+msgstr ""
+
+#: inc/front.php:448
+msgid "Support"
+msgstr ""
+
+#: inc/front.php:449
+msgid "The author replies within one business day. Bugs and feature questions are covered."
+msgstr ""
+
+#: inc/front.php:453
+#: types/product.php:52
+msgid "Reviews"
+msgstr ""
+
+#: inc/front.php:454
+msgid "by"
+msgstr ""
+
+#: inc/front.php:455
+msgid "Items by this author"
+msgstr ""
+
+#: inc/front.php:456
+msgid "Screenshots"
+msgstr ""
+
+#: inc/front.php:457
+msgid "Your details"
+msgstr ""
+
+#: inc/front.php:458
+msgid "Digital delivery: download links arrive by email right after payment."
+msgstr ""
+
+#: inc/front.php:462
+msgid "I accept the public offer and license agreement"
+msgstr ""
+
+#: inc/front.php:463
+msgid "I consent to the processing of my personal data"
+msgstr ""
+
+#: inc/front.php:464
+msgid "Required"
+msgstr ""
+
+#: inc/front.php:465
+msgid "Secure checkout"
+msgstr ""
+
+#: inc/front.php:466
+msgid "Refunds follow the refund policy for digital goods."
+msgstr ""
+
+#: inc/front.php:467
+msgid "WP FastY is a marketplace of ready-made WordPress sites, themes and plugins."
+msgstr ""
+
+#: inc/front.php:471
+msgid "Marketplace"
+msgstr ""
+
+#: inc/front.php:472
+msgid "Documents"
+msgstr ""
+
+#: inc/front.php:473
+msgid "Seller"
+msgstr ""
+
+#: inc/front.php:474
+msgid "OGRN"
+msgstr ""
+
+#: inc/front.php:475
+msgid "INN"
+msgstr ""
+
+#: inc/front.php:476
+msgid "Address"
+msgstr ""
+
+#: inc/front.php:477
+msgid "Public offer and license agreement"
+msgstr ""
+
+#: inc/front.php:478
+msgid "Privacy policy"
+msgstr ""
+
+#: inc/front.php:479
+msgid "Consent to personal data processing"
+msgstr ""
+
+#: inc/front.php:480
+msgid "Consent to newsletters"
+msgstr ""
+
+#: inc/front.php:481
+msgid "Cookie policy"
+msgstr ""
+
+#: inc/front.php:482
+msgid "Refund policy"
+msgstr ""
+
+#: inc/front.php:483
+msgid "Seller details"
+msgstr ""
+
+#: inc/front.php:484
+msgid "I want to receive news and offers by email (optional)"
+msgstr ""
+
+#: inc/front.php:485
+msgid "We use necessary cookies to run the store and, with your consent, analytics cookies."
+msgstr ""
+
+#: inc/front.php:489
+msgid "Accept all"
+msgstr ""
+
+#: inc/front.php:490
+msgid "Necessary only"
+msgstr ""
+
+#: inc/front.php:491
+msgid "Cookie settings"
+msgstr ""
+
+#: inc/front.php:492
+msgid "All rights reserved."
+msgstr ""
+
+#: inc/front.php:493
+msgid "Previous"
+msgstr ""
+
+#: inc/front.php:494
+msgid "Next"
+msgstr ""
+
+#: inc/front.php:495
+msgid "Pagination"
+msgstr ""
+
+#: inc/front.php:496
+msgid "Temporarily unavailable"
+msgstr ""
+
+#: inc/front.php:497
+msgid "This feature is temporarily unavailable. Please try again later."
+msgstr ""
+
+#: inc/front.php:501
+msgid "Back to site"
+msgstr ""
+
+#: inc/front.php:502
+msgid "Downloads"
+msgstr ""
+
+#: inc/front.php:503
+msgid "Download"
+msgstr ""
+
+#: inc/front.php:504
+msgid "Download links appear here and in your email as soon as the payment is confirmed."
+msgstr ""
+
+#: inc/front.php:508
+msgid "Link valid until"
+msgstr ""
+
+#: inc/front.php:509
+msgid "downloads left"
+msgstr ""
+
+#: inc/front.php:510
+msgid "Verified buyer"
+msgstr ""
+
+#: inc/front.php:511
+msgid "Write a review"
+msgstr ""
+
+#: inc/front.php:512
+msgid "Only buyers can review: use the email of your paid order."
+msgstr ""
+
+#: inc/front.php:513
+msgid "Name"
+msgstr ""
+
+#: inc/front.php:514
+msgid "Order email"
+msgstr ""
+
+#: inc/front.php:516
+msgid "Your review"
+msgstr ""
+
+#: inc/front.php:517
+msgid "Send review"
+msgstr ""
+
+#: inc/front.php:518
+msgid "No reviews yet."
+msgstr ""
+
+#: inc/front.php:530
+msgid "Added to your cart."
+msgstr ""
+
+#: inc/front.php:535
+msgid "Item removed."
+msgstr ""
+
+#: inc/front.php:537
+msgid "Cart updated."
+msgstr ""
+
+#: inc/front.php:541
+msgid "Sorry, this item is unavailable."
+msgstr ""
+
+#: types/product.php:21
+msgid "Products"
+msgstr ""
+
+#: types/product.php:22
+msgid "Product"
+msgstr ""
+
+#: types/product.php:23
+msgid "Add product"
+msgstr ""
+
+#: types/product.php:24
+msgid "Edit product"
+msgstr ""
+
+#: types/product.php:36
+msgid "Product categories"
+msgstr ""
+
+#: types/product.php:37
+msgid "Product category"
+msgstr ""
+
+#: types/product.php:48
+msgid "Sale price"
+msgstr ""
+
+#: types/product.php:49
+msgid "SKU"
+msgstr ""
+
+#: types/product.php:50
+msgid "Stock (empty = unlimited)"
+msgstr ""
+
+#: types/product.php:51
+msgid "Rating (0-5)"
+msgstr ""
+
+#: types/product.php:55
+msgid "Badge (empty = sale when discounted)"
+msgstr ""
+
+#: types/product.php:58
+msgid "Requires WordPress"
+msgstr ""
+
+#: types/product.php:59
+msgid "Requires PHP"
+msgstr ""
+
+#: types/product.php:62
+msgid "Changelog (version|date|notes per line)"
+msgstr ""
+
+#: types/product.php:64
+msgid "Live preview URL"
+msgstr ""
+
+#: types/product.php:65
+msgid "Support (months)"
+msgstr ""
+
+#: types/product.php:66
+msgid "Sales"
+msgstr ""
+
+#: types/product.php:69
+msgid "Licenses (tier|Label|price per line)"
+msgstr ""
+
+#: types/product.php:73
+msgid "Download file (attachment ID)"
+msgstr ""
+
+#: types/product.php:77
+msgid "Author (user ID)"
+msgstr ""
+
+#: types/product.php:79
+msgid "Product data"
+msgstr ""
+
+#: types/product.php:93
+msgid "Catalog"
+msgstr ""
+
+#: types/product.php:102
+msgid "Stock"
+msgstr ""

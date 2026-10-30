@@ -1,0 +1,44 @@
+{# WP FastY — footer: brand, marketplace links, legal documents, seller details. #}
+{% set cols %}
+	{% set about %}
+		{% include 'layout/parts/brand.html.twig' %}
+		{% set t %}{{ labels['footer_about'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'max-w-xs text-sm text-muted-foreground', 'children': t, 'attrs': []} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-4', 'children': about, 'attrs': []} only %}
+
+	{% set market %}
+		{% set h %}{{ labels['footer_market'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'text-sm font-semibold', 'children': h, 'attrs': []} only %}
+		{% set list %}
+			{% for cat in shop['categories'] %}
+				{% set l %}{% set n %}{{ cat['name'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': cat['url'] ?? '', 'class': 'text-sm text-muted-foreground no-underline hover:text-foreground', 'children': n, 'attrs': []} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'children': l, 'attrs': []} only %}
+			{% endfor %}
+			{% set l %}{% set n %}{{ labels['all_products'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': 'text-sm text-muted-foreground no-underline hover:text-foreground', 'children': n, 'attrs': []} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'children': l, 'attrs': []} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col gap-2', 'children': list, 'attrs': []} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'flex flex-col gap-4', 'children': market, 'attrs': {'aria-label': (labels['footer_market'])}} only %}
+
+	{% set docs %}
+		{% set h %}{{ labels['footer_docs'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'text-sm font-semibold', 'children': h, 'attrs': []} only %}
+		{% set list %}
+			{% for doc in shop['legal'] %}
+				{% set l %}{% set n %}{{ labels['legal_' ~ doc['slug']] }}{% endset %}{% include 'link/Link.html.twig' with {'href': doc['url'] ?? '', 'class': 'text-sm text-muted-foreground no-underline hover:text-foreground', 'children': n, 'attrs': []} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'children': l, 'attrs': []} only %}
+			{% endfor %}
+			{% if not ((cookie_consent['enabled']) is empty) %}{% set l %}{% set n %}{{ labels['cookie_settings'] }}{% endset %}{% include 'button/Button.html.twig' with {'type': 'button', 'class': 'cursor-pointer text-left text-sm text-muted-foreground hover:text-foreground', 'children': n, 'attrs': {'data-cookie-open': 'true'}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'children': l, 'attrs': []} only %}{% endif %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col gap-2', 'children': list, 'attrs': []} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'flex flex-col gap-4', 'children': docs, 'attrs': {'aria-label': (labels['footer_docs'])}} only %}
+
+	{% set seller %}
+		{% set h %}{{ labels['footer_company'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'text-sm font-semibold', 'children': h, 'attrs': []} only %}
+		{% set req %}
+			{% set r %}{{ company['name'] }} ({{ company['name_en'] }}){% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'font-medium text-foreground', 'children': r, 'attrs': []} only %}
+			{% set r %}{{ labels['ogrn'] }} {{ company['ogrn'] }} · {{ labels['inn'] }} {{ company['inn'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': r, 'attrs': []} only %}
+			{% set r %}{{ labels['address'] }}: {{ company['address'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': r, 'attrs': []} only %}
+			{% set r %}{{ icon('mail', 'size-4') }}{{ company['email'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': 'mailto:' ~ company['email'], 'class': 'inline-flex items-center gap-2 text-muted-foreground no-underline hover:text-foreground', 'children': r, 'attrs': []} only %}
+		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2 text-sm text-muted-foreground', 'children': req, 'attrs': []} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-4', 'children': seller, 'attrs': []} only %}
+{% endset %}
+{% set inner %}
+	{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-8 sm:grid-cols-2 lg:grid-cols-4', 'children': cols, 'attrs': []} only %}
+	{% set copy %}&copy; {{ site['year'] }} {{ site['title'] }} · {{ company['name'] }}. {{ labels['rights'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'border-t border-border pt-6 text-xs text-muted-foreground', 'children': copy, 'attrs': []} only %}
+{% endset %}
+{% set wrap %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'container mx-auto flex flex-col gap-8 px-4 md:px-6', 'children': inner, 'attrs': []} only %}{% endset %}
+{% include 'box/Box.html.twig' with {'tag': 'footer', 'class': 'site-footer mt-16 border-t border-border bg-card py-12', 'children': wrap, 'attrs': []} only %}
+{% if not ((cookie_consent['enabled']) is empty) %}{% include 'blocks/cookie-banner.html.twig' with {'legalUrls': ((shop['legal'])|reduce((c_acc, c_row) => c_acc|merge({(c_row['slug']): c_row['url']}), {}))} %}{% endif %}

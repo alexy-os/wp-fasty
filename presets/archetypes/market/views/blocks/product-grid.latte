@@ -1,0 +1,14 @@
+{** WP FastY — titled row of item cards. Params: $title, $products, $shop, $labels *}
+{if !empty($products)}
+	{capture $sec}
+		{capture $head}
+			{capture $h}{$title}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'font-heading text-2xl font-bold tracking-tight md:text-3xl', children: (string) $h, attrs: []}
+			{capture $all}{$labels['view_all']}{icon('arrow-right', 'size-4')}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'inline-flex items-center gap-2 text-sm font-semibold text-primary no-underline hover:underline', children: (string) $all, attrs: []}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-6 flex items-end justify-between gap-4', children: (string) $head, attrs: []}
+		{capture $grid}
+			{foreach $products as $product}
+				{include 'blocks/product-card.latte', product: $product, shop: $shop, labels: $labels}
+			{/foreach}
+		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-6 sm:grid-cols-2 lg:grid-cols-4', children: (string) $grid, attrs: []}
+	{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 py-12 md:px-6', children: (string) $sec, attrs: []}
+{/if}
