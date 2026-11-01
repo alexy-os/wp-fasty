@@ -50,8 +50,8 @@ export function styleCss(m: J, body: string): string {
     ["Tested up to", v.testedUpTo],
     ["Requires PHP", v.requires.php],
     ["Template", parentSlug(m)],
-    ["License", "GNU Affero General Public License v3 or later"],
-    ["License URI", "https://www.gnu.org/licenses/agpl-3.0.html"],
+    ["License", "GNU General Public License v2 or later"],
+    ["License URI", "https://www.gnu.org/licenses/gpl-2.0.html"],
     ["Text Domain", t.textDomain],
     ["Tags", (t.tags ?? []).join(", ")],
   ];

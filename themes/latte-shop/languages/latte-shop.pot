@@ -1,5 +1,5 @@
 # Copyright (C) 2026 AlexY OS
-# This file is distributed under the GNU Affero General Public License v3 or later.
+# This file is distributed under the GNU General Public License v2 or later.
 msgid ""
 msgstr ""
 "Project-Id-Version: Latte Shop 1.0.0\n"

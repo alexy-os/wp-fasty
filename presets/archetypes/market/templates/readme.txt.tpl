@@ -4,8 +4,8 @@ Requires at least: {{requires.platform}}
 Tested up to: {{testedUpTo}}
 Requires PHP: {{requires.php}}
 Stable tag: {{theme.version}}
-License: AGPLv3 or later
-License URI: https://www.gnu.org/licenses/agpl-3.0.html
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Marketplace child theme of Latte for selling ready-made WordPress sites, themes and plugins.
 
@@ -20,17 +20,17 @@ Child theme of Latte (parent theme required). Product post type fields are decla
 == Copyright ==
 
 {{theme.name}} WordPress Theme, Copyright {{copyrightYear}} AlexY OS
-{{theme.name}} is distributed under the terms of the GNU AGPL v3 or later.
+{{theme.name}} is distributed under the terms of the GNU GPL v2 or later.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
+GNU General Public License for more details.
 
 == Resources ==
 
 * Lucide icons (via the parent theme) — ISC License — https://lucide.dev/license
-* All other code and CSS — AGPLv3 or later — AlexY OS
+* All other code and CSS — GPLv2 or later — AlexY OS
 * No images are bundled with this theme.
 
 == Changelog ==

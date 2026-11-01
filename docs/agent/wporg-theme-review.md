@@ -10,7 +10,7 @@ Verified 2026-10-16 (UTC+3).
 - Accessibility-ready requirements: https://make.wordpress.org/themes/handbook/review/accessibility/ — **UNVERIFIED** (not opened in this pass)
 
 ## Required (summary of the Required page)
-- **License:** GPL-compatible for *everything* in the zip (code, images, fonts); "GPLv2 or later" recommended.
+- **License:** GPL-compatible for *everything* in the zip (code, images, fonts); "GPLv2 or later" recommended. WP FastY ships everything (themes, plugins, repo) under GPL-2.0-or-later (owner decision 01.11.2026).
   Copyright for the theme + license/source for every bundled resource, listed in one file (readme.txt `== Resources ==`).
 - **Privacy:** no tracking unless opt-in.
 - **Accessibility:** skip link (first focusable, visible on focus, moves focus to main); visible keyboard focus on menus, form fields, buttons, links; everything keyboard-reachable.

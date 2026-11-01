@@ -1,7 +1,7 @@
 {
   "name": "alexy-os/wp-fasty",
   "description": "WP FastY monorepo — PHPUnit + PHPCS tooling",
-  "license": "AGPL-3.0-or-later",
+  "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=8.2"
   },

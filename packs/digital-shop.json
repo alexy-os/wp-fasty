@@ -3,7 +3,7 @@
   "id": "digital-shop",
   "name": "WP FastY — digital shop",
   "version": "1.0.0",
-  "license": "AGPL-3.0-or-later",
+  "license": "GPL-2.0-or-later",
   "locale": "ru_RU",
   "themes": [
     { "slug": "latte", "role": "parent", "path": "themes/latte" },

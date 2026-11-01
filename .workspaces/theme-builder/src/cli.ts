@@ -148,8 +148,8 @@ Requires at least: 6.4
 Tested up to: 6.7
 Requires PHP: 8.2
 Template: ${parent}
-License: GNU Affero General Public License v3 or later
-License URI: https://www.gnu.org/licenses/agpl-3.0.html
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: ${preset.textDomain}
 Tags: blog, custom-menu, featured-images
 */
@@ -332,7 +332,7 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
     const credits = [
       "* Twig template engine (bundled in vendor/twig/twig) — BSD-3-Clause — https://twig.symfony.com/",
       "* Symfony polyfills / deprecation-contracts (bundled in vendor/symfony, Twig dependencies) — MIT — https://symfony.com/",
-      "* UI8Kit 3 Twig primitives (twig/ui8kit) — AGPL-3.0-or-later — https://github.com/alexy-os/wp-fasty",
+      "* UI8Kit 3 Twig primitives (twig/ui8kit) — GPL-2.0-or-later — https://github.com/alexy-os/wp-fasty",
     ].join("\n");
     if (!txt.includes("== Resources ==")) throw new Error("readme.txt has no == Resources == section");
     txt = txt.replace("== Resources ==\n", `== Resources ==\n\n${credits}\n`).replace(/\n\n\n/g, "\n\n");
@@ -349,7 +349,7 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
     name: `alexy-os/${slug}`,
     description: `${engine === "twig" ? "Twig" : preset.name} — WP FastY theme with vendored UI8Kit ${engine === "twig" ? "Twig" : "Latte"} primitives`,
     type: "wordpress-theme",
-    license: "AGPL-3.0-or-later",
+    license: "GPL-2.0-or-later",
     require,
     ...(repositories.length ? { repositories } : {}),
     autoload: {

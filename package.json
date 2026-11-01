@@ -3,7 +3,7 @@
   "description": "WordPress theme generator — Latte + UI8Kit primitives, layout/block/style presets",
   "version": "0.3.0",
   "private": true,
-  "license": "AGPL-3.0-or-later",
+  "license": "GPL-2.0-or-later",
   "author": "alexy-os",
   "homepage": "https://github.com/alexy-os/wp-fasty",
   "repository": {

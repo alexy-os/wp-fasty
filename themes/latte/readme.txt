@@ -4,8 +4,8 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.2
 Stable tag: 1.1.0
-License: AGPLv3 or later
-License URI: https://www.gnu.org/licenses/agpl-3.0.html
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: blog, custom-menu, featured-images, custom-logo, one-column, two-columns, translation-ready
 
 Clean classic WordPress theme powered by Latte templates and UI8Kit primitives.
@@ -65,24 +65,24 @@ Not included in this version.
 == Copyright ==
 
 Latte WordPress Theme, Copyright 2024-2026 AlexY OS
-Latte is distributed under the terms of the GNU AGPL v3 or later.
+Latte is distributed under the terms of the GNU GPL v2 or later.
 
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
 (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
+GNU General Public License for more details.
 
 == Resources ==
 
 * Latte template engine — https://latte.nette.org/ — New BSD / GPL dual (see vendor)
-* UI8Kit Latte primitives (bundled) — AGPL-3.0-or-later — https://github.com/alexy-os/wp-fasty
-* ui8kit.js (theme assets) — AGPL-3.0-or-later — theme author
+* UI8Kit Latte primitives (bundled) — GPL-2.0-or-later — https://github.com/alexy-os/wp-fasty
+* ui8kit.js (theme assets) — GPL-2.0-or-later — theme author
 * Design tokens / CSS utilities — MIT — theme author
-* screenshot.png — theme author, AGPLv3+
+* screenshot.png — theme author, GPLv2+
 * Lucide icons (assets/icons) — ISC License — https://lucide.dev/license
 * Tailwind CSS build output (assets/css/theme.css, theme.min.css) — MIT — https://tailwindcss.com
