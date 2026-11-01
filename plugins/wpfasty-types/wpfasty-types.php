@@ -6,9 +6,12 @@
  * Requires at least: 6.4
  * Requires PHP:      8.2
  * Author:            alexy-os
- * License:           GPL-2.0-or-later
- * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * License:           AGPL-3.0-or-later
+ * License URI:       https://www.gnu.org/licenses/agpl-3.0.html
  * Text Domain:       wpfasty-types
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ * Copyright (C) 2026 alexy-os
  *
  * @package WPFasty_Types
  */

@@ -116,4 +116,6 @@ Parity: `bun run parity` (Latte ↔ Twig, DOM + class token sets, `tools/parity/
 
 ## License
 
-MIT
+Copyright (C) 2025–2026 alexy-os.
+
+GNU Affero General Public License v3.0 or later (`AGPL-3.0-or-later`) — the whole repository, including the themes and the `wpfasty-builder` / `wpfasty-types` plugins. See [LICENSE](LICENSE).
