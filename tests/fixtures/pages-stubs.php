@@ -5,7 +5,7 @@ declare(strict_types=1);
 // WordPress stubs for tests/PagesTest.php (Pages::create, Admin row action / buttons): page inserts and deletes are
 // recorded in $GLOBALS['wpfb_pages'] ('inserted', 'deleted'; 'taken' = slugs already used).
 
-require_once __DIR__ . '/wp-objects-stubs.php';
+require_once __DIR__.'/wp-objects-stubs.php';
 
 if (!function_exists('sanitize_text_field')) {
     function sanitize_text_field(string $s): string
@@ -25,8 +25,9 @@ if (!function_exists('wp_unique_post_slug')) {
         $n = 2;
         $out = $slug;
         while (in_array($out, $GLOBALS['wpfb_pages']['taken'] ?? [], true)) {
-            $out = $slug . '-' . $n++;
+            $out = $slug.'-'.$n++;
         }
+
         return $out;
     }
 }
@@ -35,6 +36,7 @@ if (!function_exists('wp_insert_post')) {
     function wp_insert_post(array $args, bool $wpError = false): int
     {
         $GLOBALS['wpfb_pages']['inserted'][] = $args;
+
         return 100 + count($GLOBALS['wpfb_pages']['inserted']);
     }
 }
@@ -42,20 +44,21 @@ if (!function_exists('wp_delete_post')) {
     function wp_delete_post(int $id, bool $force = false): bool
     {
         $GLOBALS['wpfb_pages']['deleted'][] = $id;
+
         return true;
     }
 }
 if (!function_exists('admin_url')) {
     function admin_url(string $path = ''): string
     {
-        return 'http://example.test/wp-admin/' . ltrim($path, '/');
+        return 'http://example.test/wp-admin/'.ltrim($path, '/');
     }
 }
 if (!function_exists('add_query_arg')) {
     /** @param array<string, mixed> $args */
     function add_query_arg(array $args, string $url): string
     {
-        return $url . (str_contains($url, '?') ? '&' : '?') . http_build_query($args);
+        return $url.(str_contains($url, '?') ? '&' : '?').http_build_query($args);
     }
 }
 if (!function_exists('esc_url')) {

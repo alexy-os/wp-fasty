@@ -70,6 +70,7 @@ if (!function_exists('get_post_type')) {
     function get_post_type(int|WP_Post|null $post = null): string|false
     {
         $id = $post instanceof WP_Post ? $post->ID : (int) $post;
+
         return $GLOBALS['wpfasty_wp']['posts'][$id] ?? false;
     }
 }
@@ -88,7 +89,7 @@ if (!function_exists('wp_get_attachment_url')) {
 if (!function_exists('get_post_meta')) {
     function get_post_meta(int $id, string $key = '', bool $single = false): mixed
     {
-        return $key === '_wp_attachment_image_alt' ? ($GLOBALS['wpfasty_wp']['att'][$id]['alt'] ?? '') : '';
+        return '_wp_attachment_image_alt' === $key ? ($GLOBALS['wpfasty_wp']['att'][$id]['alt'] ?? '') : '';
     }
 }
 if (!function_exists('get_user_meta')) {

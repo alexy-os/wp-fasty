@@ -64,7 +64,7 @@ if (!class_exists('WP_REST_Request')) {
 
         public function offsetExists(mixed $k): bool
         {
-            return $this->get_param((string) $k) !== null;
+            return null !== $this->get_param((string) $k);
         }
 
         public function offsetGet(mixed $k): mixed
@@ -87,7 +87,8 @@ if (!function_exists('current_user_can')) {
     function current_user_can(string $cap, mixed ...$args): bool
     {
         $caps = $GLOBALS['wp_test_caps'] ?? [];
-        return in_array($cap . ($args !== [] ? ':' . implode(',', $args) : ''), $caps, true) || in_array($cap, $caps, true);
+
+        return in_array($cap.([] !== $args ? ':'.implode(',', $args) : ''), $caps, true) || in_array($cap, $caps, true);
     }
 }
 if (!function_exists('sanitize_key')) {
@@ -118,14 +119,15 @@ if (!function_exists('wp_upload_dir')) {
     /** @return array{basedir: string} */
     function wp_upload_dir(mixed $time = null, bool $create = true): array
     {
-        return ['basedir' => sys_get_temp_dir() . '/wpfb-rest-test-uploads'];
+        return ['basedir' => sys_get_temp_dir().'/wpfb-rest-test-uploads'];
     }
 }
 if (!function_exists('register_rest_route')) {
     /** @param array<mixed> $args */
     function register_rest_route(string $ns, string $route, array $args): bool
     {
-        $GLOBALS['wp_test_routes'][$ns . $route] = $args;
+        $GLOBALS['wp_test_routes'][$ns.$route] = $args;
+
         return true;
     }
 }

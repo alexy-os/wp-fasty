@@ -4,11 +4,26 @@ declare(strict_types=1);
 
 namespace WPFasty\Data;
 
+use WPFasty\Adapter\WordPress\WordPressMenuProvider;
+use WPFasty\Core\Port\MenuProviderInterface;
+use WPFasty\Data\Menu\MenuViewModelBuilder;
+
 /**
- * Builds typed plain-array context for Latte — no WP calls in views.
+ * Facade of the template context: reads the WordPress request, asks the ports (Core\Port, WordPress adapters) for
+ * data and hands it to the ViewModel builders (WPFasty\Data\*). No WP calls in views.
+ * Dependencies come through the constructor (configs/services.php); the defaults keep `new ContextFactory()` working.
  */
 final class ContextFactory
 {
+    private readonly MenuProviderInterface $menuProvider;
+    private readonly MenuViewModelBuilder $menuBuilder;
+
+    public function __construct(?MenuProviderInterface $menuProvider = null, ?MenuViewModelBuilder $menuBuilder = null)
+    {
+        $this->menuProvider = $menuProvider ?? new WordPressMenuProvider();
+        $this->menuBuilder = $menuBuilder ?? new MenuViewModelBuilder();
+    }
+
     /** @return array<string, mixed> */
     public function createPageContext(?\WP_Post $post = null): array
     {
@@ -478,53 +493,7 @@ final class ContextFactory
     /** @return array<string, array{items: list<array<string, mixed>>}> */
     private function menus(): array
     {
-        $out = [
-            'primary' => ['items' => []],
-            'footer' => ['items' => []],
-        ];
-        $locations = get_nav_menu_locations();
-        if ([] === $locations) {
-            return $out;
-        }
-
-        foreach ($locations as $location => $menuId) {
-            $items = wp_get_nav_menu_items($menuId);
-            $out[$location] = ['items' => is_array($items) ? $this->menuTree($items) : []];
-        }
-
-        return $out;
-    }
-
-    /**
-     * @param list<\WP_Post> $items
-     *
-     * @return list<array<string, mixed>>
-     */
-    private function menuTree(array $items): array
-    {
-        $byParent = [];
-        foreach ($items as $item) {
-            $parent = (int) $item->menu_item_parent;
-            $byParent[$parent][] = $item;
-        }
-
-        $build = function (int $parentId) use (&$build, $byParent): array {
-            $branch = [];
-            foreach ($byParent[$parentId] ?? [] as $item) {
-                $id = (int) $item->ID;
-                $branch[] = [
-                    'title' => $item->title,
-                    'url' => $item->url,
-                    'id' => $id,
-                    'current' => (bool) $item->current,
-                    'children' => $build($id),
-                ];
-            }
-
-            return $branch;
-        };
-
-        return $build(0);
+        return $this->menuBuilder->build($this->menuProvider->itemsByLocation());
     }
 
     private function sidebarHtml(string $id): string

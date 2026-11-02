@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use WPFasty\Adapter\WordPress\WordPressMenuProvider;
 use WPFasty\Core\Container;
 use WPFasty\Core\ContainerInterface;
 use WPFasty\Data\ContextFactory;
+use WPFasty\Data\Menu\MenuViewModelBuilder;
 use WPFasty\Hooks\AssetsHooks;
 use WPFasty\Hooks\ThemeHooks;
 use WPFasty\Template\Engines;
@@ -72,7 +74,10 @@ return function (Container $container): void {
     ]))));
     $container->addTag('types.registry', ContainerInterface::TAG_BOOTABLE);
 
-    $container->singleton('data.context_factory', static fn () => new ContextFactory());
+    $container->singleton('data.context_factory', static fn () => new ContextFactory(
+        new WordPressMenuProvider(),
+        new MenuViewModelBuilder(),
+    ));
 
     $container->singleton('theme', static function (Container $c): ThemeService {
         return new ThemeService(

@@ -397,30 +397,6 @@ parameters:
 			path: themes/latte/classes/Core/ContainerInterface.php
 
 		-
-			message: '#^Access to an undefined property WP_Post\:\:\$current\.$#'
-			identifier: property.notFound
-			count: 1
-			path: themes/latte/classes/Data/ContextFactory.php
-
-		-
-			message: '#^Access to an undefined property WP_Post\:\:\$menu_item_parent\.$#'
-			identifier: property.notFound
-			count: 1
-			path: themes/latte/classes/Data/ContextFactory.php
-
-		-
-			message: '#^Access to an undefined property WP_Post\:\:\$title\.$#'
-			identifier: property.notFound
-			count: 1
-			path: themes/latte/classes/Data/ContextFactory.php
-
-		-
-			message: '#^Access to an undefined property WP_Post\:\:\$url\.$#'
-			identifier: property.notFound
-			count: 1
-			path: themes/latte/classes/Data/ContextFactory.php
-
-		-
 			message: '#^Access to an undefined property object\:\:\$max_num_pages\.$#'
 			identifier: property.notFound
 			count: 1
@@ -428,12 +404,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$array of function array_filter expects array, array\<int\|WP_Post\>\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: themes/latte/classes/Data/ContextFactory.php
-
-		-
-			message: '#^Parameter \#1 \$items of method WPFasty\\Data\\ContextFactory\:\:menuTree\(\) expects list\<WP_Post\>, array given\.$#'
 			identifier: argument.type
 			count: 1
 			path: themes/latte/classes/Data/ContextFactory.php

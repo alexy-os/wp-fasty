@@ -31,11 +31,13 @@ if (!class_exists('WP_Term')) {
 if (!function_exists('get_posts')) {
     /**
      * @param array<string, mixed> $args
+     *
      * @return list<WP_Post>
      */
     function get_posts(array $args = []): array
     {
         $GLOBALS['wpfb_records']['log'][] = ['get_posts', $args];
+
         return array_values(array_filter(
             $GLOBALS['wpfb_records']['posts'],
             static fn ($p): bool => $p->post_type === ($args['post_type'] ?? 'post')
@@ -48,11 +50,13 @@ if (!function_exists('get_posts')) {
 if (!function_exists('get_terms')) {
     /**
      * @param array<string, mixed> $args
+     *
      * @return list<WP_Term>
      */
     function get_terms(array $args = []): array
     {
         $GLOBALS['wpfb_records']['log'][] = ['get_terms', $args];
+
         return array_values(array_filter(
             $GLOBALS['wpfb_records']['terms'],
             static fn ($t): bool => in_array($t->taxonomy, (array) $args['taxonomy'], true)
@@ -63,7 +67,7 @@ if (!function_exists('get_terms')) {
 if (!function_exists('get_term_link')) {
     function get_term_link(WP_Term $t): string
     {
-        return 'http://example.test/' . $t->taxonomy . '/' . $t->slug . '/';
+        return 'http://example.test/'.$t->taxonomy.'/'.$t->slug.'/';
     }
 }
 if (!function_exists('get_post_meta')) {

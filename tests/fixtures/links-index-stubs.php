@@ -39,29 +39,34 @@ function wpfb_links_call(string $fn, array $args): void
 if (!function_exists('get_posts')) {
     /**
      * @param array<string, mixed> $args
+     *
      * @return list<WP_Post>
      */
     function get_posts(array $args = []): array
     {
         wpfb_links_call('get_posts', $args);
         $type = $args['post_type'] ?? 'page';
+
         return array_values(array_filter($GLOBALS['wpfb_links']['pages'], static fn ($p): bool => $p->post_type === $type));
     }
 }
 if (!function_exists('get_terms')) {
     /**
      * @param array<string, mixed> $args
+     *
      * @return list<WP_Term>
      */
     function get_terms(array $args = []): array
     {
         wpfb_links_call('get_terms', $args);
+
         return $GLOBALS['wpfb_links']['terms'];
     }
 }
 if (!function_exists('get_post_types')) {
     /**
      * @param array<string, mixed> $args
+     *
      * @return array<string, object>
      */
     function get_post_types(array $args = [], string $output = 'names'): array
@@ -71,6 +76,7 @@ if (!function_exists('get_post_types')) {
         foreach ($GLOBALS['wpfb_links']['types'] as $name => $label) {
             $out[$name] = (object) ['name' => $name, 'labels' => (object) ['name' => $label]];
         }
+
         return $out;
     }
 }
@@ -80,23 +86,24 @@ if (!function_exists('get_page_link')) {
         $id = $post instanceof WP_Post ? $post->ID : $post;
         foreach ($GLOBALS['wpfb_links']['pages'] as $p) {
             if ($p->ID === $id) {
-                return 'http://example.test/' . $p->post_name . '/';
+                return 'http://example.test/'.$p->post_name.'/';
             }
         }
+
         return $id === $GLOBALS['wpfb_links']['posts_page'] ? 'http://example.test/blog/' : '';
     }
 }
 if (!function_exists('get_category_link')) {
     function get_category_link(int|WP_Term $term): string
     {
-        return 'http://example.test/category/' . ($term instanceof WP_Term ? $term->slug : (string) $term) . '/';
+        return 'http://example.test/category/'.($term instanceof WP_Term ? $term->slug : (string) $term).'/';
     }
 }
 
 if (!function_exists('is_email')) {
     function is_email(string $email): string|false
     {
-        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false ? $email : false;
+        return false !== filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : false;
     }
 }
 if (!function_exists('wp_date')) {

@@ -17,7 +17,6 @@ if (!class_exists('WP_Query')) {
         public array $posts = [];
         public int $max_num_pages = 1;
 
-        /** @param array<string, mixed> $args */
         public function __construct(public array $query_vars = [])
         {
             $GLOBALS['wpfasty_recent']['log'][] = ['WP_Query', $query_vars];
@@ -26,7 +25,6 @@ if (!class_exists('WP_Query')) {
     }
 }
 
-/** @param mixed ...$args */
 function wpfasty_recent_log(string $fn, ...$args): void
 {
     $GLOBALS['wpfasty_recent']['log'][] = [$fn, $args];
@@ -37,6 +35,7 @@ if (!function_exists('update_meta_cache')) {
     function update_meta_cache(string $type, array $ids): bool
     {
         wpfasty_recent_log('update_meta_cache', $type, $ids);
+
         return true;
     }
 }
@@ -45,6 +44,7 @@ if (!function_exists('update_object_term_cache')) {
     function update_object_term_cache(array $ids, string $type): bool
     {
         wpfasty_recent_log('update_object_term_cache', $ids, $type);
+
         return true;
     }
 }
@@ -65,11 +65,11 @@ if (!function_exists('cache_users')) {
 if (!function_exists('get_post_meta')) {
     function get_post_meta(int $id, string $key = '', bool $single = false): mixed
     {
-        return $key === '_thumbnail_id' ? (string) ($GLOBALS['wpfasty_recent']['thumbs'][$id] ?? '') : '';
+        return '_thumbnail_id' === $key ? (string) ($GLOBALS['wpfasty_recent']['thumbs'][$id] ?? '') : '';
     }
 }
 
-require_once __DIR__ . '/wp-objects-stubs.php';
+require_once __DIR__.'/wp-objects-stubs.php';
 
 // what post() reads per post (kept trivial: the test is about the batch priming above)
 if (!function_exists('post_password_required')) {
@@ -136,12 +136,12 @@ if (!function_exists('is_object_in_taxonomy')) {
 if (!function_exists('get_the_author_meta')) {
     function get_the_author_meta(string $field = '', int|false $userId = false): string
     {
-        return 'Author ' . (int) $userId;
+        return 'Author '.(int) $userId;
     }
 }
 if (!function_exists('get_author_posts_url')) {
     function get_author_posts_url(int $authorId, string $nicename = ''): string
     {
-        return 'http://example.test/author/' . $authorId . '/';
+        return 'http://example.test/author/'.$authorId.'/';
     }
 }

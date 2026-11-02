@@ -19,12 +19,12 @@ if (!function_exists('get_category_by_slug')) {
 if (!function_exists('post_type_exists')) {
     function post_type_exists(string $type): bool
     {
-        return $type === 'product';
+        return 'product' === $type;
     }
 }
 if (!function_exists('get_post_type_archive_link')) {
     function get_post_type_archive_link(string $type): string|false
     {
-        return 'http://example.test/' . $type . '/';
+        return 'http://example.test/'.$type.'/';
     }
 }
