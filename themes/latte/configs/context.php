@@ -7,6 +7,7 @@
 
 declare(strict_types=1);
 
+use WPFasty\Adapter\WordPress\ContextFilters;
 use WPFasty\Adapter\WordPress\PostRepository;
 use WPFasty\Adapter\WordPress\WordPressArchiveStateProvider;
 use WPFasty\Adapter\WordPress\WordPressCommentsRenderer;
@@ -43,5 +44,6 @@ return static function (): ContextFactory {
         new WordPressCommentsRenderer(),
         new PostRepository(),
         new PostViewModelBuilder(),
+        new ContextFilters(),
     );
 };

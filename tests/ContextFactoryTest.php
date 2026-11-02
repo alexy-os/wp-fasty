@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace WPFasty\Tests;
 
 use PHPUnit\Framework\TestCase;
+use WPFasty\Adapter\WordPress\PlainText;
 use WPFasty\Data\ContextFactory;
 
 final class ContextFactoryTest extends TestCase
 {
     public function testTextDecodesWpEntitiesOnce(): void
     {
-        $this->assertSame('It’s fine…', ContextFactory::text('It&#8217;s fine&hellip;'));
-        $this->assertSame('<b>', ContextFactory::text('&lt;b&gt;'));
+        $this->assertSame('It’s fine…', PlainText::from('It&#8217;s fine&hellip;'));
+        $this->assertSame('<b>', PlainText::from('&lt;b&gt;'));
     }
 
     public function testErrorContextShape(): void
