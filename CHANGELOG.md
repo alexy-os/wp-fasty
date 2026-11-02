@@ -10,6 +10,19 @@
   so callbacks must not rely on the global `$post`. Module `context` callables (`types/*.php`) keep their `WP_Post`
   argument.
 - `ContextFactory::text()` is deprecated: use `WPFasty\Adapter\WordPress\PlainText::from()`.
+- `ContextFactory` takes all its dependencies through the constructor (no defaults): `new ContextFactory()` is gone;
+  get it from the container (`data.context_factory`) or call the factory in `configs/context.php`.
+
+### Added (theme)
+- `<meta name="description">` out of the box (excerpt, term/author description, tagline, else site title; ≤ 160
+  chars, escaped). Filter `wpfasty_meta_description` ('' removes it); skipped when Yoast, Rank Math, AIOSEO, SEOPress
+  or The SEO Framework is active.
+- CI: HTML snapshot parity of the parent theme against the previous commit (declare intended markup changes with
+  `[html-change]` in the commit message) and live template contexts validated against
+  `schema/theme-context.schema.json`.
+
+### Fixed
+- latte-folio: the contact `mailto:` link was double-encoded (`&amp;#100;…`).
 
 ### Changed (theme PHP)
 - `ContextFactory` is a thin facade: data comes through Core ports (`PostRepositoryInterface`, menu, site info, labels,
