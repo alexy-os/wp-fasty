@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 /**
  * Child-theme API (global functions). Declarations only; loaded from functions.php.
- *
- * @package Latte
  */
 
 /**
  * Child-theme API: view-model arrays for posts from secondary queries.
  *
- * @param list<\WP_Post|int> $posts
+ * @param list<WP_Post|int> $posts
+ *
  * @return list<array<string, mixed>>
  */
 function wpfasty_posts(array $posts): array
@@ -26,6 +25,7 @@ function wpfasty_posts(array $posts): array
     foreach ($resolved as $p) {
         $out[] = $factory->postData($p);
     }
+
     return $out;
 }
 

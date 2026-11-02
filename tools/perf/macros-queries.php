@@ -1,4 +1,5 @@
 <?php
+
 /**
  * N+1 guard of the builder record tokens on a page: {post:<slug>}, {product:<slug>}, {term:<taxonomy>:<slug>},
  * {price:<product>}, {stock:<product>}. A page of blocks naming [small] then [large] records of each type is rendered
@@ -6,10 +7,7 @@
  * Missing posts / terms are added for the run and removed after it (products: the site's own, seed them first).
  *   wp eval-file tools/perf/queries.php macros [small] [large]
  * Exit 1 when the larger page needs more queries.
- *
- * @package WPFasty
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -18,13 +16,13 @@ $wpfasty_mq_small = max(1, (int) ($args[1] ?? 2));
 $wpfasty_mq_large = max($wpfasty_mq_small + 1, (int) ($args[2] ?? 6));
 $wpfasty_mq_site = WPFastyBuilder\Records::site();
 $wpfasty_mq_product = $wpfasty_mq_site['product'];
-if ($wpfasty_mq_product === null) {
+if (null === $wpfasty_mq_product) {
     WP_CLI::error('the active site has no purchasable post type (activate latte-shop with wpfasty-types)');
 }
 $wpfasty_mq_tax = in_array('product_cat', $wpfasty_mq_site['taxonomies'], true)
     ? 'product_cat'
     : (string) ($wpfasty_mq_site['taxonomies'][0] ?? '');
-if ($wpfasty_mq_tax === '') {
+if ('' === $wpfasty_mq_tax) {
     WP_CLI::error('the active site has no taxonomy in its Codex manifest');
 }
 
@@ -34,14 +32,14 @@ $wpfasty_mq_slugs = static fn (string $type): array => get_posts([
     'post_type' => $type, 'post_status' => 'publish', 'numberposts' => $wpfasty_mq_large, 'fields' => 'ids',
     'no_found_rows' => true,
 ]);
-for ($i = count($wpfasty_mq_slugs('post')); $i < $wpfasty_mq_large; $i++) {
+for ($i = count($wpfasty_mq_slugs('post')); $i < $wpfasty_mq_large; ++$i) {
     $wpfasty_mq_added['posts'][] = wp_insert_post([
         'post_type' => 'post', 'post_status' => 'publish', 'post_title' => "Perf macro post $i",
         'post_name' => "perf-macro-post-$i",
     ]);
 }
 $wpfasty_mq_terms = get_terms(['taxonomy' => $wpfasty_mq_tax, 'hide_empty' => false, 'fields' => 'slugs']);
-for ($i = count(is_array($wpfasty_mq_terms) ? $wpfasty_mq_terms : []); $i < $wpfasty_mq_large; $i++) {
+for ($i = count(is_array($wpfasty_mq_terms) ? $wpfasty_mq_terms : []); $i < $wpfasty_mq_large; ++$i) {
     $wpfasty_mq_t = wp_insert_term("Perf macro term $i", $wpfasty_mq_tax, ['slug' => "perf-macro-term-$i"]);
     if (is_array($wpfasty_mq_t)) {
         $wpfasty_mq_added['terms'][] = (int) $wpfasty_mq_t['term_id'];
@@ -52,6 +50,7 @@ $wpfasty_mq_names = static function (string $type, int $n): array {
     foreach (get_posts(['post_type' => $type, 'post_status' => 'publish', 'numberposts' => $n, 'no_found_rows' => true]) as $p) {
         $out[] = $p->post_name;
     }
+
     return $out;
 };
 $wpfasty_mq_products = $wpfasty_mq_names($wpfasty_mq_product['post_type'], $wpfasty_mq_large);
@@ -64,7 +63,7 @@ $wpfasty_mq_termslugs = array_slice((array) get_terms(['taxonomy' => $wpfasty_mq
 /** blocks of a page naming $n records of each type (one block per record, like a product grid built by hand) */
 $wpfasty_mq_page = static function (int $n) use ($wpfasty_mq_posts, $wpfasty_mq_products, $wpfasty_mq_termslugs, $wpfasty_mq_tax): array {
     $blocks = [];
-    for ($i = 0; $i < $n; $i++) {
+    for ($i = 0; $i < $n; ++$i) {
         $p = $wpfasty_mq_products[$i];
         $blocks[] = [
             'title' => "{post:{$wpfasty_mq_posts[$i]}}",
@@ -72,6 +71,7 @@ $wpfasty_mq_page = static function (int $n) use ($wpfasty_mq_posts, $wpfasty_mq_
             'href' => "{term:$wpfasty_mq_tax:{$wpfasty_mq_termslugs[$i]}}#top",
         ];
     }
+
     return $blocks;
 };
 
@@ -89,6 +89,7 @@ $wpfasty_mq_render = static function (array $blocks): array {
     }
     $n = $wpdb->num_queries - $before;
     $flat = (string) wp_json_encode($out);
+
     return [$n, substr_count($flat, '"#') + preg_match_all('/\{(post|product|term|price|stock):/', $flat), $flat];
 };
 
@@ -111,7 +112,7 @@ WP_CLI::log(sprintf(
     $wpfasty_mq_q2
 ));
 if ($wpfasty_mq_bad1 + $wpfasty_mq_bad2 > 0) {
-    WP_CLI::error('unresolved record tokens: ' . substr($wpfasty_mq_sample, 0, 400));
+    WP_CLI::error('unresolved record tokens: '.substr($wpfasty_mq_sample, 0, 400));
 }
 if ($wpfasty_mq_q2 > $wpfasty_mq_q1) {
     WP_CLI::error('N+1: the query count grows with the number of record tokens');

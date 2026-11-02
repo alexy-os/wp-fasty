@@ -14,14 +14,14 @@ use WPFastyBuilder\DataSources;
 use WPFastyBuilder\Safe;
 use WPFastyBuilder\Source\LocalSource;
 
-require_once __DIR__ . '/fixtures/links-stubs.php';
-require_once __DIR__ . '/fixtures/rest-stubs.php';
-require_once dirname(__DIR__) . '/plugins/wpfasty-builder/sources/ui8kit/latte/php/Runtime.php';
-require_once dirname(__DIR__) . '/plugins/wpfasty-builder/sources/ui8kit/twig/php/Runtime.php';
+require_once __DIR__.'/fixtures/links-stubs.php';
+require_once __DIR__.'/fixtures/rest-stubs.php';
+require_once dirname(__DIR__).'/plugins/wpfasty-builder/sources/ui8kit/latte/php/Runtime.php';
+require_once dirname(__DIR__).'/plugins/wpfasty-builder/sources/ui8kit/twig/php/Runtime.php';
 
 spl_autoload_register(static function (string $class): void {
     if (str_starts_with($class, 'WPFastyBuilder\\')) {
-        $file = dirname(__DIR__) . '/plugins/wpfasty-builder/src/' . str_replace('\\', '/', substr($class, 15)) . '.php';
+        $file = dirname(__DIR__).'/plugins/wpfasty-builder/src/'.str_replace('\\', '/', substr($class, 15)).'.php';
         if (is_file($file)) {
             require_once $file;
         }
@@ -37,7 +37,7 @@ spl_autoload_register(static function (string $class): void {
  */
 final class CodegenSafetySharedTest extends TestCase
 {
-    private const SRC = __DIR__ . '/../plugins/wpfasty-builder/sources/ui8kit';
+    private const SRC = __DIR__.'/../plugins/wpfasty-builder/sources/ui8kit';
     private const XSS = '<img src=x onerror=alert(1)><script>alert(2)</script>';
 
     /**
@@ -58,7 +58,7 @@ final class CodegenSafetySharedTest extends TestCase
     /** @return array<string, mixed> */
     private static function vectors(): array
     {
-        return json_decode((string) file_get_contents(__DIR__ . '/fixtures/codex-shared/safety-vectors.json'), true);
+        return json_decode((string) file_get_contents(__DIR__.'/fixtures/codex-shared/safety-vectors.json'), true);
     }
 
     /** @return iterable<string, array{class-string}> */
@@ -103,7 +103,7 @@ final class CodegenSafetySharedTest extends TestCase
         $looser = [];
         foreach (self::vectors()['url'] as [$url, $image, $ok]) {
             $adapter = Safe::url($url, $image);
-            $printed = $adapter === '' ? '' : LatteRuntime::url($adapter, $image);
+            $printed = '' === $adapter ? '' : LatteRuntime::url($adapter, $image);
             // what reaches the page: allowed only when both allow; the adapter never refuses what codegen allows
             self::assertSame($ok ? $url : '', $printed, json_encode([$url, $image]));
             if (!$ok && $adapter === $url) {
@@ -137,9 +137,9 @@ final class CodegenSafetySharedTest extends TestCase
     #[DataProvider('engines')]
     public function testSlotPropIsRawOnlyAsCapturedMarkup(string $engine): void
     {
-        $src = new LocalSource('ui8kit', self::SRC . '/' . $engine, $engine);
+        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
         $r = new BlockRenderer(['ui8kit' => $src], null);
-        $tpl = $engine === 'latte' ? 'blocks/section-frame.latte' : 'blocks/section-frame.html.twig';
+        $tpl = 'latte' === $engine ? 'blocks/section-frame.latte' : 'blocks/section-frame.html.twig';
         foreach (['start', 'end'] as $side) {
             foreach (['split', 'stack'] as $layout) {
                 $p = ['title' => 'T', 'layout' => $layout, 'media' => ['show' => true, 'side' => $side], 'aside' => self::XSS];
@@ -156,9 +156,9 @@ final class CodegenSafetySharedTest extends TestCase
     #[DataProvider('engines')]
     public function testRichTextSideNoteNeedsItsMarkup(string $engine): void
     {
-        $src = new LocalSource('ui8kit', self::SRC . '/' . $engine, $engine);
+        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
         $r = new BlockRenderer(['ui8kit' => $src], null);
-        $tpl = $engine === 'latte' ? 'blocks/rich-text.latte' : 'blocks/rich-text.html.twig';
+        $tpl = 'latte' === $engine ? 'blocks/rich-text.latte' : 'blocks/rich-text.html.twig';
         $base = ['id' => 'rt', 'title' => 'T', 'content' => ['__html' => '<p>Body</p>'], 'layout' => 'sidebar'];
         // the adapter's answer for a blank side note (ReadPath |html, DataSources::trusted after kses): absent
         foreach (['', '  ', "\n\t"] as $blank) {

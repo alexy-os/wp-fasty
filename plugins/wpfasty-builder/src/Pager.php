@@ -39,6 +39,7 @@ final class Pager
         foreach (explode('.', $path) as $k) {
             $v = is_array($v) ? ($v[$k] ?? null) : null;
         }
+
         return is_array($v) && ($v['mode'] ?? null) === 'pages';
     }
 
@@ -49,24 +50,27 @@ final class Pager
         if ($paged < 1 && function_exists('is_front_page') && is_front_page()) {
             $paged = (int) get_query_var('page');
         }
+
         return max(1, $paged);
     }
 
     /**
      * page and pages of the main query: the theme context of ContextFactory (`pagination.current`, `total`) when it
-     * has them, else the main WP_Query (no query is run)
+     * has them, else the main WP_Query (no query is run).
      *
      * @param array<string, mixed> $context
+     *
      * @return array{0: int, 1: int}
      */
     public static function main(array $context = []): array
     {
         $p = is_array($context['pagination'] ?? null) ? $context['pagination'] : null;
-        if ($p !== null && isset($p['current'], $p['total'])) {
+        if (null !== $p && isset($p['current'], $p['total'])) {
             return [max(1, (int) $p['current']), max(1, (int) $p['total'])];
         }
         global $wp_query;
         $pages = isset($wp_query) && is_object($wp_query) ? (int) $wp_query->max_num_pages : 1;
+
         return [self::request(), max(1, $pages)];
     }
 
@@ -76,6 +80,7 @@ final class Pager
      * is used when it has them.
      *
      * @param array<string, mixed> $context
+     *
      * @return array{url: string, firstUrl: string}
      */
     public static function urls(array $context = []): array
@@ -84,6 +89,7 @@ final class Pager
         $url = is_string($p['url'] ?? null) ? $p['url'] : self::template();
         $first = is_string($p['first_url'] ?? null) ? $p['first_url'] : (string) get_pagenum_link(1, false);
         $url = str_contains($url, '{0}') ? Safe::url(Safe::text($url)) : '';
+
         return ['url' => $url, 'firstUrl' => Safe::url(Safe::text($first))];
     }
 
@@ -91,6 +97,7 @@ final class Pager
     public static function template(): string
     {
         $url = (string) get_pagenum_link(self::SENTINEL, false);
+
         return str_contains($url, (string) self::SENTINEL) ? str_replace((string) self::SENTINEL, '{0}', $url) : '';
     }
 
@@ -98,6 +105,7 @@ final class Pager
      * The group the template reads; null when there is a single page (no pager). With $urls (urls()) the link mode.
      *
      * @param array{url: string, firstUrl: string}|null $urls
+     *
      * @return array{mode: string, page: int, pages: int, label: string, summary: string, previous: string,
      *   next: string, pageLabel: string, url?: string, firstUrl?: string}|null
      */
@@ -107,6 +115,7 @@ final class Pager
             return null;
         }
         self::$head ??= [$page, $pages];
+
         return [
             'mode' => 'pages',
             'page' => max(1, $page),
@@ -118,8 +127,8 @@ final class Pager
             'next' => __('Next page', 'wpfasty-builder'),
             /* translators: accessible name of a page number button: {0} is the page number (keep the braces). */
             'pageLabel' => __('Page {0}', 'wpfasty-builder'),
-        ] + ($urls !== null && str_contains($urls['url'], '{0}')
-            ? array_filter($urls, static fn (string $u): bool => $u !== '')
+        ] + (null !== $urls && str_contains($urls['url'], '{0}')
+            ? array_filter($urls, static fn (string $u): bool => '' !== $u)
             : []);
     }
 
@@ -139,13 +148,13 @@ final class Pager
     /** <link rel="prev|next"> of the first pager of the page (wp_head) */
     public static function head(): void
     {
-        if (self::$head === null) {
+        if (null === self::$head) {
             return;
         }
         foreach (self::links(...self::$head) as $rel => $url) {
-            if ($url !== null && $url !== '') {
+            if (null !== $url && '' !== $url) {
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $url is esc_url()'d in links()
-                printf("<link rel=\"%s\" href=\"%s\" />\n", $rel === 'previous' ? 'prev' : 'next', $url);
+                printf("<link rel=\"%s\" href=\"%s\" />\n", 'previous' === $rel ? 'prev' : 'next', $url);
             }
         }
     }

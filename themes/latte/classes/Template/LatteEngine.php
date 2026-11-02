@@ -1,9 +1,9 @@
 <?php
+
 /**
  * Backwards-compatible name for LatteRenderer.
  *
- * @package Latte
- * @deprecated Use LatteRenderer.
+ * @deprecated use LatteRenderer
  */
 
 declare(strict_types=1);

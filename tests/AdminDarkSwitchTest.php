@@ -17,10 +17,10 @@ final class AdminDarkSwitchTest extends TestCase
 {
     protected function setUp(): void
     {
-        $src = dirname(__DIR__) . '/plugins/wpfasty-builder/src/';
+        $src = dirname(__DIR__).'/plugins/wpfasty-builder/src/';
         spl_autoload_register(static function (string $class) use ($src): void {
             if (str_starts_with($class, 'WPFastyBuilder\\')) {
-                require_once $src . str_replace('\\', '/', substr($class, 15)) . '.php';
+                require_once $src.str_replace('\\', '/', substr($class, 15)).'.php';
             }
         });
         if (!class_exists('WP_Admin_Bar', false)) {
@@ -35,7 +35,7 @@ final class AdminDarkSwitchTest extends TestCase
     {
         (new \ReflectionProperty(Admin::class, 'hook'))->setValue(null, $hook);
         (new \ReflectionProperty(Admin::class, 'editor'))->setValue(null, $editor);
-        $GLOBALS['wpfb_test_screen'] = $screen === null ? null : (object) ['id' => $screen];
+        $GLOBALS['wpfb_test_screen'] = null === $screen ? null : (object) ['id' => $screen];
     }
 
     /** @return list<array<string, mixed>> */
@@ -43,6 +43,7 @@ final class AdminDarkSwitchTest extends TestCase
     {
         $bar = new \WP_Admin_Bar();
         Admin::darkSwitch($bar);
+
         return $bar->nodes;
     }
 

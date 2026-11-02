@@ -51,7 +51,7 @@ final class Records
      */
     public static function setSite(?array $site): void
     {
-        self::$site = $site === null
+        self::$site = null === $site
             ? null
             : $site + ['product' => null, 'taxonomies' => [], 'currency' => '', 'locale' => 'en'];
         self::reset();
@@ -68,19 +68,19 @@ final class Records
     /** @return array<string, mixed> */
     public static function site(): array
     {
-        if (self::$site !== null) {
+        if (null !== self::$site) {
             return self::$site;
         }
         $out = ['product' => null, 'taxonomies' => [], 'currency' => '', 'locale' => 'en'];
         $site = class_exists(\WPFastyTypes\Codex\Site::class) ? DataSources::site() : null;
-        if ($site === null) {
+        if (null === $site) {
             return self::$site = $out;
         }
         foreach (DataSources::models() as $m) {
             if ($m['term'] || !is_array($m['purchasable']) || !post_type_exists((string) $m['post_type'])) {
                 continue;
             }
-            if ($out['product'] !== null && $m['kind'] !== 'product') {
+            if (null !== $out['product'] && 'product' !== $m['kind']) {
                 continue;
             }
             $kind = (string) $m['kind'];
@@ -95,8 +95,9 @@ final class Records
         }
         $out['taxonomies'] = array_values(array_filter($site->allTaxonomies(), 'taxonomy_exists'));
         $cur = strtoupper((string) get_option($site->currencyOption()));
-        $out['currency'] = preg_match('/^[A-Z]{3}$/', $cur) === 1 ? $cur : '';
+        $out['currency'] = 1 === preg_match('/^[A-Z]{3}$/', $cur) ? $cur : '';
         $out['locale'] = \WPFastyTypes\Codex\Mapper::locale();
+
         return self::$site = $out;
     }
 
@@ -112,19 +113,19 @@ final class Records
         $want['post'] = array_diff(array_keys($want['post']), array_keys(self::$posts));
         $want['product'] = array_diff(array_keys($want['product']), array_keys(self::$products));
         $want['term'] = array_diff(array_keys($want['term']), array_keys(self::$terms));
-        if ($want['post'] !== []) {
+        if ([] !== $want['post']) {
             self::loadPosts(array_values($want['post']));
         }
-        if ($want['product'] !== []) {
+        if ([] !== $want['product']) {
             self::loadProducts(array_values($want['product']));
         }
-        if ($want['term'] !== []) {
+        if ([] !== $want['term']) {
             self::loadTerms(array_values($want['term']));
         }
     }
 
     /**
-     * @param array<mixed> $props
+     * @param array<mixed>                       $props
      * @param array<string, array<string, true>> $want
      */
     private static function scan(array $props, array &$want): void
@@ -138,12 +139,12 @@ final class Records
                 continue;
             }
             foreach ($all as $m) {
-                if ($m[1] === 'term') {
+                if ('term' === $m[1]) {
                     if (($m[3] ?? '') !== '') {
-                        $want['term'][$m[2] . ':' . $m[3]] = true;
+                        $want['term'][$m[2].':'.$m[3]] = true;
                     }
                 } elseif (($m[3] ?? '') === '') {
-                    $want[$m[1] === 'post' ? 'post' : 'product'][$m[2]] = true;
+                    $want['post' === $m[1] ? 'post' : 'product'][$m[2]] = true;
                 }
             }
         }
@@ -152,33 +153,36 @@ final class Records
     /** What a record token gives: a URL ("#" when the record is not there) or text ("" when not there). */
     public static function value(string $kind, string $arg, string $arg2 = ''): string
     {
-        if ($kind === 'term') {
-            if ($arg2 === '') {
+        if ('term' === $kind) {
+            if ('' === $arg2) {
                 return '#';
             }
-            $key = $arg . ':' . $arg2;
+            $key = $arg.':'.$arg2;
             if (!array_key_exists($key, self::$terms)) {
                 self::loadTerms([$key]);
             }
+
             return self::$terms[$key] ?? '#';
         }
-        if ($arg2 !== '') {
+        if ('' !== $arg2) {
             return in_array($kind, ['post', 'product'], true) ? '#' : '';
         }
-        if ($kind === 'post') {
+        if ('post' === $kind) {
             if (!array_key_exists($arg, self::$posts)) {
                 self::loadPosts([$arg]);
             }
+
             return self::$posts[$arg] ?? '#';
         }
         if (!array_key_exists($arg, self::$products)) {
             self::loadProducts([$arg]);
         }
         $p = self::$products[$arg] ?? null;
+
         return match ($kind) {
-            'product' => $p !== null ? (string) $p['url'] : '#',
-            'price' => $p !== null ? (string) $p['price'] : '',
-            'stock' => $p !== null ? (string) $p['stock'] : '',
+            'product' => null !== $p ? (string) $p['url'] : '#',
+            'price' => null !== $p ? (string) $p['price'] : '',
+            'stock' => null !== $p ? (string) $p['stock'] : '',
             default => '',
         };
     }
@@ -197,7 +201,7 @@ final class Records
         foreach (is_array($found) ? $found : [] as $p) {
             if ($p instanceof \WP_Post && array_key_exists((string) $p->post_name, self::$posts)) {
                 $url = get_permalink($p);
-                self::$posts[(string) $p->post_name] = is_string($url) && $url !== '' ? $url : null;
+                self::$posts[(string) $p->post_name] = is_string($url) && '' !== $url ? $url : null;
             }
         }
     }
@@ -209,7 +213,7 @@ final class Records
             self::$products[$s] = null;
         }
         $kind = self::site()['product'];
-        if ($kind === null) {
+        if (null === $kind) {
             return;
         }
         // one query for the posts, one for their meta (price, stock…); no term cache
@@ -221,7 +225,7 @@ final class Records
         foreach (is_array($found) ? $found : [] as $p) {
             if ($p instanceof \WP_Post && array_key_exists((string) $p->post_name, self::$products)) {
                 $product = self::product($p);
-                if ((string) $p->post_password !== '') {
+                if ('' !== (string) $p->post_password) {
                     // a password-protected product: its link stays, its fields are behind the password
                     $product = ['amount' => null, 'price' => '', 'in_stock' => false, 'stock' => ''] + $product;
                 }
@@ -243,27 +247,28 @@ final class Records
         $kind = $site['product'];
         $e = self::entry($p, $kind ?? ['meta' => [], 'fields' => []]);
         $md = $e['metadata'];
-        $price = $kind !== null ? ($md[$kind['price']]['value'] ?? null) : null;
-        $sale = $kind !== null && $kind['sale'] !== '' ? ($md[$kind['sale']]['value'] ?? null) : null;
+        $price = null !== $kind ? ($md[$kind['price']]['value'] ?? null) : null;
+        $sale = null !== $kind && '' !== $kind['sale'] ? ($md[$kind['sale']]['value'] ?? null) : null;
         $amount = is_int($price) ? $price : null;
-        if ($amount !== null && is_int($sale) && $sale > 0 && $sale < $amount) {
+        if (null !== $amount && is_int($sale) && $sale > 0 && $sale < $amount) {
             $amount = $sale;
         }
         $opts = [
-            'settings' => $site['currency'] !== '' ? ['currency' => $site['currency']] : [],
+            'settings' => '' !== $site['currency'] ? ['currency' => $site['currency']] : [],
             'locale' => $site['locale'],
         ];
         $currency = ReadPath::read($e, 'metadata.currency.value|settings:currency', $opts);
         $currency = is_string($currency) ? $currency : '';
-        $inStock = (bool) ReadPath::read($e, 'metadata.' . ($kind['stock'] ?? '') . '.value|in-stock', $opts);
+        $inStock = (bool) ReadPath::read($e, 'metadata.'.($kind['stock'] ?? '').'.value|in-stock', $opts);
         $url = get_permalink($p);
         $title = trim(wp_strip_all_tags((string) $p->post_title));
+
         return [
-            'url' => is_string($url) && $url !== '' ? $url : '#',
-            'label' => $title !== '' ? $title : (string) $p->post_name,
+            'url' => is_string($url) && '' !== $url ? $url : '#',
+            'label' => '' !== $title ? $title : (string) $p->post_name,
             'amount' => $amount,
             'currency' => $currency,
-            'price' => $amount !== null && $currency !== ''
+            'price' => null !== $amount && '' !== $currency
                 ? (string) Format::currency($amount, $currency, $site['locale'])
                 : '',
             'in_stock' => $inStock,
@@ -276,6 +281,7 @@ final class Records
      * delivery mapping (meta cache primed by the batch query).
      *
      * @param array<string, mixed> $kind
+     *
      * @return array{id: string, slug: string, metadata: array<string, array{value: mixed}>}
      */
     private static function entry(\WP_Post $p, array $kind): array
@@ -286,13 +292,14 @@ final class Records
             $raw = get_post_meta($p->ID, (string) $key, true);
             $value = class_exists(\WPFastyTypes\Codex\Mapper::class)
                 ? \WPFastyTypes\Codex\Mapper::typed($def, $raw)
-                : (is_numeric($raw) ? (int) round((float) $raw) : ($raw === '' || $raw === null ? null : $raw));
-            if ($value !== null) {
+                : (is_numeric($raw) ? (int) round((float) $raw) : ('' === $raw || null === $raw ? null : $raw));
+            if (null !== $value) {
                 $md[(string) $field] = ['value' => $value];
             }
         }
+
         return [
-            'id' => ($kind['kind'] ?? 'product') . '-' . $p->ID,
+            'id' => ($kind['kind'] ?? 'product').'-'.$p->ID,
             'slug' => (string) $p->post_name,
             'metadata' => $md,
         ];
@@ -311,7 +318,7 @@ final class Records
                 $slugs[$slug] = true;
             }
         }
-        if ($taxes === []) {
+        if ([] === $taxes) {
             return;
         }
         // one query for every taxonomy and slug of the page
@@ -320,10 +327,10 @@ final class Records
             'update_term_meta_cache' => false,
         ]);
         foreach (is_array($found) ? $found : [] as $t) {
-            $key = $t instanceof \WP_Term ? $t->taxonomy . ':' . $t->slug : '';
-            if ($key !== '' && array_key_exists($key, self::$terms)) {
+            $key = $t instanceof \WP_Term ? $t->taxonomy.':'.$t->slug : '';
+            if ('' !== $key && array_key_exists($key, self::$terms)) {
                 $url = get_term_link($t);
-                self::$terms[$key] = is_string($url) && $url !== '' ? $url : null;
+                self::$terms[$key] = is_string($url) && '' !== $url ? $url : null;
             }
         }
     }
@@ -349,20 +356,20 @@ final class Records
             'update_post_meta_cache' => false, 'update_post_term_cache' => false,
         ]);
         foreach (is_array($found) ? $found : [] as $p) {
-            if (!$p instanceof \WP_Post || preg_match(Links::SLUG, (string) $p->post_name) !== 1) {
+            if (!$p instanceof \WP_Post || 1 !== preg_match(Links::SLUG, (string) $p->post_name)) {
                 continue;
             }
             $url = get_permalink($p);
             $title = trim(wp_strip_all_tags((string) $p->post_title));
-            self::$posts[(string) $p->post_name] = is_string($url) && $url !== '' ? $url : null;
+            self::$posts[(string) $p->post_name] = is_string($url) && '' !== $url ? $url : null;
             $posts[] = [
-                'token' => '{post:' . $p->post_name . '}', 'label' => $title !== '' ? $title : (string) $p->post_name,
-                'slug' => (string) $p->post_name, 'url' => is_string($url) && $url !== '' ? $url : '#',
+                'token' => '{post:'.$p->post_name.'}', 'label' => '' !== $title ? $title : (string) $p->post_name,
+                'slug' => (string) $p->post_name, 'url' => is_string($url) && '' !== $url ? $url : '#',
             ];
         }
         $site = self::site();
         $products = null;
-        if ($site['product'] !== null) {
+        if (null !== $site['product']) {
             $products = [];
             $found = get_posts([
                 'post_type' => $site['product']['post_type'], 'post_status' => 'publish', 'numberposts' => Links::MAX,
@@ -370,37 +377,38 @@ final class Records
                 'update_post_meta_cache' => true, 'update_post_term_cache' => false,
             ]);
             foreach (is_array($found) ? $found : [] as $p) {
-                if (!$p instanceof \WP_Post || preg_match(Links::SLUG, (string) $p->post_name) !== 1) {
+                if (!$p instanceof \WP_Post || 1 !== preg_match(Links::SLUG, (string) $p->post_name)) {
                     continue;
                 }
                 $slug = (string) $p->post_name;
                 $r = self::product($p);
                 self::$products[$slug] = $r;
-                $products[] = ['token' => '{product:' . $slug . '}', 'label' => $r['label'], 'slug' => $slug] + $r;
+                $products[] = ['token' => '{product:'.$slug.'}', 'label' => $r['label'], 'slug' => $slug] + $r;
             }
         }
         $terms = [];
         $taxes = array_values(array_diff($site['taxonomies'], ['category']));
-        $found = $taxes !== [] ? get_terms([
+        $found = [] !== $taxes ? get_terms([
             'taxonomy' => $taxes, 'hide_empty' => false, 'number' => Links::MAX, 'orderby' => 'name',
             'update_term_meta_cache' => false,
         ]) : [];
         foreach (is_array($found) ? $found : [] as $t) {
-            if (!$t instanceof \WP_Term || preg_match(Links::SLUG, (string) $t->slug) !== 1) {
+            if (!$t instanceof \WP_Term || 1 !== preg_match(Links::SLUG, (string) $t->slug)) {
                 continue;
             }
             $url = get_term_link($t);
             $tax = get_taxonomy($t->taxonomy);
-            self::$terms[$t->taxonomy . ':' . $t->slug] = is_string($url) && $url !== '' ? $url : null;
+            self::$terms[$t->taxonomy.':'.$t->slug] = is_string($url) && '' !== $url ? $url : null;
             $terms[] = [
-                'token' => '{term:' . $t->taxonomy . ':' . $t->slug . '}', 'label' => (string) $t->name,
+                'token' => '{term:'.$t->taxonomy.':'.$t->slug.'}', 'label' => (string) $t->name,
                 'slug' => (string) $t->slug, 'taxonomy' => (string) $t->taxonomy,
                 'kind' => is_object($tax) && isset($tax->labels->singular_name)
                     ? html_entity_decode((string) $tax->labels->singular_name, ENT_QUOTES, 'UTF-8')
                     : (string) $t->taxonomy,
-                'url' => is_string($url) && $url !== '' ? $url : '#',
+                'url' => is_string($url) && '' !== $url ? $url : '#',
             ];
         }
+
         return ['posts' => $posts, 'products' => $products, 'terms' => $terms];
     }
 }

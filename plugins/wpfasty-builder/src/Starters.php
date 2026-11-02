@@ -27,11 +27,11 @@ final class Starters
      */
     public static function shipped(): array
     {
-        if (self::$shipped === null) {
+        if (null === self::$shipped) {
             $out = [];
             foreach (self::IDS as $id) {
-                $raw = is_file(Plugin::$dir . '/starters/' . $id . '.json')
-                    ? file_get_contents(Plugin::$dir . '/starters/' . $id . '.json')
+                $raw = is_file(Plugin::$dir.'/starters/'.$id.'.json')
+                    ? file_get_contents(Plugin::$dir.'/starters/'.$id.'.json')
                     : false;
                 $s = is_string($raw) ? json_decode($raw, true) : null;
                 if (is_array($s) && is_array($s['layout'] ?? null) && is_array($s['layout']['blocks'] ?? null)) {
@@ -47,6 +47,7 @@ final class Starters
                 ? array_values((array) apply_filters('wpfasty_builder_starters', $out))
                 : $out;
         }
+
         return self::$shipped;
     }
 
@@ -55,19 +56,19 @@ final class Starters
      * source exists.
      *
      * @param array<string, mixed> $starter
-     * @param list<string> $dataSources
+     * @param list<string>         $dataSources
      */
     public static function fits(array $starter, ?Catalog $catalog, array $dataSources): bool
     {
         $blocks = $starter['layout']['blocks'] ?? null;
-        if ($catalog === null || !is_array($blocks) || $blocks === []) {
+        if (null === $catalog || !is_array($blocks) || [] === $blocks) {
             return false;
         }
         foreach ($blocks as $b) {
             $variant = is_array($b)
                 ? $catalog->variant((string) ($b['block'] ?? ''), (string) ($b['variant'] ?? ''))
                 : null;
-            if ($variant === null) {
+            if (null === $variant) {
                 return false;
             }
             foreach ((array) ($b['bindings'] ?? []) as $bind) {
@@ -76,6 +77,7 @@ final class Starters
                 }
             }
         }
+
         return true;
     }
 
@@ -95,6 +97,7 @@ final class Starters
                 $out[] = $s;
             }
         }
+
         return $out;
     }
 
@@ -106,6 +109,7 @@ final class Starters
                 return $s;
             }
         }
+
         return null;
     }
 

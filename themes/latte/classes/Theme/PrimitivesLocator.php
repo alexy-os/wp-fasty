@@ -34,12 +34,12 @@ final class PrimitivesLocator
     public static function latteRoots(?string $themeDir = null): array
     {
         $themeDir ??= get_template_directory();
-        if (is_dir($themeDir . '/ui8kit/ui') && is_dir($themeDir . '/kit/ui')) {
-            return [$themeDir . '/kit/ui', $themeDir . '/ui8kit/ui', $themeDir . '/ui8kit'];
+        if (is_dir($themeDir.'/ui8kit/ui') && is_dir($themeDir.'/kit/ui')) {
+            return [$themeDir.'/kit/ui', $themeDir.'/ui8kit/ui', $themeDir.'/ui8kit'];
         }
         $legacy = self::resolve($themeDir);
 
-        return $legacy === null ? [] : [$legacy];
+        return null === $legacy ? [] : [$legacy];
     }
 
     /**
@@ -53,19 +53,19 @@ final class PrimitivesLocator
     public static function twigRoots(?string $themeDir = null): array
     {
         $themeDir ??= get_template_directory();
-        if (is_dir($themeDir . '/twig/ui8kit/ui') && is_dir($themeDir . '/twig/kit/ui')) {
-            return [$themeDir . '/twig/kit/ui', $themeDir . '/twig/ui8kit/ui', $themeDir . '/twig/ui8kit'];
+        if (is_dir($themeDir.'/twig/ui8kit/ui') && is_dir($themeDir.'/twig/kit/ui')) {
+            return [$themeDir.'/twig/kit/ui', $themeDir.'/twig/ui8kit/ui', $themeDir.'/twig/ui8kit'];
         }
         $legacy = self::resolveTwig($themeDir);
 
-        return $legacy === null ? [] : [$legacy];
+        return null === $legacy ? [] : [$legacy];
     }
 
     /** @return list<string> */
     public static function candidates(string $themeDir): array
     {
         return [
-            $themeDir . '/ui8kit/ui',
+            $themeDir.'/ui8kit/ui',
         ];
     }
 
@@ -74,6 +74,6 @@ final class PrimitivesLocator
     {
         $themeDir ??= get_template_directory();
 
-        return is_dir($themeDir . '/twig/ui8kit/ui') ? $themeDir . '/twig/ui8kit/ui' : null;
+        return is_dir($themeDir.'/twig/ui8kit/ui') ? $themeDir.'/twig/ui8kit/ui' : null;
     }
 }

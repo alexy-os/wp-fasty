@@ -11,21 +11,21 @@ final class PrimitivesLocatorTest extends TestCase
 {
     private function theme(): string
     {
-        return dirname(__DIR__) . '/themes/latte';
+        return dirname(__DIR__).'/themes/latte';
     }
 
     public function testResolvesUi8Kit3Primitives(): void
     {
         $dir = PrimitivesLocator::resolve($this->theme());
-        $this->assertSame($this->theme() . '/ui8kit/ui', $dir);
-        $this->assertFileExists($dir . '/button/Button.latte');
-        $this->assertTrue(class_exists(\UI8Kit\Latte\Classes::class), 'PSR-4 UI8Kit\\Latte\\ → ui8kit/runtime/');
+        $this->assertSame($this->theme().'/ui8kit/ui', $dir);
+        $this->assertFileExists($dir.'/button/Button.latte');
+        $this->assertTrue(class_exists(UI8Kit\Latte\Classes::class), 'PSR-4 UI8Kit\\Latte\\ → ui8kit/runtime/');
     }
 
     public function testLatteRootsPutKitBeforeUi8Kit3(): void
     {
         $this->assertSame(
-            [$this->theme() . '/kit/ui', $this->theme() . '/ui8kit/ui', $this->theme() . '/ui8kit'],
+            [$this->theme().'/kit/ui', $this->theme().'/ui8kit/ui', $this->theme().'/ui8kit'],
             PrimitivesLocator::latteRoots($this->theme()),
         );
     }
@@ -33,9 +33,9 @@ final class PrimitivesLocatorTest extends TestCase
     public function testComposeFieldsMapStateErrorToAriaInvalid(): void
     {
         // kit-compose form fields (ui8kit/compose, tools/builder/export-ui8kit.ts): state error → recipe + aria-invalid
-        $this->assertFileExists($this->theme() . '/ui8kit/compose/Input.latte');
-        $this->assertFileExists($this->theme() . '/twig/ui8kit/compose/Input.html.twig');
-        foreach ([\CodegenX\Compose\Latte\Compose::class, \CodegenX\Compose\Twig\Compose::class] as $compose) {
+        $this->assertFileExists($this->theme().'/ui8kit/compose/Input.latte');
+        $this->assertFileExists($this->theme().'/twig/ui8kit/compose/Input.html.twig');
+        foreach ([CodegenX\Compose\Latte\Compose::class, CodegenX\Compose\Twig\Compose::class] as $compose) {
             foreach (['Input', 'Textarea', 'Select'] as $field) {
                 $err = $compose::props($field, ['state' => 'error', 'class' => 'x']);
                 $this->assertSame('true', $err['ariaInvalid'] ?? null, "{$compose} {$field}");
@@ -53,8 +53,8 @@ final class PrimitivesLocatorTest extends TestCase
         // base, every key (selected or default), the matching compound classes, then the extra classes (kit-compose Compose::rc)
         $this->assertSame(
             'inline-flex shrink-0 items-center justify-center whitespace-nowrap font-medium inset-ring transition-colors '
-            . 'disabled:pointer-events-none disabled:opacity-50 rounded bg-secondary text-secondary-foreground inset-ring-border hover:bg-secondary/80 '
-            . 'h-12 px-6 text-base w-full',
+            .'disabled:pointer-events-none disabled:opacity-50 rounded bg-secondary text-secondary-foreground inset-ring-border hover:bg-secondary/80 '
+            .'h-12 px-6 text-base w-full',
             Kit::classes('button', ['variant' => 'secondary', 'size' => 'lg'], 'w-full'),
         );
         $icon = Kit::classes('button', ['variant' => 'outline', 'layout' => 'icon']);
@@ -68,7 +68,7 @@ final class PrimitivesLocatorTest extends TestCase
     {
         // presets/components/<recipe>.json = codegen-x packages/kit-compose/variants at the builder source commit
         $root = dirname(__DIR__);
-        $compose = json_decode((string) file_get_contents($root . '/plugins/wpfasty-builder/sources/ui8kit/latte/compose/compose.json'), true);
+        $compose = json_decode((string) file_get_contents($root.'/plugins/wpfasty-builder/sources/ui8kit/latte/compose/compose.json'), true);
         foreach (['alert', 'badge', 'button', 'card', 'iconbadge', 'input', 'textarea', 'label', 'link', 'stack', 'title'] as $name) {
             $recipe = Kit::recipe($name);
             $cgx = $compose['recipes'][$name];
@@ -81,13 +81,13 @@ final class PrimitivesLocatorTest extends TestCase
 
     public function testMiddleLayerRendersOverUi8Kit3Box(): void
     {
-        $cache = sys_get_temp_dir() . '/wpfasty-kit-' . getmypid();
-        $tpl = $cache . '/kit-probe';
+        $cache = sys_get_temp_dir().'/wpfasty-kit-'.getmypid();
+        $tpl = $cache.'/kit-probe';
         @mkdir($tpl, 0775, true);
-        file_put_contents($tpl . '/probe.latte', "{include 'block/Block.latte', tag: 'section', id: 'x', class: 'py-8', children: 'Hi'}"
-            . "{include 'title/Title.latte', as: 1, children: 'T'}{include 'badge/Badge.latte', variant: 'secondary', children: 'B'}"
-            . "{include 'textarea/Textarea.latte', value: \"  a\\nb\", class: kit('textarea')}");
-        $r2 = new LatteRenderer([$tpl, ...PrimitivesLocator::latteRoots($this->theme())], $cache . '/c');
+        file_put_contents($tpl.'/probe.latte', "{include 'block/Block.latte', tag: 'section', id: 'x', class: 'py-8', children: 'Hi'}"
+            ."{include 'title/Title.latte', as: 1, children: 'T'}{include 'badge/Badge.latte', variant: 'secondary', children: 'B'}"
+        ."{include 'textarea/Textarea.latte', value: \"  a\\nb\", class: kit('textarea')}");
+        $r2 = new LatteRenderer([$tpl, ...PrimitivesLocator::latteRoots($this->theme())], $cache.'/c');
         $html = (string) preg_replace('/\s+/', ' ', $r2->render('probe'));
         $this->assertStringContainsString('<section class="py-8" id="x">Hi</section>', $html);
         $this->assertStringContainsString('<h1 class="text-foreground font-semibold">T</h1>', $html);

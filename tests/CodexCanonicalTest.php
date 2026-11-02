@@ -8,7 +8,7 @@ use WPFastyTypes\Codex\Canonical;
 use WPFastyTypes\Codex\CanonicalError;
 use WPFastyTypes\Codex\Json;
 
-require_once dirname(__DIR__) . '/plugins/wpfasty-types/src/Codex/autoload.php';
+require_once dirname(__DIR__).'/plugins/wpfasty-types/src/Codex/autoload.php';
 
 /** codex-entry/v1 vectors of @ui8kit/contract (tests/fixtures/codex/canonical.json, contract 8299fee). */
 final class CodexCanonicalTest extends TestCase
@@ -16,7 +16,7 @@ final class CodexCanonicalTest extends TestCase
     /** @return iterable<string, array{array<string, mixed>}> */
     public static function vectors(): iterable
     {
-        $doc = json_decode((string) file_get_contents(__DIR__ . '/fixtures/codex/canonical.json'), true);
+        $doc = json_decode((string) file_get_contents(__DIR__.'/fixtures/codex/canonical.json'), true);
         foreach ($doc['cases'] as $case) {
             yield $case['name'] => [$case];
         }
@@ -33,6 +33,7 @@ final class CodexCanonicalTest extends TestCase
             } catch (CanonicalError $e) {
                 self::assertSame($case['error'], $e->codexCode, $e->getMessage());
             }
+
             return;
         }
         self::assertSame($case['canonical'], Canonical::canonicalize($case['input_text']));
@@ -43,7 +44,7 @@ final class CodexCanonicalTest extends TestCase
 
     public function testVectorFileShape(): void
     {
-        $doc = json_decode((string) file_get_contents(__DIR__ . '/fixtures/codex/canonical.json'), true);
+        $doc = json_decode((string) file_get_contents(__DIR__.'/fixtures/codex/canonical.json'), true);
         self::assertSame('codex-entry/v1', $doc['profile']);
         self::assertCount(24, $doc['cases']);
     }
@@ -51,7 +52,7 @@ final class CodexCanonicalTest extends TestCase
     /** @return iterable<string, array{array<string, mixed>}> */
     public static function manifestVectors(): iterable
     {
-        $doc = json_decode((string) file_get_contents(__DIR__ . '/fixtures/codex/manifest.json'), true);
+        $doc = json_decode((string) file_get_contents(__DIR__.'/fixtures/codex/manifest.json'), true);
         foreach ($doc['cases'] as $case) {
             yield $case['name'] => [$case];
         }
@@ -68,6 +69,7 @@ final class CodexCanonicalTest extends TestCase
             } catch (CanonicalError $e) {
                 self::assertSame($case['error'], $e->codexCode, $e->getMessage());
             }
+
             return;
         }
         self::assertSame($case['canonical'], Canonical::manifest($case['input_text']));
@@ -76,7 +78,7 @@ final class CodexCanonicalTest extends TestCase
 
     public function testManifestVectorFileShape(): void
     {
-        $doc = json_decode((string) file_get_contents(__DIR__ . '/fixtures/codex/manifest.json'), true);
+        $doc = json_decode((string) file_get_contents(__DIR__.'/fixtures/codex/manifest.json'), true);
         self::assertSame('codex-manifest/v2', $doc['profile']);
         self::assertCount(6, $doc['cases']);
     }

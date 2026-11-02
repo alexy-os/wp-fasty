@@ -1,9 +1,8 @@
 <?php
+
 /**
  * View helpers shared by both renderers, so Latte and Twig views have the same vocabulary:
  * filters esc_url, kses, safe_url; functions t, icon (+ the WordPress hook tags / functions).
- *
- * @package Latte
  */
 
 declare(strict_types=1);
@@ -38,7 +37,8 @@ final class ViewHelpers
     public static function safeUrl(mixed $url): string
     {
         $url = (string) $url;
-        return preg_match('~^(?:(?:https?|ftp)://[^@]+(?:/.*)?|(?:mailto|tel|sms):.+|[/?#].*|[^:]+)$~Di', $url) === 1
+
+        return 1 === preg_match('~^(?:(?:https?|ftp)://[^@]+(?:/.*)?|(?:mailto|tel|sms):.+|[/?#].*|[^:]+)$~Di', $url)
             ? $url
             : '';
     }

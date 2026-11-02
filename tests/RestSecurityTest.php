@@ -52,10 +52,10 @@ final class RestSecurityTest extends TestCase
 
     protected function setUp(): void
     {
-        require_once __DIR__ . '/fixtures/rest-stubs.php';
-        require_once __DIR__ . '/fixtures/wp-objects-stubs.php';
+        require_once __DIR__.'/fixtures/rest-stubs.php';
+        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
         foreach (['Rest', 'Sources'] as $f) {
-            require_once dirname(__DIR__) . "/plugins/wpfasty-builder/src/$f.php";
+            require_once dirname(__DIR__)."/plugins/wpfasty-builder/src/$f.php";
         }
         $GLOBALS['wpfasty_wp']['posts'] = [self::PAGE => 'page', self::OWN_PAGE => 'page', self::POST => 'post'];
         $GLOBALS['wp_test_routes'] = [];
@@ -65,7 +65,7 @@ final class RestSecurityTest extends TestCase
     /** @return callable(\WP_REST_Request): bool */
     private static function permission(string $route, string $method): callable
     {
-        $r = $GLOBALS['wp_test_routes'][Rest::NS . $route] ?? null;
+        $r = $GLOBALS['wp_test_routes'][Rest::NS.$route] ?? null;
         self::assertIsArray($r, $route);
         if (!isset($r['permission_callback'])) {
             foreach ($r as $handler) {
@@ -76,6 +76,7 @@ final class RestSecurityTest extends TestCase
         }
         self::assertArrayHasKey('permission_callback', $r, "$method $route");
         self::assertNotSame('__return_true', $r['permission_callback'], "$method $route is not public");
+
         return $r['permission_callback'];
     }
 
@@ -83,14 +84,14 @@ final class RestSecurityTest extends TestCase
     {
         $routes = array_keys($GLOBALS['wp_test_routes']);
         self::assertEqualsCanonicalizing(
-            array_map(static fn (string $r): string => Rest::NS . $r, ['/catalog', '/links', '/layout/(?P<id>\d+)', '/render-block', '/pages', '/sources']),
+            array_map(static fn (string $r): string => Rest::NS.$r, ['/catalog', '/links', '/layout/(?P<id>\d+)', '/render-block', '/pages', '/sources']),
             $routes,
             'a new route needs a row in ALLOWED',
         );
         foreach (self::ALLOWED as $call => $allowed) {
             preg_match('#^(GET|POST) (/[a-z-]+)(?:/(\d+))?(?: page=(\d+))?$#', $call, $m);
             $method = $m[1];
-            $route = $m[2] === '/layout' ? '/layout/(?P<id>\d+)' : $m[2];
+            $route = '/layout' === $m[2] ? '/layout/(?P<id>\d+)' : $m[2];
             $params = ($m[3] ?? '') !== '' ? ['id' => (int) $m[3]] : [];
             $json = ($m[4] ?? '') !== '' ? ['page' => (int) $m[4]] : [];
             $perm = self::permission($route, $method);
@@ -126,7 +127,7 @@ final class RestSecurityTest extends TestCase
     {
         foreach (self::ROLES as $role => $caps) {
             $GLOBALS['wp_test_caps'] = $caps;
-            self::assertSame($role === 'administrator', \WPFastyBuilder\Sources::canImport(), $role);
+            self::assertSame('administrator' === $role, \WPFastyBuilder\Sources::canImport(), $role);
         }
     }
 }

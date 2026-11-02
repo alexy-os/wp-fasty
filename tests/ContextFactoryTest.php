@@ -17,8 +17,8 @@ final class ContextFactoryTest extends TestCase
 
     public function testTextDecodesWpEntitiesOnce(): void
     {
-        $this->assertSame('It’s fine…', \WPFasty\Data\ContextFactory::text('It&#8217;s fine&hellip;'));
-        $this->assertSame('<b>', \WPFasty\Data\ContextFactory::text('&lt;b&gt;'));
+        $this->assertSame('It’s fine…', ContextFactory::text('It&#8217;s fine&hellip;'));
+        $this->assertSame('<b>', ContextFactory::text('&lt;b&gt;'));
     }
 
     public function testErrorContextShape(): void

@@ -18,18 +18,16 @@
  *
  *   php tools/security/xss-fuzz.php [--mode fragment,raw,page] [--block <id>] [--max N] [--shard i/n] [--json out.json]
  * --shard i/n takes every n-th variant from the i-th (CI runs the shards in parallel).
- *
- * @package WPFastyBuilder
  */
 
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-require $root . '/themes/latte/vendor/autoload.php';
-require $root . '/vendor/autoload.php';
+require $root.'/themes/latte/vendor/autoload.php';
+require $root.'/vendor/autoload.php';
 spl_autoload_register(static function (string $class) use ($root): void {
     if (str_starts_with($class, 'WPFastyBuilder\\')) {
-        require $root . '/plugins/wpfasty-builder/src/' . str_replace('\\', '/', substr($class, 15)) . '.php';
+        require $root.'/plugins/wpfasty-builder/src/'.str_replace('\\', '/', substr($class, 15)).'.php';
     }
 });
 if (!function_exists('__')) {
@@ -40,7 +38,7 @@ if (!function_exists('__')) {
 }
 
 $opt = getopt('', ['block:', 'max:', 'mode:', 'json:', 'shard:']);
-$payloads = require __DIR__ . '/payloads.php';
+$payloads = require __DIR__.'/payloads.php';
 $max = isset($opt['max']) ? max(1, (int) $opt['max']) : 0;
 $lists = [
     'html' => $max > 0 ? array_slice($payloads['html'], 0, $max) : $payloads['html'],
@@ -50,12 +48,12 @@ $lists = [
 ];
 $modes = explode(',', (string) ($opt['mode'] ?? 'fragment,raw,page'));
 $onlyBlock = (string) ($opt['block'] ?? '');
-$normalize = require $root . '/tools/parity/normalize-dom.php';
-$pageBlocks = (require $root . '/tools/builder/fragment-html.php')['blocks'];
-$check = require __DIR__ . '/dom-check.php';
+$normalize = require $root.'/tools/parity/normalize-dom.php';
+$pageBlocks = (require $root.'/tools/builder/fragment-html.php')['blocks'];
+$check = require __DIR__.'/dom-check.php';
 
 /** a prop that may hold a URL, by its key */
-$urlKey = static fn (string $k): bool => preg_match('/(href|src|srcset|action|poster|url|image|avatar|logo|cover)$/i', $k) === 1;
+$urlKey = static fn (string $k): bool => 1 === preg_match('/(href|src|srcset|action|poster|url|image|avatar|logo|cover)$/i', $k);
 
 /** every string leaf replaced: url-context leaves in the url list, the others in the html list */
 $inject = static function (mixed $v, string $payload, bool $url, string $key = '') use (&$inject, $urlKey): mixed {
@@ -63,11 +61,13 @@ $inject = static function (mixed $v, string $payload, bool $url, string $key = '
         foreach ($v as $k => $x) {
             $v[$k] = $inject($x, $payload, $url, is_string($k) ? $k : $key);
         }
+
         return $v;
     }
     if (is_string($v) && $urlKey($key) === $url) {
         return $payload;
     }
+
     return $v;
 };
 
@@ -82,9 +82,10 @@ $extra = static function (mixed $v) use (&$extra): mixed {
     foreach ($v as $k => $x) {
         $v[$k] = $extra($x);
     }
-    if ($v !== [] && array_is_list($v)) {
+    if ([] !== $v && array_is_list($v)) {
         return $v;
     }
+
     return $v + [
         'attrs' => [
             'onclick' => 'alert(1)', 'onmouseover' => 'alert(1)', 'href' => 'javascript:alert(1)',
@@ -111,7 +112,7 @@ $prepare = static fn (array $p): array => method_exists(WPFastyBuilder\Front::cl
 
 $engines = [];
 foreach (['latte', 'twig'] as $engine) {
-    $src = new WPFastyBuilder\Source\LocalSource('ui8kit', $root . '/plugins/wpfasty-builder/sources/ui8kit/' . $engine, $engine);
+    $src = new WPFastyBuilder\Source\LocalSource('ui8kit', $root.'/plugins/wpfasty-builder/sources/ui8kit/'.$engine, $engine);
     $r = new WPFastyBuilder\BlockRenderer(['ui8kit' => $src], null);
     $engines[$engine] = [
         'catalog' => new WPFastyBuilder\Catalog($src->catalog()),
@@ -120,13 +121,13 @@ foreach (['latte', 'twig'] as $engine) {
 }
 $catalogL = $engines['latte']['catalog'];
 
-[$shard, $shards] = isset($opt['shard']) && preg_match('#^(\d+)/(\d+)$#', (string) $opt['shard'], $sm) === 1
+[$shard, $shards] = isset($opt['shard']) && 1 === preg_match('#^(\d+)/(\d+)$#', (string) $opt['shard'], $sm)
     ? [max(1, (int) $sm[1]), max(1, (int) $sm[2])]
     : [1, 1];
 $variants = [];
 $n = 0;
 foreach ($catalogL->forEditor(null)['blocks'] as $b) {
-    if ($onlyBlock !== '' && $b['id'] !== $onlyBlock) {
+    if ('' !== $onlyBlock && $b['id'] !== $onlyBlock) {
         continue;
     }
     foreach ($b['variants'] as $v) {
@@ -143,7 +144,7 @@ foreach ($catalogL->forEditor(null)['blocks'] as $b) {
 $inputs = static function (WPFastyBuilder\Catalog $c, string $block, string $variant, string $payload, bool $url) use ($inject, $extra): array {
     $v = (array) $c->variant($block, $variant);
     $props = (array) ($v['props'] ?? []);
-    if ($payload === '#extra') {
+    if ('#extra' === $payload) {
         $props = $extra($props);
         $bound = [];
         foreach (array_keys($c->bindable($block, $variant)) as $path) {
@@ -153,6 +154,7 @@ $inputs = static function (WPFastyBuilder\Catalog $c, string $block, string $var
             }
             $bound[$path] = is_array($at) ? $at : [];
         }
+
         return [$props, $bound, static fn (array $slot): array => $extra((array) ($slot['sample'] ?? []))];
     }
     $bound = [];
@@ -170,8 +172,10 @@ $inputs = static function (WPFastyBuilder\Catalog $c, string $block, string $var
                 $rec[$k] = $inject($x, $payload, $url, (string) $k);
             }
         }
+
         return $rec;
     };
+
     return [$inject($props, $payload, $url), $bound, $current];
 };
 
@@ -214,8 +218,8 @@ foreach (['fragment', 'raw'] as $mode) {
                 $norm = [];
                 foreach ($engines as $name => $e) {
                     $c = $e['catalog'];
-                    [$props, $bound, $current] = $inputs($c, $block, $variant, $payload, $list === 'url');
-                    if ($mode === 'fragment') {
+                    [$props, $bound, $current] = $inputs($c, $block, $variant, $payload, 'url' === $list);
+                    if ('fragment' === $mode) {
                         $kinds = $c->bindable($block, $variant);
                         $out = WPFastyBuilder\Fragment::render(
                             $c,
@@ -227,6 +231,7 @@ foreach (['fragment', 'raw'] as $mode) {
                             ['fuzz'],
                             static function (array $bind, string $kind, ?array $slot) use ($bound, $kinds): array {
                                 $path = (string) array_search($kind, $kinds, true);
+
                                 return $bound[$path] ?? [];
                             },
                             $e['render'],
@@ -244,9 +249,9 @@ foreach (['fragment', 'raw'] as $mode) {
                         }
                         $html = ($e['render'])((string) $v['template'], $merged);
                     }
-                    $renders++;
+                    ++$renders;
                     if (str_contains(html_entity_decode($html, ENT_QUOTES | ENT_HTML5), 'alert(1)')) {
-                        $reached++;
+                        ++$reached;
                     }
                     $add(
                         ['mode' => $mode, 'engine' => $name, 'block' => $block, 'variant' => $variant, 'payload' => $payload],
@@ -274,8 +279,8 @@ if (in_array('page', $modes, true)) {
                 foreach (array_chunk($variants, WPFastyBuilder\Layout::MAX_BLOCKS) as $ci => $chunk) {
                     $blocks = [];
                     foreach ($chunk as $i => [$block, $variant]) {
-                        [$props] = $inputs($c, $block, $variant, $payload, $list === 'url');
-                        $blocks[] = ['id' => 'v' . $i, 'block' => $block, 'variant' => $variant, 'props' => $props];
+                        [$props] = $inputs($c, $block, $variant, $payload, 'url' === $list);
+                        $blocks[] = ['id' => 'v'.$i, 'block' => $block, 'variant' => $variant, 'props' => $props];
                     }
                     [$entry] = WPFastyBuilder\Layout::normalize(['blocks' => $blocks], 'ui8kit', $c, [], [
                         'id' => 'layout-fuzz', 'slug' => 'fuzz', 'title' => $payload, 'version' => 1,
@@ -285,34 +290,34 @@ if (in_array('page', $modes, true)) {
                     $tpl = WPFastyBuilder\Compiler::compile($entry, $c, $name);
                     $fn = $e['render'];
                     try {
-                        if ($name === 'latte') {
+                        if ('latte' === $name) {
                             $l = new Latte\Engine();
                             $l->setLoader(new Latte\Loaders\StringLoader(['page' => $tpl]));
                             $l->addFunction('wpfb_block', static fn (string $s, string $t, array $p): string => $fn($t, $p));
                             $page = $l->renderToString('page', ['wpfb' => []]);
                         } else {
                             $env = new Twig\Environment(new Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
-                            $env->registerUndefinedFunctionCallback(static fn (string $n): Twig\TwigFunction|false => $n === 'wpfb_block'
+                            $env->registerUndefinedFunctionCallback(static fn (string $n): Twig\TwigFunction|false => 'wpfb_block' === $n
                                 ? new Twig\TwigFunction($n, static fn (string $s, string $t, array $p): string => $fn($t, $p), ['is_safe' => ['html']])
-                                : false);
+                            : false);
                             $page = $env->render('page', ['wpfb' => []]);
                         }
                     } catch (Throwable $ex) {
                         $findings[] = [
                             'mode' => 'page', 'engine' => $name, 'block' => "chunk $ci", 'variant' => '',
-                            'payload' => $payload, 'finding' => 'compile-error: ' . substr($ex->getMessage(), 0, 120),
+                            'payload' => $payload, 'finding' => 'compile-error: '.substr($ex->getMessage(), 0, 120),
                         ];
                         continue;
                     }
-                    $renders++;
+                    ++$renders;
                     $head = substr($page, 0, (int) strpos($page, '<div class="wpfb-page"'));
-                    if (trim((string) preg_replace('/\s+/', ' ', $head)) !== '') {
+                    if ('' !== trim((string) preg_replace('/\s+/', ' ', $head))) {
                         $findings[] = [
                             'mode' => 'page', 'engine' => $name, 'block' => "chunk $ci", 'variant' => '',
                             'payload' => $payload, 'finding' => 'page-head-output (title left the template comment)',
                         ];
                     }
-                    foreach ($pageBlocks('<!doctype html><html><body>' . $page . '</body></html>') as $id => $inner) {
+                    foreach ($pageBlocks('<!doctype html><html><body>'.$page.'</body></html>') as $id => $inner) {
                         [$block, $variant] = $chunk[(int) substr((string) $id, 1)];
                         $add(
                             ['mode' => 'page', 'engine' => $name, 'block' => $block, 'variant' => $variant, 'payload' => $payload],
@@ -337,12 +342,12 @@ if (in_array('page', $modes, true)) {
 
 $by = [];
 foreach ($findings as $f) {
-    $by[$f['mode'] . ' ' . $f['finding']][] = $f;
+    $by[$f['mode'].' '.$f['finding']][] = $f;
 }
 ksort($by);
 foreach ($by as $kind => $list) {
     $ex = $list[0];
-    $blocks = count(array_unique(array_map(static fn (array $f): string => $f['block'] . '/' . $f['variant'], $list)));
+    $blocks = count(array_unique(array_map(static fn (array $f): string => $f['block'].'/'.$f['variant'], $list)));
     fwrite(STDERR, sprintf(
         "✗ %s × %d (%d variants) — e.g. %s/%s [%s] %s\n",
         $kind,
@@ -368,4 +373,4 @@ fwrite(STDOUT, sprintf(
     microtime(true) - $t0,
     count($findings),
 ));
-exit($findings === [] ? 0 : 1);
+exit([] === $findings ? 0 : 1);

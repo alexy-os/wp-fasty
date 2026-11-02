@@ -16,6 +16,7 @@ final class Seeder
 {
     /**
      * @param array<string, mixed> $spec
+     *
      * @return array{page: int, version: int, blocks: int, issues: list<array<string, string>>}|\WP_Error
      */
     public static function landing(array $spec): array|\WP_Error
@@ -34,7 +35,7 @@ final class Seeder
             return $id;
         }
         if (!empty($spec['front'])) {
-            if ((int) get_option('page_for_posts') === 0 && get_option('show_on_front') === 'posts') {
+            if (0 === (int) get_option('page_for_posts') && 'posts' === get_option('show_on_front')) {
                 $blog = get_page_by_path('blog');
                 $blogId = $blog instanceof \WP_Post ? $blog->ID : wp_insert_post([
                     'post_type' => 'page',
@@ -55,6 +56,7 @@ final class Seeder
             return $result;
         }
         [$entry, $issues] = $result;
+
         return [
             'page' => (int) $id,
             'version' => (int) $entry['version'],
@@ -68,12 +70,12 @@ final class Seeder
     {
         $locations = get_nav_menu_locations();
         $menuId = (int) ($locations[sanitize_key((string) ($menu['location'] ?? 'primary'))] ?? 0);
-        if ($menuId === 0) {
+        if (0 === $menuId) {
             return;
         }
         $items = wp_get_nav_menu_items($menuId);
         foreach (is_array($items) ? $items : [] as $item) {
-            if ($item->object === 'page' && (int) $item->object_id === $page) {
+            if ('page' === $item->object && (int) $item->object_id === $page) {
                 return;
             }
         }

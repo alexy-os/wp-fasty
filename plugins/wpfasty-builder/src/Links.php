@@ -25,7 +25,7 @@ final class Links
 {
     public const TOKEN =
         '/\{(home|posts|post|page|category|archive|site|tel|mailto|whatsapp|telegram|map|year|today|open-now'
-        . '|product|term|price|stock)(?::([a-z0-9_-]+))?(?::([a-z0-9_-]+))?\}/';
+        .'|product|term|price|stock)(?::([a-z0-9_-]+))?(?::([a-z0-9_-]+))?\}/';
     /** {site:<key>} keys, in picker order */
     public const SITE = ['name', 'phone', 'email', 'address', 'hours'];
     /** contact tokens → the site data key each one is built from */
@@ -38,7 +38,7 @@ final class Links
     public const MAP = 'https://www.openstreetmap.org/search?query=';
     /** map links by provider (settings map.provider; unknown or none = osm): [pin at {lat},{lng}, search for {q}] */
     public const MAPS = [
-        'osm' => ['https://www.openstreetmap.org/?mlat={lat}&mlon={lng}#map=17/{lat}/{lng}', self::MAP . '{q}'],
+        'osm' => ['https://www.openstreetmap.org/?mlat={lat}&mlon={lng}#map=17/{lat}/{lng}', self::MAP.'{q}'],
         'google' => [
             'https://www.google.com/maps/search/?api=1&query={lat}%2C{lng}',
             'https://www.google.com/maps/search/?api=1&query={q}',
@@ -66,12 +66,14 @@ final class Links
         if (!str_contains($value, '{')) {
             return $value;
         }
+
         return (string) preg_replace_callback(self::TOKEN, static function (array $m): string {
             $key = $m[0];
             $arg2 = $m[3] ?? '';
-            if ($arg2 !== '' && $m[1] !== 'term') {
+            if ('' !== $arg2 && 'term' !== $m[1]) {
                 return $key; // only {term:<taxonomy>:<slug>} takes two arguments
             }
+
             return self::$cache[$key] ??= self::value($m[1], $m[2] ?? '', $arg2);
         }, $value);
     }
@@ -97,9 +99,10 @@ final class Links
     /** @return array<string, mixed> */
     public static function block(): array
     {
-        if (self::$block === null) {
+        if (null === self::$block) {
             self::$block = class_exists(\WPFastyTypes\Contact::class) ? \WPFastyTypes\Contact::block() : [];
         }
+
         return self::$block;
     }
 
@@ -109,6 +112,7 @@ final class Links
      * contact.links (WhatsApp falls back to the phone) and the map pin. "" for what the site does not have.
      *
      * @param array<string, mixed>|null $block block(); null = the site's
+     *
      * @return array{name: string, phone: string, email: string, address: string, hours: string, telegram: string,
      *   whatsapp: string, lat: string, lng: string, provider: string}
      */
@@ -122,12 +126,14 @@ final class Links
                     return $l['handle'];
                 }
             }
+
             return '';
         };
         $map = is_array($block['map'] ?? null) ? $block['map'] : [];
         $coords = is_numeric($map['lat'] ?? null) && is_numeric($map['lng'] ?? null);
         $phone = is_string($c['phone'] ?? null) ? $c['phone'] : '';
         $whatsapp = $handle('whatsapp');
+
         return [
             'name' => html_entity_decode((string) get_option('blogname'), ENT_QUOTES, 'UTF-8'),
             'phone' => $phone,
@@ -135,7 +141,7 @@ final class Links
             'address' => is_string($c['address'] ?? null) ? $c['address'] : '',
             'hours' => self::hoursText(is_array($block['hours'] ?? null) ? $block['hours'] : []),
             'telegram' => $handle('telegram'),
-            'whatsapp' => $whatsapp !== '' ? $whatsapp : $phone,
+            'whatsapp' => '' !== $whatsapp ? $whatsapp : $phone,
             'lat' => $coords ? (string) (float) $map['lat'] : '',
             'lng' => $coords ? (string) (float) $map['lng'] : '',
             'provider' => is_string($map['provider'] ?? null) ? $map['provider'] : '',
@@ -163,7 +169,7 @@ final class Links
             }
             foreach ($r['days'] as $d) {
                 if (isset($byDay[$d])) {
-                    $byDay[$d][] = (string) ($r['open'] ?? '') . '–' . (string) ($r['close'] ?? '');
+                    $byDay[$d][] = (string) ($r['open'] ?? '').'–'.(string) ($r['close'] ?? '');
                 }
             }
         }
@@ -173,7 +179,7 @@ final class Links
             sort($times, SORT_STRING);
             $key = implode(', ', $times);
             $last = count($groups) - 1;
-            if ($last >= 0 && $groups[$last][2] === $key && $key !== '') {
+            if ($last >= 0 && $groups[$last][2] === $key && '' !== $key) {
                 $groups[$last][1] = $d;
                 continue;
             }
@@ -181,10 +187,11 @@ final class Links
         }
         $out = [];
         foreach ($groups as [$from, $to, $key]) {
-            if ($key !== '') {
-                $out[] = $names[$from] . ($from !== $to ? '–' . $names[$to] : '') . ' ' . $key;
+            if ('' !== $key) {
+                $out[] = $names[$from].($from !== $to ? '–'.$names[$to] : '').' '.$key;
             }
         }
+
         return implode('; ', $out);
     }
 
@@ -199,31 +206,33 @@ final class Links
         $v = trim((string) ($data[self::CONTACT[$kind] ?? ''] ?? ''));
         $digits = (string) preg_replace('/[^0-9]/', '', $v);
         $plus = str_starts_with($v, '+') ? '+' : '';
-        $handle = preg_match(self::HANDLE, $v, $m) === 1 ? $m[1] : '';
+        $handle = 1 === preg_match(self::HANDLE, $v, $m) ? $m[1] : '';
         $lat = (string) ($data['lat'] ?? '');
         $lng = (string) ($data['lng'] ?? '');
         $pin = is_numeric($lat) && is_numeric($lng);
         $ok = match ($kind) {
-            'tel', 'whatsapp' => $digits !== '',
-            'mailto' => is_email($v) !== false,
-            'telegram' => $handle !== '',
-            'map' => $v !== '' || $pin,
+            'tel', 'whatsapp' => '' !== $digits,
+            'mailto' => false !== is_email($v),
+            'telegram' => '' !== $handle,
+            'map' => '' !== $v || $pin,
             default => false,
         };
         if (!$ok) {
             return '#';
         }
-        if ($kind === 'map') {
+        if ('map' === $kind) {
             $urls = self::MAPS[(string) ($data['provider'] ?? '')] ?? self::MAPS['osm'];
+
             return $pin
                 ? str_replace(['{lat}', '{lng}'], [$lat, $lng], $urls[0])
                 : str_replace('{q}', rawurlencode($v), $urls[1]);
         }
+
         return match ($kind) {
-            'tel' => 'tel:' . $plus . $digits,
-            'mailto' => 'mailto:' . $v,
-            'whatsapp' => 'https://wa.me/' . $digits,
-            default => 'https://t.me/' . $handle,
+            'tel' => 'tel:'.$plus.$digits,
+            'mailto' => 'mailto:'.$v,
+            'whatsapp' => 'https://wa.me/'.$digits,
+            default => 'https://t.me/'.$handle,
         };
     }
 
@@ -238,8 +247,8 @@ final class Links
             return $html;
         }
         $html = (string) preg_replace_callback(
-            '/<[^>]*>|' . preg_quote(self::OPEN_NOW, '/') . '/u',
-            static fn (array $m): string => $m[0] === self::OPEN_NOW
+            '/<[^>]*>|'.preg_quote(self::OPEN_NOW, '/').'/u',
+            static fn (array $m): string => self::OPEN_NOW === $m[0]
                 ? '<span data-wpfb-open-now></span>'
                 : str_replace(self::OPEN_NOW, '', $m[0]),
             $html,
@@ -248,6 +257,7 @@ final class Links
             self::$footer = true;
             add_action('wp_footer', [self::class, 'footer'], 20);
         }
+
         return $html;
     }
 
@@ -262,9 +272,10 @@ final class Links
     {
         $block ??= self::block();
         $hours = is_array($block['hours'] ?? null) ? array_values($block['hours']) : [];
-        if ($hours === []) {
+        if ([] === $hours) {
             return null;
         }
+
         return [
             'tz' => (string) get_option('timezone_string', ''),
             'offset' => (int) round((float) get_option('gmt_offset', 0) * 60),
@@ -280,20 +291,21 @@ final class Links
     public static function footer(): void
     {
         $data = self::openNow();
-        if ($data === null) {
+        if (null === $data) {
             return;
         }
-        $js = '(function(d){' . self::OPEN_NOW_JS . '})('
-            . (string) wp_json_encode(
+        $js = '(function(d){'.self::OPEN_NOW_JS.'})('
+            .(string) wp_json_encode(
                 $data,
                 JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE,
-            ) . ');';
+            ).');';
         if (function_exists('wp_print_inline_script_tag')) {
             wp_print_inline_script_tag($js, ['id' => 'wpfb-open-now']);
+
             return;
         }
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- code + JSON encoded with JSON_HEX_TAG
-        echo '<script id="wpfb-open-now">' . $js . '</script>';
+        echo '<script id="wpfb-open-now">'.$js.'</script>';
     }
 
     /**
@@ -302,33 +314,34 @@ final class Links
      * for elements added later (editor preview swaps).
      */
     public const OPEN_NOW_JS = 'var W=["mon","tue","wed","thu","fri","sat","sun"];'
-        . 'function m(t){return +t.slice(0,2)*60+ +t.slice(3,5)}'
-        . 'function now(){var t=new Date(),p;try{if(d.tz){p={};new Intl.DateTimeFormat("en-US",{timeZone:d.tz,'
-        . 'year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"})'
-        . '.formatToParts(t).forEach(function(x){p[x.type]=x.value});'
-        . 'return{y:+p.year,mo:+p.month,da:+p.day,mi:(+p.hour%24)*60+ +p.minute}}}catch(e){}'
-        . 't=new Date(t.getTime()+d.offset*6e4);'
-        . 'return{y:t.getUTCFullYear(),mo:t.getUTCMonth()+1,da:t.getUTCDate(),mi:t.getUTCHours()*60+t.getUTCMinutes()}}'
-        . 'function day(u){var t=new Date(u),s=t.toISOString().slice(0,10),w=W[(t.getUTCDay()+6)%7],r=[],x,i;'
-        . 'for(i=0;i<d.exceptions.length;i++)if(d.exceptions[i].date===s)x=d.exceptions[i];'
-        . 'if(x)return x.closed?[]:[[m(x.open),m(x.close)]];'
-        . 'd.hours.forEach(function(h){if(h.days.indexOf(w)>=0)r.push([m(h.open),m(h.close)])});return r}'
-        . 'function open(){var n=now(),u=Date.UTC(n.y,n.mo-1,n.da),k=n.mi;'
-        . 'return day(u).some(function(i){return k>=i[0]&&k<(i[1]>i[0]?i[1]:1440)})'
-        . '||day(u-864e5).some(function(i){return i[1]<i[0]&&k<i[1]})}'
-        . 'function paint(){var o=open(),l=document.querySelectorAll("[data-wpfb-open-now]");'
-        . 'for(var i=0;i<l.length;i++){if(l[i].textContent!==(o?d.open:d.closed))l[i].textContent=o?d.open:d.closed;'
-        . 'l[i].setAttribute("data-state",o?"open":"closed")}}'
-        . 'paint();setInterval(paint,6e4);'
-        . 'if(window.MutationObserver)new MutationObserver(function(){'
-        . 'if(document.querySelector("[data-wpfb-open-now]:not([data-state])"))paint()})'
-        . '.observe(document.body,{childList:true,subtree:true});';
+        .'function m(t){return +t.slice(0,2)*60+ +t.slice(3,5)}'
+        .'function now(){var t=new Date(),p;try{if(d.tz){p={};new Intl.DateTimeFormat("en-US",{timeZone:d.tz,'
+        .'year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"})'
+        .'.formatToParts(t).forEach(function(x){p[x.type]=x.value});'
+        .'return{y:+p.year,mo:+p.month,da:+p.day,mi:(+p.hour%24)*60+ +p.minute}}}catch(e){}'
+        .'t=new Date(t.getTime()+d.offset*6e4);'
+        .'return{y:t.getUTCFullYear(),mo:t.getUTCMonth()+1,da:t.getUTCDate(),mi:t.getUTCHours()*60+t.getUTCMinutes()}}'
+        .'function day(u){var t=new Date(u),s=t.toISOString().slice(0,10),w=W[(t.getUTCDay()+6)%7],r=[],x,i;'
+        .'for(i=0;i<d.exceptions.length;i++)if(d.exceptions[i].date===s)x=d.exceptions[i];'
+        .'if(x)return x.closed?[]:[[m(x.open),m(x.close)]];'
+        .'d.hours.forEach(function(h){if(h.days.indexOf(w)>=0)r.push([m(h.open),m(h.close)])});return r}'
+        .'function open(){var n=now(),u=Date.UTC(n.y,n.mo-1,n.da),k=n.mi;'
+        .'return day(u).some(function(i){return k>=i[0]&&k<(i[1]>i[0]?i[1]:1440)})'
+        .'||day(u-864e5).some(function(i){return i[1]<i[0]&&k<i[1]})}'
+        .'function paint(){var o=open(),l=document.querySelectorAll("[data-wpfb-open-now]");'
+        .'for(var i=0;i<l.length;i++){if(l[i].textContent!==(o?d.open:d.closed))l[i].textContent=o?d.open:d.closed;'
+        .'l[i].setAttribute("data-state",o?"open":"closed")}}'
+        .'paint();setInterval(paint,6e4);'
+        .'if(window.MutationObserver)new MutationObserver(function(){'
+        .'if(document.querySelector("[data-wpfb-open-now]:not([data-state])"))paint()})'
+        .'.observe(document.body,{childList:true,subtree:true});';
 
     /** {year} / {today} now in the site time zone ({today} in the date_format setting) */
     public static function date(string $kind): string
     {
-        $format = $kind === 'year' ? 'Y' : (string) get_option('date_format', 'F j, Y');
-        return (string) wp_date($format !== '' ? $format : 'F j, Y');
+        $format = 'year' === $kind ? 'Y' : (string) get_option('date_format', 'F j, Y');
+
+        return (string) wp_date('' !== $format ? $format : 'F j, Y');
     }
 
     private static function value(string $kind, string $arg, string $arg2 = ''): string
@@ -337,7 +350,7 @@ final class Links
             'post', 'product', 'term', 'price', 'stock' => Records::value($kind, $arg, $arg2),
             'site' => in_array($arg, self::SITE, true) ? self::data()[$arg] : '',
             'tel', 'mailto', 'whatsapp', 'telegram', 'map' => self::contact($kind, self::data()),
-            'open-now' => self::openNow() !== null ? self::OPEN_NOW : '',
+            'open-now' => null !== self::openNow() ? self::OPEN_NOW : '',
             'year', 'today' => self::date($kind),
             default => self::url($kind, $arg),
         };
@@ -345,6 +358,7 @@ final class Links
 
     /**
      * @param array<mixed> $props
+     *
      * @return array<mixed>
      */
     public static function walk(array $props): array
@@ -356,6 +370,7 @@ final class Links
                 $props[$k] = self::resolve($v);
             }
         }
+
         return $props;
     }
 
@@ -394,14 +409,14 @@ final class Links
             'update_post_meta_cache' => false, 'update_post_term_cache' => false,
         ]);
         foreach (is_array($found) ? $found : [] as $p) {
-            if (!$p instanceof \WP_Post || preg_match(self::SLUG, (string) $p->post_name) !== 1) {
+            if (!$p instanceof \WP_Post || 1 !== preg_match(self::SLUG, (string) $p->post_name)) {
                 continue;
             }
             $slug = (string) $p->post_name;
             $title = trim(wp_strip_all_tags((string) $p->post_title));
             $pages[] = [
-                'token' => '{page:' . $slug . '}',
-                'label' => $title !== '' ? $title : $slug,
+                'token' => '{page:'.$slug.'}',
+                'label' => '' !== $title ? $title : $slug,
                 'slug' => $slug,
                 'url' => self::str(get_page_link($p), $home),
             ];
@@ -412,11 +427,11 @@ final class Links
             'update_term_meta_cache' => false,
         ]);
         foreach (is_array($terms) ? $terms : [] as $t) {
-            if (!$t instanceof \WP_Term || preg_match(self::SLUG, (string) $t->slug) !== 1) {
+            if (!$t instanceof \WP_Term || 1 !== preg_match(self::SLUG, (string) $t->slug)) {
                 continue;
             }
             $sections[] = [
-                'token' => '{category:' . $t->slug . '}',
+                'token' => '{category:'.$t->slug.'}',
                 'label' => (string) $t->name,
                 'slug' => (string) $t->slug,
                 'kind' => 'category',
@@ -425,12 +440,12 @@ final class Links
         }
         foreach (get_post_types(['public' => true, 'has_archive' => true], 'objects') as $name => $type) {
             $name = (string) $name;
-            if (preg_match(self::SLUG, $name) !== 1) {
+            if (1 !== preg_match(self::SLUG, $name)) {
                 continue;
             }
             $label = is_object($type) && isset($type->labels->name) ? (string) $type->labels->name : $name;
             $sections[] = [
-                'token' => '{archive:' . $name . '}',
+                'token' => '{archive:'.$name.'}',
                 'label' => $label,
                 'slug' => $name,
                 'kind' => 'archive',
@@ -446,7 +461,7 @@ final class Links
         $contact = [];
         foreach (self::CONTACT as $kind => $source) {
             $contact[] = [
-                'token' => '{' . $kind . '}', 'label' => $contactLabels[$kind],
+                'token' => '{'.$kind.'}', 'label' => $contactLabels[$kind],
                 'url' => self::contact($kind, $data), 'source' => $source,
             ];
         }
@@ -457,10 +472,11 @@ final class Links
         ];
         $values = [];
         foreach (self::SITE as $key) {
-            $values[] = ['token' => '{site:' . $key . '}', 'label' => $dataLabels[$key], 'value' => $data[$key]];
+            $values[] = ['token' => '{site:'.$key.'}', 'label' => $dataLabels[$key], 'value' => $data[$key]];
         }
         $values[] = ['token' => '{year}', 'label' => __('Year', 'wpfasty-builder'), 'value' => self::date('year')];
         $values[] = ['token' => '{today}', 'label' => __('Today', 'wpfasty-builder'), 'value' => self::date('today')];
+
         return [
             'home' => $home, 'site' => $site, 'pages' => $pages, 'sections' => $sections,
             'contact' => $contact, 'data' => $values,
@@ -469,7 +485,7 @@ final class Links
 
     private static function str(mixed $url, string $fallback): string
     {
-        return is_string($url) && $url !== '' ? $url : $fallback;
+        return is_string($url) && '' !== $url ? $url : $fallback;
     }
 
     private static function url(string $kind, string $arg): string
@@ -482,13 +498,14 @@ final class Links
                 : $home,
             // published pages only: a draft, pending, private or trashed page is not a link target (its URL would
             // name it to every visitor), the same set the picker lists (index())
-            'page' => ($p = get_page_by_path($arg)) instanceof \WP_Post && $p->post_status === 'publish'
+            'page' => ($p = get_page_by_path($arg)) instanceof \WP_Post && 'publish' === $p->post_status
                 ? get_permalink($p)
                 : $home,
             'category' => ($t = get_category_by_slug($arg)) instanceof \WP_Term ? get_category_link($t) : $home,
             'archive' => post_type_exists($arg) ? get_post_type_archive_link($arg) : $home,
             default => $home,
         };
-        return is_string($url) && $url !== '' ? $url : $home;
+
+        return is_string($url) && '' !== $url ? $url : $home;
     }
 }

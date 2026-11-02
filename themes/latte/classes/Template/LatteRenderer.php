@@ -1,8 +1,7 @@
 <?php
+
 /**
  * Latte adapter for RendererInterface.
- *
- * @package Latte
  */
 
 declare(strict_types=1);
@@ -19,8 +18,8 @@ class LatteRenderer implements RendererInterface
     private array $roots;
 
     /**
-     * @param array<int, mixed> $roots    Views roots in lookup order.
-     * @param string            $cacheDir Compiled templates directory.
+     * @param array<int, mixed> $roots    views roots in lookup order
+     * @param string            $cacheDir compiled templates directory
      */
     public function __construct(array $roots, string $cacheDir)
     {
@@ -46,7 +45,7 @@ class LatteRenderer implements RendererInterface
 
     public function exists(string $view): bool
     {
-        return RootChain::find($this->roots, $this->withExtension($view)) !== null;
+        return null !== RootChain::find($this->roots, $this->withExtension($view));
     }
 
     public function render(string $template, array $context = []): string
@@ -61,6 +60,6 @@ class LatteRenderer implements RendererInterface
 
     private function withExtension(string $view): string
     {
-        return str_ends_with($view, '.latte') ? $view : $view . '.latte';
+        return str_ends_with($view, '.latte') ? $view : $view.'.latte';
     }
 }

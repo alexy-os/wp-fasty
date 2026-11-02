@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use WPFasty\Template\LatteRenderer;
-use WPFasty\Template\EngineUnavailable;
 use WPFasty\Template\Engines;
+use WPFasty\Template\EngineUnavailable;
+use WPFasty\Template\LatteRenderer;
 use WPFasty\Template\RendererFactory;
 use WPFasty\Template\TwigRenderer;
 use WPFasty\Theme\PrimitivesLocator;
@@ -16,26 +16,27 @@ final class RendererTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->cache = sys_get_temp_dir() . '/renderer-' . uniqid('', true);
+        $this->cache = sys_get_temp_dir().'/renderer-'.uniqid('', true);
     }
 
     private function views(): string
     {
-        return __DIR__ . '/fixtures/views';
+        return __DIR__.'/fixtures/views';
     }
 
     private function latte(): LatteRenderer
     {
-        return new LatteRenderer([$this->views(), ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__) . '/themes/latte')], $this->cache);
+        return new LatteRenderer([$this->views(), ...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte')], $this->cache);
     }
 
     private function twig(): TwigRenderer
     {
-        $prims = PrimitivesLocator::twigRoots(dirname(__DIR__) . '/themes/latte');
-        if ($prims === [] || !class_exists(\Twig\Environment::class)) {
+        $prims = PrimitivesLocator::twigRoots(dirname(__DIR__).'/themes/latte');
+        if ([] === $prims || !class_exists(Twig\Environment::class)) {
             $this->markTestSkipped('Twig primitives not installed (themes/latte/twig: npx ui8kit@3 add --all)');
         }
-        return new TwigRenderer([$this->views(), ...$prims], $this->cache . '/twig');
+
+        return new TwigRenderer([$this->views(), ...$prims], $this->cache.'/twig');
     }
 
     private static function normalize(string $html): string
@@ -57,7 +58,7 @@ final class RendererTest extends TestCase
         $twig = $this->twig();
         $ctx = ['title' => '<b>'];
         // UI8Kit 3 pilot: strict DOM; class lists may only lose duplicates (tools/parity/compare-classes.php).
-        $compare = require dirname(__DIR__) . '/tools/parity/compare-classes.php';
+        $compare = require dirname(__DIR__).'/tools/parity/compare-classes.php';
         self::assertNull($compare($this->latte()->render('probe', $ctx), $twig->render('probe', $ctx)));
     }
 
@@ -65,11 +66,11 @@ final class RendererTest extends TestCase
     {
         foreach (['https://a.test/x?y=1', '/rel', '#frag', '?q=1', 'mailto:a@b.c', 'page'] as $ok) {
             self::assertSame($ok, TwigRenderer::safeUrl($ok));
-            self::assertSame($ok, \Latte\Essential\Filters::checkUrl($ok));
+            self::assertSame($ok, Latte\Essential\Filters::checkUrl($ok));
         }
         foreach (['javascript:alert(1)', 'data:text/html,x', 'vbscript:x'] as $bad) {
             self::assertSame('', TwigRenderer::safeUrl($bad));
-            self::assertSame('', \Latte\Essential\Filters::checkUrl($bad));
+            self::assertSame('', Latte\Essential\Filters::checkUrl($bad));
         }
     }
 
@@ -77,11 +78,11 @@ final class RendererTest extends TestCase
     {
         $twig = $this->twig()->twig();
         $latte = $this->latte()->latte();
-        foreach (\WPFasty\Template\ViewHelpers::FILTERS as $f) {
+        foreach (WPFasty\Template\ViewHelpers::FILTERS as $f) {
             self::assertNotFalse($twig->getFilter($f), "twig filter $f");
             self::assertArrayHasKey($f, $latte->getFilters(), "latte filter $f");
         }
-        foreach (\WPFasty\Template\ViewHelpers::FUNCTIONS as $fn) {
+        foreach (WPFasty\Template\ViewHelpers::FUNCTIONS as $fn) {
             self::assertNotFalse($twig->getFunction($fn), "twig function $fn");
         }
         self::assertArrayHasKey('icon', $latte->getFunctions());
@@ -98,7 +99,7 @@ final class RendererTest extends TestCase
     public function testNoFallbackBetweenEngines(): void
     {
         // Isolated runtimes (K7): an engine without its primitives (or library) is an error, never the other engine.
-        $latte = ['latte' => [...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__) . '/themes/latte')], 'twig' => []];
+        $latte = ['latte' => [...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte')], 'twig' => []];
         try {
             RendererFactory::create('twig', [$this->views()], $latte, $this->cache);
             self::fail('twig without Twig primitives must not render');
@@ -119,7 +120,7 @@ final class RendererTest extends TestCase
 
     public function testFactoryPicksEngine(): void
     {
-        $r = RendererFactory::create('latte', [$this->views()], ['latte' => [...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__) . '/themes/latte')]], $this->cache);
+        $r = RendererFactory::create('latte', [$this->views()], ['latte' => [...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte')]], $this->cache);
         self::assertInstanceOf(LatteRenderer::class, $r);
         self::assertSame($r, RendererFactory::create($r, [], [], $this->cache));
     }

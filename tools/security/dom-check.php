@@ -14,9 +14,7 @@
  *   style-url         url(javascript:/vbscript:/data:…) or expression( in a style attribute
  *   attr-name         an attribute name carrying the payload (dynamic attribute names)
  *   element:<tag>     iframe, frame, object, embed, base, meta, link, style, math elements beyond the baseline
- *   ssti              1337 (= 7*191 of the probes) in the output where neither the payload nor the baseline has it
- *
- * @package WPFastyBuilder
+ *   ssti              1337 (= 7*191 of the probes) in the output where neither the payload nor the baseline has it.
  */
 
 declare(strict_types=1);
@@ -26,11 +24,12 @@ return static function (string $html, string $payload = '', string $baseline = '
         $doc = new DOMDocument();
         $prev = libxml_use_internal_errors(true);
         $doc->loadHTML(
-            '<?xml encoding="UTF-8"><div id="wpfb-check-root">' . $h . '</div>',
+            '<?xml encoding="UTF-8"><div id="wpfb-check-root">'.$h.'</div>',
             LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING,
         );
         libxml_clear_errors();
         libxml_use_internal_errors($prev);
+
         return new DOMXPath($doc);
     };
     $count = static fn (DOMXPath $xp, string $tag): int => (int) $xp->evaluate("count(//$tag)");
@@ -42,37 +41,37 @@ return static function (string $html, string $payload = '', string $baseline = '
     }
     foreach (['iframe', 'frame', 'object', 'embed', 'base', 'meta', 'link', 'style', 'math'] as $tag) {
         if ($count($xp, $tag) > $count($base, $tag)) {
-            $out[] = 'element:' . $tag;
+            $out[] = 'element:'.$tag;
         }
     }
     $urlAttrs = ['href', 'src', 'srcset', 'action', 'formaction', 'poster', 'cite', 'background', 'xlink:href', 'data', 'ping'];
-    $marker = $payload !== '' ? strtolower(substr((string) preg_replace('/[^a-z]/i', '', $payload), 0, 12)) : '';
+    $marker = '' !== $payload ? strtolower(substr((string) preg_replace('/[^a-z]/i', '', $payload), 0, 12)) : '';
     foreach ($xp->query('//@*') ?: [] as $a) {
         $name = strtolower($a->nodeName);
         $val = (string) $a->nodeValue;
         $el = $a->parentNode instanceof DOMElement ? strtolower($a->parentNode->nodeName) : '';
         if (str_starts_with($name, 'on')) {
-            $out[] = 'on-attr:' . $name;
+            $out[] = 'on-attr:'.$name;
         }
-        if ($marker !== '' && strlen($marker) > 4 && !in_array($name, ['class', 'id'], true)
+        if ('' !== $marker && strlen($marker) > 4 && !in_array($name, ['class', 'id'], true)
             && str_contains(strtolower(preg_replace('/[^a-z]/i', '', $name)), $marker)) {
             $out[] = 'attr-name';
         }
         if (in_array($name, $urlAttrs, true)) {
-            $candidates = $name === 'srcset' || $name === 'ping' ? preg_split('/,|\s+(?=\S)/', $val) : [$val];
+            $candidates = 'srcset' === $name || 'ping' === $name ? preg_split('/,|\s+(?=\S)/', $val) : [$val];
             foreach ($candidates ?: [] as $u) {
                 $k = strtolower((string) preg_replace('/[\x00-\x20\x7f]+/', '', (string) $u));
-                $img = in_array($el, ['img', 'source'], true) && ($name === 'src' || $name === 'srcset');
-                if (preg_match('/^(javascript|vbscript|livescript):/', $k) === 1
+                $img = in_array($el, ['img', 'source'], true) && ('src' === $name || 'srcset' === $name);
+                if (1 === preg_match('/^(javascript|vbscript|livescript):/', $k)
                     || (str_starts_with($k, 'data:')
-                        && !($img && preg_match('#^data:image/(png|jpeg|gif|webp|avif|svg\+xml)[;,]#', $k) === 1))) {
-                    $out[] = 'url:' . $name;
+                        && !($img && 1 === preg_match('#^data:image/(png|jpeg|gif|webp|avif|svg\+xml)[;,]#', $k)))) {
+                    $out[] = 'url:'.$name;
                 }
             }
         }
-        if ($name === 'style') {
+        if ('style' === $name) {
             $css = strtolower((string) preg_replace('/[\x00-\x20\x7f]+|\\\\/', '', $val));
-            if (preg_match('/url\(["\']?(javascript|vbscript|livescript|data):|expression\(/', $css) === 1) {
+            if (1 === preg_match('/url\(["\']?(javascript|vbscript|livescript|data):|expression\(/', $css)) {
                 $out[] = 'style-url';
             }
         }
@@ -82,9 +81,10 @@ return static function (string $html, string $payload = '', string $baseline = '
         foreach ($x->query('//@*') ?: [] as $a) {
             if (in_array(strtolower($a->nodeName), $urlAttrs, true)) {
                 $v = ltrim((string) preg_replace('/[\t\n\r]+/', '', (string) $a->nodeValue), "\x00..\x20\x7F");
-                $n += preg_match('#^[/\\\\]{2}#', $v) === 1 ? 1 : 0;
+                $n += 1 === preg_match('#^[/\\\\]{2}#', $v) ? 1 : 0;
             }
         }
+
         return $n;
     };
     if ($network($xp) > $network($base)) {
@@ -93,5 +93,6 @@ return static function (string $html, string $payload = '', string $baseline = '
     if (!str_contains($payload, '1337') && str_contains($html, '1337') && !str_contains($baseline, '1337')) {
         $out[] = 'ssti';
     }
+
     return array_values(array_unique($out));
 };

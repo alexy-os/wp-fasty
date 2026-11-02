@@ -1,8 +1,7 @@
 <?php
+
 /**
  * Engine-agnostic renderer contract (ADR-001 §1).
- *
- * @package Latte
  */
 
 declare(strict_types=1);

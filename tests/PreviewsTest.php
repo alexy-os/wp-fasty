@@ -24,38 +24,38 @@ final class PreviewsTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->plugin = dirname(__DIR__) . '/plugins/wpfasty-builder';
-        $src = $this->plugin . '/src/';
+        $this->plugin = dirname(__DIR__).'/plugins/wpfasty-builder';
+        $src = $this->plugin.'/src/';
         spl_autoload_register(static function (string $class) use ($src): void {
             if (str_starts_with($class, 'WPFastyBuilder\\')) {
-                require_once $src . str_replace('\\', '/', substr($class, 15)) . '.php';
+                require_once $src.str_replace('\\', '/', substr($class, 15)).'.php';
             }
         });
         if (!function_exists('plugins_url')) {
             eval('function plugins_url(string $path = "", string $plugin = ""): string { return "http://example.test/wp-content/plugins/" . basename(dirname($plugin)) . "/" . ltrim($path, "/"); }');
         }
-        Plugin::$file = $this->plugin . '/wpfasty-builder.php';
+        Plugin::$file = $this->plugin.'/wpfasty-builder.php';
         Plugin::$dir = $this->plugin;
     }
 
     public function testEveryBundledVariantGetsItsPreview(): void
     {
         foreach (['latte', 'twig'] as $runtime) {
-            $src = new LocalSource('ui8kit', $this->plugin . '/sources/ui8kit/' . $runtime, $runtime);
+            $src = new LocalSource('ui8kit', $this->plugin.'/sources/ui8kit/'.$runtime, $runtime);
             $blocks = Previews::attach((new Catalog($src->catalog()))->forEditor(null)['blocks'], $src);
             $n = 0;
             foreach ($blocks as $b) {
                 foreach ($b['variants'] as $v) {
-                    $key = $b['id'] . '/' . $v['id'];
+                    $key = $b['id'].'/'.$v['id'];
                     $base = 'http://example.test/wp-content/plugins/wpfasty-builder/sources/ui8kit/previews/';
                     $this->assertSame([
-                        'src' => $base . $key . '.webp',
-                        'dark' => $base . $key . '.dark.webp',
+                        'src' => $base.$key.'.webp',
+                        'dark' => $base.$key.'.dark.webp',
                         'width' => 320, 'height' => 180,
                     ], $v['preview'] ?? null, $key);
-                    $this->assertFileExists($this->plugin . '/sources/ui8kit/previews/' . $key . '.webp');
-                    $this->assertFileExists($this->plugin . '/sources/ui8kit/previews/' . $key . '.dark.webp');
-                    $n++;
+                    $this->assertFileExists($this->plugin.'/sources/ui8kit/previews/'.$key.'.webp');
+                    $this->assertFileExists($this->plugin.'/sources/ui8kit/previews/'.$key.'.dark.webp');
+                    ++$n;
                 }
             }
             $this->assertSame(482, $n, $runtime);
@@ -64,34 +64,35 @@ final class PreviewsTest extends TestCase
 
     public function testAVariantWithoutADarkShotGetsOnlyTheLightOne(): void
     {
-        $dir = $this->plugin . '/sources/ui8kit/previews';
-        $m = json_decode((string) file_get_contents($dir . '/manifest.json'), true);
+        $dir = $this->plugin.'/sources/ui8kit/previews';
+        $m = json_decode((string) file_get_contents($dir.'/manifest.json'), true);
         $key = array_key_first($m['variants']);
         unset($m['variants'][$key]['dark']);
         $prop = new \ReflectionProperty(Previews::class, 'manifests');
         $prop->setValue(null, [$dir => $m['variants']]);
-        $src = new LocalSource('ui8kit', $this->plugin . '/sources/ui8kit/latte', 'latte');
+        $src = new LocalSource('ui8kit', $this->plugin.'/sources/ui8kit/latte', 'latte');
         [$block, $variant] = explode('/', $key);
         foreach (Previews::attach((new Catalog($src->catalog()))->forEditor(null)['blocks'], $src) as $b) {
             foreach ($b['variants'] as $v) {
                 if ($b['id'] === $block && $v['id'] === $variant) {
                     $this->assertArrayNotHasKey('dark', $v['preview']);
-                    $this->assertStringEndsWith('/previews/' . $key . '.webp', $v['preview']['src']);
+                    $this->assertStringEndsWith('/previews/'.$key.'.webp', $v['preview']['src']);
+
                     return;
                 }
             }
         }
-        $this->fail('variant ' . $key . ' not in the catalog');
+        $this->fail('variant '.$key.' not in the catalog');
     }
 
     public function testSourcesOutsideThePluginHaveNoPreviews(): void
     {
-        $tmp = sys_get_temp_dir() . '/wpfb-previews-' . getmypid();
-        @mkdir($tmp . '/ui8kit/latte', 0777, true);
-        @mkdir($tmp . '/ui8kit/previews', 0777, true);
-        copy($this->plugin . '/sources/ui8kit/latte/catalog.json', $tmp . '/ui8kit/latte/catalog.json');
-        copy($this->plugin . '/sources/ui8kit/previews/manifest.json', $tmp . '/ui8kit/previews/manifest.json');
-        $src = new LocalSource('imported', $tmp . '/ui8kit/latte', 'latte');
+        $tmp = sys_get_temp_dir().'/wpfb-previews-'.getmypid();
+        @mkdir($tmp.'/ui8kit/latte', 0777, true);
+        @mkdir($tmp.'/ui8kit/previews', 0777, true);
+        copy($this->plugin.'/sources/ui8kit/latte/catalog.json', $tmp.'/ui8kit/latte/catalog.json');
+        copy($this->plugin.'/sources/ui8kit/previews/manifest.json', $tmp.'/ui8kit/previews/manifest.json');
+        $src = new LocalSource('imported', $tmp.'/ui8kit/latte', 'latte');
         $blocks = (new Catalog($src->catalog()))->forEditor(null)['blocks'];
         $this->assertSame($blocks, Previews::attach($blocks, $src));
         $this->assertSame($blocks, Previews::attach($blocks, null));
@@ -102,26 +103,26 @@ final class PreviewsTest extends TestCase
     {
         $base = 'http://example.test/wp-content/plugins/wpfasty-builder/sources/ui8kit/page-previews/';
         foreach (['latte', 'twig'] as $runtime) {
-            $src = new LocalSource('ui8kit', $this->plugin . '/sources/ui8kit/' . $runtime, $runtime);
+            $src = new LocalSource('ui8kit', $this->plugin.'/sources/ui8kit/'.$runtime, $runtime);
             $catalog = new Catalog($src->catalog());
             $n = 0;
             foreach ($src->catalog()['collections'] as $c) {
                 $col = Previews::attachPages($catalog->forEditor($c['id'])['collection'], $src);
                 foreach ((array) ($col['pages'] ?? []) as $p) {
-                    $key = $c['id'] . '/' . $p['id'];
+                    $key = $c['id'].'/'.$p['id'];
                     $preview = $p['preview'] ?? [];
-                    $this->assertSame($base . $key . '.webp', $preview['src'] ?? null, $key);
-                    $this->assertSame($base . $key . '.dark.webp', $preview['dark'] ?? null, $key);
+                    $this->assertSame($base.$key.'.webp', $preview['src'] ?? null, $key);
+                    $this->assertSame($base.$key.'.dark.webp', $preview['dark'] ?? null, $key);
                     $this->assertSame(640, $preview['width'], $key);
                     $this->assertGreaterThan(0, $preview['height'], $key);
                     $this->assertLessThanOrEqual(2400, $preview['height'], $key);
-                    $this->assertFileExists($this->plugin . '/sources/ui8kit/page-previews/' . $key . '.dark.webp');
-                    $n++;
+                    $this->assertFileExists($this->plugin.'/sources/ui8kit/page-previews/'.$key.'.dark.webp');
+                    ++$n;
                 }
             }
             $this->assertSame(63, $n, $runtime);
         }
-        $src = new LocalSource('ui8kit', $this->plugin . '/sources/ui8kit/latte', 'latte');
+        $src = new LocalSource('ui8kit', $this->plugin.'/sources/ui8kit/latte', 'latte');
         $this->assertNull(Previews::attachPages(null, $src));
         $plain = ['id' => 'hero', 'label' => 'Hero', 'blocks' => ['hero']];
         $this->assertSame($plain, Previews::attachPages($plain, $src));

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace WPFasty\Hooks;
 
-use WPFasty\Template\EngineUnavailable;
 use WPFasty\Template\Engines;
+use WPFasty\Template\EngineUnavailable;
 use WPFasty\Theme\PrimitivesLocator;
 
 final class ThemeHooks extends AbstractHooks
@@ -31,7 +31,7 @@ final class ThemeHooks extends AbstractHooks
 
         return (string) preg_replace(
             '/<form role="search"/',
-            '<form role="search" aria-label="' . esc_attr__('Sidebar search', 'latte') . '"',
+            '<form role="search" aria-label="'.esc_attr__('Sidebar search', 'latte').'"',
             $html,
             1
         );
@@ -49,11 +49,11 @@ final class ThemeHooks extends AbstractHooks
             return $html;
         }
         $title = trim(wp_strip_all_tags(get_the_title((int) $id)));
-        if ($title === '') {
+        if ('' === $title) {
             return $html;
         }
 
-        return (string) preg_replace('/<a /', '<a aria-label="' . esc_attr($title) . '" ', $html, 1);
+        return (string) preg_replace('/<a /', '<a aria-label="'.esc_attr($title).'" ', $html, 1);
     }
 
     public function setup(): void
@@ -133,19 +133,21 @@ final class ThemeHooks extends AbstractHooks
 
         $engine = Engines::requested();
         if (is_string($engine) && !Engines::available($engine)) {
-            echo '<div class="notice notice-error"><p>' . esc_html(EngineUnavailable::for($engine)->getMessage())
-                . '</p></div>';
+            echo '<div class="notice notice-error"><p>'.esc_html(EngineUnavailable::for($engine)->getMessage())
+                .'</p></div>';
+
             return;
         }
-        if ($engine === 'twig') {
-            if (PrimitivesLocator::twigRoots() === []) {
+        if ('twig' === $engine) {
+            if ([] === PrimitivesLocator::twigRoots()) {
                 echo '<div class="notice notice-error"><p>';
                 echo esc_html__('WP FastY theme: UI8Kit Twig primitives not found (twig/ui8kit).', 'latte');
                 echo '</p></div>';
             }
+
             return;
         }
-        if (!is_string($engine) || PrimitivesLocator::resolve() !== null) {
+        if (!is_string($engine) || null !== PrimitivesLocator::resolve()) {
             return;
         }
 

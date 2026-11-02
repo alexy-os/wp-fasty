@@ -50,7 +50,7 @@ final class TemplateGuard extends \Latte\Extension
 
     private function pass(TemplateNode $node): void
     {
-        if ($this->loader?->trusted === true) {
+        if (true === $this->loader?->trusted) {
             return;
         }
         (new NodeTraverser())->traverse($node, leave: $this->visit(...));
@@ -63,49 +63,35 @@ final class TemplateGuard extends \Latte\Extension
         if (str_starts_with(
             $class,
             'Latte\\Essential\\Nodes\\',
-        ) && $node instanceof CustomFunctionCallNode === false && !in_array($short, self::TAGS, true)) {
-            throw new SecurityViolationException(
-                "Tag $short is not allowed in a remote template.",
-                $node->position ?? null,
-            );
+        ) && false === $node instanceof CustomFunctionCallNode && !in_array($short, self::TAGS, true)) {
+            throw new SecurityViolationException("Tag $short is not allowed in a remote template.", $node->position ?? null);
         }
         foreach (self::FORBIDDEN as $f) {
             if ($node instanceof $f) {
-                throw new SecurityViolationException(
-                    "$short is not allowed in a remote template.",
-                    $node->position ?? null,
-                );
+                throw new SecurityViolationException("$short is not allowed in a remote template.", $node->position ?? null);
             }
         }
         if ($node instanceof Expression\PropertyFetchNode) {
-            $ok = $node->object instanceof Expression\VariableNode && $node->object->name === 'iterator'
+            $ok = $node->object instanceof Expression\VariableNode && 'iterator' === $node->object->name
                 && $node->name instanceof Php\IdentifierNode && in_array($node->name->name, self::ITERATOR, true);
             if (!$ok) {
-                throw new SecurityViolationException(
-                    'Only $iterator counters may be read in a remote template.',
-                    $node->position,
-                );
+                throw new SecurityViolationException('Only $iterator counters may be read in a remote template.', $node->position);
             }
         }
-        if ($node instanceof Expression\VariableNode && (!is_string($node->name) || $node->name === 'this')) {
+        if ($node instanceof Expression\VariableNode && (!is_string($node->name) || 'this' === $node->name)) {
             throw new SecurityViolationException('Forbidden variable.', $node->position);
         }
         if ($node instanceof Expression\FunctionCallNode || $node instanceof CustomFunctionCallNode) {
             $name = $node->name instanceof Php\NameNode ? strtolower((string) $node->name) : '';
             $partial = $node instanceof Expression\FunctionCallNode && $node->isPartialFunction();
-            if ($name === '' || !isset($this->functions[$name]) || $partial) {
-                throw new SecurityViolationException(
-                    "Function $name() is not allowed in a remote template.",
-                    $node->position,
-                );
+            if ('' === $name || !isset($this->functions[$name]) || $partial) {
+                throw new SecurityViolationException("Function $name() is not allowed in a remote template.", $node->position);
             }
         }
         if ($node instanceof Php\FilterNode && !in_array(strtolower((string) $node->name), self::FILTERS, true)) {
-            throw new SecurityViolationException(
-                "Filter |{$node->name} is not allowed in a remote template.",
-                $node->position,
-            );
+            throw new SecurityViolationException("Filter |{$node->name} is not allowed in a remote template.", $node->position);
         }
+
         return $node;
     }
 }

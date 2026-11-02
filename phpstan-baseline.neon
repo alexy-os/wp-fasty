@@ -463,7 +463,7 @@ parameters:
 			path: themes/latte/classes/Template/Engines.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between decimal\-int\-string and ''twig'' will always evaluate to false\.$#'
+			message: '#^Strict comparison using \=\=\= between ''twig'' and decimal\-int\-string will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
 			path: themes/latte/classes/Template/RendererFactory.php

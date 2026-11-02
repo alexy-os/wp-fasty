@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace WPFasty\Theme;
 
 use WPFasty\Data\ContextFactory;
-use WPFasty\Template\TemplateEngineInterface;
 use WPFasty\Template\RendererInterface;
+use WPFasty\Template\TemplateEngineInterface;
 
 /**
  * Context routing + two-pass render (content → layout).
@@ -44,9 +44,9 @@ final class ThemeService
             $view = 'pages/single';
         }
 
-        /** @var mixed $filtered */
         $filtered = apply_filters('wpfasty_resolve_view', $view);
-        return is_string($filtered) && $filtered !== '' ? $filtered : $view;
+
+        return is_string($filtered) && '' !== $filtered ? $filtered : $view;
     }
 
     /** @return array<string, mixed> */
@@ -54,7 +54,7 @@ final class ThemeService
     {
         $view ??= $this->resolveView();
 
-        if ($view === 'pages/404') {
+        if ('pages/404' === $view) {
             return $this->contextFactory->createErrorContext();
         }
         // Context follows the WP query, not the view name, so child themes can
@@ -62,6 +62,7 @@ final class ThemeService
         if (in_array($view, ['pages/search', 'pages/archive'], true) || is_search() || is_archive() || is_home()) {
             return $this->contextFactory->createArchiveContext();
         }
+
         return $this->contextFactory->createPageContext();
     }
 
@@ -89,6 +90,7 @@ final class ThemeService
     public function renderPage(string $view, array $context): string
     {
         $context['content'] = $this->render($view, $context);
+
         return $this->render('layout/default', $context);
     }
 }

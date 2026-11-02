@@ -1,4 +1,5 @@
 <?php
+
 /**
  * N+1 guard of the builder richtext block (the record of the current route, DataSources::current): a page with
  * [small] then [large] richtext blocks (all six variants in turn) gets its bound data as Front does it
@@ -7,10 +8,7 @@
  * added and removed.
  *   wp eval-file tools/perf/queries.php richtext [small] [large]
  * Exit 1 when the larger page needs more queries, or when a block misses the body.
- *
- * @package WPFasty
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -18,14 +16,14 @@ if (!defined('ABSPATH')) {
 $wpfasty_rq_small = max(1, (int) ($args[1] ?? 2));
 $wpfasty_rq_large = max($wpfasty_rq_small + 1, (int) ($args[2] ?? 6));
 $wpfasty_rq_catalog = WPFastyBuilder\Sources::catalog('ui8kit');
-if ($wpfasty_rq_catalog === null || $wpfasty_rq_catalog->block('richtext') === null) {
+if (null === $wpfasty_rq_catalog || null === $wpfasty_rq_catalog->block('richtext')) {
     WP_CLI::error('the ui8kit source has no richtext block');
 }
 $wpfasty_rq_thumb = (int) (get_posts([
     'post_type' => 'attachment', 'post_status' => 'inherit', 'numberposts' => 1, 'fields' => 'ids',
 ])[0] ?? 0);
 $wpfasty_rq_body = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Perf</h2>\n<!-- /wp:heading -->\n"
-    . "<!-- wp:paragraph -->\n<p>Body with a [caption width=\"10\"]caption[/caption].</p>\n<!-- /wp:paragraph -->";
+    ."<!-- wp:paragraph -->\n<p>Body with a [caption width=\"10\"]caption[/caption].</p>\n<!-- /wp:paragraph -->";
 $wpfasty_rq_pages = [];
 foreach ([1, 2, 3] as $i) {
     $wpfasty_rq_pages[] = wp_insert_post([
@@ -42,7 +40,7 @@ $wpfasty_rq_render = static function (int $pageId, int $n) use ($wpfasty_rq_cata
     global $wpdb, $wp_query, $wp_the_query, $post;
     $variants = array_column((array) $wpfasty_rq_catalog->block('richtext')['variants'], 'id');
     $blocks = [];
-    for ($i = 0; $i < $n; $i++) {
+    for ($i = 0; $i < $n; ++$i) {
         $blocks[] = ['id' => "rt$i", 'block' => 'richtext', 'variant' => $variants[$i % count($variants)]];
     }
     [$entry] = WPFastyBuilder\Layout::normalize(['blocks' => $blocks], 'ui8kit', $wpfasty_rq_catalog, [], [
@@ -59,6 +57,7 @@ $wpfasty_rq_render = static function (int $pageId, int $n) use ($wpfasty_rq_cata
     foreach ($blocks as $b) {
         $missing += str_contains((string) ($bound[$b['id']]['content']['__html'] ?? ''), 'wp-block-heading') ? 0 : 1;
     }
+
     return [$q, $missing];
 };
 

@@ -4,10 +4,7 @@
  * Plugin Name: WP FastY QA — offline
  * Description: QA/CI only (never shipped): no wordpress.org update / API calls, so a wordpress.org outage cannot
  * log "An unexpected error occurred" warnings into the PHP-notice gate.
- *
- * @package Latte
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }

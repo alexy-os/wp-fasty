@@ -1,20 +1,18 @@
 <?php
+
 /**
  * Seeds realistic archive items for the N+1 guard: featured image, terms, typed field meta and several authors.
  *
  * Usage: wp eval-file tools/perf/seed.php [post_type] [count]
  * post: categories + tags; module types (project, product): their taxonomies + declared fields.
- *
- * @package Latte
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
 
-require_once ABSPATH . 'wp-admin/includes/media.php';
-require_once ABSPATH . 'wp-admin/includes/file.php';
-require_once ABSPATH . 'wp-admin/includes/image.php';
+require_once ABSPATH.'wp-admin/includes/media.php';
+require_once ABSPATH.'wp-admin/includes/file.php';
+require_once ABSPATH.'wp-admin/includes/image.php';
 
 $wpfasty_seed_type = $args[0] ?? 'post';
 $wpfasty_seed_count = (int) ($args[1] ?? 7);
@@ -24,14 +22,15 @@ $wpfasty_seed_count = (int) ($args[1] ?? 7);
  */
 function wpfasty_seed_image(string $name, int $i): int
 {
-    $file = wp_tempnam($name . '.jpg');
+    $file = wp_tempnam($name.'.jpg');
     $img = imagecreatetruecolor(320, 240);
     imagefill($img, 0, 0, imagecolorallocate($img, (40 * $i) % 255, 120, 200));
     imagejpeg($img, $file);
-    $id = media_handle_sideload(['name' => $name . '.jpg', 'tmp_name' => $file], 0);
+    $id = media_handle_sideload(['name' => $name.'.jpg', 'tmp_name' => $file], 0);
     if (is_wp_error($id)) {
         WP_CLI::error($id->get_error_message());
     }
+
     return (int) $id;
 }
 
@@ -48,6 +47,7 @@ function wpfasty_seed_terms(string $taxonomy, string $prefix): array
         }
         $ids[] = (int) (is_array($t) ? $t['term_id'] : $t);
     }
+
     return $ids;
 }
 
@@ -62,24 +62,24 @@ foreach (['ann', 'bob', 'cid'] as $login) {
     ]);
 }
 
-$wpfasty_seed_module = $wpfasty_seed_type === 'post'
+$wpfasty_seed_module = 'post' === $wpfasty_seed_type
     ? null
     : WPFasty\Core\Application::getInstance()->get('types.registry')->get($wpfasty_seed_type);
-if ($wpfasty_seed_type !== 'post' && $wpfasty_seed_module === null) {
+if ('post' !== $wpfasty_seed_type && null === $wpfasty_seed_module) {
     WP_CLI::error("Unknown post type module: $wpfasty_seed_type (is its theme active?)");
 }
-$wpfasty_seed_tax = $wpfasty_seed_type === 'post'
+$wpfasty_seed_tax = 'post' === $wpfasty_seed_type
     ? ['category' => wpfasty_seed_terms('category', 'perf'), 'post_tag' => wpfasty_seed_terms('post_tag', 'perf')]
     : [];
 foreach (array_keys($wpfasty_seed_module?->taxonomies() ?? []) as $tax) {
     $wpfasty_seed_tax[$tax] = wpfasty_seed_terms((string) $tax, 'perf');
 }
 
-for ($i = 1; $i <= $wpfasty_seed_count; $i++) {
+for ($i = 1; $i <= $wpfasty_seed_count; ++$i) {
     $id = wp_insert_post([
         'post_type' => $wpfasty_seed_type,
         'post_status' => 'publish',
-        'post_title' => ucfirst($wpfasty_seed_type) . " $i",
+        'post_title' => ucfirst($wpfasty_seed_type)." $i",
         'post_excerpt' => "Excerpt $i",
         'post_content' => "<p>Body of item $i.</p>",
         'post_author' => $wpfasty_seed_authors[$i % 3],
@@ -94,12 +94,12 @@ for ($i = 1; $i <= $wpfasty_seed_count; $i++) {
     }
     foreach ($wpfasty_seed_module?->fields ?? [] as $name => $field) {
         $value = match ($field->type) {
-            'money' => $name === 'sale_price' ? ($i % 2 ? 900 + $i : '') : 1000 + $i * 100,
+            'money' => 'sale_price' === $name ? ($i % 2 ? 900 + $i : '') : 1000 + $i * 100,
             'integer' => 5 + $i,
             'url' => "https://example.com/$i",
-            default => ucfirst($name) . " $i",
+            default => ucfirst($name)." $i",
         };
-        if ($value !== '') {
+        if ('' !== $value) {
             update_post_meta($id, $field->metaKey, $field->toStorage($value));
         }
     }

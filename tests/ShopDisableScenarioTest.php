@@ -14,14 +14,14 @@ final class ShopDisableScenarioTest extends TestCase
     /** @return iterable<string, array{string}> */
     public static function roots(): iterable
     {
-        yield 'theme' => [dirname(__DIR__) . '/themes/latte-shop'];
-        yield 'archetype' => [dirname(__DIR__) . '/presets/archetypes/shop'];
+        yield 'theme' => [dirname(__DIR__).'/themes/latte-shop'];
+        yield 'archetype' => [dirname(__DIR__).'/presets/archetypes/shop'];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('roots')]
+    #[PHPUnit\Framework\Attributes\DataProvider('roots')]
     public function testFormsAreGatedByAvailabilityFlags(string $root): void
     {
-        $front = (string) file_get_contents($root . '/inc/front.php');
+        $front = (string) file_get_contents($root.'/inc/front.php');
         $this->assertStringContainsString("\$shop['cart_available'] = !empty(\$shop['enabled'])", $front);
         $this->assertStringContainsString("\$shop['checkout_available'] =", $front);
         $this->assertStringContainsString("'enabled' => false", $front, 'default without modules must be off');
@@ -33,7 +33,7 @@ final class ShopDisableScenarioTest extends TestCase
             'pages/checkout.html.twig' => ['{% if not shop.checkout_available %}', "{% include 'blocks/unavailable.html.twig' %}"],
         ];
         foreach ($gates as $view => $needles) {
-            $src = (string) file_get_contents($root . '/views/' . $view);
+            $src = (string) file_get_contents($root.'/views/'.$view);
             foreach ($needles as $n) {
                 $this->assertStringContainsString($n, $src, $view);
             }
@@ -41,7 +41,7 @@ final class ShopDisableScenarioTest extends TestCase
             $this->assertLessThan(strpos($src, 'Form.') ?: PHP_INT_MAX, strpos($src, 'unavailable'), $view);
         }
         foreach (['blocks/unavailable.latte', 'blocks/unavailable.html.twig'] as $b) {
-            $src = (string) file_get_contents($root . '/views/' . $b);
+            $src = (string) file_get_contents($root.'/views/'.$b);
             $this->assertStringContainsString('back_to_site', $src);
             $this->assertStringNotContainsString('apply_filters', $src);
             $this->assertStringNotContainsString('get_', $src, 'no WP calls in templates');

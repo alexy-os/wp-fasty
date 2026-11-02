@@ -3,8 +3,6 @@
 /**
  * Demo author profiles (studios that are not WordPress users). Version, compatibility, licenses, changelog,
  * sales and live preview are real product fields now (types/product.php); reviews come from the reviews module.
- *
- * @package WP_FastY_Market
  */
 
 declare(strict_types=1);
@@ -104,6 +102,7 @@ final class Fixtures
     public static function productAuthor(string $slug): ?array
     {
         $author = self::PRODUCTS[$slug][0] ?? null;
-        return $author === null ? null : self::author($author);
+
+        return null === $author ? null : self::author($author);
     }
 }

@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 /**
  * Latte Shop — WooCommerce-free shop child theme of Latte.
- *
- * @package Latte_Shop
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -16,9 +13,9 @@ if (!defined('ABSPATH')) {
 // (wpfasty_shop_* filters, see inc/front.php). Without them products are shown as a catalog.
 // Loaded at once (not on after_setup_theme): the base-theme layer can request strings earlier,
 // which would cache a no-op domain.
-load_textdomain('latte-shop', __DIR__ . '/languages/' . determine_locale() . '.mo');
+load_textdomain('latte-shop', __DIR__.'/languages/'.determine_locale().'.mo');
 
-require_once __DIR__ . '/inc/front.php';
+require_once __DIR__.'/inc/front.php';
 
 LatteShop\Front::register();
 

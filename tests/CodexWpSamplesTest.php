@@ -18,12 +18,12 @@ use WPFastyTypes\Codex\Site;
 #[RunTestsInSeparateProcesses]
 final class CodexWpSamplesTest extends TestCase
 {
-    private const DIR = __DIR__ . '/fixtures/codex/wordpress';
+    private const DIR = __DIR__.'/fixtures/codex/wordpress';
 
     /** @return list<array<string, mixed>> */
     private static function sample(string $name): array
     {
-        return json_decode((string) file_get_contents(self::DIR . "/{$name}.json"), true);
+        return json_decode((string) file_get_contents(self::DIR."/{$name}.json"), true);
     }
 
     /** @param array<string, mixed> $item */
@@ -32,6 +32,7 @@ final class CodexWpSamplesTest extends TestCase
         if (!is_array($item[$field] ?? null) || !array_key_exists('raw', $item[$field])) {
             throw new InvalidArgumentException("{$field}.raw missing: Codex export needs context=edit");
         }
+
         return (string) $item[$field]['raw'];
     }
 
@@ -48,6 +49,7 @@ final class CodexWpSamplesTest extends TestCase
             'url' => $m['source_url'], 'alt' => $m['alt_text'] ?? '',
             'meta' => array_intersect_key($d, ['width' => 1, 'height' => 1, 'filesize' => 1]),
         ];
+
         return new WP_Post([
             'ID' => $m['id'], 'post_type' => 'attachment', 'post_status' => $m['status'], 'post_name' => $m['slug'],
             'post_title' => self::raw($m, 'title'), 'post_content' => self::raw($m, 'description'),
@@ -71,6 +73,7 @@ final class CodexWpSamplesTest extends TestCase
             $GLOBALS['wpfasty_wp']['registered']['user'][$k] = ['show_in_rest' => true, 'single' => true];
             $GLOBALS['wpfasty_wp']['meta']['user'][$u['id']][$k] = $v;
         }
+
         return new WP_User([
             'ID' => $u['id'], 'user_login' => $u['username'], 'user_nicename' => $u['slug'], 'user_url' => $u['url'],
             'user_registered' => self::mysql($u['registered_date']), 'display_name' => $u['name'],
@@ -80,16 +83,17 @@ final class CodexWpSamplesTest extends TestCase
 
     private static function mapper(): Mapper
     {
-        require_once dirname(__DIR__) . '/plugins/wpfasty-types/src/Codex/autoload.php';
-        require_once __DIR__ . '/fixtures/wp-objects-stubs.php';
+        require_once dirname(__DIR__).'/plugins/wpfasty-types/src/Codex/autoload.php';
+        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
         $GLOBALS['wpfasty_wp']['posts'][10] = 'product'; // owner of media 11 (linen-apron)
-        return new Mapper(Site::fromDir(dirname(__DIR__) . '/themes/latte-shop/types'));
+
+        return new Mapper(Site::fromDir(dirname(__DIR__).'/themes/latte-shop/types'));
     }
 
     /** @return array<string, list<string>> */
     private static function expected(): array
     {
-        return json_decode((string) file_get_contents(self::DIR . '/expected.json'), true);
+        return json_decode((string) file_get_contents(self::DIR.'/expected.json'), true);
     }
 
     public function testMediaEditMatchesContractAdapter(): void

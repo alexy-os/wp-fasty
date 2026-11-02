@@ -1,7 +1,6 @@
 <?php
 
-
-require __DIR__ . '/common.php';
+require __DIR__.'/common.php';
 
 wpfasty_demo_cleanup_defaults();
 update_option('blogname', 'Latte Press');
@@ -34,7 +33,7 @@ foreach ($posts as [$slug, $title, $cat, $img]) {
         'post_content' => wpfasty_demo_lorem(5),
         'post_excerpt' => '',
         'post_category' => [$cats[$cat]],
-        'post_date' => gmdate('Y-m-d H:i:s', strtotime('-' . ($i * 3 + 1) . ' days')),
+        'post_date' => gmdate('Y-m-d H:i:s', strtotime('-'.($i * 3 + 1).' days')),
         'tags_input' => ['wordpress', strtolower($cat)],
         'comment_status' => 'open',
     ]);
@@ -42,11 +41,11 @@ foreach ($posts as [$slug, $title, $cat, $img]) {
     if ($att) {
         set_post_thumbnail($id, $att);
     }
-    $i++;
+    ++$i;
 }
 
 $first = get_page_by_path('the-8px-grid', OBJECT, 'post');
-if ($first && (int) get_comments_number($first->ID) === 0) {
+if ($first && 0 === (int) get_comments_number($first->ID)) {
     $c = wp_insert_comment(['comment_post_ID' => $first->ID, 'comment_author' => 'Maria', 'comment_author_email' => 'maria@example.com', 'comment_content' => 'This finally explains why my layouts felt uneven. Thanks!', 'comment_approved' => 1]);
     wp_insert_comment(['comment_post_ID' => $first->ID, 'comment_author' => 'Latte Press', 'comment_author_email' => 'admin@example.com', 'comment_content' => 'Glad it helped — eight is a forgiving number.', 'comment_parent' => $c, 'comment_approved' => 1, 'user_id' => 1]);
 }

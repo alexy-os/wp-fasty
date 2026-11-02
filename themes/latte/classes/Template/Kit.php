@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class presets of the WP FastY kit over UI8Kit 3 primitives.
  *
@@ -7,8 +8,6 @@
  * alert, badge, button, card, iconbadge, input, textarea, label, link, stack and title are the codegen-x kit-compose
  * recipes (`packages/kit-compose/variants/*.variants.json`), imported unchanged.
  * Latte: `class: kit('button', ['variant' => 'default', 'size' => 'lg'], 'mt-4')`, parts as `kit('card.CardHeader')`.
- *
- * @package Latte
  */
 
 declare(strict_types=1);
@@ -33,17 +32,17 @@ final class Kit
         $picked = [];
         foreach ((array) ($recipe['keys'] ?? []) as $key) {
             $choice = trim((string) ($selection[$key] ?? ''));
-            if ($choice === '') {
+            if ('' === $choice) {
                 $choice = trim((string) ($recipe['defaults'][$key] ?? ''));
             }
             $picked[$key] = $choice;
-            $parts[] = $choice === '' ? '' : trim((string) ($recipe['byKey'][$key][$choice] ?? ''));
+            $parts[] = '' === $choice ? '' : trim((string) ($recipe['byKey'][$key][$choice] ?? ''));
         }
         // Compound classes of a codegen-x recipe (kit-compose `compound`): added when every listed key has that value.
         foreach ((array) ($recipe['compound'] ?? []) as $when) {
             $hit = true;
             foreach ((array) $when as $key => $value) {
-                if ($key !== 'class' && ($picked[$key] ?? '') !== (string) $value) {
+                if ('class' !== $key && ($picked[$key] ?? '') !== (string) $value) {
                     $hit = false;
                     break;
                 }
@@ -56,14 +55,14 @@ final class Kit
             $parts[] = trim((string) $c);
         }
 
-        return implode(' ', array_values(array_filter($parts, static fn (string $p): bool => $p !== '')));
+        return implode(' ', array_values(array_filter($parts, static fn (string $p): bool => '' !== $p)));
     }
 
     /** @return array<string, mixed> */
     public static function recipe(string $component): array
     {
         self::$presets ??= (array) json_decode(
-            (string) file_get_contents(dirname(__DIR__, 2) . '/kit/presets.json'),
+            (string) file_get_contents(dirname(__DIR__, 2).'/kit/presets.json'),
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -72,7 +71,7 @@ final class Kit
         $recipe = self::$presets[$name]
             ?? throw new \InvalidArgumentException("Unknown kit component {$component}");
 
-        return $part === null
+        return null === $part
             ? $recipe
             : (array) ($recipe['parts'][$part]
                 ?? throw new \InvalidArgumentException("Unknown kit part {$component}"));

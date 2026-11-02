@@ -16,7 +16,7 @@ final class Site
     private static ?self $current = null;
 
     /**
-     * @param array<string, mixed> $manifest   decoded with JSON objects as arrays (read-only use)
+     * @param array<string, mixed> $manifest decoded with JSON objects as arrays (read-only use)
      * @param array<string, mixed> $delivery
      */
     public function __construct(
@@ -28,7 +28,7 @@ final class Site
 
     public static function current(): ?self
     {
-        if (self::$current !== null) {
+        if (null !== self::$current) {
             return self::$current;
         }
         $dirs = function_exists('get_stylesheet_directory')
@@ -39,13 +39,14 @@ final class Site
             $dirs = array_values(array_unique((array) apply_filters('wpfasty_theme_dirs', $dirs)));
         }
         foreach ($dirs as $dir) {
-            $site = self::fromDir((string) $dir . '/types');
-            if ($site !== null) {
+            $site = self::fromDir((string) $dir.'/types');
+            if (null !== $site) {
                 return self::$current = $site;
             }
         }
+
         // a theme without its own Codex manifest: core post / page (generated, see theme-builder coreCodex())
-        return self::$current = self::fromDir(dirname(__DIR__, 2) . '/codex');
+        return self::$current = self::fromDir(dirname(__DIR__, 2).'/codex');
     }
 
     public static function reset(?self $site = null): void
@@ -55,8 +56,8 @@ final class Site
 
     public static function fromDir(string $dir): ?self
     {
-        $m = $dir . '/codex.manifest.json';
-        $d = $dir . '/codex.delivery.json';
+        $m = $dir.'/codex.manifest.json';
+        $d = $dir.'/codex.delivery.json';
         if (!is_file($m)) {
             return null;
         }
@@ -64,6 +65,7 @@ final class Site
         $digest = Canonical::manifestDigest(Json::parse($text));
         $manifest = (array) json_decode($text, true);
         $delivery = is_file($d) ? (array) json_decode((string) file_get_contents($d), true) : [];
+
         return new self($manifest, $delivery, $digest);
     }
 
@@ -75,6 +77,7 @@ final class Site
                 return $r;
             }
         }
+
         return null;
     }
 
@@ -84,10 +87,11 @@ final class Site
         $out = [];
         foreach ((array) ($this->manifest['resources'] ?? []) as $r) {
             $id = (string) ($r['record']['id'] ?? '');
-            if ($id !== '' && $id !== 'media' && $id !== 'user') {
+            if ('' !== $id && 'media' !== $id && 'user' !== $id) {
                 $out[] = $id;
             }
         }
+
         return $out;
     }
 
@@ -99,6 +103,7 @@ final class Site
                 return $kind;
             }
         }
+
         return null;
     }
 
@@ -109,6 +114,7 @@ final class Site
         foreach ((array) ($this->resource($kind)['record']['fields'] ?? []) as $f) {
             $out[(string) $f['id']] = (array) $f;
         }
+
         return $out;
     }
 
@@ -129,6 +135,7 @@ final class Site
         }
         $out = array_keys($out);
         sort($out, SORT_STRING);
+
         return $out;
     }
 
@@ -144,6 +151,7 @@ final class Site
                 return $t;
             }
         }
+
         return '';
     }
 

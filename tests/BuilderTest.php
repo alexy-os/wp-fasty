@@ -16,7 +16,7 @@ use WPFastyBuilder\Source\RemoteSource;
 
 spl_autoload_register(static function (string $class): void {
     if (str_starts_with($class, 'WPFastyBuilder\\')) {
-        $file = dirname(__DIR__) . '/plugins/wpfasty-builder/src/' . str_replace('\\', '/', substr($class, 15)) . '.php';
+        $file = dirname(__DIR__).'/plugins/wpfasty-builder/src/'.str_replace('\\', '/', substr($class, 15)).'.php';
         if (is_file($file)) {
             require_once $file;
         }
@@ -25,9 +25,9 @@ spl_autoload_register(static function (string $class): void {
 
 final class BuilderTest extends TestCase
 {
-    private const SRC = __DIR__ . '/../plugins/wpfasty-builder/sources/ui8kit';
-    private const LATTE = self::SRC . '/latte';
-    private const TWIG = self::SRC . '/twig';
+    private const SRC = __DIR__.'/../plugins/wpfasty-builder/sources/ui8kit';
+    private const LATTE = self::SRC.'/latte';
+    private const TWIG = self::SRC.'/twig';
     private static ?Catalog $catalog = null;
     private static ?Catalog $twigCatalog = null;
 
@@ -61,6 +61,7 @@ final class BuilderTest extends TestCase
             $zip->addFromString($name, $content);
         }
         $zip->close();
+
         return (string) file_get_contents($file);
     }
 
@@ -120,7 +121,7 @@ final class BuilderTest extends TestCase
             'blocks' => [
                 ['block' => 'pagehead', 'variant' => 'start', 'props' => ['title' => '<script>x</script>Hi', 'href' => 'javascript:alert(1)']],
                 ['id' => 'news', 'block' => 'posts', 'variant' => 'grid', 'props' => ['posts' => [['id' => 'stale']]],
-                    'bindings' => ['posts' => ['source' => 'posts', 'limit' => 99, 'term' => 'De sign!', 'sale' => 'yes'], 'bad' => ['source' => 'posts']]],
+                    'bindings' => ['posts' => ['source' => 'posts', 'limit' => 99, 'term' => 'De sign!', 'sale' => 'yes'], 'bad' => ['source' => 'posts']], ],
                 ['block' => 'missing', 'variant' => 'x'],
                 ['id' => 'news', 'block' => 'stats', 'variant' => 'plain4', 'bindings' => ['stats' => ['source' => 'evil']]],
             ],
@@ -150,7 +151,7 @@ final class BuilderTest extends TestCase
         $this->assertFalse(Layout::safeHref('{open-now}'));
         [$sale] = Layout::normalize([
             'blocks' => [['id' => 'sale', 'block' => 'products', 'variant' => 'grid3',
-                'bindings' => ['products' => ['source' => 'products', 'limit' => 4, 'sale' => true]]]],
+                'bindings' => ['products' => ['source' => 'products', 'limit' => 4, 'sale' => true]], ], ],
         ], 'ui8kit', self::catalog(), ['products'], self::base());
         $this->assertSame(['source' => 'products', 'limit' => 4, 'sale' => true], Layout::blocks($sale)[0]['bindings']['products']);
     }
@@ -186,7 +187,7 @@ final class BuilderTest extends TestCase
         $latte = new Engine();
         $latte->setLoader(new StringLoader());
         $value = ['q' => "a'b\\c {\$d} \"e\" */ {* f *}", 'list' => ['x', ['y' => 2]]];
-        $out = $latte->renderToString('{=json_encode(' . Compiler::literal($value, [], []) . ')|noescape}');
+        $out = $latte->renderToString('{=json_encode('.Compiler::literal($value, [], []).')|noescape}');
         $this->assertSame($value, json_decode($out, true));
     }
 
@@ -196,7 +197,7 @@ final class BuilderTest extends TestCase
             ['id' => 'intro', 'block' => 'pagehead', 'variant' => 'start', 'props' => ['title' => "It's <Builder> \\ page"]],
             ['id' => 'news', 'block' => 'posts', 'variant' => 'grid', 'bindings' => ['posts' => ['source' => 'posts']]],
             ['id' => 'gone', 'block' => 'nope', 'variant' => 'x'],
-        ]], 'ui8kit', self::catalog(), ['posts'], self::base());
+        ], ], 'ui8kit', self::catalog(), ['posts'], self::base());
         $latte = Compiler::compile($entry, self::catalog());
         $twig = Compiler::compile($entry, self::twigCatalog(), 'twig');
         // no cross-runtime compile: a Latte catalog gives a Twig page nothing to render, and vice versa
@@ -206,7 +207,7 @@ final class BuilderTest extends TestCase
         $this->assertStringContainsString("{{ wpfb_block('ui8kit', 'blocks/post-grid.html.twig'", $twig);
         $this->assertStringContainsString("wpfb['news']['posts'] ?? []", $twig);
         $post = ['id' => 'post-1', 'title' => 'A "real" post', 'excerpt' => 'E', 'category' => 'News', 'author' => 'Ann',
-            'date' => 'Oct 1, 2026', 'minutes' => 2, 'icon' => 'file-text', 'href' => 'https://example.test/a/', 'image' => 'https://example.test/a.jpg'];
+            'date' => 'Oct 1, 2026', 'minutes' => 2, 'icon' => 'file-text', 'href' => 'https://example.test/a/', 'image' => 'https://example.test/a.jpg', ];
         $rl = new BlockRenderer(['ui8kit' => self::latteSource()], null);
         $rt = new BlockRenderer(['ui8kit' => self::twigSource()], null);
         $ctx = ['wpfb' => ['news' => ['posts' => [$post]]]];
@@ -215,9 +216,8 @@ final class BuilderTest extends TestCase
         $l->addFunction('wpfb_block', static fn (string $s, string $t, array $p): string => $rl->render($s, $t, $p));
         $fn = static fn (string $s, string $t, array $p): string => $rt->render($s, $t, $p);
         $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $twig]), ['autoescape' => 'html']);
-        $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false
-            => $n === 'wpfb_block' ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
-        $strip = require dirname(__DIR__) . '/tools/parity/normalize-dom.php';
+        $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
+        $strip = require dirname(__DIR__).'/tools/parity/normalize-dom.php';
         $a = $strip($l->renderToString('page', $ctx));
         $this->assertStringContainsString('A &quot;real&quot; post', $a);
         $this->assertSame($a, $strip($env->render('page', $ctx)));
@@ -226,7 +226,7 @@ final class BuilderTest extends TestCase
 
     public function testTwigBlocksNeedNoLatteAndMatchLatteBlocks(): void
     {
-        $dom = require dirname(__DIR__) . '/tools/parity/normalize-dom.php';
+        $dom = require dirname(__DIR__).'/tools/parity/normalize-dom.php';
         $rt = new BlockRenderer(['ui8kit' => self::twigSource()], null);
         $rl = new BlockRenderer(['ui8kit' => self::latteSource()], null);
         $props = (array) self::catalog()->variant('pagehead', 'start')['props'];
@@ -238,9 +238,9 @@ final class BuilderTest extends TestCase
         // Isolated runtimes: no source ever renders the other runtime's template — no fallback in either direction.
         $this->assertSame('', $rt->render('ui8kit', 'blocks/page-intro.latte', $props));
         $this->assertSame('', $rl->render('ui8kit', 'blocks/page-intro.html.twig', $props));
-        $dir = sys_get_temp_dir() . '/wpfb-notwig-' . getmypid();
-        @mkdir($dir . '/blocks', 0777, true);
-        file_put_contents($dir . '/blocks/x.latte', '<p>{$p[\'t\']}</p>');
+        $dir = sys_get_temp_dir().'/wpfb-notwig-'.getmypid();
+        @mkdir($dir.'/blocks', 0777, true);
+        file_put_contents($dir.'/blocks/x.latte', '<p>{$p[\'t\']}</p>');
         $only = new BlockRenderer(['n' => new LocalSource('n', $dir, 'latte')], null);
         $this->assertSame('<p>ok</p>', $only->render('n', 'blocks/x.latte', ['t' => 'ok']));
         $this->assertSame('', $only->render('n', 'blocks/x.html.twig', ['t' => 'ok']), 'a Latte-only source has no Twig block');
@@ -249,51 +249,51 @@ final class BuilderTest extends TestCase
 
     public function testTwigSandboxRejectsUnsafeTemplates(): void
     {
-        $dir = sys_get_temp_dir() . '/wpfb-twig-guard-' . getmypid();
-        @mkdir($dir . '/twig/blocks', 0777, true);
+        $dir = sys_get_temp_dir().'/wpfb-twig-guard-'.getmypid();
+        @mkdir($dir.'/twig/blocks', 0777, true);
         $cases = [
             "{{ constant('PHP_VERSION') }}" => false, '{% do 1 %}' => false, "{{ ['id']|map(c => c)|join }}" => false,
             '{% macro m() %}{% endmacro %}' => false, "{{ source('blocks/x.html.twig') }}" => false,
             "{{ og_text('<b>') }}" => true, "{{ include('compose/Text.html.twig', {text: 'k'}) }}" => true,
             "{% set a = 1 %}{% if a %}{{ include('blocks/y.html.twig', {p: p}) }}{% endif %}" => true,
         ];
-        file_put_contents($dir . '/twig/blocks/y.html.twig', 'y');
+        file_put_contents($dir.'/twig/blocks/y.html.twig', 'y');
         // the shared layers of a remote source are never its own: compose/ comes from the bundled package
-        @mkdir($dir . '/twig/compose', 0777, true);
-        file_put_contents($dir . '/twig/compose/Text.html.twig', "EVIL{{ constant('PHP_VERSION') }}");
+        @mkdir($dir.'/twig/compose', 0777, true);
+        file_put_contents($dir.'/twig/compose/Text.html.twig', "EVIL{{ constant('PHP_VERSION') }}");
         $i = 0;
         foreach ($cases as $tpl => $ok) {
             // one file per case: Twig names compiled classes by template path, not by content
-            $name = 'blocks/x' . ++$i . '.html.twig';
-            file_put_contents($dir . '/twig/' . $name, $tpl);
-            $html = (new BlockRenderer(['e' => new LocalSource('e', $dir . '/twig', 'twig', '', true)], null))->render('e', $name, []);
-            $this->assertSame($ok, !str_starts_with($html, '<!-- wpfasty-builder'), $tpl . ' → ' . $html);
+            $name = 'blocks/x'.++$i.'.html.twig';
+            file_put_contents($dir.'/twig/'.$name, $tpl);
+            $html = (new BlockRenderer(['e' => new LocalSource('e', $dir.'/twig', 'twig', '', true)], null))->render('e', $name, []);
+            $this->assertSame($ok, !str_starts_with($html, '<!-- wpfasty-builder'), $tpl.' → '.$html);
             $this->assertStringNotContainsString('EVIL', $html);
         }
     }
 
     public function testRemoteTwigZipExtractsOnlyTwigTemplates(): void
     {
-        $dir = sys_get_temp_dir() . '/wpfb-twigzip-' . getmypid();
+        $dir = sys_get_temp_dir().'/wpfb-twigzip-'.getmypid();
         @mkdir($dir, 0777, true);
-        $zipFile = $dir . '/twig.zip';
+        $zipFile = $dir.'/twig.zip';
         $zip = new \ZipArchive();
         $zip->open($zipFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
         $zip->addFromString('twig/blocks/hero.html.twig', '<h1>{{ p.title }}</h1>');
         $zip->addFromString('blocks/evil.latte', '{php}');
         $zip->addFromString('blocks/x.php', '<?php');
         $zip->close();
-        RemoteSource::extract($zipFile, $dir . '/twig', 'twig');
-        $this->assertFileExists($dir . '/twig/blocks/hero.html.twig');
-        $this->assertFileDoesNotExist($dir . '/twig/blocks/evil.latte');
-        $this->assertFileDoesNotExist($dir . '/twig/blocks/x.php');
+        RemoteSource::extract($zipFile, $dir.'/twig', 'twig');
+        $this->assertFileExists($dir.'/twig/blocks/hero.html.twig');
+        $this->assertFileDoesNotExist($dir.'/twig/blocks/evil.latte');
+        $this->assertFileDoesNotExist($dir.'/twig/blocks/x.php');
     }
 
     public function testTwigLiteralRoundTripsJson(): void
     {
         $value = ['a' => [1, 2.5, true, null, "q'\\"], 'b' => [], 'c' => ['x' => ['y' => 'z']], 'd' => -3];
         $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader([
-            'x' => '{{ ' . Compiler::literal($value, [], [], true) . '|json_encode|raw }}',
+            'x' => '{{ '.Compiler::literal($value, [], [], true).'|json_encode|raw }}',
         ]));
         $this->assertSame($value, json_decode($env->render('x'), true));
     }
@@ -303,14 +303,14 @@ final class BuilderTest extends TestCase
         [$entry] = Layout::normalize(['blocks' => [
             ['id' => 'intro', 'block' => 'pagehead', 'variant' => 'start', 'props' => ['title' => 'Builder page']],
             ['id' => 'news', 'block' => 'posts', 'variant' => 'grid', 'bindings' => ['posts' => ['source' => 'posts']]],
-        ]], 'ui8kit', self::catalog(), ['posts'], self::base());
+        ], ], 'ui8kit', self::catalog(), ['posts'], self::base());
         $tpl = Compiler::compile($entry, self::catalog());
         $this->assertStringContainsString("wpfb_block('ui8kit', 'blocks/post-grid.latte'", $tpl);
         $this->assertStringContainsString("\$wpfb['news']['posts']", $tpl);
         $this->assertStringNotContainsString('post-static-first', $tpl, 'sample records of a bound path are not compiled in');
 
         $post = ['id' => 'post-1', 'title' => 'A real post', 'excerpt' => 'E', 'category' => 'News', 'author' => 'Ann',
-            'date' => 'Oct 1, 2026', 'minutes' => 2, 'icon' => 'file-text', 'href' => 'https://example.test/a/', 'image' => 'https://example.test/a.jpg'];
+            'date' => 'Oct 1, 2026', 'minutes' => 2, 'icon' => 'file-text', 'href' => 'https://example.test/a/', 'image' => 'https://example.test/a.jpg', ];
         foreach ([false, true] as $guarded) {
             $renderer = new BlockRenderer(['ui8kit' => self::latteSource($guarded)], null);
             $theme = new Engine();
@@ -328,8 +328,8 @@ final class BuilderTest extends TestCase
 
     public function testGuardRejectsUnsafeTemplates(): void
     {
-        $dir = sys_get_temp_dir() . '/wpfb-guard-' . getmypid();
-        @mkdir($dir . '/latte/blocks', 0777, true);
+        $dir = sys_get_temp_dir().'/wpfb-guard-'.getmypid();
+        @mkdir($dir.'/latte/blocks', 0777, true);
         $cases = [
             "{=system('id')}" => false, '{php echo 1}' => false, '{=$x->y()}' => false, '{=og_text(1)|upper}' => false,
             '{do $a = 1}' => false, '{=new \\stdClass}' => false, "{=og_text('<b>')|noescape}" => true,
@@ -337,14 +337,14 @@ final class BuilderTest extends TestCase
             "{=og_include('compose/Text.latte', ['text' => 'k'])|noescape}" => true,
         ];
         // the shared layers of a remote source are never its own: compose/ comes from the bundled package
-        @mkdir($dir . '/latte/compose', 0777, true);
-        file_put_contents($dir . '/latte/compose/Text.latte', 'EVIL{php echo 1}');
+        @mkdir($dir.'/latte/compose', 0777, true);
+        file_put_contents($dir.'/latte/compose/Text.latte', 'EVIL{php echo 1}');
         $i = 0;
         foreach ($cases as $tpl => $ok) {
             // one file per case: without a temp directory Latte names the evaluated class by template, not content
-            $name = 'blocks/x' . ++$i . '.latte';
-            file_put_contents($dir . '/latte/' . $name, $tpl);
-            $r = new BlockRenderer(['e' => new LocalSource('e', $dir . '/latte', 'latte', '', true)], null);
+            $name = 'blocks/x'.++$i.'.latte';
+            file_put_contents($dir.'/latte/'.$name, $tpl);
+            $r = new BlockRenderer(['e' => new LocalSource('e', $dir.'/latte', 'latte', '', true)], null);
             $thrown = false;
             $html = '';
             try {
@@ -360,8 +360,8 @@ final class BuilderTest extends TestCase
 
     public function testRemoteImportKeepsOnlyTemplates(): void
     {
-        $dir = sys_get_temp_dir() . '/wpfb-remote-' . getmypid();
-        $zipFile = $dir . '-src.zip';
+        $dir = sys_get_temp_dir().'/wpfb-remote-'.getmypid();
+        $zipFile = $dir.'-src.zip';
         @mkdir(dirname($zipFile), 0777, true);
         $zip = new \ZipArchive();
         $zip->open($zipFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
@@ -371,27 +371,27 @@ final class BuilderTest extends TestCase
         $zip->close();
         $catalog = json_encode(['templates' => 'latte', 'label' => 'Remote', 'blocks' => [
             ['id' => 'hero', 'variants' => [['id' => 'a', 'template' => 'blocks/hero.latte', 'props' => ['title' => 'Hi']]]],
-        ], 'collections' => []]);
+        ], 'collections' => [], ]);
         $fetch = static fn (string $url): string => str_ends_with($url, 'catalog.json') ? (string) $catalog : (string) file_get_contents($zipFile);
         $remote = new RemoteSource('remote', 'https://registry.example/ui', $dir, 'latte', $fetch);
         $this->assertSame(['blocks' => 1, 'collections' => 0, 'runtime' => 'latte', 'version' => ''], $remote->import());
         $this->assertTrue($remote->imported());
-        $this->assertFileExists($dir . '/blocks/hero.latte');
-        $this->assertFileDoesNotExist($dir . '/php/Evil.php');
-        $this->assertFileDoesNotExist(dirname($dir) . '/escape.latte');
+        $this->assertFileExists($dir.'/blocks/hero.latte');
+        $this->assertFileDoesNotExist($dir.'/php/Evil.php');
+        $this->assertFileDoesNotExist(dirname($dir).'/escape.latte');
         $this->assertTrue($remote->sandboxed());
         $html = (new BlockRenderer(['remote' => $remote], null))->render('remote', 'blocks/hero.latte', ['title' => 'Hi <b>']);
         $this->assertSame('<h1>Hi &lt;b&gt;</h1>', trim($html));
 
         $badFetch = static fn (string $url): string => '{"templates":"twig","blocks":[]}';
         $this->expectException(\RuntimeException::class);
-        (new RemoteSource('bad', 'https://x.example', $dir . '-bad', 'latte', $badFetch))->import();
+        (new RemoteSource('bad', 'https://x.example', $dir.'-bad', 'latte', $badFetch))->import();
     }
 
     public function testRuntimeRegistryImportIsIsolated(): void
     {
-        $dir = sys_get_temp_dir() . '/wpfb-reg2-' . getmypid();
-        $zip = self::zip($dir . '-src/blocks.zip', [
+        $dir = sys_get_temp_dir().'/wpfb-reg2-'.getmypid();
+        $zip = self::zip($dir.'-src/blocks.zip', [
             'blocks/hero.html.twig' => '<h1>{{ p.title }}</h1>',
             'blocks/hero.latte' => '<h1>{$p[title]}</h1>',
             'php/Evil.php' => '<?php echo 1;',
@@ -402,31 +402,29 @@ final class BuilderTest extends TestCase
             'blocks' => [['id' => 'hero', 'variants' => [['id' => 'a', 'template' => 'blocks/hero.html.twig', 'props' => []]]]],
             'collections' => [],
         ]);
-        $fetchOf = static fn (string $cat, string $z): \Closure => static fn (string $url): string
-            => str_ends_with($url, 'catalog.json') ? $cat : (str_ends_with($url, 'blocks.zip') ? $z : throw new \RuntimeException('404 ' . $url));
+        $fetchOf = static fn (string $cat, string $z): \Closure => static fn (string $url): string => str_ends_with($url, 'catalog.json') ? $cat : (str_ends_with($url, 'blocks.zip') ? $z : throw new \RuntimeException('404 '.$url));
         $twig = new RemoteSource('reg', 'https://registry.example/twig/wpfasty/v1.2.0', $dir, 'twig', $fetchOf($catalog(), $zip));
         $this->assertSame(['blocks' => 1, 'collections' => 0, 'runtime' => 'twig', 'version' => '1.2.0'], $twig->import());
-        $this->assertFileExists($dir . '/blocks/hero.html.twig');
-        $this->assertFileDoesNotExist($dir . '/blocks/hero.latte', 'the other runtime is never stored');
-        $this->assertFileDoesNotExist($dir . '/php/Evil.php');
+        $this->assertFileExists($dir.'/blocks/hero.html.twig');
+        $this->assertFileDoesNotExist($dir.'/blocks/hero.latte', 'the other runtime is never stored');
+        $this->assertFileDoesNotExist($dir.'/php/Evil.php');
         $this->assertSame('<h1>Hi &lt;b&gt;</h1>', trim((new BlockRenderer(['reg' => $twig], null))->render('reg', 'blocks/hero.html.twig', ['title' => 'Hi <b>'])));
         $this->assertFalse((new RemoteSource('reg', 'u', $dir, 'latte', $fetchOf('', '')))->imported(), 'a twig copy is not a latte source');
 
         $fails = [
-            'other runtime' => [new RemoteSource('l', 'u', $dir . '-l', 'latte', $fetchOf($catalog(), $zip)), 'serves twig'],
-            'bad sha256' => [new RemoteSource('s', 'u', $dir . '-s', 'twig', $fetchOf($catalog(), $zip . 'x')), 'sha256'],
-            'missing template' => [new RemoteSource('m', 'u', $dir . '-m', 'twig', $fetchOf($catalog(['blocks' => [['id' => 'x', 'variants' => [['id' => 'a', 'template' => 'blocks/gone.html.twig', 'props' => []]]]]]), $zip)), 'lacks 1'],
-            'no archive hash' => [new RemoteSource('h', 'u', $dir . '-h', 'twig', $fetchOf($catalog(['archive' => ['file' => 'blocks.zip']]), $zip)), 'sha256'],
+            'other runtime' => [new RemoteSource('l', 'u', $dir.'-l', 'latte', $fetchOf($catalog(), $zip)), 'serves twig'],
+            'bad sha256' => [new RemoteSource('s', 'u', $dir.'-s', 'twig', $fetchOf($catalog(), $zip.'x')), 'sha256'],
+            'missing template' => [new RemoteSource('m', 'u', $dir.'-m', 'twig', $fetchOf($catalog(['blocks' => [['id' => 'x', 'variants' => [['id' => 'a', 'template' => 'blocks/gone.html.twig', 'props' => []]]]]]), $zip)), 'lacks 1'],
+            'no archive hash' => [new RemoteSource('h', 'u', $dir.'-h', 'twig', $fetchOf($catalog(['archive' => ['file' => 'blocks.zip']]), $zip)), 'sha256'],
             // format 1 without the site runtime's zip: rejected, never served from latte.zip
-            'format 1 without twig.zip' => [new RemoteSource('f', 'u', $dir . '-f', 'twig', static fn (string $url): string
-                => str_ends_with($url, 'catalog.json')
+            'format 1 without twig.zip' => [new RemoteSource('f', 'u', $dir.'-f', 'twig', static fn (string $url): string => str_ends_with($url, 'catalog.json')
                     ? (string) json_encode(['templates' => 'latte', 'blocks' => [['id' => 'hero', 'variants' => [['id' => 'a', 'template' => 'blocks/hero.latte', 'props' => []]]]]])
-                    : (str_ends_with($url, 'latte.zip') ? $zip : throw new \RuntimeException('HTTP 404'))), 'no twig package'],
+            : (str_ends_with($url, 'latte.zip') ? $zip : throw new \RuntimeException('HTTP 404'))), 'no twig package', ],
         ];
         foreach ($fails as $case => [$src, $needle]) {
             try {
                 $src->import();
-                $this->fail($case . ' imported');
+                $this->fail($case.' imported');
             } catch (\RuntimeException $e) {
                 $this->assertStringContainsString($needle, $e->getMessage(), $case);
                 $this->assertFalse($src->imported(), $case);
@@ -436,12 +434,12 @@ final class BuilderTest extends TestCase
 
     public function testLegacyStoredCopyServesOnlyItsOwnRuntime(): void
     {
-        $dir = sys_get_temp_dir() . '/wpfb-legacy-' . getmypid();
-        @mkdir($dir . '/latte/blocks', 0777, true);
-        file_put_contents($dir . '/latte/blocks/hero.latte', '<h1>{$p[title]}</h1>');
-        file_put_contents($dir . '/catalog.json', (string) json_encode(['templates' => 'latte', 'engines' => ['latte'], 'blocks' => [
+        $dir = sys_get_temp_dir().'/wpfb-legacy-'.getmypid();
+        @mkdir($dir.'/latte/blocks', 0777, true);
+        file_put_contents($dir.'/latte/blocks/hero.latte', '<h1>{$p[title]}</h1>');
+        file_put_contents($dir.'/catalog.json', (string) json_encode(['templates' => 'latte', 'engines' => ['latte'], 'blocks' => [
             ['id' => 'hero', 'variants' => [['id' => 'a', 'template' => 'blocks/hero.latte', 'props' => []]]],
-        ]]));
+        ], ]));
         $nofetch = static fn (string $u): string => throw new \RuntimeException('offline');
         $latte = new RemoteSource('old', 'u', $dir, 'latte', $nofetch);
         $this->assertTrue($latte->imported());

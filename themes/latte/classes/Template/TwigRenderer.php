@@ -1,11 +1,10 @@
 <?php
+
 /**
  * Twig adapter for RendererInterface (optional — requires twig/twig).
  *
  * Primitives come from ui8kit/codegen Twig output (`generated/ui/<brick>/<Part>.html.twig`)
  * and are registered with UI8Kit\TwigExtension so the DOM matches the Latte primitives.
- *
- * @package Latte
  */
 
 declare(strict_types=1);
@@ -26,8 +25,8 @@ final class TwigRenderer implements RendererInterface
     private array $roots;
 
     /**
-     * @param array<int, mixed> $roots    Views roots in lookup order.
-     * @param string            $cacheDir Compiled templates directory.
+     * @param array<int, mixed> $roots    views roots in lookup order
+     * @param string            $cacheDir compiled templates directory
      */
     public function __construct(array $roots, string $cacheDir)
     {
@@ -68,7 +67,7 @@ final class TwigRenderer implements RendererInterface
 
     public function exists(string $view): bool
     {
-        return RootChain::find($this->roots, $this->withExtension($view)) !== null;
+        return null !== RootChain::find($this->roots, $this->withExtension($view));
     }
 
     public function render(string $template, array $context = []): string
@@ -88,8 +87,7 @@ final class TwigRenderer implements RendererInterface
         $this->twig->addFilter(new TwigFilter('kses', [ViewHelpers::class, 'kses'], ['is_safe' => ['html']]));
         $this->twig->addFunction(new TwigFunction(
             'icon',
-            static fn (string $name, string $class = 'size-4', string $label = ''): Markup
-                => new Markup(Icons::svg($name, $class, $label), 'UTF-8')
+            static fn (string $name, string $class = 'size-4', string $label = ''): Markup => new Markup(Icons::svg($name, $class, $label), 'UTF-8')
         ));
         $this->twig->addFilter(new TwigFilter('safe_url', [ViewHelpers::class, 'safeUrl']));
         $this->registerWordPressHooks();
@@ -122,6 +120,7 @@ final class TwigRenderer implements RendererInterface
                 static function (mixed ...$args) use ($fn): string {
                     ob_start();
                     $fn(...$args);
+
                     return (string) ob_get_clean();
                 },
                 ['is_safe' => ['html']]
@@ -129,14 +128,13 @@ final class TwigRenderer implements RendererInterface
         }
         $this->twig->addFunction(new TwigFunction(
             'apply_filters',
-            static fn (string $hook, mixed $value, mixed ...$args): string
-                => (string) apply_filters($hook, $value, ...$args),
+            static fn (string $hook, mixed $value, mixed ...$args): string => (string) apply_filters($hook, $value, ...$args),
             ['is_safe' => ['html']]
         ));
     }
 
     private function withExtension(string $view): string
     {
-        return str_ends_with($view, '.twig') ? $view : $view . '.html.twig';
+        return str_ends_with($view, '.twig') ? $view : $view.'.html.twig';
     }
 }

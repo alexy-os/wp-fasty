@@ -1,4 +1,5 @@
 <?php
+
 /**
  * N+1 guard of the builder posts pager (posts/listPaged, Pager): a page with one paged posts block bound to the posts
  * source, [small] then [large] posts per page, on page 1 and page 2 of the request (`paged` of the main query), gets
@@ -7,10 +8,7 @@
  * page 2 as on page 1. Temporary posts top the site up to 2 × [large] + 1 and are removed after the run.
  *   wp eval-file tools/perf/queries.php pager [small] [large]
  * Exit 1 when a count grows, or when the pager or the page of posts is wrong.
- *
- * @package WPFasty
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -18,7 +16,7 @@ if (!defined('ABSPATH')) {
 $wpfasty_pq_small = max(1, (int) ($args[1] ?? 2));
 $wpfasty_pq_large = max($wpfasty_pq_small + 1, (int) ($args[2] ?? 6));
 $wpfasty_pq_catalog = WPFastyBuilder\Sources::catalog('ui8kit');
-if ($wpfasty_pq_catalog === null || $wpfasty_pq_catalog->variant('posts', 'listPaged') === null) {
+if (null === $wpfasty_pq_catalog || null === $wpfasty_pq_catalog->variant('posts', 'listPaged')) {
     WP_CLI::error('the ui8kit source has no posts/listPaged variant');
 }
 if (!isset(WPFastyBuilder\DataSources::all()['posts'])) {
@@ -28,7 +26,7 @@ $wpfasty_pq_added = [];
 $wpfasty_pq_have = count(get_posts([
     'post_type' => 'post', 'post_status' => 'publish', 'numberposts' => -1, 'fields' => 'ids', 'no_found_rows' => true,
 ]));
-for ($i = $wpfasty_pq_have; $i < 2 * $wpfasty_pq_large + 1; $i++) {
+for ($i = $wpfasty_pq_have; $i < 2 * $wpfasty_pq_large + 1; ++$i) {
     $wpfasty_pq_added[] = wp_insert_post([
         'post_type' => 'post', 'post_status' => 'publish', 'post_title' => "Perf pager post $i",
         'post_name' => "perf-pager-post-$i", 'post_content' => 'Perf pager body', 'post_author' => 1,
@@ -45,7 +43,7 @@ $wpfasty_pq_render = static function (int $n, int $paged) use ($wpfasty_pq_catal
     [$entry] = WPFastyBuilder\Layout::normalize(['blocks' => [[
         'id' => 'pg', 'block' => 'posts', 'variant' => 'listPaged',
         'bindings' => ['posts' => ['source' => 'posts', 'limit' => $n]],
-    ]]], 'ui8kit', $wpfasty_pq_catalog, array_keys(WPFastyBuilder\DataSources::all()), [
+    ], ], ], 'ui8kit', $wpfasty_pq_catalog, array_keys(WPFastyBuilder\DataSources::all()), [
         'id' => 'perf', 'slug' => 'perf', 'title' => 'Perf',
     ]);
     wp_cache_flush();
@@ -64,9 +62,10 @@ $wpfasty_pq_render = static function (int $n, int $paged) use ($wpfasty_pq_catal
         count($bound['pg']['posts'] ?? []) !== $want => sprintf('%d posts on page %d, want %d', count($bound['pg']['posts'] ?? []), $paged, $want),
         !is_array($pager) => 'no pager',
         $pager['page'] !== $paged || $pager['pages'] !== $pages => sprintf('pager %d/%d, want %d/%d', $pager['page'], $pager['pages'], $paged, $pages),
-        $pager['previous'] === '' || $pager['next'] === '' => 'a pager button without a name',
+        '' === $pager['previous'] || '' === $pager['next'] => 'a pager button without a name',
         default => '',
     };
+
     return [$q, $problem];
 };
 
@@ -92,7 +91,7 @@ WP_CLI::log(sprintf(
     $wpfasty_pq_runs["$wpfasty_pq_large/2"][0]
 ));
 foreach ($wpfasty_pq_runs as $k => [, $problem]) {
-    if ($problem !== '') {
+    if ('' !== $problem) {
         WP_CLI::error("pager $k: $problem");
     }
 }

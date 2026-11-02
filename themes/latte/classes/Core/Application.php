@@ -18,9 +18,9 @@ final class Application
 
     public static function getInstance(): self
     {
-        if (self::$instance === null) {
+        if (null === self::$instance) {
             $container = new Container();
-            $config = dirname(__DIR__, 2) . '/configs/services.php';
+            $config = dirname(__DIR__, 2).'/configs/services.php';
             if (!is_file($config)) {
                 throw new \RuntimeException('Missing configs/services.php');
             }

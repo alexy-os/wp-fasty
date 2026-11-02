@@ -24,9 +24,10 @@ final class Layout
     /**
      * Sanitizes a layout payload against a catalog and the known data sources.
      *
-     * @param array<string, mixed> $in        untrusted payload: {source, collection, blocks:[...]}, or a full entry
+     * @param array<string, mixed> $in          untrusted payload: {source, collection, blocks:[...]}, or a full entry
      * @param list<string>         $dataSources ids accepted in bindings
-     * @param array<string, mixed> $base      id, locale, slug, title, status, version, created_at, updated_at, page_id
+     * @param array<string, mixed> $base        id, locale, slug, title, status, version, created_at, updated_at, page_id
+     *
      * @return array{0: array<string, mixed>, 1: list<array{code: string, path: string, message: string}>}
      */
     public static function normalize(
@@ -38,8 +39,8 @@ final class Layout
     ): array {
         $issues = [];
         $meta = is_array($in['metadata'] ?? null) ? $in['metadata'] : null;
-        $blocksIn = $meta !== null ? ($meta['blocks']['value'] ?? []) : ($in['blocks'] ?? []);
-        $collection = $meta !== null ? ($meta['collection']['value'] ?? '') : ($in['collection'] ?? '');
+        $blocksIn = null !== $meta ? ($meta['blocks']['value'] ?? []) : ($in['blocks'] ?? []);
+        $collection = null !== $meta ? ($meta['collection']['value'] ?? '') : ($in['collection'] ?? '');
         $blocks = [];
         $seen = [];
         foreach (array_slice(is_array($blocksIn) ? array_values($blocksIn) : [], 0, self::MAX_BLOCKS) as $i => $b) {
@@ -50,11 +51,11 @@ final class Layout
             }
             $block = is_string($b['block'] ?? null) ? $b['block'] : '';
             $variant = is_string($b['variant'] ?? null) ? $b['variant'] : '';
-            if ($catalog->variant($block, $variant) === null) {
+            if (null === $catalog->variant($block, $variant)) {
                 $issues[] = self::issue('layout.block_unknown', $p, "unknown block/variant $block/$variant");
                 continue;
             }
-            $id = is_string($b['id'] ?? null) && preg_match(Catalog::IDENT, $b['id']) === 1 ? $b['id'] : 'b' . ($i + 1);
+            $id = is_string($b['id'] ?? null) && 1 === preg_match(Catalog::IDENT, $b['id']) ? $b['id'] : 'b'.($i + 1);
             while (isset($seen[$id])) {
                 $id .= 'x';
             }
@@ -87,14 +88,14 @@ final class Layout
                     '',
                     $bind['term'],
                 )) : '';
-                if ($term !== '') {
+                if ('' !== $term) {
                     $one['term'] = $term;
                 }
                 if (($bind['sale'] ?? false) === true) {
                     $one['sale'] = true;
                 }
                 $map = self::map($bind['map'] ?? null);
-                if ($map !== []) {
+                if ([] !== $map) {
                     $one['map'] = $map;
                 }
                 $bindings[$path] = $one;
@@ -107,7 +108,7 @@ final class Layout
             }
             // the pager group is the adapter's (page, pages, texts: Pager); a layout keeps only its mode
             $pager = $catalog->pager($block, $variant);
-            if ($pager !== null) {
+            if (null !== $pager) {
                 $mode = is_array($props[$pager['path']] ?? null) ? ($props[$pager['path']]['mode'] ?? null) : null;
                 unset($props[$pager['path']]);
                 if (in_array($mode, Pager::MODES, true)) {
@@ -126,10 +127,10 @@ final class Layout
             $issues[] = self::issue(
                 'layout.too_many_blocks',
                 'metadata.blocks.value',
-                'at most ' . self::MAX_BLOCKS . ' blocks',
+                'at most '.self::MAX_BLOCKS.' blocks',
             );
         }
-        $known = is_string($collection) && ($collection === '' || $catalog->collection($collection) !== null);
+        $known = is_string($collection) && ('' === $collection || null !== $catalog->collection($collection));
         $collection = $known ? $collection : '';
         $entry = [
             'id' => (string) ($base['id'] ?? ''),
@@ -149,6 +150,7 @@ final class Layout
             'created_at' => (string) ($base['created_at'] ?? ''),
             'updated_at' => (string) ($base['updated_at'] ?? ''),
         ];
+
         return [$entry, array_merge($issues, self::check($entry))];
     }
 
@@ -156,15 +158,16 @@ final class Layout
      * The core checks of a v0.4 entry (ui8kit/contract src/validate-v04.ts checkEntryV04) for the fields a layout uses.
      *
      * @param array<string, mixed> $e
+     *
      * @return list<array{code: string, path: string, message: string}>
      */
     public static function check(array $e): array
     {
         $out = [];
-        if (trim((string) ($e['id'] ?? '')) === '') {
+        if ('' === trim((string) ($e['id'] ?? ''))) {
             $out[] = self::issue('core.id_required', 'id', 'id is required');
         }
-        if (preg_match(self::LOCALE, (string) ($e['locale'] ?? '')) !== 1) {
+        if (1 !== preg_match(self::LOCALE, (string) ($e['locale'] ?? ''))) {
             $out[] = self::issue('core.locale_invalid', 'locale', 'locale must be a BCP 47 tag');
         }
         if (!is_int($e['version'] ?? null) || $e['version'] < 1) {
@@ -172,7 +175,7 @@ final class Layout
         }
         $c = (string) ($e['created_at'] ?? '');
         $u = (string) ($e['updated_at'] ?? '');
-        if (preg_match(self::RFC3339, $c) !== 1 || preg_match(self::RFC3339, $u) !== 1) {
+        if (1 !== preg_match(self::RFC3339, $c) || 1 !== preg_match(self::RFC3339, $u)) {
             $out[] = self::issue(
                 'core.timestamps_required',
                 'created_at',
@@ -181,7 +184,7 @@ final class Layout
         } elseif (strtotime($u) < strtotime($c)) {
             $out[] = self::issue('core.timestamps_order', 'updated_at', 'updated_at precedes created_at');
         }
-        if (preg_match(Catalog::IDENT, (string) ($e['kind'] ?? '')) !== 1) {
+        if (1 !== preg_match(Catalog::IDENT, (string) ($e['kind'] ?? ''))) {
             $out[] = self::issue('core.entry.kind_invalid', 'kind', 'kind is invalid');
         }
         if (!in_array(
@@ -194,7 +197,7 @@ final class Layout
         if (($e['visibility'] ?? '') !== 'public' && ($e['visibility'] ?? '') !== 'private') {
             $out[] = self::issue('core.entry.visibility_invalid', 'visibility', 'visibility must be public or private');
         }
-        if (trim((string) ($e['slug'] ?? '')) === '') {
+        if ('' === trim((string) ($e['slug'] ?? ''))) {
             $out[] = self::issue('core.entry.slug_required', 'slug', 'slug is required');
         }
         if (!is_string($e['title'] ?? null)) {
@@ -209,6 +212,7 @@ final class Layout
                 );
             }
         }
+
         return $out;
     }
 
@@ -260,6 +264,7 @@ final class Layout
                 $out[] = $b;
             }
         }
+
         return $out;
     }
 
@@ -268,6 +273,7 @@ final class Layout
      *
      * @param array<string, mixed> $base
      * @param array<string, mixed> $over
+     *
      * @return array<string, mixed>
      */
     public static function merge(array $base, array $over): array
@@ -279,6 +285,7 @@ final class Layout
                 $base[$k] = $v;
             }
         }
+
         return $base;
     }
 
@@ -286,8 +293,9 @@ final class Layout
     public static function set(array &$a, array $path, mixed $value): void
     {
         $k = array_shift($path);
-        if ($path === []) {
+        if ([] === $path) {
             $a[$k] = $value;
+
             return;
         }
         if (!is_array($a[$k] ?? null)) {
@@ -300,7 +308,7 @@ final class Layout
     private static function unset(array &$a, array $path): void
     {
         $k = array_shift($path);
-        if ($path === []) {
+        if ([] === $path) {
             unset($a[$k]);
         } elseif (is_array($a[$k] ?? null)) {
             self::unset($a[$k], $path);
@@ -314,9 +322,10 @@ final class Layout
      * same path (string / number / boolean / list / object; the catalog schema of the props) is dropped with an issue,
      * so a template never gets an object where it prints a string. No `__html` key at any depth.
      *
-     * @param array<mixed> $v
-     * @param mixed        $sample the variant sample props at the same path (null: no constraint)
+     * @param array<mixed>                                             $v
+     * @param mixed                                                    $sample the variant sample props at the same path (null: no constraint)
      * @param list<array{code: string, path: string, message: string}> $issues
+     *
      * @return array<mixed>
      */
     private static function clean(
@@ -329,14 +338,15 @@ final class Layout
     ): array {
         $out = [];
         if ($depth > self::MAX_DEPTH) {
-            $issues[] = self::issue('layout.props_too_deep', $at, 'props nest at most ' . self::MAX_DEPTH . ' levels');
+            $issues[] = self::issue('layout.props_too_deep', $at, 'props nest at most '.self::MAX_DEPTH.' levels');
+
             return $out;
         }
         $list = array_is_list($v);
         foreach ($v as $k => $x) {
             $key = is_int($k) ? $k : (string) preg_replace('/[^A-Za-z0-9_.-]/', '', (string) $k);
             // `__html` is the trusted-markup marker (TrustedHtml): only the data adapter sets it, never a layout
-            if ($key === '' || $key === '__html') {
+            if ('' === $key || '__html' === $key) {
                 continue;
             }
             $name = is_string($key) ? $key : $parent; // list items are checked like the list's key ("images" → src)
@@ -344,12 +354,12 @@ final class Layout
             if (is_array($sample)) {
                 $want = $list && array_is_list($sample) ? ($sample[0] ?? null) : ($sample[$key] ?? null);
             }
-            $path = $at . '.' . $key;
+            $path = $at.'.'.$key;
             if (!self::sameKind($want, $x)) {
                 $issues[] = self::issue(
                     'layout.prop_type',
                     $path,
-                    $path . ' must be ' . self::kind($want) . ', not ' . self::kind($x),
+                    $path.' must be '.self::kind($want).', not '.self::kind($x),
                 );
                 continue;
             }
@@ -357,28 +367,30 @@ final class Layout
                 $out[$key] = self::clean($x, $depth + 1, $want, $issues, $path, $name);
             } elseif (is_string($x)) {
                 $s = trim(Safe::text(strip_tags(mb_substr($x, 0, 2000))));
-                if (preg_match('/href$/i', $name) === 1) {
+                if (1 === preg_match('/href$/i', $name)) {
                     $s = self::safeHref($s) ? $s : '#/';
-                } elseif (Safe::isUrlKey($name) && preg_match(Links::TOKEN, $s) !== 1) {
-                    $s = Safe::url($s, preg_match(Safe::IMAGE_KEY, $name) === 1);
+                } elseif (Safe::isUrlKey($name) && 1 !== preg_match(Links::TOKEN, $s)) {
+                    $s = Safe::url($s, 1 === preg_match(Safe::IMAGE_KEY, $name));
                 }
                 $out[$key] = $s;
-            } elseif (is_int($x) || is_float($x) || is_bool($x) || $x === null) {
+            } elseif (is_int($x) || is_float($x) || is_bool($x) || null === $x) {
                 $out[$key] = is_float($x) && !is_finite($x) ? 0 : $x;
             }
         }
+
         return $out;
     }
 
     /** $x may stand where the sample has $want: same JSON type; null (unset) and an empty array fit any shape */
     private static function sameKind(mixed $want, mixed $x): bool
     {
-        if ($want === null || $x === null) {
+        if (null === $want || null === $x) {
             return true;
         }
         $a = self::kind($want);
         $b = self::kind($x);
-        return $a === $b || (is_array($want) && is_array($x) && ($want === [] || $x === []));
+
+        return $a === $b || (is_array($want) && is_array($x) && ([] === $want || [] === $x));
     }
 
     /** JSON type of a prop value: string, number, boolean, list, object, null, other */
@@ -388,8 +400,8 @@ final class Layout
             is_string($v) => 'string',
             is_int($v) || is_float($v) => 'number',
             is_bool($v) => 'boolean',
-            $v === null => 'null',
-            is_array($v) => $v === [] || array_is_list($v) ? 'list' : 'object',
+            null === $v => 'null',
+            is_array($v) => [] === $v || array_is_list($v) ? 'list' : 'object',
             default => 'other',
         };
     }
@@ -400,6 +412,7 @@ final class Layout
      * through the current record of the data adapter (DataSources::current), filled after this.
      *
      * @param array<array-key, mixed> $v
+     *
      * @return array<array-key, mixed>
      */
     public static function untrust(array $v): array
@@ -410,15 +423,17 @@ final class Layout
                     : self::untrust($x);
             }
         }
+
         return $v;
     }
 
     public static function safeHref(string $h): bool
     {
         // a site path (/x, not //host or /\host), a fragment, a query, or http(s)/mailto/tel
-        $plain = preg_match('#^(https?://|/(?![/\\\\])|\#|\?|mailto:|tel:)#i', $h) === 1 && Safe::url($h) === $h;
-        return $h === '' || $plain
-            || (preg_match(Links::TOKEN, $h, $m, PREG_OFFSET_CAPTURE) === 1 && $m[0][1] === 0
+        $plain = 1 === preg_match('#^(https?://|/(?![/\\\\])|\#|\?|mailto:|tel:)#i', $h) && Safe::url($h) === $h;
+
+        return '' === $h || $plain
+            || (1 === preg_match(Links::TOKEN, $h, $m, PREG_OFFSET_CAPTURE) && 0 === $m[0][1]
                 && !in_array($m[1][0], ['open-now', 'price', 'stock'], true)); // text tokens are never a link
     }
 
@@ -440,12 +455,13 @@ final class Layout
     {
         $out = [];
         foreach (is_array($map) ? $map : [] as $field => $path) {
-            if (is_string($field) && preg_match('/^[A-Za-z][A-Za-z0-9_]{0,62}$/', $field) === 1
-                && is_string($path) && strlen($path) <= 200 && preg_match(self::MAP_PATH, $path) === 1) {
+            if (is_string($field) && 1 === preg_match('/^[A-Za-z][A-Za-z0-9_]{0,62}$/', $field)
+                && is_string($path) && strlen($path) <= 200 && 1 === preg_match(self::MAP_PATH, $path)) {
                 $out[$field] = $path;
             }
         }
         ksort($out, SORT_STRING);
+
         return $out;
     }
 }

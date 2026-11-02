@@ -17,7 +17,7 @@ final class Plugin
     public static function engine(): ?string
     {
         $engine = function_exists('apply_filters') ? apply_filters('wpfasty_builder_engine', null) : null;
-        if ($engine === null && class_exists('\WPFasty\Core\Application')) {
+        if (null === $engine && class_exists('\WPFasty\Core\Application')) {
             try {
                 $renderer = \WPFasty\Core\Application::getInstance()->get('template.engine');
                 $engine = is_object($renderer) && method_exists($renderer, 'engine') ? $renderer->engine() : null;
@@ -25,6 +25,7 @@ final class Plugin
                 $engine = null;
             }
         }
+
         return in_array($engine, ['latte', 'twig'], true) ? $engine : null;
     }
 
@@ -40,7 +41,7 @@ final class Plugin
 
     public static function ships(string $runtime): bool
     {
-        return is_file(self::$dir . '/sources/ui8kit/' . $runtime . '/catalog.json');
+        return is_file(self::$dir.'/sources/ui8kit/'.$runtime.'/catalog.json');
     }
 
     public static function boot(string $file): void
@@ -53,13 +54,13 @@ final class Plugin
             Admin::register();
         }
         add_action('init', static function (): void {
-            load_plugin_textdomain('wpfasty-builder', false, dirname(plugin_basename(Plugin::$file)) . '/languages');
+            load_plugin_textdomain('wpfasty-builder', false, dirname(plugin_basename(Plugin::$file)).'/languages');
         });
         add_action('wpfasty_builder_missing_block', [Sources::class, 'recordMissing'], 10, 2);
         add_action('before_delete_post', static function (int $id): void {
             foreach ([true, false] as $preview) {
                 foreach (Compiler::ENGINES as $ext) {
-                    $file = Store::viewsDir() . '/' . Store::view($id, $preview) . $ext;
+                    $file = Store::viewsDir().'/'.Store::view($id, $preview).$ext;
                     if (is_file($file)) {
                         wp_delete_file($file);
                     }

@@ -55,7 +55,7 @@ final class ContextFactory
                 $authors[] = (int) $post->post_author;
             }
         }
-        if ($ids === []) {
+        if ([] === $ids) {
             return;
         }
         update_meta_cache('post', $ids);
@@ -69,7 +69,7 @@ final class ContextFactory
                 $thumbs[] = $thumb;
             }
         }
-        if ($thumbs !== []) {
+        if ([] !== $thumbs) {
             _prime_post_caches(array_values(array_unique($thumbs)), false, true);
         }
         if (function_exists('cache_users')) {
@@ -97,7 +97,7 @@ final class ContextFactory
         }
 
         $searchQuery = is_search() ? (string) get_search_query() : null;
-        $title = $searchQuery !== null
+        $title = null !== $searchQuery
             ? sprintf(
                 /* translators: %s: search query */
                 __('Search results for “%s”', 'latte'),
@@ -108,7 +108,7 @@ final class ContextFactory
         $context = array_merge($this->common(), [
             'archive' => [
                 'title' => $title,
-                'description' => $searchQuery !== null ? '' : wp_kses_post(get_the_archive_description()),
+                'description' => null !== $searchQuery ? '' : wp_kses_post(get_the_archive_description()),
                 'search_query' => $searchQuery,
                 'type' => $this->archiveType(),
             ],
@@ -149,7 +149,7 @@ final class ContextFactory
     private function common(): array
     {
         $shell = (string) apply_filters('wpfasty_shell', 'classic');
-        $shell = $shell === 'app-shell' ? 'app-shell' : 'classic';
+        $shell = 'app-shell' === $shell ? 'app-shell' : 'classic';
 
         return [
             'site' => [
@@ -187,12 +187,12 @@ final class ContextFactory
     /** @return array<string, string> */
     private function sheetIds(string $shell): array
     {
-        $prefix = $shell === 'app-shell' ? 'app-shell' : 'classic';
+        $prefix = 'app-shell' === $shell ? 'app-shell' : 'classic';
 
         return [
-            'trigger' => $prefix . '-mobile-sheet-trigger',
-            'panel' => $prefix . '-mobile-sheet-panel',
-            'title' => $prefix . '-mobile-sheet-title',
+            'trigger' => $prefix.'-mobile-sheet-trigger',
+            'panel' => $prefix.'-mobile-sheet-panel',
+            'title' => $prefix.'-mobile-sheet-title',
         ];
     }
 
@@ -286,6 +286,7 @@ final class ContextFactory
         if (!$src) {
             return null;
         }
+
         return [
             'url' => $src[0],
             'width' => $src[1],
@@ -309,7 +310,7 @@ final class ContextFactory
             'url' => (string) get_permalink($post),
             'excerpt' => self::text(has_excerpt($post) || post_password_required($post)
                 ? get_the_excerpt($post)
-                : wp_trim_words(wp_strip_all_tags(strip_shortcodes($post->post_content)), 40)),
+            : wp_trim_words(wp_strip_all_tags(strip_shortcodes($post->post_content)), 40)),
             'featuredImage' => null,
             'thumbnail' => null,
             'categories' => [],
@@ -320,7 +321,7 @@ final class ContextFactory
             'prev' => null,
             'next' => null,
             'mime_type' => $post->post_mime_type,
-            'is_attachment' => $post->post_type === 'attachment',
+            'is_attachment' => 'attachment' === $post->post_type,
             'date' => [
                 'display' => get_the_date('', $post),
                 'iso' => get_the_date('c', $post),
@@ -334,7 +335,7 @@ final class ContextFactory
             $data['thumbnail'] = $this->image($id, 'medium', $alt);
         }
 
-        if ($post->post_type === 'attachment') {
+        if ('attachment' === $post->post_type) {
             $alt = (string) get_post_meta($post->ID, '_wp_attachment_image_alt', true);
             $data['featuredImage'] = $this->image($post->ID, 'large', $alt) ?? $data['featuredImage'];
             $data['attachment_url'] = (string) wp_get_attachment_url($post->ID);
@@ -368,16 +369,16 @@ final class ContextFactory
             ];
         }
 
-        if ($singular && $post->post_type !== 'attachment') {
+        if ($singular && 'attachment' !== $post->post_type) {
             $data['link_pages'] = wp_link_pages([
                 'before' => '<nav class="post-pages mt-8 text-sm text-muted-foreground" aria-label="'
-                    . esc_attr__('Pages', 'latte') . '"><span class="mr-2">'
-                    . esc_html__('Pages:', 'latte') . '</span>',
+                    .esc_attr__('Pages', 'latte').'"><span class="mr-2">'
+                    .esc_html__('Pages:', 'latte').'</span>',
                 'after' => '</nav>',
                 'echo' => false,
             ]) ?: '';
 
-            if ($post->post_type === 'post') {
+            if ('post' === $post->post_type) {
                 $prev = get_adjacent_post(false, '', true);
                 $next = get_adjacent_post(false, '', false);
                 if ($prev instanceof \WP_Post) {
@@ -397,6 +398,7 @@ final class ContextFactory
 
         /** @var array<string, mixed> $data */
         $data = apply_filters('wpfasty_post_data', $data, $post, $singular);
+
         return $data;
     }
 
@@ -418,7 +420,7 @@ final class ContextFactory
         if (!apply_filters('wpfasty_comments_enabled', false) || !function_exists('wp_list_comments')) {
             return '';
         }
-        if (!comments_open($post) && (int) get_comments_number($post) === 0) {
+        if (!comments_open($post) && 0 === (int) get_comments_number($post)) {
             return '';
         }
         if (post_password_required($post)) {
@@ -435,7 +437,7 @@ final class ContextFactory
         ob_start();
         comment_form([
             'class_submit' => 'inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium '
-                . 'text-primary-foreground',
+                .'text-primary-foreground',
             'title_reply_before' => '<h3 id="reply-title" class="comment-reply-title mb-4 text-xl font-semibold">',
             'title_reply_after' => '</h3>',
         ], $post);
@@ -443,16 +445,16 @@ final class ContextFactory
 
         $count = (int) get_comments_number($post);
         $heading = $count > 0
-            ? '<h2 class="mb-6 text-2xl font-semibold">' . esc_html(sprintf(
+            ? '<h2 class="mb-6 text-2xl font-semibold">'.esc_html(sprintf(
                 /* translators: %d: number of comments */
                 _n('%d comment', '%d comments', $count, 'latte'),
                 $count
-            )) . '</h2>'
+            )).'</h2>'
             : '';
 
-        return '<section id="comments" class="comments-area">' . $heading
-            . ($list ? '<ol class="comment-list mb-8 flex flex-col gap-6">' . $list . '</ol>' : '')
-            . $form . '</section>';
+        return '<section id="comments" class="comments-area">'.$heading
+            .($list ? '<ol class="comment-list mb-8 flex flex-col gap-6">'.$list.'</ol>' : '')
+            .$form.'</section>';
     }
 
     /** @return array<string, mixed>|null */
@@ -481,7 +483,7 @@ final class ContextFactory
             'footer' => ['items' => []],
         ];
         $locations = get_nav_menu_locations();
-        if ($locations === []) {
+        if ([] === $locations) {
             return $out;
         }
 
@@ -495,6 +497,7 @@ final class ContextFactory
 
     /**
      * @param list<\WP_Post> $items
+     *
      * @return list<array<string, mixed>>
      */
     private function menuTree(array $items): array
@@ -517,6 +520,7 @@ final class ContextFactory
                     'children' => $build($id),
                 ];
             }
+
             return $branch;
         };
 
@@ -530,6 +534,7 @@ final class ContextFactory
         }
         ob_start();
         dynamic_sidebar($id);
+
         return (string) ob_get_clean();
     }
 
@@ -556,6 +561,7 @@ final class ContextFactory
             $posts[] = $this->post($p, false);
         }
         wp_reset_postdata();
+
         return $posts;
     }
 
@@ -571,6 +577,7 @@ final class ContextFactory
             return null;
         }
         $paged = max(1, (int) get_query_var('paged'));
+
         return [
             'current' => $paged,
             'total' => $max,

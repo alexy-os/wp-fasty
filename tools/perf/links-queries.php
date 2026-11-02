@@ -1,14 +1,12 @@
 <?php
+
 /**
  * N+1 guard of the builder's link picker: queries of GET /wpfasty-builder/v1/links must not grow with the number of
  * pages and categories. Measures the site as is, adds [extra] published pages and categories, measures again and
  * removes them.
  *   wp eval-file tools/perf/links-queries.php [extra]
  * Exit 1 when the larger site needs more queries.
- *
- * @package WPFasty
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -24,9 +22,10 @@ $wpfasty_lq_measure = static function (): array {
     $res = rest_do_request(new WP_REST_Request('GET', '/wpfasty-builder/v1/links'));
     $n = $wpdb->num_queries - $before;
     $data = $res->get_data();
-    if ($res->get_status() !== 200 || !is_array($data)) {
-        WP_CLI::error('GET /wpfasty-builder/v1/links: HTTP ' . $res->get_status());
+    if (200 !== $res->get_status() || !is_array($data)) {
+        WP_CLI::error('GET /wpfasty-builder/v1/links: HTTP '.$res->get_status());
     }
+
     return [$n, count($data['pages']), count($data['sections'])];
 };
 
@@ -34,7 +33,7 @@ $wpfasty_lq_measure(); // warm-up: REST server, rewrite rules and other once-per
 $wpfasty_lq_small = $wpfasty_lq_measure();
 $wpfasty_lq_posts = [];
 $wpfasty_lq_terms = [];
-for ($wpfasty_lq_i = 1; $wpfasty_lq_i <= $wpfasty_lq_extra; $wpfasty_lq_i++) {
+for ($wpfasty_lq_i = 1; $wpfasty_lq_i <= $wpfasty_lq_extra; ++$wpfasty_lq_i) {
     $wpfasty_lq_posts[] = wp_insert_post([
         'post_type' => 'page', 'post_status' => 'publish', 'post_title' => "Perf page $wpfasty_lq_i",
         'post_name' => "perf-page-$wpfasty_lq_i",

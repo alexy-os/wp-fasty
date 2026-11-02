@@ -18,22 +18,24 @@ final class Store
     public static function dir(): string
     {
         $up = wp_upload_dir(null, false);
-        return rtrim((string) $up['basedir'], '/') . '/wpfasty-builder';
+
+        return rtrim((string) $up['basedir'], '/').'/wpfasty-builder';
     }
 
     public static function viewsDir(): string
     {
-        return self::dir() . '/views';
+        return self::dir().'/views';
     }
 
     /** @return array<string, mixed>|null */
     public static function get(int $pageId, bool $draft): ?array
     {
         $raw = (string) get_post_meta($pageId, $draft ? self::DRAFT : self::PUBLISHED, true);
-        if ($raw === '' && $draft) {
+        if ('' === $raw && $draft) {
             $raw = (string) get_post_meta($pageId, self::PUBLISHED, true);
         }
-        $entry = $raw !== '' ? json_decode($raw, true) : null;
+        $entry = '' !== $raw ? json_decode($raw, true) : null;
+
         return is_array($entry) ? $entry : null;
     }
 
@@ -46,12 +48,12 @@ final class Store
 
     public static function has(int $pageId): bool
     {
-        return get_post_meta($pageId, self::PUBLISHED, true) !== '';
+        return '' !== get_post_meta($pageId, self::PUBLISHED, true);
     }
 
     public static function view(int $pageId, bool $preview): string
     {
-        return 'builder/' . ($preview ? 'preview' : 'page') . '-' . $pageId;
+        return 'builder/'.($preview ? 'preview' : 'page').'-'.$pageId;
     }
 
     /**
@@ -64,18 +66,18 @@ final class Store
         $view = self::view($pageId, $preview);
         $catalog = null;
         $engine = Plugin::engine();
-        if ($engine === null) {
+        if (null === $engine) {
             return null;
         }
         // The site engine only (ADR-001: isolated runtimes; the engine is chosen at site creation).
         foreach ([$engine => Compiler::ENGINES[$engine]] as $engine => $ext) {
-            $file = self::viewsDir() . '/' . $view . $ext;
+            $file = self::viewsDir().'/'.$view.$ext;
             $marker = Compiler::marker($entry, $engine);
             if (is_file($file) && str_starts_with((string) file_get_contents($file, false, null, 0, 64), $marker)) {
                 continue;
             }
             $catalog ??= Sources::catalog((string) ($entry['metadata']['source']['value'] ?? ''));
-            if ($catalog === null) {
+            if (null === $catalog) {
                 return null;
             }
             $tpl = Compiler::compile($entry, $catalog, $engine);
@@ -84,6 +86,7 @@ final class Store
             }
             file_put_contents($file, $tpl);
         }
+
         return $view;
     }
 
@@ -92,23 +95,24 @@ final class Store
      * checks capabilities (edit_page, publish_pages).
      *
      * @param array<string, mixed> $layout
+     *
      * @return array{0: array<string, mixed>, 1: list<array{code: string, path: string, message: string}>}|\WP_Error
      */
     public static function save(int $id, array $layout, bool $publish): array|\WP_Error
     {
         $sourceId = sanitize_key((string) ($layout['source'] ?? ($layout['metadata']['source']['value'] ?? 'ui8kit')));
         $catalog = Sources::catalog($sourceId);
-        if ($catalog === null) {
+        if (null === $catalog) {
             return new \WP_Error('wpfb_source', __('Unknown source.', 'wpfasty-builder'), ['status' => 400]);
         }
         $prev = self::get($id, true);
         $now = gmdate('Y-m-d\\TH:i:s\\Z');
         $post = get_post($id);
         [$entry, $issues] = Layout::normalize($layout, $sourceId, $catalog, array_keys(DataSources::all()), [
-            'id' => 'layout-' . $id,
+            'id' => 'layout-'.$id,
             'locale' => self::locale(),
-            'slug' => $post !== null && $post->post_name !== '' ? $post->post_name : 'page-' . $id,
-            'title' => $post !== null ? $post->post_title : '',
+            'slug' => null !== $post && '' !== $post->post_name ? $post->post_name : 'page-'.$id,
+            'title' => null !== $post ? $post->post_title : '',
             'status' => $publish ? 'published' : 'draft',
             'version' => (int) ($prev['version'] ?? 0) + 1,
             'created_at' => (string) ($prev['created_at'] ?? $now),
@@ -119,7 +123,7 @@ final class Store
             $issues,
             static fn (array $i): bool => str_starts_with($i['code'], 'core.'),
         ));
-        if ($fatal !== []) {
+        if ([] !== $fatal) {
             return new \WP_Error(
                 'wpfb_invalid',
                 __('The layout is not a valid entry.', 'wpfasty-builder'),
@@ -132,12 +136,14 @@ final class Store
             self::put($id, $entry, false);
             self::compile($id, $entry, false);
         }
+
         return [$entry, $issues];
     }
 
     public static function locale(): string
     {
         $l = strtolower(str_replace('_', '-', (string) get_locale()));
-        return preg_match('/^[a-z]{2,3}(-[a-z0-9]{2,8})*$/', $l) === 1 ? $l : 'en';
+
+        return 1 === preg_match('/^[a-z]{2,3}(-[a-z0-9]{2,8})*$/', $l) ? $l : 'en';
     }
 }

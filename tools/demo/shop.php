@@ -1,11 +1,11 @@
 <?php
 
-require __DIR__ . '/common.php';
+require __DIR__.'/common.php';
 
 wpfasty_demo_cleanup_defaults();
 // The active shop child (latte-shop or a generated twin such as latte-shop-twig): its name and its Front class.
 $theme = wp_get_theme();
-$front = str_replace(' ', '', (string) $theme->get('Name')) . '\\Front';
+$front = str_replace(' ', '', (string) $theme->get('Name')).'\\Front';
 if (!class_exists($front)) {
     $front = 'LatteShop\\Front';
 }
@@ -47,13 +47,13 @@ foreach ($products as [$slug, $title, $cat, $price, $sale, $sku, $stock, $img, $
         '_shop_rating' => $rating, '_shop_reviews' => $reviews, '_shop_badge' => $badge,
     ];
     foreach ($meta as $key => $value) {
-        if ($value === null) {
+        if (null === $value) {
             delete_post_meta($id, $key);
         } else {
             update_post_meta($id, $key, $value);
         }
     }
-    $att = wpfasty_demo_image('shop-' . $img, 1000, 1000);
+    $att = wpfasty_demo_image('shop-'.$img, 1000, 1000);
     if ($att) {
         set_post_thumbnail($id, $att);
     }
@@ -63,7 +63,7 @@ $front::ensurePages();
 $home = wpfasty_demo_post('home', [
     'post_type' => 'page',
     'post_title' => 'Everyday goods, simply made.',
-    'post_excerpt' => 'Small-batch kitchen and home essentials. A WooCommerce-free demo store built on ' . ucfirst(get_template()) . ' + UI8Kit.',
+    'post_excerpt' => 'Small-batch kitchen and home essentials. A WooCommerce-free demo store built on '.ucfirst(get_template()).' + UI8Kit.',
     'post_content' => '',
 ]);
 $hero = wpfasty_demo_image('shop-hero-table', 1200, 900);
@@ -97,4 +97,4 @@ wpfasty_demo_contact([
 ], 'America/Chicago');
 flush_rewrite_rules();
 
-wpfasty_demo_log($theme->get('Name') . ' demo content ready.');
+wpfasty_demo_log($theme->get('Name').' demo content ready.');

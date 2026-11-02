@@ -16,12 +16,12 @@ use WPFastyBuilder\Plugin;
 use WPFastyBuilder\Rest;
 use WPFastyBuilder\Source\LocalSource;
 
-require_once __DIR__ . '/fixtures/links-stubs.php';
-require_once __DIR__ . '/fixtures/rest-stubs.php';
+require_once __DIR__.'/fixtures/links-stubs.php';
+require_once __DIR__.'/fixtures/rest-stubs.php';
 
 spl_autoload_register(static function (string $class): void {
     if (str_starts_with($class, 'WPFastyBuilder\\')) {
-        $file = dirname(__DIR__) . '/plugins/wpfasty-builder/src/' . str_replace('\\', '/', substr($class, 15)) . '.php';
+        $file = dirname(__DIR__).'/plugins/wpfasty-builder/src/'.str_replace('\\', '/', substr($class, 15)).'.php';
         if (is_file($file)) {
             require_once $file;
         }
@@ -31,16 +31,17 @@ spl_autoload_register(static function (string $class): void {
 /** POST /render-block: one block's HTML equals the same block inside the compiled page (Latte and Twig). */
 final class FragmentTest extends TestCase
 {
-    private const SRC = __DIR__ . '/../plugins/wpfasty-builder/sources/ui8kit';
+    private const SRC = __DIR__.'/../plugins/wpfasty-builder/sources/ui8kit';
 
     private const POST = ['id' => 'post-1', 'title' => 'A "real" post', 'excerpt' => 'E', 'category' => 'News',
         'author' => 'Ann', 'date' => 'Oct 1, 2026', 'minutes' => 2, 'icon' => 'file-text',
-        'href' => 'https://example.test/a/', 'image' => 'https://example.test/a.jpg'];
+        'href' => 'https://example.test/a/', 'image' => 'https://example.test/a.jpg', ];
 
     /** @return array{0: Catalog, 1: BlockRenderer} */
     private static function runtime(string $engine): array
     {
-        $src = new LocalSource('ui8kit', self::SRC . '/' . $engine, $engine);
+        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
+
         return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
     }
 
@@ -61,23 +62,23 @@ final class FragmentTest extends TestCase
         $tpl = Compiler::compile($entry, $catalog, $engine);
         $ctx = ['wpfb' => ['news' => ['posts' => [self::POST]]]];
         $fn = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
-        if ($engine === 'latte') {
+        if ('latte' === $engine) {
             $l = new Engine();
             $l->setLoader(new StringLoader(['page' => $tpl]));
             $l->addFunction('wpfb_block', $fn);
             $html = $l->renderToString('page', $ctx);
         } else {
             $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
-            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false
-                => $n === 'wpfb_block' ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
+            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
             $html = $env->render('page', $ctx);
         }
-        return (require dirname(__DIR__) . '/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>' . $html . '</body></html>');
+
+        return (require dirname(__DIR__).'/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>'.$html.'</body></html>');
     }
 
     public function testFragmentEqualsTheBlockInTheCompiledPage(): void
     {
-        $html = require dirname(__DIR__) . '/tools/builder/fragment-html.php';
+        $html = require dirname(__DIR__).'/tools/builder/fragment-html.php';
         foreach (['latte', 'twig'] as $engine) {
             [$catalog, $r] = self::runtime($engine);
             [$entry] = Layout::normalize(['blocks' => self::layoutBlocks()], 'ui8kit', $catalog, ['posts'], [
@@ -94,7 +95,8 @@ final class FragmentTest extends TestCase
                     $b,
                     ['posts'],
                     static function (array $bind, string $kind) use (&$seen): array {
-                        $seen[] = $bind['source'] . ':' . $kind . ':' . $bind['limit'];
+                        $seen[] = $bind['source'].':'.$kind.':'.$bind['limit'];
+
                         return [self::POST];
                     },
                     static fn (string $t, array $p): string => $r->render('ui8kit', $t, $p),
@@ -103,7 +105,7 @@ final class FragmentTest extends TestCase
                 $this->assertSame($b['id'], $out['id']);
                 $this->assertStringNotContainsString('<!-- wpfasty-builder', $out['html']);
                 $this->assertSame($page[$b['id']], $html['inner']($out['html']), "$engine {$b['id']}");
-                $this->assertSame($b['id'] === 'news' ? ['posts:post:3'] : [], $seen);
+                $this->assertSame('news' === $b['id'] ? ['posts:post:3'] : [], $seen);
             }
         }
     }
@@ -131,7 +133,7 @@ final class FragmentTest extends TestCase
     public function testFragmentRendersOnlyTheCatalogRuntime(): void
     {
         [$latte] = self::runtime('latte');
-        $twigNamed = json_decode((string) json_encode((new LocalSource('ui8kit', self::SRC . '/latte', 'latte'))->catalog()), true);
+        $twigNamed = json_decode((string) json_encode((new LocalSource('ui8kit', self::SRC.'/latte', 'latte'))->catalog()), true);
         $twigNamed['runtime'] = $twigNamed['templates'] = 'twig';
         // a Twig catalog whose variant still names a .latte template is not rendered by a Twig site
         $out = Fragment::render(new Catalog($twigNamed), 'ui8kit', ['block' => 'pagehead', 'variant' => 'start'], [], static fn (): array => [], static fn (): string => 'x');
@@ -141,11 +143,11 @@ final class FragmentTest extends TestCase
 
     public function testRestRenderBlock(): void
     {
-        Plugin::$dir = dirname(__DIR__) . '/plugins/wpfasty-builder';
+        Plugin::$dir = dirname(__DIR__).'/plugins/wpfasty-builder';
         add_filter('wpfasty_builder_engine', static fn (): string => 'latte');
         $GLOBALS['wp_test_routes'] = [];
         Rest::routes();
-        $route = $GLOBALS['wp_test_routes'][Rest::NS . '/render-block'];
+        $route = $GLOBALS['wp_test_routes'][Rest::NS.'/render-block'];
         $this->assertSame('POST', $route['methods']);
         $perm = $route['permission_callback'];
         $GLOBALS['wp_test_caps'] = [];

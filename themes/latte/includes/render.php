@@ -15,7 +15,7 @@ use WPFasty\Theme\ThemeService;
 $app = Application::getInstance();
 /** @var ThemeService $theme */
 $theme = $app->get(ThemeService::class);
-$view = isset($view) && is_string($view) && $view !== ''
+$view = isset($view) && is_string($view) && '' !== $view
     ? $view
     : $theme->resolveView();
 $context = $theme->context($view);

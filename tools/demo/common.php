@@ -4,22 +4,20 @@
  * Shared demo-content helpers. Run via: wp eval-file tools/demo/<theme>.php
  * Idempotent-ish: content is keyed by slug; images by source URL.
  */
-
-
 if (!defined('ABSPATH')) {
     exit;
 }
 
-require_once ABSPATH . 'wp-admin/includes/media.php';
-require_once ABSPATH . 'wp-admin/includes/file.php';
-require_once ABSPATH . 'wp-admin/includes/image.php';
+require_once ABSPATH.'wp-admin/includes/media.php';
+require_once ABSPATH.'wp-admin/includes/file.php';
+require_once ABSPATH.'wp-admin/includes/image.php';
 
 function wpfasty_demo_log(string $msg): void
 {
     if (class_exists('WP_CLI')) {
         WP_CLI::log($msg);
     } else {
-        error_log('[wpfasty-demo] ' . $msg);
+        error_log('[wpfasty-demo] '.$msg);
     }
 }
 
@@ -27,35 +25,39 @@ function wpfasty_demo_image(string $seed, int $w = 1200, int $h = 800): int
 {
     $url = "https://picsum.photos/seed/{$seed}/{$w}/{$h}.jpg";
     // Bundled images (WordPress Playground preview) take precedence over network.
-    $local = __DIR__ . "/images/{$seed}.jpg";
+    $local = __DIR__."/images/{$seed}.jpg";
     $existing = get_posts(['post_type' => 'attachment', 'meta_key' => '_wpfasty_demo_src', 'meta_value' => $url, 'fields' => 'ids', 'numberposts' => 1]);
     if ($existing) {
         return (int) $existing[0];
     }
-    $tmp = wp_tempnam($seed . '.jpg');
+    $tmp = wp_tempnam($seed.'.jpg');
     if (is_file($local)) {
         copy($local, $tmp);
         $id = media_handle_sideload(['name' => "{$seed}.jpg", 'tmp_name' => $tmp], 0);
         if (!is_wp_error($id)) {
             update_post_meta($id, '_wpfasty_demo_src', $url);
             update_post_meta($id, '_wp_attachment_image_alt', ucwords(str_replace('-', ' ', $seed)));
+
             return (int) $id;
         }
     }
     // Plain HTTP fetch (CLI-only demo tool; wp_safe_remote_get rejects some sandbox resolvers).
     $res = wp_remote_get($url, ['timeout' => 30, 'stream' => true, 'filename' => $tmp, 'redirection' => 5]);
-    if (is_wp_error($res) || wp_remote_retrieve_response_code($res) !== 200) {
-        wpfasty_demo_log("image {$seed}: " . (is_wp_error($res) ? $res->get_error_message() : wp_remote_retrieve_response_code($res)));
+    if (is_wp_error($res) || 200 !== wp_remote_retrieve_response_code($res)) {
+        wpfasty_demo_log("image {$seed}: ".(is_wp_error($res) ? $res->get_error_message() : wp_remote_retrieve_response_code($res)));
         @unlink($tmp);
+
         return 0;
     }
     $id = media_handle_sideload(['name' => "{$seed}.jpg", 'tmp_name' => $tmp], 0);
     if (is_wp_error($id)) {
         @unlink($tmp);
+
         return 0;
     }
     update_post_meta($id, '_wpfasty_demo_src', $url);
     update_post_meta($id, '_wp_attachment_image_alt', ucwords(str_replace('-', ' ', $seed)));
+
     return (int) $id;
 }
 
@@ -67,8 +69,10 @@ function wpfasty_demo_post(string $slug, array $args): int
     $data = array_merge(['post_name' => $slug, 'post_status' => 'publish', 'post_type' => $type], $args);
     if ($found) {
         $data['ID'] = $found->ID;
+
         return (int) wp_update_post($data);
     }
+
     return (int) wp_insert_post($data);
 }
 
@@ -83,16 +87,17 @@ function wpfasty_demo_lorem(int $paras = 4, bool $rich = true): string
         'Content is prepared in PHP as plain arrays, so templates never call WordPress directly. That separation makes views easy to test and easy to reuse across themes.',
     ];
     $out = '';
-    for ($i = 0; $i < $paras; $i++) {
+    for ($i = 0; $i < $paras; ++$i) {
         $out .= "<!-- wp:paragraph --><p>{$p[$i % count($p)]}</p><!-- /wp:paragraph -->\n";
-        if ($rich && $i === 1) {
+        if ($rich && 1 === $i) {
             $out .= "<!-- wp:heading --><h2>Why it matters</h2><!-- /wp:heading -->\n";
             $out .= "<!-- wp:quote --><blockquote class=\"wp-block-quote\"><p>Simplicity is the ultimate sophistication.</p></blockquote><!-- /wp:quote -->\n";
         }
-        if ($rich && $i === 2) {
+        if ($rich && 2 === $i) {
             $out .= "<!-- wp:list --><ul><li>8px layout grid</li><li>Token-only colors</li><li>Lucide icons</li></ul><!-- /wp:list -->\n";
         }
     }
+
     return $out;
 }
 
@@ -132,9 +137,9 @@ function wpfasty_demo_cleanup_defaults(): void
 function wpfasty_demo_contact(array $c, string $timezone = ''): void
 {
     foreach ($c as $key => $value) {
-        update_option('wpfasty_' . $key, $value);
+        update_option('wpfasty_'.$key, $value);
     }
-    if ($timezone !== '') {
+    if ('' !== $timezone) {
         update_option('timezone_string', $timezone);
         update_option('gmt_offset', '');
     }

@@ -35,6 +35,7 @@ final class Front
         if (!is_dir($dir)) {
             wp_mkdir_p($dir);
         }
+
         return [$dir, ...$roots];
     }
 
@@ -46,16 +47,17 @@ final class Front
             ? sanitize_text_field(wp_unslash((string) $_GET['_wpnonce']))
             : '';
         // phpcs:enable
-        if ($nonce === '') {
+        if ('' === $nonce) {
             return false;
         }
-        return current_user_can('edit_page', $pageId) && wp_verify_nonce($nonce, 'wpfb_preview_' . $pageId) !== false;
+
+        return current_user_can('edit_page', $pageId) && false !== wp_verify_nonce($nonce, 'wpfb_preview_'.$pageId);
     }
 
     public static function previewUrl(int $pageId): string
     {
         return add_query_arg(
-            ['wpfb_preview' => 1, '_wpnonce' => wp_create_nonce('wpfb_preview_' . $pageId)],
+            ['wpfb_preview' => 1, '_wpnonce' => wp_create_nonce('wpfb_preview_'.$pageId)],
             (string) get_permalink($pageId),
         );
     }
@@ -80,7 +82,7 @@ final class Front
             return $view;
         }
         // Landings compile to Latte and Twig; an unknown theme renderer renders the page as a normal page.
-        if (self::themeRenderer() === null) {
+        if (null === self::themeRenderer()) {
             return $view;
         }
         $id = (int) get_queried_object_id();
@@ -89,30 +91,33 @@ final class Front
             return $view;
         }
         $entry = Store::get($id, $preview);
-        $compiled = $entry !== null ? Store::compile($id, $entry, $preview) : null;
-        if ($compiled === null) {
+        $compiled = null !== $entry ? Store::compile($id, $entry, $preview) : null;
+        if (null === $compiled) {
             return $view;
         }
         self::$page = $id;
         self::$preview = $preview;
         self::attach();
+
         return $compiled;
     }
 
     /**
      * @param array<string, mixed> $context
+     *
      * @return array<string, mixed>
      */
     public static function context(array $context, mixed $post = null): array
     {
-        if (self::$page === null) {
+        if (null === self::$page) {
             return $context;
         }
         $entry = Store::get(self::$page, self::$preview);
-        $context['wpfb'] = $entry !== null ? self::bound($entry, $context) : [];
+        $context['wpfb'] = null !== $entry ? self::bound($entry, $context) : [];
         // record tokens of every block ({post:}, {product:}, {term:}, {price:}, {stock:}): one query per type
-        Links::prime($entry !== null ? array_column(Layout::blocks($entry), 'props') : []);
+        Links::prime(null !== $entry ? array_column(Layout::blocks($entry), 'props') : []);
         $context['widgets']['sidebar'] = '';
+
         return $context;
     }
 
@@ -121,6 +126,7 @@ final class Front
      *
      * @param array<string, mixed> $entry
      * @param array<string, mixed> $context the theme context (ContextFactory: `pagination` of the main query)
+     *
      * @return array<string, array<string, mixed>>
      */
     public static function bound(array $entry, array $context = []): array
@@ -132,7 +138,7 @@ final class Front
             // the pager (PostGrid `pager`): asked for by the variant / layout mode, filled here, null on one page
             $pager = $catalog?->pager((string) $b['block'], (string) $b['variant']);
             $sample = (array) ($catalog?->variant((string) $b['block'], (string) $b['variant'])['props'] ?? []);
-            $paged = $pager !== null && Pager::active(Layout::merge($sample, (array) $b['props']), $pager['path']);
+            $paged = null !== $pager && Pager::active(Layout::merge($sample, (array) $b['props']), $pager['path']);
             foreach ($b['bindings'] as $path => $bind) {
                 if (is_array($bind) && isset($kinds[(string) $path])) {
                     $slot = $catalog?->slot((string) $b['block'], (string) $b['variant'], (string) $path);
@@ -151,7 +157,7 @@ final class Front
                     );
                 }
             }
-            if ($pager !== null && !array_key_exists($pager['path'], $out[(string) $b['id']] ?? [])) {
+            if (null !== $pager && !array_key_exists($pager['path'], $out[(string) $b['id']] ?? [])) {
                 // no own query: the main query (ContextFactory pagination, else max_num_pages); a page has one page
                 $out[(string) $b['id']][$pager['path']] = $paged
                     ? Pager::value(...[...Pager::main($context), Pager::urls($context)])
@@ -167,15 +173,16 @@ final class Front
                 $out[(string) $b['id']][(string) $path] = $value;
             }
         }
+
         return $out;
     }
 
     public static function styles(): void
     {
-        if (self::$page === null && !(is_page() && Store::has((int) get_queried_object_id()))) {
+        if (null === self::$page && !(is_page() && Store::has((int) get_queried_object_id()))) {
             return;
         }
-        $file = Plugin::$dir . '/assets/blocks.css';
+        $file = Plugin::$dir.'/assets/blocks.css';
         if (is_file($file)) {
             wp_enqueue_style(
                 'wpfasty-builder-blocks',
@@ -194,22 +201,23 @@ final class Front
             if (!isset($engine->getFunctions()['wpfb_block'])) {
                 $engine->addFunction('wpfb_block', [self::class, 'block']);
             }
+
             return;
         }
         if ($engine instanceof \Twig\Environment && !self::$twigAttached) {
             self::$twigAttached = true;
             // A callback, not addFunction(): it works after the Twig extensions are initialized.
-            $engine->registerUndefinedFunctionCallback(static fn (string $name): \Twig\TwigFunction|false
-                => $name === 'wpfb_block'
+            $engine->registerUndefinedFunctionCallback(static fn (string $name): \Twig\TwigFunction|false => 'wpfb_block' === $name
                     ? new \Twig\TwigFunction('wpfb_block', [self::class, 'block'], ['is_safe' => ['html']])
-                    : false);
+            : false);
         }
     }
 
     /** @param array<string, mixed> $props */
     public static function block(string $source, string $template, array $props): string
     {
-        self::$renderer ??= new BlockRenderer(Sources::all(), Store::dir() . '/cache');
+        self::$renderer ??= new BlockRenderer(Sources::all(), Store::dir().'/cache');
+
         return Links::finish(self::$renderer->render($source, $template, self::prepare($props)));
     }
 
@@ -219,6 +227,7 @@ final class Front
      * ({site:…}, a record URL) is checked like a typed one. Latte and Twig render from the same safe props.
      *
      * @param array<string, mixed> $props
+     *
      * @return array<string, mixed>
      */
     public static function prepare(array $props): array
@@ -240,6 +249,7 @@ final class Front
         if (is_object($renderer) && method_exists($renderer, 'latte')) {
             return $renderer->latte();
         }
+
         return is_object($renderer) && method_exists($renderer, 'twig') ? $renderer->twig() : null;
     }
 }

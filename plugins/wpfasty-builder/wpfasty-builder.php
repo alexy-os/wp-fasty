@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name:       WP FastY Builder
  * Description:       Drag-and-drop page builder for WP FastY Latte themes, in wp-admin only. Pages are saved
@@ -9,12 +10,10 @@
  * Author:            alexy-os
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       wpfasty-builder
+ * Text Domain:       wpfasty-builder.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
  * Copyright (C) 2026 alexy-os
- *
- * @package WPFasty_Builder
  */
 
 declare(strict_types=1);
@@ -25,7 +24,7 @@ if (!defined('ABSPATH')) {
 
 spl_autoload_register(static function (string $class): void {
     if (str_starts_with($class, 'WPFastyBuilder\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', substr($class, 15)) . '.php';
+        $file = __DIR__.'/src/'.str_replace('\\', '/', substr($class, 15)).'.php';
         if (is_file($file)) {
             require_once $file;
         }

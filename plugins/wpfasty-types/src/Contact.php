@@ -93,7 +93,7 @@ final class Contact
                 'type' => $type,
                 'default' => $default,
                 'show_in_rest' => ['schema' => ['type' => $type] + $schema],
-                'sanitize_callback' => [self::class, 'save' . ucfirst($sanitize)],
+                'sanitize_callback' => [self::class, 'save'.ucfirst($sanitize)],
                 'description' => $description,
             ]);
         }
@@ -104,21 +104,24 @@ final class Contact
         $s = is_scalar($v) ? trim((string) $v) : '';
         $s = (string) preg_replace('/[\s().\-\x{2010}-\x{2015}]/u', '', $s);
         if (str_starts_with($s, '00')) {
-            $s = '+' . substr($s, 2);
+            $s = '+'.substr($s, 2);
         }
-        return preg_match(self::E164, $s) === 1 ? $s : '';
+
+        return 1 === preg_match(self::E164, $s) ? $s : '';
     }
 
     public static function email(mixed $v): string
     {
         $s = is_scalar($v) ? trim((string) $v) : '';
-        return preg_match(self::EMAIL, $s) === 1 && (!function_exists('is_email') || is_email($s) !== false) ? $s : '';
+
+        return 1 === preg_match(self::EMAIL, $s) && (!function_exists('is_email') || false !== is_email($s)) ? $s : '';
     }
 
     /** one line, no tags or control characters */
     public static function line(mixed $v): string
     {
         $s = is_scalar($v) ? strip_tags((string) $v) : '';
+
         return trim((string) preg_replace('/[\s\x{0}-\x{1F}\x{7F}]+/u', ' ', $s));
     }
 
@@ -126,13 +129,14 @@ final class Contact
     public static function handle(string $network, mixed $v): string
     {
         $h = is_scalar($v) ? trim((string) $v) : '';
-        if ($network === 'telegram') {
+        if ('telegram' === $network) {
             $h = (string) preg_replace('~^(https?://)?(t\.me|telegram\.me)/~i', '', ltrim($h, '@'));
-        } elseif ($network === 'whatsapp') {
+        } elseif ('whatsapp' === $network) {
             $h = (string) preg_replace('~^(https?://)?wa\.me/~i', '', $h);
-            $h = self::phone(str_starts_with($h, '+') || str_starts_with($h, '00') ? $h : '+' . $h);
+            $h = self::phone(str_starts_with($h, '+') || str_starts_with($h, '00') ? $h : '+'.$h);
         }
-        return preg_match('/^\S+$/u', $h) === 1 ? $h : '';
+
+        return 1 === preg_match('/^\S+$/u', $h) ? $h : '';
     }
 
     /**
@@ -149,12 +153,13 @@ final class Contact
             }
             $network = strtolower(trim((string) (is_array($row) ? ($row['network'] ?? '') : '')));
             $handle = self::handle($network, is_array($row) ? ($row['handle'] ?? '') : '');
-            if (preg_match(self::IDENT, $network) !== 1 || $handle === '') {
+            if (1 !== preg_match(self::IDENT, $network) || '' === $handle) {
                 $bad[] = $n + 1;
                 continue;
             }
             $out[] = ['network' => $network, 'handle' => $handle];
         }
+
         return $out;
     }
 
@@ -169,21 +174,22 @@ final class Contact
         $out = [];
         foreach (self::rows($v) as $n => $row) {
             if (is_string($row)) {
-                $row = preg_match('/^\s*(\S+)\s+(\S+?)\s*[-\x{2013}\x{2014}]\s*(\S+)\s*$/u', $row, $m) === 1
+                $row = 1 === preg_match('/^\s*(\S+)\s+(\S+?)\s*[-\x{2013}\x{2014}]\s*(\S+)\s*$/u', $row, $m)
                     ? ['days' => self::days($m[1]), 'open' => self::time($m[2]), 'close' => self::time($m[3])]
                     : [];
             }
             $days = is_array($row) && is_array($row['days'] ?? null) ? array_values($row['days']) : [];
             $open = is_array($row) ? self::time($row['open'] ?? '') : '';
             $close = is_array($row) ? self::time($row['close'] ?? '') : '';
-            $daysOk = $days !== [] && count(array_unique($days)) === count($days)
-                && array_diff($days, self::DAYS) === [];
+            $daysOk = [] !== $days && count(array_unique($days)) === count($days)
+                && [] === array_diff($days, self::DAYS);
             if (!$daysOk || !self::interval($open, $close)) {
                 $bad[] = $n + 1;
                 continue;
             }
             $out[] = ['days' => array_map('strval', $days), 'open' => $open, 'close' => $close];
         }
+
         return $out;
     }
 
@@ -204,7 +210,7 @@ final class Contact
                 $row = ['date' => $t[0] ?? ''];
                 if (in_array($rest, ['closed', 'close', 'off'], true)) {
                     $row['closed'] = true;
-                } elseif (preg_match('/^(\S+?)\s*[-\x{2013}\x{2014}]\s*(\S+)$/u', $rest, $m) === 1) {
+                } elseif (1 === preg_match('/^(\S+?)\s*[-\x{2013}\x{2014}]\s*(\S+)$/u', $rest, $m)) {
                     $row['open'] = $m[1];
                     $row['close'] = $m[2];
                 }
@@ -229,6 +235,7 @@ final class Contact
             $seen[$date] = true;
             $out[] = $e;
         }
+
         return $out;
     }
 
@@ -240,15 +247,16 @@ final class Contact
         $v = is_array($v) ? $v : [];
         $out = [];
         $provider = strtolower(trim(is_scalar($v['provider'] ?? null) ? (string) $v['provider'] : ''));
-        if (preg_match(self::IDENT, $provider) === 1) {
+        if (1 === preg_match(self::IDENT, $provider)) {
             $out['provider'] = $provider;
         }
         $lat = self::coord($v['lat'] ?? null, 90);
         $lng = self::coord($v['lng'] ?? null, 180);
-        if ($lat !== null && $lng !== null) {
+        if (null !== $lat && null !== $lng) {
             $out['lat'] = $lat;
             $out['lng'] = $lng;
         }
+
         return $out;
     }
 
@@ -266,26 +274,27 @@ final class Contact
             'email' => self::email(get_option('wpfasty_contact_email', '')),
             'address' => self::line(get_option('wpfasty_contact_address', '')),
             'links' => self::links(get_option('wpfasty_contact_links', [])),
-        ], static fn ($v): bool => $v !== '' && $v !== []);
+        ], static fn ($v): bool => '' !== $v && [] !== $v);
+
         return array_filter([
             'contact' => $contact,
             'hours' => self::hours(get_option('wpfasty_hours', [])),
             'hours_exceptions' => self::exceptions(get_option('wpfasty_hours_exceptions', [])),
             'map' => self::map(get_option('wpfasty_map', [])),
-        ], static fn ($v): bool => $v !== []);
+        ], static fn ($v): bool => [] !== $v);
     }
 
     /** @param list<array{network: string, handle: string}> $links */
     public static function linksText(array $links): string
     {
-        return implode("\n", array_map(static fn (array $l): string => $l['network'] . ' ' . $l['handle'], $links));
+        return implode("\n", array_map(static fn (array $l): string => $l['network'].' '.$l['handle'], $links));
     }
 
     /** @param list<array{days: list<string>, open: string, close: string}> $hours */
     public static function hoursText(array $hours): string
     {
         return implode("\n", array_map(
-            static fn (array $r): string => self::daysText($r['days']) . ' ' . $r['open'] . '-' . $r['close'],
+            static fn (array $r): string => self::daysText($r['days']).' '.$r['open'].'-'.$r['close'],
             $hours,
         ));
     }
@@ -294,8 +303,8 @@ final class Contact
     public static function exceptionsText(array $exceptions): string
     {
         return implode("\n", array_map(
-            static fn (array $e): string => $e['date'] . ' '
-                . (($e['closed'] ?? false) === true ? 'closed' : $e['open'] . '-' . $e['close']),
+            static fn (array $e): string => $e['date'].' '
+                .(($e['closed'] ?? false) === true ? 'closed' : $e['open'].'-'.$e['close']),
             $exceptions,
         ));
     }
@@ -305,10 +314,11 @@ final class Contact
     {
         $idx = array_map(static fn (string $d): int => (int) array_search($d, self::DAYS, true), $days);
         $run = count($idx) > 2;
-        for ($i = 1; $run && $i < count($idx); $i++) {
-            $run = $idx[$i] === $idx[$i - 1] + 1;
+        for ($i = 1; $run && $i < count($idx); ++$i) {
+            $run = $idx[$i - 1] + 1 === $idx[$i];
         }
-        return $run ? $days[0] . '-' . $days[count($days) - 1] : implode(',', $days);
+
+        return $run ? $days[0].'-'.$days[count($days) - 1] : implode(',', $days);
     }
 
     /** @return list<string> "mon-fri" → mon…fri, "fri-mon" wraps, "sat,sun" as given; [] when a part is unknown */
@@ -319,7 +329,7 @@ final class Contact
             $ends = explode('-', trim($part));
             $a = array_search($ends[0], self::DAYS, true);
             $b = array_search($ends[count($ends) - 1], self::DAYS, true);
-            if ($a === false || $b === false || count($ends) > 2) {
+            if (false === $a || false === $b || count($ends) > 2) {
                 return [];
             }
             for ($i = $a;; $i = ($i + 1) % 7) {
@@ -329,6 +339,7 @@ final class Contact
                 }
             }
         }
+
         return $out;
     }
 
@@ -346,24 +357,24 @@ final class Contact
     public static function fields(): void
     {
         add_settings_section('contact', __('Contact', 'wpfasty-types'), static function (): void {
-            echo '<p>' . esc_html__('Part of the Codex site settings.', 'wpfasty-types') . ' '
-                . esc_html__('Builder tokens: {site:phone}, {site:email}, {site:address},', 'wpfasty-types') . ' '
-                . esc_html__('{tel}, {mailto}, {whatsapp}, {telegram} and {map}.', 'wpfasty-types') . '</p>';
+            echo '<p>'.esc_html__('Part of the Codex site settings.', 'wpfasty-types').' '
+                .esc_html__('Builder tokens: {site:phone}, {site:email}, {site:address},', 'wpfasty-types').' '
+                .esc_html__('{tel}, {mailto}, {whatsapp}, {telegram} and {map}.', 'wpfasty-types').'</p>';
         }, self::PAGE);
         add_settings_section('hours', __('Opening hours', 'wpfasty-types'), static function (): void {
-            echo '<p>' . esc_html__(
+            echo '<p>'.esc_html__(
                 'In the site time zone (Settings → General). Shown by {site:hours} and {open-now}.',
                 'wpfasty-types'
-            ) . '</p>';
+            ).'</p>';
         }, self::PAGE);
         add_settings_section('map', __('Map', 'wpfasty-types'), static function (): void {
-            echo '<p>' . esc_html__('Without coordinates the {map} link searches the address.', 'wpfasty-types')
-                . '</p>';
+            echo '<p>'.esc_html__('Without coordinates the {map} link searches the address.', 'wpfasty-types')
+                .'</p>';
         }, self::PAGE);
         $input = static function (string $name, string $type, string $hint, string $value): void {
             printf(
                 '<input name="%1$s" id="%1$s" type="%2$s" class="regular-text" value="%3$s">'
-                    . ' <p class="description">%4$s</p>',
+                    .' <p class="description">%4$s</p>',
                 esc_attr($name),
                 esc_attr($type),
                 esc_attr($value),
@@ -373,7 +384,7 @@ final class Contact
         $area = static function (string $name, string $hint, string $value, string $placeholder): void {
             printf(
                 '<textarea name="%1$s" id="%1$s" rows="4" class="large-text code" placeholder="%4$s">%3$s</textarea>'
-                    . ' <p class="description">%2$s</p>',
+                    .' <p class="description">%2$s</p>',
                 esc_attr($name),
                 esc_html($hint),
                 esc_textarea($value),
@@ -409,16 +420,16 @@ final class Contact
         $links = __('Messengers and profiles', 'wpfasty-types');
         $field('wpfasty_contact_links', $links, 'contact', static fn () => $area(
             'wpfasty_contact_links',
-            __('One per line: network and handle, e.g. "telegram example_shop".', 'wpfasty-types') . ' '
-                . __('WhatsApp takes the number: "whatsapp +12025550143". The order is kept.', 'wpfasty-types'),
+            __('One per line: network and handle, e.g. "telegram example_shop".', 'wpfasty-types').' '
+                .__('WhatsApp takes the number: "whatsapp +12025550143". The order is kept.', 'wpfasty-types'),
             self::linksText(self::links(get_option('wpfasty_contact_links', []))),
             "telegram example_shop\nwhatsapp +12025550143",
         ));
         $field('wpfasty_hours', __('Weekly hours', 'wpfasty-types'), 'hours', static fn () => $area(
             'wpfasty_hours',
             __('One rule per line: days (mon … sun, ranges with -, lists with ,) and HH:MM-HH:MM.', 'wpfasty-types')
-                . ' ' . __('After midnight: 20:00-02:00; all day: 00:00-24:00.', 'wpfasty-types')
-                . ' ' . __('Days without a rule are closed.', 'wpfasty-types'),
+                .' '.__('After midnight: 20:00-02:00; all day: 00:00-24:00.', 'wpfasty-types')
+                .' '.__('Days without a rule are closed.', 'wpfasty-types'),
             self::hoursText(self::hours(get_option('wpfasty_hours', []))),
             "mon-fri 09:00-18:00\nsat 10:00-14:00",
         ));
@@ -452,15 +463,15 @@ final class Contact
         foreach ($coords as $k => $label) {
             printf(
                 '<label>%1$s <input name="wpfasty_map[%2$s]" type="number" step="any" class="small-text"'
-                    . ' value="%3$s"></label> ',
+                    .' value="%3$s"></label> ',
                 esc_html($label),
                 esc_attr($k),
                 esc_attr(isset($m[$k]) ? (string) $m[$k] : '')
             );
         }
         echo '<p class="description">'
-            . esc_html__('Latitude -90 … 90, longitude -180 … 180 (WGS 84), both or none.', 'wpfasty-types')
-            . '</p>';
+            .esc_html__('Latitude -90 … 90, longitude -180 … 180 (WGS 84), both or none.', 'wpfasty-types')
+            .'</p>';
     }
 
     public static function page(): void
@@ -468,7 +479,7 @@ final class Contact
         if (!current_user_can('manage_options')) {
             return;
         }
-        echo '<div class="wrap"><h1>' . esc_html__('Contact & hours', 'wpfasty-types') . '</h1>';
+        echo '<div class="wrap"><h1>'.esc_html__('Contact & hours', 'wpfasty-types').'</h1>';
         echo '<form method="post" action="options.php">';
         settings_fields(self::GROUP);
         do_settings_sections(self::PAGE);
@@ -480,10 +491,11 @@ final class Contact
     {
         $out = self::phone($v);
         self::report(
-            $out === '' && is_scalar($v) && trim((string) $v) !== '',
+            '' === $out && is_scalar($v) && '' !== trim((string) $v),
             'phone',
             __('The phone is not an international number (E.164) and was not saved.', 'wpfasty-types')
         );
+
         return $out;
     }
 
@@ -491,10 +503,11 @@ final class Contact
     {
         $out = self::email($v);
         self::report(
-            $out === '' && is_scalar($v) && trim((string) $v) !== '',
+            '' === $out && is_scalar($v) && '' !== trim((string) $v),
             'email',
             __('The email address is not valid and was not saved.', 'wpfasty-types')
         );
+
         return $out;
     }
 
@@ -508,6 +521,7 @@ final class Contact
     {
         $out = self::links($v, $bad);
         self::reportLines($bad, 'links', __('Messengers and profiles', 'wpfasty-types'));
+
         return $out;
     }
 
@@ -516,6 +530,7 @@ final class Contact
     {
         $out = self::hours($v, $bad);
         self::reportLines($bad, 'hours', __('Weekly hours', 'wpfasty-types'));
+
         return $out;
     }
 
@@ -524,6 +539,7 @@ final class Contact
     {
         $out = self::exceptions($v, $bad);
         self::reportLines($bad, 'exceptions', __('Exceptions', 'wpfasty-types'));
+
         return $out;
     }
 
@@ -531,12 +547,13 @@ final class Contact
     public static function saveMap(mixed $v): array
     {
         $out = self::map($v);
-        $given = is_array($v) && (trim((string) ($v['lat'] ?? '')) !== '' || trim((string) ($v['lng'] ?? '')) !== '');
+        $given = is_array($v) && ('' !== trim((string) ($v['lat'] ?? '')) || '' !== trim((string) ($v['lng'] ?? '')));
         self::report(
             $given && !isset($out['lat']),
             'map',
             __('The coordinates are out of range or incomplete and were not saved.', 'wpfasty-types')
         );
+
         return $out;
     }
 
@@ -545,8 +562,10 @@ final class Contact
     {
         if (is_string($v)) {
             $lines = array_map('trim', preg_split('/\R/u', $v) ?: []);
-            return array_values(array_filter($lines, static fn (string $l): bool => $l !== ''));
+
+            return array_values(array_filter($lines, static fn (string $l): bool => '' !== $l));
         }
+
         return is_array($v) && array_is_list($v) ? $v : [];
     }
 
@@ -554,21 +573,22 @@ final class Contact
     private static function time(mixed $v): string
     {
         $s = is_scalar($v) ? trim((string) $v) : '';
-        if (preg_match('/^(\d{1,2}):(\d{2})$/', $s, $m) !== 1) {
+        if (1 !== preg_match('/^(\d{1,2}):(\d{2})$/', $s, $m)) {
             return '';
         }
-        $t = str_pad($m[1], 2, '0', STR_PAD_LEFT) . ':' . $m[2];
-        return preg_match(self::CLOSE, $t) === 1 ? $t : '';
+        $t = str_pad($m[1], 2, '0', STR_PAD_LEFT).':'.$m[2];
+
+        return 1 === preg_match(self::CLOSE, $t) ? $t : '';
     }
 
     private static function interval(string $open, string $close): bool
     {
-        return preg_match(self::TIME, $open) === 1 && preg_match(self::CLOSE, $close) === 1 && $open !== $close;
+        return 1 === preg_match(self::TIME, $open) && 1 === preg_match(self::CLOSE, $close) && $open !== $close;
     }
 
     private static function isDate(string $d): bool
     {
-        return preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $d, $m) === 1
+        return 1 === preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $d, $m)
             && checkdate((int) $m[2], (int) $m[3], (int) $m[1]);
     }
 
@@ -581,20 +601,21 @@ final class Contact
             return null;
         }
         $f = (float) $v;
+
         return is_finite($f) && abs($f) <= $max ? $f : null;
     }
 
     private static function report(bool $failed, string $code, string $message): void
     {
         if ($failed && function_exists('add_settings_error')) {
-            add_settings_error(self::GROUP, 'wpfasty_' . $code, $message);
+            add_settings_error(self::GROUP, 'wpfasty_'.$code, $message);
         }
     }
 
     /** @param list<int> $bad */
     private static function reportLines(array $bad, string $code, string $field): void
     {
-        self::report($bad !== [], $code, sprintf(
+        self::report([] !== $bad, $code, sprintf(
             /* translators: 1: field name, 2: line numbers */
             __('%1$s: lines %2$s were not understood and were not saved.', 'wpfasty-types'),
             $field,

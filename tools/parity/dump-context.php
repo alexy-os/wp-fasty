@@ -1,12 +1,11 @@
 <?php
+
 /**
  * Snapshot one request's view + ContextFactory context as a parity fixture (dev tool, needs a WP site).
  *   wp eval-file tools/parity/dump-context.php <uri> <out.json>
  *   [front-page=<id>] uses that page as the static front page.
  *   [posts-front] renders the theme front page even when a static page is set.
  * The fixture is frozen data: parity renders it with both engines, no WordPress needed.
- *
- * @package Latte
  */
 
 use WPFasty\Core\Application;
@@ -20,7 +19,7 @@ if (count($wpfastyArgs) < 2) {
 
 $_SERVER['REQUEST_URI'] = $wpfastyUri;
 $wpfastyQuery = (string) wp_parse_url($wpfastyUri, PHP_URL_QUERY);
-if ($wpfastyQuery !== '') {
+if ('' !== $wpfastyQuery) {
     parse_str($wpfastyQuery, $_GET); // phpcs:ignore WordPress.Security.NonceVerification
 }
 foreach ($wpfastyArgs as $wpfastyArg) {
@@ -43,5 +42,5 @@ $wpfastyJson = wp_json_encode(
     ['uri' => $wpfastyUri, 'view' => $wpfastyView, 'page' => true, 'context' => $wpfastyTheme->context($wpfastyView)],
     JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
 );
-file_put_contents($wpfastyOut, $wpfastyJson . "\n"); // phpcs:ignore WordPress.WP.AlternativeFunctions
+file_put_contents($wpfastyOut, $wpfastyJson."\n"); // phpcs:ignore WordPress.WP.AlternativeFunctions
 WP_CLI::success("{$wpfastyUri} → {$wpfastyView} ({$wpfastyOut})");

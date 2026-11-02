@@ -11,8 +11,9 @@ final class TypesTest extends TestCase
 {
     private function registry(): Registry
     {
-        $r = new Registry([__DIR__ . '/fixtures/types']);
+        $r = new Registry([__DIR__.'/fixtures/types']);
         $r->load();
+
         return $r;
     }
 
@@ -122,6 +123,6 @@ final class TypesTest extends TestCase
         self::assertSame('2026-10-19', $date->toStorage('2026-10-19T23:59:00+03:00'));
         self::assertSame('', $date->toStorage('tomorrow'));
         self::assertSame('2026-10-19', $date->toInput('2026-10-19'));
-        self::assertSame(1, preg_match('/' . Field::DATE_PATTERN . '/', '2026-10-19'));
+        self::assertSame(1, preg_match('/'.Field::DATE_PATTERN.'/', '2026-10-19'));
     }
 }

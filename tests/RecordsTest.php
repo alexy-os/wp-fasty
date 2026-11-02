@@ -32,16 +32,15 @@ final class RecordsTest extends TestCase
 
     protected function setUp(): void
     {
-        require_once __DIR__ . '/fixtures/records-stubs.php';
-        require_once __DIR__ . '/fixtures/wp-objects-stubs.php';
-        require_once __DIR__ . '/fixtures/links-stubs.php';
-        $src = dirname(__DIR__) . '/plugins/wpfasty-builder/src/';
+        require_once __DIR__.'/fixtures/records-stubs.php';
+        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
+        require_once __DIR__.'/fixtures/links-stubs.php';
+        $src = dirname(__DIR__).'/plugins/wpfasty-builder/src/';
         foreach (['Links', 'Records', 'Layout', 'Codex/ReadPath', 'Codex/Format'] as $f) {
-            require_once $src . $f . '.php';
+            require_once $src.$f.'.php';
         }
-        require_once dirname(__DIR__) . '/plugins/wpfasty-types/src/Codex/Mapper.php';
-        $post = static fn (int $id, string $type, string $slug, string $title): \WP_Post
-            => new \WP_Post(['ID' => $id, 'post_type' => $type, 'post_name' => $slug, 'post_title' => $title]);
+        require_once dirname(__DIR__).'/plugins/wpfasty-types/src/Codex/Mapper.php';
+        $post = static fn (int $id, string $type, string $slug, string $title): \WP_Post => new \WP_Post(['ID' => $id, 'post_type' => $type, 'post_name' => $slug, 'post_title' => $title]);
         $GLOBALS['wpfb_records'] = [
             'posts' => [
                 $post(1, 'post', 'hello-world', 'Hello world'),
@@ -86,7 +85,7 @@ final class RecordsTest extends TestCase
             ['items' => [
                 ['href' => '{product:wallet}#buy', 'price' => '{price:wallet}', 'stock' => '{stock:tray}'],
                 ['href' => '{term:product_cat:kitchen}', 'tag' => '{term:post_tag:sale}', 'x' => '{price:missing}'],
-            ]],
+            ], ],
         ];
         Links::prime($props);
         $this->assertSame(['get_posts', 'get_posts', 'get_terms'], self::queries());
@@ -101,7 +100,7 @@ final class RecordsTest extends TestCase
             ['items' => [
                 ['href' => 'http://example.test/product/wallet/#buy', 'price' => '$39', 'stock' => 'Out of stock'],
                 ['href' => 'http://example.test/product_cat/kitchen/', 'tag' => 'http://example.test/post_tag/sale/', 'x' => ''],
-            ]],
+            ], ],
         ], Links::walk($props));
         // everything was primed: rendering made no query
         $this->assertCount(3, self::queries());
@@ -173,8 +172,8 @@ final class RecordsTest extends TestCase
             $this->assertSame($t['url'], Links::resolve($t['token']), $t['token']);
         }
         foreach ($index['products'] as $p) {
-            $this->assertSame($p['price'], Links::resolve('{price:' . $p['slug'] . '}'));
-            $this->assertSame($p['stock'], Links::resolve('{stock:' . $p['slug'] . '}'));
+            $this->assertSame($p['price'], Links::resolve('{price:'.$p['slug'].'}'));
+            $this->assertSame($p['stock'], Links::resolve('{stock:'.$p['slug'].'}'));
         }
         $this->assertCount(3, self::queries());
     }
@@ -190,8 +189,7 @@ final class RecordsTest extends TestCase
     /** {post:}/{product:} name only published records; a password-protected product keeps its link, not its data */
     public function testUnpublishedAndProtectedRecordsStayPrivate(): void
     {
-        $post = static fn (int $id, string $type, string $slug, array $more): \WP_Post
-            => new \WP_Post(['ID' => $id, 'post_type' => $type, 'post_name' => $slug, 'post_title' => $slug] + $more);
+        $post = static fn (int $id, string $type, string $slug, array $more): \WP_Post => new \WP_Post(['ID' => $id, 'post_type' => $type, 'post_name' => $slug, 'post_title' => $slug] + $more);
         $GLOBALS['wpfb_records']['posts'][] = $post(20, 'post', 'draft-post', ['post_status' => 'draft']);
         $GLOBALS['wpfb_records']['posts'][] = $post(21, 'post', 'private-post', ['post_status' => 'private']);
         $GLOBALS['wpfb_records']['posts'][] = $post(22, 'product', 'draft-product', ['post_status' => 'draft']);
@@ -199,7 +197,7 @@ final class RecordsTest extends TestCase
         $GLOBALS['wpfb_records']['meta'][22] = ['_shop_price' => '100'];
         $GLOBALS['wpfb_records']['meta'][23] = ['_shop_price' => '777', '_shop_stock' => '3'];
         $GLOBALS['wp_test_permalinks'] += [20 => 'http://example.test/?p=20', 21 => 'http://example.test/private-post/',
-            22 => 'http://example.test/?p=22', 23 => 'http://example.test/product/locked/'];
+            22 => 'http://example.test/?p=22', 23 => 'http://example.test/product/locked/', ];
         $this->assertSame('#|#|#|', Links::resolve('{post:draft-post}|{post:private-post}|{product:draft-product}|{price:draft-product}'));
         $this->assertSame('http://example.test/product/locked/||', Links::resolve('{product:locked}|{price:locked}|{stock:locked}'));
         foreach (self::queries() as $i => $fn) {

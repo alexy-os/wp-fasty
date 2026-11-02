@@ -15,20 +15,20 @@ final class ContextFactoryRecentPostsTest extends TestCase
     #[RunInSeparateProcess]
     public function testRecentPostsPrimesCachesOncePerKind(): void
     {
-        require __DIR__ . '/fixtures/recent-posts-stubs.php';
+        require __DIR__.'/fixtures/recent-posts-stubs.php';
 
         $posts = [];
         foreach ([101, 102, 103] as $i => $id) {
-            $posts[] = new \WP_Post([
+            $posts[] = new WP_Post([
                 'ID' => $id,
-                'post_title' => 'Post ' . $id,
-                'post_name' => 'post-' . $id,
-                'post_author' => $i === 2 ? 7 : 5,
+                'post_title' => 'Post '.$id,
+                'post_name' => 'post-'.$id,
+                'post_author' => 2 === $i ? 7 : 5,
             ]);
         }
         $GLOBALS['wpfasty_recent'] = ['posts' => $posts, 'thumbs' => [101 => 901, 103 => 903], 'log' => []];
 
-        $recent = (new \ReflectionMethod(ContextFactory::class, 'recentPosts'))->invoke(new ContextFactory(), 6);
+        $recent = (new ReflectionMethod(ContextFactory::class, 'recentPosts'))->invoke(new ContextFactory(), 6);
 
         $this->assertSame([101, 102, 103], array_column($recent, 'id'));
 
@@ -53,10 +53,10 @@ final class ContextFactoryRecentPostsTest extends TestCase
     #[RunInSeparateProcess]
     public function testRecentPostsWithoutPostsRunsNoPriming(): void
     {
-        require __DIR__ . '/fixtures/recent-posts-stubs.php';
+        require __DIR__.'/fixtures/recent-posts-stubs.php';
         $GLOBALS['wpfasty_recent'] = ['posts' => [], 'thumbs' => [], 'log' => []];
 
-        $recent = (new \ReflectionMethod(ContextFactory::class, 'recentPosts'))->invoke(new ContextFactory(), 6);
+        $recent = (new ReflectionMethod(ContextFactory::class, 'recentPosts'))->invoke(new ContextFactory(), 6);
 
         $this->assertSame([], $recent);
         $this->assertSame(['WP_Query'], array_column($GLOBALS['wpfasty_recent']['log'], 0));

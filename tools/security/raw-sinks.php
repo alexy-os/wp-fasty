@@ -18,20 +18,19 @@
  *
  *   php tools/security/raw-sinks.php            check
  *   php tools/security/raw-sinks.php --list     print every place found (file:line expression)
- *
- * @package WPFastyBuilder
  */
 
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
 $list = in_array('--list', $argv, true);
-$allow = json_decode((string) file_get_contents(__DIR__ . '/raw-sinks.json'), true, 512, JSON_THROW_ON_ERROR);
+$allow = json_decode((string) file_get_contents(__DIR__.'/raw-sinks.json'), true, 512, JSON_THROW_ON_ERROR);
 
 /** @return list<string> */
 $git = static function (string $args) use ($root): array {
-    $out = (string) shell_exec('git -C ' . escapeshellarg($root) . ' ls-files ' . $args);
-    return array_values(array_filter(explode("\n", $out), static fn (string $f): bool => $f !== ''));
+    $out = (string) shell_exec('git -C '.escapeshellarg($root).' ls-files '.$args);
+
+    return array_values(array_filter(explode("\n", $out), static fn (string $f): bool => '' !== $f));
 };
 $norm = static fn (string $e): string => trim((string) preg_replace('/\s+/', ' ', $e));
 
@@ -48,53 +47,55 @@ $sinks = static function (string $src, bool $twig) use ($norm): array {
         preg_match_all('/\{\{-?(?:[^}\'"]|\}(?!\})|\'(?:[^\'\\\\]|\\\\.)*\'|"(?:[^"\\\\]|\\\\.)*")*-?\}\}/s', $src, $m, PREG_OFFSET_CAPTURE);
         foreach ($m[0] as [$tag, $at]) {
             $body = trim(substr($tag, 2, -2), "- \t\r\n");
-            if (preg_match('/^(.*)\|\s*raw\s*$/s', $body, $mm) === 1) {
+            if (1 === preg_match('/^(.*)\|\s*raw\s*$/s', $body, $mm)) {
                 $out[] = [$line($at), $norm($mm[1])];
-            } elseif (preg_match('/\|\s*raw\b/', $body) === 1) {
+            } elseif (1 === preg_match('/\|\s*raw\b/', $body)) {
                 $out[] = [$line($at), $norm($body)];
             }
         }
         preg_match_all('/\{%-?\s*autoescape\s+(false|[\'"]?(?!html)[a-z]*[\'"]?)\s*-?%\}/', $src, $m, PREG_OFFSET_CAPTURE);
         foreach ($m[0] as [$tag, $at]) {
-            $out[] = [$line($at), $norm('autoescape ' . trim(substr($tag, 2, -2), '-% '))];
+            $out[] = [$line($at), $norm('autoescape '.trim(substr($tag, 2, -2), '-% '))];
         }
+
         return $out;
     }
     // Latte tags: { … } with balanced braces and quoted strings
     $n = strlen($src);
-    for ($i = 0; $i < $n; $i++) {
-        if ($src[$i] !== '{' || $i + 1 >= $n || ctype_space($src[$i + 1]) || $src[$i + 1] === '*') {
+    for ($i = 0; $i < $n; ++$i) {
+        if ('{' !== $src[$i] || $i + 1 >= $n || ctype_space($src[$i + 1]) || '*' === $src[$i + 1]) {
             continue;
         }
         $depth = 0;
         $q = '';
-        for ($j = $i; $j < $n; $j++) {
+        for ($j = $i; $j < $n; ++$j) {
             $c = $src[$j];
-            if ($q !== '') {
-                if ($c === '\\') {
-                    $j++;
+            if ('' !== $q) {
+                if ('\\' === $c) {
+                    ++$j;
                 } elseif ($c === $q) {
                     $q = '';
                 }
                 continue;
             }
-            if ($c === "'" || $c === '"') {
+            if ("'" === $c || '"' === $c) {
                 $q = $c;
-            } elseif ($c === '{') {
-                $depth++;
-            } elseif ($c === '}' && --$depth === 0) {
+            } elseif ('{' === $c) {
+                ++$depth;
+            } elseif ('}' === $c && 0 === --$depth) {
                 break;
             }
         }
         $tag = substr($src, $i + 1, $j - $i - 1);
-        if (preg_match('/^=?\s*(.*)\|noescape\s*$/s', $tag, $mm) === 1) {
+        if (1 === preg_match('/^=?\s*(.*)\|noescape\s*$/s', $tag, $mm)) {
             $out[] = [$line($i), $norm($mm[1])];
-        } elseif (preg_match('/^(contentType|syntax\s+off)\b/', $tag) === 1) {
+        } elseif (1 === preg_match('/^(contentType|syntax\s+off)\b/', $tag)) {
             $out[] = [$line($i), $norm($tag)];
         } elseif (str_contains($tag, '|noescape')) {
             $out[] = [$line($i), $norm($tag)];
         }
     }
+
     return $out;
 };
 
@@ -102,15 +103,15 @@ $found = ['generated' => [], 'views' => [], 'safe' => []];
 $fail = [];
 foreach ($git("'*.latte' '*.twig'") as $file) {
     $src = (string) file_get_contents("$root/$file");
-    $generated = preg_match('/Code generated|DO NOT EDIT/', substr($src, 0, 400)) === 1;
+    $generated = 1 === preg_match('/Code generated|DO NOT EDIT/', substr($src, 0, 400));
     foreach ($sinks($src, str_ends_with($file, '.twig')) as [$line, $expr]) {
         if ($list) {
-            fwrite(STDOUT, ($generated ? 'G ' : 'V ') . "$file:$line  $expr\n");
+            fwrite(STDOUT, ($generated ? 'G ' : 'V ')."$file:$line  $expr\n");
         }
         if ($generated) {
             $ok = false;
             foreach ($allow['generated'] as $rule) {
-                if (preg_match('#' . $rule['pattern'] . '#s', $expr) === 1) {
+                if (1 === preg_match('#'.$rule['pattern'].'#s', $expr)) {
                     $ok = true;
                     $found['generated'][$rule['pattern']] = ($found['generated'][$rule['pattern']] ?? 0) + 1;
                     break;
@@ -153,7 +154,7 @@ foreach ($git("'*.php'") as $file) {
 
 $views = [];
 foreach ($allow['views'] as $v) {
-    $views[$v['file'] . "\0" . $norm($v['expr'])] = $v;
+    $views[$v['file']."\0".$norm($v['expr'])] = $v;
 }
 foreach ($found['views'] as $key => $count) {
     if (str_ends_with($key, "\0lines")) {
@@ -164,7 +165,7 @@ foreach ($found['views'] as $key => $count) {
     if (!isset($views[$key])) {
         $fail[] = "$file:$lines raw print of a view not reviewed: $expr";
     } elseif ((int) ($views[$key]['count'] ?? 1) !== $count) {
-        $fail[] = "$file:$lines $expr printed raw $count× (reviewed: " . (int) ($views[$key]['count'] ?? 1) . '×)';
+        $fail[] = "$file:$lines $expr printed raw $count× (reviewed: ".(int) ($views[$key]['count'] ?? 1).'×)';
     }
 }
 foreach ($views as $key => $v) {
@@ -174,7 +175,7 @@ foreach ($views as $key => $v) {
 }
 $safe = [];
 foreach ($allow['safe'] as $s) {
-    $safe[$s['file'] . "\0" . $s['name']] = true;
+    $safe[$s['file']."\0".$s['name']] = true;
 }
 foreach (array_keys($found['safe']) as $key) {
     if (!isset($safe[$key])) {
@@ -203,6 +204,6 @@ fwrite(STDOUT, sprintf(
     array_sum(array_filter($found['views'], 'is_int')),
     count($allow['views']),
     count($found['safe']),
-    $fail === [] ? 'all reviewed' : count($fail) . ' not reviewed',
+    [] === $fail ? 'all reviewed' : count($fail).' not reviewed',
 ));
-exit($fail === [] ? 0 : 1);
+exit([] === $fail ? 0 : 1);

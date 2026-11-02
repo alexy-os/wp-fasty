@@ -32,7 +32,7 @@ final class LocalSource implements SourceInterface
 
     public function label(): string
     {
-        return $this->label !== '' ? $this->label : (string) ($this->catalog()['label'] ?? $this->id);
+        return '' !== $this->label ? $this->label : (string) ($this->catalog()['label'] ?? $this->id);
     }
 
     public function runtime(): string
@@ -42,14 +42,15 @@ final class LocalSource implements SourceInterface
 
     public function catalog(): array
     {
-        if ($this->catalog === null) {
-            $file = $this->catalogFile ?? $this->dir . '/catalog.json';
+        if (null === $this->catalog) {
+            $file = $this->catalogFile ?? $this->dir.'/catalog.json';
             $raw = is_file($file) ? (string) file_get_contents($file) : '';
-            $data = $raw !== '' ? json_decode($raw, true) : null;
+            $data = '' !== $raw ? json_decode($raw, true) : null;
             $data = is_array($data) ? Catalog::forRuntime($data, $this->runtime) : null;
-            $ok = $data !== null && Catalog::runtimeOf($data) === $this->runtime;
+            $ok = null !== $data && Catalog::runtimeOf($data) === $this->runtime;
             $this->catalog = $ok ? $data : ['runtime' => $this->runtime, 'blocks' => [], 'collections' => []];
         }
+
         return $this->catalog;
     }
 

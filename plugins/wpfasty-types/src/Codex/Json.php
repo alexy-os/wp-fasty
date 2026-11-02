@@ -24,7 +24,7 @@ final class Json
     /** @throws CanonicalError */
     public static function parse(string $text): mixed
     {
-        if (preg_match('//u', $text) !== 1) {
+        if (1 !== preg_match('//u', $text)) {
             throw new CanonicalError('canonical.invalid_json', '@0', 'text is not UTF-8');
         }
         $p = new self($text);
@@ -33,18 +33,19 @@ final class Json
         if ($p->i !== $p->n) {
             $p->fail('canonical.invalid_json', 'trailing data after the JSON value');
         }
+
         return $v;
     }
 
     private function fail(string $code, string $msg, ?int $at = null): never
     {
-        throw new CanonicalError($code, '@' . ($at ?? $this->i), $msg);
+        throw new CanonicalError($code, '@'.($at ?? $this->i), $msg);
     }
 
     private function ws(): void
     {
-        while ($this->i < $this->n && strpos(" \t\n\r", $this->s[$this->i]) !== false) {
-            $this->i++;
+        while ($this->i < $this->n && false !== strpos(" \t\n\r", $this->s[$this->i])) {
+            ++$this->i;
         }
     }
 
@@ -55,55 +56,58 @@ final class Json
         }
         $this->ws();
         $c = $this->s[$this->i] ?? '';
-        if ($c === '{') {
+        if ('{' === $c) {
             return $this->object($depth);
         }
-        if ($c === '[') {
-            $this->i++;
+        if ('[' === $c) {
+            ++$this->i;
             $a = [];
             $this->ws();
             if (($this->s[$this->i] ?? '') === ']') {
-                $this->i++;
+                ++$this->i;
+
                 return $a;
             }
-            for (;;) {
+            while (true) {
                 $a[] = $this->value($depth + 1);
                 $this->ws();
                 $c = $this->s[$this->i++] ?? '';
-                if ($c === ']') {
+                if (']' === $c) {
                     return $a;
                 }
-                if ($c !== ',') {
+                if (',' !== $c) {
                     $this->fail('canonical.invalid_json', "expected ',' or ']'", $this->i - 1);
                 }
             }
         }
-        if ($c === '"') {
+        if ('"' === $c) {
             return $this->str();
         }
         foreach (['true' => true, 'false' => false, 'null' => null] as $word => $v) {
-            if (substr_compare($this->s, $word, $this->i, strlen($word)) === 0) {
+            if (0 === substr_compare($this->s, $word, $this->i, strlen($word))) {
                 $this->i += strlen($word);
+
                 return $v;
             }
         }
-        if ($c === '-' || ($c >= '0' && $c <= '9' && $c !== '')) {
+        if ('-' === $c || ($c >= '0' && $c <= '9' && '' !== $c)) {
             return $this->num();
         }
-        $this->fail('canonical.invalid_json', $c === '' ? 'unexpected end of input' : 'unexpected token');
+        $this->fail('canonical.invalid_json', '' === $c ? 'unexpected end of input' : 'unexpected token');
     }
 
     private function object(int $depth): \stdClass
     {
-        $this->i++;
+        ++$this->i;
         $o = new \stdClass();
         $seen = [];
         $this->ws();
         if (($this->s[$this->i] ?? '') === '}') {
-            $this->i++;
+            ++$this->i;
+
             return $o;
         }
-        for (;;) {
+        while (true) {
             $this->ws();
             if (($this->s[$this->i] ?? '') !== '"') {
                 $this->fail('canonical.invalid_json', 'expected a key');
@@ -111,21 +115,21 @@ final class Json
             $at = $this->i;
             $k = $this->str();
             if (isset($seen[$k])) {
-                $this->fail('canonical.duplicate_key', 'duplicate key ' . json_encode($k), $at);
+                $this->fail('canonical.duplicate_key', 'duplicate key '.json_encode($k), $at);
             }
             $seen[$k] = true;
             $this->ws();
             if (($this->s[$this->i] ?? '') !== ':') {
                 $this->fail('canonical.invalid_json', "expected ':'");
             }
-            $this->i++;
+            ++$this->i;
             $o->{$k} = $this->value($depth + 1);
             $this->ws();
             $c = $this->s[$this->i++] ?? '';
-            if ($c === '}') {
+            if ('}' === $c) {
                 return $o;
             }
-            if ($c !== ',') {
+            if (',' !== $c) {
                 $this->fail('canonical.invalid_json', "expected ',' or '}'", $this->i - 1);
             }
         }
@@ -137,7 +141,7 @@ final class Json
         $out = '';
         $units = []; // pending UTF-16 code units of \u escapes
         $flush = function () use (&$units, &$out, $start): void {
-            for ($k = 0, $m = count($units); $k < $m; $k++) {
+            for ($k = 0, $m = count($units); $k < $m; ++$k) {
                 $u = $units[$k];
                 $next = $units[$k + 1] ?? 0;
                 if ($u >= 0xD800 && $u <= 0xDBFF && $next >= 0xDC00 && $next <= 0xDFFF) {
@@ -150,30 +154,30 @@ final class Json
             }
             $units = [];
         };
-        for (;;) {
+        while (true) {
             if ($this->i >= $this->n) {
                 $this->fail('canonical.invalid_json', 'unterminated string', $start);
             }
             $c = $this->s[$this->i];
-            if ($c === '"') {
-                $this->i++;
+            if ('"' === $c) {
+                ++$this->i;
                 break;
             }
             if (ord($c) < 0x20) {
                 $this->fail('canonical.invalid_json', 'raw control character in string');
             }
-            if ($c !== '\\') {
+            if ('\\' !== $c) {
                 $flush();
-                $len = strcspn($this->s, "\"\\" . implode('', array_map('chr', range(0, 31))), $this->i);
+                $len = strcspn($this->s, '"\\'.implode('', array_map('chr', range(0, 31))), $this->i);
                 $out .= substr($this->s, $this->i, $len);
                 $this->i += $len;
                 continue;
             }
             $e = $this->s[$this->i + 1] ?? '';
             $this->i += 2;
-            if ($e === 'u') {
+            if ('u' === $e) {
                 $h = substr($this->s, $this->i, 4);
-                if (preg_match('/^[0-9A-Fa-f]{4}$/', $h) !== 1) {
+                if (1 !== preg_match('/^[0-9A-Fa-f]{4}$/', $h)) {
                     $this->fail('canonical.invalid_json', 'bad \\u escape');
                 }
                 $units[] = hexdec($h);
@@ -190,12 +194,13 @@ final class Json
             $out .= $map[$e];
         }
         $flush();
+
         return $out;
     }
 
     private function num(): int|float
     {
-        if (preg_match('/-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?/A', $this->s, $m, 0, $this->i) !== 1) {
+        if (1 !== preg_match('/-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?/A', $this->s, $m, 0, $this->i)) {
             $this->fail('canonical.invalid_json', 'bad number');
         }
         $tok = $m[0];
@@ -208,6 +213,7 @@ final class Json
             if (strlen($digits) > 16 || (int) $digits > Profile::MAX_SAFE) {
                 $this->fail('canonical.unsafe_integer', "integer {$tok} is outside ±(2^53-1)", $at);
             }
+
             return (int) $tok;
         }
         $f = (float) $tok;
@@ -217,6 +223,7 @@ final class Json
         if (!$exp && floor($f) === $f && abs($f) > Profile::MAX_SAFE) {
             $this->fail('canonical.unsafe_integer', "integer {$tok} is outside ±(2^53-1)", $at);
         }
+
         return $f;
     }
 
@@ -225,7 +232,7 @@ final class Json
     /** JCS text of a value tree (\stdClass / assoc array = object, list = array). */
     public static function jcs(mixed $v): string
     {
-        if ($v === null) {
+        if (null === $v) {
             return 'null';
         }
         if (is_bool($v)) {
@@ -235,6 +242,7 @@ final class Json
             if (abs($v) > Profile::MAX_SAFE) {
                 throw new CanonicalError('canonical.unsafe_integer', '$', "integer {$v} is outside ±(2^53-1)");
             }
+
             return (string) $v;
         }
         if (is_float($v)) {
@@ -244,7 +252,7 @@ final class Json
             return self::string($v);
         }
         if (is_array($v) && array_is_list($v)) {
-            return '[' . implode(',', array_map([self::class, 'jcs'], $v)) . ']';
+            return '['.implode(',', array_map([self::class, 'jcs'], $v)).']';
         }
         if (is_array($v) || $v instanceof \stdClass) {
             $o = (array) $v;
@@ -252,11 +260,12 @@ final class Json
             usort($keys, [self::class, 'utf16Compare']);
             $parts = [];
             foreach ($keys as $k) {
-                $parts[] = self::string($k) . ':' . self::jcs($o[$k]);
+                $parts[] = self::string($k).':'.self::jcs($o[$k]);
             }
-            return '{' . implode(',', $parts) . '}';
+
+            return '{'.implode(',', $parts).'}';
         }
-        throw new CanonicalError('canonical.invalid_type', '$', 'value is not JSON: ' . get_debug_type($v));
+        throw new CanonicalError('canonical.invalid_type', '$', 'value is not JSON: '.get_debug_type($v));
     }
 
     /** ECMAScript Number::toString of a finite double (RFC 8785 §3.2.2.3); -0 → "0". */
@@ -265,7 +274,7 @@ final class Json
         if (!is_finite($f)) {
             throw new CanonicalError('canonical.invalid_number', '$', 'number is not finite');
         }
-        if ($f == 0.0) {
+        if (0.0 == $f) {
             return '0';
         }
         $prev = ini_get('serialize_precision');
@@ -277,22 +286,23 @@ final class Json
         $int = $m[2];
         $fr = $m[3] ?? '';
         $e = (int) ($m[4] ?? 0);
-        $digits = ltrim($int . $fr, '0');
-        $point = strlen($int) + $e - (strlen($int . $fr) - strlen($digits)); // decimal point position in $digits
+        $digits = ltrim($int.$fr, '0');
+        $point = strlen($int) + $e - (strlen($int.$fr) - strlen($digits)); // decimal point position in $digits
         $digits = rtrim($digits, '0');
         $k = strlen($digits);
         $n = $point;
         if ($k <= $n && $n <= 21) {
-            $s = $digits . str_repeat('0', $n - $k);
+            $s = $digits.str_repeat('0', $n - $k);
         } elseif (0 < $n && $n <= 21) {
-            $s = substr($digits, 0, $n) . '.' . substr($digits, $n);
+            $s = substr($digits, 0, $n).'.'.substr($digits, $n);
         } elseif (-6 < $n && $n <= 0) {
-            $s = '0.' . str_repeat('0', -$n) . $digits;
+            $s = '0.'.str_repeat('0', -$n).$digits;
         } else {
             $x = $n - 1;
-            $s = $digits[0] . ($k > 1 ? '.' . substr($digits, 1) : '') . 'e' . ($x >= 0 ? '+' : '-') . abs($x);
+            $s = $digits[0].($k > 1 ? '.'.substr($digits, 1) : '').'e'.($x >= 0 ? '+' : '-').abs($x);
         }
-        return $sign . $s;
+
+        return $sign.$s;
     }
 
     /** JSON string: only " \ and controls escaped; / U+2028 U+2029 and non-ASCII as is. */
@@ -302,6 +312,7 @@ final class Json
             $s,
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_LINE_TERMINATORS | JSON_THROW_ON_ERROR,
         );
+
         return $out;
     }
 
@@ -309,9 +320,10 @@ final class Json
     public static function utf16Compare(string $a, string $b): int
     {
         // BMP only: UTF-8 byte order == code point order == UTF-16 order
-        if (preg_match('/[\xF0-\xF4]/', $a . $b) !== 1) {
+        if (1 !== preg_match('/[\xF0-\xF4]/', $a.$b)) {
             return strcmp($a, $b);
         }
+
         return strcmp(self::utf16($a), self::utf16($b));
     }
 
@@ -335,6 +347,7 @@ final class Json
                 $out .= pack('n', $cp);
             }
         }
+
         return $out;
     }
 
@@ -343,10 +356,10 @@ final class Json
     {
         return match (true) {
             $cp < 0x80 => chr($cp),
-            $cp < 0x800 => chr(0xC0 | ($cp >> 6)) . chr(0x80 | ($cp & 0x3F)),
-            $cp < 0x10000 => chr(0xE0 | ($cp >> 12)) . chr(0x80 | (($cp >> 6) & 0x3F)) . chr(0x80 | ($cp & 0x3F)),
-            default => chr(0xF0 | ($cp >> 18)) . chr(0x80 | (($cp >> 12) & 0x3F)) . chr(0x80 | (($cp >> 6) & 0x3F))
-                . chr(0x80 | ($cp & 0x3F)),
+            $cp < 0x800 => chr(0xC0 | ($cp >> 6)).chr(0x80 | ($cp & 0x3F)),
+            $cp < 0x10000 => chr(0xE0 | ($cp >> 12)).chr(0x80 | (($cp >> 6) & 0x3F)).chr(0x80 | ($cp & 0x3F)),
+            default => chr(0xF0 | ($cp >> 18)).chr(0x80 | (($cp >> 12) & 0x3F)).chr(0x80 | (($cp >> 6) & 0x3F))
+                .chr(0x80 | ($cp & 0x3F)),
         };
     }
 }

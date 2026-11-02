@@ -1,8 +1,7 @@
 <?php
+
 /**
  * WP FastY Types — data registration for declarative post-type modules.
- *
- * @package WPFasty_Types
  */
 
 declare(strict_types=1);
@@ -55,7 +54,8 @@ final class Plugin
     public static function sanitizeCurrency(mixed $value): string
     {
         $code = strtoupper(trim(is_scalar($value) ? (string) $value : ''));
-        return preg_match('/^[A-Z]{3}$/', $code) === 1 ? $code : 'USD';
+
+        return 1 === preg_match('/^[A-Z]{3}$/', $code) ? $code : 'USD';
     }
 
     public static function currencyField(): void
@@ -63,7 +63,7 @@ final class Plugin
         add_settings_field('wpfasty_currency', __('Store currency', 'wpfasty-types'), static function (): void {
             printf(
                 '<input name="wpfasty_currency" id="wpfasty_currency" type="text" maxlength="3"'
-                    . ' class="small-text" value="%s"> <span class="description">%s</span>',
+                    .' class="small-text" value="%s"> <span class="description">%s</span>',
                 esc_attr((string) get_option('wpfasty_currency', 'USD')),
                 esc_html__('ISO 4217 code, e.g. USD, EUR.', 'wpfasty-types')
             );
@@ -77,13 +77,13 @@ final class Plugin
             foreach ($type->taxonomies() as $taxonomy => $args) {
                 register_taxonomy((string) $taxonomy, $type->name, (array) $args);
             }
-            if ($type->fields !== []) {
+            if ([] !== $type->fields) {
                 // REST exposes `meta` only for post types that support custom-fields
                 // (keys are `_`-prefixed, so the core box hides them).
                 add_post_type_support($type->name, 'custom-fields');
             }
-            if ($type->fields !== []) {
-                add_filter('rest_prepare_' . $type->name, [$this, 'restNullMeta'], 10, 2);
+            if ([] !== $type->fields) {
+                add_filter('rest_prepare_'.$type->name, [$this, 'restNullMeta'], 10, 2);
             }
             foreach ($type->fields as $field) {
                 register_post_meta($type->name, $field->metaKey, [
@@ -92,8 +92,8 @@ final class Plugin
                     // Typed values in REST (money = integer minor units).
                     // Opt out per field with 'show_in_rest' => false.
                     'show_in_rest' => ($field->def['show_in_rest'] ?? true) === false ? false : (
-                        $field->type === 'date' ? ['schema' => ['pattern' => Field::DATE_PATTERN]] : (
-                            $field->options() !== [] ? ['schema' => ['enum' => $field->options()]] : true
+                        'date' === $field->type ? ['schema' => ['pattern' => Field::DATE_PATTERN]] : (
+                            [] !== $field->options() ? ['schema' => ['enum' => $field->options()]] : true
                         )
                     ),
                     'sanitize_callback' => [$field, 'toStorage'],
@@ -139,25 +139,26 @@ final class Plugin
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- one-off migration over one meta key, not cached.
                 $rows = (array) $wpdb->get_results($wpdb->prepare(
                     "SELECT pm.post_id, pm.meta_value FROM {$wpdb->postmeta} pm"
-                    . " INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id WHERE pm.meta_key = %s AND p.post_type = %s",
+                    ." INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id WHERE pm.meta_key = %s AND p.post_type = %s",
                     $field->metaKey,
                     $type->name,
                 ));
                 $n = 0;
                 foreach ($rows as $row) {
                     $raw = (string) $row->meta_value;
-                    $value = $field->type === 'date' ? Field::date($raw) : $field->toStorage($raw);
-                    if ($value === null || $value === '') {
+                    $value = 'date' === $field->type ? Field::date($raw) : $field->toStorage($raw);
+                    if (null === $value || '' === $value) {
                         do_action('wpfasty_types_migrate_invalid', (int) $row->post_id, $field->metaKey, $raw);
                     } elseif ((string) (is_bool($value) ? (int) $value : $value) !== $raw) {
                         update_post_meta((int) $row->post_id, $field->metaKey, $value);
-                        $n++;
+                        ++$n;
                     }
                 }
                 $done[$field->metaKey] = $n;
             }
         }
         update_option(self::SCHEMA_OPTION, $now, true);
+
         return $done;
     }
 
@@ -169,7 +170,7 @@ final class Plugin
     {
         $data = $response->get_data();
         $type = $this->types->get($post->post_type);
-        if ($type === null || !isset($data['meta']) || !is_array($data['meta'])) {
+        if (null === $type || !isset($data['meta']) || !is_array($data['meta'])) {
             return $response;
         }
         foreach ($type->fields as $field) {
@@ -179,6 +180,7 @@ final class Plugin
             }
         }
         $response->set_data($data);
+
         return $response;
     }
 
@@ -186,11 +188,11 @@ final class Plugin
     {
         $type = $this->types->get($postType);
         $box = $type?->metabox();
-        if ($type === null || $box === false || $type->fields === []) {
+        if (null === $type || false === $box || [] === $type->fields) {
             return;
         }
         add_meta_box(
-            'wpfasty-' . $type->name . '-fields',
+            'wpfasty-'.$type->name.'-fields',
             (string) ($box['title'] ?? __('Details', 'wpfasty-types')),
             fn (\WP_Post $post) => $this->renderMetaBox($type, $post),
             $type->name,
@@ -201,15 +203,15 @@ final class Plugin
 
     private function renderMetaBox(PostType $type, \WP_Post $post): void
     {
-        wp_nonce_field('wpfasty_save_' . $type->name, 'wpfasty_' . $type->name . '_nonce');
+        wp_nonce_field('wpfasty_save_'.$type->name, 'wpfasty_'.$type->name.'_nonce');
         foreach ($type->fields as $name => $field) {
             $value = $field->toInput(get_post_meta($post->ID, $field->metaKey, true));
-            $id = 'wpfasty-' . $type->name . '-' . $name;
+            $id = 'wpfasty-'.$type->name.'-'.$name;
             $input = $field->inputType();
-            if ($input === 'checkbox') {
+            if ('checkbox' === $input) {
                 printf(
                     '<p><label for="%1$s"><input type="checkbox" id="%1$s"'
-                        . ' name="wpfasty_fields[%2$s]" value="1"%3$s> %4$s</label></p>',
+                        .' name="wpfasty_fields[%2$s]" value="1"%3$s> %4$s</label></p>',
                     esc_attr($id),
                     esc_attr($name),
                     checked($value, '1', false),
@@ -217,7 +219,7 @@ final class Plugin
                 );
                 continue;
             }
-            if ($input === 'select') {
+            if ('select' === $input) {
                 $opts = '<option value=""></option>';
                 foreach ($field->options() as $option) {
                     $opts .= sprintf(
@@ -229,7 +231,7 @@ final class Plugin
                 }
                 printf(
                     '<p><label for="%1$s"><strong>%2$s</strong></label><br>'
-                        . '<select class="widefat" id="%1$s" name="wpfasty_fields[%3$s]">%4$s</select></p>',
+                        .'<select class="widefat" id="%1$s" name="wpfasty_fields[%3$s]">%4$s</select></p>',
                     esc_attr($id),
                     esc_html($field->label),
                     esc_attr($name),
@@ -237,13 +239,13 @@ final class Plugin
                 );
                 continue;
             }
-            $step = $field->type === 'integer' ? '1' : '0.01';
+            $step = 'integer' === $field->type ? '1' : '0.01';
             // money may be negative (Q9); integer / number stay >= 0
-            $min = $field->type === 'money' ? '' : ' min="0"';
-            $extra = $input === 'number' ? $min . ' step="' . esc_attr($step) . '"' : '';
+            $min = 'money' === $field->type ? '' : ' min="0"';
+            $extra = 'number' === $input ? $min.' step="'.esc_attr($step).'"' : '';
             printf(
                 '<p><label for="%1$s"><strong>%2$s</strong></label><br>'
-                    . '<input class="widefat" type="%3$s"%4$s id="%1$s" name="wpfasty_fields[%5$s]" value="%6$s"></p>',
+                    .'<input class="widefat" type="%3$s"%4$s id="%1$s" name="wpfasty_fields[%5$s]" value="%6$s"></p>',
                 esc_attr($id),
                 esc_html($field->label),
                 esc_attr($input),
@@ -257,12 +259,12 @@ final class Plugin
     public function save(int $postId, \WP_Post $post): void
     {
         $type = $this->types->get($post->post_type);
-        if ($type === null || $type->fields === [] || $type->metabox() === false) {
+        if (null === $type || [] === $type->fields || false === $type->metabox()) {
             return;
         }
-        $key = 'wpfasty_' . $type->name . '_nonce';
+        $key = 'wpfasty_'.$type->name.'_nonce';
         $nonce = isset($_POST[$key]) ? sanitize_text_field(wp_unslash($_POST[$key])) : '';
-        if (!wp_verify_nonce($nonce, 'wpfasty_save_' . $type->name)
+        if (!wp_verify_nonce($nonce, 'wpfasty_save_'.$type->name)
             || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
             || !current_user_can('edit_post', $postId)
         ) {
@@ -276,7 +278,7 @@ final class Plugin
         // phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         foreach ($type->fields as $name => $field) {
             $value = $field->fromInput($input[$name] ?? '');
-            if ($value === null) {
+            if (null === $value) {
                 delete_post_meta($postId, $field->metaKey);
             } else {
                 update_post_meta($postId, $field->metaKey, $value);
@@ -289,17 +291,18 @@ final class Plugin
     {
         foreach ($this->types->all() as $type) {
             $columns = (array) ($type->def['columns'] ?? []);
-            if ($columns === []) {
+            if ([] === $columns) {
                 continue;
             }
-            add_filter('manage_' . $type->name . '_posts_columns', static function (array $c) use ($columns): array {
+            add_filter('manage_'.$type->name.'_posts_columns', static function (array $c) use ($columns): array {
                 $extra = [];
                 foreach ($columns as $key => $col) {
                     $extra[(string) $key] = (string) ($col['label'] ?? $key);
                 }
+
                 return array_slice($c, 0, 2, true) + $extra + $c;
             });
-            $hook = 'manage_' . $type->name . '_posts_custom_column';
+            $hook = 'manage_'.$type->name.'_posts_custom_column';
             add_action($hook, static function (string $col, int $id) use ($columns): void {
                 if (isset($columns[$col]['value']) && is_callable($columns[$col]['value'])) {
                     echo esc_html((string) $columns[$col]['value']($id));

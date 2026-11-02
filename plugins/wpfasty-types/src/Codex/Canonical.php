@@ -13,7 +13,7 @@ namespace WPFastyTypes\Codex;
 final class Canonical
 {
     private const RFC3339 = '/^(\d{4})-(\d{2})-(\d{2})[Tt](\d{2}):(\d{2}):(\d{2})(\.\d+)?'
-        . '([Zz]|([+-])(\d{2}):(\d{2}))$/';
+        .'([Zz]|([+-])(\d{2}):(\d{2}))$/';
 
     /** @throws CanonicalError */
     public static function canonicalize(string $text): string
@@ -24,7 +24,7 @@ final class Canonical
     /** @throws CanonicalError */
     public static function digest(string $text): string
     {
-        return Profile::ENTRY_PROFILE . ':sha256:' . hash('sha256', self::canonicalize($text));
+        return Profile::ENTRY_PROFILE.':sha256:'.hash('sha256', self::canonicalize($text));
     }
 
     /** Canonical bytes of an entry value tree built in PHP (the mapper). */
@@ -52,7 +52,7 @@ final class Canonical
     /** codex-manifest/v2:sha256: + sha256(JCS(Canonical())) of a manifest value tree (objects as \stdClass). */
     public static function manifestDigest(mixed $manifest): string
     {
-        return Profile::MANIFEST_DIGEST . hash('sha256', Json::jcs($manifest));
+        return Profile::MANIFEST_DIGEST.hash('sha256', Json::jcs($manifest));
     }
 
     /** @return array<string, mixed> */
@@ -63,12 +63,12 @@ final class Canonical
 
     private static function isObj(mixed $v): bool
     {
-        return $v instanceof \stdClass || (is_array($v) && ($v === [] ? false : !array_is_list($v)));
+        return $v instanceof \stdClass || (is_array($v) && ([] === $v ? false : !array_is_list($v)));
     }
 
     private static function isEmpty(mixed $v): bool
     {
-        return $v === null || $v === '' || $v === [] || ($v instanceof \stdClass && get_object_vars($v) === []);
+        return null === $v || '' === $v || [] === $v || ($v instanceof \stdClass && [] === get_object_vars($v));
     }
 
     /** @param list<string> $keys */
@@ -76,11 +76,7 @@ final class Canonical
     {
         foreach (array_keys($o) as $k) {
             if (!in_array((string) $k, $keys, true)) {
-                throw new CanonicalError(
-                    'canonical.unknown_field',
-                    "{$path}.{$k}",
-                    'unknown field ' . json_encode((string) $k),
-                );
+                throw new CanonicalError('canonical.unknown_field', "{$path}.{$k}", 'unknown field '.json_encode((string) $k));
             }
         }
     }
@@ -102,16 +98,12 @@ final class Canonical
         $o = self::arr($doc);
         self::closed($o, $keys, '$');
         foreach ($required as $k) {
-            if (!array_key_exists($k, $o) || $o[$k] === null) {
+            if (!array_key_exists($k, $o) || null === $o[$k]) {
                 throw new CanonicalError('canonical.missing_field', "$.{$k}", "required field {$k} is missing");
             }
         }
-        if (!is_string($o['id']) || preg_match(Profile::ID_PATTERN, $o['id']) !== 1) {
-            throw new CanonicalError(
-                'canonical.invalid_id',
-                '$.id',
-                'id must match ^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$',
-            );
+        if (!is_string($o['id']) || 1 !== preg_match(Profile::ID_PATTERN, $o['id'])) {
+            throw new CanonicalError('canonical.invalid_id', '$.id', 'id must match ^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$');
         }
         $out = new \stdClass();
         foreach ($o as $k => $v) {
@@ -122,32 +114,29 @@ final class Canonical
             }
             if (in_array($k, Profile::DATE_FIELDS, true)) {
                 $v = self::date($v, $path);
-            } elseif ($k === 'metadata') {
+            } elseif ('metadata' === $k) {
                 $v = self::metadata($v, $path);
-                if ($v === null) {
+                if (null === $v) {
                     continue;
                 }
-            } elseif ($k === 'terms') {
+            } elseif ('terms' === $k) {
                 $v = self::terms($v, $path);
-            } elseif ($k === 'origin') {
+            } elseif ('origin' === $k) {
                 if (!is_array($v) || !array_is_list($v)) {
                     throw new CanonicalError('canonical.invalid_type', $path, 'origin must be an array');
                 }
                 foreach ($v as $n => $x) {
                     if (!self::isObj($x)) {
-                        throw new CanonicalError(
-                            'canonical.invalid_type',
-                            "{$path}[{$n}]",
-                            'origin item must be {system, id}',
-                        );
+                        throw new CanonicalError('canonical.invalid_type', "{$path}[{$n}]", 'origin item must be {system, id}');
                     }
                     self::closed(self::arr($x), ['system', 'id'], "{$path}[{$n}]");
                 }
-            } elseif ($k === 'discussion' && self::isObj($v)) {
+            } elseif ('discussion' === $k && self::isObj($v)) {
                 self::closed(self::arr($v), ['comments', 'pings'], $path);
             }
             $out->{$k} = $v;
         }
+
         return $out;
     }
 
@@ -160,27 +149,20 @@ final class Canonical
         foreach (self::arr($v) as $mk => $mv) {
             $mk = (string) $mk;
             if (!self::isObj($mv) || !array_key_exists('value', self::arr($mv))) {
-                throw new CanonicalError(
-                    'canonical.invalid_type',
-                    "{$path}.{$mk}",
-                    'metadata item must be {value, private?}',
-                );
+                throw new CanonicalError('canonical.invalid_type', "{$path}.{$mk}", 'metadata item must be {value, private?}');
             }
             $item = self::arr($mv);
             self::closed($item, ['value', 'private'], "{$path}.{$mk}");
             if (array_key_exists('private', $item) && !is_bool($item['private'])) {
-                throw new CanonicalError(
-                    'canonical.invalid_type',
-                    "{$path}.{$mk}.private",
-                    'private must be boolean',
-                );
+                throw new CanonicalError('canonical.invalid_type', "{$path}.{$mk}.private", 'private must be boolean');
             }
             if (($item['private'] ?? false) === true) {
                 continue; // not part of the public projection
             }
             $md->{$mk} = (object) ['value' => $item['value']];
         }
-        return get_object_vars($md) === [] ? null : $md;
+
+        return [] === get_object_vars($md) ? null : $md;
     }
 
     /** @return list<\stdClass> */
@@ -193,18 +175,14 @@ final class Canonical
         foreach ($v as $n => $t) {
             $a = self::isObj($t) ? self::arr($t) : [];
             if (!is_string($a['taxonomy'] ?? null) || !is_string($a['term_id'] ?? null)) {
-                throw new CanonicalError(
-                    'canonical.invalid_type',
-                    "{$path}[{$n}]",
-                    'term must be {taxonomy, term_id} strings',
-                );
+                throw new CanonicalError('canonical.invalid_type', "{$path}[{$n}]", 'term must be {taxonomy, term_id} strings');
             }
             self::closed($a, ['taxonomy', 'term_id'], "{$path}[{$n}]");
             $out[] = (object) $a;
         }
         // UTF-8 byte order == Unicode code point order
-        usort($out, static fn (\stdClass $a, \stdClass $b): int
-            => strcmp($a->taxonomy, $b->taxonomy) ?: strcmp($a->term_id, $b->term_id));
+        usort($out, static fn (\stdClass $a, \stdClass $b): int => strcmp($a->taxonomy, $b->taxonomy) ?: strcmp($a->term_id, $b->term_id));
+
         return $out;
     }
 
@@ -214,13 +192,13 @@ final class Canonical
         if (!is_string($v)) {
             throw new CanonicalError('canonical.invalid_date', $path, 'date-time must be a string');
         }
-        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $v) === 1) {
+        if (1 === preg_match('/^\d{4}-\d{2}-\d{2}$/', $v)) {
             throw new CanonicalError('canonical.invalid_date', $path, "date without time: {$v}");
         }
-        if (preg_match(self::RFC3339, $v, $m) !== 1) {
+        if (1 !== preg_match(self::RFC3339, $v, $m)) {
             throw new CanonicalError('canonical.invalid_date', $path, "not an RFC 3339 date-time: {$v}");
         }
-        if (($m[7] ?? '') !== '' && preg_match('/[1-9]/', $m[7]) === 1) {
+        if (($m[7] ?? '') !== '' && 1 === preg_match('/[1-9]/', $m[7])) {
             throw new CanonicalError('canonical.fractional_seconds', $path, "fractional seconds are not allowed: {$v}");
         }
         [$y, $mo, $d, $h, $mi, $s] = array_map('intval', array_slice($m, 1, 6));
@@ -236,6 +214,7 @@ final class Canonical
         if ($yy < 0 || $yy > 9999) {
             throw new CanonicalError('canonical.invalid_date', $path, "year out of range after UTC conversion: {$v}");
         }
+
         return gmdate('Y-m-d\TH:i:s\Z', $t);
     }
 }

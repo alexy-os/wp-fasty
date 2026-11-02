@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace WPFastyBuilder;
 
-use WP_Error;
 use WP_REST_Request;
-use WP_REST_Response;
 
 /**
  * REST API of the editor (namespace wpfasty-builder/v1). Every route needs a logged-in user with the capability
@@ -25,7 +23,7 @@ use WP_REST_Response;
  *                                                    (Sources::canImport: a source is templates, i.e. markup)
  *   POST /render-block                  edit_pages (edit_page with `page`)  one block's HTML for the live preview:
  *        {source?, page?, id?, block, variant, props?, bindings?} → {id, html, issues}; same sanitizing, props and
- *        bound data as the page template (Fragment), rendered by the site engine's BlockRenderer
+ *        bound data as the page template (Fragment), rendered by the site engine's BlockRenderer.
  */
 final class Rest
 {
@@ -54,7 +52,7 @@ final class Rest
             'callback' => [self::class, 'links'],
             'permission_callback' => static fn (): bool => current_user_can('edit_pages'),
         ]);
-        $page = static fn (WP_REST_Request $r): bool => get_post_type((int) $r['id']) === 'page' && current_user_can(
+        $page = static fn (\WP_REST_Request $r): bool => 'page' === get_post_type((int) $r['id']) && current_user_can(
             'edit_page',
             (int) $r['id'],
         );
@@ -66,7 +64,7 @@ final class Rest
             'methods' => 'POST',
             'callback' => [self::class, 'renderBlock'],
             // the `page` the permission is checked for is the page whose record renders (renderBlock: same read)
-            'permission_callback' => static fn (WP_REST_Request $r): bool => self::page($r) > 0
+            'permission_callback' => static fn (\WP_REST_Request $r): bool => self::page($r) > 0
                 ? current_user_can('edit_page', self::page($r))
                 : current_user_can('edit_pages'),
         ]);
@@ -89,17 +87,18 @@ final class Rest
         ]);
     }
 
-    public static function catalog(WP_REST_Request $r): WP_REST_Response|WP_Error
+    public static function catalog(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
         $catalog = Sources::catalog((string) $r['source']);
-        if ($catalog === null) {
-            return new WP_Error('wpfb_source', __('Unknown source.', 'wpfasty-builder'), ['status' => 404]);
+        if (null === $catalog) {
+            return new \WP_Error('wpfb_source', __('Unknown source.', 'wpfasty-builder'), ['status' => 404]);
         }
         $col = (string) $r['collection'];
-        $editor = $catalog->forEditor($col !== '' && $catalog->collection($col) !== null ? $col : null);
+        $editor = $catalog->forEditor('' !== $col && null !== $catalog->collection($col) ? $col : null);
         $editor['blocks'] = Previews::attach($editor['blocks'], Sources::get((string) $r['source']));
         $editor['collection'] = Previews::attachPages($editor['collection'], Sources::get((string) $r['source']));
-        return new WP_REST_Response([
+
+        return new \WP_REST_Response([
             'source' => (string) $r['source'],
             'sources' => array_map(
                 static fn ($s): array => ['id' => $s->id(), 'label' => $s->label()],
@@ -110,16 +109,17 @@ final class Rest
         ] + $editor);
     }
 
-    public static function links(): WP_REST_Response
+    public static function links(): \WP_REST_Response
     {
-        return new WP_REST_Response(Links::index());
+        return new \WP_REST_Response(Links::index());
     }
 
-    public static function getLayout(WP_REST_Request $r): WP_REST_Response
+    public static function getLayout(\WP_REST_Request $r): \WP_REST_Response
     {
         $id = (int) $r['id'];
         $entry = Store::get($id, true);
-        return new WP_REST_Response([
+
+        return new \WP_REST_Response([
             'layout' => $entry,
             'published' => Store::has($id),
             'previewUrl' => Front::previewUrl($id),
@@ -127,12 +127,12 @@ final class Rest
         ]);
     }
 
-    public static function saveLayout(WP_REST_Request $r): WP_REST_Response|WP_Error
+    public static function saveLayout(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
         $id = (int) $r['id'];
         $publish = (bool) $r->get_param('publish');
         if ($publish && !current_user_can('publish_pages')) {
-            return new WP_Error(
+            return new \WP_Error(
                 'wpfb_forbidden',
                 __('You cannot publish pages.', 'wpfasty-builder'),
                 ['status' => 403],
@@ -143,11 +143,12 @@ final class Rest
         }
         $body = $r->get_json_params();
         $result = Store::save($id, is_array($body['layout'] ?? null) ? $body['layout'] : [], $publish);
-        if ($result instanceof WP_Error) {
+        if ($result instanceof \WP_Error) {
             return $result;
         }
         [$entry, $issues] = $result;
-        return new WP_REST_Response([
+
+        return new \WP_REST_Response([
             'layout' => $entry,
             'issues' => $issues,
             'published' => Store::has($id),
@@ -156,23 +157,24 @@ final class Rest
     }
 
     /** the `page` parameter of a request (JSON body first, as WP_REST_Request::get_param), 0 without one */
-    public static function page(WP_REST_Request $r): int
+    public static function page(\WP_REST_Request $r): int
     {
         $page = $r->get_param('page');
+
         return is_numeric($page) ? max(0, (int) $page) : 0;
     }
 
     /** a request body over MAX_BODY bytes (a layout of 40 blocks is far below): 413 */
-    private static function tooLarge(WP_REST_Request $r): ?WP_Error
+    private static function tooLarge(\WP_REST_Request $r): ?\WP_Error
     {
-        return strlen((string) $r->get_body()) > self::MAX_BODY ? new WP_Error(
+        return strlen((string) $r->get_body()) > self::MAX_BODY ? new \WP_Error(
             'wpfb_too_large',
             __('The request is too large.', 'wpfasty-builder'),
             ['status' => 413],
         ) : null;
     }
 
-    public static function renderBlock(WP_REST_Request $r): WP_REST_Response|WP_Error
+    public static function renderBlock(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
         if (($e = self::tooLarge($r)) !== null) {
             return $e;
@@ -181,8 +183,8 @@ final class Rest
         $body = is_array($body) ? $body : [];
         $source = sanitize_key((string) ($body['source'] ?? 'ui8kit'));
         $catalog = Sources::catalog($source);
-        if ($catalog === null) {
-            return new WP_Error('wpfb_source', __('Unknown source.', 'wpfasty-builder'), ['status' => 404]);
+        if (null === $catalog) {
+            return new \WP_Error('wpfb_source', __('Unknown source.', 'wpfasty-builder'), ['status' => 404]);
         }
         $input = [
             'id' => $body['id'] ?? null,
@@ -207,29 +209,32 @@ final class Rest
             static fn (array $bind, string $kind, ?array $slot): array => DataSources::paged($bind, $kind, $slot, 1),
             static fn (int $pages): ?array => Pager::value(1, $pages),
         );
-        if ($out === null) {
-            return new WP_Error('wpfb_block', __('Unknown block or variant.', 'wpfasty-builder'), ['status' => 400]);
+        if (null === $out) {
+            return new \WP_Error('wpfb_block', __('Unknown block or variant.', 'wpfasty-builder'), ['status' => 400]);
         }
-        return new WP_REST_Response($out);
+
+        return new \WP_REST_Response($out);
     }
 
-    public static function createPage(WP_REST_Request $r): WP_REST_Response|WP_Error
+    public static function createPage(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
         $out = Pages::create(
             (string) $r->get_param('title'),
             (string) $r->get_param('slug'),
             sanitize_key((string) ($r->get_param('starter') ?? Pages::EMPTY)),
         );
-        return $out instanceof WP_Error ? $out : new WP_REST_Response($out, 201);
+
+        return $out instanceof \WP_Error ? $out : new \WP_REST_Response($out, 201);
     }
 
-    public static function importSource(WP_REST_Request $r): WP_REST_Response|WP_Error
+    public static function importSource(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
         try {
             $stats = Sources::import(sanitize_key((string) $r->get_param('id')), (string) $r->get_param('url'));
         } catch (\Throwable $e) {
-            return new WP_Error('wpfb_import', $e->getMessage(), ['status' => 400]);
+            return new \WP_Error('wpfb_import', $e->getMessage(), ['status' => 400]);
         }
-        return new WP_REST_Response($stats);
+
+        return new \WP_REST_Response($stats);
     }
 }

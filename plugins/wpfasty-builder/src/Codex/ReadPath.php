@@ -37,6 +37,7 @@ final class ReadPath
             }
             $cur = $cur[$part];
         }
+
         return $cur;
     }
 
@@ -50,6 +51,7 @@ final class ReadPath
                 return $r;
             }
         }
+
         return $records[0] ?? null;
     }
 
@@ -58,7 +60,8 @@ final class ReadPath
     {
         $text = preg_replace('/<[^>]*>/', ' ', is_scalar($html) ? (string) $html : '');
         $parts = preg_split('/\s+/u', (string) $text) ?: [];
-        return array_values(array_filter($parts, static fn ($w): bool => $w !== ''));
+
+        return array_values(array_filter($parts, static fn ($w): bool => '' !== $w));
     }
 
     /**
@@ -67,6 +70,7 @@ final class ReadPath
      * @param list<mixed>           $entries
      * @param array<string, string> $fields  record field → path
      * @param array<string, mixed>  $opts
+     *
      * @return list<array<string, mixed>>
      */
     public static function fromCodex(array $entries, array $fields, array $opts = []): array
@@ -79,6 +83,7 @@ final class ReadPath
             }
             $out[] = $rec;
         }
+
         return $out;
     }
 
@@ -86,35 +91,36 @@ final class ReadPath
     public static function read(mixed $source, string $path, array $opts = []): mixed
     {
         $bar = strpos($path, '|');
-        $dotted = $bar === false ? $path : substr($path, 0, $bar);
-        $pipe = $bar === false ? null : substr($path, $bar + 1);
+        $dotted = false === $bar ? $path : substr($path, 0, $bar);
+        $pipe = false === $bar ? null : substr($path, $bar + 1);
         $cur = self::at($source, $dotted);
         $own = self::field($source, 'locale');
         $locale = (string) ($opts['locale'] ?? (is_string($own) ? $own : self::DEFAULT_LOCALE));
 
         // Q4 pipes that also run when the value is absent (fallbacks)
-        if ($pipe === 'excerpt-fallback') {
-            if (is_string($cur) && trim($cur) !== '') {
+        if ('excerpt-fallback' === $pipe) {
+            if (is_string($cur) && '' !== trim($cur)) {
                 return $cur;
             }
             $w = self::words(self::field($source, 'content'));
-            if ($w === []) {
+            if ([] === $w) {
                 return null;
             }
+
             return count($w) > self::EXCERPT_WORDS
-                ? implode(' ', array_slice($w, 0, self::EXCERPT_WORDS)) . '…'
+                ? implode(' ', array_slice($w, 0, self::EXCERPT_WORDS)).'…'
                 : implode(' ', $w);
         }
-        if ($pipe !== null && str_starts_with($pipe, 'settings:')) {
+        if (null !== $pipe && str_starts_with($pipe, 'settings:')) {
             return $cur ?? self::field($opts['settings'] ?? null, substr($pipe, 9));
         }
-        if ($pipe === 'in-stock') {
-            return $cur === null ? true : ((is_int($cur) || is_float($cur)) && $cur > 0);
+        if ('in-stock' === $pipe) {
+            return null === $cur ? true : ((is_int($cur) || is_float($cur)) && $cur > 0);
         }
-        if ($pipe === null || $cur === null) {
+        if (null === $pipe || null === $cur) {
             return $cur;
         }
-        if ($pipe === 'reading-minutes') {
+        if ('reading-minutes' === $pipe) {
             return (int) ceil(count(self::words($cur)) / self::WORDS_PER_MINUTE);
         }
         if (str_starts_with($pipe, 'term-names:')) {
@@ -127,52 +133,57 @@ final class ReadPath
             foreach ($cur as $ref) {
                 if (self::field($ref, 'taxonomy') === $tax) {
                     $name = self::field(self::term($opts, $tax, self::field($ref, 'term_id'), $locale), 'name');
-                    if ($name !== null) {
+                    if (null !== $name) {
                         $names[] = $name;
                     }
                 }
             }
+
             return $names;
         }
-        if ($pipe === 'html') {
+        if ('html' === $pipe) {
             // markup of the Codex (the body of an entry) is trusted: the TrustedHtml marker the og_html helper of the
             // runtimes prints unescaped (codegen-x readPath `html`); a value read without this pipe stays text.
             // Only a string with text is markup (codegen-x core.ts since 89a08eff, test/readpath-null.json): a blank
             // string (PHP trim()), a number, a boolean, a list or null gives null — absent, so a block that shows a
             // part only when its markup is set (the RichText side note) leaves it out
-            return is_string($cur) && trim($cur) !== '' ? ['__html' => $cur] : null;
+            return is_string($cur) && '' !== trim($cur) ? ['__html' => $cur] : null;
         }
-        if ($pipe === 'date') {
+        if ('date' === $pipe) {
             return Format::date($cur, $locale);
         }
-        if ($pipe === 'ago' || $pipe === 'ago-days' || $pipe === 'ago-short') {
+        if ('ago' === $pipe || 'ago-days' === $pipe || 'ago-short' === $pipe) {
             $now = $opts['now'] ?? self::DEMO_NOW;
             $now = is_int($now) ? $now : (Format::time($now) ?? 0);
+
             return Format::ago($cur, $now, $pipe, $locale);
         }
-        if ($pipe === 'media') {
+        if ('media' === $pipe) {
             foreach ((array) ($opts['media'] ?? []) as $m) {
-                if (self::field($m, 'id') === $cur && self::field($m, 'status') === 'published') {
+                if (self::field($m, 'id') === $cur && 'published' === self::field($m, 'status')) {
                     return self::at($m, 'metadata.file.value');
                 }
             }
+
             return null;
         }
-        if ($pipe === 'author') {
+        if ('author' === $pipe) {
             $users = array_values(array_filter(
                 (array) ($opts['users'] ?? []),
                 static fn ($u): bool => self::field($u, 'id') === $cur,
             ));
             $user = self::byLocale($users, $locale);
+
             return self::at($user, 'metadata.display_name.value') ?? self::field($user, 'title');
         }
-        if ($pipe === 'number') {
+        if ('number' === $pipe) {
             $currency = self::at($source, 'metadata.currency.value');
+
             return is_string($currency)
                 ? Format::currency($cur, $currency, $locale)
                 : Format::figure($cur, self::at($source, 'metadata.unit.value'), $locale);
         }
-        if ($pipe === 'compact') {
+        if ('compact' === $pipe) {
             return Format::compact($cur, $locale);
         }
         if (str_starts_with($pipe, 'term:') || str_starts_with($pipe, 'term-slug:')) {
@@ -184,13 +195,14 @@ final class ReadPath
                     break;
                 }
             }
-            if ($ref === null) {
+            if (null === $ref) {
                 return null;
             }
             $term = self::term($opts, $tax, self::field($ref, 'term_id'), $locale);
+
             return self::field($term, str_starts_with($pipe, 'term-slug:') ? 'slug' : 'name');
         }
-        if ($pipe === 'menu') {
+        if ('menu' === $pipe) {
             $kids = array_values(array_filter(
                 (array) ($opts['menus'] ?? []),
                 static fn ($m): bool => self::field($m, 'parent_id') === $cur,
@@ -198,17 +210,19 @@ final class ReadPath
             $order = static fn ($m): int|float => is_int(self::field($m, 'order')) || is_float(self::field($m, 'order'))
                 ? self::field($m, 'order') : 0;
             usort($kids, static fn ($a, $b): int => $order($a) <=> $order($b));
+
             return array_map(static fn ($m): array => [
                 'id' => self::field($m, 'id'), 'name' => self::field($m, 'title'),
                 'icon' => self::at($m, 'metadata.icon.value'), 'href' => self::read($m, 'slug|route', $opts),
             ], $kids);
         }
-        if ($pipe === 'route') {
+        if ('route' === $pipe) {
             $kind = self::field($source, 'kind');
             $route = is_string($kind) ? ($opts['routes'][$kind] ?? null) : null;
-            if ($route === null) {
+            if (null === $route) {
                 return null;
             }
+
             return str_replace('{slug}', self::encodeUriComponent((string) $cur), (string) $route);
         }
         throw new \InvalidArgumentException("readPath: unknown formatter \"{$pipe}\" in \"{$path}\"");
@@ -221,6 +235,7 @@ final class ReadPath
             (array) ($opts['terms'] ?? []),
             static fn ($t): bool => self::field($t, 'taxonomy_id') === $tax && self::field($t, 'id') === $id,
         ));
+
         return self::byLocale($list, $locale);
     }
 

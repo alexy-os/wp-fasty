@@ -19,16 +19,14 @@
  * the themes read their own `kit/presets.json` and never the plugin.
  *
  *   php tools/ui8kit3/presets.php [--check] [--cgx <codegen-x checkout>]
- *
- * @package Latte
  */
 
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
 $check = in_array('--check', $argv, true);
-$legacy = $root . '/.workspaces/ui8kit-latte/php/UI8Kit/Classes.php';
-$builder = $root . '/plugins/wpfasty-builder/sources/ui8kit/latte/ui';
+$legacy = $root.'/.workspaces/ui8kit-latte/php/UI8Kit/Classes.php';
+$builder = $root.'/plugins/wpfasty-builder/sources/ui8kit/latte/ui';
 
 /** Our kit: v3-backed primitives that keep variants as presets + the middle layer (compositions over Box/Text). */
 /** Recipes owned by codegen-x (kit-compose variants); the rest stay wp-fasty presets until codegen has them. */
@@ -41,7 +39,7 @@ const COMPONENTS = [
 ];
 
 $cgxAt = array_search('--cgx', $argv, true);
-$cgx = $cgxAt === false ? null : rtrim((string) ($argv[$cgxAt + 1] ?? ''), '/');
+$cgx = false === $cgxAt ? null : rtrim((string) ($argv[$cgxAt + 1] ?? ''), '/');
 
 $out = [];
 if (!is_file($legacy)) {
@@ -55,13 +53,13 @@ if (!is_file($legacy)) {
 }
 $src = (string) file_get_contents($legacy);
 if (!class_exists('UI8Kit\Rt', false)) {
-    require_once dirname($legacy) . '/Rt.php';
+    require_once dirname($legacy).'/Rt.php';
 }
 require_once $legacy;
 $consts = (new ReflectionClass('UI8Kit\Classes'))->getConstants();
 
 foreach (COMPONENTS as $name) {
-    $prefix = strtoupper($name) . '_';
+    $prefix = strtoupper($name).'_';
     $recipe = null;
     $parts = [];
     foreach ($consts as $const => $value) {
@@ -76,22 +74,22 @@ foreach (COMPONENTS as $name) {
         }
     }
     // Parts composed from a literal: `public static function cardHeaderClasses(...) { return Rt::cn('…', class) }`.
-    if (preg_match_all('/function (' . $name . '[A-Z]\w*)Classes\(array \$in = \[\]\): string\s*\{\s*return Rt::cn\(\'([^\']*)\'/', $src, $m, PREG_SET_ORDER)) {
+    if (preg_match_all('/function ('.$name.'[A-Z]\w*)Classes\(array \$in = \[\]\): string\s*\{\s*return Rt::cn\(\'([^\']*)\'/', $src, $m, PREG_SET_ORDER)) {
         foreach ($m as [, $fn, $base]) {
             $parts[ucfirst($fn)] = ['base' => $base, 'keys' => [], 'defaults' => [], 'byKey' => []];
         }
     }
-    $from = 'legacy:.workspaces/ui8kit-latte (Classes::' . $name . 'Classes)';
-    if ($recipe === null && is_file("{$builder}/{$name}/{$name}.variants.json")) {
+    $from = 'legacy:.workspaces/ui8kit-latte (Classes::'.$name.'Classes)';
+    if (null === $recipe && is_file("{$builder}/{$name}/{$name}.variants.json")) {
         $json = json_decode((string) file_get_contents("{$builder}/{$name}/{$name}.variants.json"), true, 512, JSON_THROW_ON_ERROR);
         $recipe = ['base' => $json['base'] ?? '', 'keys' => $json['keys'] ?? [], 'defaults' => $json['defaults'] ?? [], 'byKey' => $json['byKey'] ?? []];
         $from = "builder:plugins/wpfasty-builder/sources/ui8kit/latte/ui/{$name}/{$name}.variants.json";
     }
-    if ($recipe === null) {
+    if (null === $recipe) {
         fwrite(STDERR, "✗ no recipe for {$name}\n");
         exit(1);
     }
-    if ($name === 'grid') {
+    if ('grid' === $name) {
         // Grid::cols is a function-level map in the legacy Classes (skipped when class already has grid-cols-*).
         $recipe['keys'][] = 'cols';
         $recipe['defaults']['cols'] = '1';
@@ -107,7 +105,7 @@ foreach (COMPONENTS as $name) {
         'defaults' => (object) (array) $recipe['defaults'],
         'byKey' => (object) array_map(static fn ($v) => (object) $v, (array) $recipe['byKey']),
         'parts' => (object) array_map(static fn (array $p): array => ['base' => (string) $p['base'], 'keys' => array_values((array) $p['keys']),
-            'defaults' => (object) (array) $p['defaults'], 'byKey' => (object) array_map(static fn ($v) => (object) $v, (array) $p['byKey'])], $parts),
+            'defaults' => (object) (array) $p['defaults'], 'byKey' => (object) array_map(static fn ($v) => (object) $v, (array) $p['byKey']), ], $parts),
     ];
 }
 
@@ -121,7 +119,7 @@ foreach (CODEGEN as $name) {
         fwrite(STDERR, "✗ codegen-x {$commit}: no kit-compose recipe {$name}\n");
         exit(1);
     }
-    if ($cgx !== null) {
+    if (null !== $cgx) {
         $v = json_decode((string) file_get_contents("{$cgx}/packages/kit-compose/variants/{$name}.variants.json"), true, 512, JSON_THROW_ON_ERROR);
         unset($v['id']);
         $v['compound'] ??= [];
@@ -131,14 +129,14 @@ foreach (CODEGEN as $name) {
         }
     }
     $parts = [];
-    if ($name === 'card') {
+    if ('card' === $name) {
         foreach (['CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle'] as $part) {
             $parts[$part] = $emptyRecipe((string) ($compose['compositions'][$part]['extra'] ?? ''));
         }
     }
     $out[$name] = [
         'id' => "kit.{$name}",
-        'source' => 'codegen-x/ui8kit@' . substr($commit, 0, 8) . ":packages/kit-compose/variants/{$name}.variants.json",
+        'source' => 'codegen-x/ui8kit@'.substr($commit, 0, 8).":packages/kit-compose/variants/{$name}.variants.json",
         'base' => (string) $r['base'],
         'keys' => array_values((array) $r['keys']),
         'defaults' => (object) (array) $r['defaults'],
@@ -153,8 +151,10 @@ foreach ($out as $name => $recipe) {
     $comment = in_array($name, CODEGEN, true)
         ? 'Generated by tools/ui8kit3/presets.php from the codegen-x kit-compose recipe (see source); never edit, change it in codegen-x.'
         : 'Generated by tools/ui8kit3/presets.php. Class recipe of our kit (UI8Kit 3 primitives are unstyled).';
-    $files["presets/components/{$name}.json"] = json_encode(['$comment' => $comment] + $recipe,
-        JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n";
+    $files["presets/components/{$name}.json"] = json_encode(
+        ['$comment' => $comment] + $recipe,
+        JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+    )."\n";
 }
 $theme = $out;
 foreach ($theme as &$r) {
@@ -162,7 +162,7 @@ foreach ($theme as &$r) {
 }
 unset($r);
 $files['themes/latte/kit/presets.json'] = json_encode(['$comment' => 'Generated by tools/ui8kit3/presets.php (same recipes as presets/components/*.json); read by WPFasty\\Template\\Kit.']
-    + $theme, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n";
++ $theme, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)."\n";
 
 $stale = 0;
 foreach ($files as $rel => $body) {
@@ -170,12 +170,12 @@ foreach ($files as $rel => $body) {
     if ($check) {
         if (!is_file($path) || file_get_contents($path) !== $body) {
             fwrite(STDERR, "✗ stale {$rel} (php tools/ui8kit3/presets.php)\n");
-            $stale++;
+            ++$stale;
         }
         continue;
     }
     @mkdir(dirname($path), 0775, true);
     file_put_contents($path, $body);
 }
-echo $check ? ($stale ? '' : "✓ kit presets up to date (" . count($out) . " components)\n") : 'Wrote ' . count($files) . " files\n";
+echo $check ? ($stale ? '' : '✓ kit presets up to date ('.count($out)." components)\n") : 'Wrote '.count($files)." files\n";
 exit($stale ? 1 : 0);

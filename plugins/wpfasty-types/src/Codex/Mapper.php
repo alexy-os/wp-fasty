@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace WPFastyTypes\Codex;
 
-use WP_Post;
-use WP_Term;
-use WP_User;
-
 /**
  * WordPress → Codex v0.4 records (entry / term / taxonomy / settings). Platform facts stay here: meta keys come
  * from codex.delivery.json, value types and privacy from codex.manifest.json (never from the `_` key prefix).
@@ -41,39 +37,40 @@ final class Mapper
             return null;
         }
         $l = str_replace('_', '-', (string) get_locale());
-        return preg_match('/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/', $l) === 1 ? $l : Profile::SETTINGS_LANGUAGE;
+
+        return 1 === preg_match('/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/', $l) ? $l : Profile::SETTINGS_LANGUAGE;
     }
 
     public static function id(string $kind, int $wpId): string
     {
-        return $kind . '-' . $wpId;
+        return $kind.'-'.$wpId;
     }
 
     /** WordPress id from a Codex id of a kind; 0 when it is not `<kind>-<n>`. */
     public static function wpId(string $kind, string $id): int
     {
-        return preg_match('/^' . preg_quote($kind, '/') . '-([1-9][0-9]{0,18})$/', $id, $m) === 1 ? (int) $m[1] : 0;
+        return 1 === preg_match('/^'.preg_quote($kind, '/').'-([1-9][0-9]{0,18})$/', $id, $m) ? (int) $m[1] : 0;
     }
 
     private static function gmt(string $mysql): string
     {
-        return str_replace(' ', 'T', $mysql) . 'Z';
+        return str_replace(' ', 'T', $mysql).'Z';
     }
 
     /** @return array<string, mixed> */
-    public function entry(WP_Post $post, string $kind): array
+    public function entry(\WP_Post $post, string $kind): array
     {
         $fields = $this->site->fields($kind);
         $status = Profile::STATUS[$post->post_status] ?? 'draft';
         $modified = self::gmt($post->post_modified_gmt);
-        $dated = $post->post_date_gmt !== '0000-00-00 00:00:00' ? self::gmt($post->post_date_gmt) : $modified;
+        $dated = '0000-00-00 00:00:00' !== $post->post_date_gmt ? self::gmt($post->post_date_gmt) : $modified;
         $e = [
             'id' => self::id($kind, $post->ID),
             'locale' => self::locale(),
             'kind' => $kind,
             'status' => $status,
-            'visibility' => $post->post_status === 'private' || $post->post_password !== '' ? 'private' : 'public',
-            'slug' => $post->post_name !== '' ? $post->post_name : self::id($kind, $post->ID),
+            'visibility' => 'private' === $post->post_status || '' !== $post->post_password ? 'private' : 'public',
+            'slug' => '' !== $post->post_name ? $post->post_name : self::id($kind, $post->ID),
             'title' => (string) $post->post_title,
             'content' => (string) $post->post_content,
             'excerpt' => (string) $post->post_excerpt,
@@ -89,7 +86,7 @@ final class Mapper
             $e['featured_media_id'] = self::id('media', $thumb);
         }
         $tpl = (string) get_post_meta($post->ID, '_wp_page_template', true);
-        if ($tpl !== '' && $tpl !== 'default') {
+        if ('' !== $tpl && 'default' !== $tpl) {
             $e['template'] = $tpl;
         }
         $terms = [];
@@ -103,14 +100,14 @@ final class Mapper
         if (isset($fields['order'])) {
             $e['order'] = (int) $post->menu_order;
         }
-        if ($post->post_type === 'post') {
+        if ('post' === $post->post_type) {
             $e['pinned'] = is_sticky($post->ID);
             $e['format'] = (string) (get_post_format($post) ?: 'standard');
         }
         if (post_type_supports($post->post_type, 'comments')) {
             $e['discussion'] = [
-                'comments' => $post->comment_status === 'open',
-                'pings' => $post->ping_status === 'open',
+                'comments' => 'open' === $post->comment_status,
+                'pings' => 'open' === $post->ping_status,
             ];
         }
         $e['origin'] = [['system' => Profile::SYSTEM, 'id' => (string) $post->ID]];
@@ -118,12 +115,13 @@ final class Mapper
         $e['version'] = 1;
         $e['created_at'] = strcmp($dated, $modified) > 0 ? $modified : $dated;
         $e['updated_at'] = $modified;
-        if ($status === 'published' || $status === 'scheduled') {
+        if ('published' === $status || 'scheduled' === $status) {
             $e['published_at'] = $dated;
         }
-        if ($status === 'trashed') {
+        if ('trashed' === $status) {
             $e['deleted_at'] = $modified;
         }
+
         return $e;
     }
 
@@ -132,6 +130,7 @@ final class Mapper
      * "no value": the key is left out (nullable). Sensitive fields are marked private.
      *
      * @param array<string, array<string, mixed>> $fields
+     *
      * @return array<string, array{value: mixed, private?: bool}>
      */
     private function metadata(int $postId, string $kind, array $fields): array
@@ -139,28 +138,30 @@ final class Mapper
         $md = [];
         foreach ((array) ($this->site->wp($kind)['meta'] ?? []) as $id => $key) {
             $f = $fields[(string) $id] ?? null;
-            if ($f === null) {
+            if (null === $f) {
                 continue;
             }
             $raw = get_post_meta($postId, (string) $key, true);
             $value = self::typed($f, $raw);
-            if ($value === null) {
+            if (null === $value) {
                 continue;
             }
             $md[(string) $id] = !empty($f['sensitive']) ? ['value' => $value, 'private' => true] : ['value' => $value];
         }
         ksort($md, SORT_STRING);
+
         return $md;
     }
 
     /** Stored meta → Codex value of a manifest field; null = no value. */
     public static function typed(array $field, mixed $raw): mixed
     {
-        if ($raw === '' || $raw === null || $raw === false && ($field['type'] ?? '') !== 'boolean') {
+        if ('' === $raw || null === $raw || false === $raw && ($field['type'] ?? '') !== 'boolean') {
             return null;
         }
         $rules = array_map(static fn ($r): string => (string) ($r['name'] ?? ''), (array) ($field['rules'] ?? []));
         $int = in_array('fastygo.codex/integer', $rules, true) || in_array('fastygo.codex/money', $rules, true);
+
         return match ((string) ($field['type'] ?? 'string')) {
             'number' => is_numeric($raw)
                 ? ($int ? (int) round((float) $raw) : (floor((float) $raw) === (float) $raw && abs((float) $raw) < 1e15
@@ -178,7 +179,7 @@ final class Mapper
      *
      * @return array<string, mixed>
      */
-    public function media(WP_Post $att): array
+    public function media(\WP_Post $att): array
     {
         $meta = wp_get_attachment_metadata($att->ID);
         $meta = is_array($meta) ? $meta : [];
@@ -195,37 +196,38 @@ final class Mapper
         if ((int) $att->post_parent > 0) {
             $type = get_post_type((int) $att->post_parent);
             $owner = is_string($type) ? $this->site->kindOf($type) : null;
-            if ($owner !== null) {
+            if (null !== $owner) {
                 $f[Profile::MEDIA_ATTACHED_FIELD] = self::id($owner, (int) $att->post_parent);
             }
         }
         $md = [];
         foreach ($f as $k => $v) {
-            if ($v !== null && $v !== '') {
+            if (null !== $v && '' !== $v) {
                 $md[$k] = ['value' => $v];
             }
         }
         $md = self::withRestMeta($md, 'post', 'attachment', $att->ID, "media {$att->ID}");
         $modified = self::gmt($att->post_modified_gmt);
-        $dated = $att->post_date_gmt !== '0000-00-00 00:00:00' ? self::gmt($att->post_date_gmt) : $modified;
-        $status = $att->post_status === 'inherit' ? 'published' : (Profile::STATUS[$att->post_status] ?? 'draft');
+        $dated = '0000-00-00 00:00:00' !== $att->post_date_gmt ? self::gmt($att->post_date_gmt) : $modified;
+        $status = 'inherit' === $att->post_status ? 'published' : (Profile::STATUS[$att->post_status] ?? 'draft');
         $e = [
             'id' => self::id('media', $att->ID), 'locale' => self::locale(), 'kind' => 'media', 'status' => $status,
-            'visibility' => $att->post_status === 'private' ? 'private' : 'public',
-            'slug' => $att->post_name !== '' ? $att->post_name : self::id('media', $att->ID),
+            'visibility' => 'private' === $att->post_status ? 'private' : 'public',
+            'slug' => '' !== $att->post_name ? $att->post_name : self::id('media', $att->ID),
             'title' => (string) $att->post_title, 'content' => (string) $att->post_content,
         ];
         if ((int) $att->post_author > 0) {
             $e['author_id'] = self::id('user', (int) $att->post_author);
         }
-        $e['discussion'] = ['comments' => $att->comment_status === 'open', 'pings' => $att->ping_status === 'open'];
+        $e['discussion'] = ['comments' => 'open' === $att->comment_status, 'pings' => 'open' === $att->ping_status];
         $e += [
             'origin' => [['system' => Profile::SYSTEM, 'id' => (string) $att->ID]], 'metadata' => $md, 'version' => 1,
             'created_at' => strcmp($dated, $modified) > 0 ? $modified : $dated, 'updated_at' => $modified,
         ];
-        if ($status === 'published' || $status === 'scheduled') {
+        if ('published' === $status || 'scheduled' === $status) {
             $e['published_at'] = $dated;
         }
+
         return $e;
     }
 
@@ -235,20 +237,21 @@ final class Mapper
      *
      * @return array<string, mixed>
      */
-    public function user(WP_User $u): array
+    public function user(\WP_User $u): array
     {
-        $at = $u->user_registered !== '' && $u->user_registered !== '0000-00-00 00:00:00'
+        $at = '' !== $u->user_registered && '0000-00-00 00:00:00' !== $u->user_registered
             ? self::gmt($u->user_registered) : self::EPOCH;
         $md = [];
-        if ((string) $u->user_url !== '') {
+        if ('' !== (string) $u->user_url) {
             $md['url'] = ['value' => (string) $u->user_url];
         }
         $md['login'] = ['value' => (string) $u->user_login, 'private' => true];
         $md['roles'] = ['value' => array_values((array) $u->roles), 'private' => true];
         $md = self::withRestMeta($md, 'user', '', $u->ID, "user {$u->ID}");
+
         return [
             'id' => self::id('user', $u->ID), 'locale' => self::locale(), 'kind' => 'user', 'status' => 'published',
-            'visibility' => 'public', 'slug' => (string) $u->user_nicename !== '' ? (string) $u->user_nicename
+            'visibility' => 'public', 'slug' => '' !== (string) $u->user_nicename ? (string) $u->user_nicename
                 : self::id('user', $u->ID),
             'title' => (string) $u->display_name, 'content' => (string) get_user_meta($u->ID, 'description', true),
             'origin' => [['system' => Profile::SYSTEM, 'id' => (string) $u->ID]], 'metadata' => $md,
@@ -261,6 +264,7 @@ final class Mapper
      * field is an error, never an overwrite. `_` keys are private (contract metaIn).
      *
      * @param array<string, array<string, mixed>> $md
+     *
      * @return array<string, array<string, mixed>>
      */
     private static function withRestMeta(array $md, string $type, string $sub, int $id, string $what): array
@@ -274,12 +278,13 @@ final class Mapper
                 throw new \LogicException("wordpress: meta key \"{$key}\" of {$what} collides with an adapter field");
             }
             $v = get_metadata($type, $id, $key, !empty($args['single']));
-            if ($v === '' || $v === null || $v === []) {
+            if ('' === $v || null === $v || [] === $v) {
                 continue;
             }
             $md[$key] = str_starts_with($key, '_') ? ['value' => $v, 'private' => true] : ['value' => $v];
         }
         ksort($md, SORT_STRING);
+
         return $md;
     }
 
@@ -289,11 +294,12 @@ final class Mapper
      *
      * @return array<string, mixed>
      */
-    public function term(WP_Term $t, bool $withCount = false): array
+    public function term(\WP_Term $t, bool $withCount = false): array
     {
         $created = (string) get_term_meta($t->term_id, self::TERM_CREATED, true);
         $updated = (string) get_term_meta($t->term_id, self::TERM_UPDATED, true);
-        $created = $created !== '' ? $created : self::EPOCH;
+        $created = '' !== $created ? $created : self::EPOCH;
+
         return [
             'id' => self::id($t->taxonomy, $t->term_id),
             'locale' => self::locale(),
@@ -306,7 +312,7 @@ final class Mapper
             ...($withCount ? ['metadata' => ['count' => ['value' => (int) $t->count]]] : []),
             'version' => 1,
             'created_at' => $created,
-            'updated_at' => $updated !== '' ? $updated : $created,
+            'updated_at' => '' !== $updated ? $updated : $created,
         ];
     }
 
@@ -320,6 +326,7 @@ final class Mapper
                 $kinds[] = $kind;
             }
         }
+
         return [
             'id' => $tax,
             'locale' => self::locale(),
@@ -340,16 +347,16 @@ final class Mapper
             'language' => self::language() ?? Profile::SETTINGS_LANGUAGE,
             'timezone' => (string) get_option('timezone_string'),
         ];
-        if (get_option('show_on_front') === 'page' && (int) get_option('page_on_front') > 0) {
+        if ('page' === get_option('show_on_front') && (int) get_option('page_on_front') > 0) {
             $s['front_page_id'] = self::id('page', (int) get_option('page_on_front'));
         }
         if ((int) get_option('page_for_posts') > 0) {
             $s['posts_page_id'] = self::id('page', (int) get_option('page_for_posts'));
         }
         $s['posts_per_page'] = max(1, (int) get_option('posts_per_page'));
-        $s['comments_open'] = get_option('default_comment_status') === 'open';
+        $s['comments_open'] = 'open' === get_option('default_comment_status');
         $cur = strtoupper((string) get_option($this->site->currencyOption())); // registered default applies
-        if (preg_match('/^[A-Z]{3}$/', $cur) === 1) {
+        if (1 === preg_match('/^[A-Z]{3}$/', $cur)) {
             $s['currency'] = $cur;
         }
         // contact block (contract WP_CONTACT_OPTIONS: the wpfasty-types options, only what is set)
@@ -360,6 +367,7 @@ final class Mapper
         $s['version'] = 1;
         $s['created_at'] = self::EPOCH;
         $s['updated_at'] = self::EPOCH;
+
         return $s;
     }
 

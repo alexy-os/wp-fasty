@@ -32,18 +32,20 @@ final class SourceLoader extends \Latte\Loaders\FileLoader
                 return true;
             }
         }
+
         return false;
     }
 
     public function getContent(string $fileName): string
     {
         $name = self::normalizePath($fileName);
-        $this->trusted = $this->bundled !== null && self::shared($name);
+        $this->trusted = null !== $this->bundled && self::shared($name);
         if (!$this->trusted) {
             $this->baseDir = $this->root;
+
             return parent::getContent($fileName);
         }
-        $this->baseDir = self::normalizePath($this->bundled . '/');
+        $this->baseDir = self::normalizePath($this->bundled.'/');
         try {
             return parent::getContent($name);
         } finally {
@@ -54,8 +56,9 @@ final class SourceLoader extends \Latte\Loaders\FileLoader
     public function getUniqueId(string $file): string
     {
         $name = self::normalizePath($file);
-        return $this->bundled !== null && self::shared($name)
-            ? self::normalizePath($this->bundled . '/') . $name
+
+        return null !== $this->bundled && self::shared($name)
+            ? self::normalizePath($this->bundled.'/').$name
             : parent::getUniqueId($file);
     }
 }

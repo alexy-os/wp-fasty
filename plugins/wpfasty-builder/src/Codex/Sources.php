@@ -18,12 +18,13 @@ final class Sources
 
     public static function idFor(string $kind): string
     {
-        return $kind === 'category' ? 'categories' : $kind . 's';
+        return 'category' === $kind ? 'categories' : $kind.'s';
     }
 
     /**
      * @param array<string, mixed> $manifest
      * @param array<string, mixed> $delivery
+     *
      * @return array<string, array<string, mixed>> id → source model
      */
     public static function fromManifest(array $manifest, array $delivery): array
@@ -75,6 +76,7 @@ final class Sources
                 'roleOf' => $roleOf, 'role' => $roleOf[$tax] ?? null, 'purchasable' => null, 'stock' => null,
             ];
         }
+
         return $out;
     }
 }

@@ -39,6 +39,7 @@ final class Safe
      * Props as the templates may print them: every URL prop checked, control characters dropped from text.
      *
      * @param array<array-key, mixed> $props
+     *
      * @return array<array-key, mixed>
      */
     public static function props(array $props, string $key = ''): array
@@ -46,17 +47,18 @@ final class Safe
         foreach ($props as $k => $v) {
             $name = is_string($k) ? $k : $key; // list items inherit the key of their list ("images" → each src)
             if (is_array($v)) {
-                if ($k === '__html') {
+                if ('__html' === $k) {
                     continue;
                 }
                 $props[$k] = array_key_exists('__html', $v) ? $v : self::props($v, $name);
             } elseif (is_string($v)) {
                 $v = self::text($v);
-                $props[$k] = preg_match(self::URL_KEY, $name) === 1
-                    ? self::url($v, preg_match(self::IMAGE_KEY, $name) === 1)
+                $props[$k] = 1 === preg_match(self::URL_KEY, $name)
+                    ? self::url($v, 1 === preg_match(self::IMAGE_KEY, $name))
                     : $v;
             }
         }
+
         return $props;
     }
 
@@ -69,7 +71,7 @@ final class Safe
     /** true when a URL prop key */
     public static function isUrlKey(string $key): bool
     {
-        return preg_match(self::URL_KEY, $key) === 1;
+        return 1 === preg_match(self::URL_KEY, $key);
     }
 
     /**
@@ -77,14 +79,16 @@ final class Safe
      */
     public static function url(string $url, bool $image = false): string
     {
-        if (str_contains($url, ',') && preg_match('/\s\d+(\.\d+)?[wx]\s*(,|$)/', $url) === 1) {
+        if (str_contains($url, ',') && 1 === preg_match('/\s\d+(\.\d+)?[wx]\s*(,|$)/', $url)) {
             foreach (explode(',', $url) as $candidate) {
                 if (!self::allowed((string) preg_replace('/\s+\S+\s*$/', '', trim($candidate)), $image)) {
                     return '';
                 }
             }
+
             return $url;
         }
+
         return self::allowed($url, $image) ? $url : '';
     }
 
@@ -92,11 +96,12 @@ final class Safe
     public static function scheme(string $url): string
     {
         $s = $url;
-        for ($i = 0; $i < 3 && str_contains($s, '&'); $i++) {
+        for ($i = 0; $i < 3 && str_contains($s, '&'); ++$i) {
             $s = html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
         $s = strtolower((string) preg_replace('/[\x00-\x20\x7F]+/', '', $s));
-        return preg_match('/^([a-z][a-z0-9+.\-]*):/', $s, $m) === 1 ? $m[1] : '';
+
+        return 1 === preg_match('/^([a-z][a-z0-9+.\-]*):/', $s, $m) ? $m[1] : '';
     }
 
     /**
@@ -107,11 +112,12 @@ final class Safe
     public static function networkPath(string $url): bool
     {
         $s = $url;
-        for ($i = 0; $i < 3 && str_contains($s, '&'); $i++) {
+        for ($i = 0; $i < 3 && str_contains($s, '&'); ++$i) {
             $s = html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
         $s = ltrim((string) preg_replace('/[\t\n\r]+/', '', $s), "\x00..\x20\x7F");
-        return preg_match('#^[/\\\\]{2}#', $s) === 1;
+
+        return 1 === preg_match('#^[/\\\\]{2}#', $s);
     }
 
     private static function allowed(string $url, bool $image): bool
@@ -122,15 +128,17 @@ final class Safe
             return false;
         }
         $scheme = self::scheme($url);
-        if ($scheme === '') {
+        if ('' === $scheme) {
             return true; // relative: /x, #a, ?q, x.html (scheme() already sees through entities and whitespace)
         }
-        if ($scheme === 'data') {
+        if ('data' === $scheme) {
             $k = html_entity_decode($url, ENT_QUOTES | ENT_HTML5, 'UTF-8');
             $k = strtolower((string) preg_replace('/[\x00-\x20\x7F]+/', '', $k));
-            return $image && preg_match(self::DATA_IMAGE, $k) === 1;
+
+            return $image && 1 === preg_match(self::DATA_IMAGE, $k);
         }
         $allowed = function_exists('wp_allowed_protocols') ? (array) wp_allowed_protocols() : self::PROTOCOLS;
+
         return in_array($scheme, array_map('strtolower', array_map('strval', $allowed)), true);
     }
 }

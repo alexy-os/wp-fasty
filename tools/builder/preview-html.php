@@ -10,18 +10,16 @@
  *
  *   php tools/builder/preview-html.php > variants.json
  *   php tools/builder/preview-html.php --pages > pages.json
- *
- * @package WPFastyBuilder
  */
 
 declare(strict_types=1);
 
 $root = dirname(__DIR__, 2);
-require $root . '/themes/latte/vendor/autoload.php';
-require $root . '/vendor/autoload.php';
+require $root.'/themes/latte/vendor/autoload.php';
+require $root.'/vendor/autoload.php';
 spl_autoload_register(static function (string $class) use ($root): void {
     if (str_starts_with($class, 'WPFastyBuilder\\')) {
-        require $root . '/plugins/wpfasty-builder/src/' . str_replace('\\', '/', substr($class, 15)) . '.php';
+        require $root.'/plugins/wpfasty-builder/src/'.str_replace('\\', '/', substr($class, 15)).'.php';
     }
 });
 if (!function_exists('__')) {
@@ -31,7 +29,7 @@ if (!function_exists('__')) {
     }
 }
 
-$src = new WPFastyBuilder\Source\LocalSource('ui8kit', $root . '/plugins/wpfasty-builder/sources/ui8kit/latte', 'latte');
+$src = new WPFastyBuilder\Source\LocalSource('ui8kit', $root.'/plugins/wpfasty-builder/sources/ui8kit/latte', 'latte');
 $catalog = new WPFastyBuilder\Catalog($src->catalog());
 $r = new WPFastyBuilder\BlockRenderer(['ui8kit' => $src], null);
 $fragment = static function (string $block, string $variant, array $props) use ($catalog, $r): string {
@@ -45,10 +43,11 @@ $fragment = static function (string $block, string $variant, array $props) use (
         // the current record (richtext): the catalog's fixture record, as a page shows it
         static fn (array $slot): array => (array) ($slot['sample'] ?? []),
     );
-    if ($res === null) {
+    if (null === $res) {
         fwrite(STDERR, "✗ {$block}/{$variant}: no fragment\n");
         exit(1);
     }
+
     return $res['html'];
 };
 $out = [];
@@ -57,15 +56,15 @@ if (in_array('--pages', $argv, true)) {
         foreach ((array) ($col['pages'] ?? []) as $page) {
             $html = '';
             foreach ((array) $page['blocks'] as $b) {
-                $html .= '<div class="wpfb-block">' . $fragment($b['block'], $b['variant'], (array) ($b['props'] ?? [])) . '</div>';
+                $html .= '<div class="wpfb-block">'.$fragment($b['block'], $b['variant'], (array) ($b['props'] ?? [])).'</div>';
             }
-            $out[$col['id'] . '/' . $page['id']] = $html;
+            $out[$col['id'].'/'.$page['id']] = $html;
         }
     }
 } else {
     foreach ($src->catalog()['blocks'] as $b) {
         foreach ($b['variants'] as $v) {
-            $out[$b['id'] . '/' . $v['id']] = $fragment($b['id'], $v['id'], []);
+            $out[$b['id'].'/'.$v['id']] = $fragment($b['id'], $v['id'], []);
         }
     }
 }

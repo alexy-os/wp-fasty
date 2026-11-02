@@ -33,16 +33,16 @@ final class Primitives
 
     public static function dir(string $engine): string
     {
-        return dirname(__DIR__) . '/primitives/' . $engine . '/ui8kit';
+        return dirname(__DIR__).'/primitives/'.$engine.'/ui8kit';
     }
 
     /** loads the UI8Kit 3 runtime of an engine (skips classes another copy, e.g. the theme's, already declared) */
     public static function loadRuntime(string $engine): bool
     {
-        $ns = $engine === 'twig' ? 'UI8Kit\\Twig\\' : 'UI8Kit\\Latte\\';
-        $runtime = self::dir($engine) . '/runtime';
-        foreach (['Tags', 'CnMerge', 'Rt', 'Classes', $engine === 'twig' ? 'TwigExtension' : null] as $f) {
-            if ($f === null || class_exists($ns . $f)) {
+        $ns = 'twig' === $engine ? 'UI8Kit\\Twig\\' : 'UI8Kit\\Latte\\';
+        $runtime = self::dir($engine).'/runtime';
+        foreach (['Tags', 'CnMerge', 'Rt', 'Classes', 'twig' === $engine ? 'TwigExtension' : null] as $f) {
+            if (null === $f || class_exists($ns.$f)) {
                 continue;
             }
             if (!is_file("$runtime/$f.php")) {
@@ -50,6 +50,7 @@ final class Primitives
             }
             require_once "$runtime/$f.php";
         }
+
         return true;
     }
 
@@ -69,12 +70,13 @@ final class Primitives
         if (!isset(self::MAP[$name])) {
             return '';
         }
-        if (self::$latte === null) {
+        if (null === self::$latte) {
             self::$latte = new \Latte\Engine();
-            self::$latte->setLoader(new \Latte\Loaders\FileLoader(self::dir('latte') . '/ui'));
+            self::$latte->setLoader(new \Latte\Loaders\FileLoader(self::dir('latte').'/ui'));
             self::$latte->setStrictTypes(true);
         }
-        return self::$latte->renderToString(self::MAP[$name] . '.latte', self::params($args));
+
+        return self::$latte->renderToString(self::MAP[$name].'.latte', self::params($args));
     }
 
     /** @param array<string, mixed> $args */
@@ -87,31 +89,34 @@ final class Primitives
         if (!isset(self::MAP[$name])) {
             return '';
         }
-        if (self::$twig === null) {
-            $loader = new \Twig\Loader\FilesystemLoader(self::dir('twig') . '/ui');
+        if (null === self::$twig) {
+            $loader = new \Twig\Loader\FilesystemLoader(self::dir('twig').'/ui');
             self::$twig = new \Twig\Environment($loader, ['autoescape' => 'html']);
             self::$twig->addExtension(new \UI8Kit\Twig\TwigExtension());
         }
-        return self::$twig->render(self::MAP[$name] . '.html.twig', self::params($args));
+
+        return self::$twig->render(self::MAP[$name].'.html.twig', self::params($args));
     }
 
     /**
      * `auto` (a brick whose tag is a prop): Box for structural tags, Text for text tags.
      *
-     * @param array<string, mixed> $args
+     * @param array<string, mixed>        $args
      * @param array<string, list<string>> $groups
      */
     private static function pick(string $name, array $args, array $groups): string
     {
-        if ($name !== 'auto') {
+        if ('auto' !== $name) {
             return $name;
         }
         $tag = strtolower(trim((string) ($args['tag'] ?? '')));
+
         return in_array($tag, $groups['Text'] ?? [], true) ? 'text' : 'box';
     }
 
     /**
      * @param array<string, mixed> $args
+     *
      * @return array<string, mixed>
      */
     private static function params(array $args): array
@@ -119,10 +124,10 @@ final class Primitives
         $attrs = [];
         foreach ([(array) ($args['attrs'] ?? []), is_array($args['extra'] ?? null) ? $args['extra'] : []] as $map) {
             foreach ($map as $k => $v) {
-                if ($v === null || $v === false || array_key_exists((string) $k, $attrs)) {
+                if (null === $v || false === $v || array_key_exists((string) $k, $attrs)) {
                     continue;
                 }
-                $attrs[(string) $k] = $v === true ? true : self::str($v);
+                $attrs[(string) $k] = true === $v ? true : self::str($v);
             }
         }
         unset($args['attrs'], $args['extra']);
@@ -130,6 +135,7 @@ final class Primitives
         foreach ($args as $k => $v) {
             $out[(string) $k] = is_bool($v) || is_array($v) ? $v : self::str($v);
         }
+
         return $out;
     }
 

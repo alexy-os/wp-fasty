@@ -31,23 +31,24 @@ final class Previews
 
     /**
      * @param list<array<string, mixed>> $blocks forEditor() blocks
+     *
      * @return list<array<string, mixed>>
      */
     public static function attach(array $blocks, ?object $source): array
     {
         $dir = self::dirOf($source);
-        $m = $dir !== null ? self::manifest($dir) : null;
-        if ($m === null) {
+        $m = null !== $dir ? self::manifest($dir) : null;
+        if (null === $m) {
             return $blocks;
         }
-        $base = plugins_url(substr($dir, strlen(Plugin::$dir) + 1), Plugin::$file) . '/';
+        $base = plugins_url(substr($dir, strlen(Plugin::$dir) + 1), Plugin::$file).'/';
         foreach ($blocks as $i => $b) {
             foreach ((array) ($b['variants'] ?? []) as $j => $v) {
-                $e = $m[(string) ($b['id'] ?? '') . '/' . (string) ($v['id'] ?? '')] ?? null;
+                $e = $m[(string) ($b['id'] ?? '').'/'.(string) ($v['id'] ?? '')] ?? null;
                 if (is_array($e) && is_string($e['file'] ?? null)) {
-                    $preview = ['src' => $base . $e['file']];
-                    if (is_string($e['dark']['file'] ?? null) && $e['dark']['file'] !== '') {
-                        $preview['dark'] = $base . $e['dark']['file'];
+                    $preview = ['src' => $base.$e['file']];
+                    if (is_string($e['dark']['file'] ?? null) && '' !== $e['dark']['file']) {
+                        $preview['dark'] = $base.$e['dark']['file'];
                     }
                     $blocks[$i]['variants'][$j]['preview'] = $preview + [
                         'width' => self::WIDTH, 'height' => self::HEIGHT,
@@ -55,56 +56,61 @@ final class Previews
                 }
             }
         }
+
         return $blocks;
     }
 
     /**
      * @param array<string, mixed>|null $collection forEditor() collection
+     *
      * @return array<string, mixed>|null
      */
     public static function attachPages(?array $collection, ?object $source): ?array
     {
         $dir = self::dirOf($source, 'page-previews');
-        $m = $dir !== null && $collection !== null ? self::manifest($dir, 'pages') : null;
-        if ($m === null || !is_array($collection['pages'] ?? null)) {
+        $m = null !== $dir && null !== $collection ? self::manifest($dir, 'pages') : null;
+        if (null === $m || !is_array($collection['pages'] ?? null)) {
             return $collection;
         }
-        $base = plugins_url(substr($dir, strlen(Plugin::$dir) + 1), Plugin::$file) . '/';
+        $base = plugins_url(substr($dir, strlen(Plugin::$dir) + 1), Plugin::$file).'/';
         foreach ($collection['pages'] as $i => $p) {
-            $e = $m[(string) ($collection['id'] ?? '') . '/' . (string) ($p['id'] ?? '')] ?? null;
-            if (!is_array($e) || !is_string($e['file'] ?? null) || $e['file'] === '') {
+            $e = $m[(string) ($collection['id'] ?? '').'/'.(string) ($p['id'] ?? '')] ?? null;
+            if (!is_array($e) || !is_string($e['file'] ?? null) || '' === $e['file']) {
                 continue;
             }
-            $preview = ['src' => $base . $e['file']];
-            if (is_string($e['dark']['file'] ?? null) && $e['dark']['file'] !== '') {
-                $preview['dark'] = $base . $e['dark']['file'];
+            $preview = ['src' => $base.$e['file']];
+            if (is_string($e['dark']['file'] ?? null) && '' !== $e['dark']['file']) {
+                $preview['dark'] = $base.$e['dark']['file'];
             }
             $collection['pages'][$i]['preview'] = $preview + [
                 'width' => (int) ($e['width'] ?? 0), 'height' => (int) ($e['height'] ?? 0),
             ];
         }
+
         return $collection;
     }
 
     /** a folder of a source bundled with the plugin (sources/<id>/previews or …/page-previews) with a manifest, or null */
     public static function dirOf(?object $source, string $name = 'previews'): ?string
     {
-        if (!$source instanceof LocalSource || Plugin::$dir === '') {
+        if (!$source instanceof LocalSource || '' === Plugin::$dir) {
             return null;
         }
-        $dir = dirname(rtrim($source->templateRoot(), '/')) . '/' . $name;
-        $root = rtrim(Plugin::$dir, '/') . '/';
-        return str_starts_with($dir, $root) && is_file($dir . '/manifest.json') ? $dir : null;
+        $dir = dirname(rtrim($source->templateRoot(), '/')).'/'.$name;
+        $root = rtrim(Plugin::$dir, '/').'/';
+
+        return str_starts_with($dir, $root) && is_file($dir.'/manifest.json') ? $dir : null;
     }
 
     /** @return array<string, mixed>|null "<block>/<variant>" (or "<collection>/<page>") => {file, bytes, …, dark: {…}} */
     private static function manifest(string $dir, string $key = 'variants'): ?array
     {
         if (!array_key_exists($dir, self::$manifests)) {
-            $raw = file_get_contents($dir . '/manifest.json');
+            $raw = file_get_contents($dir.'/manifest.json');
             $json = is_string($raw) ? json_decode($raw, true) : null;
             self::$manifests[$dir] = is_array($json) && is_array($json[$key] ?? null) ? $json[$key] : null;
         }
+
         return self::$manifests[$dir];
     }
 }

@@ -5,13 +5,11 @@ declare(strict_types=1);
 /**
  * WP FastY Market — brand child: tokens, logo, footer. Shop templates come from Latte Shop ("Extends: latte-shop",
  * layered by Latte), digital features from ModulY modules through Latte Shop extension points.
- *
- * @package WPFasty_Market
  */
 
 // Loaded at once (not on after_setup_theme): the base-theme layer can request strings earlier,
 // which would cache a no-op domain.
-load_textdomain('wpfasty-market', __DIR__ . '/languages/' . determine_locale() . '.mo');
+load_textdomain('wpfasty-market', __DIR__.'/languages/'.determine_locale().'.mo');
 
 if (!defined('ABSPATH')) {
     exit;
@@ -46,5 +44,6 @@ add_filter('wpfasty_context', static function (array $context): array {
         'inn' => __('INN', 'wpfasty-market'),
         'rights' => __('All rights reserved.', 'wpfasty-market'),
     ];
+
     return $context;
 }, 20);

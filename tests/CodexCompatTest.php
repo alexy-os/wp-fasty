@@ -14,7 +14,8 @@ final class CodexCompatTest extends TestCase
     /** @return array<string, array<string, mixed>> */
     private static function sources(string $site): array
     {
-        $t = dirname(__DIR__) . "/themes/latte-$site/types";
+        $t = dirname(__DIR__)."/themes/latte-$site/types";
+
         return Sources::fromManifest(
             json_decode((string) file_get_contents("$t/codex.manifest.json"), true),
             json_decode((string) file_get_contents("$t/codex.delivery.json"), true),
@@ -60,7 +61,7 @@ final class CodexCompatTest extends TestCase
     public function testRecordPlanOfTheBundledCatalog(): void
     {
         $catalog = new Catalog(json_decode((string) file_get_contents(
-            dirname(__DIR__) . '/plugins/wpfasty-builder/sources/ui8kit/latte/catalog.json',
+            dirname(__DIR__).'/plugins/wpfasty-builder/sources/ui8kit/latte/catalog.json',
         ), true));
         $slot = $catalog->slot('posts', 'grid', 'posts');
         $this->assertSame('post', $slot['kind']);

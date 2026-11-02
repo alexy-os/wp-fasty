@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 if (!defined('ABSPATH')) {
-    define('ABSPATH', sys_get_temp_dir() . '/');
+    define('ABSPATH', sys_get_temp_dir().'/');
 }
 
-$themeVendor = dirname(__DIR__) . '/themes/latte/vendor/autoload.php';
+$themeVendor = dirname(__DIR__).'/themes/latte/vendor/autoload.php';
 if (!is_file($themeVendor)) {
     fwrite(STDERR, "Missing themes/latte/vendor — run: bash tools/composer.sh install --working-dir=themes/latte\n");
     exit(1);
@@ -14,8 +14,8 @@ if (!is_file($themeVendor)) {
 require $themeVendor;
 
 // Root dev deps (twig/twig for TwigRenderer tests).
-if (is_file(dirname(__DIR__) . '/vendor/autoload.php')) {
-    require_once dirname(__DIR__) . '/vendor/autoload.php';
+if (is_file(dirname(__DIR__).'/vendor/autoload.php')) {
+    require_once dirname(__DIR__).'/vendor/autoload.php';
 }
 
 // Minimal WordPress stubs for unit tests (no WP bootstrap).
@@ -52,7 +52,7 @@ if (!function_exists('esc_attr')) {
 if (!function_exists('wp_salt')) {
     function wp_salt(string $scheme = 'auth'): string
     {
-        return 'test-salt-' . $scheme;
+        return 'test-salt-'.$scheme;
     }
 }
 
@@ -78,6 +78,7 @@ if (!function_exists('apply_filters')) {
         foreach ($filters as $callback) {
             $value = $callback($value, ...$args);
         }
+
         return $value;
     }
 }
@@ -85,13 +86,14 @@ if (!function_exists('add_filter')) {
     function add_filter(string $hook, callable $callback, int $priority = 10, int $accepted_args = 1): bool
     {
         $GLOBALS['wp_test_filters'][$hook][] = $callback;
+
         return true;
     }
 }
 if (!function_exists('home_url')) {
     function home_url(string $path = ''): string
     {
-        return 'http://example.test' . $path;
+        return 'http://example.test'.$path;
     }
 }
 if (!function_exists('get_bloginfo')) {
@@ -109,13 +111,13 @@ if (!function_exists('get_bloginfo')) {
 if (!function_exists('get_template_directory')) {
     function get_template_directory(): string
     {
-        return dirname(__DIR__) . '/themes/latte';
+        return dirname(__DIR__).'/themes/latte';
     }
 }
 if (!function_exists('get_stylesheet_directory')) {
     function get_stylesheet_directory(): string
     {
-        return dirname(__DIR__) . '/themes/latte';
+        return dirname(__DIR__).'/themes/latte';
     }
 }
 if (!function_exists('get_template_directory_uri')) {
@@ -226,11 +228,12 @@ if (!function_exists('is_singular')) {
         if (!($GLOBALS['wp_test_flags']['is_singular'] ?? false)) {
             return false;
         }
-        if ($postTypes === '' || $postTypes === []) {
+        if ('' === $postTypes || [] === $postTypes) {
             return true;
         }
         $type = $GLOBALS['wp_test_flags']['singular_type'] ?? 'post';
         $types = (array) $postTypes;
+
         return in_array($type, $types, true);
     }
 }
@@ -238,6 +241,7 @@ if (!function_exists('get_the_title')) {
     function get_the_title(int|object $post = 0): string
     {
         $id = is_object($post) ? (int) $post->ID : $post;
+
         return (string) ($GLOBALS['wp_test_titles'][$id] ?? (is_object($post) ? ($post->post_title ?? '') : ''));
     }
 }
@@ -246,7 +250,7 @@ if (!function_exists('wp_head')) {
     {
         // Mirrors core `_wp_render_title_tag()` (theme declares title-tag support) so renders are full documents.
         $title = (string) ($GLOBALS['wp_test_flags']['document_title'] ?? get_bloginfo('name'));
-        echo '<title>' . htmlspecialchars($title !== '' ? $title : 'WordPress', ENT_QUOTES) . '</title>' . "\n";
+        echo '<title>'.htmlspecialchars('' !== $title ? $title : 'WordPress', ENT_QUOTES).'</title>'."\n";
     }
 }
 if (!function_exists('wp_footer')) {
@@ -269,7 +273,7 @@ if (!function_exists('language_attributes')) {
 if (!function_exists('body_class')) {
     function body_class(string ...$classes): void
     {
-        echo 'class="body ' . implode(' ', $classes) . '"';
+        echo 'class="body '.implode(' ', $classes).'"';
     }
 }
 if (!function_exists('do_action')) {
@@ -293,6 +297,7 @@ if (!function_exists('get_permalink')) {
     function get_permalink(int|WP_Post|null $post = 0): string|false
     {
         $id = $post instanceof WP_Post ? $post->ID : (int) $post;
+
         return $GLOBALS['wp_test_permalinks'][$id] ?? 'http://example.test/blog';
     }
 }
@@ -336,10 +341,11 @@ if (!function_exists('dynamic_sidebar')) {
     function dynamic_sidebar(string $id): bool
     {
         $html = $GLOBALS['wp_test_sidebars'][$id] ?? '';
-        if ($html === '') {
+        if ('' === $html) {
             return false;
         }
         echo $html;
+
         return true;
     }
 }
@@ -363,7 +369,7 @@ if (!function_exists('get_query_var')) {
 if (!function_exists('get_pagenum_link')) {
     function get_pagenum_link(int $page = 1): string
     {
-        return 'http://example.test/page/' . $page;
+        return 'http://example.test/page/'.$page;
     }
 }
 

@@ -28,19 +28,19 @@ final class PagesTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->plugin = dirname(__DIR__) . '/plugins/wpfasty-builder';
-        $src = $this->plugin . '/src/';
+        $this->plugin = dirname(__DIR__).'/plugins/wpfasty-builder';
+        $src = $this->plugin.'/src/';
         spl_autoload_register(static function (string $class) use ($src): void {
             if (str_starts_with($class, 'WPFastyBuilder\\')) {
-                $file = $src . str_replace('\\', '/', substr($class, 15)) . '.php';
+                $file = $src.str_replace('\\', '/', substr($class, 15)).'.php';
                 if (is_file($file)) {
                     require_once $file;
                 }
             }
         });
-        require_once __DIR__ . '/fixtures/rest-stubs.php';
-        require_once __DIR__ . '/fixtures/pages-stubs.php';
-        Plugin::$file = $this->plugin . '/wpfasty-builder.php';
+        require_once __DIR__.'/fixtures/rest-stubs.php';
+        require_once __DIR__.'/fixtures/pages-stubs.php';
+        Plugin::$file = $this->plugin.'/wpfasty-builder.php';
         Plugin::$dir = $this->plugin;
         $GLOBALS['wp_test_filters']['wpfasty_builder_engine'] = [static fn (): string => 'latte'];
         $GLOBALS['wp_test_filters']['wpfasty_builder_data_sources'] = [
@@ -54,8 +54,8 @@ final class PagesTest extends TestCase
         $shipped = Starters::shipped();
         $this->assertSame(['shop', 'folio', 'press'], array_column($shipped, 'id'));
         foreach ($shipped as $s) {
-            $landing = json_decode((string) file_get_contents(dirname(__DIR__) . '/tools/builder/landings/' . $s['id'] . '.json'), true);
-            $this->assertSame($landing['layout'], $s['layout'], $s['id'] . ': starters/<id>.json must keep the layout of its landing');
+            $landing = json_decode((string) file_get_contents(dirname(__DIR__).'/tools/builder/landings/'.$s['id'].'.json'), true);
+            $this->assertSame($landing['layout'], $s['layout'], $s['id'].': starters/<id>.json must keep the layout of its landing');
             $this->assertNotSame('', $s['label']);
             $this->assertArrayNotHasKey('page', $s, 'a starter is only blocks: no page title, slug or template');
         }
@@ -64,14 +64,14 @@ final class PagesTest extends TestCase
     public function testStartersFitTheBundledCatalogsAndNormalizeCleanly(): void
     {
         foreach (['latte', 'twig'] as $runtime) {
-            $catalog = new Catalog((new LocalSource('ui8kit', $this->plugin . '/sources/ui8kit/' . $runtime, $runtime))->catalog());
+            $catalog = new Catalog((new LocalSource('ui8kit', $this->plugin.'/sources/ui8kit/'.$runtime, $runtime))->catalog());
             foreach (Starters::shipped() as $s) {
-                $this->assertTrue(Starters::fits($s, $catalog, ['posts', 'products', 'projects']), $runtime . ' ' . $s['id']);
+                $this->assertTrue(Starters::fits($s, $catalog, ['posts', 'products', 'projects']), $runtime.' '.$s['id']);
                 [$entry, $issues] = Layout::normalize($s['layout'], 'ui8kit', $catalog, ['posts', 'products', 'projects'], [
                     'id' => 'layout-1', 'locale' => 'en', 'slug' => 'x', 'title' => 'X', 'status' => 'draft', 'version' => 1,
                     'created_at' => '2026-10-28T00:00:00Z', 'updated_at' => '2026-10-28T00:00:00Z', 'page_id' => 1,
                 ]);
-                $this->assertSame([], $issues, $runtime . ' ' . $s['id']);
+                $this->assertSame([], $issues, $runtime.' '.$s['id']);
                 $this->assertCount(count($s['layout']['blocks']), Layout::blocks($entry));
             }
         }
@@ -82,7 +82,7 @@ final class PagesTest extends TestCase
         $this->assertSame(['shop', 'folio', 'press'], array_column(Starters::forEditor(), 'id'));
         $this->assertSame(4, Starters::forEditor()[0]['blocks']);
         $this->assertArrayNotHasKey('layout', Starters::forEditor()[0]);
-        $catalog = new Catalog((new LocalSource('ui8kit', $this->plugin . '/sources/ui8kit/latte', 'latte'))->catalog());
+        $catalog = new Catalog((new LocalSource('ui8kit', $this->plugin.'/sources/ui8kit/latte', 'latte'))->catalog());
         [$shop] = Starters::shipped();
         // no products on this site (theme without the product type): the shop starter is not offered
         $this->assertFalse(Starters::fits($shop, $catalog, ['posts', 'projects']));
@@ -96,7 +96,7 @@ final class PagesTest extends TestCase
     {
         $GLOBALS['wp_test_routes'] = [];
         Rest::routes();
-        $route = $GLOBALS['wp_test_routes'][Rest::NS . '/pages'];
+        $route = $GLOBALS['wp_test_routes'][Rest::NS.'/pages'];
         $this->assertSame('POST', $route['methods']);
         $this->assertTrue($route['args']['title']['required']);
         $GLOBALS['wp_test_caps'] = [];
@@ -110,6 +110,7 @@ final class PagesTest extends TestCase
         $saved = [];
         $out = Pages::create('  Summer <b>Sale</b> ', '', 'empty', static function () use (&$saved): array {
             $saved[] = func_get_args();
+
             return [[], []];
         });
         $this->assertIsArray($out);
@@ -118,7 +119,7 @@ final class PagesTest extends TestCase
         $this->assertSame('http://example.test/wp-admin/edit.php?post_type=page&page=wpfasty-builder&post=101', $out['url']);
         $this->assertSame([[
             'post_type' => 'page', 'post_status' => 'draft', 'post_title' => 'Summer Sale', 'post_name' => 'summer-sale', 'post_content' => '',
-        ]], $GLOBALS['wpfb_pages']['inserted'], 'no page_template, no meta: the page template is not touched');
+        ], ], $GLOBALS['wpfb_pages']['inserted'], 'no page_template, no meta: the page template is not touched');
     }
 
     public function testSlugIsSanitizedAndMadeUnique(): void
@@ -134,6 +135,7 @@ final class PagesTest extends TestCase
         $calls = [];
         $out = Pages::create('Shop home', 'shop-home', 'shop', static function (int $id, array $layout, bool $publish) use (&$calls): array {
             $calls[] = [$id, $layout, $publish];
+
             return [['metadata' => ['blocks' => ['value' => $layout['blocks']]]], []];
         });
         $this->assertIsArray($out);

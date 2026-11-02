@@ -8,7 +8,7 @@
  * or $WPFASTY_LEGAL_JSON).
  */
 
-require __DIR__ . '/common.php';
+require __DIR__.'/common.php';
 
 wpfasty_demo_cleanup_defaults();
 $front = 'LatteShop\\Front';
@@ -41,15 +41,16 @@ $items = [
 /** A tiny demo archive as an attachment; the downloads module moves it into the private dir. */
 function wpfasty_demo_zip(string $slug): ?int
 {
-    $found = get_posts(['post_type' => 'attachment', 'name' => 'download-' . $slug, 'fields' => 'ids', 'post_status' => 'any', 'numberposts' => 1]);
+    $found = get_posts(['post_type' => 'attachment', 'name' => 'download-'.$slug, 'fields' => 'ids', 'post_status' => 'any', 'numberposts' => 1]);
     if ($found) {
         return (int) $found[0];
     }
-    $upload = wp_upload_bits($slug . '.zip', null, "PK\x05\x06" . str_repeat("\0", 18));
+    $upload = wp_upload_bits($slug.'.zip', null, "PK\x05\x06".str_repeat("\0", 18));
     if (!empty($upload['error'])) {
         return null;
     }
-    $id = wp_insert_attachment(['post_title' => $slug . '.zip', 'post_name' => 'download-' . $slug, 'post_mime_type' => 'application/zip', 'post_status' => 'inherit'], $upload['file']);
+    $id = wp_insert_attachment(['post_title' => $slug.'.zip', 'post_name' => 'download-'.$slug, 'post_mime_type' => 'application/zip', 'post_status' => 'inherit'], $upload['file']);
+
     return $id ?: null;
 }
 
@@ -63,8 +64,8 @@ foreach ([
 ] as $login => [$name, $bio, $since]) {
     $user = get_user_by('login', $login);
     $uid = $user ? $user->ID : wp_insert_user([
-        'user_login' => $login, 'user_pass' => wp_generate_password(24), 'user_email' => $login . '@example.com',
-        'display_name' => $name, 'role' => 'author', 'user_registered' => $since . ' 00:00:00',
+        'user_login' => $login, 'user_pass' => wp_generate_password(24), 'user_email' => $login.'@example.com',
+        'display_name' => $name, 'role' => 'author', 'user_registered' => $since.' 00:00:00',
     ]);
     if (!is_wp_error($uid)) {
         wp_update_user(['ID' => $uid, 'display_name' => $name, 'nickname' => $name, 'description' => $bio, 'user_nicename' => $login]);
@@ -96,15 +97,15 @@ foreach ($items as [$slug, $title, $cat, $price, $sale, $rating, $reviews, $badg
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     $meta = ['_shop_price' => $price * 100, '_shop_sale_price' => $sale ? $sale * 100 : null, '_shop_sku' => strtoupper($slug),
         '_shop_stock' => null, '_shop_rating' => null, '_shop_reviews' => null, '_shop_badge' => $badge,
-        '_shop_version' => '1.' . ($order % 5) . '.0', '_shop_requires_wp' => '6.5', '_shop_requires_php' => '8.2',
-        '_shop_changelog' => '1.' . ($order % 5) . ".0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз", '_shop_preview_url' => home_url('/'), '_shop_support_months' => 6,
+        '_shop_version' => '1.'.($order % 5).'.0', '_shop_requires_wp' => '6.5', '_shop_requires_php' => '8.2',
+        '_shop_changelog' => '1.'.($order % 5).".0|2026-10-01|Совместимость с WordPress 7.1, ускорение загрузки\n1.0.0|2026-06-01|Первый релиз", '_shop_preview_url' => home_url('/'), '_shop_support_months' => 6,
         '_shop_sales_count' => $reviews, '_shop_licenses' => $licenses,
         '_shop_download_file' => wpfasty_demo_zip($slug)];
     unset($rating);
     foreach ($meta as $key => $value) {
-        $value === null ? delete_post_meta($id, $key) : update_post_meta($id, $key, $value);
+        null === $value ? delete_post_meta($id, $key) : update_post_meta($id, $key, $value);
     }
-    $att = wpfasty_demo_image('market-' . $slug, 1280, 720);
+    $att = wpfasty_demo_image('market-'.$slug, 1280, 720);
     if ($att) {
         set_post_thumbnail($id, $att);
     }
@@ -125,7 +126,7 @@ if (!get_page_by_path('home')) {
 }
 
 // Legal documents with clearly fake details (Демо-данные) + seller details for the footer.
-$legalFile = getenv('WPFASTY_LEGAL_JSON') ?: __DIR__ . '/legal.json';
+$legalFile = getenv('WPFASTY_LEGAL_JSON') ?: __DIR__.'/legal.json';
 $legal = is_file($legalFile) ? (array) json_decode((string) file_get_contents($legalFile), true) : [];
 update_option('wpfasty_company', (array) ($legal['company'] ?? []));
 $legalLinks = [];
@@ -134,12 +135,12 @@ foreach ((array) ($legal['pages'] ?? []) as $slug => $doc) {
     $pid = $existing
         ? wp_update_post(['ID' => $existing->ID, 'post_title' => $doc['title'], 'post_content' => $doc['html'], 'post_status' => 'publish'])
         : wpfasty_demo_post($slug, ['post_type' => 'page', 'post_title' => $doc['title'], 'post_content' => $doc['html']]);
-    if ($slug === 'privacy-policy') {
+    if ('privacy-policy' === $slug) {
         update_option('wp_page_for_privacy_policy', (int) $pid);
     }
     $legalLinks[] = [$doc['title'], (string) get_permalink((int) $pid)];
 }
-if ($legalLinks !== []) {
+if ([] !== $legalLinks) {
     wpfasty_demo_menu('Документы', 'legal', $legalLinks);
 }
 $author = get_page_by_path('author');

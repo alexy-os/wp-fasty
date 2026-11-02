@@ -9,8 +9,6 @@ declare(strict_types=1);
  * (e.g. wpfasty-market on top of latte-shop) declares `Template: latte` plus `Extends: latte-shop` in style.css;
  * Latte then layers the base theme between the active child and itself: its functions.php is loaded, its views and
  * types are searched after the child's and before Latte's, its tokens.css is enqueued under the child's.
- *
- * @package Latte
  */
 
 /** Absolute directory of the base theme of the active child, or '' (none, unknown or not a direct Latte child). */
@@ -24,13 +22,13 @@ function latte_base_theme_dir(): string
     if (get_stylesheet() === get_template()) {
         return $dir;
     }
-    $style = get_stylesheet_directory() . '/style.css';
+    $style = get_stylesheet_directory().'/style.css';
     $slug = is_file($style) ? (string) (get_file_data($style, ['Extends' => 'Extends'])['Extends'] ?? '') : '';
-    if (preg_match('/^[a-z0-9_-]{1,64}$/', $slug) !== 1 || $slug === get_stylesheet() || $slug === get_template()) {
+    if (1 !== preg_match('/^[a-z0-9_-]{1,64}$/', $slug) || $slug === get_stylesheet() || $slug === get_template()) {
         return $dir;
     }
-    $candidate = get_theme_root() . '/' . $slug;
-    $baseStyle = $candidate . '/style.css';
+    $candidate = get_theme_root().'/'.$slug;
+    $baseStyle = $candidate.'/style.css';
     if (!is_file($baseStyle)) {
         return $dir;
     }
@@ -39,6 +37,7 @@ function latte_base_theme_dir(): string
     if ($template === get_template()) {
         $dir = $candidate;
     }
+
     return $dir;
 }
 
@@ -46,7 +45,8 @@ function latte_base_theme_dir(): string
 function latte_base_theme_uri(): string
 {
     $dir = latte_base_theme_dir();
-    return $dir === '' ? '' : get_theme_root_uri() . '/' . basename($dir);
+
+    return '' === $dir ? '' : get_theme_root_uri().'/'.basename($dir);
 }
 
 /** Hooks of the base layer: theme dirs for codex lookups, slots in the view context. */
@@ -56,28 +56,30 @@ function latte_base_theme_hooks(): void
     function latte_load_base_theme(): void
     {
         $dir = latte_base_theme_dir();
-        if ($dir !== '' && is_file($dir . '/functions.php')) {
-            require_once $dir . '/functions.php';
+        if ('' !== $dir && is_file($dir.'/functions.php')) {
+            require_once $dir.'/functions.php';
         }
     }
 
     // Post type files of the base theme for registries built outside Latte's services (ModulY types module).
     add_filter('wpfasty_type_dirs', static function (array $dirs): array {
         $base = latte_base_theme_dir();
-        if ($base === '' || in_array($base . '/types', $dirs, true)) {
+        if ('' === $base || in_array($base.'/types', $dirs, true)) {
             return $dirs;
         }
-        array_splice($dirs, min(1, count($dirs)), 0, [$base . '/types']);
+        array_splice($dirs, min(1, count($dirs)), 0, [$base.'/types']);
+
         return $dirs;
     });
 
     // Codex / Builder look up the base theme's types/ after the child's (wpfasty-types Site::current()).
     add_filter('wpfasty_theme_dirs', static function (array $dirs): array {
         $base = latte_base_theme_dir();
-        if ($base === '') {
+        if ('' === $base) {
             return $dirs;
         }
         array_splice($dirs, 1, 0, [$base]);
+
         return $dirs;
     });
 
@@ -94,12 +96,13 @@ function latte_base_theme_hooks(): void
         foreach ($slots as $name => $list) {
             foreach ((array) $list as $slot) {
                 $view = is_array($slot) ? (string) ($slot['view'] ?? '') : '';
-                if (preg_match('#^[a-z0-9/_-]{1,128}$#', $view) === 1 && !str_contains($view, '..')) {
+                if (1 === preg_match('#^[a-z0-9/_-]{1,128}$#', $view) && !str_contains($view, '..')) {
                     $clean[(string) $name][] = ['view' => $view, 'data' => (array) ($slot['data'] ?? [])];
                 }
             }
         }
         $context['slots'] = $clean;
+
         return $context;
     }, 99);
 }

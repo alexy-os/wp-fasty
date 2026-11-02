@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 /**
  * Latte Skin — thin child theme (no Composer, no Application boot).
- *
- * @package Latte_Skin
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
 
-/**
+/*
  * Demo: enable app-shell layout (sidebar + mobile sheet).
  */
 add_filter('wpfasty_shell', static fn (): string => 'app-shell');
 
-/**
+/*
  * Demo context filter — skins may adjust presentation data only.
  *
  * @param array<string, mixed> $context
@@ -31,5 +28,6 @@ add_filter('wpfasty_context', static function (array $context): array {
         $context['hero']['primary_label'] = __('Explore', 'latte-skin');
         $context['hero']['secondary_label'] = __('Learn more', 'latte-skin');
     }
+
     return $context;
 });

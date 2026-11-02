@@ -1,9 +1,8 @@
 <?php
+
 /**
  * Archetype fragment: callables (admin columns + view model) appended to the generated types/product.php by theme:generate.
  * Only the entries between `return [` and `];` are used; {{theme.textDomain}} is substituted.
- *
- * @package Latte
  */
 
 declare(strict_types=1);

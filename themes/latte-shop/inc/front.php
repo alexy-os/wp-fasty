@@ -15,9 +15,7 @@
  *   wpfasty_shop_product_fields    (array $fields)                 extra product fields (types/product.php)
  *   wpfasty_shop_checkout_fields   (array $fields)                 checkout form fields
  *   wpfasty_shop_checkout_payments (array $payments)               payment methods shown at checkout
- *   wpfasty_shop_digital_only      (bool)                          downloads-only store: no address, no shipping
- *
- * @package Latte_Shop
+ *   wpfasty_shop_digital_only      (bool)                          downloads-only store: no address, no shipping.
  */
 
 declare(strict_types=1);
@@ -39,7 +37,7 @@ final class Front
         // Payment ids the orders module accepts follow the methods shown at checkout.
         add_filter('wpfasty_shop_payment_methods', static fn (array $ids): array => self::digitalOnly()
             ? array_column(self::payments(), 'id')
-            : $ids);
+        : $ids);
         // Cart/checkout must never be cached by proxies.
         add_action('template_redirect', static function (): void {
             if (is_page(array_keys(self::PAGES))) {
@@ -66,7 +64,8 @@ final class Front
     public static function pageUrl(string $slug): string
     {
         $page = get_page_by_path($slug);
-        return $page ? (string) get_permalink($page) : home_url('/' . $slug . '/');
+
+        return $page ? (string) get_permalink($page) : home_url('/'.$slug.'/');
     }
 
     public static function shopUrl(): string
@@ -79,13 +78,14 @@ final class Front
         return match (true) {
             is_page('cart') => 'pages/cart',
             is_page('checkout') => 'pages/checkout',
-            is_author() && self::authorProducts() !== [] => 'pages/author',
+            is_author() && [] !== self::authorProducts() => 'pages/author',
             default => $view,
         };
     }
 
     /**
      * @param array<string, mixed> $context
+     *
      * @return array<string, mixed>
      */
     public static function context(array $context): array
@@ -106,7 +106,7 @@ final class Front
         // Availability flags for the views (disable scenario): the cart module sets `enabled`, the orders module the
         // checkout nonce. Without them the views show "temporarily unavailable" instead of a form that cannot work.
         $shop['cart_available'] = !empty($shop['enabled']);
-        $shop['checkout_available'] = $shop['cart_available'] && (string) ($shop['checkout_nonce'] ?? '') !== '';
+        $shop['checkout_available'] = $shop['cart_available'] && '' !== (string) ($shop['checkout_nonce'] ?? '');
         $shop['account_url'] = is_user_logged_in() ? admin_url('profile.php') : wp_login_url(self::pageUrl('cart'));
         $context['shop'] = $shop + [
             'notice' => self::notice(),
@@ -140,7 +140,7 @@ final class Front
             $context['checkout']['error_labels'] = self::errorLabels((array) ($context['checkout']['errors'] ?? []));
         }
 
-        if (is_author() && self::authorProducts() !== []) {
+        if (is_author() && [] !== self::authorProducts()) {
             $user = get_queried_object();
             $products = self::authorProducts();
             $name = $user instanceof \WP_User ? (string) $user->display_name : '';
@@ -197,7 +197,7 @@ final class Front
             'instant_download' => __('Instant download after payment', 'latte-shop'),
             'updates_included' => __('Updates included', 'latte-shop'),
             'pay_options' => __('Pay on delivery or by bank transfer', 'latte-shop'),
-            'free_shipping_over' => $context['shop']['free_shipping'] !== ''
+            'free_shipping_over' => '' !== $context['shop']['free_shipping']
                 ? sprintf(
                     /* translators: %s: order amount for free shipping */
                     __('Free shipping over %s', 'latte-shop'),
@@ -214,6 +214,7 @@ final class Front
      * the cart reads license tiers from `licenses` and treats products as downloads in a digital store.
      *
      * @param array<mixed> $defs
+     *
      * @return array<mixed>
      */
     public static function types(array $defs): array
@@ -224,12 +225,13 @@ final class Front
             }
             $def['fields'] = (array) apply_filters('wpfasty_shop_product_fields', (array) ($def['fields'] ?? []));
             $buy = (array) ($def['supports']['purchasable'] ?? []);
-            if ($buy !== []) {
+            if ([] !== $buy) {
                 $buy += ['license_field' => 'licenses', 'digital' => self::digitalOnly()];
                 $def['supports']['purchasable'] = $buy;
             }
             $defs[$i] = $def;
         }
+
         return $defs;
     }
 
@@ -240,6 +242,7 @@ final class Front
     public static function digitalOnly(): bool
     {
         $cart = (array) apply_filters('wpfasty_shop_cart', ['items' => []]);
+
         return (bool) apply_filters('wpfasty_shop_digital_only', !empty($cart['digital']));
     }
 
@@ -260,6 +263,7 @@ final class Front
                 ['city', __('City', 'latte-shop'), 'text', 'address-level2', true],
                 ['postcode', __('Postcode', 'latte-shop'), 'text', 'postal-code', true],
             ];
+
         return array_values((array) apply_filters('wpfasty_shop_checkout_fields', $fields));
     }
 
@@ -267,6 +271,7 @@ final class Front
      * Human names of the invalid checkout fields (the orders module reports field ids).
      *
      * @param array<mixed> $errors
+     *
      * @return list<string>
      */
     public static function errorLabels(array $errors): array
@@ -285,6 +290,7 @@ final class Front
             $e = (string) $e;
             $out[] = $names[$e] ?? $e;
         }
+
         return $out;
     }
 
@@ -301,6 +307,7 @@ final class Front
                 ['id' => 'cod', 'label' => __('Cash on delivery', 'latte-shop'), 'icon' => 'truck'],
                 ['id' => 'bank', 'label' => __('Bank transfer', 'latte-shop'), 'icon' => 'credit-card'],
             ];
+
         return array_values((array) apply_filters('wpfasty_shop_checkout_payments', $payments));
     }
 
@@ -327,11 +334,12 @@ final class Front
             'fields' => 'ids',
             'no_found_rows' => true,
         ]);
-        $all = $ids === [] ? [] : wpfasty_type_posts('product', 48);
+        $all = [] === $ids ? [] : wpfasty_type_posts('product', 48);
         $cache = array_values(array_filter(
             $all,
             static fn (array $p): bool => in_array((int) ($p['id'] ?? 0), $ids, true)
         ));
+
         return $cache;
     }
 
@@ -339,6 +347,7 @@ final class Front
      * Product view-model (module `context` of types/product.php): prices and stock from the cart module.
      *
      * @param array<string, mixed> $data
+     *
      * @return array<string, mixed>
      */
     public static function productViewModel(array $data, \WP_Post $post): array
@@ -350,6 +359,7 @@ final class Front
         $data['seller'] = $isSeller && $user instanceof \WP_User
             ? ['name' => (string) $user->display_name, 'url' => (string) get_author_posts_url($user->ID)]
             : null;
+
         return $data;
     }
 
@@ -371,15 +381,17 @@ final class Front
     public static function column(int $postId, string $column): string
     {
         $product = self::product($postId);
-        if ($column === 'stock') {
-            return $product['stock'] === null ? '∞' : (string) $product['stock'];
+        if ('stock' === $column) {
+            return null === $product['stock'] ? '∞' : (string) $product['stock'];
         }
+
         return (string) ($product[$column] ?? '');
     }
 
     private static function notice(): ?array
     {
         $code = isset($_GET['cart']) ? sanitize_key(wp_unslash($_GET['cart'])) : '';
+
         return match ($code) {
             'added' => [
                 'variant' => 'success',

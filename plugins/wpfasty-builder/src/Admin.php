@@ -69,32 +69,34 @@ final class Admin
     public static function url(int $pageId, string $collection = ''): string
     {
         $args = ['page' => self::SLUG, 'post' => $pageId];
-        if ($collection !== '') {
+        if ('' !== $collection) {
             $args['collection'] = $collection;
         }
+
         return add_query_arg($args, admin_url('edit.php?post_type=page'));
     }
 
     /**
      * @param array<string, string> $actions
+     *
      * @return array<string, string>
      */
     public static function rowAction(array $actions, \WP_Post $post): array
     {
         if (current_user_can('edit_page', $post->ID)) {
-            $actions['wpfb'] = '<a href="' . esc_url(self::url($post->ID)) . '">' . esc_html__(
+            $actions['wpfb'] = '<a href="'.esc_url(self::url($post->ID)).'">'.esc_html__(
                 'Edit with Builder',
                 'wpfasty-builder',
-            ) . '</a>';
+            ).'</a>';
         }
+
         return $actions;
     }
 
     /** a GET parameter of the screen URL (display state only; every action checks a nonce) */
     private static function query(string $key): string
     {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        return isset($_GET[$key]) && is_string($_GET[$key]) ? sanitize_text_field(wp_unslash($_GET[$key])) : '';
+        return isset($_GET[$key]) && is_string($_GET[$key]) ? sanitize_text_field(wp_unslash($_GET[$key])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
     }
 
     private static function pageId(): int
@@ -108,11 +110,11 @@ final class Admin
      */
     public static function pagesList(string $hook): void
     {
-        if ($hook !== 'edit.php' || !current_user_can('edit_pages') || !function_exists('get_current_screen')) {
+        if ('edit.php' !== $hook || !current_user_can('edit_pages') || !function_exists('get_current_screen')) {
             return;
         }
         $screen = get_current_screen();
-        if ($screen === null || $screen->post_type !== 'page') {
+        if (null === $screen || 'page' !== $screen->post_type) {
             return;
         }
         wp_register_script('wpfasty-builder-pages', false, [], Plugin::VERSION, true);
@@ -124,23 +126,23 @@ final class Admin
     public static function addNewScript(): string
     {
         return '(function(){var a=document.querySelector(".wrap .page-title-action");if(!a){return;}'
-            . 'var b=document.createElement("a");b.className="page-title-action wpfb-add-new";'
-            . 'b.href=' . wp_json_encode(self::newUrl(), self::JSON) . ';b.textContent='
-            . wp_json_encode(__('Add New with Builder', 'wpfasty-builder'), self::JSON) . ';a.after(b);})();';
+            .'var b=document.createElement("a");b.className="page-title-action wpfb-add-new";'
+            .'b.href='.wp_json_encode(self::newUrl(), self::JSON).';b.textContent='
+            .wp_json_encode(__('Add New with Builder', 'wpfasty-builder'), self::JSON).';a.after(b);})();';
     }
 
     public static function enqueue(string $hook): void
     {
-        if ($hook !== self::$hook || self::$hook === '') {
+        if ($hook !== self::$hook || '' === self::$hook) {
             return;
         }
         $id = self::pageId();
-        $chooser = $id === 0 && current_user_can('edit_pages');
-        if (!$chooser && ($id === 0 || get_post_type($id) !== 'page' || !current_user_can('edit_page', $id))) {
+        $chooser = 0 === $id && current_user_can('edit_pages');
+        if (!$chooser && (0 === $id || 'page' !== get_post_type($id) || !current_user_can('edit_page', $id))) {
             return;
         }
-        $js = Plugin::$dir . '/assets/editor.js';
-        $css = Plugin::$dir . '/assets/editor.css';
+        $js = Plugin::$dir.'/assets/editor.js';
+        $css = Plugin::$dir.'/assets/editor.css';
         if (!is_file($js)) {
             return;
         }
@@ -164,26 +166,27 @@ final class Admin
             'nonce' => wp_create_nonce('wp_rest'),
             'user' => get_current_user_id(),
             'starters' => Starters::forEditor(),
-            'newPage' => self::query('new') === '1',
+            'newPage' => '1' === self::query('new'),
         ];
         if ($chooser) {
             wp_add_inline_script(
                 'wpfasty-builder-editor',
-                'window.WPFastyBuilderConfig = ' . wp_json_encode($common + [
+                'window.WPFastyBuilderConfig = '.wp_json_encode($common + [
                     'page' => 0, 'title' => '', 'source' => '', 'collection' => '', 'permalink' => '',
                     'canPublish' => false, 'editUrl' => '',
-                ], self::JSON) . ';',
+                ], self::JSON).';',
                 'before',
             );
+
             return;
         }
         $collection = sanitize_key(self::query('collection'));
         $source = sanitize_key(self::query('source'));
         $entry = Store::get($id, true);
-        if ($source === '') {
+        if ('' === $source) {
             $source = (string) ($entry['metadata']['source']['value'] ?? 'ui8kit');
         }
-        if ($collection === '') {
+        if ('' === $collection) {
             $collection = (string) ($entry['metadata']['collection']['value'] ?? '');
         }
         $config = $common + [
@@ -197,7 +200,7 @@ final class Admin
         ];
         wp_add_inline_script(
             'wpfasty-builder-editor',
-            'window.WPFastyBuilderConfig = ' . wp_json_encode($config, self::JSON) . ';',
+            'window.WPFastyBuilderConfig = '.wp_json_encode($config, self::JSON).';',
             'before',
         );
         self::$editor = true;
@@ -210,11 +213,11 @@ final class Admin
      */
     public static function darkSwitch(\WP_Admin_Bar $bar): void
     {
-        if (!self::$editor || self::$hook === '' || !function_exists('get_current_screen')) {
+        if (!self::$editor || '' === self::$hook || !function_exists('get_current_screen')) {
             return;
         }
         $screen = get_current_screen();
-        if ($screen === null || $screen->id !== self::$hook) {
+        if (null === $screen || $screen->id !== self::$hook) {
             return;
         }
         $bar->add_node([
@@ -230,18 +233,19 @@ final class Admin
     public static function darkButton(): string
     {
         $label = __('Dark mode', 'wpfasty-builder');
-        $svg = static fn (string $class, string $body): string => '<svg class="' . $class
-            . '" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" '
-            . 'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
-            . 'aria-hidden="true" focusable="false">' . $body . '</svg>';
+        $svg = static fn (string $class, string $body): string => '<svg class="'.$class
+            .'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" '
+            .'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+            .'aria-hidden="true" focusable="false">'.$body.'</svg>';
         $moon = $svg('wpfb-dark-moon', '<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803'
-            . 'a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>');
+        .'a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>');
         $sun = $svg('wpfb-dark-sun', '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/>'
-            . '<path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/>'
-            . '<path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>');
+            .'<path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/>'
+        .'<path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>');
+
         return '<button type="button" id="wpfb-dark-toggle" class="wpfb-dark-toggle" aria-pressed="false" title="'
-            . esc_attr($label) . '">' . $moon . $sun . '<span class="screen-reader-text">' . esc_html($label)
-            . '</span></button>';
+            .esc_attr($label).'">'.$moon.$sun.'<span class="screen-reader-text">'.esc_html($label)
+            .'</span></button>';
     }
 
     public static function screen(): void
@@ -250,29 +254,30 @@ final class Admin
             wp_die(esc_html__('Sorry, you are not allowed to use the builder.', 'wpfasty-builder'));
         }
         $id = self::pageId();
-        if ($id > 0 && get_post_type($id) === 'page' && current_user_can('edit_page', $id)) {
-            echo '<div class="wrap wpfb-wrap"><div id="wpfasty-builder" class="wpfb-root"><p>' . esc_html__(
+        if ($id > 0 && 'page' === get_post_type($id) && current_user_can('edit_page', $id)) {
+            echo '<div class="wrap wpfb-wrap"><div id="wpfasty-builder" class="wpfb-root"><p>'.esc_html__(
                 'Loading the builder…',
                 'wpfasty-builder',
-            ) . '</p></div>';
-            if (!is_file(Plugin::$dir . '/assets/editor.js')) {
-                echo '<p>' . esc_html__(
+            ).'</p></div>';
+            if (!is_file(Plugin::$dir.'/assets/editor.js')) {
+                echo '<p>'.esc_html__(
                     'The editor build is missing: run the editor build (plugins/wpfasty-builder/editor).',
                     'wpfasty-builder',
-                ) . '</p>';
+                ).'</p>';
             }
             echo '</div>';
+
             return;
         }
         $pages = get_pages(['post_status' => 'publish,draft,private', 'sort_column' => 'post_title']);
-        echo '<div class="wrap"><h1 class="wp-heading-inline">' . esc_html__('Builder', 'wpfasty-builder') . '</h1> ';
+        echo '<div class="wrap"><h1 class="wp-heading-inline">'.esc_html__('Builder', 'wpfasty-builder').'</h1> ';
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup of escaped parts (newPageButton)
-        echo self::newPageButton() . '<hr class="wp-header-end">';
+        echo self::newPageButton().'<hr class="wp-header-end">';
         echo '<div id="wpfasty-builder-new" class="wpfb-root"></div>';
-        echo '<p>' . esc_html__(
+        echo '<p>'.esc_html__(
             'Choose a page to build. Pages with a published layout render it on the front end.',
             'wpfasty-builder',
-        ) . '</p><table class="widefat striped"><tbody>';
+        ).'</p><table class="widefat striped"><tbody>';
         foreach ($pages as $p) {
             if (!current_user_can('edit_page', $p->ID)) {
                 continue;
@@ -281,7 +286,7 @@ final class Admin
             printf(
                 '<tr><td><a href="%s">%s</a></td><td>%s</td></tr>',
                 esc_url(self::url($p->ID)),
-                esc_html($p->post_title !== '' ? $p->post_title : '#' . $p->ID),
+                esc_html('' !== $p->post_title ? $p->post_title : '#'.$p->ID),
                 esc_html($state)
             );
         }
@@ -292,7 +297,7 @@ final class Admin
     public static function newPageButton(): string
     {
         return '<button type="button" id="wpfb-new-page" class="page-title-action" aria-haspopup="dialog">'
-            . esc_html__('New page', 'wpfasty-builder') . '</button>';
+            .esc_html__('New page', 'wpfasty-builder').'</button>';
     }
 
     /** blocks that cannot render in the site runtime — never rendered through the other engine instead */
@@ -302,7 +307,7 @@ final class Admin
             return;
         }
         foreach (Sources::problems() as $msg) {
-            echo '<div class="notice notice-error"><p>' . esc_html($msg) . '</p></div>';
+            echo '<div class="notice notice-error"><p>'.esc_html($msg).'</p></div>';
         }
     }
 
@@ -311,16 +316,16 @@ final class Admin
         if (!current_user_can('manage_options')) {
             wp_die(esc_html__('Sorry, you are not allowed to manage builder sources.', 'wpfasty-builder'));
         }
-        echo '<div class="wrap"><h1>' . esc_html__('Builder sources', 'wpfasty-builder') . '</h1>';
+        echo '<div class="wrap"><h1>'.esc_html__('Builder sources', 'wpfasty-builder').'</h1>';
         echo self::takeNotice(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped there
-        echo '<table class="widefat striped"><thead><tr><th>' . esc_html__('Source', 'wpfasty-builder') . '</th><th>'
-            . esc_html__('Collections', 'wpfasty-builder') . '</th></tr></thead><tbody>';
+        echo '<table class="widefat striped"><thead><tr><th>'.esc_html__('Source', 'wpfasty-builder').'</th><th>'
+            .esc_html__('Collections', 'wpfasty-builder').'</th></tr></thead><tbody>';
         foreach (Sources::all() as $src) {
             $catalog = Sources::catalog($src->id());
             $links = [];
             foreach ($catalog?->collections() ?? [] as $c) {
-                if ($c['type'] === 'template') {
-                    $links[] = esc_html($c['label']) . ' <code>' . esc_html($c['id']) . '</code>';
+                if ('template' === $c['type']) {
+                    $links[] = esc_html($c['label']).' <code>'.esc_html($c['id']).'</code>';
                 }
             }
             printf(
@@ -332,27 +337,27 @@ final class Admin
         }
         echo '</tbody></table>';
         if (Sources::canImport()) {
-            echo '<h2>' . esc_html__('Import a remote source', 'wpfasty-builder') . '</h2>';
-            echo '<p>' . esc_html(sprintf(
+            echo '<h2>'.esc_html__('Import a remote source', 'wpfasty-builder').'</h2>';
+            echo '<p>'.esc_html(sprintf(
                 // phpcs:disable Generic.Files.LineLength.TooLong -- a translatable literal must stay one string.
                 /* translators: %1$s: site engine (latte or twig) */
                 __('The URL must be a %1$s block registry (catalog.json + blocks.zip), e.g. https://registry.buildy.tw/%1$s/wpfasty/v1.0.0/.', 'wpfasty-builder'),
                 // phpcs:enable Generic.Files.LineLength.TooLong
                 (string) Plugin::engine(),
-            )) . ' '
-                . esc_html__('Remote templates compile through an allowlist of tags and functions.', 'wpfasty-builder')
-                . '</p>';
-            echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
+            )).' '
+                .esc_html__('Remote templates compile through an allowlist of tags and functions.', 'wpfasty-builder')
+                .'</p>';
+            echo '<form method="post" action="'.esc_url(admin_url('admin-post.php')).'">';
             wp_nonce_field('wpfb_import');
             echo '<input type="hidden" name="action" value="wpfb_import">';
-            echo '<p><label>' . esc_html__(
+            echo '<p><label>'.esc_html__(
                 'Id',
                 'wpfasty-builder',
-            ) . ' <input name="id" pattern="[a-z][a-z0-9_-]*" required></label> ';
-            echo '<label>' . esc_html__(
+            ).' <input name="id" pattern="[a-z][a-z0-9_-]*" required></label> ';
+            echo '<label>'.esc_html__(
                 'URL',
                 'wpfasty-builder',
-            ) . ' <input name="url" type="url" size="60" required></label> ';
+            ).' <input name="url" type="url" size="60" required></label> ';
             submit_button(__('Import', 'wpfasty-builder'), 'primary', 'submit', false);
             echo '</p></form>';
         }
@@ -392,8 +397,8 @@ final class Admin
      */
     public static function notice(string $type, string $text): void
     {
-        set_transient(self::NOTICE . get_current_user_id(), [
-            'type' => $type === 'error' ? 'error' : 'success',
+        set_transient(self::NOTICE.get_current_user_id(), [
+            'type' => 'error' === $type ? 'error' : 'success',
             'text' => $text,
         ], 300);
     }
@@ -401,13 +406,14 @@ final class Admin
     /** the pending notice of the current user as an admin notice (escaped), then forgotten; '' without one */
     public static function takeNotice(): string
     {
-        $key = self::NOTICE . get_current_user_id();
+        $key = self::NOTICE.get_current_user_id();
         $n = get_transient($key);
         if (!is_array($n) || !is_string($n['text'] ?? null)) {
             return '';
         }
         delete_transient($key);
         $type = ($n['type'] ?? '') === 'error' ? 'error' : 'success';
-        return '<div class="notice notice-' . $type . '"><p>' . esc_html($n['text']) . '</p></div>';
+
+        return '<div class="notice notice-'.$type.'"><p>'.esc_html($n['text']).'</p></div>';
     }
 }

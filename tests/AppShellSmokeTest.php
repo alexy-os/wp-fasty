@@ -11,16 +11,16 @@ final class AppShellSmokeTest extends TestCase
 {
     public function testAppShellRendersSidebarAndSheet(): void
     {
-        $theme = dirname(__DIR__) . '/themes/latte';
-        $cache = sys_get_temp_dir() . '/latte-app-shell-' . uniqid('', true);
+        $theme = dirname(__DIR__).'/themes/latte';
+        $cache = sys_get_temp_dir().'/latte-app-shell-'.uniqid('', true);
         mkdir($cache, 0755, true);
 
         $latte = new Engine();
         $latte->setTempDirectory($cache);
         $latte->setStrictTypes(true);
         $latte->setLoader(new MultiRootLoader([
-            $theme . '/views',
-            ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__) . '/themes/latte'),
+            $theme.'/views',
+            ...WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte'),
         ]));
         $latte->addExtension(new WordPressExtension());
 

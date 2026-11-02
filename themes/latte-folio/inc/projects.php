@@ -2,8 +2,6 @@
 
 /**
  * Portfolio site context (work filters, services, next project).
- *
- * @package Latte_Folio
  */
 
 declare(strict_types=1);
@@ -15,7 +13,7 @@ if (!defined('ABSPATH')) {
 // CPT, taxonomy, fields, metabox, routing and archive query live in types/project.php
 // (registered by the parent WPFasty\Types\Registry).
 
-/**
+/*
  * @param array<string, mixed> $context
  * @return array<string, mixed>
  */
@@ -40,7 +38,7 @@ add_filter('wpfasty_context', static function (array $context): array {
     $contact = get_page_by_path('contact');
     $context['contact_url'] = $contact
         ? (string) get_permalink($contact)
-        : 'mailto:' . antispambot((string) get_option('admin_email'));
+        : 'mailto:'.antispambot((string) get_option('admin_email'));
 
     if (is_front_page()) {
         $context['projects'] = wpfasty_type_posts('project', 6);

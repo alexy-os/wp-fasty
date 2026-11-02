@@ -9,9 +9,7 @@
  *   wpfasty_shop_product  (array $product, int $postId)  price / licenses / reviews         — cart, reviews
  *   wpfasty_shop_checkout (array $checkout)              errors, kept values, consents      — orders, consent-log
  *   wpfasty_shop_order    (?array $order)                confirmation + download links      — orders, downloads
- *   wpfasty_cookie_consent (array $state)                cookie banner on/off                — cookie-consent
- *
- * @package WP_FastY_Market
+ *   wpfasty_cookie_consent (array $state)                cookie banner on/off                — cookie-consent.
  */
 
 declare(strict_types=1);
@@ -64,7 +62,8 @@ final class Front
     public static function pageUrl(string $slug): string
     {
         $page = get_page_by_path($slug);
-        return $page ? (string) get_permalink($page) : home_url('/' . $slug . '/');
+
+        return $page ? (string) get_permalink($page) : home_url('/'.$slug.'/');
     }
 
     public static function shopUrl(): string
@@ -85,6 +84,7 @@ final class Front
     private static function param(string $key, array $allowed): string
     {
         $raw = isset($_GET[$key]) ? sanitize_key(wp_unslash($_GET[$key])) : '';
+
         return in_array($raw, $allowed, true) ? $raw : $allowed[0];
     }
 
@@ -99,14 +99,14 @@ final class Front
         $price = self::param('price', self::PRICES);
         $ranges = ['free-50' => [0, 500000], '50-100' => [500000, 1000000], '100-plus' => [1000000, PHP_INT_MAX]];
         $range = $ranges[$price] ?? null;
-        if ($range !== null) {
+        if (null !== $range) {
             $meta[] = ['key' => '_shop_price', 'value' => $range, 'type' => 'NUMERIC', 'compare' => 'BETWEEN'];
         }
         if (isset($_GET['rating']) && absint(wp_unslash($_GET['rating'])) > 0) {
             $min = absint(wp_unslash($_GET['rating']));
             $meta[] = ['key' => '_shop_rating', 'value' => $min, 'type' => 'DECIMAL', 'compare' => '>='];
         }
-        if ($meta !== []) {
+        if ([] !== $meta) {
             $q->set('meta_query', $meta); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
         }
         $order = match ($sort) {
@@ -123,6 +123,7 @@ final class Front
 
     /**
      * @param array<string, mixed> $context
+     *
      * @return array<string, mixed>
      */
     public static function context(array $context): array
@@ -148,7 +149,7 @@ final class Front
         // Availability flags for the views (disable scenario): the cart module sets `enabled`, the orders module the
         // checkout nonce. Without them the views hide the buy buttons and show "temporarily unavailable".
         $shop['cart_available'] = !empty($shop['enabled']);
-        $shop['checkout_available'] = $shop['cart_available'] && (string) ($shop['checkout_nonce'] ?? '') !== '';
+        $shop['checkout_available'] = $shop['cart_available'] && '' !== (string) ($shop['checkout_nonce'] ?? '');
         $context['shop'] = $shop + [
             'search_url' => home_url('/'),
             'notice' => self::notice(),
@@ -188,7 +189,7 @@ final class Front
             'ogrn' => '0000',
             'inn' => '[ИНН]',
             'address' => '[АДРЕС]',
-            'email' => 'support@' . wp_parse_url(home_url(), PHP_URL_HOST),
+            'email' => 'support@'.wp_parse_url(home_url(), PHP_URL_HOST),
         ]);
 
         $context['cookie_consent'] = (array) apply_filters('wpfasty_cookie_consent', ['enabled' => false]);
@@ -271,6 +272,7 @@ final class Front
      * digital-goods details from the product fields.
      *
      * @param array<string, mixed> $data
+     *
      * @return array<string, mixed>
      */
     public static function productViewModel(array $data, \WP_Post $post): array
@@ -282,6 +284,7 @@ final class Front
         $data['reviews'] = (int) ($fields['reviews'] ?? 0);
         $data['badge'] = (string) ($fields['badge'] ?? '');
         $data['digital'] = self::digital($fields, $post, $data['product']);
+
         return $data;
     }
 
@@ -308,6 +311,7 @@ final class Front
      *
      * @param array<string, mixed> $fields
      * @param array<string, mixed> $product
+     *
      * @return array<string, mixed>
      */
     private static function digital(array $fields, \WP_Post $post, array $product): array
@@ -315,7 +319,7 @@ final class Front
         $changelog = [];
         foreach (preg_split('/\R/', (string) ($fields['changelog'] ?? '')) ?: [] as $line) {
             $parts = array_map('trim', explode('|', $line, 3));
-            if (count($parts) === 3 && $parts[0] !== '') {
+            if (3 === count($parts) && '' !== $parts[0]) {
                 $changelog[] = ['version' => $parts[0], 'date' => $parts[1], 'notes' => $parts[2]];
             }
         }
@@ -323,8 +327,9 @@ final class Front
         $user = $userId > 0 ? get_userdata($userId) : false;
         $author = $user instanceof \WP_User
             ? ['name' => $user->display_name, 'slug' => $user->user_nicename, 'role' => '', 'items' => 0,
-                'url' => (string) get_author_posts_url($user->ID)]
+                'url' => (string) get_author_posts_url($user->ID), ]
             : Fixtures::productAuthor($post->post_name);
+
         return [
             'version' => (string) ($fields['version'] ?? ''),
             'wp' => (string) ($fields['requires_wp'] ?? ''),
@@ -355,14 +360,16 @@ final class Front
     public static function column(int $postId, string $column): string
     {
         $product = self::product($postId);
-        if ($column === 'stock') {
-            return $product['stock'] === null ? '∞' : (string) $product['stock'];
+        if ('stock' === $column) {
+            return null === $product['stock'] ? '∞' : (string) $product['stock'];
         }
+
         return (string) ($product[$column] ?? '');
     }
 
     /**
      * @param array<string, mixed> $context
+     *
      * @return array<string, string>
      */
     private static function labels(array $context): array
@@ -523,6 +530,7 @@ final class Front
     private static function notice(): ?array
     {
         $code = isset($_GET['cart']) ? sanitize_key(wp_unslash($_GET['cart'])) : '';
+
         return match ($code) {
             'added' => [
                 'variant' => 'success',

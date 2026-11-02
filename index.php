@@ -1,4 +1,5 @@
 <?php
+
 /**
  * wp-fasty monorepo root — not a WordPress theme.
  * Active themes live under themes/<slug>/.

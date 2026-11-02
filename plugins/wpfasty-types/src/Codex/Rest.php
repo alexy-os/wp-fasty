@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace WPFastyTypes\Codex;
 
-use WP_Post;
-use WP_REST_Request;
-use WP_REST_Response;
-use WP_REST_Server;
-
 /**
  * /wpfasty/v1/codex — the Codex HTTP form (agreed with Ops Engineer / XGenBot):
  *   GET /                                  {codex_version, profile, manifest_digest}
@@ -37,9 +32,9 @@ final class Rest
     public static function routes(): void
     {
         $base = Profile::REST_BASE;
-        $open = ['methods' => WP_REST_Server::READABLE, 'permission_callback' => '__return_true'];
+        $open = ['methods' => \WP_REST_Server::READABLE, 'permission_callback' => '__return_true'];
         $add = static function (string $path, callable $cb) use ($open, $base): void {
-            register_rest_route(Profile::REST_NS, $base . $path, $open + ['callback' => $cb]);
+            register_rest_route(Profile::REST_NS, $base.$path, $open + ['callback' => $cb]);
         };
         $add('', [self::class, 'discovery']);
         $add('/entries/(?P<kind>[^/]+)', [self::class, 'entries']);
@@ -50,35 +45,38 @@ final class Rest
         $add('/settings/(?P<id>[^/]+)', [self::class, 'setting']);
     }
 
-    private static function raw(string $bytes, int $status = 200, array $headers = []): WP_REST_Response
+    private static function raw(string $bytes, int $status = 200, array $headers = []): \WP_REST_Response
     {
-        $r = new WP_REST_Response(null, $status, ['Content-Type' => self::CT] + $headers);
+        $r = new \WP_REST_Response(null, $status, ['Content-Type' => self::CT] + $headers);
         $r->header('Content-Type', self::CT);
         $r->set_data([self::RAW => $bytes]);
+
         return $r;
     }
 
     private const QUERY = ['locale', 'page', 'per_page'];
 
-    public static function error(string $code, string $message, int $status, ?array $details = null): WP_REST_Response
+    public static function error(string $code, string $message, int $status, ?array $details = null): \WP_REST_Response
     {
         $e = ['code' => $code, 'message' => $message, 'status' => $status];
         if ($details) {
             $e['details'] = $details;
         }
+
         return self::raw(Json::jcs(['error' => $e]), $status);
     }
 
     /** Print the exact bytes of our responses. */
-    public static function serve(bool $served, mixed $result, WP_REST_Request $request, WP_REST_Server $server): bool
+    public static function serve(bool $served, mixed $result, \WP_REST_Request $request, \WP_REST_Server $server): bool
     {
-        $data = $result instanceof WP_REST_Response ? $result->get_data() : null;
+        $data = $result instanceof \WP_REST_Response ? $result->get_data() : null;
         if ($served || !is_array($data) || !isset($data[self::RAW])) {
             return $served;
         }
         $server->send_header('Content-Type', self::CT);
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON bytes of a REST response.
         echo $data[self::RAW];
+
         return true;
     }
 
@@ -88,15 +86,16 @@ final class Rest
             'page' => $page, 'per_page' => $per, 'total' => $total,
             'total_pages' => $per > 0 ? (int) ceil($total / $per) : 0,
         ]);
-        return '{"data":[' . implode(',', $items) . '],"pagination":' . $p . '}';
+
+        return '{"data":['.implode(',', $items).'],"pagination":'.$p.'}';
     }
 
     /**
      * Query of every route (as fastygo/backend /codex/v1): only locale, page, per_page; anything else is 400.
      *
-     * @return array{0: string, 1: int, 2: int}|WP_REST_Response locale, page, per_page
+     * @return array{0: string, 1: int, 2: int}|\WP_REST_Response locale, page, per_page
      */
-    private static function query(WP_REST_Request $req): array|WP_REST_Response
+    private static function query(\WP_REST_Request $req): array|\WP_REST_Response
     {
         $q = $req->get_query_params();
         unset($q['rest_route']); // plain permalinks route through ?rest_route=
@@ -108,7 +107,7 @@ final class Rest
         $locale = Mapper::locale();
         if (isset($q['locale'])) {
             $l = is_string($q['locale']) ? $q['locale'] : '';
-            if (preg_match('/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/', $l) !== 1) {
+            if (1 !== preg_match('/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/', $l)) {
                 return self::error('validation_error', 'locale is invalid', 400, ['locale' => $l]);
             }
             if ($l !== $locale) {
@@ -120,38 +119,40 @@ final class Rest
         foreach (['page' => &$page, 'per_page' => &$per] as $k => &$v) {
             if (isset($q[$k])) {
                 $raw = is_string($q[$k]) ? $q[$k] : '';
-                if (preg_match('/^\+?0*[1-9][0-9]{0,17}$/', $raw) !== 1) {
+                if (1 !== preg_match('/^\+?0*[1-9][0-9]{0,17}$/', $raw)) {
                     return self::error('validation_error', "{$k} must be a positive integer", 400, [$k => $raw]);
                 }
                 // per_page above the maximum is clamped, not rejected (fastygo/backend /codex/v1)
-                $v = $k === 'per_page' ? min((int) $raw, Profile::MAX_PER_PAGE) : (int) $raw;
+                $v = 'per_page' === $k ? min((int) $raw, Profile::MAX_PER_PAGE) : (int) $raw;
             }
         }
         unset($v);
+
         return [$locale, $page, $per];
     }
 
-    private static function site(): Site|WP_REST_Response
+    private static function site(): Site|\WP_REST_Response
     {
         return Site::current() ?? self::error('not_found', 'manifest was not found', 404);
     }
 
     private static function publicPost(mixed $post, string $postType): bool
     {
-        return $post instanceof WP_Post && $post->post_type === $postType && $post->post_status === 'publish'
-            && $post->post_password === '';
+        return $post instanceof \WP_Post && $post->post_type === $postType && 'publish' === $post->post_status
+            && '' === $post->post_password;
     }
 
-    public static function discovery(WP_REST_Request $req): WP_REST_Response
+    public static function discovery(\WP_REST_Request $req): \WP_REST_Response
     {
         $site = self::site();
-        if ($site instanceof WP_REST_Response) {
+        if ($site instanceof \WP_REST_Response) {
             return $site;
         }
         $q = self::query($req);
-        if ($q instanceof WP_REST_Response) {
+        if ($q instanceof \WP_REST_Response) {
             return $q;
         }
+
         return self::raw(Json::jcs([
             'codex_version' => Profile::CODEX_VERSION,
             'profile' => Profile::ENTRY_PROFILE,
@@ -159,14 +160,14 @@ final class Rest
         ]));
     }
 
-    public static function entries(WP_REST_Request $req): WP_REST_Response
+    public static function entries(\WP_REST_Request $req): \WP_REST_Response
     {
         $site = self::site();
-        if ($site instanceof WP_REST_Response) {
+        if ($site instanceof \WP_REST_Response) {
             return $site;
         }
         $q = self::query($req);
-        if ($q instanceof WP_REST_Response) {
+        if ($q instanceof \WP_REST_Response) {
             return $q;
         }
         $kind = (string) $req['kind'];
@@ -183,6 +184,7 @@ final class Rest
         foreach (self::posts($wpIds, $postType) as $post) {
             $items[] = Canonical::entryBytes($map->entry($post, $kind));
         }
+
         return self::raw(self::envelope($items, $page, $per, count($ids)));
     }
 
@@ -200,6 +202,7 @@ final class Rest
         ]);
         $out = array_map(static fn ($id): string => Mapper::id($kind, (int) $id), $ids);
         sort($out, SORT_STRING);
+
         return $out;
     }
 
@@ -207,11 +210,12 @@ final class Rest
      * Posts in the given order with meta + term caches primed (no N+1).
      *
      * @param list<int> $ids
-     * @return list<WP_Post>
+     *
+     * @return list<\WP_Post>
      */
     public static function posts(array $ids, string $postType): array
     {
-        if ($ids === []) {
+        if ([] === $ids) {
             return [];
         }
         $posts = get_posts([
@@ -219,36 +223,37 @@ final class Rest
             'posts_per_page' => count($ids), 'no_found_rows' => true, 'ignore_sticky_posts' => true,
             'update_post_meta_cache' => true, 'update_post_term_cache' => true, 'suppress_filters' => true,
         ]);
-        return array_values(array_filter($posts, static fn ($p): bool => $p instanceof WP_Post));
+
+        return array_values(array_filter($posts, static fn ($p): bool => $p instanceof \WP_Post));
     }
 
-    public static function entry(WP_REST_Request $req): WP_REST_Response
+    public static function entry(\WP_REST_Request $req): \WP_REST_Response
     {
         $site = self::site();
-        if ($site instanceof WP_REST_Response) {
+        if ($site instanceof \WP_REST_Response) {
             return $site;
         }
         $kind = (string) $req['kind'];
         $id = (string) $req['id'];
         $q = self::query($req);
-        if ($q instanceof WP_REST_Response) {
+        if ($q instanceof \WP_REST_Response) {
             return $q;
         }
-        if (!in_array($kind, [...$site->postKinds(), 'media', 'user'], true) || $site->resource($kind) === null) {
+        if (!in_array($kind, [...$site->postKinds(), 'media', 'user'], true) || null === $site->resource($kind)) {
             return self::error('not_found', 'kind was not found', 404);
         }
         $wpId = Mapper::wpId($kind, $id);
         $map = new Mapper($site);
         $entry = null;
-        if ($kind === 'media' && $site->resource('media') !== null && $wpId > 0) {
+        if ('media' === $kind && null !== $site->resource('media') && $wpId > 0) {
             $att = get_post($wpId);
-            $parent = $att instanceof WP_Post && $att->post_parent > 0 ? get_post($att->post_parent) : null;
-            if ($att instanceof WP_Post && $att->post_type === 'attachment' && $att->post_status === 'inherit'
-                && ($parent === null || ($parent instanceof WP_Post && $parent->post_status === 'publish'))
+            $parent = $att instanceof \WP_Post && $att->post_parent > 0 ? get_post($att->post_parent) : null;
+            if ($att instanceof \WP_Post && 'attachment' === $att->post_type && 'inherit' === $att->post_status
+                && (null === $parent || ($parent instanceof \WP_Post && 'publish' === $parent->post_status))
             ) {
                 $entry = $map->media($att);
             }
-        } elseif ($kind === 'user' && $site->resource('user') !== null && $wpId > 0) {
+        } elseif ('user' === $kind && null !== $site->resource('user') && $wpId > 0) {
             $u = get_userdata($wpId);
             // only authors of public content are public
             if ($u instanceof \WP_User && count_user_posts($wpId, $site->postKinds(), true) > 0) {
@@ -260,25 +265,26 @@ final class Rest
                 $entry = $map->entry($post, $kind);
             }
         }
-        if ($entry === null) {
+        if (null === $entry) {
             return self::error('not_found', 'content was not found', 404);
         }
         $bytes = Canonical::entryBytes($entry);
         $hex = hash('sha256', $bytes);
+
         return self::raw($bytes, 200, [
-            'Codex-Digest' => Profile::ENTRY_PROFILE . ':sha256:' . $hex,
+            'Codex-Digest' => Profile::ENTRY_PROFILE.':sha256:'.$hex,
             'ETag' => "\"{$hex}\"",
         ]);
     }
 
-    public static function taxonomies(WP_REST_Request $req): WP_REST_Response
+    public static function taxonomies(\WP_REST_Request $req): \WP_REST_Response
     {
         $site = self::site();
-        if ($site instanceof WP_REST_Response) {
+        if ($site instanceof \WP_REST_Response) {
             return $site;
         }
         $q = self::query($req);
-        if ($q instanceof WP_REST_Response) {
+        if ($q instanceof \WP_REST_Response) {
             return $q;
         }
         [, $page, $per] = $q;
@@ -288,17 +294,18 @@ final class Rest
             static fn (string $t): string => Json::jcs($map->taxonomy($t)),
             array_slice($all, ($page - 1) * $per, $per),
         );
+
         return self::raw(self::envelope($items, $page, $per, count($all)));
     }
 
-    public static function terms(WP_REST_Request $req): WP_REST_Response
+    public static function terms(\WP_REST_Request $req): \WP_REST_Response
     {
         $site = self::site();
-        if ($site instanceof WP_REST_Response) {
+        if ($site instanceof \WP_REST_Response) {
             return $site;
         }
         $q = self::query($req);
-        if ($q instanceof WP_REST_Response) {
+        if ($q instanceof \WP_REST_Response) {
             return $q;
         }
         $tax = (string) $req['taxonomy'];
@@ -314,6 +321,7 @@ final class Rest
         $map = new Mapper($site);
         $slice = array_slice($terms, ($page - 1) * $per, $per);
         $items = array_map(static fn (\WP_Term $t): string => Canonical::termBytes($map->term($t)), $slice);
+
         return self::raw(self::envelope($items, $page, $per, count($terms)));
     }
 
@@ -321,42 +329,45 @@ final class Rest
     private static function settingsBytes(Site $site): string
     {
         $s = (new Mapper($site))->settings();
-        return Json::jcs(array_filter($s, static fn ($v): bool => $v !== '' && $v !== null));
+
+        return Json::jcs(array_filter($s, static fn ($v): bool => '' !== $v && null !== $v));
     }
 
-    public static function settings(WP_REST_Request $req): WP_REST_Response
+    public static function settings(\WP_REST_Request $req): \WP_REST_Response
     {
         $site = self::site();
-        if ($site instanceof WP_REST_Response) {
+        if ($site instanceof \WP_REST_Response) {
             return $site;
         }
         $q = self::query($req);
-        if ($q instanceof WP_REST_Response) {
+        if ($q instanceof \WP_REST_Response) {
             return $q;
         }
         [, $page, $per] = $q;
         // one settings record per locale; query() already answered an unknown locale with 404
         $items = array_slice([self::settingsBytes($site)], ($page - 1) * $per, $per);
+
         return self::raw(self::envelope($items, $page, $per, 1));
     }
 
-    public static function setting(WP_REST_Request $req): WP_REST_Response
+    public static function setting(\WP_REST_Request $req): \WP_REST_Response
     {
         $site = self::site();
-        if ($site instanceof WP_REST_Response) {
+        if ($site instanceof \WP_REST_Response) {
             return $site;
         }
         $q = self::query($req);
-        if ($q instanceof WP_REST_Response) {
+        if ($q instanceof \WP_REST_Response) {
             return $q;
         }
-        if ((string) $req['id'] !== Mapper::SETTINGS_ID) {
+        if (Mapper::SETTINGS_ID !== (string) $req['id']) {
             return self::error('not_found', 'settings were not found', 404);
         }
         $bytes = self::settingsBytes($site);
         $hex = hash('sha256', $bytes);
+
         return self::raw($bytes, 200, [
-            'Codex-Digest' => Profile::SETTINGS_PROFILE . ':sha256:' . $hex,
+            'Codex-Digest' => Profile::SETTINGS_PROFILE.':sha256:'.$hex,
             'ETag' => "\"{$hex}\"",
         ]);
     }

@@ -34,8 +34,7 @@ final class WordPressExtension extends Extension
     {
         return [
             // {icon('shopping-cart', 'size-4')} — inline Lucide SVG, attributes escaped.
-            'icon' => static fn (string $name, string $class = 'size-4', string $label = ''): \Latte\Runtime\Html
-                => new \Latte\Runtime\Html(Icons::svg($name, $class, $label)),
+            'icon' => static fn (string $name, string $class = 'size-4', string $label = ''): \Latte\Runtime\Html => new \Latte\Runtime\Html(Icons::svg($name, $class, $label)),
             't' => [ViewHelpers::class, 't'],
             // Kit presets over the unstyled UI8Kit 3 primitives:
             // class: kit('button', ['variant' => 'default'], 'mt-4').
@@ -63,7 +62,7 @@ final class WordPressExtension extends Extension
         $tag->expectArguments();
         $node = $tag->parser->parseArguments();
 
-        return new class ($node) extends StatementNode {
+        return new class($node) extends StatementNode {
             public function __construct(public readonly Node $node)
             {
             }
@@ -85,7 +84,7 @@ final class WordPressExtension extends Extension
         $tag->expectArguments();
         $node = $tag->parser->parseArguments();
 
-        return new class ($node) extends StatementNode {
+        return new class($node) extends StatementNode {
             public function __construct(public readonly Node $node)
             {
             }
@@ -184,7 +183,8 @@ final class WordPressExtension extends Extension
         }
 
         $node = $tag->parser->parseArguments();
-        return new class ($node) extends StatementNode {
+
+        return new class($node) extends StatementNode {
             public function __construct(public readonly Node $node)
             {
             }
@@ -209,8 +209,10 @@ final class WordPressExtension extends Extension
             foreach ($node->items as $item) {
                 $args[] = $item->value->print($context);
             }
-            return $prefix . $fn . '(' . implode(', ', $args) . ');';
+
+            return $prefix.$fn.'('.implode(', ', $args).');';
         }
-        return $prefix . $fn . '(' . $node->print($context) . ');';
+
+        return $prefix.$fn.'('.$node->print($context).');';
     }
 }

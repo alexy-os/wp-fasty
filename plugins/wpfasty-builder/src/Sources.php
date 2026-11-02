@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace WPFastyBuilder;
 
-use RuntimeException;
 use WPFastyBuilder\Source\LocalSource;
 use WPFastyBuilder\Source\RemoteSource;
 use WPFastyBuilder\Source\SourceInterface;
@@ -30,17 +29,17 @@ final class Sources
     public static function all(): array
     {
         $engine = Plugin::engine();
-        if (self::$all !== null && self::$engine === $engine) {
+        if (null !== self::$all && self::$engine === $engine) {
             return self::$all;
         }
         self::$engine = $engine;
         self::$catalogs = [];
-        if ($engine === null) {
+        if (null === $engine) {
             return self::$all = [];
         }
         $all = [];
         if (Plugin::ships($engine)) {
-            $all['ui8kit'] = new LocalSource('ui8kit', Plugin::$dir . '/sources/ui8kit/' . $engine, $engine);
+            $all['ui8kit'] = new LocalSource('ui8kit', Plugin::$dir.'/sources/ui8kit/'.$engine, $engine);
         }
         foreach ((array) get_option(self::OPTION, []) as $row) {
             $valid = is_array($row) && is_string($row['id'] ?? null) && is_string($row['url'] ?? null);
@@ -53,6 +52,7 @@ final class Sources
                 }
             }
         }
+
         return self::$all = (array) apply_filters('wpfasty_builder_sources', $all);
     }
 
@@ -64,15 +64,16 @@ final class Sources
     public static function catalog(string $id): ?Catalog
     {
         $src = self::get($id);
-        if ($src === null) {
+        if (null === $src) {
             return null;
         }
+
         return self::$catalogs[$id] ??= new Catalog($src->catalog());
     }
 
     public static function remote(string $id, string $url, string $runtime): RemoteSource
     {
-        return new RemoteSource($id, $url, Store::dir() . '/sources/' . $id, $runtime, [self::class, 'fetch']);
+        return new RemoteSource($id, $url, Store::dir().'/sources/'.$id, $runtime, [self::class, 'fetch']);
     }
 
     /**
@@ -84,11 +85,11 @@ final class Sources
     public static function problems(): array
     {
         $engine = Plugin::engine();
-        if ($engine === null) {
+        if (null === $engine) {
             return [__(
                 'WP FastY Builder: the active theme has no WP FastY renderer; landings do not render.',
                 'wpfasty-builder',
-            )];
+            ), ];
         }
         $out = [];
         if (!Plugin::ships($engine)) {
@@ -119,7 +120,7 @@ final class Sources
             }
         }
         $missing = (array) get_option(self::MISSING, []);
-        if ($missing !== []) {
+        if ([] !== $missing) {
             $out[] = sprintf(
                 /* translators: 1: site engine, 2: list of source:template */
                 __('WP FastY Builder: blocks missing from the %1$s sources render nothing: %2$s', 'wpfasty-builder'),
@@ -127,6 +128,7 @@ final class Sources
                 implode(', ', array_map('strval', array_keys($missing))),
             );
         }
+
         return $out;
     }
 
@@ -134,7 +136,7 @@ final class Sources
     public static function recordMissing(string $source, string $template): void
     {
         $missing = (array) get_option(self::MISSING, []);
-        $key = $source . ':' . $template;
+        $key = $source.':'.$template;
         if (isset($missing[$key]) || count($missing) >= 20) {
             return;
         }
@@ -161,18 +163,15 @@ final class Sources
     public static function import(string $id, string $url): array
     {
         $engine = Plugin::engine();
-        if ($engine === null) {
-            throw new RuntimeException(__('The active theme has no WP FastY renderer.', 'wpfasty-builder'));
+        if (null === $engine) {
+            throw new \RuntimeException(__('The active theme has no WP FastY renderer.', 'wpfasty-builder'));
         }
-        if (preg_match(Catalog::IDENT, $id) !== 1 || $id === 'ui8kit') {
-            throw new RuntimeException(__(
-                'The source id must be a short lowercase name other than ui8kit.',
-                'wpfasty-builder',
-            ));
+        if (1 !== preg_match(Catalog::IDENT, $id) || 'ui8kit' === $id) {
+            throw new \RuntimeException(__('The source id must be a short lowercase name other than ui8kit.', 'wpfasty-builder'));
         }
         $url = esc_url_raw($url, ['https', 'http']);
-        if ($url === '' || !wp_http_validate_url($url)) {
-            throw new RuntimeException(__('The source URL is not a valid public http(s) URL.', 'wpfasty-builder'));
+        if ('' === $url || !wp_http_validate_url($url)) {
+            throw new \RuntimeException(__('The source URL is not a valid public http(s) URL.', 'wpfasty-builder'));
         }
         $stats = self::remote($id, $url, $engine)->import();
         $rows = array_values(array_filter(
@@ -190,6 +189,7 @@ final class Sources
         update_option(self::OPTION, $rows, false);
         self::$all = null;
         unset(self::$catalogs[$id]);
+
         return $stats;
     }
 
@@ -197,12 +197,13 @@ final class Sources
     {
         $res = wp_safe_remote_get($url, ['timeout' => 30, 'limit_response_size' => 20 * 1024 * 1024]);
         if (is_wp_error($res)) {
-            throw new RuntimeException($res->get_error_message());
+            throw new \RuntimeException($res->get_error_message());
         }
         $code = (int) wp_remote_retrieve_response_code($res);
-        if ($code !== 200) {
-            throw new RuntimeException(sprintf('%s: HTTP %d', $url, $code));
+        if (200 !== $code) {
+            throw new \RuntimeException(sprintf('%s: HTTP %d', $url, $code));
         }
+
         return (string) wp_remote_retrieve_body($res);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name:       WP FastY Types
  * Description:       Data layer for WP FastY post-type modules: post types, taxonomies, typed meta, metaboxes.
@@ -8,12 +9,10 @@
  * Author:            alexy-os
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       wpfasty-types
+ * Text Domain:       wpfasty-types.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
  * Copyright (C) 2026 alexy-os
- *
- * @package WPFasty_Types
  */
 
 declare(strict_types=1);
@@ -22,16 +21,16 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-require_once __DIR__ . '/src/Plugin.php';
-require_once __DIR__ . '/src/Contact.php';
-require_once __DIR__ . '/src/Codex/autoload.php';
+require_once __DIR__.'/src/Plugin.php';
+require_once __DIR__.'/src/Contact.php';
+require_once __DIR__.'/src/Codex/autoload.php';
 
 add_action('wpfasty_types_loaded', [WPFastyTypes\Plugin::class, 'attach']);
 // Site contact data (Codex settings contact block): Settings → Contact & hours, with any theme.
 WPFastyTypes\Contact::boot();
 
 add_action('init', static function (): void {
-    load_plugin_textdomain('wpfasty-types', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    load_plugin_textdomain('wpfasty-types', false, dirname(plugin_basename(__FILE__)).'/languages');
 });
 
 register_activation_hook(__FILE__, static function (): void {

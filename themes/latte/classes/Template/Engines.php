@@ -1,8 +1,7 @@
 <?php
+
 /**
  * The template engines of this parent build (ADR-001, K7: isolated runtimes).
- *
- * @package Latte
  */
 
 declare(strict_types=1);

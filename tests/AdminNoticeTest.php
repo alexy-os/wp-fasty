@@ -17,7 +17,7 @@ final class AdminNoticeTest extends TestCase
 {
     protected function setUp(): void
     {
-        require_once dirname(__DIR__) . '/plugins/wpfasty-builder/src/Admin.php';
+        require_once dirname(__DIR__).'/plugins/wpfasty-builder/src/Admin.php';
         if (!function_exists('set_transient')) {
             eval('function set_transient(string $k, mixed $v, int $ttl = 0): bool { $GLOBALS["wp_test_transients"][$k] = [$v, $ttl]; return true; }
                 function get_transient(string $k): mixed { return $GLOBALS["wp_test_transients"][$k][0] ?? false; }
@@ -48,7 +48,7 @@ final class AdminNoticeTest extends TestCase
     {
         $_GET['wpfb_msg'] = 'Your site is hacked, call +1 555';
         self::assertSame('', Admin::takeNotice());
-        $src = (string) file_get_contents(dirname(__DIR__) . '/plugins/wpfasty-builder/src/Admin.php');
+        $src = (string) file_get_contents(dirname(__DIR__).'/plugins/wpfasty-builder/src/Admin.php');
         self::assertStringNotContainsString('wpfb_msg', $src, 'the import result is not passed in the URL');
     }
 }

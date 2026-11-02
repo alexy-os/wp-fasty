@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/common.php';
+require __DIR__.'/common.php';
 
 wpfasty_demo_cleanup_defaults();
 update_option('blogname', 'Alex Rivera');
@@ -34,7 +34,7 @@ foreach ($projects as [$slug, $title, $type, $client, $year, $role, $img]) {
     update_post_meta($id, '_folio_client', $client);
     update_post_meta($id, '_folio_year', $year);
     update_post_meta($id, '_folio_role', $role);
-    update_post_meta($id, '_folio_url', 'https://example.com/' . $slug);
+    update_post_meta($id, '_folio_url', 'https://example.com/'.$slug);
     if ($order <= 2) {
         update_post_meta($id, '_folio_featured', true);
     } else {

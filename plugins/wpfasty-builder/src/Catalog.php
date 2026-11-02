@@ -39,32 +39,35 @@ final class Catalog
      * Shape errors of a decoded catalog (empty when it is usable).
      *
      * @param array<string, mixed>|null $c
+     *
      * @return list<string>
      */
     public static function check(?array $c): array
     {
-        if ($c === null) {
+        if (null === $c) {
             return ['not a JSON object'];
         }
         $errors = [];
         $runtime = self::runtimeOf($c);
-        if ($runtime === null) {
+        if (null === $runtime) {
             $errors[] = 'templates must be "latte" or "twig" (and equal runtime)';
+
             return $errors;
         }
         $ext = self::RUNTIMES[$runtime];
-        if (!is_array($c['blocks'] ?? null) || $c['blocks'] === []) {
+        if (!is_array($c['blocks'] ?? null) || [] === $c['blocks']) {
             $errors[] = 'blocks must be a non-empty list';
+
             return $errors;
         }
         foreach ($c['blocks'] as $i => $b) {
-            if (!is_array($b) || !is_string($b['id'] ?? null) || preg_match('/^[a-z][a-z0-9_-]*$/i', $b['id']) !== 1) {
+            if (!is_array($b) || !is_string($b['id'] ?? null) || 1 !== preg_match('/^[a-z][a-z0-9_-]*$/i', $b['id'])) {
                 $errors[] = "blocks[$i].id is invalid";
                 continue;
             }
             foreach ((array) ($b['variants'] ?? []) as $j => $v) {
                 $template = is_array($v) && is_string($v['template'] ?? null) ? $v['template'] : '';
-                $ok = preg_match(self::TEMPLATE, $template) === 1 && str_ends_with($template, $ext);
+                $ok = 1 === preg_match(self::TEMPLATE, $template) && str_ends_with($template, $ext);
                 if (!is_string($v['id'] ?? null) || !$ok) {
                     $errors[] = "blocks[$i].variants[$j] needs an id and a template blocks/<name>$ext";
                 } elseif (!is_array($v['props'] ?? null)) {
@@ -77,6 +80,7 @@ final class Catalog
                 $errors[] = "collections[$i] needs an id and blocks";
             }
         }
+
         return $errors;
     }
 
@@ -90,6 +94,7 @@ final class Catalog
     {
         $templates = $c['templates'] ?? null;
         $runtime = $c['runtime'] ?? $templates;
+
         return is_string($runtime) && $runtime === $templates && isset(self::RUNTIMES[$runtime]) ? $runtime : null;
     }
 
@@ -98,6 +103,7 @@ final class Catalog
      * format-2 catalog of $runtime: same blocks, the runtime's template extension. Format 2 is returned unchanged.
      *
      * @param array<string, mixed> $c
+     *
      * @return array<string, mixed>
      */
     public static function forRuntime(array $c, string $runtime): array
@@ -117,6 +123,7 @@ final class Catalog
                 }
             }
         }
+
         return $c;
     }
 
@@ -124,6 +131,7 @@ final class Catalog
      * Variant templates of a catalog missing under $root (a runtime folder with blocks/).
      *
      * @param array<string, mixed> $c
+     *
      * @return list<string>
      */
     public static function missingTemplates(array $c, string $root): array
@@ -132,11 +140,12 @@ final class Catalog
         foreach ((array) ($c['blocks'] ?? []) as $b) {
             foreach ((array) ($b['variants'] ?? []) as $v) {
                 $t = is_array($v) ? (string) ($v['template'] ?? '') : '';
-                if ($t !== '' && !is_file($root . '/' . $t)) {
+                if ('' !== $t && !is_file($root.'/'.$t)) {
                     $missing[$t] = true;
                 }
             }
         }
+
         return array_keys($missing);
     }
 
@@ -150,6 +159,7 @@ final class Catalog
     {
         $out = $this->data;
         unset($out['blocks'], $out['collections']);
+
         return $out;
     }
 
@@ -167,6 +177,7 @@ final class Catalog
                 return $v;
             }
         }
+
         return null;
     }
 
@@ -188,6 +199,7 @@ final class Catalog
                 'blocks' => count((array) $c['blocks']),
             ];
         }
+
         return $out;
     }
 
@@ -200,7 +212,7 @@ final class Catalog
     {
         $b = $this->block($block);
         $v = $this->variant($block, $variant);
-        if ($b === null || $v === null) {
+        if (null === $b || null === $v) {
             return [];
         }
         $kinds = [];
@@ -215,6 +227,7 @@ final class Catalog
                 $out[implode('.', $bind['path'])] = $kinds[(string) ($bind['data'] ?? '')] ?? '';
             }
         }
+
         return $out;
     }
 
@@ -239,6 +252,7 @@ final class Catalog
                 return self::slotOf($d, $this->data);
             }
         }
+
         return null;
     }
 
@@ -263,10 +277,11 @@ final class Catalog
             $path = is_array($c) && is_array($c['path'] ?? null) ? implode('.', array_map('strval', $c['path'])) : '';
             $data = is_array($c) ? (string) ($c['data'] ?? '') : '';
             $field = is_array($c) ? (string) ($c['field'] ?? '') : '';
-            if ($path !== '' && $field !== '' && isset($scoped[$data])) {
+            if ('' !== $path && '' !== $field && isset($scoped[$data])) {
                 $out[$path] = ['data' => $data, 'field' => $field];
             }
         }
+
         return $out;
     }
 
@@ -284,6 +299,7 @@ final class Catalog
                 return self::slotOf($d, $this->data) + ['sample' => (array) ($d['sample'] ?? [])];
             }
         }
+
         return null;
     }
 
@@ -292,6 +308,7 @@ final class Catalog
      * path => value, null when the record has no such field.
      *
      * @param callable(array<string, mixed>): array<string, mixed> $record
+     *
      * @return array<string, mixed>
      */
     public function currentValues(string $block, string $variant, callable $record): array
@@ -301,10 +318,11 @@ final class Catalog
         foreach ($this->current($block, $variant) as $path => $c) {
             if (!array_key_exists($c['data'], $records)) {
                 $slot = $this->currentSlot($block, $c['data']);
-                $records[$c['data']] = $slot !== null ? $record($slot) : [];
+                $records[$c['data']] = null !== $slot ? $record($slot) : [];
             }
             $out[$path] = $records[$c['data']][$c['field']] ?? null;
         }
+
         return $out;
     }
 
@@ -319,16 +337,18 @@ final class Catalog
     public function pager(string $block, string $variant): ?array
     {
         $b = $this->block($block);
-        if ($b === null || $this->variant($block, $variant) === null) {
+        if (null === $b || null === $this->variant($block, $variant)) {
             return null;
         }
         foreach ((array) ($b['props'] ?? []) as $prop) {
             $record = is_array($prop) && is_array($prop['type'] ?? null) ? ($prop['type']['record'] ?? null) : null;
             if (is_string($record) && in_array($record, Pager::RECORDS, true) && is_string($prop['name'] ?? null)) {
                 $list = array_key_first($this->bindable($block, $variant));
+
                 return ['path' => $prop['name'], 'list' => is_string($list) ? $list : ''];
             }
         }
+
         return null;
     }
 
@@ -343,22 +363,25 @@ final class Catalog
         foreach ($this->blocks as $b) {
             foreach ((array) ($b['data'] ?? []) as $d) {
                 $kind = is_array($d) && ($d['scope'] ?? null) !== 'current' ? (string) ($d['kind'] ?? '') : '';
-                if ($kind !== '' && !isset($out[$kind])) {
+                if ('' !== $kind && !isset($out[$kind])) {
                     $out[$kind] = self::slotOf($d, $this->data);
                 }
             }
         }
+
         return $out;
     }
 
     /**
      * @param array<string, mixed> $d
      * @param array<string, mixed> $data
+     *
      * @return array{kind: string, record: string, fields: array<string, string>, defs: list<array<string, mixed>>}
      */
     private static function slotOf(array $d, array $data): array
     {
         $record = (string) ($d['record'] ?? '');
+
         return [
             'kind' => (string) ($d['kind'] ?? ''),
             'record' => $record,
@@ -378,8 +401,8 @@ final class Catalog
      */
     public function forEditor(?string $collection): array
     {
-        $col = $collection !== null ? $this->collection($collection) : null;
-        $ids = $col !== null ? array_values(array_unique(array_map(
+        $col = null !== $collection ? $this->collection($collection) : null;
+        $ids = null !== $col ? array_values(array_unique(array_map(
             'strval',
             (array) $col['blocks'],
         ))) : array_keys($this->blocks);
@@ -389,6 +412,7 @@ final class Catalog
                 $blocks[] = $this->blocks[$id];
             }
         }
+
         return ['meta' => $this->meta(), 'collection' => $col, 'blocks' => $blocks];
     }
 }

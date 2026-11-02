@@ -7,7 +7,7 @@ namespace WPFasty\Tests;
 use PHPUnit\Framework\TestCase;
 use WPFastyTypes\Contact;
 
-require_once dirname(__DIR__) . '/plugins/wpfasty-types/src/Contact.php';
+require_once dirname(__DIR__).'/plugins/wpfasty-types/src/Contact.php';
 
 /**
  * Settings → Contact & hours of wpfasty-types: the sanitizers keep only what the Codex settings contact block accepts

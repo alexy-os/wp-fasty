@@ -35,7 +35,7 @@ final class BlockRenderer
     /** the bundled package of a runtime (the trusted compose/ui/icons layers of sandboxed sources) */
     public static function bundled(string $runtime): string
     {
-        return dirname(__DIR__) . '/sources/ui8kit/' . $runtime;
+        return dirname(__DIR__).'/sources/ui8kit/'.$runtime;
     }
 
     /** loads the codegen-x runtime of the bundled package: UI8Kit 3 primitives, compositions and og_* organisms */
@@ -51,10 +51,10 @@ final class BlockRenderer
         // compose/*.php declare CodegenX\Compose\{Latte,Twig}\<file>; the parent theme ships the same classes
         // (ui8kit/compose, twig/ui8kit/compose: kit-compose form fields, same commit and compose.json), so a class
         // already defined or autoloadable is used, not redeclared (like Primitives::loadRuntime)
-        $ns = $runtime === 'twig' ? 'CodegenX\\Compose\\Twig\\' : 'CodegenX\\Compose\\Latte\\';
+        $ns = 'twig' === $runtime ? 'CodegenX\\Compose\\Twig\\' : 'CodegenX\\Compose\\Latte\\';
         $files = array_values(array_filter(
-            glob($root . '/compose/*.php') ?: [],
-            static fn (string $f): bool => !class_exists($ns . basename($f, '.php'))
+            glob($root.'/compose/*.php') ?: [],
+            static fn (string $f): bool => !class_exists($ns.basename($f, '.php'))
         ));
         foreach (['CnMerge', 'Runtime', 'OrganismExtension'] as $f) {
             $files[] = "$root/php/$f.php";
@@ -65,6 +65,7 @@ final class BlockRenderer
             }
             require_once $file;
         }
+
         return class_exists($probe, false);
     }
 
@@ -85,27 +86,31 @@ final class BlockRenderer
     /** @param array<string, mixed> $props */
     public function render(string $source, string $template, array $props): string
     {
-        if (preg_match(Catalog::TEMPLATE, $template) !== 1) {
+        if (1 !== preg_match(Catalog::TEMPLATE, $template)) {
             return '';
         }
         $runtime = str_ends_with($template, self::TWIG_EXT) ? 'twig' : 'latte';
         $src = $this->sources[$source] ?? null;
-        if ($src === null || $src->runtime() !== $runtime || !is_file($src->templateRoot() . '/' . $template)) {
+        if (null === $src || $src->runtime() !== $runtime || !is_file($src->templateRoot().'/'.$template)) {
             self::missing($source, $template);
+
             return '';
         }
         try {
-            $engine = $runtime === 'twig' ? $this->twig($source) : $this->engine($source);
-            if ($engine === null) {
+            $engine = 'twig' === $runtime ? $this->twig($source) : $this->engine($source);
+            if (null === $engine) {
                 self::missing($source, $template);
+
                 return '';
             }
+
             return $engine instanceof \Twig\Environment
                 ? $engine->render($template, ['p' => $props])
                 : $engine->renderToString($template, ['p' => $props]);
         } catch (\Throwable $e) {
             $msg = function_exists('current_user_can') && current_user_can('edit_pages') ? $e->getMessage() : '';
-            return '<!-- wpfasty-builder: ' . htmlspecialchars($template . ' ' . $msg, ENT_QUOTES) . ' -->';
+
+            return '<!-- wpfasty-builder: '.htmlspecialchars($template.' '.$msg, ENT_QUOTES).' -->';
         }
     }
 
@@ -123,7 +128,7 @@ final class BlockRenderer
             return $this->engines[$source];
         }
         $src = $this->sources[$source] ?? null;
-        if ($src === null || $src->runtime() !== 'latte' || !is_dir($src->templateRoot() . '/blocks')) {
+        if (null === $src || 'latte' !== $src->runtime() || !is_dir($src->templateRoot().'/blocks')) {
             return null;
         }
         if (!self::loadRuntime()) {
@@ -134,15 +139,16 @@ final class BlockRenderer
         $loader = new SourceLoader($root, $bundled);
         $engine = new \Latte\Engine();
         $tmp = $this->cache($source);
-        if ($tmp !== null) {
+        if (null !== $tmp) {
             $engine->setTempDirectory($tmp);
         }
         $engine->setLoader($loader);
         // recipes, presets and icons (JSON) of a sandboxed source come from the bundled package too
         $engine->addExtension(new \CodegenX\Organisms\Latte\OrganismExtension($bundled ?? $root, $engine));
-        if ($bundled !== null) {
+        if (null !== $bundled) {
             $engine->addExtension(self::guard($engine, $loader));
         }
+
         return $this->engines[$source] = $engine;
     }
 
@@ -154,12 +160,12 @@ final class BlockRenderer
         }
         $src = $this->sources[$source] ?? null;
         $root = $src?->templateRoot();
-        if ($src === null || $src->runtime() !== 'twig' || !is_dir($root . '/blocks') || !self::loadTwigRuntime()) {
+        if (null === $src || 'twig' !== $src->runtime() || !is_dir($root.'/blocks') || !self::loadTwigRuntime()) {
             return $this->twigs[$source] = null;
         }
-        $tmp = $this->cache($source . '/twig');
+        $tmp = $this->cache($source.'/twig');
         $bundled = $src->sandboxed() ? self::bundled('twig') : null;
-        $loader = $bundled !== null
+        $loader = null !== $bundled
             ? new TwigSourceLoader($root, $bundled)
             : new \Twig\Loader\FilesystemLoader([$root]);
         $env = new \Twig\Environment($loader, [
@@ -171,6 +177,7 @@ final class BlockRenderer
         if ($loader instanceof TwigSourceLoader) {
             $env->addExtension(self::sandbox($env, $loader));
         }
+
         return $this->twigs[$source] = $env;
     }
 
@@ -183,12 +190,13 @@ final class BlockRenderer
                 $fns[] = (string) $name;
             }
         }
+
         return new TemplateGuard($fns, $loader);
     }
 
     /**
      * Twig sandbox of a remote source: its blocks may use only the tags, filters and og_* functions of the generated
-     * templates and no methods/properties; the bundled compose/ui/icons layers are trusted (the loader's source policy)
+     * templates and no methods/properties; the bundled compose/ui/icons layers are trusted (the loader's source policy).
      */
     public static function sandbox(
         \Twig\Environment $env,
@@ -205,20 +213,22 @@ final class BlockRenderer
             [],
             $fns,
         );
-        return $policy !== null
+
+        return null !== $policy
             ? new \Twig\Extension\SandboxExtension($security, false, $policy)
             : new \Twig\Extension\SandboxExtension($security, true);
     }
 
     private function cache(string $sub): ?string
     {
-        if ($this->cacheDir === null) {
+        if (null === $this->cacheDir) {
             return null;
         }
-        $tmp = $this->cacheDir . '/' . $sub;
+        $tmp = $this->cacheDir.'/'.$sub;
         if (!is_dir($tmp)) {
             @mkdir($tmp, 0775, true);
         }
+
         return is_dir($tmp) ? $tmp : null;
     }
 }

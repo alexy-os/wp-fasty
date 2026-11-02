@@ -1,8 +1,7 @@
 <?php
+
 /**
  * One declarative post-type module (`types/<name>.php`).
- *
- * @package Latte
  */
 
 declare(strict_types=1);
@@ -15,7 +14,7 @@ final class PostType
     public readonly array $fields;
 
     /**
-     * @param array<string, mixed> $def Module definition array.
+     * @param array<string, mixed> $def module definition array
      */
     public function __construct(public readonly string $name, public readonly array $def)
     {
@@ -36,6 +35,7 @@ final class PostType
         if (!preg_match('/^[a-z][a-z0-9_]{1,19}$/', $name)) {
             throw new \InvalidArgumentException(sprintf('Invalid post type name "%s"', $name));
         }
+
         return new self($name, $def);
     }
 
@@ -54,6 +54,7 @@ final class PostType
     public function supports(string $capability): bool
     {
         $supports = (array) ($this->def['supports'] ?? []);
+
         return in_array($capability, $supports, true) || array_key_exists($capability, $supports);
     }
 
@@ -61,13 +62,15 @@ final class PostType
     public function capability(string $capability): array
     {
         $value = ((array) ($this->def['supports'] ?? []))[$capability] ?? [];
+
         return is_array($value) ? $value : [];
     }
 
     public function view(string $kind): ?string
     {
         $view = ((array) ($this->def['views'] ?? []))[$kind] ?? null;
-        return is_string($view) && $view !== '' ? $view : null;
+
+        return is_string($view) && '' !== $view ? $view : null;
     }
 
     /** @return array<string, mixed> */
@@ -80,7 +83,8 @@ final class PostType
     public function metabox(): array|false
     {
         $box = $this->def['metabox'] ?? [];
-        return $box === false ? false : (array) $box;
+
+        return false === $box ? false : (array) $box;
     }
 
     public function textDomain(): string

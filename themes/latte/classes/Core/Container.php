@@ -36,6 +36,7 @@ final class Container implements ContainerInterface
             if (!isset($this->instances[$id])) {
                 $this->instances[$id] = $factory($this);
             }
+
             return $this->instances[$id];
         };
     }
@@ -47,6 +48,7 @@ final class Container implements ContainerInterface
         }
 
         $concrete = $this->bindings[$id];
+
         return $concrete instanceof \Closure ? $concrete($this) : $concrete;
     }
 
@@ -68,6 +70,7 @@ final class Container implements ContainerInterface
                 $ids[] = $id;
             }
         }
+
         return $ids;
     }
 
@@ -76,9 +79,7 @@ final class Container implements ContainerInterface
         foreach ($this->findTaggedServiceIds(self::TAG_BOOTABLE) as $id) {
             $service = $this->get($id);
             if (!$service instanceof BootableServiceInterface) {
-                throw new \RuntimeException(
-                    "Bootable service \"{$id}\" must implement BootableServiceInterface"
-                );
+                throw new \RuntimeException("Bootable service \"{$id}\" must implement BootableServiceInterface");
             }
             $service->boot();
         }

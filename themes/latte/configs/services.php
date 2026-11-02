@@ -7,8 +7,8 @@ use WPFasty\Core\ContainerInterface;
 use WPFasty\Data\ContextFactory;
 use WPFasty\Hooks\AssetsHooks;
 use WPFasty\Hooks\ThemeHooks;
-use WPFasty\Template\EngineUnavailable;
 use WPFasty\Template\Engines;
+use WPFasty\Template\EngineUnavailable;
 use WPFasty\Template\LatteRenderer;
 use WPFasty\Template\RendererFactory;
 use WPFasty\Template\RendererInterface;
@@ -29,21 +29,22 @@ return function (Container $container): void {
 
         $baseDir = latte_base_theme_dir();
         $roots = array_values(array_filter([
-            $stylesheetDir . '/views',
-            $baseDir !== '' ? $baseDir . '/views' : '',
-            $templateDir . '/views',
+            $stylesheetDir.'/views',
+            '' !== $baseDir ? $baseDir.'/views' : '',
+            $templateDir.'/views',
         ]));
         $engine = Engines::requested();
         // Only the requested engine's primitives are located (a build never loads the other runtime).
         $primitives = [
-            'latte' => $engine === 'latte' ? PrimitivesLocator::latteRoots($templateDir) : [],
-            'twig' => $engine === 'twig' ? PrimitivesLocator::twigRoots($templateDir) : [],
+            'latte' => 'latte' === $engine ? PrimitivesLocator::latteRoots($templateDir) : [],
+            'twig' => 'twig' === $engine ? PrimitivesLocator::twigRoots($templateDir) : [],
         ];
         $roots = (array) apply_filters('wpfasty_view_roots', $roots, is_string($engine) ? $engine : 'custom');
-        if ($engine === 'latte' && Engines::available($engine) && $primitives['latte'] !== []) {
+        if ('latte' === $engine && Engines::available($engine) && [] !== $primitives['latte']) {
             // Legacy filter: receives the full Latte chain (views + primitives).
             $chain = (array) apply_filters('wpfasty_latte_roots', array_merge($roots, $primitives['latte']));
-            return new LatteRenderer($chain, $templateDir . '/~cache');
+
+            return new LatteRenderer($chain, $templateDir.'/~cache');
         }
 
         try {
@@ -51,7 +52,7 @@ return function (Container $container): void {
                 $engine instanceof RendererInterface ? $engine : (string) $engine,
                 $roots,
                 $primitives,
-                $templateDir . '/~cache'
+                $templateDir.'/~cache'
             );
         } catch (EngineUnavailable $e) {
             // Front end: a clear error page, never the other engine. wp-admin shows ThemeHooks::primitivesNotice().
@@ -65,9 +66,9 @@ return function (Container $container): void {
 
     // Declarative post-type modules: child `types/*.php` first, then parent `types/*.php`.
     $container->singleton('types.registry', static fn () => new Registry(array_values(array_unique([
-        get_stylesheet_directory() . '/types',
-        ...(latte_base_theme_dir() !== '' ? [latte_base_theme_dir() . '/types'] : []),
-        get_template_directory() . '/types',
+        get_stylesheet_directory().'/types',
+        ...('' !== latte_base_theme_dir() ? [latte_base_theme_dir().'/types'] : []),
+        get_template_directory().'/types',
     ]))));
     $container->addTag('types.registry', ContainerInterface::TAG_BOOTABLE);
 

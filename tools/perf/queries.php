@@ -1,4 +1,5 @@
 <?php
+
 /**
  * N+1 guard: DB query count of a rendered archive page must not grow with the number of posts.
  *
@@ -8,10 +9,7 @@
  *        wp eval-file tools/perf/queries.php pager [small] [large]    (builder posts pager, pager-queries.php)
  * Counts $wpdb->num_queries (SAVEQUERIES is not needed).
  * Exit code 1 when the large page needs more queries than the small one.
- *
- * @package Latte
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -19,19 +17,22 @@ if (!defined('ABSPATH')) {
 $_SERVER['SERVER_NAME'] ??= 'localhost';
 
 $wpfasty_perf_type = $args[0] ?? 'post';
-if ($wpfasty_perf_type === 'macros') {
+if ('macros' === $wpfasty_perf_type) {
     // builder record tokens on a page: wp eval-file tools/perf/queries.php macros [small] [large]
-    require __DIR__ . '/macros-queries.php';
+    require __DIR__.'/macros-queries.php';
+
     return;
 }
-if ($wpfasty_perf_type === 'pager') {
+if ('pager' === $wpfasty_perf_type) {
     // builder posts pager (posts/listPaged, pages 1 and 2): wp eval-file tools/perf/queries.php pager [small] [large]
-    require __DIR__ . '/pager-queries.php';
+    require __DIR__.'/pager-queries.php';
+
     return;
 }
-if ($wpfasty_perf_type === 'richtext') {
+if ('richtext' === $wpfasty_perf_type) {
     // builder richtext (the queried page's the_content): wp eval-file tools/perf/queries.php richtext [small] [large]
-    require __DIR__ . '/richtext-queries.php';
+    require __DIR__.'/richtext-queries.php';
+
     return;
 }
 $wpfasty_perf_small = (int) ($args[1] ?? 2);
@@ -53,14 +54,15 @@ function wpfasty_perf_render(string $type, int $n): array
         'ignore_sticky_posts' => true,
     ]);
     $wp_the_query = $wp_query;
-    $wp_query->is_home = $type === 'post';
-    $wp_query->is_post_type_archive = $type !== 'post';
-    $wp_query->is_archive = $type !== 'post';
+    $wp_query->is_home = 'post' === $type;
+    $wp_query->is_post_type_archive = 'post' !== $type;
+    $wp_query->is_archive = 'post' !== $type;
     $theme = WPFasty\Core\Application::getInstance()->get('theme');
-    $view = $type === 'post' ? 'pages/archive' : (WPFasty\Core\Application::getInstance()->get('types.registry')->get($type)?->view('archive') ?? 'pages/archive');
+    $view = 'post' === $type ? 'pages/archive' : (WPFasty\Core\Application::getInstance()->get('types.registry')->get($type)?->view('archive') ?? 'pages/archive');
     ob_start();
     echo $theme->renderPage($view, $theme->context($view)); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     ob_end_clean();
+
     return [$wpdb->num_queries - $before, $wp_query->post_count];
 }
 

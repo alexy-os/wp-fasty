@@ -15,12 +15,12 @@ use WPFastyBuilder\Fragment;
 use WPFastyBuilder\Layout;
 use WPFastyBuilder\Source\LocalSource;
 
-require_once __DIR__ . '/fixtures/links-stubs.php';
-require_once __DIR__ . '/fixtures/rest-stubs.php';
+require_once __DIR__.'/fixtures/links-stubs.php';
+require_once __DIR__.'/fixtures/rest-stubs.php';
 
 spl_autoload_register(static function (string $class): void {
     if (str_starts_with($class, 'WPFastyBuilder\\')) {
-        $file = dirname(__DIR__) . '/plugins/wpfasty-builder/src/' . str_replace('\\', '/', substr($class, 15)) . '.php';
+        $file = dirname(__DIR__).'/plugins/wpfasty-builder/src/'.str_replace('\\', '/', substr($class, 15)).'.php';
         if (is_file($file)) {
             require_once $file;
         }
@@ -34,15 +34,16 @@ spl_autoload_register(static function (string $class): void {
  */
 final class RichTextTest extends TestCase
 {
-    private const SRC = __DIR__ . '/../plugins/wpfasty-builder/sources/ui8kit';
+    private const SRC = __DIR__.'/../plugins/wpfasty-builder/sources/ui8kit';
     private const VARIANTS = ['narrow', 'wide', 'sidebar', 'media', 'card', 'heroTitle'];
     private const BODY = '<h2>Heading</h2><p>A <a href="/x">link</a> &amp; <code>code</code>.</p>'
-        . '<figure class="wp-caption alignwide"><img src="/a.jpg" alt="A"><figcaption class="wp-caption-text">C</figcaption></figure>';
+        .'<figure class="wp-caption alignwide"><img src="/a.jpg" alt="A"><figcaption class="wp-caption-text">C</figcaption></figure>';
 
     /** @return array{0: Catalog, 1: BlockRenderer} */
     private static function runtime(string $engine): array
     {
-        $src = new LocalSource('ui8kit', self::SRC . '/' . $engine, $engine);
+        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
+
         return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
     }
 
@@ -60,18 +61,18 @@ final class RichTextTest extends TestCase
     {
         $tpl = Compiler::compile($entry, $catalog, $engine);
         $fn = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
-        if ($engine === 'latte') {
+        if ('latte' === $engine) {
             $l = new Engine();
             $l->setLoader(new StringLoader(['page' => $tpl]));
             $l->addFunction('wpfb_block', $fn);
             $html = $l->renderToString('page', ['wpfb' => $wpfb]);
         } else {
             $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
-            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false
-                => $n === 'wpfb_block' ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
+            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
             $html = $env->render('page', ['wpfb' => $wpfb]);
         }
-        return (require dirname(__DIR__) . '/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>' . $html . '</body></html>');
+
+        return (require dirname(__DIR__).'/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>'.$html.'</body></html>');
     }
 
     public function testCatalogDeclaresTheCurrentRecord(): void
@@ -110,8 +111,8 @@ final class RichTextTest extends TestCase
         [$entry] = Layout::normalize(['blocks' => [[
             'id' => 'rt', 'block' => 'richtext', 'variant' => 'narrow',
             'props' => ['title' => 'Mine', 'content' => ['__html' => '<script>x</script>'], 'tone' => 'muted',
-                'aside' => ['title' => 'Note', 'content' => 'x'], 'extra' => ['__html' => '<i>i</i>', 'k' => 'v']],
-        ]]], 'ui8kit', $catalog, [], ['id' => 'l', 'slug' => 'l', 'title' => 'L']);
+                'aside' => ['title' => 'Note', 'content' => 'x'], 'extra' => ['__html' => '<i>i</i>', 'k' => 'v'], ],
+        ], ], ], 'ui8kit', $catalog, [], ['id' => 'l', 'slug' => 'l', 'title' => 'L']);
         $props = (array) Layout::blocks($entry)[0]['props'];
         self::assertSame(['tone' => 'muted', 'aside' => ['title' => 'Note'], 'extra' => ['k' => 'v']], $props);
         // catalog props with a marker (a remote source) are plain text
@@ -128,12 +129,12 @@ final class RichTextTest extends TestCase
     /** Latte = Twig (DOM), the fragment = the block in the compiled page, the body raw, the rest escaped, one h1 */
     public function testSixVariantsLatteEqualsTwigAndFragment(): void
     {
-        $dom = require dirname(__DIR__) . '/tools/parity/normalize-dom.php';
-        $html = require dirname(__DIR__) . '/tools/builder/fragment-html.php';
+        $dom = require dirname(__DIR__).'/tools/parity/normalize-dom.php';
+        $html = require dirname(__DIR__).'/tools/builder/fragment-html.php';
         $pages = [];
         foreach (['latte', 'twig'] as $engine) {
             [$catalog, $r] = self::runtime($engine);
-            $blocks = array_map(static fn (string $v): array => ['id' => 'rt-' . strtolower($v), 'block' => 'richtext', 'variant' => $v], self::VARIANTS);
+            $blocks = array_map(static fn (string $v): array => ['id' => 'rt-'.strtolower($v), 'block' => 'richtext', 'variant' => $v], self::VARIANTS);
             [$entry] = Layout::normalize(['blocks' => $blocks], 'ui8kit', $catalog, [], ['id' => 'l', 'slug' => 'l', 'title' => 'L']);
             $rec = static fn (array $slot): array => self::record();
             $wpfb = [];
@@ -150,8 +151,8 @@ final class RichTextTest extends TestCase
                 self::assertStringContainsString('<h2>Heading</h2>', $one, "$engine {$b['variant']}: body is markup");
                 self::assertStringContainsString('About &lt;us&gt;', $one, "$engine {$b['variant']}: title escaped");
                 self::assertStringNotContainsString('<us>', $one);
-                self::assertSame($b['variant'] === 'heroTitle' ? 1 : 0, substr_count($one, '<h1'), "$engine {$b['variant']}: h1");
-                self::assertSame($b['variant'] === 'sidebar' ? 1 : 0, substr_count($one, '<em>note</em>'), "$engine {$b['variant']}: side note");
+                self::assertSame('heroTitle' === $b['variant'] ? 1 : 0, substr_count($one, '<h1'), "$engine {$b['variant']}: h1");
+                self::assertSame('sidebar' === $b['variant'] ? 1 : 0, substr_count($one, '<em>note</em>'), "$engine {$b['variant']}: side note");
                 $pages[$b['variant']][$engine] = $dom($one);
             }
         }

@@ -20,8 +20,8 @@ final class AssetsHooks extends AbstractHooks
     {
         wp_print_inline_script_tag(
             '(function(){var d;try{var s=localStorage.getItem("wpfasty-color-scheme");'
-            . 'd=s?s==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;}catch(e){d=false;}'
-            . 'document.documentElement.classList.toggle("dark",d);})();',
+            .'d=s?s==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;}catch(e){d=false;}'
+            .'document.documentElement.classList.toggle("dark",d);})();',
             ['id' => 'latte-color-scheme']
         );
     }
@@ -35,22 +35,22 @@ final class AssetsHooks extends AbstractHooks
 
         wp_enqueue_style(
             'latte-theme',
-            get_template_directory_uri() . '/assets/css/theme.min.css',
+            get_template_directory_uri().'/assets/css/theme.min.css',
             [],
             $parentVer
         );
         wp_enqueue_style(
             'latte-tokens',
-            get_template_directory_uri() . '/assets/css/tokens.css',
+            get_template_directory_uri().'/assets/css/tokens.css',
             ['latte-theme'],
             $parentVer
         );
 
-        $a11y = get_template_directory() . '/assets/css/a11y.css';
+        $a11y = get_template_directory().'/assets/css/a11y.css';
         if (is_file($a11y)) {
             wp_enqueue_style(
                 'latte-a11y',
-                get_template_directory_uri() . '/assets/css/a11y.css',
+                get_template_directory_uri().'/assets/css/a11y.css',
                 ['latte-tokens'],
                 $parentVer
             );
@@ -58,27 +58,27 @@ final class AssetsHooks extends AbstractHooks
 
         wp_enqueue_style(
             'latte-wp-core',
-            get_template_directory_uri() . '/assets/css/wp-core.css',
+            get_template_directory_uri().'/assets/css/wp-core.css',
             ['latte-tokens'],
             $parentVer
         );
 
-        $ariaJs = get_template_directory() . '/assets/js/ui8kit.js';
+        $ariaJs = get_template_directory().'/assets/js/ui8kit.js';
         if (is_file($ariaJs)) {
             wp_enqueue_script(
                 'latte-ui8kit',
-                get_template_directory_uri() . '/assets/js/ui8kit.js',
+                get_template_directory_uri().'/assets/js/ui8kit.js',
                 [],
                 $parentVer,
                 true
             );
         }
 
-        $toggleJs = get_template_directory() . '/assets/js/theme-toggle.js';
+        $toggleJs = get_template_directory().'/assets/js/theme-toggle.js';
         if (is_file($toggleJs)) {
             wp_enqueue_script(
                 'latte-theme-toggle',
-                get_template_directory_uri() . '/assets/js/theme-toggle.js',
+                get_template_directory_uri().'/assets/js/theme-toggle.js',
                 [],
                 $parentVer,
                 ['in_footer' => true, 'strategy' => 'defer']
@@ -91,27 +91,27 @@ final class AssetsHooks extends AbstractHooks
 
         $tokenDeps = ['latte-tokens'];
         $baseDir = function_exists('latte_base_theme_dir') ? latte_base_theme_dir() : '';
-        if ($baseDir !== '' && is_file($baseDir . '/assets/css/tokens.css')) {
+        if ('' !== $baseDir && is_file($baseDir.'/assets/css/tokens.css')) {
             wp_enqueue_style(
                 'latte-base-tokens',
-                latte_base_theme_uri() . '/assets/css/tokens.css',
+                latte_base_theme_uri().'/assets/css/tokens.css',
                 ['latte-tokens'],
                 $childVer
             );
             $tokenDeps[] = 'latte-base-tokens';
         }
 
-        $childTokens = get_stylesheet_directory() . '/assets/css/tokens.css';
+        $childTokens = get_stylesheet_directory().'/assets/css/tokens.css';
         if (is_file($childTokens)) {
             wp_enqueue_style(
                 'latte-skin-tokens',
-                get_stylesheet_directory_uri() . '/assets/css/tokens.css',
+                get_stylesheet_directory_uri().'/assets/css/tokens.css',
                 $tokenDeps,
                 $childVer
             );
         }
 
-        $childStyle = get_stylesheet_directory() . '/style.css';
+        $childStyle = get_stylesheet_directory().'/style.css';
         if (is_file($childStyle)) {
             wp_enqueue_style(
                 'latte-skin-style',

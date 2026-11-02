@@ -20,7 +20,6 @@ use WPFastyBuilder\Links;
 use WPFastyBuilder\Safe;
 use WPFastyBuilder\Source\LocalSource;
 
-
 /**
  * XSS / template injection of the builder (docs: /workspace/ui8kit3/audit/security-xss.md): URL props through
  * obfuscation, template code in the page title, prop types and markup of a saved layout, TrustedHtml of meta fields,
@@ -30,24 +29,25 @@ use WPFastyBuilder\Source\LocalSource;
 #[RunTestsInSeparateProcesses]
 final class SecurityXssTest extends TestCase
 {
-    private const SRC = __DIR__ . '/../plugins/wpfasty-builder/sources/ui8kit';
+    private const SRC = __DIR__.'/../plugins/wpfasty-builder/sources/ui8kit';
 
     /** @return array{0: Catalog, 1: BlockRenderer} */
     private static function runtime(string $engine): array
     {
-        $src = new LocalSource('ui8kit', self::SRC . '/' . $engine, $engine);
+        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
+
         return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
     }
 
     /** WP stubs per process: get_post_type & co. must not exist for ShopCartTest, {page:} lookups are cached per request */
     protected function setUp(): void
     {
-        require_once __DIR__ . '/fixtures/links-stubs.php';
-        require_once __DIR__ . '/fixtures/rest-stubs.php';
-        require_once __DIR__ . '/fixtures/wp-objects-stubs.php';
+        require_once __DIR__.'/fixtures/links-stubs.php';
+        require_once __DIR__.'/fixtures/rest-stubs.php';
+        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
         spl_autoload_register(static function (string $class): void {
             if (str_starts_with($class, 'WPFastyBuilder\\')) {
-                $file = dirname(__DIR__) . '/plugins/wpfasty-builder/src/' . str_replace('\\', '/', substr($class, 15)) . '.php';
+                $file = dirname(__DIR__).'/plugins/wpfasty-builder/src/'.str_replace('\\', '/', substr($class, 15)).'.php';
                 if (is_file($file)) {
                     require_once $file;
                 }
@@ -108,7 +108,7 @@ final class SecurityXssTest extends TestCase
     {
         $bad = ['//evil.test/x', '/\\evil.test', '\\\\evil.test', '\\/evil.test', ' //evil.test', "\t//evil.test",
             "/\t/evil.test", "/\n/evil.test", '&#47;/evil.test', '&#x2F;&#x2F;evil.test', '&sol;&sol;evil.test',
-            "\x01//evil.test"];
+            "\x01//evil.test", ];
         foreach ($bad as $u) {
             self::assertTrue(Safe::networkPath($u), json_encode($u));
             self::assertSame('', Safe::url($u), json_encode($u));
@@ -148,10 +148,10 @@ final class SecurityXssTest extends TestCase
                 [$catalog, $r] = self::runtime($engine);
                 [$entry] = Layout::normalize(['blocks' => [
                     ['id' => 'h', 'block' => 'pagehead', 'variant' => 'start', 'props' => ['title' => $title, 'text' => $title]],
-                ]], 'ui8kit', $catalog, [], ['id' => 'l', 'slug' => 'l', 'title' => $title]);
+                ], ], 'ui8kit', $catalog, [], ['id' => 'l', 'slug' => 'l', 'title' => $title]);
                 $tpl = Compiler::compile($entry, $catalog, $engine);
                 $fn = static fn (string $s, string $t, array $p): string => $r->render($s, $t, Front::prepare($p));
-                if ($engine === 'latte') {
+                if ('latte' === $engine) {
                     $l = new Engine();
                     $l->setTempDirectory(null);
                     $l->setLoader(new StringLoader(['page' => $tpl]));
@@ -159,8 +159,7 @@ final class SecurityXssTest extends TestCase
                     $html = $l->renderToString('page', ['wpfb' => []]);
                 } else {
                     $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
-                    $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false
-                        => $n === 'wpfb_block' ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
+                    $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
                     $html = $env->render('page', ['wpfb' => []]);
                 }
                 self::assertStringNotContainsString('RCE', $html, "$engine: $title");
@@ -176,7 +175,7 @@ final class SecurityXssTest extends TestCase
     {
         [$catalog] = self::runtime('latte');
         $deep = ['x' => 'y'];
-        for ($i = 0; $i < 40; $i++) {
+        for ($i = 0; $i < 40; ++$i) {
             $deep = ['n' => $deep];
         }
         [$entry, $issues] = Layout::normalize(['blocks' => [[
@@ -190,7 +189,7 @@ final class SecurityXssTest extends TestCase
                 'extra' => ['n' => ['__html' => '<i>x</i>', 'k' => '<svg onload=alert(1)>v']],
                 'deep' => $deep,
             ],
-        ]]], 'ui8kit', $catalog, [], ['id' => 'l', 'slug' => 'l', 'title' => 'L']);
+        ], ], ], 'ui8kit', $catalog, [], ['id' => 'l', 'slug' => 'l', 'title' => 'L']);
         $props = (array) Layout::blocks($entry)[0]['props'];
         $codes = array_column($issues, 'code');
         self::assertArrayNotHasKey('title', $props, 'a marker or an object where the sample has text is dropped');
@@ -249,14 +248,15 @@ final class SecurityXssTest extends TestCase
     /** a sample of tools/security/xss-fuzz.php: the payloads through every string prop of a few blocks, DOM-checked */
     public function testFuzzSampleLatteEqualsTwigAndNothingExecutes(): void
     {
-        $payloads = require dirname(__DIR__) . '/tools/security/payloads.php';
-        $check = require dirname(__DIR__) . '/tools/security/dom-check.php';
-        $dom = require dirname(__DIR__) . '/tools/parity/normalize-dom.php';
+        $payloads = require dirname(__DIR__).'/tools/security/payloads.php';
+        $check = require dirname(__DIR__).'/tools/security/dom-check.php';
+        $dom = require dirname(__DIR__).'/tools/parity/normalize-dom.php';
         $set = array_merge(array_slice($payloads['html'], 0, 12), array_slice($payloads['url'], 0, 12));
         $put = static function (mixed $v, string $p) use (&$put): mixed {
             if (is_array($v)) {
                 return array_key_exists('__html', $v) ? $v : array_map(static fn ($x) => $put($x, $p), $v);
             }
+
             return is_string($v) ? $p : $v;
         };
         foreach ([['pagehead', 'start'], ['cta', 'card'], ['about', 'split'], ['richtext', 'sidebar']] as [$block, $variant]) {

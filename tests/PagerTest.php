@@ -15,13 +15,13 @@ use WPFastyBuilder\Layout;
 use WPFastyBuilder\Pager;
 use WPFastyBuilder\Source\LocalSource;
 
-require_once __DIR__ . '/fixtures/links-stubs.php';
-require_once __DIR__ . '/fixtures/rest-stubs.php';
-require_once __DIR__ . '/fixtures/pager-stubs.php';
+require_once __DIR__.'/fixtures/links-stubs.php';
+require_once __DIR__.'/fixtures/rest-stubs.php';
+require_once __DIR__.'/fixtures/pager-stubs.php';
 
 spl_autoload_register(static function (string $class): void {
     if (str_starts_with($class, 'WPFastyBuilder\\')) {
-        $file = dirname(__DIR__) . '/plugins/wpfasty-builder/src/' . str_replace('\\', '/', substr($class, 15)) . '.php';
+        $file = dirname(__DIR__).'/plugins/wpfasty-builder/src/'.str_replace('\\', '/', substr($class, 15)).'.php';
         if (is_file($file)) {
             require_once $file;
         }
@@ -35,12 +35,13 @@ spl_autoload_register(static function (string $class): void {
  */
 final class PagerTest extends TestCase
 {
-    private const SRC = __DIR__ . '/../plugins/wpfasty-builder/sources/ui8kit';
+    private const SRC = __DIR__.'/../plugins/wpfasty-builder/sources/ui8kit';
 
     /** @return array{0: Catalog, 1: BlockRenderer} */
     private static function runtime(string $engine): array
     {
-        $src = new LocalSource('ui8kit', self::SRC . '/' . $engine, $engine);
+        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
+
         return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
     }
 
@@ -49,18 +50,18 @@ final class PagerTest extends TestCase
     {
         $tpl = Compiler::compile($entry, $catalog, $engine);
         $fn = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
-        if ($engine === 'latte') {
+        if ('latte' === $engine) {
             $l = new Engine();
             $l->setLoader(new StringLoader(['page' => $tpl]));
             $l->addFunction('wpfb_block', $fn);
             $html = $l->renderToString('page', ['wpfb' => $wpfb]);
         } else {
             $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
-            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false
-                => $n === 'wpfb_block' ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
+            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
             $html = $env->render('page', ['wpfb' => $wpfb]);
         }
-        return (require dirname(__DIR__) . '/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>' . $html . '</body></html>');
+
+        return (require dirname(__DIR__).'/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>'.$html.'</body></html>');
     }
 
     public function testCatalogDeclaresThePagerOfThePostsBlock(): void
@@ -101,6 +102,7 @@ final class PagerTest extends TestCase
         [$catalog] = self::runtime('latte');
         $norm = static function (array $props) use ($catalog): array {
             [$entry] = Layout::normalize(['blocks' => [['id' => 'p', 'block' => 'posts', 'variant' => 'listPaged', 'props' => $props]]], 'ui8kit', $catalog, [], ['id' => 'l', 'slug' => 'l', 'title' => 'L']);
+
             return (array) Layout::blocks($entry)[0]['props'];
         };
         self::assertSame(['title' => 'T', 'pager' => ['mode' => 'none']], $norm(['title' => 'T', 'pager' => ['mode' => 'none', 'page' => 9, 'pages' => 99, 'previous' => '', 'next' => '']]));
@@ -111,8 +113,8 @@ final class PagerTest extends TestCase
     /** the pager under the list: nav landmark with a name, the current page, named arrows; Latte = Twig; fragment = page */
     public function testPagerRendersLatteEqualsTwigAndFragment(): void
     {
-        $dom = require dirname(__DIR__) . '/tools/parity/normalize-dom.php';
-        $html = require dirname(__DIR__) . '/tools/builder/fragment-html.php';
+        $dom = require dirname(__DIR__).'/tools/parity/normalize-dom.php';
+        $html = require dirname(__DIR__).'/tools/builder/fragment-html.php';
         $by = [];
         foreach (['latte', 'twig'] as $engine) {
             [$catalog, $r] = self::runtime($engine);
@@ -168,7 +170,7 @@ final class PagerTest extends TestCase
     /** links mode renders <a href> for every page and previous / next, Latte = Twig */
     public function testPagerLinksRender(): void
     {
-        $dom = require dirname(__DIR__) . '/tools/parity/normalize-dom.php';
+        $dom = require dirname(__DIR__).'/tools/parity/normalize-dom.php';
         $by = [];
         foreach (['latte', 'twig'] as $engine) {
             [$catalog, $r] = self::runtime($engine);
@@ -176,7 +178,7 @@ final class PagerTest extends TestCase
             [$entry] = Layout::normalize(['blocks' => $blocks], 'ui8kit', $catalog, [], ['id' => 'l', 'slug' => 'l', 'title' => 'L']);
             $one = self::page($engine, $catalog, $r, $entry, ['paged' => ['pager' => Pager::value(2, 5, ['url' => '/j/page/{0}/', 'firstUrl' => '/j/'])]])['paged'];
             foreach (['/j/', '/j/page/3/', '/j/page/5/'] as $href) {
-                self::assertStringContainsString('href="' . $href . '"', $one, "$engine: $href");
+                self::assertStringContainsString('href="'.$href.'"', $one, "$engine: $href");
             }
             self::assertStringNotContainsString('href="/j/page/1/"', $one, "$engine: page 1 is firstUrl");
             self::assertStringNotContainsString('href="/j/page/2/"', $one, "$engine: the current page is no link");

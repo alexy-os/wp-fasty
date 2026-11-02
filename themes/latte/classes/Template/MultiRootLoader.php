@@ -20,11 +20,11 @@ final class MultiRootLoader extends FileLoader
         $normalized = [];
         foreach ($roots as $root) {
             $path = rtrim(str_replace('\\', '/', $root), '/');
-            if ($path !== '' && is_dir($path)) {
+            if ('' !== $path && is_dir($path)) {
                 $normalized[] = $path;
             }
         }
-        if ($normalized === []) {
+        if ([] === $normalized) {
             throw new \RuntimeException('MultiRootLoader requires at least one directory');
         }
         $this->roots = $normalized;
@@ -34,9 +34,10 @@ final class MultiRootLoader extends FileLoader
     public function getContent(string $fileName): string
     {
         $path = $this->find($fileName);
-        if ($path === null) {
+        if (null === $path) {
             throw new \RuntimeException("Missing template \"{$fileName}\"");
         }
+
         return (string) file_get_contents($path);
     }
 
@@ -45,22 +46,24 @@ final class MultiRootLoader extends FileLoader
         if ($this->isAbsolute($file)) {
             return $file;
         }
-        if ($referringFile !== '' && !$this->isAbsolute($referringFile)) {
+        if ('' !== $referringFile && !$this->isAbsolute($referringFile)) {
             $ref = $this->find($referringFile);
-            if ($ref !== null) {
-                $candidate = dirname($ref) . '/' . $file;
+            if (null !== $ref) {
+                $candidate = dirname($ref).'/'.$file;
                 if (is_file($candidate)) {
                     return $this->toLogical($candidate) ?? $file;
                 }
             }
         }
+
         return $file;
     }
 
     public function isExpired(string $file, int $time): bool
     {
         $path = $this->find($file);
-        return $path === null || filemtime($path) > $time;
+
+        return null === $path || filemtime($path) > $time;
     }
 
     private function find(string $fileName): ?string
@@ -70,11 +73,12 @@ final class MultiRootLoader extends FileLoader
             return $name;
         }
         foreach ($this->roots as $root) {
-            $path = $root . '/' . $name;
+            $path = $root.'/'.$name;
             if (is_file($path)) {
                 return $path;
             }
         }
+
         return null;
     }
 
@@ -87,10 +91,11 @@ final class MultiRootLoader extends FileLoader
     {
         $abs = str_replace('\\', '/', $absolute);
         foreach ($this->roots as $root) {
-            if (str_starts_with($abs, $root . '/')) {
+            if (str_starts_with($abs, $root.'/')) {
                 return substr($abs, strlen($root) + 1);
             }
         }
+
         return null;
     }
 }

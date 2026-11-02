@@ -5,10 +5,7 @@
  * Description: QA/CI only (never shipped): appends `<!-- wpfasty-qa: loaded latte|twig -->` to a front-end response for
  *              every template library (`Latte\`, `Twig\`) whose classes were loaded during the request.
  *              tools/qa/site-pair.sh requires exactly the site engine's marker (ADR-001, K7: isolated runtimes).
- *
- * @package Latte
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -26,6 +23,6 @@ add_action('shutdown', static function (): void {
         }
     }
     foreach (array_keys($loaded) as $engine) {
-        echo "\n<!-- wpfasty-qa: loaded " . esc_html($engine) . " -->\n";
+        echo "\n<!-- wpfasty-qa: loaded ".esc_html($engine)." -->\n";
     }
 }, PHP_INT_MAX);

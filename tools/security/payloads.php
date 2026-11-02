@@ -6,8 +6,6 @@
  * handlers, attribute breakouts, dangerous URL schemes with obfuscation (case, whitespace, tabs, newlines, control
  * characters, entities), </style> and </script> breakouts, template syntax of both engines.
  * `url` payloads are tried where a URL is expected (they must start with the scheme); 1337 = 7 * 191 is the SSTI probe.
- *
- * @package WPFastyBuilder
  */
 
 declare(strict_types=1);
