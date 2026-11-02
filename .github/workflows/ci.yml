@@ -160,6 +160,9 @@ jobs:
       - name: Rector dry-run (rector.php; a pending change fails the build)
         run: composer rector
 
+      - name: Translation templates up to date (latte.pot + child themes + builder; strings, not line refs)
+        run: bash tools/qa/pot-check.sh
+
       - name: Pack parent zips (isolated engines — latte.zip ships only Latte, twig.zip only Twig)
         run: |
           bun run theme:pack -- latte
