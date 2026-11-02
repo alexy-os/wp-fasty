@@ -9,6 +9,7 @@
         "deptrac/deptrac": "^3.0",
         "escapestudios/symfony2-coding-standard": "^3.13",
         "friendsofphp/php-cs-fixer": "^3.64",
+        "opis/json-schema": "^2.4",
         "phpcompatibility/phpcompatibility-wp": "^2.1",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",

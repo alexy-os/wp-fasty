@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wpfasty.dev/schema/theme-context.schema.json",
+  "title": "WP FastY theme template context",
+  "description": "What ContextFactory hands to the Latte/Twig views (createPageContext / createArchiveContext / createErrorContext). The post view-model is built from WPFasty\\Core\\Model\\Post, whose id/slug/title/content/excerpt follow the Codex v0.4 entry (ui8kit/contract, WPFastyTypes\\Codex\\Mapper::entry); `kind` maps to isAttachment / the view choice. Filters (wpfasty_post_data, wpfasty_context) may add keys, so objects stay open; the keys below are the contract the parent views rely on.",
+  "oneOf": [
+    { "$ref": "#/$defs/pageContext" },
+    { "$ref": "#/$defs/archiveContext" },
+    { "$ref": "#/$defs/errorContext" }
+  ],
+  "$defs": {
+    "url": { "type": "string" },
+    "html": { "type": "string", "description": "TrustedHtml from a WordPress adapter, printed unescaped" },
+    "image": {
+      "type": "object",
+      "required": ["url", "width", "height", "alt", "srcset", "sizes"],
+      "properties": {
+        "url": { "$ref": "#/$defs/url" },
+        "width": { "type": ["string", "integer"], "description": "PostRepository gives strings; frozen fixtures may hold integers" },
+        "height": { "type": ["string", "integer"] },
+        "alt": { "type": "string" },
+        "srcset": { "type": "string" },
+        "sizes": { "type": "string" }
+      }
+    },
+    "term": {
+      "type": "object",
+      "required": ["name", "url", "slug"],
+      "properties": { "name": { "type": "string" }, "url": { "$ref": "#/$defs/url" }, "slug": { "type": "string" } }
+    },
+    "link": {
+      "type": "object",
+      "required": ["title", "url"],
+      "properties": { "title": { "type": "string" }, "url": { "$ref": "#/$defs/url" } }
+    },
+    "post": {
+      "type": "object",
+      "required": ["id", "title", "content", "slug", "url", "excerpt", "featuredImage", "thumbnail", "categories", "tags",
+        "author", "postClass", "linkPages", "prev", "next", "mimeType", "isAttachment", "date"],
+      "properties": {
+        "id": { "type": "integer", "minimum": 0, "description": "Codex entry id = <kind>-<id>" },
+        "title": { "type": "string", "description": "Codex title (plain text)" },
+        "content": { "$ref": "#/$defs/html", "description": "Codex content, rendered" },
+        "slug": { "type": "string", "description": "Codex slug" },
+        "url": { "$ref": "#/$defs/url" },
+        "excerpt": { "type": "string", "description": "Codex excerpt (plain text)" },
+        "featuredImage": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/image" }] },
+        "thumbnail": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/image" }] },
+        "categories": { "type": "array", "items": { "$ref": "#/$defs/term" } },
+        "tags": { "type": "array", "items": { "$ref": "#/$defs/term" } },
+        "author": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "object", "required": ["name", "url"], "properties": { "name": { "type": "string" }, "url": { "$ref": "#/$defs/url" } } }
+          ]
+        },
+        "postClass": { "type": "string" },
+        "linkPages": { "$ref": "#/$defs/html" },
+        "prev": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/link" }] },
+        "next": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/link" }] },
+        "mimeType": { "type": "string" },
+        "isAttachment": { "type": "boolean" },
+        "attachmentUrl": { "$ref": "#/$defs/url" },
+        "date": {
+          "type": "object",
+          "required": ["display", "iso"],
+          "properties": { "display": { "type": "string" }, "iso": { "type": "string" } }
+        }
+      }
+    },
+    "menuItem": {
+      "type": "object",
+      "required": ["title", "url", "id", "current", "children"],
+      "properties": {
+        "id": { "type": "integer" },
+        "current": { "type": "boolean" },
+        "children": { "type": "array", "items": { "$ref": "#/$defs/menuItem" } }
+      }
+    },
+    "pagination": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["current", "total", "prevUrl", "nextUrl", "url", "firstUrl"],
+          "properties": {
+            "current": { "type": "integer", "minimum": 1 },
+            "total": { "type": "integer", "minimum": 2 },
+            "prevUrl": { "type": ["string", "null"] },
+            "nextUrl": { "type": ["string", "null"] },
+            "url": { "type": "string", "pattern": "\\{0\\}" },
+            "firstUrl": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "common": {
+      "type": "object",
+      "required": ["site", "menu", "shell", "sheet", "labels", "search", "widgets"],
+      "properties": {
+        "site": {
+          "type": "object",
+          "required": ["title", "url", "themeUrl", "stylesheetUrl", "lang", "description", "charset", "year", "logo"],
+          "properties": {
+            "year": { "type": "string", "pattern": "^[0-9]{4}$" },
+            "logo": {
+              "oneOf": [
+                { "type": "null" },
+                { "type": "object", "required": ["url", "width", "height", "alt"] }
+              ]
+            }
+          }
+        },
+        "menu": {
+          "type": "object",
+          "required": ["primary", "footer"],
+          "additionalProperties": {
+            "type": "object",
+            "required": ["items"],
+            "properties": { "items": { "type": "array", "items": { "$ref": "#/$defs/menuItem" } } }
+          }
+        },
+        "shell": { "enum": ["classic", "app-shell"] },
+        "sheet": { "type": "object", "required": ["trigger", "panel", "title"], "additionalProperties": { "type": "string" } },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } },
+        "search": {
+          "type": "object",
+          "required": ["action", "query", "placeholder", "submit", "label"],
+          "additionalProperties": { "type": "string" }
+        },
+        "widgets": {
+          "type": "object",
+          "required": ["sidebar", "footer"],
+          "properties": { "sidebar": { "$ref": "#/$defs/html" }, "footer": { "$ref": "#/$defs/html" } }
+        }
+      }
+    },
+    "pageContext": {
+      "allOf": [
+        { "$ref": "#/$defs/common" },
+        {
+          "type": "object",
+          "required": ["page", "hero", "comments"],
+          "properties": {
+            "page": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/post" }] },
+            "hero": { "type": "object", "required": ["primaryLabel", "primaryUrl", "secondaryLabel", "secondaryUrl"] },
+            "comments": { "$ref": "#/$defs/html" },
+            "posts": { "type": "array", "items": { "$ref": "#/$defs/post" } }
+          }
+        }
+      ]
+    },
+    "archiveContext": {
+      "allOf": [
+        { "$ref": "#/$defs/common" },
+        {
+          "type": "object",
+          "required": ["archive", "posts", "pagination"],
+          "properties": {
+            "archive": {
+              "type": "object",
+              "required": ["title", "description", "searchQuery", "type"],
+              "properties": {
+                "title": { "type": "string" },
+                "description": { "type": "string" },
+                "searchQuery": { "type": ["string", "null"] },
+                "type": { "enum": ["search", "category", "tag", "author", "date", "post_type", "taxonomy", "home", "archive"] }
+              }
+            },
+            "posts": { "type": "array", "items": { "$ref": "#/$defs/post" } },
+            "pagination": { "$ref": "#/$defs/pagination" }
+          }
+        }
+      ]
+    },
+    "errorContext": {
+      "allOf": [
+        { "$ref": "#/$defs/common" },
+        {
+          "type": "object",
+          "required": ["error"],
+          "properties": {
+            "error": {
+              "type": "object",
+              "required": ["code", "title", "message", "homeUrl", "homeLabel"],
+              "properties": { "code": { "type": "integer" } }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
