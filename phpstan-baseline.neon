@@ -397,12 +397,6 @@ parameters:
 			path: themes/latte/classes/Core/ContainerInterface.php
 
 		-
-			message: '#^Access to an undefined property object\:\:\$max_num_pages\.$#'
-			identifier: property.notFound
-			count: 1
-			path: themes/latte/classes/Data/ContextFactory.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_filter expects array, array\<int\|WP_Post\>\|null given\.$#'
 			identifier: argument.type
 			count: 1

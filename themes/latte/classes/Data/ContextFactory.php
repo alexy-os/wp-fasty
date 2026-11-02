@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace WPFasty\Data;
 
+use WPFasty\Adapter\WordPress\WordPressArchiveStateProvider;
 use WPFasty\Adapter\WordPress\WordPressLabelProvider;
 use WPFasty\Adapter\WordPress\WordPressMenuProvider;
 use WPFasty\Adapter\WordPress\WordPressSiteInfoProvider;
 use WPFasty\Adapter\WordPress\WordPressWidgetAreaProvider;
 use WPFasty\Core\Model\SiteInfo;
+use WPFasty\Core\Port\ArchiveStateProviderInterface;
 use WPFasty\Core\Port\LabelProviderInterface;
 use WPFasty\Core\Port\MenuProviderInterface;
+use WPFasty\Core\Port\PageLinkProviderInterface;
 use WPFasty\Core\Port\SiteInfoProviderInterface;
 use WPFasty\Core\Port\WidgetAreaProviderInterface;
+use WPFasty\Data\Archive\ArchiveViewModelBuilder;
 use WPFasty\Data\Menu\MenuViewModelBuilder;
 use WPFasty\Data\Site\SiteViewModelBuilder;
 
@@ -29,6 +33,9 @@ final class ContextFactory
     private readonly LabelProviderInterface $labels;
     private readonly WidgetAreaProviderInterface $widgets;
     private readonly SiteViewModelBuilder $siteBuilder;
+    private readonly ArchiveStateProviderInterface $archiveState;
+    private readonly PageLinkProviderInterface $pageLinks;
+    private readonly ArchiveViewModelBuilder $archiveBuilder;
 
     public function __construct(
         ?MenuProviderInterface $menuProvider = null,
@@ -37,13 +44,20 @@ final class ContextFactory
         ?LabelProviderInterface $labels = null,
         ?WidgetAreaProviderInterface $widgets = null,
         ?SiteViewModelBuilder $siteBuilder = null,
+        ?ArchiveStateProviderInterface $archiveState = null,
+        ?PageLinkProviderInterface $pageLinks = null,
+        ?ArchiveViewModelBuilder $archiveBuilder = null,
     ) {
+        $wpArchive = new WordPressArchiveStateProvider();
         $this->menuProvider = $menuProvider ?? new WordPressMenuProvider();
         $this->menuBuilder = $menuBuilder ?? new MenuViewModelBuilder();
         $this->siteInfo = $siteInfo ?? new WordPressSiteInfoProvider();
         $this->labels = $labels ?? new WordPressLabelProvider();
         $this->widgets = $widgets ?? new WordPressWidgetAreaProvider();
         $this->siteBuilder = $siteBuilder ?? new SiteViewModelBuilder();
+        $this->archiveState = $archiveState ?? $wpArchive;
+        $this->pageLinks = $pageLinks ?? $wpArchive;
+        $this->archiveBuilder = $archiveBuilder ?? new ArchiveViewModelBuilder();
     }
 
     /** @return array<string, mixed> */
@@ -134,20 +148,13 @@ final class ContextFactory
             wp_reset_postdata();
         }
 
-        $searchQuery = is_search() ? (string) get_search_query() : null;
-        $title = null !== $searchQuery
-            ? $this->labels->searchResultsTitle($searchQuery)
-            : wp_strip_all_tags(get_the_archive_title());
+        $state = $this->archiveState->current();
+        $searchTitle = null !== $state->searchQuery ? $this->labels->searchResultsTitle($state->searchQuery) : null;
 
         $context = array_merge($this->common($this->siteInfo->site()), [
-            'archive' => [
-                'title' => $title,
-                'description' => null !== $searchQuery ? '' : wp_kses_post(get_the_archive_description()),
-                'searchQuery' => $searchQuery,
-                'type' => $this->archiveType(),
-            ],
+            'archive' => $this->archiveBuilder->archive($state, $searchTitle),
             'posts' => $posts,
-            'pagination' => $this->pagination(),
+            'pagination' => $this->archiveBuilder->pagination($state, $this->pageLinks),
         ]);
 
         return apply_filters('wpfasty_context', $context, null);
@@ -207,36 +214,6 @@ final class ContextFactory
                 'footer' => (string) $this->widgets->render('footer-1'),
             ],
         ];
-    }
-
-    private function archiveType(): string
-    {
-        if (is_search()) {
-            return 'search';
-        }
-        if (is_category()) {
-            return 'category';
-        }
-        if (is_tag()) {
-            return 'tag';
-        }
-        if (is_author()) {
-            return 'author';
-        }
-        if (is_date()) {
-            return 'date';
-        }
-        if (is_post_type_archive()) {
-            return 'post_type';
-        }
-        if (is_tax()) {
-            return 'taxonomy';
-        }
-        if (is_home()) {
-            return 'home';
-        }
-
-        return 'archive';
     }
 
     /** @return array<string, mixed> */
@@ -441,30 +418,5 @@ final class ContextFactory
         wp_reset_postdata();
 
         return $posts;
-    }
-
-    /** @return array<string, mixed>|null */
-    private function pagination(): ?array
-    {
-        global $wp_query;
-        if (!isset($wp_query) || !is_object($wp_query)) {
-            return null;
-        }
-        $max = (int) $wp_query->max_num_pages;
-        if ($max <= 1) {
-            return null;
-        }
-        $paged = max(1, (int) get_query_var('paged'));
-
-        return [
-            'current' => $paged,
-            'total' => $max,
-            'prevUrl' => $paged > 1 ? get_pagenum_link($paged - 1) : null,
-            'nextUrl' => $paged < $max ? get_pagenum_link($paged + 1) : null,
-            // link mode of the builder Pager (codegen-x pageUrl / firstUrl): page {0}, page 1; unescaped (the
-            // builder passes them through its Safe URL check, esc_url would drop the braces)
-            'url' => str_replace('987654321', '{0}', (string) get_pagenum_link(987654321, false)),
-            'firstUrl' => (string) get_pagenum_link(1, false),
-        ];
     }
 }

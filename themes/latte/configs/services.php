@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
+use WPFasty\Adapter\WordPress\WordPressArchiveStateProvider;
 use WPFasty\Adapter\WordPress\WordPressLabelProvider;
 use WPFasty\Adapter\WordPress\WordPressMenuProvider;
 use WPFasty\Adapter\WordPress\WordPressSiteInfoProvider;
 use WPFasty\Adapter\WordPress\WordPressWidgetAreaProvider;
 use WPFasty\Core\Container;
 use WPFasty\Core\ContainerInterface;
+use WPFasty\Data\Archive\ArchiveViewModelBuilder;
 use WPFasty\Data\ContextFactory;
 use WPFasty\Data\Menu\MenuViewModelBuilder;
 use WPFasty\Data\Site\SiteViewModelBuilder;
@@ -78,14 +80,21 @@ return function (Container $container): void {
     ]))));
     $container->addTag('types.registry', ContainerInterface::TAG_BOOTABLE);
 
-    $container->singleton('data.context_factory', static fn () => new ContextFactory(
-        new WordPressMenuProvider(),
-        new MenuViewModelBuilder(),
-        new WordPressSiteInfoProvider(),
-        new WordPressLabelProvider(),
-        new WordPressWidgetAreaProvider(),
-        new SiteViewModelBuilder(),
-    ));
+    $container->singleton('data.context_factory', static function (): ContextFactory {
+        $archive = new WordPressArchiveStateProvider();
+
+        return new ContextFactory(
+            new WordPressMenuProvider(),
+            new MenuViewModelBuilder(),
+            new WordPressSiteInfoProvider(),
+            new WordPressLabelProvider(),
+            new WordPressWidgetAreaProvider(),
+            new SiteViewModelBuilder(),
+            $archive,
+            $archive,
+            new ArchiveViewModelBuilder(),
+        );
+    });
 
     $container->singleton('theme', static function (Container $c): ThemeService {
         return new ThemeService(
