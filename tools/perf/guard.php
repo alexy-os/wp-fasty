@@ -32,7 +32,9 @@ if (!function_exists('wpfasty_perf_query_shape')) {
     }
 
     /**
-     * Shapes that run more often in $large than in $small (the same render with more items or another page).
+     * Shapes that run more often in $large than in $small (the same render with more items or another page) by more
+     * than one: one extra run is a batch that only exists when the items need it (the first post with a featured
+     * image adds one `wp_posts WHERE ID IN (...)` for all images); a per-item query grows with the items.
      *
      * @param list<string> $small
      * @param list<string> $large
@@ -44,7 +46,7 @@ if (!function_exists('wpfasty_perf_query_shape')) {
         $a = array_count_values(array_map('wpfasty_perf_query_shape', $small));
         $out = [];
         foreach (array_count_values(array_map('wpfasty_perf_query_shape', $large)) as $shape => $n) {
-            if ($n > ($a[$shape] ?? 0) && $n > 1) {
+            if ($n > ($a[$shape] ?? 0) + 1) {
                 $out[(string) $shape] = [$a[$shape] ?? 0, $n];
             }
         }

@@ -38,6 +38,8 @@ final class PerfGuardTest extends TestCase
             'SELECT wp_posts.* FROM wp_posts WHERE ID IN (3,4,5,6,7,8)',
             'SELECT wp_posts.* FROM wp_posts WHERE ID IN (9,10)',
         ]));
+        // featured images only on the larger page: one more batch, not an N+1
+        self::assertSame([], wpfasty_perf_growing_shapes(['SELECT wp_posts.* FROM wp_posts WHERE ID IN (3,4)'], $batch));
         self::assertSame(
             ['SELECT * FROM wp_users WHERE ID = ?' => [0, 2]],
             wpfasty_perf_growing_shapes($batch, [...$batch, 'SELECT * FROM wp_users WHERE ID = 1', 'SELECT * FROM wp_users WHERE ID = 2'])
