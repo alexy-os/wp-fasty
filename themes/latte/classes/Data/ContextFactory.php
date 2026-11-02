@@ -54,21 +54,13 @@ final class ContextFactory
         ], $request->frontPage ? ['posts' => $this->viewModels($this->posts->recent(6))] : []), $post);
     }
 
-    /**
-     * Public view-model for any post (used by child themes for secondary queries).
-     *
-     * @return array<string, mixed>
-     */
+    /** @return array<string, mixed> the public view-model of any post (child themes, secondary queries) */
     public function postData(\WP_Post $post, bool $singular = false): array
     {
-        return $this->viewModel($this->posts->fromWordPress($post, $singular));
+        return $this->viewModels([$this->posts->fromWordPress($post, $singular)])[0];
     }
 
-    /**
-     * Batch-loads everything a list of post view-models touches (PostRepository::prime). Avoids N+1.
-     *
-     * @param list<\WP_Post> $posts
-     */
+    /** @param list<\WP_Post> $posts batch-loads what their view-models touch (PostRepository::prime), no N+1 */
     public function prime(array $posts): void
     {
         $this->posts->prime($posts);
@@ -97,12 +89,6 @@ final class ContextFactory
         ]), null);
     }
 
-    /** @return array<string, mixed> */
-    private function viewModel(Post $post): array
-    {
-        return $this->filters->postData($this->postBuilder->build($post), $post);
-    }
-
     /**
      * @param list<Post> $posts
      *
@@ -110,6 +96,6 @@ final class ContextFactory
      */
     private function viewModels(array $posts): array
     {
-        return array_map($this->viewModel(...), $posts);
+        return array_map(fn (Post $p): array => $this->filters->postData($this->postBuilder->build($p), $p), $posts);
     }
 }
