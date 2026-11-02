@@ -1,4 +1,4 @@
-# Deptrac — architecture layers (report-only: `composer deptrac` never fails the build yet).
+# Deptrac — architecture layers (blocking: `composer deptrac` fails on a violation; CI runs it).
 # Layers follow the current structure of themes/latte/classes and the builder/types plugins.
 deptrac:
   cache_file: var/cache/.deptrac.cache
@@ -7,6 +7,7 @@ deptrac:
     - ./themes/latte
     - ./plugins/wpfasty-builder/src
     - ./plugins/wpfasty-types/src
+    - ./vendor/php-stubs/wordpress-stubs
   exclude_files:
     - '#/vendor/#'
     - '#/ui8kit/#'
@@ -14,15 +15,21 @@ deptrac:
     - '#/twig/#'
     - '#/views/#'
   layers:
-    # Domain/Core: container, application kernel, content-type definitions
+    # Domain/Core: container, application kernel, ports (interfaces) and plain DTOs, content-type definitions.
+    # Knows nothing of WordPress or the renderer.
     - name: Core
       collectors:
         - { type: classLike, value: '^WPFasty\\Core\\.*' }
-        - { type: classLike, value: '^WPFasty\\Types\\.*' }
-    # ViewModel: WordPress state -> plain template context arrays
+        - { type: classLike, value: '^WPFasty\\Types\\(Field|PostType)$' }
+    # ViewModel: Core data -> plain template context arrays (builders per domain). No WordPress classes here;
+    # no WordPress function calls either (Deptrac does not see global functions: tests/ArchitectureTest.php).
     - name: ViewModel
       collectors:
-        - { type: classLike, value: '^WPFasty\\Data\\.*' }
+        - type: bool
+          must:
+            - { type: classLike, value: '^WPFasty\\Data\\.*' }
+          must_not:
+            - { type: classLike, value: '^WPFasty\\Data\\ContextFactory$' }
     # Renderer: Latte/Twig engines, kit, view helpers
     - name: Renderer
       collectors:
@@ -31,6 +38,10 @@ deptrac:
     - name: Adapter\WordPress
       collectors:
         - { type: classLike, value: '^WPFasty\\Hooks\\.*' }
+        - { type: classLike, value: '^WPFasty\\Adapter\\WordPress\\.*' }
+        # the facade/orchestrator: reads the WordPress request state and hands it to ports and builders
+        - { type: classLike, value: '^WPFasty\\Data\\ContextFactory$' }
+        - { type: classLike, value: '^WPFasty\\Types\\Registry$' }
         - { type: classLike, value: '^WPFasty\\Theme\\.*' }
         - { type: classLike, value: '^WPFastyBuilder\\.*' }
         - { type: classLike, value: '^WPFastyTypes\\.*' }
@@ -38,9 +49,14 @@ deptrac:
     - name: Templates
       collectors:
         - { type: directory, value: 'themes/latte/[^/]+\.php$' }
+    # WordPress itself (php-stubs/wordpress-stubs: WP_Post, WP_Query, ...)
+    - name: WordPress
+      collectors:
+        - { type: directory, value: 'vendor/php-stubs/wordpress-stubs/.*' }
   ruleset:
     Core: ~
     ViewModel: [Core]
-    Renderer: [Core]
-    Adapter\WordPress: [Core, ViewModel, Renderer]
-    Templates: [Core, ViewModel, Renderer, Adapter\WordPress]
+    Renderer: [Core, WordPress]
+    Adapter\WordPress: [Core, ViewModel, Renderer, WordPress]
+    Templates: [Core, ViewModel, Renderer, Adapter\WordPress, WordPress]
+    WordPress: ~
