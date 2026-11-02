@@ -36,10 +36,10 @@ final class Site
             : [];
         // Themes layered between child and parent (Latte "Extends:" base theme) add their dirs here.
         if (function_exists('apply_filters')) {
-            $dirs = array_values(array_unique((array) apply_filters('wpfasty_theme_dirs', $dirs)));
+            $dirs = array_values(array_unique(Cast::strings(apply_filters('wpfasty_theme_dirs', $dirs))));
         }
         foreach ($dirs as $dir) {
-            $site = self::fromDir((string) $dir.'/types');
+            $site = self::fromDir($dir.'/types');
             if (null !== $site) {
                 return self::$current = $site;
             }
@@ -63,8 +63,8 @@ final class Site
         }
         $text = (string) file_get_contents($m);
         $digest = Canonical::manifestDigest(Json::parse($text));
-        $manifest = (array) json_decode($text, true);
-        $delivery = is_file($d) ? (array) json_decode((string) file_get_contents($d), true) : [];
+        $manifest = Cast::map(json_decode($text, true));
+        $delivery = is_file($d) ? Cast::map(json_decode((string) file_get_contents($d), true)) : [];
 
         return new self($manifest, $delivery, $digest);
     }
@@ -72,9 +72,9 @@ final class Site
     /** @return array<string, mixed>|null resource {record, taxonomies?} of a kind */
     public function resource(string $kind): ?array
     {
-        foreach ((array) ($this->manifest['resources'] ?? []) as $r) {
-            if (($r['record']['id'] ?? null) === $kind) {
-                return $r;
+        foreach (Cast::list($this->manifest['resources'] ?? []) as $r) {
+            if (Cast::path($r, 'record', 'id') === $kind) {
+                return Cast::map($r);
             }
         }
 
@@ -85,8 +85,8 @@ final class Site
     public function postKinds(): array
     {
         $out = [];
-        foreach ((array) ($this->manifest['resources'] ?? []) as $r) {
-            $id = (string) ($r['record']['id'] ?? '');
+        foreach (Cast::list($this->manifest['resources'] ?? []) as $r) {
+            $id = Cast::string(Cast::path($r, 'record', 'id'));
             if ('' !== $id && 'media' !== $id && 'user' !== $id) {
                 $out[] = $id;
             }
@@ -99,7 +99,7 @@ final class Site
     public function kindOf(string $postType): ?string
     {
         foreach ($this->postKinds() as $kind) {
-            if ((string) ($this->wp($kind)['post_type'] ?? $kind) === $postType) {
+            if (Cast::string($this->wp($kind)['post_type'] ?? $kind) === $postType) {
                 return $kind;
             }
         }
@@ -111,8 +111,9 @@ final class Site
     public function fields(string $kind): array
     {
         $out = [];
-        foreach ((array) ($this->resource($kind)['record']['fields'] ?? []) as $f) {
-            $out[(string) $f['id']] = (array) $f;
+        foreach (Cast::list(Cast::path($this->resource($kind), 'record', 'fields')) as $f) {
+            $f = Cast::map($f);
+            $out[Cast::string($f['id'] ?? '')] = $f;
         }
 
         return $out;
@@ -121,16 +122,16 @@ final class Site
     /** @return list<string> */
     public function taxonomies(string $kind): array
     {
-        return array_values(array_map('strval', (array) ($this->resource($kind)['taxonomies'] ?? [])));
+        return array_values(array_map(Cast::string(...), (array) ($this->resource($kind)['taxonomies'] ?? [])));
     }
 
     /** @return list<string> every taxonomy of the manifest */
     public function allTaxonomies(): array
     {
         $out = [];
-        foreach ((array) ($this->manifest['resources'] ?? []) as $r) {
-            foreach ((array) ($r['taxonomies'] ?? []) as $t) {
-                $out[(string) $t] = true;
+        foreach (Cast::list($this->manifest['resources'] ?? []) as $r) {
+            foreach (Cast::list(Cast::path($r, 'taxonomies')) as $t) {
+                $out[Cast::string($t)] = true;
             }
         }
         $out = array_keys($out);
@@ -143,8 +144,8 @@ final class Site
     public function roleTaxonomy(string $kind, string $role): string
     {
         $roles = [];
-        foreach ((array) ($this->delivery['taxonomies'] ?? []) as $t) {
-            $roles[(string) $t['id']] = (string) ($t['role'] ?? '');
+        foreach (Cast::list($this->delivery['taxonomies'] ?? []) as $t) {
+            $roles[Cast::string(Cast::path($t, 'id'))] = Cast::string(Cast::path($t, 'role'));
         }
         foreach ($this->taxonomies($kind) as $t) {
             if (($roles[$t] ?? '') === $role) {
@@ -158,11 +159,11 @@ final class Site
     /** @return array<string, mixed> WordPress delivery of a kind: post_type, meta (field → meta key), purchasable */
     public function wp(string $kind): array
     {
-        return (array) ($this->delivery[self::WP]['kinds'][$kind] ?? ['post_type' => $kind]);
+        return Cast::map(Cast::path($this->delivery, self::WP, 'kinds', $kind) ?? ['post_type' => $kind]);
     }
 
     public function currencyOption(): string
     {
-        return (string) ($this->delivery[self::WP]['settings']['currency'] ?? 'wpfasty_currency');
+        return Cast::string(Cast::path($this->delivery, self::WP, 'settings', 'currency') ?? 'wpfasty_currency');
     }
 }

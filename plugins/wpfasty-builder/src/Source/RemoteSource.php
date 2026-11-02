@@ -88,10 +88,11 @@ final class RemoteSource implements SourceInterface
         $base = rtrim($this->url, '/');
         $raw = ($this->fetch)($base.'/catalog.json');
         $catalog = json_decode($raw, true);
-        if (!is_array($catalog)) {
+        if (!is_array($catalog) || array_is_list($catalog)) {
             throw new \RuntimeException('catalog.json: not a JSON object');
         }
-        $format = (int) ($catalog['format'] ?? 1);
+        $catalog = \WPFastyBuilder\Cast::map($catalog);
+        $format = \WPFastyBuilder\Cast::int($catalog['format'] ?? 1);
         $runtime = Catalog::runtimeOf($catalog);
         if ($format >= 2 && $runtime !== $this->runtime) {
             throw new \RuntimeException(sprintf('This registry serves %s templates, the site renders %s: import the %s registry instead.', (string) ($runtime ?? 'unknown'), $this->runtime, $this->runtime));
@@ -102,8 +103,8 @@ final class RemoteSource implements SourceInterface
         }
         if ($format >= 2) {
             $archive = (array) ($catalog['archive'] ?? []);
-            $file = (string) ($archive['file'] ?? 'blocks.zip');
-            $sha = (string) ($archive['sha256'] ?? '');
+            $file = \WPFastyBuilder\Cast::string($archive['file'] ?? 'blocks.zip');
+            $sha = \WPFastyBuilder\Cast::string($archive['sha256'] ?? '');
             if (1 !== preg_match('/^[a-z0-9][a-z0-9_-]*\.zip$/', $file) || 1 !== preg_match('/^[0-9a-f]{64}$/', $sha)) {
                 throw new \RuntimeException('catalog.json: archive needs a file name and a sha256');
             }
@@ -149,7 +150,7 @@ final class RemoteSource implements SourceInterface
             'blocks' => count((array) ($catalog['blocks'] ?? [])),
             'collections' => count((array) ($catalog['collections'] ?? [])),
             'runtime' => $this->runtime,
-            'version' => (string) ($catalog['version'] ?? ''),
+            'version' => \WPFastyBuilder\Cast::string($catalog['version'] ?? ''),
         ];
     }
 
@@ -201,7 +202,7 @@ final class RemoteSource implements SourceInterface
     {
         $c = $this->stored();
 
-        return null !== $c && (int) ($c['format'] ?? 1) < 2;
+        return null !== $c && \WPFastyBuilder\Cast::int($c['format'] ?? 1) < 2;
     }
 
     /** @return array<string, mixed>|null */
@@ -210,7 +211,7 @@ final class RemoteSource implements SourceInterface
         $file = $this->dir.'/catalog.json';
         $data = is_file($file) ? json_decode((string) file_get_contents($file), true) : null;
 
-        return is_array($data) ? $data : null;
+        return is_array($data) ? \WPFastyBuilder\Cast::map($data) : null;
     }
 
     private static function rmrf(string $path): void

@@ -11,6 +11,9 @@ namespace WPFastyBuilder;
  * props, bindings} ]} } }
  * `props` are overrides of the variant sample props; `bindings` map a bindable path ("posts", "filter.topics")
  * to a data source {source, limit, term, sale}. normalize() sanitizes untrusted input and reports contract issues.
+ *
+ * @phpstan-type LayoutBlock array{id: string, block: string, variant: string, props: array<string, mixed>,
+ *   bindings: array<string, mixed>}
  */
 final class Layout
 {
@@ -42,8 +45,8 @@ final class Layout
     ): array {
         $issues = [];
         $meta = is_array($in['metadata'] ?? null) ? $in['metadata'] : null;
-        $blocksIn = null !== $meta ? ($meta['blocks']['value'] ?? []) : ($in['blocks'] ?? []);
-        $collection = null !== $meta ? ($meta['collection']['value'] ?? '') : ($in['collection'] ?? '');
+        $blocksIn = null !== $meta ? (Cast::path($meta, 'blocks', 'value') ?? []) : ($in['blocks'] ?? []);
+        $collection = null !== $meta ? (Cast::path($meta, 'collection', 'value') ?? '') : ($in['collection'] ?? '');
         $blocks = [];
         $seen = [];
         foreach (array_slice(is_array($blocksIn) ? array_values($blocksIn) : [], 0, self::MAX_BLOCKS) as $i => $b) {
@@ -75,7 +78,8 @@ final class Layout
                     );
                     continue;
                 }
-                $src = is_array($bind) && is_string($bind['source'] ?? null) ? $bind['source'] : '';
+                $bind = Cast::map($bind);
+                $src = is_string($bind['source'] ?? null) ? $bind['source'] : '';
                 if (!in_array($src, $dataSources, true)) {
                     $issues[] = self::issue(
                         'layout.binding_source_unknown',
@@ -84,7 +88,7 @@ final class Layout
                     );
                     continue;
                 }
-                $limit = max(1, min(24, (int) ($bind['limit'] ?? 6)));
+                $limit = max(1, min(24, Cast::int($bind['limit'] ?? 6)));
                 $one = ['source' => $src, 'limit' => $limit];
                 $term = is_string($bind['term'] ?? null) ? strtolower((string) preg_replace(
                     '/[^a-z0-9_-]/i',
@@ -136,22 +140,22 @@ final class Layout
         $known = is_string($collection) && ('' === $collection || null !== $catalog->collection($collection));
         $collection = $known ? $collection : '';
         $entry = [
-            'id' => (string) ($base['id'] ?? ''),
-            'locale' => (string) ($base['locale'] ?? 'en'),
+            'id' => Cast::string($base['id'] ?? ''),
+            'locale' => Cast::string($base['locale'] ?? 'en'),
             'kind' => self::KIND,
             'status' => in_array($base['status'] ?? '', self::STATUSES, true) ? $base['status'] : 'draft',
             'visibility' => 'public',
-            'slug' => (string) ($base['slug'] ?? ''),
-            'title' => (string) ($base['title'] ?? ''),
+            'slug' => Cast::string($base['slug'] ?? ''),
+            'title' => Cast::string($base['title'] ?? ''),
             'metadata' => [
                 'source' => ['value' => $sourceId],
                 'collection' => ['value' => $collection],
-                'page_id' => ['value' => (string) ($base['page_id'] ?? '')],
+                'page_id' => ['value' => Cast::string($base['page_id'] ?? '')],
                 'blocks' => ['value' => $blocks],
             ],
-            'version' => max(1, (int) ($base['version'] ?? 1)),
-            'created_at' => (string) ($base['created_at'] ?? ''),
-            'updated_at' => (string) ($base['updated_at'] ?? ''),
+            'version' => max(1, Cast::int($base['version'] ?? 1)),
+            'created_at' => Cast::string($base['created_at'] ?? ''),
+            'updated_at' => Cast::string($base['updated_at'] ?? ''),
         ];
 
         return [$entry, array_merge($issues, self::check($entry))];
@@ -167,17 +171,17 @@ final class Layout
     public static function check(array $e): array
     {
         $out = [];
-        if ('' === trim((string) ($e['id'] ?? ''))) {
+        if ('' === trim(Cast::string($e['id'] ?? ''))) {
             $out[] = self::issue('core.id_required', 'id', 'id is required');
         }
-        if (1 !== preg_match(self::LOCALE, (string) ($e['locale'] ?? ''))) {
+        if (1 !== preg_match(self::LOCALE, Cast::string($e['locale'] ?? ''))) {
             $out[] = self::issue('core.locale_invalid', 'locale', 'locale must be a BCP 47 tag');
         }
         if (!is_int($e['version'] ?? null) || $e['version'] < 1) {
             $out[] = self::issue('core.version_required', 'version', 'version must be an integer >= 1');
         }
-        $c = (string) ($e['created_at'] ?? '');
-        $u = (string) ($e['updated_at'] ?? '');
+        $c = Cast::string($e['created_at'] ?? '');
+        $u = Cast::string($e['updated_at'] ?? '');
         if (1 !== preg_match(self::RFC3339, $c) || 1 !== preg_match(self::RFC3339, $u)) {
             $out[] = self::issue(
                 'core.timestamps_required',
@@ -187,7 +191,7 @@ final class Layout
         } elseif (strtotime($u) < strtotime($c)) {
             $out[] = self::issue('core.timestamps_order', 'updated_at', 'updated_at precedes created_at');
         }
-        if (1 !== preg_match(Catalog::IDENT, (string) ($e['kind'] ?? ''))) {
+        if (1 !== preg_match(Catalog::IDENT, Cast::string($e['kind'] ?? ''))) {
             $out[] = self::issue('core.entry.kind_invalid', 'kind', 'kind is invalid');
         }
         if (!in_array(
@@ -200,7 +204,7 @@ final class Layout
         if (($e['visibility'] ?? '') !== 'public' && ($e['visibility'] ?? '') !== 'private') {
             $out[] = self::issue('core.entry.visibility_invalid', 'visibility', 'visibility must be public or private');
         }
-        if ('' === trim((string) ($e['slug'] ?? ''))) {
+        if ('' === trim(Cast::string($e['slug'] ?? ''))) {
             $out[] = self::issue('core.entry.slug_required', 'slug', 'slug is required');
         }
         if (!is_string($e['title'] ?? null)) {
@@ -254,17 +258,25 @@ final class Layout
         ];
     }
 
-    /** @return list<array<string, mixed>> the blocks of an entry as arrays */
+    /**
+     * @param array<string, mixed> $entry
+     *
+     * @return list<LayoutBlock> the blocks of an entry as arrays
+     */
     public static function blocks(array $entry): array
     {
-        $list = $entry['metadata']['blocks']['value'] ?? [];
+        $list = Cast::path($entry, 'metadata', 'blocks', 'value') ?? [];
         $out = [];
         foreach (is_array($list) ? $list : [] as $b) {
             $b = json_decode((string) json_encode($b), true);
             if (is_array($b)) {
-                $b['props'] = is_array($b['props'] ?? null) ? $b['props'] : [];
-                $b['bindings'] = is_array($b['bindings'] ?? null) ? $b['bindings'] : [];
-                $out[] = $b;
+                $out[] = [
+                    'id' => Cast::string($b['id'] ?? ''),
+                    'block' => Cast::string($b['block'] ?? ''),
+                    'variant' => Cast::string($b['variant'] ?? ''),
+                    'props' => Cast::map($b['props'] ?? []),
+                    'bindings' => Cast::map($b['bindings'] ?? []),
+                ];
             }
         }
 
@@ -274,10 +286,10 @@ final class Layout
     /**
      * Variant sample props with the overrides on top (objects merge, lists and scalars replace).
      *
-     * @param array<string, mixed> $base
-     * @param array<string, mixed> $over
+     * @param array<array-key, mixed> $base
+     * @param array<array-key, mixed> $over
      *
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      */
     public static function merge(array $base, array $over): array
     {
@@ -292,10 +304,18 @@ final class Layout
         return $base;
     }
 
-    /** @param array<string, mixed> $a */
+    /**
+     * @param array<array-key, mixed> $a
+     * @param list<string>            $path
+     *
+     * @param-out array<array-key, mixed> $a
+     */
     public static function set(array &$a, array $path, mixed $value): void
     {
         $k = array_shift($path);
+        if (null === $k) {
+            return;
+        }
         if ([] === $path) {
             $a[$k] = $value;
 
@@ -357,10 +377,18 @@ final class Layout
         return $out;
     }
 
-    /** @param array<string, mixed> $a */
+    /**
+     * @param array<array-key, mixed> $a
+     * @param list<string>            $path
+     *
+     * @param-out array<array-key, mixed> $a
+     */
     private static function unset(array &$a, array $path): void
     {
         $k = array_shift($path);
+        if (null === $k) {
+            return;
+        }
         if ([] === $path) {
             unset($a[$k]);
         } elseif (is_array($a[$k] ?? null)) {

@@ -23,6 +23,10 @@ abstract class AbstractHooks implements BootableServiceInterface
 
     protected function addAction(string $hook, string $method, int $priority = 10, int $args = 1): void
     {
-        add_action($hook, [$this, $method], $priority, $args);
+        $callback = [$this, $method];
+        if (!is_callable($callback)) {
+            throw new \LogicException(sprintf('%s::%s() is not a hook callback', static::class, $method));
+        }
+        add_action($hook, $callback, $priority, $args);
     }
 }

@@ -48,7 +48,7 @@ final class Field
      */
     public static function fromArray(string $name, array $def, string $prefix): self
     {
-        $type = (string) ($def['type'] ?? 'string');
+        $type = \WPFasty\Core\Cast::string($def['type'] ?? 'string');
         $type = self::MODULE_TYPES[$type] ?? $type;
         if (!in_array($type, self::TYPES, true)) {
             throw new \InvalidArgumentException(sprintf('Unknown field type "%s" for "%s"', $type, $name));
@@ -57,8 +57,8 @@ final class Field
         return new self(
             $name,
             $type,
-            (string) ($def['label'] ?? $name),
-            (string) ($def['meta_key'] ?? '_'.$prefix.'_'.$name),
+            \WPFasty\Core\Cast::string($def['label'] ?? $name),
+            \WPFasty\Core\Cast::string($def['meta_key'] ?? '_'.$prefix.'_'.$name),
             $def['sanitize'] ?? null,
             $def,
         );
@@ -67,7 +67,7 @@ final class Field
     public function sanitize(mixed $raw): string
     {
         if (is_callable($this->sanitize)) {
-            return (string) call_user_func($this->sanitize, $raw);
+            return \WPFasty\Core\Cast::string(call_user_func($this->sanitize, $raw));
         }
         $raw = is_scalar($raw) ? trim((string) $raw) : '';
 
@@ -96,7 +96,7 @@ final class Field
      */
     public function options(): array
     {
-        return array_values(array_map('strval', (array) ($this->def['options'] ?? [])));
+        return array_values(array_map(\WPFasty\Core\Cast::string(...), (array) ($this->def['options'] ?? [])));
     }
 
     /** register_post_meta() type for this field. */
@@ -155,9 +155,9 @@ final class Field
         }
 
         return match ($this->type) {
-            'money' => number_format(((int) $stored) / 100, 2, '.', ''),
+            'money' => number_format(\WPFasty\Core\Cast::int($stored) / 100, 2, '.', ''),
             'boolean' => $stored ? '1' : '',
-            default => (string) $stored,
+            default => \WPFasty\Core\Cast::string($stored),
         };
     }
 

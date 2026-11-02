@@ -53,7 +53,14 @@ final class Sources
             }
         }
 
-        return self::$all = (array) apply_filters('wpfasty_builder_sources', $all);
+        $filtered = [];
+        foreach (Cast::map(apply_filters('wpfasty_builder_sources', $all)) as $id => $source) {
+            if ($source instanceof SourceInterface) {
+                $filtered[$id] = $source;
+            }
+        }
+
+        return self::$all = $filtered;
     }
 
     public static function get(string $id): ?SourceInterface
@@ -106,7 +113,7 @@ final class Sources
             if (!is_array($row) || !is_string($row['id'] ?? null) || !is_string($row['url'] ?? null)) {
                 continue;
             }
-            $runtime = (string) ($row['runtime'] ?? $engine);
+            $runtime = Cast::string($row['runtime'] ?? $engine);
             if ($runtime !== $engine || !self::remote($row['id'], $row['url'], $engine)->imported()) {
                 $out[] = sprintf(
                     // phpcs:disable Generic.Files.LineLength.TooLong -- a translatable literal must stay one string.
@@ -125,7 +132,7 @@ final class Sources
                 /* translators: 1: site engine, 2: list of source:template */
                 __('WP FastY Builder: blocks missing from the %1$s sources render nothing: %2$s', 'wpfasty-builder'),
                 $engine,
-                implode(', ', array_map('strval', array_keys($missing))),
+                implode(', ', array_map(Cast::string(...), array_keys($missing))),
             );
         }
 

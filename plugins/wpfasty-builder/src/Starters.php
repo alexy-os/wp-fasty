@@ -17,7 +17,7 @@ final class Starters
     /** the demo landings shipped as starters, in the order of the panel */
     public const IDS = ['shop', 'folio', 'press'];
 
-    /** @var list<array<string, mixed>>|null */
+    /** @var list<array{id: string, label: string, description: string, layout: array<string, mixed>}>|null */
     private static ?array $shipped = null;
 
     /**
@@ -37,14 +37,14 @@ final class Starters
                 if (is_array($s) && is_array($s['layout'] ?? null) && is_array($s['layout']['blocks'] ?? null)) {
                     $out[] = [
                         'id' => $id,
-                        'label' => (string) ($s['label'] ?? $id),
-                        'description' => (string) ($s['description'] ?? ''),
-                        'layout' => $s['layout'],
+                        'label' => Cast::string($s['label'] ?? $id),
+                        'description' => Cast::string($s['description'] ?? ''),
+                        'layout' => Cast::map($s['layout']),
                     ];
                 }
             }
             self::$shipped = function_exists('apply_filters')
-                ? array_values((array) apply_filters('wpfasty_builder_starters', $out))
+                ? self::starters(apply_filters('wpfasty_builder_starters', $out))
                 : $out;
         }
 
@@ -60,19 +60,19 @@ final class Starters
      */
     public static function fits(array $starter, ?Catalog $catalog, array $dataSources): bool
     {
-        $blocks = $starter['layout']['blocks'] ?? null;
+        $blocks = Cast::path($starter, 'layout', 'blocks');
         if (null === $catalog || !is_array($blocks) || [] === $blocks) {
             return false;
         }
         foreach ($blocks as $b) {
             $variant = is_array($b)
-                ? $catalog->variant((string) ($b['block'] ?? ''), (string) ($b['variant'] ?? ''))
+                ? $catalog->variant(Cast::string($b['block'] ?? ''), Cast::string($b['variant'] ?? ''))
                 : null;
             if (null === $variant) {
                 return false;
             }
             foreach ((array) ($b['bindings'] ?? []) as $bind) {
-                if (!is_array($bind) || !in_array((string) ($bind['source'] ?? ''), $dataSources, true)) {
+                if (!is_array($bind) || !in_array(Cast::string($bind['source'] ?? ''), $dataSources, true)) {
                     return false;
                 }
             }
@@ -91,7 +91,7 @@ final class Starters
         $out = [];
         $data = null;
         foreach (self::shipped() as $s) {
-            $catalog = Sources::catalog(sanitize_key((string) ($s['layout']['source'] ?? 'ui8kit')));
+            $catalog = Sources::catalog(sanitize_key(Cast::string($s['layout']['source'] ?? 'ui8kit')));
             $data ??= array_keys(DataSources::all($catalog));
             if (self::fits($s, $catalog, $data)) {
                 $out[] = $s;
@@ -124,7 +124,30 @@ final class Starters
             'id' => $s['id'],
             'label' => $s['label'],
             'description' => $s['description'],
-            'blocks' => count($s['layout']['blocks']),
+            'blocks' => count(Cast::list($s['layout']['blocks'] ?? [])),
         ], self::available());
+    }
+
+    /**
+     * Starters returned by the `wpfasty_builder_starters` filter, read back typed (rows without a layout dropped).
+     *
+     * @return list<array{id: string, label: string, description: string, layout: array<string, mixed>}>
+     */
+    private static function starters(mixed $filtered): array
+    {
+        $out = [];
+        foreach (Cast::list($filtered) as $s) {
+            if (is_array($s) && is_array($s['layout'] ?? null)) {
+                $id = Cast::string($s['id'] ?? '');
+                $out[] = [
+                    'id' => $id,
+                    'label' => Cast::string($s['label'] ?? $id),
+                    'description' => Cast::string($s['description'] ?? ''),
+                    'layout' => Cast::map($s['layout']),
+                ];
+            }
+        }
+
+        return $out;
     }
 }

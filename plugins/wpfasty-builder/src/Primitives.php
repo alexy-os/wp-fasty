@@ -109,7 +109,7 @@ final class Primitives
         if ('auto' !== $name) {
             return $name;
         }
-        $tag = strtolower(trim((string) ($args['tag'] ?? '')));
+        $tag = strtolower(trim(Cast::string($args['tag'] ?? '')));
 
         return in_array($tag, $groups['Text'] ?? [], true) ? 'text' : 'box';
     }

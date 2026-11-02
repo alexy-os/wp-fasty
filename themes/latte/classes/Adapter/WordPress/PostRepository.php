@@ -89,7 +89,7 @@ final class PostRepository implements WordPressPostRepositoryInterface
         }
         $thumbs = [];
         foreach ($ids as $id) {
-            $thumb = (int) get_post_meta($id, '_thumbnail_id', true);
+            $thumb = \WPFasty\Core\Cast::int(get_post_meta($id, '_thumbnail_id', true));
             if ($thumb > 0) {
                 $thumbs[] = $thumb;
             }
@@ -113,12 +113,12 @@ final class PostRepository implements WordPressPostRepositoryInterface
         $thumbnail = null;
         if (has_post_thumbnail($post)) {
             $id = (int) get_post_thumbnail_id($post);
-            $alt = (string) get_post_meta($id, '_wp_attachment_image_alt', true);
+            $alt = \WPFasty\Core\Cast::string(get_post_meta($id, '_wp_attachment_image_alt', true));
             $featured = $this->image($id, 'large', $alt);
             $thumbnail = $this->image($id, 'medium', $alt);
         }
         if ($isAttachment) {
-            $alt = (string) get_post_meta($post->ID, '_wp_attachment_image_alt', true);
+            $alt = \WPFasty\Core\Cast::string(get_post_meta($post->ID, '_wp_attachment_image_alt', true));
             $featured = $this->image($post->ID, 'large', $alt) ?? $featured;
         }
 
@@ -161,7 +161,7 @@ final class PostRepository implements WordPressPostRepositoryInterface
             kind: $post->post_type,
             slug: $post->post_name,
             title: PlainText::from(get_the_title($post)),
-            content: new TrustedHtml((string) ($locked
+            content: new TrustedHtml(\WPFasty\Core\Cast::string($locked
                 ? get_the_password_form($post)
                 : apply_filters('the_content', $post->post_content))),
             excerpt: PlainText::from(has_excerpt($post) || $locked

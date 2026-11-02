@@ -22,7 +22,7 @@ final class AdminDarkSwitchTest extends TestCase
         $this->assertCount(1, $nodes);
         $this->assertSame(Admin::DARK, $nodes[0]['id']);
         $this->assertSame('top-secondary', $nodes[0]['parent']);
-        $this->assertFalse($nodes[0]['href']);
+        $this->assertArrayNotHasKey('href', $nodes[0], 'a button, not a link (WP_Admin_Bar defaults href to false)');
         $this->assertGreaterThan(9999, Admin::DARK_PRIORITY, 'after every core toolbar item');
     }
 

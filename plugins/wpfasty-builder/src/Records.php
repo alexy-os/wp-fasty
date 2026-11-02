@@ -22,6 +22,10 @@ use WPFastyBuilder\Codex\ReadPath;
  * `metadata.currency.value|settings:currency`, in stock = `metadata.<stock>.value|in-stock` (no stock value =
  * unlimited = in stock).
  * Degrades safely: no wpfasty-types, no purchasable kind, unknown taxonomy or slug → "#" for links, "" for text.
+ *
+ * @phpstan-type ProductKind array{kind: string, post_type: string, meta: array<string, string>,
+ *   fields: array<string, array<string, mixed>>, price: string, sale: string, stock: string}
+ * @phpstan-type RecordsSite array{product: ProductKind|null, taxonomies: list<string>, currency: string, locale: string}
  */
 final class Records
 {
@@ -30,11 +34,7 @@ final class Records
     /** a record token with its argument(s): {post:slug}, {term:tax:slug} */
     private const SCAN = '/\{(post|product|term|price|stock):([a-z0-9_-]+)(?::([a-z0-9_-]+))?\}/';
 
-    /**
-     * @var array{product: array{kind: string, post_type: string, meta: array<string, string>,
-     *   fields: array<string, array<string, mixed>>, price: string, sale: string, stock: string}|null,
-     *   taxonomies: list<string>, currency: string, locale: string}|null
-     */
+    /** @var RecordsSite|null */
     private static ?array $site = null;
     /** @var array<string, string|null> post slug → URL (null = not found) */
     private static array $posts = [];
@@ -51,9 +51,7 @@ final class Records
      */
     public static function setSite(?array $site): void
     {
-        self::$site = null === $site
-            ? null
-            : $site + ['product' => null, 'taxonomies' => [], 'currency' => '', 'locale' => 'en'];
+        self::$site = null === $site ? null : self::siteOf($site);
         self::reset();
     }
 
@@ -65,7 +63,7 @@ final class Records
         self::$terms = [];
     }
 
-    /** @return array<string, mixed> */
+    /** @return RecordsSite */
     public static function site(): array
     {
         if (null !== self::$site) {
@@ -77,24 +75,24 @@ final class Records
             return self::$site = $out;
         }
         foreach (DataSources::models() as $m) {
-            if ($m['term'] || !is_array($m['purchasable']) || !post_type_exists((string) $m['post_type'])) {
+            if ($m['term'] || !is_array($m['purchasable']) || !post_type_exists($m['post_type'])) {
                 continue;
             }
             if (null !== $out['product'] && 'product' !== $m['kind']) {
                 continue;
             }
-            $kind = (string) $m['kind'];
-            $p = $m['purchasable'];
+            $kind = Cast::string($m['kind']);
+            $p = Cast::map($m['purchasable']);
             $out['product'] = [
-                'kind' => $kind, 'post_type' => (string) $m['post_type'],
-                'meta' => array_map('strval', (array) ($site->wp($kind)['meta'] ?? [])),
+                'kind' => $kind, 'post_type' => $m['post_type'],
+                'meta' => array_map(Cast::string(...), Cast::map($site->wp($kind)['meta'] ?? [])),
                 'fields' => $site->fields($kind),
-                'price' => (string) ($p['price'] ?? ''), 'sale' => (string) ($p['sale'] ?? ''),
-                'stock' => (string) ($p['stock'] ?? ''),
+                'price' => Cast::string($p['price'] ?? ''), 'sale' => Cast::string($p['sale'] ?? ''),
+                'stock' => Cast::string($p['stock'] ?? ''),
             ];
         }
         $out['taxonomies'] = array_values(array_filter($site->allTaxonomies(), 'taxonomy_exists'));
-        $cur = strtoupper((string) get_option($site->currencyOption()));
+        $cur = strtoupper(Cast::string(get_option($site->currencyOption())));
         $out['currency'] = 1 === preg_match('/^[A-Z]{3}$/', $cur) ? $cur : '';
         $out['locale'] = \WPFastyTypes\Codex\Mapper::locale();
 
@@ -117,10 +115,10 @@ final class Records
             self::loadPosts(array_values($want['post']));
         }
         if ([] !== $want['product']) {
-            self::loadProducts(array_values($want['product']));
+            self::loadProducts(Cast::strings($want['product']));
         }
         if ([] !== $want['term']) {
-            self::loadTerms(array_values($want['term']));
+            self::loadTerms(Cast::strings($want['term']));
         }
     }
 
@@ -154,9 +152,9 @@ final class Records
         $p = self::$products[$arg] ?? null;
 
         return match ($kind) {
-            'product' => null !== $p ? (string) $p['url'] : '#',
-            'price' => null !== $p ? (string) $p['price'] : '',
-            'stock' => null !== $p ? (string) $p['stock'] : '',
+            'product' => null !== $p ? Cast::string($p['url']) : '#',
+            'price' => null !== $p ? Cast::string($p['price']) : '',
+            'stock' => null !== $p ? Cast::string($p['stock']) : '',
             default => '',
         };
     }
@@ -174,8 +172,8 @@ final class Records
         $kind = $site['product'];
         $e = self::entry($p, $kind ?? ['meta' => [], 'fields' => []]);
         $md = $e['metadata'];
-        $price = null !== $kind ? ($md[$kind['price']]['value'] ?? null) : null;
-        $sale = null !== $kind && '' !== $kind['sale'] ? ($md[$kind['sale']]['value'] ?? null) : null;
+        $price = null !== $kind ? Cast::path($md, $kind['price'], 'value') : null;
+        $sale = null !== $kind && '' !== $kind['sale'] ? Cast::path($md, $kind['sale'], 'value') : null;
         $amount = is_int($price) ? $price : null;
         if (null !== $amount && is_int($sale) && $sale > 0 && $sale < $amount) {
             $amount = $sale;
@@ -271,13 +269,38 @@ final class Records
                 'token' => '{term:'.$t->taxonomy.':'.$t->slug.'}', 'label' => (string) $t->name,
                 'slug' => (string) $t->slug, 'taxonomy' => (string) $t->taxonomy,
                 'kind' => is_object($tax) && isset($tax->labels->singular_name)
-                    ? html_entity_decode((string) $tax->labels->singular_name, ENT_QUOTES, 'UTF-8')
+                    ? html_entity_decode(Cast::string($tax->labels->singular_name), ENT_QUOTES, 'UTF-8')
                     : (string) $t->taxonomy,
                 'url' => is_string($url) && '' !== $url ? $url : '#',
             ];
         }
 
         return ['posts' => $posts, 'products' => $products, 'terms' => $terms];
+    }
+
+    /**
+     * @param array<string, mixed> $site
+     *
+     * @return RecordsSite
+     */
+    private static function siteOf(array $site): array
+    {
+        $p = isset($site['product']) && is_array($site['product']) ? $site['product'] : null;
+
+        return [
+            'product' => null === $p ? null : [
+                'kind' => Cast::string($p['kind'] ?? 'product'),
+                'post_type' => Cast::string($p['post_type'] ?? 'product'),
+                'meta' => array_map(Cast::string(...), Cast::map($p['meta'] ?? [])),
+                'fields' => array_map(Cast::map(...), Cast::map($p['fields'] ?? [])),
+                'price' => Cast::string($p['price'] ?? ''),
+                'sale' => Cast::string($p['sale'] ?? ''),
+                'stock' => Cast::string($p['stock'] ?? ''),
+            ],
+            'taxonomies' => Cast::strings($site['taxonomies'] ?? []),
+            'currency' => Cast::string($site['currency'] ?? ''),
+            'locale' => Cast::string($site['locale'] ?? 'en'),
+        ];
     }
 
     /**
@@ -357,16 +380,16 @@ final class Records
      * The Codex entry part the tokens read: id, slug and typed metadata (field → {value}) from the post meta of the
      * delivery mapping (meta cache primed by the batch query).
      *
-     * @param array<string, mixed> $kind
+     * @param array{meta: array<string, string>, fields: array<string, array<string, mixed>>, kind?: string} $kind
      *
      * @return array{id: string, slug: string, metadata: array<string, array{value: mixed}>}
      */
     private static function entry(\WP_Post $p, array $kind): array
     {
         $md = [];
-        foreach ((array) $kind['meta'] as $field => $key) {
-            $def = (array) ($kind['fields'][$field] ?? ['type' => 'string']);
-            $raw = get_post_meta($p->ID, (string) $key, true);
+        foreach ($kind['meta'] as $field => $key) {
+            $def = $kind['fields'][$field] ?? ['type' => 'string'];
+            $raw = get_post_meta($p->ID, $key, true);
             $value = class_exists(\WPFastyTypes\Codex\Mapper::class)
                 ? \WPFastyTypes\Codex\Mapper::typed($def, $raw)
                 : (is_numeric($raw) ? (int) round((float) $raw) : ('' === $raw || null === $raw ? null : $raw));

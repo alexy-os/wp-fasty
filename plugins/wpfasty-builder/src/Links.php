@@ -117,7 +117,11 @@ final class Links
         Records::prime($props);
     }
 
-    /** Site contact block (SettingsV04 contact, hours, hours_exceptions, map); tests and previews may set one. */
+    /**
+     * Site contact block (SettingsV04 contact, hours, hours_exceptions, map); tests and previews may set one.
+     *
+     * @param array<string, mixed>|null $block
+     */
     public static function setBlock(?array $block): void
     {
         self::$block = $block;
@@ -163,11 +167,11 @@ final class Links
         $whatsapp = $handle('whatsapp');
 
         return [
-            'name' => html_entity_decode((string) get_option('blogname'), ENT_QUOTES, 'UTF-8'),
+            'name' => html_entity_decode(Cast::string(get_option('blogname')), ENT_QUOTES, 'UTF-8'),
             'phone' => $phone,
             'email' => is_string($c['email'] ?? null) ? $c['email'] : '',
             'address' => is_string($c['address'] ?? null) ? $c['address'] : '',
-            'hours' => self::hoursText(is_array($block['hours'] ?? null) ? $block['hours'] : []),
+            'hours' => self::hoursText(Cast::list($block['hours'] ?? [])),
             'telegram' => $handle('telegram'),
             'whatsapp' => '' !== $whatsapp ? $whatsapp : $phone,
             'lat' => $coords ? (string) (float) $map['lat'] : '',
@@ -195,28 +199,32 @@ final class Links
             if (!is_array($r) || !is_array($r['days'] ?? null)) {
                 continue;
             }
-            foreach ($r['days'] as $d) {
+            foreach (Cast::strings($r['days']) as $d) {
                 if (isset($byDay[$d])) {
-                    $byDay[$d][] = (string) ($r['open'] ?? '').'–'.(string) ($r['close'] ?? '');
+                    $byDay[$d][] = Cast::string($r['open'] ?? '').'–'.Cast::string($r['close'] ?? '');
                 }
             }
         }
         $groups = [];
+        $open = null; // the group being extended: consecutive days with the same intervals
         foreach (self::WEEK as $d) {
             $times = $byDay[$d];
             sort($times, SORT_STRING);
             $key = implode(', ', $times);
-            $last = count($groups) - 1;
-            if ($last >= 0 && $groups[$last][2] === $key && '' !== $key) {
-                $groups[$last][1] = $d;
+            if (null !== $open && $open['key'] === $key && '' !== $key) {
+                $open['to'] = $d;
                 continue;
             }
-            $groups[] = [$d, $d, $key];
+            if (null !== $open) {
+                $groups[] = $open;
+            }
+            $open = ['from' => $d, 'to' => $d, 'key' => $key];
         }
+        $groups[] = $open;
         $out = [];
-        foreach ($groups as [$from, $to, $key]) {
-            if ('' !== $key) {
-                $out[] = $names[$from].($from !== $to ? '–'.$names[$to] : '').' '.$key;
+        foreach ($groups as $g) {
+            if ('' !== $g['key']) {
+                $out[] = $names[$g['from']].($g['from'] !== $g['to'] ? '–'.$names[$g['to']] : '').' '.$g['key'];
             }
         }
 
@@ -293,6 +301,8 @@ final class Links
      * Data of the {open-now} script: hours, exceptions, the site time zone (IANA, else the UTC offset in minutes)
      * and the two labels; null without hours.
      *
+     * @param array<string, mixed>|null $block
+     *
      * @return array{tz: string, offset: int, hours: list<mixed>, exceptions: list<mixed>, open: string,
      *   closed: string}|null
      */
@@ -305,8 +315,8 @@ final class Links
         }
 
         return [
-            'tz' => (string) get_option('timezone_string', ''),
-            'offset' => (int) round((float) get_option('gmt_offset', 0) * 60),
+            'tz' => Cast::string(get_option('timezone_string', '')),
+            'offset' => (int) round(Cast::float(get_option('gmt_offset', 0)) * 60),
             'hours' => $hours,
             'exceptions' => is_array($block['hours_exceptions'] ?? null)
                 ? array_values($block['hours_exceptions']) : [],
@@ -339,7 +349,7 @@ final class Links
     /** {year} / {today} now in the site time zone ({today} in the date_format setting) */
     public static function date(string $kind): string
     {
-        $format = 'year' === $kind ? 'Y' : (string) get_option('date_format', 'F j, Y');
+        $format = 'year' === $kind ? 'Y' : Cast::string(get_option('date_format', 'F j, Y'));
 
         return (string) wp_date('' !== $format ? $format : 'F j, Y');
     }
@@ -381,7 +391,7 @@ final class Links
     public static function index(): array
     {
         $home = home_url('/');
-        $postsPage = (int) get_option('page_for_posts');
+        $postsPage = Cast::int(get_option('page_for_posts'));
         $site = [
             ['token' => '{home}', 'label' => __('Home', 'wpfasty-builder'), 'url' => $home],
             [
@@ -431,7 +441,7 @@ final class Links
             if (1 !== preg_match(self::SLUG, $name)) {
                 continue;
             }
-            $label = is_object($type) && isset($type->labels->name) ? (string) $type->labels->name : $name;
+            $label = is_object($type) && isset($type->labels->name) ? Cast::string($type->labels->name) : $name;
             $sections[] = [
                 'token' => '{archive:'.$name.'}',
                 'label' => $label,
@@ -493,8 +503,8 @@ final class Links
         $home = home_url('/');
         $url = match ($kind) {
             'home' => $home,
-            'posts' => (int) get_option('page_for_posts') > 0
-                ? get_permalink((int) get_option('page_for_posts'))
+            'posts' => Cast::int(get_option('page_for_posts')) > 0
+                ? get_permalink(Cast::int(get_option('page_for_posts')))
                 : $home,
             // published pages only: a draft, pending, private or trashed page is not a link target (its URL would
             // name it to every visitor), the same set the picker lists (index())

@@ -20,6 +20,10 @@ use WPFastyTypes\Codex\Site;
  * WP specifics kept here (the adapter side): `slug|route` is the permalink, a purchasable kind's price is the
  * effective price (sale price when it is lower) with badge "sale", posts are ordered by date, other kinds by
  * menu order.
+ *
+ * @phpstan-import-type SourceModel from CodexSources
+ *
+ * @phpstan-type Binding array{source: string, limit?: int, term?: string, sale?: bool, map?: array<string, string>}
  */
 final class DataSources
 {
@@ -28,7 +32,7 @@ final class DataSources
     public const CONTENT = 'content|html';
     private const TYPES = ['string' => 'string', 'number' => 'number', 'boolean' => 'boolean'];
 
-    /** @var array<string, array<string, mixed>>|null */
+    /** @var array<string, SourceModel>|null */
     private static ?array $models = null;
 
     public static function site(): ?Site
@@ -36,7 +40,7 @@ final class DataSources
         return class_exists(Site::class) ? Site::current() : null;
     }
 
-    /** @return array<string, array<string, mixed>> Codex source models (Codex\Sources::fromManifest) */
+    /** @return array<string, SourceModel> Codex source models (Codex\Sources::fromManifest) */
     public static function models(): array
     {
         if (null === self::$models) {
@@ -77,19 +81,33 @@ final class DataSources
                 'kinds' => array_keys($levels),
                 'levels' => $levels,
                 'type' => $m['term'] ? 'taxonomy' : 'post_type',
-                'object' => $m['term'] ? (string) $m['taxonomy'] : (string) $m['post_type'],
+                'object' => $m['term'] ? $m['taxonomy'] : $m['post_type'],
                 'purchasable' => null !== $m['purchasable'],
             ];
         }
 
-        return (array) apply_filters('wpfasty_builder_data_sources', $out);
+        $filtered = [];
+        foreach (Cast::map(apply_filters('wpfasty_builder_data_sources', $out)) as $id => $s) {
+            $s = Cast::map($s);
+            $filtered[$id] = [
+                'id' => Cast::string($s['id'] ?? $id),
+                'label' => Cast::string($s['label'] ?? $id),
+                'kinds' => Cast::strings($s['kinds'] ?? []),
+                'levels' => array_map(Cast::string(...), Cast::map($s['levels'] ?? [])),
+                'type' => Cast::string($s['type'] ?? 'post_type'),
+                'object' => Cast::string($s['object'] ?? ''),
+                'purchasable' => (bool) ($s['purchasable'] ?? false),
+            ];
+        }
+
+        return $filtered;
     }
 
     /**
      * Level of a catalog slot for a source: required = the record fields that are not optional.
      *
      * @param array<string, mixed> $slot Catalog::slot()
-     * @param array<string, mixed> $m
+     * @param SourceModel          $m
      */
     public static function level(array $slot, array $m): string
     {
@@ -139,6 +157,7 @@ final class DataSources
      */
     public static function current(array $slot, ?\WP_Post $post = null): array
     {
+        /** @var array<string, array<string, mixed>> $memo */
         static $memo = [];
         $post ??= get_queried_object() instanceof \WP_Post ? get_queried_object() : null;
         $site = self::site();
@@ -147,7 +166,7 @@ final class DataSources
         }
         $m = null;
         foreach (self::models() as $model) {
-            if (!$model['term'] && (string) $model['post_type'] === $post->post_type) {
+            if (!$model['term'] && $model['post_type'] === $post->post_type) {
                 $m = $model;
                 break;
             }
@@ -160,7 +179,7 @@ final class DataSources
             return $memo[$key];
         }
         $mapper = new Mapper($site);
-        $e = $mapper->entry($post, (string) $m['kind']);
+        $e = $mapper->entry($post, Cast::string($m['kind']));
         $e['content'] = self::content($post);
         $plan = self::plan($slot, $m);
         $memo[$key] = self::record(self::project($e, $m), $plan, self::opts($plan, [$e], $mapper, $site), $m, true);
@@ -172,7 +191,7 @@ final class DataSources
      * Record field → [path|null, default, type]: the effective readPath of every record field.
      *
      * @param array<string, mixed>  $slot
-     * @param array<string, mixed>  $m
+     * @param SourceModel           $m
      * @param array<string, string> $map  manual mapping of the binding
      *
      * @return array<string, array{0: ?string, 1: mixed, 2: string}>
@@ -180,10 +199,11 @@ final class DataSources
     public static function plan(array $slot, array $m, array $map = []): array
     {
         $plan = [];
-        foreach ($slot['defs'] as $def) {
-            $name = (string) ($def['name'] ?? '');
-            $type = (string) ($def['type'] ?? 'string');
-            $path = $slot['fields'][$name] ?? null;
+        $fields = Cast::map($slot['fields'] ?? []);
+        foreach (array_map(Cast::map(...), Cast::list($slot['defs'] ?? [])) as $def) {
+            $name = Cast::string($def['name'] ?? '');
+            $type = Cast::string($def['type'] ?? 'string');
+            $path = isset($fields[$name]) ? Cast::string($fields[$name]) : null;
             if (isset($map[$name])) {
                 $plan[$name] = [(string) $map[$name], null, $type];
                 continue;
@@ -220,17 +240,46 @@ final class DataSources
         return '' === trim($html) ? null : ['__html' => $html];
     }
 
-    /** @param array<string, mixed> $m */
+    /**
+     * A stored binding (Layout::normalize shape) read back typed; null when it names no source.
+     *
+     * @return array{source: string, limit?: int, term?: string, sale?: bool, map?: array<string, string>}|null
+     */
+    public static function binding(mixed $bind): ?array
+    {
+        $bind = Cast::map($bind);
+        $source = Cast::string($bind['source'] ?? '');
+        if ('' === $source) {
+            return null;
+        }
+        $out = ['source' => $source];
+        if (isset($bind['limit'])) {
+            $out['limit'] = Cast::int($bind['limit']);
+        }
+        if (isset($bind['term'])) {
+            $out['term'] = Cast::string($bind['term']);
+        }
+        if (isset($bind['sale'])) {
+            $out['sale'] = (bool) $bind['sale'];
+        }
+        if (isset($bind['map'])) {
+            $out['map'] = array_map(Cast::string(...), Cast::map($bind['map']));
+        }
+
+        return $out;
+    }
+
+    /** @param SourceModel $m */
     private static function label(array $m): string
     {
         if ($m['term']) {
-            $t = get_taxonomy((string) $m['taxonomy']);
+            $t = get_taxonomy($m['taxonomy']);
 
-            return $t ? html_entity_decode((string) $t->labels->name, ENT_QUOTES, 'UTF-8') : (string) $m['label'];
+            return $t ? html_entity_decode(Cast::string($t->labels->name), ENT_QUOTES, 'UTF-8') : Cast::string($m['label']);
         }
-        $o = get_post_type_object((string) $m['post_type']);
+        $o = get_post_type_object($m['post_type']);
 
-        return $o ? html_entity_decode((string) $o->labels->name, ENT_QUOTES, 'UTF-8') : (string) $m['label'];
+        return $o ? html_entity_decode(Cast::string($o->labels->name), ENT_QUOTES, 'UTF-8') : Cast::string($m['label']);
     }
 
     /**
@@ -242,14 +291,16 @@ final class DataSources
     {
         $required = [];
         $needs = [];
-        foreach ($slot['defs'] as $def) {
-            $path = $slot['fields'][(string) ($def['name'] ?? '')] ?? null;
+        $fields = Cast::map($slot['fields'] ?? []);
+        foreach (array_map(Cast::map(...), Cast::list($slot['defs'] ?? [])) as $def) {
+            $name = Cast::string($def['name'] ?? '');
+            $path = isset($fields[$name]) ? Cast::string($fields[$name]) : null;
             if (null === $path || !empty($def['optional'])) {
                 continue;
             }
             $required[] = $path;
             // a string record field takes any scalar (record() casts it: year 2024 → "2024")
-            $type = self::TYPES[(string) ($def['type'] ?? '')] ?? null;
+            $type = self::TYPES[Cast::string($def['type'] ?? '')] ?? null;
             if (null !== $type && 'string' !== $type) {
                 $needs[$path] = [$type, []];
             }
@@ -266,17 +317,17 @@ final class DataSources
      */
     private static function run(array $binding, ?array $slot, ?int $page): array
     {
-        $m = self::models()[$binding['source']] ?? null;
+        $m = self::models()[Cast::string($binding['source'] ?? '')] ?? null;
         $site = self::site();
         if (null === $m || null === $site || null === $slot) {
             return [[], 1];
         }
         $mapper = new Mapper($site);
-        $limit = max(1, min(self::MAX, (int) ($binding['limit'] ?? 6)));
+        $limit = max(1, min(self::MAX, Cast::int($binding['limit'] ?? 6)));
         [$entries, $pages] = $m['term']
             ? [self::terms($m, $limit, $mapper), 1]
             : self::posts($m, $binding, $limit, $mapper, $site, $page);
-        $plan = self::plan($slot, $m, (array) ($binding['map'] ?? []));
+        $plan = self::plan($slot, $m, array_map(Cast::string(...), Cast::map($binding['map'] ?? [])));
         $opts = self::opts($plan, $entries, $mapper, $site);
         $out = [];
         foreach ($entries as $e) {
@@ -293,7 +344,7 @@ final class DataSources
         // the_content filters (blocks, shortcodes) read the global post: set for the call, restored after it
         $GLOBALS['post'] = $post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
         setup_postdata($post);
-        $html = (string) apply_filters('the_content', get_the_content(null, false, $post));
+        $html = Cast::string(apply_filters('the_content', get_the_content(null, false, $post)));
         $html = str_replace(']]>', ']]&gt;', $html);
         $GLOBALS['post'] = $prev; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
         if ($prev instanceof \WP_Post) {
@@ -307,7 +358,7 @@ final class DataSources
      * @param array<string, array{0: ?string, 1: mixed, 2: string}> $plan
      * @param array<string, mixed>                                  $e
      * @param array<string, mixed>                                  $opts
-     * @param array<string, mixed>                                  $m
+     * @param SourceModel                                           $m
      *
      * @return array<string, mixed>
      */
@@ -321,8 +372,8 @@ final class DataSources
                 continue;
             }
             if ('slug|route' === $path) {
-                $wp = Mapper::wpId((string) $m['kind'], (string) $e['id']);
-                $link = $m['term'] ? get_term_link($wp, (string) $m['taxonomy']) : get_permalink($wp);
+                $wp = Mapper::wpId(Cast::string($m['kind']), Cast::string($e['id']));
+                $link = $m['term'] ? get_term_link($wp, $m['taxonomy']) : get_permalink($wp);
                 $v = is_string($link) ? $link : null;
             } else {
                 $v = null !== $path ? ReadPath::read($e, $path, $opts) : null;
@@ -348,7 +399,7 @@ final class DataSources
             'number' => is_int($v) || is_float($v) ? $v : 0,
             'boolean' => is_bool($v) ? $v : false,
             'string' => is_scalar($v) && !is_bool($v) ? (string) $v : '',
-            'string[]' => is_array($v) ? array_values(array_map('strval', $v)) : [],
+            'string[]' => is_array($v) ? array_values(array_map(Cast::string(...), $v)) : [],
             // trusted markup: only the {"__html": string} marker of the `|html` pipe; anything else is not markup
             'TrustedHtml' => self::trusted($v, false),
             // a type that is not TrustedHtml never carries the marker (a manual mapping `…|html` stays text)
@@ -360,35 +411,38 @@ final class DataSources
      * Purchasable kinds: the price a buyer pays (sale price when set and lower), badge "sale" unless set.
      *
      * @param array<string, mixed> $e
-     * @param array<string, mixed> $m
+     * @param SourceModel          $m
      *
      * @return array<string, mixed>
      */
     private static function project(array $e, array $m): array
     {
         $p = $m['purchasable'];
-        if (null === $p) {
+        if (!is_array($p)) {
             return $e;
         }
-        $price = $e['metadata'][$p['price']]['value'] ?? null;
-        $sale = isset($p['sale']) ? ($e['metadata'][$p['sale']]['value'] ?? null) : null;
+        $priceKey = Cast::string($p['price'] ?? '');
+        $metadata = Cast::map($e['metadata'] ?? []);
+        $price = Cast::path($metadata, $priceKey, 'value');
+        $sale = isset($p['sale']) ? Cast::path($metadata, Cast::string($p['sale']), 'value') : null;
         if (is_int($price) && is_int($sale) && $sale > 0 && $sale < $price) {
-            $e['metadata'][$p['price']] = ['value' => $sale];
-            $e['metadata']['badge'] ??= ['value' => 'sale'];
+            $metadata[$priceKey] = ['value' => $sale];
+            $metadata['badge'] ??= ['value' => 'sale'];
+            $e['metadata'] = $metadata;
         }
 
         return $e;
     }
 
     /**
-     * @param array<string, mixed> $m
+     * @param SourceModel $m
      *
      * @return list<array<string, mixed>>
      */
     private static function terms(array $m, int $limit, Mapper $mapper): array
     {
         $terms = get_terms([
-            'taxonomy' => (string) $m['taxonomy'],
+            'taxonomy' => $m['taxonomy'],
             'hide_empty' => true,
             'number' => $limit,
             'orderby' => 'count',
@@ -405,7 +459,7 @@ final class DataSources
     }
 
     /**
-     * @param array<string, mixed> $m
+     * @param SourceModel          $m
      * @param array<string, mixed> $binding
      * @param int|null             $page    a page of the list (with its number of pages), null: the first $limit
      *
@@ -419,9 +473,9 @@ final class DataSources
         Site $site,
         ?int $page = null,
     ): array {
-        $kind = (string) $m['kind'];
+        $kind = Cast::string($m['kind']);
         $args = [
-            'post_type' => (string) $m['post_type'],
+            'post_type' => $m['post_type'],
             'post_status' => 'publish',
             // as the Codex REST (wpfasty-types): a password-protected post is not listed (its body, excerpt and
             // fields are behind the password)
@@ -434,13 +488,13 @@ final class DataSources
         if ('page' === $kind) {
             $args['post_parent'] = 0;
         }
-        $term = (string) ($binding['term'] ?? '');
+        $term = Cast::string($binding['term'] ?? '');
         $tax = $site->roleTaxonomy($kind, 'category');
         if ('' !== $term && '' !== $tax) {
             $args['tax_query'] = [['taxonomy' => $tax, 'field' => 'slug', 'terms' => $term]];
         }
         $p = $m['purchasable'];
-        $saleKey = null !== $p && isset($p['sale']) ? ($site->wp($kind)['meta'][$p['sale']] ?? null) : null;
+        $saleKey = is_array($p) && isset($p['sale']) ? Cast::path($site->wp($kind), 'meta', Cast::string($p['sale'])) : null;
         if (!empty($binding['sale']) && is_string($saleKey)) {
             // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- small demo catalogs, bounded by limit.
             $args['meta_query'] = [['key' => $saleKey, 'value' => 0, 'compare' => '>', 'type' => 'NUMERIC']];
@@ -457,7 +511,7 @@ final class DataSources
             $pages = max(1, (int) $q->max_num_pages);
         }
         $out = [];
-        foreach ($posts as $post) {
+        foreach ($posts ?? [] as $post) {
             if ($post instanceof \WP_Post) {
                 $out[] = $mapper->entry($post, $kind);
             }
@@ -508,14 +562,19 @@ final class DataSources
                 }
             }
             $ids = array_values(array_filter(array_unique($ids)));
-            $opts['users'] = [] === $ids ? [] : array_map([$mapper, 'user'], get_users(['include' => $ids]));
+            $opts['users'] = [];
+            foreach ([] === $ids ? [] : get_users(['include' => $ids]) as $u) {
+                if ($u instanceof \WP_User) {
+                    $opts['users'][] = $mapper->user($u);
+                }
+            }
         }
         if (1 === preg_match('/\|term(-slug|-names)?:/', $pipes)) {
             $opts['terms'] = [];
             foreach ($entries as $e) {
                 foreach ((array) ($e['terms'] ?? []) as $ref) {
-                    $tax = (string) $ref['taxonomy'];
-                    $t = get_term(Mapper::wpId($tax, (string) $ref['term_id']), $tax);
+                    $tax = Cast::string(Cast::path((array) $ref, 'taxonomy'));
+                    $t = get_term(Mapper::wpId($tax, Cast::string(Cast::path((array) $ref, 'term_id'))), $tax);
                     if ($t instanceof \WP_Term) {
                         $opts['terms'][$t->term_taxonomy_id] = $mapper->term($t, true); // cached by get_the_terms
                     }

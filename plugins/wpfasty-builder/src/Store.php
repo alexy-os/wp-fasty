@@ -30,13 +30,13 @@ final class Store
     /** @return array<string, mixed>|null */
     public static function get(int $pageId, bool $draft): ?array
     {
-        $raw = (string) get_post_meta($pageId, $draft ? self::DRAFT : self::PUBLISHED, true);
+        $raw = Cast::string(get_post_meta($pageId, $draft ? self::DRAFT : self::PUBLISHED, true));
         if ('' === $raw && $draft) {
-            $raw = (string) get_post_meta($pageId, self::PUBLISHED, true);
+            $raw = Cast::string(get_post_meta($pageId, self::PUBLISHED, true));
         }
         $entry = '' !== $raw ? json_decode($raw, true) : null;
 
-        return is_array($entry) ? $entry : null;
+        return is_array($entry) ? Cast::map($entry) : null;
     }
 
     /** @param array<string, mixed> $entry */
@@ -76,7 +76,7 @@ final class Store
             if (is_file($file) && str_starts_with((string) file_get_contents($file, false, null, 0, 64), $marker)) {
                 continue;
             }
-            $catalog ??= Sources::catalog((string) ($entry['metadata']['source']['value'] ?? ''));
+            $catalog ??= Sources::catalog(Cast::string(Cast::path($entry, 'metadata', 'source', 'value') ?? ''));
             if (null === $catalog) {
                 return null;
             }
@@ -100,7 +100,7 @@ final class Store
      */
     public static function save(int $id, array $layout, bool $publish): array|\WP_Error
     {
-        $sourceId = sanitize_key((string) ($layout['source'] ?? ($layout['metadata']['source']['value'] ?? 'ui8kit')));
+        $sourceId = sanitize_key(Cast::string($layout['source'] ?? (Cast::path($layout, 'metadata', 'source', 'value') ?? 'ui8kit')));
         $catalog = Sources::catalog($sourceId);
         if (null === $catalog) {
             return new \WP_Error('wpfb_source', __('Unknown source.', 'wpfasty-builder'), ['status' => 400]);
@@ -114,8 +114,8 @@ final class Store
             'slug' => null !== $post && '' !== $post->post_name ? $post->post_name : 'page-'.$id,
             'title' => null !== $post ? $post->post_title : '',
             'status' => $publish ? 'published' : 'draft',
-            'version' => (int) ($prev['version'] ?? 0) + 1,
-            'created_at' => (string) ($prev['created_at'] ?? $now),
+            'version' => Cast::int($prev['version'] ?? 0) + 1,
+            'created_at' => Cast::string($prev['created_at'] ?? $now),
             'updated_at' => $now,
             'page_id' => $id,
         ]);

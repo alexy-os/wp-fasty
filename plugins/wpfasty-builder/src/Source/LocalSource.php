@@ -32,7 +32,7 @@ final class LocalSource implements SourceInterface
 
     public function label(): string
     {
-        return '' !== $this->label ? $this->label : (string) ($this->catalog()['label'] ?? $this->id);
+        return '' !== $this->label ? $this->label : \WPFastyBuilder\Cast::string($this->catalog()['label'] ?? $this->id);
     }
 
     public function runtime(): string
@@ -46,7 +46,7 @@ final class LocalSource implements SourceInterface
             $file = $this->catalogFile ?? $this->dir.'/catalog.json';
             $raw = is_file($file) ? (string) file_get_contents($file) : '';
             $data = '' !== $raw ? json_decode($raw, true) : null;
-            $data = is_array($data) ? Catalog::forRuntime($data, $this->runtime) : null;
+            $data = is_array($data) ? Catalog::forRuntime(\WPFastyBuilder\Cast::map($data), $this->runtime) : null;
             $ok = null !== $data && Catalog::runtimeOf($data) === $this->runtime;
             $this->catalog = $ok ? $data : ['runtime' => $this->runtime, 'blocks' => [], 'collections' => []];
         }

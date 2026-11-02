@@ -12,7 +12,7 @@ final class WordPressSiteInfoProvider implements SiteInfoProviderInterface
 {
     public function site(): SiteInfo
     {
-        $postsPageId = (int) get_option('page_for_posts');
+        $postsPageId = \WPFasty\Core\Cast::int(get_option('page_for_posts'));
 
         return new SiteInfo(
             get_bloginfo('name'),
@@ -32,7 +32,7 @@ final class WordPressSiteInfoProvider implements SiteInfoProviderInterface
         if (!function_exists('has_custom_logo') || !has_custom_logo()) {
             return null;
         }
-        $id = (int) get_theme_mod('custom_logo');
+        $id = \WPFasty\Core\Cast::int(get_theme_mod('custom_logo'));
         if ($id <= 0) {
             return null;
         }
@@ -45,7 +45,7 @@ final class WordPressSiteInfoProvider implements SiteInfoProviderInterface
             $src[0],
             $src[1],
             $src[2],
-            (string) get_post_meta($id, '_wp_attachment_image_alt', true) ?: get_bloginfo('name'),
+            \WPFasty\Core\Cast::string(get_post_meta($id, '_wp_attachment_image_alt', true)) ?: get_bloginfo('name'),
         );
     }
 }

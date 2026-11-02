@@ -24,6 +24,8 @@ use WP_REST_Request;
  *   POST /render-block                  edit_pages (edit_page with `page`)  one block's HTML for the live preview:
  *        {source?, page?, id?, block, variant, props?, bindings?} → {id, html, issues}; same sanitizing, props and
  *        bound data as the page template (Fragment), rendered by the site engine's BlockRenderer.
+ *
+ * @phpstan-import-type Binding from DataSources
  */
 final class Rest
 {
@@ -52,9 +54,9 @@ final class Rest
             'callback' => [self::class, 'links'],
             'permission_callback' => static fn (): bool => current_user_can('edit_pages'),
         ]);
-        $page = static fn (\WP_REST_Request $r): bool => 'page' === get_post_type((int) $r['id']) && current_user_can(
+        $page = static fn (\WP_REST_Request $r): bool => 'page' === get_post_type(Cast::int($r['id'])) && current_user_can(
             'edit_page',
-            (int) $r['id'],
+            Cast::int($r['id']),
         );
         register_rest_route(self::NS, '/layout/(?P<id>\d+)', [
             ['methods' => 'GET', 'callback' => [self::class, 'getLayout'], 'permission_callback' => $page],
@@ -89,17 +91,17 @@ final class Rest
 
     public static function catalog(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
-        $catalog = Sources::catalog((string) $r['source']);
+        $catalog = Sources::catalog(Cast::string($r['source']));
         if (null === $catalog) {
             return new \WP_Error('wpfb_source', __('Unknown source.', 'wpfasty-builder'), ['status' => 404]);
         }
-        $col = (string) $r['collection'];
+        $col = Cast::string($r['collection']);
         $editor = $catalog->forEditor('' !== $col && null !== $catalog->collection($col) ? $col : null);
-        $editor['blocks'] = Previews::attach($editor['blocks'], Sources::get((string) $r['source']));
-        $editor['collection'] = Previews::attachPages($editor['collection'], Sources::get((string) $r['source']));
+        $editor['blocks'] = Previews::attach($editor['blocks'], Sources::get(Cast::string($r['source'])));
+        $editor['collection'] = Previews::attachPages($editor['collection'], Sources::get(Cast::string($r['source'])));
 
         return new \WP_REST_Response([
-            'source' => (string) $r['source'],
+            'source' => Cast::string($r['source']),
             'sources' => array_map(
                 static fn ($s): array => ['id' => $s->id(), 'label' => $s->label()],
                 array_values(Sources::all()),
@@ -116,7 +118,7 @@ final class Rest
 
     public static function getLayout(\WP_REST_Request $r): \WP_REST_Response
     {
-        $id = (int) $r['id'];
+        $id = Cast::int($r['id']);
         $entry = Store::get($id, true);
 
         return new \WP_REST_Response([
@@ -129,7 +131,7 @@ final class Rest
 
     public static function saveLayout(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
-        $id = (int) $r['id'];
+        $id = Cast::int($r['id']);
         $publish = (bool) $r->get_param('publish');
         if ($publish && !current_user_can('publish_pages')) {
             return new \WP_Error(
@@ -142,7 +144,7 @@ final class Rest
             return $e;
         }
         $body = $r->get_json_params();
-        $result = Store::save($id, is_array($body['layout'] ?? null) ? $body['layout'] : [], $publish);
+        $result = Store::save($id, Cast::map($body['layout'] ?? []), $publish);
         if ($result instanceof \WP_Error) {
             return $result;
         }
@@ -171,7 +173,7 @@ final class Rest
         }
         $body = $r->get_json_params();
         $body = is_array($body) ? $body : [];
-        $source = sanitize_key((string) ($body['source'] ?? 'ui8kit'));
+        $source = sanitize_key(Cast::string($body['source'] ?? 'ui8kit'));
         $catalog = Sources::catalog($source);
         if (null === $catalog) {
             return new \WP_Error('wpfb_source', __('Unknown source.', 'wpfasty-builder'), ['status' => 404]);
@@ -196,6 +198,10 @@ final class Rest
             static fn (string $template, array $props): string => Front::block($source, $template, $props),
             static fn (array $slot): array => $post instanceof \WP_Post ? DataSources::current($slot, $post) : [],
             // the pager: the editor previews the first page of the list (pages of its own query), none on one page
+            /**
+             * @param Binding                   $bind
+             * @param array<string, mixed>|null $slot
+             */
             static fn (array $bind, string $kind, ?array $slot): array => DataSources::paged($bind, $kind, $slot, 1),
             static fn (int $pages): ?array => Pager::value(1, $pages),
         );
@@ -209,9 +215,9 @@ final class Rest
     public static function createPage(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
         $out = Pages::create(
-            (string) $r->get_param('title'),
-            (string) $r->get_param('slug'),
-            sanitize_key((string) ($r->get_param('starter') ?? Pages::EMPTY)),
+            Cast::string($r->get_param('title')),
+            Cast::string($r->get_param('slug')),
+            sanitize_key(Cast::string($r->get_param('starter') ?? Pages::EMPTY)),
         );
 
         return $out instanceof \WP_Error ? $out : new \WP_REST_Response($out, 201);
@@ -220,7 +226,7 @@ final class Rest
     public static function importSource(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
         try {
-            $stats = Sources::import(sanitize_key((string) $r->get_param('id')), (string) $r->get_param('url'));
+            $stats = Sources::import(sanitize_key(Cast::string($r->get_param('id'))), Cast::string($r->get_param('url')));
         } catch (\Throwable $e) {
             return new \WP_Error('wpfb_import', $e->getMessage(), ['status' => 400]);
         }

@@ -22,7 +22,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "WPFasty\\Tests\\": "tests/"
+            "WPFasty\\Tests\\": "tests/",
+            "WPFastyBuilder\\": "plugins/wpfasty-builder/src/",
+            "WPFastyTypes\\Codex\\": "plugins/wpfasty-types/src/Codex/"
         }
     },
     "config": {
@@ -46,7 +48,6 @@
             "phpcbf"
         ],
         "phpstan": "phpstan analyse --configuration=phpstan.dist.neon --memory-limit=1G",
-        "phpstan:baseline": "phpstan analyse --configuration=phpstan.dist.neon --memory-limit=1G --generate-baseline=phpstan-baseline.neon",
         "deptrac": "deptrac analyse --config-file=deptrac.yaml --no-progress",
         "cs": [
             "php-cs-fixer check --config=.php-cs-fixer.dist.php",
@@ -68,7 +69,6 @@
         "test": "Run the PHPUnit suite",
         "phpcs": "PHPCS: Symfony standard + WordPress security (phpcs.xml.dist), blocking",
         "phpstan": "Static analysis (level 8 + baseline)",
-        "phpstan:baseline": "Regenerate phpstan-baseline.neon",
         "deptrac": "Architecture layers (blocking)",
         "cs": "Coding standard check, blocking: PHP-CS-Fixer @Symfony dry-run + PHPCS",
         "cs-fix": "Apply PHP-CS-Fixer @Symfony, then phpcbf",

@@ -42,7 +42,7 @@ final class WordPressMetaDescription
             $text = PlainText::from((string) get_bloginfo('name')); // no tagline set: the site title
         }
 
-        return (string) apply_filters('wpfasty_meta_description', $this->builder->build($text));
+        return \WPFasty\Core\Cast::string(apply_filters('wpfasty_meta_description', $this->builder->build($text)));
     }
 
     public function tag(): string

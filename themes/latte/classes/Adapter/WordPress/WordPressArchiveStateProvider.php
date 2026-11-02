@@ -21,8 +21,8 @@ final class WordPressArchiveStateProvider implements ArchiveStateProviderInterfa
             $searchQuery,
             null !== $searchQuery ? '' : wp_strip_all_tags(get_the_archive_title()),
             null !== $searchQuery ? '' : wp_kses_post(get_the_archive_description()),
-            isset($wp_query) && is_object($wp_query) ? (int) (get_object_vars($wp_query)['max_num_pages'] ?? 0) : null,
-            max(1, (int) get_query_var('paged')),
+            isset($wp_query) && is_object($wp_query) ? \WPFasty\Core\Cast::int(get_object_vars($wp_query)['max_num_pages'] ?? 0) : null,
+            max(1, \WPFasty\Core\Cast::int(get_query_var('paged'))),
         );
     }
 

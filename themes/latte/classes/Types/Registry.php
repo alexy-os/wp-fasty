@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace WPFasty\Types;
 
 use WPFasty\Core\BootableServiceInterface;
+use WPFasty\Core\Cast;
 use WPFasty\Core\Model\Post;
 
 final class Registry implements BootableServiceInterface
@@ -53,8 +54,8 @@ final class Registry implements BootableServiceInterface
             ? (array) apply_filters('wpfasty_type_dirs', $this->dirs)
             : $this->dirs;
         $defs = [];
-        foreach (array_unique($dirs) as $dir) {
-            foreach (glob(rtrim((string) $dir, '/\\').'/*.php') ?: [] as $file) {
+        foreach (array_unique(Cast::strings($dirs)) as $dir) {
+            foreach (glob(rtrim($dir, '/\\').'/*.php') ?: [] as $file) {
                 $def = include $file;
                 if (is_array($def)) {
                     $defs[] = $def;
@@ -65,7 +66,7 @@ final class Registry implements BootableServiceInterface
             $defs = (array) apply_filters('wpfasty_types', $defs);
         }
         foreach ($defs as $def) {
-            $this->add(PostType::fromArray((array) $def));
+            $this->add(PostType::fromArray(Cast::map($def)));
         }
         /*
          * Data registration (post types, taxonomies, meta, metaboxes) is plugin territory
@@ -106,7 +107,7 @@ final class Registry implements BootableServiceInterface
         $type = $this->get((string) get_post_type($postId));
         $def = $type?->fields[$field] ?? null;
 
-        return $def ? (string) get_post_meta($postId, $def->metaKey, true) : '';
+        return $def ? Cast::string(get_post_meta($postId, $def->metaKey, true)) : '';
     }
 
     /**
@@ -125,16 +126,17 @@ final class Registry implements BootableServiceInterface
         }
         $data['fields'] = [];
         foreach ($type->fields as $name => $field) {
-            $data['fields'][$name] = (string) get_post_meta($post->id, $field->metaKey, true);
+            $data['fields'][$name] = Cast::string(get_post_meta($post->id, $field->metaKey, true));
         }
         $data['terms'] = [];
         foreach (array_keys($type->taxonomies()) as $taxonomy) {
             $data['terms'][$taxonomy] = [];
-            foreach (get_the_terms($post->id, (string) $taxonomy) ?: [] as $term) {
+            $terms = get_the_terms($post->id, (string) $taxonomy);
+            foreach (is_array($terms) ? $terms : [] as $term) {
                 $data['terms'][$taxonomy][] = [
                     'name' => $term->name,
                     'slug' => $term->slug,
-                    'url' => (string) get_term_link($term),
+                    'url' => self::termUrl($term),
                 ];
             }
         }
@@ -146,7 +148,7 @@ final class Registry implements BootableServiceInterface
         // cache already (the list was primed), so get_post() runs no query
         $wpPost = get_post($post->id);
 
-        return $wpPost instanceof \WP_Post ? (array) $context($data, $wpPost, $type) : $data;
+        return $wpPost instanceof \WP_Post ? Cast::map($context($data, $wpPost, $type)) : $data;
     }
 
     public function resolveView(string $view): string
@@ -180,7 +182,7 @@ final class Registry implements BootableServiceInterface
             }
             $archive = $type->archive();
             if (isset($archive['per_page'])) {
-                $query->set('posts_per_page', (int) $archive['per_page']);
+                $query->set('posts_per_page', Cast::int($archive['per_page']));
             }
             if (isset($archive['orderby'])) {
                 $query->set('orderby', $archive['orderby']);
@@ -228,10 +230,12 @@ final class Registry implements BootableServiceInterface
         if (null === $type) {
             return [];
         }
+        $orderby = $type->archive()['orderby'] ?? null;
         $posts = get_posts([
             'post_type' => $postType,
             'numberposts' => $count,
-            'orderby' => $type->archive()['orderby'] ?? ['date' => 'DESC'],
+            'orderby' => is_array($orderby) ? array_map(Cast::string(...), Cast::map($orderby))
+                : (is_string($orderby) && '' !== $orderby ? $orderby : ['date' => 'DESC']),
         ]);
 
         return array_values(array_filter($posts, static fn ($p): bool => $p instanceof \WP_Post));
@@ -248,11 +252,18 @@ final class Registry implements BootableServiceInterface
         $terms = taxonomy_exists($taxonomy) ? get_terms(['taxonomy' => $taxonomy, 'hide_empty' => true]) : [];
         foreach (is_array($terms) ? $terms : [] as $term) {
             if ($term instanceof \WP_Term) {
-                $items[] = ['name' => $term->name, 'slug' => $term->slug, 'url' => (string) get_term_link($term)];
+                $items[] = ['name' => $term->name, 'slug' => $term->slug, 'url' => self::termUrl($term)];
             }
         }
         $current = is_tax($taxonomy) ? get_queried_object() : null;
 
         return ['items' => $items, 'current' => $current instanceof \WP_Term ? $current->slug : ''];
+    }
+
+    private static function termUrl(\WP_Term $term): string
+    {
+        $url = get_term_link($term);
+
+        return is_string($url) ? $url : '';
     }
 }

@@ -66,7 +66,7 @@ final class Json
         }
         if (is_array($v) || $v instanceof \stdClass) {
             $o = (array) $v;
-            $keys = array_map('strval', array_keys($o));
+            $keys = array_map(Cast::string(...), array_keys($o));
             usort($keys, [self::class, 'utf16Compare']);
             $parts = [];
             foreach ($keys as $k) {
@@ -92,7 +92,9 @@ final class Json
         ini_set('serialize_precision', '-1'); // shortest round-trip digits
         $repr = (string) json_encode($f);
         ini_set('serialize_precision', (string) $prev);
-        preg_match('/^(-?)(\d+)(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/', $repr, $m);
+        if (1 !== preg_match('/^(-?)(\d+)(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/', $repr, $m)) {
+            throw new \UnexpectedValueException("unexpected float representation: {$repr}");
+        }
         $sign = $m[1];
         $int = $m[2];
         $fr = $m[3] ?? '';
@@ -240,11 +242,12 @@ final class Json
     {
         $start = $this->i++;
         $out = '';
-        $units = []; // pending UTF-16 code units of \u escapes
+        /** @var list<int> $units pending UTF-16 code units of \u escapes */
+        $units = [];
         $flush = function () use (&$units, &$out, $start): void {
             for ($k = 0, $m = count($units); $k < $m; ++$k) {
                 $u = $units[$k];
-                $next = $units[$k + 1] ?? 0;
+                $next = $k + 1 < $m ? $units[$k + 1] : 0;
                 if ($u >= 0xD800 && $u <= 0xDBFF && $next >= 0xDC00 && $next <= 0xDFFF) {
                     $out .= self::utf8(0x10000 + (($u - 0xD800) << 10) + ($units[++$k] - 0xDC00));
                 } elseif ($u >= 0xD800 && $u <= 0xDFFF) {
@@ -281,7 +284,7 @@ final class Json
                 if (1 !== preg_match('/^[0-9A-Fa-f]{4}$/', $h)) {
                     $this->fail('canonical.invalid_json', 'bad \\u escape');
                 }
-                $units[] = hexdec($h);
+                $units[] = (int) hexdec($h);
                 $this->i += 4;
                 continue;
             }
@@ -334,7 +337,7 @@ final class Json
         $out = '';
         preg_match_all('/./su', $s, $m);
         foreach ($m[0] as $ch) {
-            $b = array_values((array) unpack('C*', $ch));
+            $b = array_values(array_map(Cast::int(...), (array) unpack('C*', $ch)));
             $cp = match (count($b)) {
                 1 => $b[0],
                 2 => (($b[0] & 0x1F) << 6) | ($b[1] & 0x3F),

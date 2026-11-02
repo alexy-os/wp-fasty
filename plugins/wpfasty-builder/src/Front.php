@@ -28,7 +28,11 @@ final class Front
         add_action('wp_head', [Pager::class, 'head'], 5);
     }
 
-    /** @param array<int, string> $roots */
+    /**
+     * @param array<int, string> $roots
+     *
+     * @return list<string>
+     */
     public static function roots(array $roots): array
     {
         $dir = Store::viewsDir();
@@ -43,8 +47,8 @@ final class Front
     public static function isPreview(int $pageId): bool
     {
         // phpcs:disable WordPress.Security.NonceVerification.Recommended -- the nonce is verified below
-        $nonce = isset($_GET['wpfb_preview'], $_GET['_wpnonce'])
-            ? sanitize_text_field(wp_unslash((string) $_GET['_wpnonce']))
+        $nonce = isset($_GET['wpfb_preview'], $_GET['_wpnonce']) && is_string($_GET['_wpnonce'])
+            ? sanitize_text_field(wp_unslash($_GET['_wpnonce']))
             : '';
         // phpcs:enable
         if ('' === $nonce) {
@@ -116,7 +120,7 @@ final class Front
         $context['wpfb'] = null !== $entry ? self::bound($entry, $context) : [];
         // record tokens of every block ({post:}, {product:}, {term:}, {price:}, {stock:}): one query per type
         Links::prime(null !== $entry ? array_column(Layout::blocks($entry), 'props') : []);
-        $context['widgets']['sidebar'] = '';
+        $context['widgets'] = ['sidebar' => ''] + Cast::map($context['widgets'] ?? []);
 
         return $context;
     }
@@ -131,46 +135,47 @@ final class Front
      */
     public static function bound(array $entry, array $context = []): array
     {
-        $catalog = Sources::catalog((string) ($entry['metadata']['source']['value'] ?? ''));
+        $catalog = Sources::catalog(Cast::string(Cast::path($entry, 'metadata', 'source', 'value')));
         $out = [];
         foreach (Layout::blocks($entry) as $b) {
-            $kinds = $catalog?->bindable((string) $b['block'], (string) $b['variant']) ?? [];
+            $kinds = $catalog?->bindable(Cast::string($b['block']), Cast::string($b['variant'])) ?? [];
             // the pager (PostGrid `pager`): asked for by the variant / layout mode, filled here, null on one page
-            $pager = $catalog?->pager((string) $b['block'], (string) $b['variant']);
-            $sample = (array) ($catalog?->variant((string) $b['block'], (string) $b['variant'])['props'] ?? []);
+            $pager = $catalog?->pager(Cast::string($b['block']), Cast::string($b['variant']));
+            $sample = (array) ($catalog?->variant(Cast::string($b['block']), Cast::string($b['variant']))['props'] ?? []);
             $paged = null !== $pager && Pager::active(Layout::merge($sample, (array) $b['props']), $pager['path']);
-            foreach ($b['bindings'] as $path => $bind) {
-                if (is_array($bind) && isset($kinds[(string) $path])) {
-                    $slot = $catalog?->slot((string) $b['block'], (string) $b['variant'], (string) $path);
-                    if ($paged && (string) $path === $pager['list']) {
+            foreach (Cast::map($b['bindings']) as $path => $bind) {
+                $bind = DataSources::binding($bind);
+                if (null !== $bind && isset($kinds[$path])) {
+                    $slot = $catalog?->slot(Cast::string($b['block']), Cast::string($b['variant']), Cast::string($path));
+                    if ($paged && Cast::string($path) === $pager['list']) {
                         // the block's own query: the page of the request, its pages from the found rows of that query
                         $page = Pager::request();
-                        [$records, $pages] = DataSources::paged($bind, $kinds[(string) $path], $slot, $page);
-                        $out[(string) $b['id']][(string) $path] = $records;
-                        $out[(string) $b['id']][$pager['path']] = Pager::value($page, $pages, Pager::urls());
+                        [$records, $pages] = DataSources::paged($bind, $kinds[Cast::string($path)], $slot, $page);
+                        $out[Cast::string($b['id'])][Cast::string($path)] = $records;
+                        $out[Cast::string($b['id'])][$pager['path']] = Pager::value($page, $pages, Pager::urls());
                         continue;
                     }
-                    $out[(string) $b['id']][(string) $path] = DataSources::resolve(
+                    $out[Cast::string($b['id'])][Cast::string($path)] = DataSources::resolve(
                         $bind,
-                        $kinds[(string) $path],
+                        $kinds[Cast::string($path)],
                         $slot,
                     );
                 }
             }
-            if (null !== $pager && !array_key_exists($pager['path'], $out[(string) $b['id']] ?? [])) {
+            if (null !== $pager && !array_key_exists($pager['path'], $out[Cast::string($b['id'])] ?? [])) {
                 // no own query: the main query (ContextFactory pagination, else max_num_pages); a page has one page
-                $out[(string) $b['id']][$pager['path']] = $paged
+                $out[Cast::string($b['id'])][$pager['path']] = $paged
                     ? Pager::value(...[...Pager::main($context), Pager::urls($context)])
                     : null;
             }
             // the record of the current route (the queried post: richtext title, the_content…), read once per page
             $current = $catalog?->currentValues(
-                (string) $b['block'],
-                (string) $b['variant'],
+                Cast::string($b['block']),
+                Cast::string($b['variant']),
                 static fn (array $slot): array => DataSources::current($slot),
             ) ?? [];
             foreach ($current as $path => $value) {
-                $out[(string) $b['id']][(string) $path] = $value;
+                $out[Cast::string($b['id'])][Cast::string($path)] = $value;
             }
         }
 
@@ -232,7 +237,7 @@ final class Front
      */
     public static function prepare(array $props): array
     {
-        return Safe::props(Links::walk($props));
+        return Cast::map(Safe::props(Links::walk($props)));
     }
 
     /** the theme's Latte engine or Twig environment, null without a known WP FastY renderer */
@@ -246,10 +251,12 @@ final class Front
         } catch (\Throwable) {
             return null;
         }
-        if (is_object($renderer) && method_exists($renderer, 'latte')) {
-            return $renderer->latte();
-        }
+        $engine = match (true) {
+            is_object($renderer) && method_exists($renderer, 'latte') => $renderer->latte(),
+            is_object($renderer) && method_exists($renderer, 'twig') => $renderer->twig(),
+            default => null,
+        };
 
-        return is_object($renderer) && method_exists($renderer, 'twig') ? $renderer->twig() : null;
+        return $engine instanceof \Latte\Engine || $engine instanceof \Twig\Environment ? $engine : null;
     }
 }

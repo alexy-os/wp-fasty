@@ -8,20 +8,33 @@ declare(strict_types=1);
 
 namespace WPFasty\Types;
 
+use WPFasty\Core\Cast;
+
 final class PostType
 {
     /** @var array<string, Field> */
     public readonly array $fields;
 
+    /** @var lowercase-string&non-empty-string */
+    public readonly string $name;
+
     /**
      * @param array<string, mixed> $def module definition array
      */
-    public function __construct(public readonly string $name, public readonly array $def)
+    public function __construct(string $name, public readonly array $def)
     {
-        $prefix = (string) ($def['meta_prefix'] ?? $name);
+        if (1 !== preg_match('/^[a-z][a-z0-9_]{1,19}$/', $name)) {
+            throw new \InvalidArgumentException(sprintf('Invalid post type name "%s"', $name));
+        }
+        $name = strtolower($name);
+        if ('' === $name) {
+            throw new \InvalidArgumentException('Empty post type name');
+        }
+        $this->name = $name;
+        $prefix = Cast::string($def['meta_prefix'] ?? $name);
         $fields = [];
         foreach ((array) ($def['fields'] ?? []) as $key => $field) {
-            $fields[(string) $key] = Field::fromArray((string) $key, (array) $field, $prefix);
+            $fields[(string) $key] = Field::fromArray((string) $key, Cast::map($field), $prefix);
         }
         $this->fields = $fields;
     }
@@ -31,24 +44,19 @@ final class PostType
      */
     public static function fromArray(array $def): self
     {
-        $name = (string) ($def['name'] ?? '');
-        if (!preg_match('/^[a-z][a-z0-9_]{1,19}$/', $name)) {
-            throw new \InvalidArgumentException(sprintf('Invalid post type name "%s"', $name));
-        }
-
-        return new self($name, $def);
+        return new self(Cast::string($def['name'] ?? ''), $def);
     }
 
     /** @return array<string, mixed> */
     public function args(): array
     {
-        return (array) ($this->def['args'] ?? []);
+        return Cast::map($this->def['args'] ?? []);
     }
 
     /** @return array<string, array<string, mixed>> */
     public function taxonomies(): array
     {
-        return (array) ($this->def['taxonomies'] ?? []);
+        return array_map(Cast::map(...), Cast::map($this->def['taxonomies'] ?? []));
     }
 
     public function supports(string $capability): bool
@@ -61,9 +69,7 @@ final class PostType
     /** @return array<string, mixed> */
     public function capability(string $capability): array
     {
-        $value = ((array) ($this->def['supports'] ?? []))[$capability] ?? [];
-
-        return is_array($value) ? $value : [];
+        return Cast::map(Cast::map($this->def['supports'] ?? [])[$capability] ?? []);
     }
 
     public function view(string $kind): ?string
@@ -76,7 +82,7 @@ final class PostType
     /** @return array<string, mixed> */
     public function archive(): array
     {
-        return (array) ($this->def['archive'] ?? []);
+        return Cast::map($this->def['archive'] ?? []);
     }
 
     /** @return array<string, mixed>|false */
@@ -84,11 +90,11 @@ final class PostType
     {
         $box = $this->def['metabox'] ?? [];
 
-        return false === $box ? false : (array) $box;
+        return false === $box ? false : Cast::map($box);
     }
 
     public function textDomain(): string
     {
-        return (string) ($this->def['text_domain'] ?? 'latte');
+        return Cast::string($this->def['text_domain'] ?? 'latte');
     }
 }

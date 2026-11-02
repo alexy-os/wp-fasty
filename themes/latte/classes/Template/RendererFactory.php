@@ -14,7 +14,7 @@ final class RendererFactory
     /**
      * @param string|RendererInterface $engine     `latte`, `twig` or a ready renderer
      * @param array<int, mixed>        $roots      shared view roots (child → parent)
-     * @param array<int, mixed>        $primitives engine-specific primitives roots, keyed by engine
+     * @param array<string, mixed>     $primitives engine-specific primitives roots, keyed by engine
      */
     public static function create(
         string|RendererInterface $engine,
@@ -31,7 +31,7 @@ final class RendererFactory
         if (!Engines::available($engine) || empty($primitives[$engine])) {
             throw EngineUnavailableException::for($engine);
         }
-        $chain = array_merge($roots, (array) $primitives[$engine]);
+        $chain = array_values(array_merge($roots, (array) $primitives[$engine]));
 
         return 'twig' === $engine
             ? new TwigRenderer($chain, rtrim($cacheDir, '/\\').'/twig')

@@ -10,23 +10,25 @@ namespace WPFastyBuilder;
  * the page (variant sample props, overrides, kind-aware labels) and every bound path is filled with the records the
  * page context would hold (`wpfb[<id>][<path>]`). The editor swaps this fragment into its preview instead of reloading
  * the page (REST POST /render-block). Only templates of the source's own runtime render (ADR-001, K7).
+ *
+ * @phpstan-import-type Binding from DataSources
  */
 final class Fragment
 {
     /**
-     * @param array<string, mixed>                                                                          $input       untrusted {id?, block, variant, props?, bindings?}
-     * @param list<string>                                                                                  $dataSources ids accepted in bindings
-     * @param callable(array<string, mixed>, string, array<string, mixed>|null): list<array<string, mixed>> $resolve
-     *                                                                                                                   records of a binding (binding, data kind, Catalog::slot())
-     * @param callable(string, array<string, mixed>): string                                                $render      HTML of a template
-     * @param (callable(array<string, mixed>): array<string, mixed>)|null                                   $current     the record of the current
-     *                                                                                                                   route for a current-scope slot (Catalog::currentSlot); null: none (those paths stay null, as on a page
-     *                                                                                                                   without the record)
-     * @param callable|null                                                                                 $paged       (binding, kind, slot) →
-     *                                                                                                                   [records, pages]: the first page of the list a pager pages and its number of pages (DataSources::paged
-     *                                                                                                                   on page 1); null: the list resolves as any binding, one page
-     * @param (callable(int): (array<string, mixed>|null))|null                                             $pager       the pager group for a number of pages (the
-     *                                                                                                                   editor previews page 1: Pager::value(1, pages)); null: no pager
+     * @param array<string, mixed>                                                                                      $input       untrusted {id?, block, variant, props?, bindings?}
+     * @param list<string>                                                                                              $dataSources ids accepted in bindings
+     * @param callable(Binding, string, array<string, mixed>|null): list<array<string, mixed>>                          $resolve
+     *                                                                                                                               records of a binding (binding, data kind, Catalog::slot())
+     * @param callable(string, array<string, mixed>): string                                                            $render      HTML of a template
+     * @param (callable(array<string, mixed>): array<string, mixed>)|null                                               $current     the record of the current
+     *                                                                                                                               route for a current-scope slot (Catalog::currentSlot); null: none (those paths stay null, as on a page
+     *                                                                                                                               without the record)
+     * @param (callable(Binding, string, array<string, mixed>|null): array{0: list<array<string, mixed>>, 1: int})|null $paged       (binding, kind, slot) →
+     *                                                                                                                               [records, pages]: the first page of the list a pager pages and its number of pages (DataSources::paged
+     *                                                                                                                               on page 1); null: the list resolves as any binding, one page
+     * @param (callable(int): (array<string, mixed>|null))|null                                                         $pager       the pager group for a number of pages (the
+     *                                                                                                                               editor previews page 1: Pager::value(1, pages)); null: no pager
      *
      * @return array{id: string, html: string, issues: list<array{code: string, path: string, message: string}>}|null
      *                                                                                                                null when the block or variant is unknown or its template is not of the catalog's runtime
@@ -54,16 +56,16 @@ final class Fragment
         if (null === $b) {
             return null;
         }
-        $variant = (array) $catalog->variant((string) $b['block'], (string) $b['variant']);
-        $template = (string) ($variant['template'] ?? '');
+        $variant = (array) $catalog->variant(Cast::string($b['block']), Cast::string($b['variant']));
+        $template = Cast::string($variant['template'] ?? '');
         $runtime = $catalog->runtime();
         $own = null !== $runtime && str_ends_with($template, Compiler::ENGINES[$runtime]);
         if (1 !== preg_match(Catalog::TEMPLATE, $template) || !$own) {
             return null;
         }
         $props = Compiler::blockProps($variant, $b, $catalog);
-        $block = (string) $b['block'];
-        $variantId = (string) $b['variant'];
+        $block = Cast::string($b['block']);
+        $variantId = Cast::string($b['variant']);
         $kinds = $catalog->bindable($block, $variantId);
         // the pager group (Pager): filled as on the page, null when the mode is not `pages` or on one page
         $at = $catalog->pager($block, $variantId);
@@ -71,8 +73,8 @@ final class Fragment
             && Pager::active(Layout::merge((array) ($variant['props'] ?? []), (array) $b['props']), $at['path']);
         $pages = 1;
         foreach ($b['bindings'] as $path => $bind) {
-            $path = (string) $path;
-            if ($active && null !== $paged && $path === $at['list'] && is_array($bind) && isset($kinds[$path])) {
+            $bind = DataSources::binding($bind);
+            if ($active && null !== $paged && $path === $at['list'] && null !== $bind && isset($kinds[$path])) {
                 [$records, $pages] = $paged($bind, $kinds[$path], $catalog->slot($block, $variantId, $path));
                 Layout::set($props, explode('.', $path), $records);
                 continue;
@@ -80,7 +82,7 @@ final class Fragment
             Layout::set(
                 $props,
                 explode('.', $path),
-                is_array($bind) && isset($kinds[$path])
+                null !== $bind && isset($kinds[$path])
                     ? $resolve($bind, $kinds[$path], $catalog->slot($block, $variantId, $path))
                     : [],
             );
@@ -98,6 +100,6 @@ final class Fragment
             static fn (array $i): bool => !str_starts_with($i['code'], 'core.'),
         ));
 
-        return ['id' => (string) $b['id'], 'html' => $render($template, $props), 'issues' => $issues];
+        return ['id' => Cast::string($b['id']), 'html' => $render($template, Cast::map($props)), 'issues' => $issues];
     }
 }

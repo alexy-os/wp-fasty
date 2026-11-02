@@ -15,5 +15,6 @@ interface ContainerInterface
     /** @return list<string> */
     public function findTaggedServiceIds(string $tag): array;
 
+    /** @param array<string, mixed> $attributes */
     public function addTag(string $id, string $tag, array $attributes = []): void;
 }

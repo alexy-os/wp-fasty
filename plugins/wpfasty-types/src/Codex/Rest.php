@@ -27,8 +27,12 @@ final class Rest
     {
         add_action('rest_api_init', [self::class, 'routes']);
         add_filter('rest_pre_serve_request', [self::class, 'serve'], 10, 4);
-        add_action('created_term', static fn (int $id): mixed => Mapper::stampTerm($id, true));
-        add_action('edited_term', static fn (int $id): mixed => Mapper::stampTerm($id, false));
+        add_action('created_term', static function (int $id): void {
+            Mapper::stampTerm($id, true);
+        });
+        add_action('edited_term', static function (int $id): void {
+            Mapper::stampTerm($id, false);
+        });
     }
 
     public static function routes(): void
@@ -47,6 +51,7 @@ final class Rest
         $add('/settings/(?P<id>[^/]+)', [self::class, 'setting']);
     }
 
+    /** @param array<string, mixed>|null $details */
     public static function error(string $code, string $message, int $status, ?array $details = null): \WP_REST_Response
     {
         $e = ['code' => $code, 'message' => $message, 'status' => $status];
@@ -66,7 +71,7 @@ final class Rest
         }
         $server->send_header('Content-Type', self::CT);
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON bytes of a REST response.
-        echo $data[self::RAW];
+        echo Cast::string($data[self::RAW]);
 
         return true;
     }
@@ -99,16 +104,16 @@ final class Rest
         if ($q instanceof \WP_REST_Response) {
             return $q;
         }
-        $kind = (string) $req['kind'];
+        $kind = Cast::string($req['kind']);
         if (!in_array($kind, $site->postKinds(), true)) {
             return self::error('not_found', 'kind was not found', 404);
         }
         [, $page, $per] = $q;
-        $ids = self::sortedIds($kind, (string) $site->wp($kind)['post_type']);
+        $ids = self::sortedIds($kind, Cast::string($site->wp($kind)['post_type']));
         $slice = array_slice($ids, ($page - 1) * $per, $per);
         $map = new Mapper($site);
         $items = [];
-        $postType = (string) $site->wp($kind)['post_type'];
+        $postType = Cast::string($site->wp($kind)['post_type']);
         $wpIds = array_map(static fn (string $id): int => Mapper::wpId($kind, $id), $slice);
         foreach (self::posts($wpIds, $postType) as $post) {
             $items[] = Canonical::entryBytes($map->entry($post, $kind));
@@ -162,8 +167,8 @@ final class Rest
         if ($site instanceof \WP_REST_Response) {
             return $site;
         }
-        $kind = (string) $req['kind'];
-        $id = (string) $req['id'];
+        $kind = Cast::string($req['kind']);
+        $id = Cast::string($req['id']);
         $q = self::query($req);
         if ($q instanceof \WP_REST_Response) {
             return $q;
@@ -190,7 +195,7 @@ final class Rest
             }
         } elseif (in_array($kind, $site->postKinds(), true) && $wpId > 0) {
             $post = get_post($wpId);
-            if (self::publicPost($post, (string) $site->wp($kind)['post_type'])) {
+            if ($post instanceof \WP_Post && self::publicPost($post, Cast::string($site->wp($kind)['post_type']))) {
                 $entry = $map->entry($post, $kind);
             }
         }
@@ -237,7 +242,7 @@ final class Rest
         if ($q instanceof \WP_REST_Response) {
             return $q;
         }
-        $tax = (string) $req['taxonomy'];
+        $tax = Cast::string($req['taxonomy']);
         if (!in_array($tax, $site->allTaxonomies(), true) || !taxonomy_exists($tax)) {
             return self::error('not_found', 'taxonomy was not found', 404);
         }
@@ -281,7 +286,7 @@ final class Rest
         if ($q instanceof \WP_REST_Response) {
             return $q;
         }
-        if (Mapper::SETTINGS_ID !== (string) $req['id']) {
+        if (Mapper::SETTINGS_ID !== Cast::string($req['id'])) {
             return self::error('not_found', 'settings were not found', 404);
         }
         $bytes = self::settingsBytes($site);
@@ -293,6 +298,7 @@ final class Rest
         ]);
     }
 
+    /** @param array<string, string> $headers */
     private static function raw(string $bytes, int $status = 200, array $headers = []): \WP_REST_Response
     {
         $r = new \WP_REST_Response(null, $status, ['Content-Type' => self::CT] + $headers);
@@ -302,6 +308,7 @@ final class Rest
         return $r;
     }
 
+    /** @param list<string> $items JCS bytes of each item */
     private static function envelope(array $items, int $page, int $per, int $total): string
     {
         $p = Json::jcs([

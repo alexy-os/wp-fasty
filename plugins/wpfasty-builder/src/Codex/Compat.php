@@ -9,6 +9,8 @@ namespace WPFastyBuilder\Codex;
  * Pure: sources come from the Codex manifest + delivery (Sources::fromManifest); slots are
  * {kind, required: [paths]} (codegen-x blocks.json) or catalog record fields (paths with pipes).
  * resolve() returns the level and the effective readPath for the source, so the builder reads exactly what was rated.
+ *
+ * @phpstan-import-type SourceModel from Sources
  */
 final class Compat
 {
@@ -33,7 +35,7 @@ final class Compat
     private const STRINGY = ['string', 'text', 'textarea', 'richtext', 'markdown', 'select'];
 
     /**
-     * @param array<string, mixed>                $src     Sources::fromManifest item
+     * @param SourceModel                         $src     Sources::fromManifest item
      * @param array{0:string,1:list<string>}|null $need    required field type of the slot, if known
      * @param string|null                         $wantTax taxonomy the slot expects for bare "terms"
      *
@@ -117,7 +119,7 @@ final class Compat
         return $manual('missing');
     }
 
-    /** @param array<string, mixed> $src */
+    /** @param SourceModel $src */
     public static function presentationalDefault(string $field, array $src): mixed
     {
         $table = self::DEFAULTS[$field] ?? null;
@@ -126,14 +128,14 @@ final class Compat
         }
         $key = $src['term'] ? ($src['role'] ?? 'category') : $src['kind'];
 
-        return $table[$key] ?? $table['*'] ?? null;
+        return $table[$key] ?? $table['*'];
     }
 
     /**
      * Slot level over its required paths. $relax: presentational fields do not count (Q6).
      *
      * @param list<string>                                  $required
-     * @param array<string, mixed>                          $src
+     * @param SourceModel                                   $src
      * @param array<string, array{0:string,1:list<string>}> $needs    path → field type
      *
      * @return array{level:string, notes:list<string>}
@@ -187,7 +189,11 @@ final class Compat
         return !in_array('integer', $nr, true) || [] !== array_intersect(['integer', 'money'], $hr);
     }
 
-    /** @param array<string, mixed> $src */
+    /**
+     * @param SourceModel $src
+     *
+     * @return array{level: string, rule: string, path: string|null}
+     */
     private static function terms(string $pipe, array $src, ?string $wantTax): array
     {
         $taxes = $src['taxes'];
@@ -205,13 +211,13 @@ final class Compat
         if (null === $have) {
             return ['level' => self::MANUAL, 'rule' => 'no '.$role.' taxonomy', 'path' => null];
         }
-        $to = '' === $pipe ? 'terms' : preg_replace('/:(.+)$/', ':'.$have, $pipe);
+        $to = '' === $pipe ? 'terms' : (string) preg_replace('/:(.+)$/', ':'.$have, $pipe);
         $rule = "R2 taxonomy role {$role}: {$wantTax}<-{$have}";
 
         return ['level' => self::AUTO, 'rule' => $rule, 'path' => '' === $pipe ? 'terms' : 'terms'.$to];
     }
 
-    /** @param array<string, mixed> $src */
+    /** @param SourceModel $src */
     private static function taxOfRole(array $src, string $role): ?string
     {
         foreach ($src['taxes'] as $t) {
@@ -223,7 +229,7 @@ final class Compat
         return null;
     }
 
-    /** @param array<string, mixed> $src */
+    /** @param SourceModel $src */
     private static function hasRule(array $src, string $rule): bool
     {
         foreach ($src['fields'] as $f) {

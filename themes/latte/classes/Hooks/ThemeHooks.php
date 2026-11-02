@@ -57,7 +57,7 @@ final class ThemeHooks extends AbstractHooks
         if (str_contains($html, 'aria-label=') || !preg_match('/<a [^>]*>\s*<img/', $html)) {
             return $html;
         }
-        $title = trim(wp_strip_all_tags(get_the_title((int) $id)));
+        $title = trim(wp_strip_all_tags(get_the_title(\WPFasty\Core\Cast::int($id))));
         if ('' === $title) {
             return $html;
         }
@@ -92,8 +92,8 @@ final class ThemeHooks extends AbstractHooks
 
         // Comments off by default (no PII collection); themes opt in via `wpfasty_comments_enabled`.
         if (!apply_filters('wpfasty_comments_enabled', false)) {
-            add_filter('comments_open', '__return_false', 20, 2);
-            add_filter('pings_open', '__return_false', 20, 2);
+            add_filter('comments_open', '__return_false', 20);
+            add_filter('pings_open', '__return_false', 20);
             add_filter('comments_array', static fn (): array => [], 20);
         }
 

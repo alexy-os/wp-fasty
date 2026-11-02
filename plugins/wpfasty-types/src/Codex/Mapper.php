@@ -76,11 +76,11 @@ final class Mapper
         if ((int) $post->post_parent > 0) {
             $e['parent_id'] = self::id($kind, (int) $post->post_parent);
         }
-        $thumb = isset($fields['featured_media_id']) ? (int) get_post_meta($post->ID, '_thumbnail_id', true) : 0;
+        $thumb = isset($fields['featured_media_id']) ? Cast::int(get_post_meta($post->ID, '_thumbnail_id', true)) : 0;
         if ($thumb > 0) {
             $e['featured_media_id'] = self::id('media', $thumb);
         }
-        $tpl = (string) get_post_meta($post->ID, '_wp_page_template', true);
+        $tpl = Cast::string(get_post_meta($post->ID, '_wp_page_template', true));
         if ('' !== $tpl && 'default' !== $tpl) {
             $e['template'] = $tpl;
         }
@@ -120,16 +120,20 @@ final class Mapper
         return $e;
     }
 
-    /** Stored meta → Codex value of a manifest field; null = no value. */
+    /**
+     * Stored meta → Codex value of a manifest field; null = no value.
+     *
+     * @param array<string, mixed> $field
+     */
     public static function typed(array $field, mixed $raw): mixed
     {
         if ('' === $raw || null === $raw || false === $raw && ($field['type'] ?? '') !== 'boolean') {
             return null;
         }
-        $rules = array_map(static fn ($r): string => (string) ($r['name'] ?? ''), (array) ($field['rules'] ?? []));
+        $rules = array_map(static fn (mixed $r): string => Cast::string(Cast::map($r)['name'] ?? ''), (array) ($field['rules'] ?? []));
         $int = in_array('fastygo.codex/integer', $rules, true) || in_array('fastygo.codex/money', $rules, true);
 
-        return match ((string) ($field['type'] ?? 'string')) {
+        return match (Cast::string($field['type'] ?? 'string')) {
             'number' => is_numeric($raw)
                 ? ($int ? (int) round((float) $raw) : (floor((float) $raw) === (float) $raw && abs((float) $raw) < 1e15
                     ? (int) $raw : (float) $raw))
@@ -156,7 +160,7 @@ final class Mapper
             'size' => isset($meta['filesize']) ? (int) $meta['filesize'] : null,
             'width' => isset($meta['width']) ? (int) $meta['width'] : null,
             'height' => isset($meta['height']) ? (int) $meta['height'] : null,
-            'alt' => (string) get_post_meta($att->ID, '_wp_attachment_image_alt', true),
+            'alt' => Cast::string(get_post_meta($att->ID, '_wp_attachment_image_alt', true)),
             'caption' => (string) $att->post_excerpt,
         ];
         // contract 3a58400: attached_to = "<kind>-<n>" of the owner; post 0 / unknown kind -> no field
@@ -220,7 +224,7 @@ final class Mapper
             'id' => self::id('user', $u->ID), 'locale' => self::locale(), 'kind' => 'user', 'status' => 'published',
             'visibility' => 'public', 'slug' => '' !== (string) $u->user_nicename ? (string) $u->user_nicename
                 : self::id('user', $u->ID),
-            'title' => (string) $u->display_name, 'content' => (string) get_user_meta($u->ID, 'description', true),
+            'title' => Cast::string($u->display_name), 'content' => Cast::string(get_user_meta($u->ID, 'description', true)),
             'origin' => [['system' => Profile::SYSTEM, 'id' => (string) $u->ID]], 'metadata' => $md,
             'version' => 1, 'created_at' => $at, 'updated_at' => $at,
         ];
@@ -234,8 +238,8 @@ final class Mapper
      */
     public function term(\WP_Term $t, bool $withCount = false): array
     {
-        $created = (string) get_term_meta($t->term_id, self::TERM_CREATED, true);
-        $updated = (string) get_term_meta($t->term_id, self::TERM_UPDATED, true);
+        $created = Cast::string(get_term_meta($t->term_id, self::TERM_CREATED, true));
+        $updated = Cast::string(get_term_meta($t->term_id, self::TERM_UPDATED, true));
         $created = '' !== $created ? $created : self::EPOCH;
 
         return [
@@ -254,7 +258,11 @@ final class Mapper
         ];
     }
 
-    /** Taxonomy definition (TaxonomyDefinitionV04). */
+    /**
+     * Taxonomy definition (TaxonomyDefinitionV04).
+     *
+     * @return array<string, mixed>
+     */
     public function taxonomy(string $tax): array
     {
         $obj = get_taxonomy($tax);
@@ -268,7 +276,7 @@ final class Mapper
         return [
             'id' => $tax,
             'locale' => self::locale(),
-            'label' => $obj ? html_entity_decode((string) $obj->labels->name, ENT_QUOTES, 'UTF-8') : $tax,
+            'label' => $obj ? html_entity_decode(Cast::string($obj->labels->name), ENT_QUOTES, 'UTF-8') : $tax,
             'mode' => $obj && $obj->hierarchical ? 'hierarchical' : 'flat',
             'assigned_to_kinds' => $kinds,
             'public' => $obj ? (bool) $obj->public : false,
@@ -276,24 +284,28 @@ final class Mapper
         ];
     }
 
-    /** Site settings (SettingsV04), as the contract adapter fromWpSettings maps them. */
+    /**
+     * Site settings (SettingsV04), as the contract adapter fromWpSettings maps them.
+     *
+     * @return array<string, mixed>
+     */
     public function settings(): array
     {
         $s = [
-            'id' => self::SETTINGS_ID, 'locale' => self::locale(), 'title' => (string) get_option('blogname'),
-            'description' => (string) get_option('blogdescription'),
+            'id' => self::SETTINGS_ID, 'locale' => self::locale(), 'title' => Cast::string(get_option('blogname')),
+            'description' => Cast::string(get_option('blogdescription')),
             'language' => self::language() ?? Profile::SETTINGS_LANGUAGE,
-            'timezone' => (string) get_option('timezone_string'),
+            'timezone' => Cast::string(get_option('timezone_string')),
         ];
-        if ('page' === get_option('show_on_front') && (int) get_option('page_on_front') > 0) {
-            $s['front_page_id'] = self::id('page', (int) get_option('page_on_front'));
+        if ('page' === get_option('show_on_front') && Cast::int(get_option('page_on_front')) > 0) {
+            $s['front_page_id'] = self::id('page', Cast::int(get_option('page_on_front')));
         }
-        if ((int) get_option('page_for_posts') > 0) {
-            $s['posts_page_id'] = self::id('page', (int) get_option('page_for_posts'));
+        if (Cast::int(get_option('page_for_posts')) > 0) {
+            $s['posts_page_id'] = self::id('page', Cast::int(get_option('page_for_posts')));
         }
-        $s['posts_per_page'] = max(1, (int) get_option('posts_per_page'));
+        $s['posts_per_page'] = max(1, Cast::int(get_option('posts_per_page')));
         $s['comments_open'] = 'open' === get_option('default_comment_status');
-        $cur = strtoupper((string) get_option($this->site->currencyOption())); // registered default applies
+        $cur = strtoupper(Cast::string(get_option($this->site->currencyOption()))); // registered default applies
         if (1 === preg_match('/^[A-Z]{3}$/', $cur)) {
             $s['currency'] = $cur;
         }
@@ -312,7 +324,7 @@ final class Mapper
     /** created/updated term meta, clock filterable (demo seeding pins it for golden files). */
     public static function stampTerm(int $termId, bool $created): void
     {
-        $now = gmdate('Y-m-d\TH:i:s\Z', (int) apply_filters('wpfasty_codex_now', time()));
+        $now = gmdate('Y-m-d\TH:i:s\Z', Cast::int(apply_filters('wpfasty_codex_now', time())));
         if ($created) {
             update_term_meta($termId, self::TERM_CREATED, $now);
         }
@@ -340,7 +352,7 @@ final class Mapper
             if (null === $f) {
                 continue;
             }
-            $raw = get_post_meta($postId, (string) $key, true);
+            $raw = get_post_meta($postId, Cast::string($key), true);
             $value = self::typed($f, $raw);
             if (null === $value) {
                 continue;

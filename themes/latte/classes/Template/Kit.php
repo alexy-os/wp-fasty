@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace WPFasty\Template;
 
+use WPFasty\Core\Cast;
+
 final class Kit
 {
     /** @var array<string, array<string, mixed>>|null */
@@ -28,27 +30,30 @@ final class Kit
     public static function classes(string $component, array $selection = [], ?string ...$extra): string
     {
         $recipe = self::recipe($component);
-        $parts = [trim((string) ($recipe['base'] ?? ''))];
+        $defaults = Cast::map($recipe['defaults'] ?? []);
+        $byKey = Cast::map($recipe['byKey'] ?? []);
+        $parts = [trim(Cast::string($recipe['base'] ?? ''))];
         $picked = [];
-        foreach ((array) ($recipe['keys'] ?? []) as $key) {
+        foreach (Cast::strings($recipe['keys'] ?? []) as $key) {
             $choice = trim((string) ($selection[$key] ?? ''));
             if ('' === $choice) {
-                $choice = trim((string) ($recipe['defaults'][$key] ?? ''));
+                $choice = trim(Cast::string($defaults[$key] ?? ''));
             }
             $picked[$key] = $choice;
-            $parts[] = '' === $choice ? '' : trim((string) ($recipe['byKey'][$key][$choice] ?? ''));
+            $parts[] = '' === $choice ? '' : trim(Cast::string(Cast::map($byKey[$key] ?? [])[$choice] ?? ''));
         }
         // Compound classes of a codegen-x recipe (kit-compose `compound`): added when every listed key has that value.
-        foreach ((array) ($recipe['compound'] ?? []) as $when) {
+        foreach (Cast::list($recipe['compound'] ?? []) as $when) {
+            $when = Cast::map($when);
             $hit = true;
-            foreach ((array) $when as $key => $value) {
-                if ('class' !== $key && ($picked[$key] ?? '') !== (string) $value) {
+            foreach ($when as $key => $value) {
+                if ('class' !== $key && ($picked[$key] ?? '') !== Cast::string($value)) {
                     $hit = false;
                     break;
                 }
             }
             if ($hit) {
-                $parts[] = trim((string) ($when['class'] ?? ''));
+                $parts[] = trim(Cast::string($when['class'] ?? ''));
             }
         }
         foreach ($extra as $c) {
@@ -61,19 +66,20 @@ final class Kit
     /** @return array<string, mixed> */
     public static function recipe(string $component): array
     {
-        self::$presets ??= (array) json_decode(
+        self::$presets ??= array_map(Cast::map(...), Cast::map(json_decode(
             (string) file_get_contents(dirname(__DIR__, 2).'/kit/presets.json'),
             true,
             512,
             JSON_THROW_ON_ERROR
-        );
+        )));
         [$name, $part] = array_pad(explode('.', $component, 2), 2, null);
         $recipe = self::$presets[$name]
             ?? throw new \InvalidArgumentException("Unknown kit component {$component}");
+        if (null === $part) {
+            return $recipe;
+        }
+        $parts = Cast::map($recipe['parts'] ?? []);
 
-        return null === $part
-            ? $recipe
-            : (array) ($recipe['parts'][$part]
-                ?? throw new \InvalidArgumentException("Unknown kit part {$component}"));
+        return isset($parts[$part]) ? Cast::map($parts[$part]) : throw new \InvalidArgumentException("Unknown kit part {$component}");
     }
 }

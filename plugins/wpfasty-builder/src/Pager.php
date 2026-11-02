@@ -32,7 +32,11 @@ final class Pager
     /** @var array{0: int, 1: int}|null the first pager on the page (page, pages), for the head links */
     private static ?array $head = null;
 
-    /** true when the group at $path of the merged props asks for pages */
+    /**
+     * true when the group at $path of the merged props asks for pages.
+     *
+     * @param array<array-key, mixed> $props
+     */
     public static function active(array $props, string $path): bool
     {
         $v = $props;
@@ -46,9 +50,9 @@ final class Pager
     /** the page of the request, from the main query: `paged`, on a static front page `page` */
     public static function request(): int
     {
-        $paged = (int) get_query_var('paged');
+        $paged = Cast::int(get_query_var('paged'));
         if ($paged < 1 && function_exists('is_front_page') && is_front_page()) {
-            $paged = (int) get_query_var('page');
+            $paged = Cast::int(get_query_var('page'));
         }
 
         return max(1, $paged);
@@ -66,10 +70,10 @@ final class Pager
     {
         $p = is_array($context['pagination'] ?? null) ? $context['pagination'] : null;
         if (null !== $p && isset($p['current'], $p['total'])) {
-            return [max(1, (int) $p['current']), max(1, (int) $p['total'])];
+            return [max(1, Cast::int($p['current'])), max(1, Cast::int($p['total']))];
         }
         global $wp_query;
-        $pages = isset($wp_query) && is_object($wp_query) ? (int) $wp_query->max_num_pages : 1;
+        $pages = isset($wp_query) && $wp_query instanceof \WP_Query ? Cast::int($wp_query->max_num_pages) : 1;
 
         return [self::request(), max(1, $pages)];
     }

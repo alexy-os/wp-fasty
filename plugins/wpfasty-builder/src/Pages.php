@@ -15,7 +15,7 @@ final class Pages
     public const EMPTY = 'empty';
 
     /**
-     * @param (callable(int, array<string, mixed>, bool): (array<int, mixed>|\WP_Error))|null $save Store::save
+     * @param (callable(int, array<string, mixed>, bool): (array{0: array<string, mixed>, 1: list<array{code: string, path: string, message: string}>}|\WP_Error))|null $save Store::save
      *
      * @return array{id: int, slug: string, url: string, blocks: int}|\WP_Error
      */

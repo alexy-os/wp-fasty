@@ -26,7 +26,7 @@ final class Engines
     /** true when this build ships $engine and its library is installed */
     public static function available(string $engine): bool
     {
-        return in_array($engine, self::BUILT, true) && class_exists(self::RUNTIME[$engine] ?? '\\stdClass\\None');
+        return in_array($engine, self::BUILT, true) && class_exists(self::RUNTIME[$engine]);
     }
 
     /** the engine asked for by the site (child theme / filter), default of this build otherwise */

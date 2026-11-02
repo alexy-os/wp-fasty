@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace WPFastyTypes;
 
+use WPFastyTypes\Codex\Cast;
+
 /**
  * Site contact data of the Codex settings contact block (@ui8kit/contract SettingsV04 `contact`, `hours`,
  * `hours_exceptions`, `map`; the contract adapter maps the same options, WP_CONTACT_OPTIONS). One option per core
@@ -140,6 +142,10 @@ final class Contact
     }
 
     /**
+     * @param list<int>|null $bad
+     *
+     * @param-out list<int> $bad 1-based numbers of the rejected rows
+     *
      * @return list<array{network: string, handle: string}>
      */
     public static function links(mixed $v, ?array &$bad = null): array
@@ -151,7 +157,7 @@ final class Contact
                 $parts = preg_split('/\s+/', trim($row), 2) ?: [];
                 $row = ['network' => $parts[0] ?? '', 'handle' => $parts[1] ?? ''];
             }
-            $network = strtolower(trim((string) (is_array($row) ? ($row['network'] ?? '') : '')));
+            $network = strtolower(trim(Cast::string(is_array($row) ? ($row['network'] ?? '') : '')));
             $handle = self::handle($network, is_array($row) ? ($row['handle'] ?? '') : '');
             if (1 !== preg_match(self::IDENT, $network) || '' === $handle) {
                 $bad[] = $n + 1;
@@ -166,6 +172,10 @@ final class Contact
     /**
      * Text lines "mon-fri 09:00-18:00", "sat,sun 10:00-14:00" or REST rules.
      *
+     * @param list<int>|null $bad
+     *
+     * @param-out list<int> $bad 1-based numbers of the rejected rows
+     *
      * @return list<array{days: list<string>, open: string, close: string}>
      */
     public static function hours(mixed $v, ?array &$bad = null): array
@@ -178,7 +188,7 @@ final class Contact
                     ? ['days' => self::days($m[1]), 'open' => self::time($m[2]), 'close' => self::time($m[3])]
                     : [];
             }
-            $days = is_array($row) && is_array($row['days'] ?? null) ? array_values($row['days']) : [];
+            $days = is_array($row) && is_array($row['days'] ?? null) ? Cast::strings($row['days']) : [];
             $open = is_array($row) ? self::time($row['open'] ?? '') : '';
             $close = is_array($row) ? self::time($row['close'] ?? '') : '';
             $daysOk = [] !== $days && count(array_unique($days)) === count($days)
@@ -187,7 +197,7 @@ final class Contact
                 $bad[] = $n + 1;
                 continue;
             }
-            $out[] = ['days' => array_map('strval', $days), 'open' => $open, 'close' => $close];
+            $out[] = ['days' => $days, 'open' => $open, 'close' => $close];
         }
 
         return $out;
@@ -195,6 +205,10 @@ final class Contact
 
     /**
      * Text lines "2026-12-31 closed", "2026-12-24 10:00-14:00" or REST exceptions; one per date (the first kept).
+     *
+     * @param list<int>|null $bad
+     *
+     * @param-out list<int> $bad 1-based numbers of the rejected rows
      *
      * @return list<array{date: string, closed?: true, open?: string, close?: string}>
      */
@@ -215,7 +229,7 @@ final class Contact
                     $row['close'] = $m[2];
                 }
             }
-            $date = is_array($row) ? trim((string) ($row['date'] ?? '')) : '';
+            $date = is_array($row) ? trim(Cast::string($row['date'] ?? '')) : '';
             $ok = self::isDate($date) && !isset($seen[$date]);
             $e = ['date' => $date];
             $timed = is_array($row) && (isset($row['open']) || isset($row['close']));
@@ -303,13 +317,17 @@ final class Contact
     public static function exceptionsText(array $exceptions): string
     {
         return implode("\n", array_map(
-            static fn (array $e): string => $e['date'].' '
-                .(($e['closed'] ?? false) === true ? 'closed' : $e['open'].'-'.$e['close']),
+            static fn (array $e): string => Cast::string($e['date'] ?? '').' '
+                .(($e['closed'] ?? false) === true ? 'closed' : Cast::string($e['open'] ?? '').'-'.Cast::string($e['close'] ?? '')),
             $exceptions,
         ));
     }
 
-    /** "mon-fri" for consecutive days in week order, else the days as given ("sat,mon") */
+    /**
+     * "mon-fri" for consecutive days in week order, else the days as given ("sat,mon").
+     *
+     * @param list<string> $days
+     */
     public static function daysText(array $days): string
     {
         $idx = array_map(static fn (string $d): int => (int) array_search($d, self::DAYS, true), $days);
@@ -403,19 +421,19 @@ final class Contact
             'wpfasty_contact_phone',
             'tel',
             __('International format E.164, e.g. +12025550143 (spaces are removed).', 'wpfasty-types'),
-            (string) get_option('wpfasty_contact_phone', ''),
+            Cast::string(get_option('wpfasty_contact_phone', '')),
         ));
         $field('wpfasty_contact_email', __('Email', 'wpfasty-types'), 'contact', static fn () => $input(
             'wpfasty_contact_email',
             'email',
             __('Public contact address.', 'wpfasty-types'),
-            (string) get_option('wpfasty_contact_email', ''),
+            Cast::string(get_option('wpfasty_contact_email', '')),
         ));
         $field('wpfasty_contact_address', __('Address', 'wpfasty-types'), 'contact', static fn () => $input(
             'wpfasty_contact_address',
             'text',
             __('One line, in the site language.', 'wpfasty-types'),
-            (string) get_option('wpfasty_contact_address', ''),
+            Cast::string(get_option('wpfasty_contact_address', '')),
         ));
         $links = __('Messengers and profiles', 'wpfasty-types');
         $field('wpfasty_contact_links', $links, 'contact', static fn () => $area(
@@ -547,7 +565,7 @@ final class Contact
     public static function saveMap(mixed $v): array
     {
         $out = self::map($v);
-        $given = is_array($v) && ('' !== trim((string) ($v['lat'] ?? '')) || '' !== trim((string) ($v['lng'] ?? '')));
+        $given = is_array($v) && ('' !== trim(Cast::string($v['lat'] ?? '')) || '' !== trim(Cast::string($v['lng'] ?? '')));
         self::report(
             $given && !isset($out['lat']),
             'map',

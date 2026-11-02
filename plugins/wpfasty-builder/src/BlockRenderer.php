@@ -21,10 +21,10 @@ final class BlockRenderer
 {
     public const TWIG_EXT = '.html.twig';
 
-    /** @var array<string, object> */
+    /** @var array<string, \Latte\Engine> */
     private array $engines = [];
 
-    /** @var array<string, object|null> */
+    /** @var array<string, \Twig\Environment|null> */
     private array $twigs = [];
 
     /** @param array<string, SourceInterface> $sources */
@@ -122,7 +122,7 @@ final class BlockRenderer
         }
         $src = $this->sources[$source] ?? null;
         $root = $src?->templateRoot();
-        if (null === $src || 'twig' !== $src->runtime() || !is_dir($root.'/blocks') || !self::loadTwigRuntime()) {
+        if (null === $src || null === $root || 'twig' !== $src->runtime() || !is_dir($root.'/blocks') || !self::loadTwigRuntime()) {
             return $this->twigs[$source] = null;
         }
         $tmp = $this->cache($source.'/twig');

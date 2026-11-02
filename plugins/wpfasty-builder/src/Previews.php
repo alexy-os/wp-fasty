@@ -43,17 +43,21 @@ final class Previews
         }
         $base = plugins_url(substr($dir, strlen(Plugin::$dir) + 1), Plugin::$file).'/';
         foreach ($blocks as $i => $b) {
-            foreach ((array) ($b['variants'] ?? []) as $j => $v) {
-                $e = $m[(string) ($b['id'] ?? '').'/'.(string) ($v['id'] ?? '')] ?? null;
-                if (is_array($e) && is_string($e['file'] ?? null)) {
+            $variants = (array) ($b['variants'] ?? []);
+            foreach ($variants as $j => $v) {
+                $e = $m[Cast::string($b['id'] ?? '').'/'.Cast::string(Cast::path($v, 'id'))] ?? null;
+                if (is_array($e) && is_string($e['file'] ?? null) && is_array($v)) {
                     $preview = ['src' => $base.$e['file']];
-                    if (is_string($e['dark']['file'] ?? null) && '' !== $e['dark']['file']) {
-                        $preview['dark'] = $base.$e['dark']['file'];
+                    $dark = Cast::path($e, 'dark', 'file');
+                    if (is_string($dark) && '' !== $dark) {
+                        $preview['dark'] = $base.$dark;
                     }
-                    $blocks[$i]['variants'][$j]['preview'] = $preview + [
-                        'width' => self::WIDTH, 'height' => self::HEIGHT,
-                    ];
+                    $v['preview'] = $preview + ['width' => self::WIDTH, 'height' => self::HEIGHT];
+                    $variants[$j] = $v;
                 }
+            }
+            if (isset($b['variants'])) {
+                $blocks[$i]['variants'] = $variants;
             }
         }
 
@@ -73,19 +77,21 @@ final class Previews
             return $collection;
         }
         $base = plugins_url(substr($dir, strlen(Plugin::$dir) + 1), Plugin::$file).'/';
-        foreach ($collection['pages'] as $i => $p) {
-            $e = $m[(string) ($collection['id'] ?? '').'/'.(string) ($p['id'] ?? '')] ?? null;
-            if (!is_array($e) || !is_string($e['file'] ?? null) || '' === $e['file']) {
+        $pages = $collection['pages'];
+        foreach ($pages as $i => $p) {
+            $e = $m[Cast::string($collection['id'] ?? '').'/'.Cast::string(Cast::path($p, 'id'))] ?? null;
+            if (!is_array($p) || !is_array($e) || !is_string($e['file'] ?? null) || '' === $e['file']) {
                 continue;
             }
             $preview = ['src' => $base.$e['file']];
-            if (is_string($e['dark']['file'] ?? null) && '' !== $e['dark']['file']) {
-                $preview['dark'] = $base.$e['dark']['file'];
+            $dark = Cast::path($e, 'dark', 'file');
+            if (is_string($dark) && '' !== $dark) {
+                $preview['dark'] = $base.$dark;
             }
-            $collection['pages'][$i]['preview'] = $preview + [
-                'width' => (int) ($e['width'] ?? 0), 'height' => (int) ($e['height'] ?? 0),
-            ];
+            $p['preview'] = $preview + ['width' => Cast::int($e['width'] ?? 0), 'height' => Cast::int($e['height'] ?? 0)];
+            $pages[$i] = $p;
         }
+        $collection['pages'] = $pages;
 
         return $collection;
     }
@@ -108,7 +114,7 @@ final class Previews
         if (!array_key_exists($dir, self::$manifests)) {
             $raw = file_get_contents($dir.'/manifest.json');
             $json = is_string($raw) ? json_decode($raw, true) : null;
-            self::$manifests[$dir] = is_array($json) && is_array($json[$key] ?? null) ? $json[$key] : null;
+            self::$manifests[$dir] = is_array($json) && is_array($json[$key] ?? null) ? Cast::map($json[$key]) : null;
         }
 
         return self::$manifests[$dir];

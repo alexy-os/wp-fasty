@@ -91,7 +91,7 @@ final class AssetsHooks extends AbstractHooks
 
         $tokenDeps = ['latte-tokens'];
         $baseDir = function_exists('latte_base_theme_dir') ? latte_base_theme_dir() : '';
-        if ('' !== $baseDir && is_file($baseDir.'/assets/css/tokens.css')) {
+        if ('' !== $baseDir && function_exists('latte_base_theme_uri') && is_file($baseDir.'/assets/css/tokens.css')) {
             wp_enqueue_style(
                 'latte-base-tokens',
                 latte_base_theme_uri().'/assets/css/tokens.css',

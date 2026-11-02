@@ -1,10 +1,8 @@
 # PHPStan — static analysis (Symfony convention: phpstan.dist.neon is committed, phpstan.neon is a local override).
-# Run: composer phpstan   |   regenerate baseline: composer phpstan:baseline
-includes:
-    - phpstan-baseline.neon
+# Run: composer phpstan. Level max, no baseline: fix the type, do not suppress it.
 
 parameters:
-    level: 8
+    level: max
     phpVersion: 80200
     paths:
         - themes/latte/classes
@@ -12,5 +10,9 @@ parameters:
         - plugins/wpfasty-types/src
     bootstrapFiles:
         - themes/latte/vendor/autoload.php
+    scanFiles:
+        - themes/latte/includes/base-theme.php
+        - plugins/wpfasty-builder/sources/ui8kit/latte/php/OrganismExtension.php
+        - plugins/wpfasty-builder/sources/ui8kit/twig/php/OrganismExtension.php
     tmpDir: var/cache/phpstan
     treatPhpDocTypesAsCertain: false

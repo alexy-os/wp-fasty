@@ -120,7 +120,7 @@ final class Format
         }
         $v = (float) $value;
         $abs = abs($v);
-        $units = [1e12 => 'T', 1e9 => 'B', 1e6 => 'M', 1e3 => 'K'];
+        $units = [1_000_000_000_000 => 'T', 1_000_000_000 => 'B', 1_000_000 => 'M', 1_000 => 'K'];
         $sign = $v < 0 ? '-' : '';
         if ($abs < 1000) {
             return $sign.self::decimal(round($abs, 1), 1);

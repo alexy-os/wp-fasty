@@ -22,12 +22,12 @@ final class ViewHelpers
 
     public static function escUrl(mixed $v): string
     {
-        return function_exists('esc_url') ? esc_url((string) $v) : htmlspecialchars((string) $v, ENT_QUOTES);
+        return function_exists('esc_url') ? esc_url(\WPFasty\Core\Cast::string($v)) : htmlspecialchars(\WPFasty\Core\Cast::string($v), ENT_QUOTES);
     }
 
     public static function kses(mixed $v): string
     {
-        return function_exists('wp_kses_post') ? wp_kses_post((string) $v) : strip_tags((string) $v);
+        return function_exists('wp_kses_post') ? wp_kses_post(\WPFasty\Core\Cast::string($v)) : strip_tags(\WPFasty\Core\Cast::string($v));
     }
 
     /**
@@ -36,7 +36,7 @@ final class ViewHelpers
      */
     public static function safeUrl(mixed $url): string
     {
-        $url = (string) $url;
+        $url = \WPFasty\Core\Cast::string($url);
 
         return 1 === preg_match('~^(?:(?:https?|ftp)://[^@]+(?:/.*)?|(?:mailto|tel|sms):.+|[/?#].*|[^:]+)$~Di', $url)
             ? $url

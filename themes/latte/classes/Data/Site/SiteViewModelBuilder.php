@@ -33,7 +33,7 @@ final class SiteViewModelBuilder
     /** The `wpfasty_shell` value: `app-shell`, anything else is `classic`. */
     public function shell(mixed $filtered): string
     {
-        return 'app-shell' === (string) $filtered ? 'app-shell' : 'classic';
+        return 'app-shell' === \WPFasty\Core\Cast::string($filtered) ? 'app-shell' : 'classic';
     }
 
     /** @return array<string, string> */

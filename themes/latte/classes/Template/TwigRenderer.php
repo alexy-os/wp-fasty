@@ -16,6 +16,7 @@ use Twig\Loader\FilesystemLoader;
 use Twig\Markup;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use WPFasty\Core\Cast;
 
 final class TwigRenderer implements RendererInterface
 {
@@ -111,8 +112,8 @@ final class TwigRenderer implements RendererInterface
             'wp_footer' => static fn () => wp_footer(),
             'wp_body_open' => static fn () => function_exists('wp_body_open') ? wp_body_open() : null,
             'language_attributes' => static fn () => language_attributes(),
-            'body_class' => static fn (string|array $class = '') => body_class($class),
-            'do_action' => static fn (string $hook, mixed ...$args) => do_action($hook, ...$args),
+            'body_class' => static fn (mixed $class = '') => body_class(\is_array($class) ? Cast::strings($class) : Cast::string($class)),
+            'do_action' => static fn (string $hook, mixed ...$args) => '' === $hook ? null : do_action($hook, ...$args),
         ];
         foreach ($echoing as $name => $fn) {
             $this->twig->addFunction(new TwigFunction(
@@ -128,7 +129,7 @@ final class TwigRenderer implements RendererInterface
         }
         $this->twig->addFunction(new TwigFunction(
             'apply_filters',
-            static fn (string $hook, mixed $value, mixed ...$args): string => (string) apply_filters($hook, $value, ...$args),
+            static fn (string $hook, mixed $value, mixed ...$args): string => Cast::string('' === $hook ? $value : apply_filters($hook, $value, ...$args)),
             ['is_safe' => ['html']]
         ));
     }

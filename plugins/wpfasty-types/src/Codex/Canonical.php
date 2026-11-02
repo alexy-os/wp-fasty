@@ -67,7 +67,7 @@ final class Canonical
         if (1 !== preg_match(self::RFC3339, $v, $m)) {
             throw new CanonicalErrorException('canonical.invalid_date', $path, "not an RFC 3339 date-time: {$v}");
         }
-        if (($m[7] ?? '') !== '' && 1 === preg_match('/[1-9]/', $m[7])) {
+        if ('' !== $m[7] && 1 === preg_match('/[1-9]/', $m[7])) {
             throw new CanonicalErrorException('canonical.fractional_seconds', $path, "fractional seconds are not allowed: {$v}");
         }
         [$y, $mo, $d, $h, $mi, $s] = array_map('intval', array_slice($m, 1, 6));
@@ -90,7 +90,7 @@ final class Canonical
     /** @return array<string, mixed> */
     private static function arr(mixed $v): array
     {
-        return $v instanceof \stdClass ? get_object_vars($v) : (array) $v;
+        return Cast::map($v instanceof \stdClass ? get_object_vars($v) : (array) $v);
     }
 
     private static function isObj(mixed $v): bool
@@ -103,7 +103,10 @@ final class Canonical
         return null === $v || '' === $v || [] === $v || ($v instanceof \stdClass && [] === get_object_vars($v));
     }
 
-    /** @param list<string> $keys */
+    /**
+     * @param array<array-key, mixed> $o
+     * @param list<string>            $keys
+     */
     private static function closed(array $o, array $keys, string $path): void
     {
         foreach (array_keys($o) as $k) {
@@ -213,7 +216,7 @@ final class Canonical
             $out[] = (object) $a;
         }
         // UTF-8 byte order == Unicode code point order
-        usort($out, static fn (\stdClass $a, \stdClass $b): int => strcmp($a->taxonomy, $b->taxonomy) ?: strcmp($a->term_id, $b->term_id));
+        usort($out, static fn (\stdClass $a, \stdClass $b): int => strcmp(Cast::string($a->taxonomy), Cast::string($b->taxonomy)) ?: strcmp(Cast::string($a->term_id), Cast::string($b->term_id)));
 
         return $out;
     }

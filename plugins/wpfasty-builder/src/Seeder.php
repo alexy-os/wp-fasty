@@ -22,12 +22,12 @@ final class Seeder
     public static function landing(array $spec): array|\WP_Error
     {
         $page = is_array($spec['page'] ?? null) ? $spec['page'] : [];
-        $slug = sanitize_title((string) ($page['slug'] ?? 'home'));
+        $slug = sanitize_title(Cast::string($page['slug'] ?? 'home'));
         $existing = get_page_by_path($slug);
         $id = $existing instanceof \WP_Post ? $existing->ID : wp_insert_post([
             'post_type' => 'page',
             'post_status' => 'publish',
-            'post_title' => sanitize_text_field((string) ($page['title'] ?? 'Home')),
+            'post_title' => sanitize_text_field(Cast::string($page['title'] ?? 'Home')),
             'post_name' => $slug,
             'post_content' => '',
         ], true);
@@ -35,7 +35,7 @@ final class Seeder
             return $id;
         }
         if (!empty($spec['front'])) {
-            if (0 === (int) get_option('page_for_posts') && 'posts' === get_option('show_on_front')) {
+            if (0 === Cast::int(get_option('page_for_posts')) && 'posts' === get_option('show_on_front')) {
                 $blog = get_page_by_path('blog');
                 $blogId = $blog instanceof \WP_Post ? $blog->ID : wp_insert_post([
                     'post_type' => 'page',
@@ -49,9 +49,9 @@ final class Seeder
             update_option('page_on_front', (int) $id);
         }
         if (is_array($spec['menu'] ?? null)) {
-            self::menu((int) $id, $spec['menu']);
+            self::menu((int) $id, Cast::map($spec['menu']));
         }
-        $result = Store::save((int) $id, is_array($spec['layout'] ?? null) ? $spec['layout'] : [], true);
+        $result = Store::save((int) $id, Cast::map($spec['layout'] ?? []), true);
         if ($result instanceof \WP_Error) {
             return $result;
         }
@@ -59,7 +59,7 @@ final class Seeder
 
         return [
             'page' => (int) $id,
-            'version' => (int) $entry['version'],
+            'version' => Cast::int($entry['version']),
             'blocks' => count(Layout::blocks($entry)),
             'issues' => $issues,
         ];
@@ -69,13 +69,15 @@ final class Seeder
     public static function menu(int $page, array $menu): void
     {
         $locations = get_nav_menu_locations();
-        $menuId = (int) ($locations[sanitize_key((string) ($menu['location'] ?? 'primary'))] ?? 0);
+        $menuId = (int) ($locations[sanitize_key(Cast::string($menu['location'] ?? 'primary'))] ?? 0);
         if (0 === $menuId) {
             return;
         }
         $items = wp_get_nav_menu_items($menuId);
         foreach (is_array($items) ? $items : [] as $item) {
-            if ('page' === $item->object && (int) $item->object_id === $page) {
+            // nav items carry wp_setup_nav_menu_item() fields as dynamic properties
+            $f = \is_object($item) ? get_object_vars($item) : [];
+            if ('page' === ($f['object'] ?? null) && Cast::int($f['object_id'] ?? 0) === $page) {
                 return;
             }
         }
@@ -84,7 +86,7 @@ final class Seeder
             'menu-item-object' => 'page',
             'menu-item-type' => 'post_type',
             'menu-item-status' => 'publish',
-            'menu-item-title' => sanitize_text_field((string) ($menu['label'] ?? get_the_title($page))),
+            'menu-item-title' => sanitize_text_field(Cast::string($menu['label'] ?? get_the_title($page))),
         ]);
     }
 }

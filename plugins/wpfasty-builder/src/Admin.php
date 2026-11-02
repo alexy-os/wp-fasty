@@ -173,10 +173,10 @@ final class Admin
         $source = sanitize_key(self::query('source'));
         $entry = Store::get($id, true);
         if ('' === $source) {
-            $source = (string) ($entry['metadata']['source']['value'] ?? 'ui8kit');
+            $source = Cast::string(Cast::path($entry, 'metadata', 'source', 'value') ?? 'ui8kit');
         }
         if ('' === $collection) {
-            $collection = (string) ($entry['metadata']['collection']['value'] ?? '');
+            $collection = Cast::string(Cast::path($entry, 'metadata', 'collection', 'value') ?? '');
         }
         $config = $common + [
             'page' => $id,
@@ -213,7 +213,6 @@ final class Admin
             'id' => self::DARK,
             'parent' => 'top-secondary',
             'title' => self::darkButton(),
-            'href' => false,
             'meta' => ['class' => 'wpfb-adminbar-dark'],
         ]);
     }
@@ -267,7 +266,7 @@ final class Admin
             'Choose a page to build. Pages with a published layout render it on the front end.',
             'wpfasty-builder',
         ).'</p><table class="widefat striped"><tbody>';
-        foreach ($pages as $p) {
+        foreach ($pages ?: [] as $p) {
             if (!current_user_can('edit_page', $p->ID)) {
                 continue;
             }
@@ -363,8 +362,8 @@ final class Admin
             );
         }
         check_admin_referer('wpfb_import');
-        $id = isset($_POST['id']) ? sanitize_key(wp_unslash((string) $_POST['id'])) : '';
-        $url = isset($_POST['url']) ? esc_url_raw(wp_unslash((string) $_POST['url'])) : '';
+        $id = isset($_POST['id']) && is_string($_POST['id']) ? sanitize_key(wp_unslash($_POST['id'])) : '';
+        $url = isset($_POST['url']) && is_string($_POST['url']) ? esc_url_raw(wp_unslash($_POST['url'])) : '';
         try {
             $s = Sources::import($id, $url);
             self::notice('success', sprintf(

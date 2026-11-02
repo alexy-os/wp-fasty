@@ -139,6 +139,6 @@ final class Safe
         }
         $allowed = function_exists('wp_allowed_protocols') ? (array) wp_allowed_protocols() : self::PROTOCOLS;
 
-        return in_array($scheme, array_map('strtolower', array_map('strval', $allowed)), true);
+        return in_array($scheme, array_map('strtolower', array_map(Cast::string(...), $allowed)), true);
     }
 }

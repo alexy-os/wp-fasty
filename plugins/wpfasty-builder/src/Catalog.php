@@ -25,12 +25,12 @@ final class Catalog
     {
         foreach ((array) ($data['blocks'] ?? []) as $b) {
             if (is_array($b) && is_string($b['id'] ?? null)) {
-                $this->blocks[$b['id']] = $b;
+                $this->blocks[$b['id']] = Cast::map($b);
             }
         }
         foreach ((array) ($data['collections'] ?? []) as $c) {
             if (is_array($c) && is_string($c['id'] ?? null)) {
-                $this->collections[$c['id']] = $c;
+                $this->collections[$c['id']] = Cast::map($c);
             }
         }
     }
@@ -66,7 +66,8 @@ final class Catalog
                 continue;
             }
             foreach ((array) ($b['variants'] ?? []) as $j => $v) {
-                $template = is_array($v) && is_string($v['template'] ?? null) ? $v['template'] : '';
+                $v = Cast::map($v);
+                $template = is_string($v['template'] ?? null) ? $v['template'] : '';
                 $ok = 1 === preg_match(self::TEMPLATE, $template) && str_ends_with($template, $ext);
                 if (!is_string($v['id'] ?? null) || !$ok) {
                     $errors[] = "blocks[$i].variants[$j] needs an id and a template blocks/<name>$ext";
@@ -108,20 +109,30 @@ final class Catalog
      */
     public static function forRuntime(array $c, string $runtime): array
     {
-        if ((int) ($c['format'] ?? 1) >= 2) {
+        if (Cast::int($c['format'] ?? 1) >= 2) {
             return $c;
         }
         unset($c['engines']);
         $c['format'] = 2;
         $c['runtime'] = $runtime;
         $c['templates'] = $runtime;
-        foreach ((array) ($c['blocks'] ?? []) as $i => $b) {
-            foreach ((array) ($b['variants'] ?? []) as $j => $v) {
+        $blocks = (array) ($c['blocks'] ?? []);
+        foreach ($blocks as $i => $b) {
+            if (!is_array($b)) {
+                continue;
+            }
+            $variants = (array) ($b['variants'] ?? []);
+            foreach ($variants as $j => $v) {
                 if (is_array($v) && is_string($v['template'] ?? null)) {
-                    $c['blocks'][$i]['variants'][$j]['template']
-                        = preg_replace('/\.latte$/', self::RUNTIMES[$runtime], $v['template']);
+                    $v['template'] = preg_replace('/\.latte$/', self::RUNTIMES[$runtime], $v['template']);
+                    $variants[$j] = $v;
                 }
             }
+            $b['variants'] = $variants;
+            $blocks[$i] = $b;
+        }
+        if (isset($c['blocks'])) {
+            $c['blocks'] = $blocks;
         }
 
         return $c;
@@ -138,8 +149,8 @@ final class Catalog
     {
         $missing = [];
         foreach ((array) ($c['blocks'] ?? []) as $b) {
-            foreach ((array) ($b['variants'] ?? []) as $v) {
-                $t = is_array($v) ? (string) ($v['template'] ?? '') : '';
+            foreach (is_array($b) ? (array) ($b['variants'] ?? []) : [] as $v) {
+                $t = is_array($v) ? Cast::string($v['template'] ?? '') : '';
                 if ('' !== $t && !is_file($root.'/'.$t)) {
                     $missing[$t] = true;
                 }
@@ -174,7 +185,7 @@ final class Catalog
     {
         foreach ((array) ($this->blocks[$block]['variants'] ?? []) as $v) {
             if (is_array($v) && ($v['id'] ?? null) === $variant) {
-                return $v;
+                return Cast::map($v);
             }
         }
 
@@ -193,9 +204,9 @@ final class Catalog
         $out = [];
         foreach ($this->collections as $c) {
             $out[] = [
-                'id' => (string) $c['id'],
-                'label' => (string) ($c['label'] ?? $c['id']),
-                'type' => (string) ($c['type'] ?? 'group'),
+                'id' => Cast::string($c['id']),
+                'label' => Cast::string($c['label'] ?? $c['id']),
+                'type' => Cast::string($c['type'] ?? 'group'),
                 'blocks' => count((array) $c['blocks']),
             ];
         }
@@ -218,13 +229,13 @@ final class Catalog
         $kinds = [];
         foreach ((array) ($b['data'] ?? []) as $d) {
             if (is_array($d) && is_string($d['as'] ?? null)) {
-                $kinds[$d['as']] = (string) ($d['kind'] ?? '');
+                $kinds[$d['as']] = Cast::string($d['kind'] ?? '');
             }
         }
         $out = [];
         foreach ((array) ($v['bindings'] ?? []) as $bind) {
             if (is_array($bind) && is_array($bind['path'] ?? null)) {
-                $out[implode('.', $bind['path'])] = $kinds[(string) ($bind['data'] ?? '')] ?? '';
+                $out[implode('.', Cast::strings($bind['path']))] = $kinds[Cast::string($bind['data'] ?? '')] ?? '';
             }
         }
 
@@ -243,13 +254,13 @@ final class Catalog
         $v = $this->variant($block, $variant);
         $as = null;
         foreach ((array) ($v['bindings'] ?? []) as $bind) {
-            if (is_array($bind) && is_array($bind['path'] ?? null) && implode('.', $bind['path']) === $path) {
-                $as = (string) ($bind['data'] ?? '');
+            if (is_array($bind) && is_array($bind['path'] ?? null) && implode('.', Cast::strings($bind['path'])) === $path) {
+                $as = Cast::string($bind['data'] ?? '');
             }
         }
         foreach ((array) ($b['data'] ?? []) as $d) {
             if (is_array($d) && ($d['as'] ?? null) === $as) {
-                return self::slotOf($d, $this->data);
+                return self::slotOf(Cast::map($d), $this->data);
             }
         }
 
@@ -274,9 +285,9 @@ final class Catalog
         }
         $out = [];
         foreach ((array) ($v['current'] ?? []) as $c) {
-            $path = is_array($c) && is_array($c['path'] ?? null) ? implode('.', array_map('strval', $c['path'])) : '';
-            $data = is_array($c) ? (string) ($c['data'] ?? '') : '';
-            $field = is_array($c) ? (string) ($c['field'] ?? '') : '';
+            $path = is_array($c) && is_array($c['path'] ?? null) ? implode('.', array_map(Cast::string(...), $c['path'])) : '';
+            $data = is_array($c) ? Cast::string($c['data'] ?? '') : '';
+            $field = is_array($c) ? Cast::string($c['field'] ?? '') : '';
             if ('' !== $path && '' !== $field && isset($scoped[$data])) {
                 $out[$path] = ['data' => $data, 'field' => $field];
             }
@@ -296,7 +307,7 @@ final class Catalog
     {
         foreach ((array) ($this->blocks[$block]['data'] ?? []) as $d) {
             if (is_array($d) && ($d['as'] ?? null) === $as && ($d['scope'] ?? null) === 'current') {
-                return self::slotOf($d, $this->data) + ['sample' => (array) ($d['sample'] ?? [])];
+                return self::slotOf(Cast::map($d), $this->data) + ['sample' => Cast::map($d['sample'] ?? [])];
             }
         }
 
@@ -362,9 +373,9 @@ final class Catalog
         $out = [];
         foreach ($this->blocks as $b) {
             foreach ((array) ($b['data'] ?? []) as $d) {
-                $kind = is_array($d) && ($d['scope'] ?? null) !== 'current' ? (string) ($d['kind'] ?? '') : '';
+                $kind = is_array($d) && ($d['scope'] ?? null) !== 'current' ? Cast::string($d['kind'] ?? '') : '';
                 if ('' !== $kind && !isset($out[$kind])) {
-                    $out[$kind] = self::slotOf($d, $this->data);
+                    $out[$kind] = self::slotOf(Cast::map($d), $this->data);
                 }
             }
         }
@@ -385,8 +396,8 @@ final class Catalog
     {
         $col = null !== $collection ? $this->collection($collection) : null;
         $ids = null !== $col ? array_values(array_unique(array_map(
-            'strval',
-            (array) $col['blocks'],
+            Cast::string(...),
+            (array) ($col['blocks'] ?? []),
         ))) : array_keys($this->blocks);
         $blocks = [];
         foreach ($ids as $id) {
@@ -406,13 +417,13 @@ final class Catalog
      */
     private static function slotOf(array $d, array $data): array
     {
-        $record = (string) ($d['record'] ?? '');
+        $record = Cast::string($d['record'] ?? '');
 
         return [
-            'kind' => (string) ($d['kind'] ?? ''),
+            'kind' => Cast::string($d['kind'] ?? ''),
             'record' => $record,
-            'fields' => array_map('strval', (array) ($d['fields'] ?? [])),
-            'defs' => array_values(array_filter((array) ($data['records'][$record] ?? []), 'is_array')),
+            'fields' => array_map(Cast::string(...), Cast::map($d['fields'] ?? [])),
+            'defs' => array_values(array_map(Cast::map(...), array_filter((array) (Cast::path($data, 'records', $record) ?? []), 'is_array'))),
         ];
     }
 }

@@ -17,11 +17,14 @@ final class WordPressMenuProvider implements MenuProviderInterface
             $items = wp_get_nav_menu_items($menuId);
             $list = [];
             foreach (is_array($items) ? $items : [] as $item) {
+                if (!\is_object($item)) {
+                    continue;
+                }
                 // WP_Post nav items carry wp_setup_nav_menu_item() fields as dynamic properties
                 $f = get_object_vars($item);
                 $list[] = new MenuItem(
-                    (int) ($f['ID'] ?? 0),
-                    (int) ($f['menu_item_parent'] ?? 0),
+                    \WPFasty\Core\Cast::int($f['ID'] ?? 0),
+                    \WPFasty\Core\Cast::int($f['menu_item_parent'] ?? 0),
                     $f['title'] ?? null,
                     $f['url'] ?? null,
                     (bool) ($f['current'] ?? false),

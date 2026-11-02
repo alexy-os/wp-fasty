@@ -54,7 +54,7 @@ final class ReadPath
         $pipe = false === $bar ? null : substr($path, $bar + 1);
         $cur = self::at($source, $dotted);
         $own = self::field($source, 'locale');
-        $locale = (string) ($opts['locale'] ?? (is_string($own) ? $own : self::DEFAULT_LOCALE));
+        $locale = \WPFastyBuilder\Cast::string($opts['locale'] ?? (is_string($own) ? $own : self::DEFAULT_LOCALE));
 
         // Q4 pipes that also run when the value is absent (fallbacks)
         if ('excerpt-fallback' === $pipe) {
@@ -177,12 +177,12 @@ final class ReadPath
         }
         if ('route' === $pipe) {
             $kind = self::field($source, 'kind');
-            $route = is_string($kind) ? ($opts['routes'][$kind] ?? null) : null;
+            $route = is_string($kind) ? \WPFastyBuilder\Cast::path($opts, 'routes', $kind) : null;
             if (null === $route) {
                 return null;
             }
 
-            return str_replace('{slug}', self::encodeUriComponent((string) $cur), (string) $route);
+            return str_replace('{slug}', self::encodeUriComponent(\WPFastyBuilder\Cast::string($cur)), \WPFastyBuilder\Cast::string($route));
         }
         throw new \InvalidArgumentException("readPath: unknown formatter \"{$pipe}\" in \"{$path}\"");
     }

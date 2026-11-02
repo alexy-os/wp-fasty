@@ -103,64 +103,40 @@ final class WordPressExtension extends Extension
 
     public static function createWpHeadNode(Tag $tag): StatementNode
     {
-        return new class extends StatementNode {
+        return new class extends AbstractLeafStatementNode {
             public function print(PrintContext $context): string
             {
                 return 'wp_head();';
-            }
-
-            public function &getIterator(): \Generator
-            {
-                return;
-                yield;
             }
         };
     }
 
     public static function createWpFooterNode(Tag $tag): StatementNode
     {
-        return new class extends StatementNode {
+        return new class extends AbstractLeafStatementNode {
             public function print(PrintContext $context): string
             {
                 return 'wp_footer();';
-            }
-
-            public function &getIterator(): \Generator
-            {
-                return;
-                yield;
             }
         };
     }
 
     public static function createWpBodyOpenNode(Tag $tag): StatementNode
     {
-        return new class extends StatementNode {
+        return new class extends AbstractLeafStatementNode {
             public function print(PrintContext $context): string
             {
                 return 'if (function_exists(\'wp_body_open\')) { wp_body_open(); }';
-            }
-
-            public function &getIterator(): \Generator
-            {
-                return;
-                yield;
             }
         };
     }
 
     public static function createLanguageAttributesNode(Tag $tag): StatementNode
     {
-        return new class extends StatementNode {
+        return new class extends AbstractLeafStatementNode {
             public function print(PrintContext $context): string
             {
                 return 'language_attributes();';
-            }
-
-            public function &getIterator(): \Generator
-            {
-                return;
-                yield;
             }
         };
     }
@@ -168,16 +144,10 @@ final class WordPressExtension extends Extension
     public static function createBodyClassNode(Tag $tag): StatementNode
     {
         if ($tag->parser->isEnd()) {
-            return new class extends StatementNode {
+            return new class extends AbstractLeafStatementNode {
                 public function print(PrintContext $context): string
                 {
                     return 'body_class();';
-                }
-
-                public function &getIterator(): \Generator
-                {
-                    return;
-                    yield;
                 }
             };
         }

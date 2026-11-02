@@ -15,23 +15,16 @@ final class Container implements ContainerInterface
     /** @var array<string, mixed> */
     private array $instances = [];
 
-    /** @var array<string, callable> */
-    private array $factories = [];
-
     /** @var array<string, array<string, array<string, mixed>>> */
     private array $tags = [];
 
     public function bind(string $id, mixed $concrete): void
     {
         $this->bindings[$id] = $concrete;
-        if ($concrete instanceof \Closure) {
-            $this->factories[$id] = $concrete;
-        }
     }
 
     public function singleton(string $id, callable $factory): void
     {
-        $this->factories[$id] = $factory;
         $this->bindings[$id] = function () use ($id, $factory) {
             if (!isset($this->instances[$id])) {
                 $this->instances[$id] = $factory($this);
@@ -57,6 +50,7 @@ final class Container implements ContainerInterface
         return isset($this->bindings[$id]);
     }
 
+    /** @param array<string, mixed> $attributes */
     public function addTag(string $id, string $tag, array $attributes = []): void
     {
         $this->tags[$id][$tag] = $attributes;
