@@ -2,7 +2,7 @@
 
 /**
  * Picks the renderer (filter `wpfasty_renderer`, default Engines::DEFAULT) and builds the root chain; an engine the
- * build lacks throws EngineUnavailable.
+ * build lacks throws EngineUnavailableException.
  */
 
 declare(strict_types=1);
@@ -29,7 +29,7 @@ final class RendererFactory
         // Isolated runtimes (ADR-001, K7): an engine this build lacks (library or primitives) is an error, never
         // rendered by the other engine.
         if (!Engines::available($engine) || empty($primitives[$engine])) {
-            throw EngineUnavailable::for($engine);
+            throw EngineUnavailableException::for($engine);
         }
         $chain = array_merge($roots, (array) $primitives[$engine]);
 

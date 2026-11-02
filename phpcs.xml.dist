@@ -76,8 +76,6 @@
         <!-- OWNER DECISION: renaming would touch WP globals/object fields ($wp_query, $post->post_title), REST/JSON
              keys and shared template context; kept snake_case where it mirrors WordPress -->
         <exclude name="Zend.NamingConventions.ValidVariableName"/>
-        <!-- OWNER DECISION: public API names (EngineUnavailable, CanonicalError) -->
-        <exclude name="Symfony.NamingConventions.ValidClassName.InvalidExceptionName"/>
         <!-- Symfony's own MIT file header does not apply: the project is GPL-2.0-or-later (LICENSE) -->
         <exclude name="Symfony.Commenting.License"/>
     </rule>
@@ -108,6 +106,12 @@
     <!-- strict comparison is required (approved 2026-11-02): a Symfony warning, an error here -->
     <rule ref="Symfony.ControlStructure.IdenticalComparison">
         <type>error</type>
+    </rule>
+
+    <!-- deprecated class_alias files of the renamed exceptions (EngineUnavailable, CanonicalError) -->
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+        <exclude-pattern>themes/latte/classes/Template/EngineUnavailable.php</exclude-pattern>
+        <exclude-pattern>plugins/wpfasty-types/src/Codex/CanonicalError.php</exclude-pattern>
     </rule>
 
     <!-- tests are WPFasty\Tests\ (autoload-dev PSR-4). Preset sources are child-theme code copied by the theme

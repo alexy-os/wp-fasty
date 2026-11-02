@@ -15,13 +15,13 @@ final class Canonical
     private const RFC3339 = '/^(\d{4})-(\d{2})-(\d{2})[Tt](\d{2}):(\d{2}):(\d{2})(\.\d+)?'
         .'([Zz]|([+-])(\d{2}):(\d{2}))$/';
 
-    /** @throws CanonicalError */
+    /** @throws CanonicalErrorException */
     public static function canonicalize(string $text): string
     {
         return Json::jcs(self::entry(Json::parse($text)));
     }
 
-    /** @throws CanonicalError */
+    /** @throws CanonicalErrorException */
     public static function digest(string $text): string
     {
         return Profile::ENTRY_PROFILE.':sha256:'.hash('sha256', self::canonicalize($text));
@@ -42,7 +42,7 @@ final class Canonical
      * Canonical() of a manifest (codex-manifest/v2, contract a70c243 fixtures/vectors/manifest.json): the full manifest
      * in RFC 8785 — arrays (resources included) keep the order of the source, empty nested values are kept.
      *
-     * @throws CanonicalError
+     * @throws CanonicalErrorException
      */
     public static function manifest(string $text): string
     {
@@ -59,29 +59,29 @@ final class Canonical
     public static function date(mixed $v, string $path = '$'): string
     {
         if (!is_string($v)) {
-            throw new CanonicalError('canonical.invalid_date', $path, 'date-time must be a string');
+            throw new CanonicalErrorException('canonical.invalid_date', $path, 'date-time must be a string');
         }
         if (1 === preg_match('/^\d{4}-\d{2}-\d{2}$/', $v)) {
-            throw new CanonicalError('canonical.invalid_date', $path, "date without time: {$v}");
+            throw new CanonicalErrorException('canonical.invalid_date', $path, "date without time: {$v}");
         }
         if (1 !== preg_match(self::RFC3339, $v, $m)) {
-            throw new CanonicalError('canonical.invalid_date', $path, "not an RFC 3339 date-time: {$v}");
+            throw new CanonicalErrorException('canonical.invalid_date', $path, "not an RFC 3339 date-time: {$v}");
         }
         if (($m[7] ?? '') !== '' && 1 === preg_match('/[1-9]/', $m[7])) {
-            throw new CanonicalError('canonical.fractional_seconds', $path, "fractional seconds are not allowed: {$v}");
+            throw new CanonicalErrorException('canonical.fractional_seconds', $path, "fractional seconds are not allowed: {$v}");
         }
         [$y, $mo, $d, $h, $mi, $s] = array_map('intval', array_slice($m, 1, 6));
         $oh = (int) ($m[10] ?? 0);
         $om = (int) ($m[11] ?? 0);
         if (!checkdate($mo, $d, $y) || $h > 23 || $mi > 59 || $s > 59 || $oh > 23 || $om > 59) {
-            throw new CanonicalError('canonical.invalid_date', $path, "date-time out of range: {$v}");
+            throw new CanonicalErrorException('canonical.invalid_date', $path, "date-time out of range: {$v}");
         }
         $t = gmmktime($h, $mi, $s, $mo, $d, $y);
         $off = ($oh * 60 + $om) * 60;
         $t += ($m[9] ?? '') === '+' ? -$off : (($m[9] ?? '') === '-' ? $off : 0);
         $yy = (int) gmdate('Y', $t);
         if ($yy < 0 || $yy > 9999) {
-            throw new CanonicalError('canonical.invalid_date', $path, "year out of range after UTC conversion: {$v}");
+            throw new CanonicalErrorException('canonical.invalid_date', $path, "year out of range after UTC conversion: {$v}");
         }
 
         return gmdate('Y-m-d\TH:i:s\Z', $t);
@@ -108,7 +108,7 @@ final class Canonical
     {
         foreach (array_keys($o) as $k) {
             if (!in_array((string) $k, $keys, true)) {
-                throw new CanonicalError('canonical.unknown_field', "{$path}.{$k}", sprintf('unknown field %s', json_encode((string) $k)));
+                throw new CanonicalErrorException('canonical.unknown_field', "{$path}.{$k}", sprintf('unknown field %s', json_encode((string) $k)));
             }
         }
     }
@@ -125,17 +125,17 @@ final class Canonical
     private static function record(mixed $doc, array $keys, array $required): \stdClass
     {
         if (!self::isObj($doc)) {
-            throw new CanonicalError('canonical.invalid_type', '$', 'record must be a JSON object');
+            throw new CanonicalErrorException('canonical.invalid_type', '$', 'record must be a JSON object');
         }
         $o = self::arr($doc);
         self::closed($o, $keys, '$');
         foreach ($required as $k) {
             if (!array_key_exists($k, $o) || null === $o[$k]) {
-                throw new CanonicalError('canonical.missing_field', "$.{$k}", "required field {$k} is missing");
+                throw new CanonicalErrorException('canonical.missing_field', "$.{$k}", "required field {$k} is missing");
             }
         }
         if (!is_string($o['id']) || 1 !== preg_match(Profile::ID_PATTERN, $o['id'])) {
-            throw new CanonicalError('canonical.invalid_id', '$.id', 'id must match ^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$');
+            throw new CanonicalErrorException('canonical.invalid_id', '$.id', 'id must match ^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$');
         }
         $out = new \stdClass();
         foreach ($o as $k => $v) {
@@ -155,11 +155,11 @@ final class Canonical
                 $v = self::terms($v, $path);
             } elseif ('origin' === $k) {
                 if (!is_array($v) || !array_is_list($v)) {
-                    throw new CanonicalError('canonical.invalid_type', $path, 'origin must be an array');
+                    throw new CanonicalErrorException('canonical.invalid_type', $path, 'origin must be an array');
                 }
                 foreach ($v as $n => $x) {
                     if (!self::isObj($x)) {
-                        throw new CanonicalError('canonical.invalid_type', "{$path}[{$n}]", 'origin item must be {system, id}');
+                        throw new CanonicalErrorException('canonical.invalid_type', "{$path}[{$n}]", 'origin item must be {system, id}');
                     }
                     self::closed(self::arr($x), ['system', 'id'], "{$path}[{$n}]");
                 }
@@ -175,18 +175,18 @@ final class Canonical
     private static function metadata(mixed $v, string $path): ?\stdClass
     {
         if (!self::isObj($v)) {
-            throw new CanonicalError('canonical.invalid_type', $path, 'metadata must be an object');
+            throw new CanonicalErrorException('canonical.invalid_type', $path, 'metadata must be an object');
         }
         $md = new \stdClass();
         foreach (self::arr($v) as $mk => $mv) {
             $mk = (string) $mk;
             if (!self::isObj($mv) || !array_key_exists('value', self::arr($mv))) {
-                throw new CanonicalError('canonical.invalid_type', "{$path}.{$mk}", 'metadata item must be {value, private?}');
+                throw new CanonicalErrorException('canonical.invalid_type', "{$path}.{$mk}", 'metadata item must be {value, private?}');
             }
             $item = self::arr($mv);
             self::closed($item, ['value', 'private'], "{$path}.{$mk}");
             if (array_key_exists('private', $item) && !is_bool($item['private'])) {
-                throw new CanonicalError('canonical.invalid_type', "{$path}.{$mk}.private", 'private must be boolean');
+                throw new CanonicalErrorException('canonical.invalid_type', "{$path}.{$mk}.private", 'private must be boolean');
             }
             if (($item['private'] ?? false) === true) {
                 continue; // not part of the public projection
@@ -201,13 +201,13 @@ final class Canonical
     private static function terms(mixed $v, string $path): array
     {
         if (!is_array($v) || !array_is_list($v)) {
-            throw new CanonicalError('canonical.invalid_type', $path, 'terms must be an array');
+            throw new CanonicalErrorException('canonical.invalid_type', $path, 'terms must be an array');
         }
         $out = [];
         foreach ($v as $n => $t) {
             $a = self::isObj($t) ? self::arr($t) : [];
             if (!is_string($a['taxonomy'] ?? null) || !is_string($a['term_id'] ?? null)) {
-                throw new CanonicalError('canonical.invalid_type', "{$path}[{$n}]", 'term must be {taxonomy, term_id} strings');
+                throw new CanonicalErrorException('canonical.invalid_type', "{$path}[{$n}]", 'term must be {taxonomy, term_id} strings');
             }
             self::closed($a, ['taxonomy', 'term_id'], "{$path}[{$n}]");
             $out[] = (object) $a;

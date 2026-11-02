@@ -8,7 +8,7 @@ use WPFasty\Data\ContextFactory;
 use WPFasty\Hooks\AssetsHooks;
 use WPFasty\Hooks\ThemeHooks;
 use WPFasty\Template\Engines;
-use WPFasty\Template\EngineUnavailable;
+use WPFasty\Template\EngineUnavailableException;
 use WPFasty\Template\LatteRenderer;
 use WPFasty\Template\RendererFactory;
 use WPFasty\Template\RendererInterface;
@@ -54,7 +54,7 @@ return function (Container $container): void {
                 $primitives,
                 $templateDir.'/~cache'
             );
-        } catch (EngineUnavailable $e) {
+        } catch (EngineUnavailableException $e) {
             // Front end: a clear error page, never the other engine. wp-admin shows ThemeHooks::primitivesNotice().
             if (!is_admin() && !(defined('WP_CLI') && WP_CLI)) {
                 $msg = $e->getMessage();

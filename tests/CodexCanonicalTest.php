@@ -7,7 +7,7 @@ namespace WPFasty\Tests;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use WPFastyTypes\Codex\Canonical;
-use WPFastyTypes\Codex\CanonicalError;
+use WPFastyTypes\Codex\CanonicalErrorException;
 use WPFastyTypes\Codex\Json;
 
 require_once dirname(__DIR__).'/plugins/wpfasty-types/src/Codex/autoload.php';
@@ -32,7 +32,7 @@ final class CodexCanonicalTest extends TestCase
             try {
                 $out = Canonical::canonicalize($case['input_text']);
                 self::fail("expected {$case['error']}, got {$out}");
-            } catch (CanonicalError $e) {
+            } catch (CanonicalErrorException $e) {
                 self::assertSame($case['error'], $e->codexCode, $e->getMessage());
             }
 
@@ -68,7 +68,7 @@ final class CodexCanonicalTest extends TestCase
             try {
                 $out = Canonical::manifest($case['input_text']);
                 self::fail("expected {$case['error']}, got {$out}");
-            } catch (CanonicalError $e) {
+            } catch (CanonicalErrorException $e) {
                 self::assertSame($case['error'], $e->codexCode, $e->getMessage());
             }
 
@@ -102,7 +102,7 @@ final class CodexCanonicalTest extends TestCase
         self::assertSame('{"0":"a","1":"b"}', Json::jcs(Json::parse('{"1":"b","0":"a"}')));
         self::assertSame('[1e+21,0,1e-7,12.5,100,-1250]', Json::jcs(Json::parse('[1e21,-0,1e-7,12.50,1E2,-1250]')));
         self::assertSame('0', Json::number(-0.0));
-        $this->expectException(CanonicalError::class);
+        $this->expectException(CanonicalErrorException::class);
         Json::parse('{"a":1,"a":2}');
     }
 }

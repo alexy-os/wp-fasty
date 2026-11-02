@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace WPFasty\Hooks;
 
 use WPFasty\Template\Engines;
-use WPFasty\Template\EngineUnavailable;
+use WPFasty\Template\EngineUnavailableException;
 use WPFasty\Theme\PrimitivesLocator;
 
 final class ThemeHooks extends AbstractHooks
@@ -133,7 +133,7 @@ final class ThemeHooks extends AbstractHooks
 
         $engine = Engines::requested();
         if (is_string($engine) && !Engines::available($engine)) {
-            echo '<div class="notice notice-error"><p>'.esc_html(EngineUnavailable::for($engine)->getMessage())
+            echo '<div class="notice notice-error"><p>'.esc_html(EngineUnavailableException::for($engine)->getMessage())
                 .'</p></div>';
 
             return;

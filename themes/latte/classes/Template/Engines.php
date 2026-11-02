@@ -11,7 +11,7 @@ namespace WPFasty\Template;
 /**
  * Release builds ship ONE engine: `latte.zip` renders Latte only, `twig.zip` Twig only (theme:pack rewrites BUILT and
  * DEFAULT). The repo parent ships both for development and the parity checks. An engine this build lacks is never
- * replaced by the other one: RendererFactory throws EngineUnavailable and wp-admin shows why.
+ * replaced by the other one: RendererFactory throws EngineUnavailableException and wp-admin shows why.
  */
 final class Engines
 {

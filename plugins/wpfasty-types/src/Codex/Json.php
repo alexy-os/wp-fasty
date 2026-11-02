@@ -21,11 +21,11 @@ final class Json
         $this->n = strlen($text);
     }
 
-    /** @throws CanonicalError */
+    /** @throws CanonicalErrorException */
     public static function parse(string $text): mixed
     {
         if (1 !== preg_match('//u', $text)) {
-            throw new CanonicalError('canonical.invalid_json', '@0', 'text is not UTF-8');
+            throw new CanonicalErrorException('canonical.invalid_json', '@0', 'text is not UTF-8');
         }
         $p = new self($text);
         $v = $p->value(0);
@@ -50,7 +50,7 @@ final class Json
         }
         if (is_int($v)) {
             if (abs($v) > Profile::MAX_SAFE) {
-                throw new CanonicalError('canonical.unsafe_integer', '$', "integer {$v} is outside ±(2^53-1)");
+                throw new CanonicalErrorException('canonical.unsafe_integer', '$', "integer {$v} is outside ±(2^53-1)");
             }
 
             return (string) $v;
@@ -75,14 +75,14 @@ final class Json
 
             return '{'.implode(',', $parts).'}';
         }
-        throw new CanonicalError('canonical.invalid_type', '$', sprintf('value is not JSON: %s', get_debug_type($v)));
+        throw new CanonicalErrorException('canonical.invalid_type', '$', sprintf('value is not JSON: %s', get_debug_type($v)));
     }
 
     /** ECMAScript Number::toString of a finite double (RFC 8785 §3.2.2.3); -0 → "0". */
     public static function number(float $f): string
     {
         if (!is_finite($f)) {
-            throw new CanonicalError('canonical.invalid_number', '$', 'number is not finite');
+            throw new CanonicalErrorException('canonical.invalid_number', '$', 'number is not finite');
         }
         // strict float comparison: -0.0 === 0.0 holds in PHP (IEEE 754), so both zeros print "0"
         if (0.0 === $f) {
@@ -140,7 +140,7 @@ final class Json
 
     private function fail(string $code, string $msg, ?int $at = null): never
     {
-        throw new CanonicalError($code, sprintf('@%d', $at ?? $this->i), $msg);
+        throw new CanonicalErrorException($code, sprintf('@%d', $at ?? $this->i), $msg);
     }
 
     private function ws(): void

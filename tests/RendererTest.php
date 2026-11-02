@@ -6,7 +6,7 @@ namespace WPFasty\Tests;
 
 use PHPUnit\Framework\TestCase;
 use WPFasty\Template\Engines;
-use WPFasty\Template\EngineUnavailable;
+use WPFasty\Template\EngineUnavailableException;
 use WPFasty\Template\LatteRenderer;
 use WPFasty\Template\RendererFactory;
 use WPFasty\Template\TwigRenderer;
@@ -75,10 +75,10 @@ final class RendererTest extends TestCase
         try {
             RendererFactory::create('twig', [$this->views()], $latte, $this->cache);
             self::fail('twig without Twig primitives must not render');
-        } catch (EngineUnavailable $e) {
+        } catch (EngineUnavailableException $e) {
             self::assertStringContainsString('twig', $e->getMessage());
         }
-        $this->expectException(EngineUnavailable::class);
+        $this->expectException(EngineUnavailableException::class);
         RendererFactory::create('latte', [$this->views()], ['latte' => [], 'twig' => ['x']], $this->cache);
     }
 
@@ -86,7 +86,7 @@ final class RendererTest extends TestCase
     {
         self::assertFalse(Engines::available('blade'));
         self::assertSame(['latte', 'twig'], Engines::BUILT, 'the repo parent ships both; release builds rewrite this');
-        $this->expectException(EngineUnavailable::class);
+        $this->expectException(EngineUnavailableException::class);
         RendererFactory::create('blade', [], ['blade' => ['x']], $this->cache);
     }
 

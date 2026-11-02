@@ -332,7 +332,7 @@ A Parent correctness ✓
 | K7 | Latte and Twig are isolated runtimes: a Twig site never requires or falls back to Latte and vice versa; one builder registry per runtime | K7.1–K7.8 | [x] |
 | K7.1 | ADR-001 "Engines are isolated runtimes", spec docs/agent/builder-registry.md, CHANGELOG (breaking) | `29d627f`, CI `39583891938` | [x] |
 | K7.2 | Builder: wpfasty-catalog@2 (runtime, semver, archive sha256), one catalog per runtime, no cross-runtime fallback (missing → '' + admin notice), runtime-checked remote import, pack-source.ts | `4d3d190`, CI `39585324158` | [x] |
-| K7.3 | Theme: `Engines` (BUILT/DEFAULT), `EngineUnavailable`, no renderer fallback (front end HTTP 500 "Install the <engine> parent theme", admin notice) | `f0bae17`, CI `39585817363` | [x] |
+| K7.3 | Theme: `Engines` (BUILT/DEFAULT), `EngineUnavailableException`, no renderer fallback (front end HTTP 500 "Install the <engine> parent theme", admin notice) | `f0bae17`, CI `39585817363` | [x] |
 | K7.4 | Builds: latte.zip only Latte, twig.zip (slug `twig`) only Twig; sites packaged per engine; CI Theme Check both parents + all sites, N+1 both engines, class markers, parity of twins | `b35e660`, CI `39588325086` | [x] |
 | K7.5 | registry:build / registry:verify (both runtimes, immutable v<semver>, deterministic zip), CI negatives | `8ce9835`, fix `2757768`, CI `39590627850` | [x] |
 | K7.6 | CI mirror isolation: other parent physically absent, remote own-runtime registry import + render over HTTP; negatives (other runtime, tampered archive, forced absent engine → 500) | `b0a2c76`, CI `39590986557` | [x] |
