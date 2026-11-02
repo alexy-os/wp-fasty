@@ -28,6 +28,22 @@ final class PerfGuardTest extends TestCase
         self::assertSame(['SELECT * FROM wp_users WHERE ID = ?' => 2], $repeated);
     }
 
+    public function testFixedBatchesDoNotGrow(): void
+    {
+        $batch = [
+            'SELECT wp_posts.* FROM wp_posts WHERE ID IN (3,4)',
+            'SELECT wp_posts.* FROM wp_posts WHERE ID IN (9)',
+        ];
+        self::assertSame([], wpfasty_perf_growing_shapes($batch, [
+            'SELECT wp_posts.* FROM wp_posts WHERE ID IN (3,4,5,6,7,8)',
+            'SELECT wp_posts.* FROM wp_posts WHERE ID IN (9,10)',
+        ]));
+        self::assertSame(
+            ['SELECT * FROM wp_users WHERE ID = ?' => [0, 2]],
+            wpfasty_perf_growing_shapes($batch, [...$batch, 'SELECT * FROM wp_users WHERE ID = 1', 'SELECT * FROM wp_users WHERE ID = 2'])
+        );
+    }
+
     /** The local false positive: page 2 has only author-less posts, so the batched users query is skipped. */
     public function testFewerBatchedQueriesAreNotAnNPlusOne(): void
     {

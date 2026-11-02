@@ -1,8 +1,9 @@
 <?php
 
 /**
- * Pure helpers of the N+1 guards in tools/perf: an N+1 is the same query shape run more than once for one render
- * (one query per post, author, term...), not a different number of batched queries. A page whose posts have no
+ * Pure helpers of the N+1 guards in tools/perf: an N+1 is a query shape that runs more often when the page lists
+ * more items (one query per post, author, term...), not a different number of batched queries. A fixed repeat (the
+ * listed posts, then their featured images: both `wp_posts WHERE ID IN (...)`) is fine. A page whose posts have no
  * author (post_author 0) or no media skips the batched users/attachments query, so raw counts differ with the data.
  */
 if (!function_exists('wpfasty_perf_query_shape')) {
@@ -28,5 +29,26 @@ if (!function_exists('wpfasty_perf_query_shape')) {
         $times = array_count_values(array_map('wpfasty_perf_query_shape', $sqls));
 
         return array_filter($times, static fn (int $n): bool => $n > 1);
+    }
+
+    /**
+     * Shapes that run more often in $large than in $small (the same render with more items or another page).
+     *
+     * @param list<string> $small
+     * @param list<string> $large
+     *
+     * @return array<string, array{0: int, 1: int}> shape => [times small, times large]
+     */
+    function wpfasty_perf_growing_shapes(array $small, array $large): array
+    {
+        $a = array_count_values(array_map('wpfasty_perf_query_shape', $small));
+        $out = [];
+        foreach (array_count_values(array_map('wpfasty_perf_query_shape', $large)) as $shape => $n) {
+            if ($n > ($a[$shape] ?? 0) && $n > 1) {
+                $out[(string) $shape] = [$a[$shape] ?? 0, $n];
+            }
+        }
+
+        return $out;
     }
 }

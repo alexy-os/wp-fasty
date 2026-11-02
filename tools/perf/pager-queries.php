@@ -4,11 +4,11 @@
  * N+1 guard of the builder posts pager (posts/listPaged, Pager): a page with one paged posts block bound to the posts
  * source, [small] then [large] posts per page, on page 1 and page 2 of the request (`paged` of the main query), gets
  * its bound data as Front does it (Front::bound: one list query with its found rows, the Codex entries, media,
- * authors, terms in one query each). No query shape may run twice in one render (guard.php), and the query count
- * must not grow above the [small] page 1 count. Fewer queries are fine: a page whose posts have no author or media
+ * authors, terms in one query each). No query shape may run more often than on the [small] page 1 (guard.php),
+ * and the query count must not grow above the [small] page 1 count. Fewer queries are fine: a page whose posts have no author or media
  * skips that batched query. Temporary posts top the site up to 2 × [large] + 1 and are removed after the run.
  *   wp eval-file tools/perf/queries.php pager [small] [large]
- * Exit 1 on a repeated query shape or a growing count, or when the pager or the page of posts is wrong.
+ * Exit 1 on a growing query shape or count, or when the pager or the page of posts is wrong.
  */
 if (!defined('ABSPATH')) {
     exit;
@@ -40,7 +40,7 @@ $wpfastyPqPage = wp_insert_post([
 ]);
 $wpfastyPqTotal = (int) wp_count_posts('post')->publish;
 
-/** @return array{0: int, 1: string} queries, problem ('' = none) */
+/** @return array{0: int, 1: string, 2: list<string>} queries, problem ('' = none), the SQL run */
 $wpfastyPqRender = static function (int $n, int $paged) use ($wpfastyPqCatalog, $wpfastyPqPage, $wpfastyPqTotal): array {
     global $wpdb, $wp_query, $wp_the_query, $post;
     [$entry] = WPFastyBuilder\Layout::normalize(['blocks' => [[
@@ -66,16 +66,10 @@ $wpfastyPqRender = static function (int $n, int $paged) use ($wpfastyPqCatalog, 
     $bound = WPFastyBuilder\Front::bound($entry);
     $q = $wpdb->num_queries - $before;
     remove_filter('query', $collect);
-    $repeated = wpfasty_perf_repeated_shapes($sqls);
     $pager = $bound['pg']['pager'] ?? null;
     $pages = (int) ceil($wpfastyPqTotal / $n);
     $want = min($n, max(0, $wpfastyPqTotal - ($paged - 1) * $n));
     $problem = match (true) {
-        [] !== $repeated => sprintf('N+1: %s', implode('; ', array_map(
-            static fn (string $shape, int $n): string => sprintf('%d× %s', $n, substr($shape, 0, 120)),
-            array_keys($repeated),
-            $repeated
-        ))),
         count($bound['pg']['posts'] ?? []) !== $want => sprintf('%d posts on page %d, want %d', count($bound['pg']['posts'] ?? []), $paged, $want),
         !is_array($pager) => 'no pager',
         $pager['page'] !== $paged || $pager['pages'] !== $pages => sprintf('pager %d/%d, want %d/%d', $pager['page'], $pager['pages'], $paged, $pages),
@@ -83,7 +77,7 @@ $wpfastyPqRender = static function (int $n, int $paged) use ($wpfastyPqCatalog, 
         default => '',
     };
 
-    return [$q, $problem];
+    return [$q, $problem, $sqls];
 };
 
 $wpfastyPqRender(1, 1); // warm-up: options, the Codex manifest, the catalog
@@ -107,9 +101,17 @@ WP_CLI::log(sprintf(
     $wpfastyPqRuns["$wpfastyPqLarge/1"][0],
     $wpfastyPqRuns["$wpfastyPqLarge/2"][0]
 ));
-foreach ($wpfastyPqRuns as $k => [, $problem]) {
+foreach ($wpfastyPqRuns as $k => [, $problem, $sqls]) {
     if ('' !== $problem) {
         WP_CLI::error("pager $k: $problem");
+    }
+    $growing = wpfasty_perf_growing_shapes($wpfastyPqRuns["$wpfastyPqSmall/1"][2], $sqls);
+    if ([] !== $growing) {
+        WP_CLI::error("pager $k: N+1: ".implode('; ', array_map(
+            static fn (string $shape, array $n): string => sprintf('%d× → %d× %s', $n[0], $n[1], substr($shape, 0, 120)),
+            array_keys($growing),
+            $growing
+        )));
     }
 }
 $wpfastyPqBase = $wpfastyPqRuns["$wpfastyPqSmall/1"][0];
