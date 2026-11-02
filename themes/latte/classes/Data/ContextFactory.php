@@ -4,9 +4,17 @@ declare(strict_types=1);
 
 namespace WPFasty\Data;
 
+use WPFasty\Adapter\WordPress\WordPressLabelProvider;
 use WPFasty\Adapter\WordPress\WordPressMenuProvider;
+use WPFasty\Adapter\WordPress\WordPressSiteInfoProvider;
+use WPFasty\Adapter\WordPress\WordPressWidgetAreaProvider;
+use WPFasty\Core\Model\SiteInfo;
+use WPFasty\Core\Port\LabelProviderInterface;
 use WPFasty\Core\Port\MenuProviderInterface;
+use WPFasty\Core\Port\SiteInfoProviderInterface;
+use WPFasty\Core\Port\WidgetAreaProviderInterface;
 use WPFasty\Data\Menu\MenuViewModelBuilder;
+use WPFasty\Data\Site\SiteViewModelBuilder;
 
 /**
  * Facade of the template context: reads the WordPress request, asks the ports (Core\Port, WordPress adapters) for
@@ -17,11 +25,25 @@ final class ContextFactory
 {
     private readonly MenuProviderInterface $menuProvider;
     private readonly MenuViewModelBuilder $menuBuilder;
+    private readonly SiteInfoProviderInterface $siteInfo;
+    private readonly LabelProviderInterface $labels;
+    private readonly WidgetAreaProviderInterface $widgets;
+    private readonly SiteViewModelBuilder $siteBuilder;
 
-    public function __construct(?MenuProviderInterface $menuProvider = null, ?MenuViewModelBuilder $menuBuilder = null)
-    {
+    public function __construct(
+        ?MenuProviderInterface $menuProvider = null,
+        ?MenuViewModelBuilder $menuBuilder = null,
+        ?SiteInfoProviderInterface $siteInfo = null,
+        ?LabelProviderInterface $labels = null,
+        ?WidgetAreaProviderInterface $widgets = null,
+        ?SiteViewModelBuilder $siteBuilder = null,
+    ) {
         $this->menuProvider = $menuProvider ?? new WordPressMenuProvider();
         $this->menuBuilder = $menuBuilder ?? new MenuViewModelBuilder();
+        $this->siteInfo = $siteInfo ?? new WordPressSiteInfoProvider();
+        $this->labels = $labels ?? new WordPressLabelProvider();
+        $this->widgets = $widgets ?? new WordPressWidgetAreaProvider();
+        $this->siteBuilder = $siteBuilder ?? new SiteViewModelBuilder();
     }
 
     /** @return array<string, mixed> */
@@ -29,9 +51,10 @@ final class ContextFactory
     {
         $post = $post ?? get_post();
         $page = $post instanceof \WP_Post ? $this->post($post, true) : null;
-        $context = array_merge($this->common(), [
+        $site = $this->siteInfo->site();
+        $context = array_merge($this->common($site), [
             'page' => $page,
-            'hero' => $this->hero(),
+            'hero' => $this->siteBuilder->hero($site, $this->labels->hero()),
             'comments' => $post instanceof \WP_Post && is_singular() ? $this->comments($post) : '',
         ]);
 
@@ -113,14 +136,10 @@ final class ContextFactory
 
         $searchQuery = is_search() ? (string) get_search_query() : null;
         $title = null !== $searchQuery
-            ? sprintf(
-                /* translators: %s: search query */
-                __('Search results for “%s”', 'latte'),
-                $searchQuery
-            )
+            ? $this->labels->searchResultsTitle($searchQuery)
             : wp_strip_all_tags(get_the_archive_title());
 
-        $context = array_merge($this->common(), [
+        $context = array_merge($this->common($this->siteInfo->site()), [
             'archive' => [
                 'title' => $title,
                 'description' => null !== $searchQuery ? '' : wp_kses_post(get_the_archive_description()),
@@ -137,14 +156,9 @@ final class ContextFactory
     /** @return array<string, mixed> */
     public function createErrorContext(int $code = 404): array
     {
-        $context = array_merge($this->common(), [
-            'error' => [
-                'code' => $code,
-                'title' => __('Page not found', 'latte'),
-                'message' => __('The page you are looking for could not be found.', 'latte'),
-                'homeUrl' => home_url('/'),
-                'homeLabel' => __('Back to home', 'latte'),
-            ],
+        $site = $this->siteInfo->site();
+        $context = array_merge($this->common($site), [
+            'error' => $this->siteBuilder->error($site, $code, $this->labels->error()),
         ]);
 
         return apply_filters('wpfasty_context', $context, null);
@@ -170,85 +184,28 @@ final class ContextFactory
      *   widgets: array<string, string>
      * }
      */
-    private function common(): array
+    private function common(SiteInfo $site): array
     {
-        $shell = (string) apply_filters('wpfasty_shell', 'classic');
-        $shell = 'app-shell' === $shell ? 'app-shell' : 'classic';
+        $shell = $this->siteBuilder->shell(apply_filters('wpfasty_shell', 'classic'));
 
         return [
-            'site' => [
-                'title' => get_bloginfo('name'),
-                'url' => home_url('/'),
-                'themeUrl' => get_template_directory_uri(),
-                'stylesheetUrl' => get_stylesheet_directory_uri(),
-                'lang' => get_bloginfo('language'),
-                'description' => get_bloginfo('description'),
-                'charset' => get_bloginfo('charset'),
-                'year' => gmdate('Y'),
-                'logo' => $this->logo(),
-            ],
+            'site' => $this->siteBuilder->site($site, gmdate('Y')),
             'menu' => $this->menus(),
             'shell' => $shell,
-            'sheet' => $this->sheetIds($shell),
-            'labels' => $this->labels(),
-            'search' => [
-                'action' => home_url('/'),
-                'query' => is_search() ? (string) get_search_query() : '',
-                'placeholder' => __('Search…', 'latte'),
-                'submit' => __('Search', 'latte'),
-                'label' => __('Search', 'latte'),
-            ],
+            'sheet' => $this->siteBuilder->sheetIds($shell),
+            'labels' => $this->labels->labels(),
+            'search' => $this->siteBuilder->search(
+                $site,
+                is_search() ? (string) get_search_query() : '',
+                $this->labels->search(),
+            ),
             'widgets' => [
                 // Full-width child themes: add_theme_support('wpfasty-full-width') — no content sidebar.
                 'sidebar' => function_exists('current_theme_supports') && current_theme_supports('wpfasty-full-width')
                     ? ''
-                    : $this->sidebarHtml('sidebar-1'),
-                'footer' => $this->sidebarHtml('footer-1'),
+                    : (string) $this->widgets->render('sidebar-1'),
+                'footer' => (string) $this->widgets->render('footer-1'),
             ],
-        ];
-    }
-
-    /** @return array<string, string> */
-    private function sheetIds(string $shell): array
-    {
-        $prefix = 'app-shell' === $shell ? 'app-shell' : 'classic';
-
-        return [
-            'trigger' => $prefix.'-mobile-sheet-trigger',
-            'panel' => $prefix.'-mobile-sheet-panel',
-            'title' => $prefix.'-mobile-sheet-title',
-        ];
-    }
-
-    /** @return array<string, string> */
-    private function labels(): array
-    {
-        return [
-            'featured' => __('Featured', 'latte'),
-            'latestArticles' => __('Latest articles', 'latte'),
-            'noPosts' => __('No posts found.', 'latte'),
-            'previous' => __('Previous', 'latte'),
-            'next' => __('Next', 'latte'),
-            'skipToContent' => __('Skip to content', 'latte'),
-            'openMenu' => __('Open menu', 'latte'),
-            'closeMenu' => __('Close menu', 'latte'),
-            'darkMode' => __('Dark mode', 'latte'),
-            'primaryNav' => __('Primary', 'latte'),
-            'mobileNav' => __('Mobile menu', 'latte'),
-            'searchSite' => __('Site search', 'latte'),
-            'searchMobile' => __('Mobile menu search', 'latte'),
-            'search404' => __('Search again', 'latte'),
-            'footerNav' => __('Footer', 'latte'),
-            'sidebar' => __('Sidebar', 'latte'),
-            'pagination' => __('Pagination', 'latte'),
-            'postedOn' => __('Posted on', 'latte'),
-            'byAuthor' => __('By', 'latte'),
-            'categories' => __('Categories', 'latte'),
-            'tags' => __('Tags', 'latte'),
-            'previousPost' => __('Previous post', 'latte'),
-            'nextPost' => __('Next post', 'latte'),
-            'attachment' => __('Attachment', 'latte'),
-            'pages' => __('Pages:', 'latte'),
         ];
     }
 
@@ -280,43 +237,6 @@ final class ContextFactory
         }
 
         return 'archive';
-    }
-
-    /** @return array<string, string> */
-    private function hero(): array
-    {
-        $postsPageId = (int) get_option('page_for_posts');
-        $blogUrl = $postsPageId > 0 ? (string) get_permalink($postsPageId) : home_url('/');
-
-        return [
-            'primaryLabel' => __('Explore', 'latte'),
-            'primaryUrl' => $blogUrl,
-            'secondaryLabel' => __('Learn more', 'latte'),
-            'secondaryUrl' => home_url('/'),
-        ];
-    }
-
-    /** @return array<string, mixed>|null */
-    private function logo(): ?array
-    {
-        if (!function_exists('has_custom_logo') || !has_custom_logo()) {
-            return null;
-        }
-        $id = (int) get_theme_mod('custom_logo');
-        if ($id <= 0) {
-            return null;
-        }
-        $src = wp_get_attachment_image_src($id, 'full');
-        if (!$src) {
-            return null;
-        }
-
-        return [
-            'url' => $src[0],
-            'width' => $src[1],
-            'height' => $src[2],
-            'alt' => (string) get_post_meta($id, '_wp_attachment_image_alt', true) ?: get_bloginfo('name'),
-        ];
     }
 
     /** @return array<string, mixed> */
@@ -494,17 +414,6 @@ final class ContextFactory
     private function menus(): array
     {
         return $this->menuBuilder->build($this->menuProvider->itemsByLocation());
-    }
-
-    private function sidebarHtml(string $id): string
-    {
-        if (!function_exists('dynamic_sidebar') || !function_exists('is_active_sidebar') || !is_active_sidebar($id)) {
-            return '';
-        }
-        ob_start();
-        dynamic_sidebar($id);
-
-        return (string) ob_get_clean();
     }
 
     /** @return list<array<string, mixed>> */
