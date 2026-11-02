@@ -258,7 +258,15 @@ jobs:
           key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
           restore-keys: composer-${{ runner.os }}-
 
-      - run: composer install --no-interaction --prefer-dist
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install PHP tooling, theme vendor and @ui8kit/contract (the test suite needs all three)
+        run: |
+          composer install --no-interaction --prefer-dist
+          composer install --no-interaction --no-progress --working-dir=themes/latte
+          bun install --frozen-lockfile
 
       - name: Infection — minMsi / minCoveredMsi 95
         run: composer infection -- --threads=max --logger-github --show-mutations=0
