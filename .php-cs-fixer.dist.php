@@ -31,6 +31,11 @@ return (new PhpCsFixer\Config())
     ->setRiskyAllowed(false)
     ->setRules([
         '@Symfony' => true,
+        // public → protected → private (Symfony.Functions.ScopeOrder in phpcs.xml.dist), declaration order kept
+        'ordered_class_elements' => [
+            'order' => ['use_trait', 'case', 'constant', 'property', 'construct', 'destruct', 'magic', 'method_public', 'method_protected', 'method_private'],
+            'sort_algorithm' => 'none',
+        ],
     ])
     ->setCacheFile(__DIR__.'/var/cache/.php-cs-fixer.cache')
     ->setFinder($finder);

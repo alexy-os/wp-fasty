@@ -105,11 +105,6 @@
         <type>error</type>
     </rule>
 
-    <!-- OWNER DECISION (reported, not blocking): public → protected → private method order, a big move-only diff -->
-    <rule ref="Symfony.Functions.ScopeOrder">
-        <type>warning</type>
-    </rule>
-
     <!-- tests are WPFasty\Tests\ (autoload-dev PSR-4). Preset sources are child-theme code copied by the theme
          generator as inc/<name>.php (WordPress file naming, own namespaces such as LatteShop\Front): kept -->
     <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName.NoMatchBetweenTypeNameAndFileName">
