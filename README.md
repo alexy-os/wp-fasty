@@ -114,6 +114,13 @@ See [docs/principles.md](docs/principles.md) and [docs/manifesto.md](docs/manife
 Update: `cd themes/latte && npx ui8kit@3 add --all --force && npx ui8kit@3 check` (and the same in `themes/latte/twig`).
 Parity: `bun run parity` (Latte ↔ Twig, DOM + class token sets, `tools/parity/compare-classes.php`).
 
+## Security
+
+Run WordPress core **7.1.4 or newer**: 4.7–7.1.3 have a remote code execution flaw,
+[CVE-2026-119977](https://www.tenable.com/cve/CVE-2026-119977), fixed in 7.1.4. The themes keep their
+`Requires at least` header (they run on older cores), but CI tests only on 7.1.4+ and fails on an older core
+(`tools/qa/wp-min-version.sh`).
+
 ## License
 
 Copyright (C) 2025–2026 alexy-os.

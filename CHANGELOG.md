@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Security
+- WordPress core 7.1.4+ recommended (README → Security): CVE-2026-119977, core RCE in 4.7–7.1.3
+  (https://www.tenable.com/cve/CVE-2026-119977). CI runs on 7.1.4 and fails on an older core
+  (`tools/qa/wp-min-version.sh`); `Requires at least` of the themes is unchanged.
+
 ### Breaking (theme PHP: Post DTO)
 - Filter `wpfasty_post_data` now receives the readonly `WPFasty\Core\Model\Post` DTO instead of `WP_Post`:
   `fn (array $data, Post $post, bool $singular): array`. Use `$post->id`, `$post->kind` (post type), `$post->slug`,
