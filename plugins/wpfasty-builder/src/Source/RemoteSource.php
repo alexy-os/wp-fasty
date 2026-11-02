@@ -95,7 +95,7 @@ final class RemoteSource implements SourceInterface
         $format = \WPFastyBuilder\Cast::int($catalog['format'] ?? 1);
         $runtime = Catalog::runtimeOf($catalog);
         if ($format >= 2 && $runtime !== $this->runtime) {
-            throw new \RuntimeException(sprintf('This registry serves %s templates, the site renders %s: import the %s registry instead.', (string) ($runtime ?? 'unknown'), $this->runtime, $this->runtime));
+            throw new \RuntimeException(sprintf('This registry serves %s templates, the site renders %s: import the %s registry instead.', $runtime ?? 'unknown', $this->runtime, $this->runtime));
         }
         $errors = Catalog::check($catalog);
         if ([] !== $errors) {
@@ -117,7 +117,7 @@ final class RemoteSource implements SourceInterface
             try {
                 $zip = ($this->fetch)($base.'/'.$file);
             } catch (\Throwable $e) {
-                throw new \RuntimeException(sprintf('This registry has no %s package (%s): %s', $this->runtime, $file, $e->getMessage()));
+                throw new \RuntimeException(sprintf('This registry has no %s package (%s): %s', $this->runtime, $file, $e->getMessage()), $e->getCode(), $e);
             }
             $catalog = Catalog::forRuntime($catalog, $this->runtime);
         }

@@ -16,9 +16,9 @@ use Twig\Source;
  */
 final class TwigSourceLoader implements LoaderInterface, SourcePolicyInterface
 {
-    private FilesystemLoader $own;
+    private readonly FilesystemLoader $own;
 
-    private FilesystemLoader $bundled;
+    private readonly FilesystemLoader $bundled;
 
     public function __construct(string $root, string $bundled)
     {

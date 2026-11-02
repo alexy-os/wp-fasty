@@ -184,7 +184,7 @@ final class Front
 
     public static function styles(): void
     {
-        if (null === self::$page && !(is_page() && Store::has((int) get_queried_object_id()))) {
+        if (null === self::$page && (!is_page() || !Store::has((int) get_queried_object_id()))) {
             return;
         }
         $file = Plugin::$dir.'/assets/blocks.css';

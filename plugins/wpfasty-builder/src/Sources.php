@@ -44,7 +44,7 @@ final class Sources
         foreach ((array) get_option(self::OPTION, []) as $row) {
             $valid = is_array($row) && is_string($row['id'] ?? null) && is_string($row['url'] ?? null);
             // rows without a runtime were imported before K7; their stored copy tells which runtimes it holds
-            $own = $valid && in_array($row['runtime'] ?? $engine, [$engine], true);
+            $own = $valid && ($row['runtime'] ?? $engine) === $engine;
             if ($own && !isset($all[$row['id']])) {
                 $remote = self::remote($row['id'], $row['url'], $engine);
                 if ($remote->imported()) {

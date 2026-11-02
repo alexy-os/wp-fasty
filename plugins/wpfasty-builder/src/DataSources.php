@@ -182,7 +182,7 @@ final class DataSources
         $e = $mapper->entry($post, Cast::string($m['kind']));
         $e['content'] = self::content($post);
         $plan = self::plan($slot, $m);
-        $memo[$key] = self::record(self::project($e, $m), $plan, self::opts($plan, [$e], $mapper, $site), $m, true);
+        $memo[$key] = self::record(self::project($e, $m), $plan, self::opts($plan, [$e], $mapper), $m, true);
 
         return $memo[$key];
     }
@@ -328,7 +328,7 @@ final class DataSources
             ? [self::terms($m, $limit, $mapper), 1]
             : self::posts($m, $binding, $limit, $mapper, $site, $page);
         $plan = self::plan($slot, $m, array_map(Cast::string(...), Cast::map($binding['map'] ?? [])));
-        $opts = self::opts($plan, $entries, $mapper, $site);
+        $opts = self::opts($plan, $entries, $mapper);
         $out = [];
         foreach ($entries as $e) {
             $out[] = self::record(self::project($e, $m), $plan, $opts, $m);
@@ -529,7 +529,7 @@ final class DataSources
      *
      * @return array<string, mixed>
      */
-    private static function opts(array $plan, array $entries, Mapper $mapper, Site $site): array
+    private static function opts(array $plan, array $entries, Mapper $mapper): array
     {
         $pipes = implode(' ', array_map(static fn ($p): string => (string) $p[0], $plan));
         $opts = ['locale' => Mapper::locale(), 'now' => time()];

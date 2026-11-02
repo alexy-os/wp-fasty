@@ -425,7 +425,7 @@ final class Layout
         }
         $list = array_is_list($v);
         foreach ($v as $k => $x) {
-            $key = is_int($k) ? $k : (string) preg_replace('/[^A-Za-z0-9_.-]/', '', (string) $k);
+            $key = is_int($k) ? $k : (string) preg_replace('/[^A-Za-z0-9_.-]/', '', $k);
             // `__html` is the trusted-markup marker (TrustedHtml): only the data adapter sets it, never a layout
             if ('' === $key || '__html' === $key) {
                 continue;

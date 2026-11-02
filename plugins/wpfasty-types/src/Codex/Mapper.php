@@ -279,7 +279,7 @@ final class Mapper
             'label' => $obj ? html_entity_decode(Cast::string($obj->labels->name), ENT_QUOTES, 'UTF-8') : $tax,
             'mode' => $obj && $obj->hierarchical ? 'hierarchical' : 'flat',
             'assigned_to_kinds' => $kinds,
-            'public' => $obj ? (bool) $obj->public : false,
+            'public' => $obj && (bool) $obj->public,
             'version' => 1,
         ];
     }

@@ -11,14 +11,12 @@ namespace WPFastyTypes\Codex;
  */
 final class Json
 {
-    private string $s;
     private int $i = 0;
-    private int $n;
+    private readonly int $n;
 
-    private function __construct(string $text)
+    private function __construct(private string $s)
     {
-        $this->s = $text;
-        $this->n = strlen($text);
+        $this->n = strlen($this->s);
     }
 
     /** @throws CanonicalErrorException */
@@ -121,12 +119,10 @@ final class Json
     /** JSON string: only " \ and controls escaped; / U+2028 U+2029 and non-ASCII as is. */
     public static function string(string $s): string
     {
-        $out = json_encode(
+        return json_encode(
             $s,
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_LINE_TERMINATORS | JSON_THROW_ON_ERROR,
         );
-
-        return $out;
     }
 
     /** Compare two UTF-8 strings as sequences of UTF-16 code units (JCS key order). */
@@ -147,7 +143,7 @@ final class Json
 
     private function ws(): void
     {
-        while ($this->i < $this->n && false !== strpos(" \t\n\r", $this->s[$this->i])) {
+        while ($this->i < $this->n && str_contains(" \t\n\r", $this->s[$this->i])) {
             ++$this->i;
         }
     }

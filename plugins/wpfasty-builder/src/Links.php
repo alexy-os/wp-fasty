@@ -131,9 +131,7 @@ final class Links
     /** @return array<string, mixed> */
     public static function block(): array
     {
-        if (null === self::$block) {
-            self::$block = class_exists(\WPFastyTypes\Contact::class) ? \WPFastyTypes\Contact::block() : [];
-        }
+        self::$block ??= class_exists(\WPFastyTypes\Contact::class) ? \WPFastyTypes\Contact::block() : [];
 
         return self::$block;
     }
@@ -333,7 +331,7 @@ final class Links
             return;
         }
         $js = '(function(d){'.self::OPEN_NOW_JS.'})('
-            .(string) wp_json_encode(
+            .wp_json_encode(
                 $data,
                 JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE,
             ).');';

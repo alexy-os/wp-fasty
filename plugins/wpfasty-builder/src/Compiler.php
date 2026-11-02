@@ -185,7 +185,7 @@ final class Compiler
     /** @param array<string, mixed> $entry */
     public static function hash(array $entry): string
     {
-        return md5((string) json_encode($entry).'|'.filemtime(__FILE__));
+        return md5(json_encode($entry).'|'.filemtime(__FILE__));
     }
 
     /**
