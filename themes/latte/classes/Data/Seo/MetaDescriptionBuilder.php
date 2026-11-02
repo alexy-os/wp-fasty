@@ -15,7 +15,7 @@ final class MetaDescriptionBuilder
         }
         $cut = mb_substr($text, 0, $max - 1);
         $space = mb_strrpos($cut, ' ');
-        if (false !== $space && $space > (int) ($max / 2)) {
+        if (false !== $space && $space > $max / 2) {
             $cut = mb_substr($cut, 0, $space);
         }
 

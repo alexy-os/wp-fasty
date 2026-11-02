@@ -9,11 +9,13 @@
         "deptrac/deptrac": "^3.0",
         "escapestudios/symfony2-coding-standard": "^3.13",
         "friendsofphp/php-cs-fixer": "^3.64",
+        "infection/infection": "^0.32.6",
         "opis/json-schema": "^2.4",
         "phpcompatibility/phpcompatibility-wp": "^2.1",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^10.5",
+        "rector/rector": "^2.8",
         "slevomat/coding-standard": "^8.15",
         "squizlabs/php_codesniffer": "^3.10",
         "szepeviktor/phpstan-wordpress": "^2.0",
@@ -30,7 +32,8 @@
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "infection/extension-installer": true
         },
         "sort-packages": true,
         "platform": {
@@ -58,6 +61,9 @@
             "@php -r \"is_dir('var/cache') || mkdir('var/cache', 0777, true);\"",
             "phpcbf || exit 0"
         ],
+        "infection": "infection --no-progress",
+        "rector": "rector process --dry-run --no-progress-bar",
+        "rector:fix": "rector process --no-progress-bar",
         "qa": [
             "@phpstan",
             "@deptrac",
@@ -67,6 +73,9 @@
     },
     "scripts-descriptions": {
         "test": "Run the PHPUnit suite",
+        "infection": "Mutation testing of Core + ViewModel builders (infection.json5, needs pcov or xdebug)",
+        "rector": "Rector dry-run (rector.php: PHP 8.2 set + dead code, code quality, early return)",
+        "rector:fix": "Apply the Rector changes",
         "phpcs": "PHPCS: Symfony standard + WordPress security (phpcs.xml.dist), blocking",
         "phpstan": "Static analysis (level 8 + baseline)",
         "deptrac": "Architecture layers (blocking)",

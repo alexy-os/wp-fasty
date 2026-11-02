@@ -26,7 +26,20 @@ final class SiteViewModelBuilderTest extends TestCase
         $b = new SiteViewModelBuilder();
         self::assertSame('app-shell', $b->shell('app-shell'));
         self::assertSame('classic', $b->shell('other'));
-        self::assertSame('app-shell-mobile-sheet-panel', $b->sheetIds('app-shell')['panel']);
+        self::assertSame([
+            'trigger' => 'app-shell-mobile-sheet-trigger',
+            'panel' => 'app-shell-mobile-sheet-panel',
+            'title' => 'app-shell-mobile-sheet-title',
+        ], $b->sheetIds('app-shell'));
+        self::assertSame('classic-mobile-sheet-title', $b->sheetIds('classic')['title']);
+    }
+
+    public function testHeroLinks(): void
+    {
+        self::assertSame(
+            ['primaryLabel' => 'P', 'primaryUrl' => '/blog/', 'secondaryLabel' => 'S', 'secondaryUrl' => '/'],
+            (new SiteViewModelBuilder())->hero($this->site(), ['primaryLabel' => 'P', 'secondaryLabel' => 'S']),
+        );
     }
 
     public function testHeroSearchAndErrorUseSiteUrls(): void

@@ -53,6 +53,13 @@ final class PostViewModelBuilderTest extends TestCase
         self::assertSame(['display' => 'Nov 2', 'iso' => '2026-11-02T10:00:00+00:00'], $vm['date']);
     }
 
+    public function testAttachmentWithoutAFileUrlGetsAnEmptyString(): void
+    {
+        $post = new Post(9, 'attachment', 'pic', 'Pic', TrustedHtml::empty(), '', '/pic/', '', '');
+        self::assertFalse($post->singular, 'a post DTO is a list item unless built for the singular view');
+        self::assertSame('', (new PostViewModelBuilder())->build($post)['attachmentUrl']);
+    }
+
     public function testAttachmentGetsItsFileUrlLast(): void
     {
         $vm = (new PostViewModelBuilder())->build(new Post(

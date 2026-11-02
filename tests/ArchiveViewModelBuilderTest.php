@@ -41,6 +41,24 @@ final class ArchiveViewModelBuilderTest extends TestCase
         ], $p);
     }
 
+    public function testSearchWithoutATitleIsEmptyString(): void
+    {
+        self::assertSame('', (new ArchiveViewModelBuilder())->archive(new ArchiveState('search', 'q', 'T', '', 1, 1), null)['title']);
+    }
+
+    public function testNoPrevOnTheFirstAndNoNextOnTheLastPage(): void
+    {
+        $b = new ArchiveViewModelBuilder();
+        $first = $b->pagination(new ArchiveState('home', null, '', '', 3, 1), $this->links());
+        $last = $b->pagination(new ArchiveState('home', null, '', '', 3, 3), $this->links());
+        self::assertNotNull($first);
+        self::assertNotNull($last);
+        self::assertNull($first['prevUrl']);
+        self::assertSame('/page/2/?e', $first['nextUrl']);
+        self::assertNull($last['nextUrl']);
+        self::assertSame('/page/2/?e', $last['prevUrl']);
+    }
+
     private function links(): PageLinkProviderInterface
     {
         return new class implements PageLinkProviderInterface {

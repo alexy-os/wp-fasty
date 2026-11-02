@@ -27,7 +27,7 @@ final class ArchiveViewModelBuilder
     /** @return array<string, mixed>|null null on a single page (or without a main query) */
     public function pagination(ArchiveState $state, PageLinkProviderInterface $links): ?array
     {
-        $max = (int) $state->maxPages;
+        $max = $state->maxPages ?? 0;
         if ($max <= 1) {
             return null;
         }

@@ -31,4 +31,10 @@ final class MenuViewModelBuilderTest extends TestCase
             ['title' => 'A1', 'url' => '/a1', 'id' => 2, 'current' => true, 'children' => []],
         ], $menu['social']['items'][0]['children']);
     }
+
+    public function testTreeIsPublicForChildThemes(): void
+    {
+        $tree = (new MenuViewModelBuilder())->tree([new MenuItem(7, 0, 'X', '/x', false)]);
+        self::assertSame([['title' => 'X', 'url' => '/x', 'id' => 7, 'current' => false, 'children' => []]], $tree);
+    }
 }

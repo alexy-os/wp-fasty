@@ -230,6 +230,33 @@ jobs:
             !dist/generated
           retention-days: 7
 
+  mutation:
+    name: mutation (Infection, Core + ViewModel builders)
+    # MSI and covered MSI >= 95 on themes/latte/classes/{Core,Data} (infection.json5); escaped mutants as annotations.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP (pcov)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          tools: composer
+          coverage: pcov
+
+      - name: Cache composer downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - run: composer install --no-interaction --prefer-dist
+
+      - name: Infection — minMsi / minCoveredMsi 95
+        run: composer infection -- --threads=max --logger-github --show-mutations=0
+
   security:
     name: security (XSS fuzz ${{ matrix.shard }}/4)
     strategy:
