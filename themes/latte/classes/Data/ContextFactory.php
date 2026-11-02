@@ -541,12 +541,19 @@ final class ContextFactory
             'post_status' => 'publish',
             'ignore_sticky_posts' => true,
             'no_found_rows' => true,
+            // meta and terms are batch-loaded by prime() below together with thumbnails and authors
+            'update_post_meta_cache' => false,
+            'update_post_term_cache' => false,
         ]);
+        $list = array_values(array_filter(
+            is_array($query->posts) ? $query->posts : [],
+            static fn ($p): bool => $p instanceof \WP_Post,
+        ));
+        // one query per kind (meta, terms, featured images, authors) for the whole list instead of N+1
+        $this->prime($list);
         $posts = [];
-        foreach ($query->posts as $p) {
-            if ($p instanceof \WP_Post) {
-                $posts[] = $this->post($p, false);
-            }
+        foreach ($list as $p) {
+            $posts[] = $this->post($p, false);
         }
         wp_reset_postdata();
         return $posts;

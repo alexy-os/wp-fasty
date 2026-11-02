@@ -1,0 +1,45 @@
+# Deptrac — architecture layers (report-only: `composer deptrac` never fails the build yet).
+# Layers follow the current structure of themes/latte/classes and the builder/types plugins.
+deptrac:
+  paths:
+    - ./themes/latte/classes
+    - ./themes/latte
+    - ./plugins/wpfasty-builder/src
+    - ./plugins/wpfasty-types/src
+  exclude_files:
+    - '#/vendor/#'
+    - '#/ui8kit/#'
+    - '#/kit/#'
+    - '#/twig/#'
+    - '#/views/#'
+  layers:
+    # Domain/Core: container, application kernel, content-type definitions
+    - name: Core
+      collectors:
+        - { type: classLike, value: '^WPFasty\\Core\\.*' }
+        - { type: classLike, value: '^WPFasty\\Types\\.*' }
+    # ViewModel: WordPress state -> plain template context arrays
+    - name: ViewModel
+      collectors:
+        - { type: classLike, value: '^WPFasty\\Data\\.*' }
+    # Renderer: Latte/Twig engines, kit, view helpers
+    - name: Renderer
+      collectors:
+        - { type: classLike, value: '^WPFasty\\Template\\.*' }
+    # Adapter\WordPress: hooks, theme service, plugins wiring into WP
+    - name: Adapter\WordPress
+      collectors:
+        - { type: classLike, value: '^WPFasty\\Hooks\\.*' }
+        - { type: classLike, value: '^WPFasty\\Theme\\.*' }
+        - { type: classLike, value: '^WPFastyBuilder\\.*' }
+        - { type: classLike, value: '^WPFastyTypes\\.*' }
+    # Templates: WordPress template-hierarchy entry files (index.php, single.php, functions.php, ...)
+    - name: Templates
+      collectors:
+        - { type: directory, value: 'themes/latte/[^/]+\.php$' }
+  ruleset:
+    Core: ~
+    ViewModel: [Core]
+    Renderer: [Core]
+    Adapter\WordPress: [Core, ViewModel, Renderer]
+    Templates: [Core, ViewModel, Renderer, Adapter\WordPress]

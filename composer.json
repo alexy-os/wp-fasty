@@ -1,26 +1,57 @@
 {
-  "name": "alexy-os/wp-fasty",
-  "description": "WP FastY monorepo — PHPUnit + PHPCS tooling",
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "php": ">=8.2"
-  },
-  "require-dev": {
-    "phpcompatibility/phpcompatibility-wp": "^2.1",
-    "phpunit/phpunit": "^10.5",
-    "slevomat/coding-standard": "^8.15",
-    "squizlabs/php_codesniffer": "^3.10",
-    "twig/twig": "^3.14",
-    "wp-coding-standards/wpcs": "^3.1"
-  },
-  "config": {
-    "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
+    "name": "alexy-os/wp-fasty",
+    "description": "WP FastY monorepo — PHPUnit, PHPStan, Deptrac, PHPCS (Symfony) and PHP-CS-Fixer tooling",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=8.2"
     },
-    "sort-packages": true
-  },
-  "scripts": {
-    "test": "phpunit",
-    "phpcs": "phpcs --standard=phpcs.xml"
-  }
+    "require-dev": {
+        "deptrac/deptrac": "^3.0",
+        "escapestudios/symfony2-coding-standard": "^3.13",
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^10.5",
+        "slevomat/coding-standard": "^8.15",
+        "squizlabs/php_codesniffer": "^3.10",
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "twig/twig": "^3.14",
+        "wp-coding-standards/wpcs": "^3.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "test": "phpunit",
+        "phpcs": "phpcs --standard=phpcs.xml",
+        "phpstan": "phpstan analyse --configuration=phpstan.dist.neon --memory-limit=1G",
+        "phpstan:baseline": "phpstan analyse --configuration=phpstan.dist.neon --memory-limit=1G --generate-baseline=phpstan-baseline.neon",
+        "deptrac": "deptrac analyse --config-file=deptrac.yaml --no-progress || exit 0",
+        "cs": [
+            "phpcs --standard=phpcs.xml.dist --report=summary || exit 0",
+            "php-cs-fixer check --config=.php-cs-fixer.dist.php || exit 0"
+        ],
+        "cs-fix": "php-cs-fixer fix --config=.php-cs-fixer.dist.php",
+        "qa": [
+            "@phpstan",
+            "@deptrac",
+            "@cs",
+            "@test"
+        ]
+    },
+    "scripts-descriptions": {
+        "test": "Run the PHPUnit suite",
+        "phpcs": "Legacy WordPress/PSR-2 ruleset (phpcs.xml), blocking",
+        "phpstan": "Static analysis (level 8 + baseline)",
+        "phpstan:baseline": "Regenerate phpstan-baseline.neon",
+        "deptrac": "Architecture layers report (report-only)",
+        "cs": "Symfony coding standard report: PHPCS (phpcs.xml.dist) + PHP-CS-Fixer @Symfony dry-run (report-only)",
+        "cs-fix": "Apply PHP-CS-Fixer @Symfony (pass paths: composer cs-fix -- path/File.php)",
+        "qa": "phpstan + deptrac + cs + test"
+    }
 }

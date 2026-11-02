@@ -39,3 +39,9 @@ themes/*/.theme-build.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Symfony-style tool caches / local overrides
+/var/
+/phpstan.neon
+/phpcs.xml.local
+/.php-cs-fixer.php

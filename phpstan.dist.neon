@@ -1,0 +1,16 @@
+# PHPStan — static analysis (Symfony convention: phpstan.dist.neon is committed, phpstan.neon is a local override).
+# Run: composer phpstan   |   regenerate baseline: composer phpstan:baseline
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 8
+    phpVersion: 80200
+    paths:
+        - themes/latte/classes
+        - plugins/wpfasty-builder/src
+        - plugins/wpfasty-types/src
+    bootstrapFiles:
+        - themes/latte/vendor/autoload.php
+    tmpDir: var/cache/phpstan
+    treatPhpDocTypesAsCertain: false

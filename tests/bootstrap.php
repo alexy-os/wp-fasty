@@ -235,9 +235,10 @@ if (!function_exists('is_singular')) {
     }
 }
 if (!function_exists('get_the_title')) {
-    function get_the_title(int $post = 0): string
+    function get_the_title(int|object $post = 0): string
     {
-        return (string) ($GLOBALS['wp_test_titles'][$post] ?? '');
+        $id = is_object($post) ? (int) $post->ID : $post;
+        return (string) ($GLOBALS['wp_test_titles'][$id] ?? (is_object($post) ? ($post->post_title ?? '') : ''));
     }
 }
 if (!function_exists('wp_head')) {

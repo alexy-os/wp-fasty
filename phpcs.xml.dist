@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Symfony coding standard (escapestudios/symfony2-coding-standard, built on PSR-12).
+    Report-only for now: run `composer cs`. The legacy WordPress/PSR-2 ruleset stays in phpcs.xml
+    (used by plain `vendor/bin/phpcs` and CI) until the codebase is migrated.
+-->
+<ruleset name="WPFasty-Symfony"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+    <description>Symfony coding standard for WP FastY PHP sources</description>
+
+    <arg name="basepath" value="."/>
+    <arg name="cache" value="var/cache/phpcs.cache"/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg value="sp"/>
+
+    <file>themes/latte/classes</file>
+    <file>plugins/wpfasty-builder/src</file>
+    <file>plugins/wpfasty-types/src</file>
+    <file>tests</file>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>tests/fixtures/*</exclude-pattern>
+
+    <rule ref="PSR12"/>
+    <rule ref="Symfony"/>
+</ruleset>
