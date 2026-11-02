@@ -38,7 +38,9 @@ add_filter('wpfasty_context', static function (array $context): array {
     $contact = get_page_by_path('contact');
     $context['contactUrl'] = $contact
         ? (string) get_permalink($contact)
-        : 'mailto:'.antispambot((string) get_option('admin_email'));
+        // the view escapes the URL, so antispambot()'s HTML entities would be double-encoded: keep its %XX
+        // obfuscation and decode the entities (plain URL text, escaped once by the view)
+        : 'mailto:'.html_entity_decode(antispambot((string) get_option('admin_email'), 1), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
     if (is_front_page()) {
         $context['projects'] = wpfasty_type_posts('project', 6);
