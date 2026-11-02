@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace WPFasty\Hooks;
 
+use WPFasty\Adapter\WordPress\WordPressMetaDescription;
+use WPFasty\Data\Seo\MetaDescriptionBuilder;
 use WPFasty\Template\Engines;
 use WPFasty\Template\EngineUnavailableException;
 use WPFasty\Theme\PrimitivesLocator;
@@ -21,6 +23,13 @@ final class ThemeHooks extends AbstractHooks
         add_filter('render_block_core/search', [$this, 'labelSearchBlock']);
         add_filter('get_archives_link', [$this, 'quoteHref']);
         add_filter('wp_get_attachment_link', [$this, 'attachmentLink'], 10, 2);
+        // SEO: a meta description out of the box (skipped when an SEO plugin prints its own)
+        add_action('wp_head', [$this, 'metaDescription'], 1);
+    }
+
+    public function metaDescription(): void
+    {
+        echo (new WordPressMetaDescription(new MetaDescriptionBuilder()))->tag(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr() in tag()
     }
 
     public function labelSearchBlock(string $html): string
