@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace WPFasty\Types;
 
 use WPFasty\Core\BootableServiceInterface;
+use WPFasty\Core\Model\Post;
 
 final class Registry implements BootableServiceInterface
 {
@@ -109,27 +110,27 @@ final class Registry implements BootableServiceInterface
     }
 
     /**
-     * Adds `fields` (name → raw string) and `terms` (taxonomy → list) to the post view-model,
-     * then lets the module shape it via its `context` callable.
+     * `wpfasty_post_data` (receives the Core Post DTO): adds `fields` (name → raw string) and `terms`
+     * (taxonomy → list) to the post view-model, then lets the module shape it via its `context` callable.
      *
      * @param array<string, mixed> $data
      *
      * @return array<string, mixed>
      */
-    public function postData(array $data, \WP_Post $post): array
+    public function postData(array $data, Post $post): array
     {
-        $type = $this->get($post->post_type);
+        $type = $this->get($post->kind);
         if (null === $type) {
             return $data;
         }
         $data['fields'] = [];
         foreach ($type->fields as $name => $field) {
-            $data['fields'][$name] = (string) get_post_meta($post->ID, $field->metaKey, true);
+            $data['fields'][$name] = (string) get_post_meta($post->id, $field->metaKey, true);
         }
         $data['terms'] = [];
         foreach (array_keys($type->taxonomies()) as $taxonomy) {
             $data['terms'][$taxonomy] = [];
-            foreach (get_the_terms($post, (string) $taxonomy) ?: [] as $term) {
+            foreach (get_the_terms($post->id, (string) $taxonomy) ?: [] as $term) {
                 $data['terms'][$taxonomy][] = [
                     'name' => $term->name,
                     'slug' => $term->slug,
@@ -138,8 +139,14 @@ final class Registry implements BootableServiceInterface
             }
         }
         $context = $type->def['context'] ?? null;
+        if (!is_callable($context)) {
+            return $data;
+        }
+        // module `context` callables keep their WP_Post argument (types/*.php contract); the post is in the object
+        // cache already (the list was primed), so get_post() runs no query
+        $wpPost = get_post($post->id);
 
-        return is_callable($context) ? (array) $context($data, $post, $type) : $data;
+        return $wpPost instanceof \WP_Post ? (array) $context($data, $wpPost, $type) : $data;
     }
 
     public function resolveView(string $view): string

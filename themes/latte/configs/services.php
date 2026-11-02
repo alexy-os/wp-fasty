@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use WPFasty\Adapter\WordPress\PostRepository;
 use WPFasty\Adapter\WordPress\WordPressArchiveStateProvider;
 use WPFasty\Adapter\WordPress\WordPressCommentsRenderer;
 use WPFasty\Adapter\WordPress\WordPressLabelProvider;
@@ -13,6 +14,7 @@ use WPFasty\Core\ContainerInterface;
 use WPFasty\Data\Archive\ArchiveViewModelBuilder;
 use WPFasty\Data\ContextFactory;
 use WPFasty\Data\Menu\MenuViewModelBuilder;
+use WPFasty\Data\Post\PostViewModelBuilder;
 use WPFasty\Data\Site\SiteViewModelBuilder;
 use WPFasty\Hooks\AssetsHooks;
 use WPFasty\Hooks\ThemeHooks;
@@ -95,6 +97,8 @@ return function (Container $container): void {
             $archive,
             new ArchiveViewModelBuilder(),
             new WordPressCommentsRenderer(),
+            new PostRepository(),
+            new PostViewModelBuilder(),
         );
     });
 

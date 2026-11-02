@@ -38,6 +38,19 @@ Theme PHP (ContextFactory, Application)
 
 WordPress is a **data adapter**. Presentation is Latte. Primitives are codegen.
 
+### Theme PHP layers (`themes/latte/classes`, enforced by `deptrac.yaml` + `tests/ArchitectureTest.php`)
+
+| Layer | Namespace | May use | Contents |
+|---|---|---|---|
+| Core | `WPFasty\Core` | nothing | kernel, `Core\Port\*Interface` ports, readonly DTOs (`Core\Model\Post`, `Image`, `Term`, `Author`, `PostLink`, `MenuItem`, `SiteInfo`, `ArchiveState`), `Core\Html\TrustedHtml` |
+| ViewModel | `WPFasty\Data\*` | Core | builders per domain: `Post\PostViewModelBuilder`, `Menu\…`, `Site\…`, `Archive\…` — no WordPress calls |
+| Adapter\WordPress | `WPFasty\Adapter\WordPress`, `Hooks`, `Theme`, `Types\Registry`, `Data\ContextFactory` | Core, ViewModel, Renderer, WordPress | `PostRepository` (WP_Post/WP_Query → `Post`, primed caches), menu/site/label/widget/archive/comments adapters; `ContextFactory` is the facade that wires them (DI in `configs/services.php`) |
+
+`Post` names follow the Codex v0.4 entry where they match (`id`, `kind`, `slug`, `title`, `content`, `excerpt`).
+Core-generated HTML (the_content, wp_link_pages, widgets, comments) travels as `TrustedHtml`.
+
+Filter `wpfasty_post_data` receives `(array $viewModel, WPFasty\Core\Model\Post $post, bool $singular)`.
+
 ## What ships in a theme zip
 
 - Theme PHP + views + assets

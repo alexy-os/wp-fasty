@@ -397,12 +397,6 @@ parameters:
 			path: themes/latte/classes/Core/ContainerInterface.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_filter expects array, array\<int\|WP_Post\>\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: themes/latte/classes/Data/ContextFactory.php
-
-		-
 			message: '#^Parameter \#2 \$callback of function add_action expects callable\(\)\: mixed, array\{\$this\(WPFasty\\Hooks\\AbstractHooks\), string\} given\.$#'
 			identifier: argument.type
 			count: 1

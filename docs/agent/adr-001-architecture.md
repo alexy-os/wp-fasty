@@ -71,7 +71,7 @@ return [
 The parent (`WPFasty\Types\Registry`, DI service `types.registry`, filter `wpfasty_type_dirs`) auto-registers:
 CPT + taxonomies, `register_post_meta` (prefixed `_<prefix>_<field>`, typed, sanitized, `show_in_rest`),
 metabox with nonce + capability check, save handler, view routing (`wpfasty_resolve_view`), `pre_get_posts` per_page,
-post data enrichment (`wpfasty_post_data`) and capability lookups (`wpfasty_type_supports($type, 'purchasable')`).
+post data enrichment (`wpfasty_post_data`, second argument: the `WPFasty\Core\Model\Post` DTO since the PostRepository split) and capability lookups (`wpfasty_type_supports($type, 'purchasable')`).
 
 ### 3a. Conflict with wordpress.org (recorded, needs owner decision later)
 wp.org forbids CPTs/taxonomies/non-design metaboxes in themes (Required rules, "Plugin territory").

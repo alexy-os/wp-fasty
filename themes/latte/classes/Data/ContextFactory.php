@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace WPFasty\Data;
 
+use WPFasty\Adapter\WordPress\PlainText;
+use WPFasty\Adapter\WordPress\PostRepository;
 use WPFasty\Adapter\WordPress\WordPressArchiveStateProvider;
 use WPFasty\Adapter\WordPress\WordPressCommentsRenderer;
 use WPFasty\Adapter\WordPress\WordPressLabelProvider;
 use WPFasty\Adapter\WordPress\WordPressMenuProvider;
+use WPFasty\Adapter\WordPress\WordPressPostRepositoryInterface;
 use WPFasty\Adapter\WordPress\WordPressSiteInfoProvider;
 use WPFasty\Adapter\WordPress\WordPressWidgetAreaProvider;
+use WPFasty\Core\Model\Post;
 use WPFasty\Core\Model\SiteInfo;
 use WPFasty\Core\Port\ArchiveStateProviderInterface;
 use WPFasty\Core\Port\CommentsRendererInterface;
@@ -20,6 +24,7 @@ use WPFasty\Core\Port\SiteInfoProviderInterface;
 use WPFasty\Core\Port\WidgetAreaProviderInterface;
 use WPFasty\Data\Archive\ArchiveViewModelBuilder;
 use WPFasty\Data\Menu\MenuViewModelBuilder;
+use WPFasty\Data\Post\PostViewModelBuilder;
 use WPFasty\Data\Site\SiteViewModelBuilder;
 
 /**
@@ -39,6 +44,8 @@ final class ContextFactory
     private readonly PageLinkProviderInterface $pageLinks;
     private readonly ArchiveViewModelBuilder $archiveBuilder;
     private readonly CommentsRendererInterface $comments;
+    private readonly WordPressPostRepositoryInterface $posts;
+    private readonly PostViewModelBuilder $postBuilder;
 
     public function __construct(
         ?MenuProviderInterface $menuProvider = null,
@@ -51,6 +58,8 @@ final class ContextFactory
         ?PageLinkProviderInterface $pageLinks = null,
         ?ArchiveViewModelBuilder $archiveBuilder = null,
         ?CommentsRendererInterface $comments = null,
+        ?WordPressPostRepositoryInterface $posts = null,
+        ?PostViewModelBuilder $postBuilder = null,
     ) {
         $wpArchive = new WordPressArchiveStateProvider();
         $this->menuProvider = $menuProvider ?? new WordPressMenuProvider();
@@ -63,13 +72,15 @@ final class ContextFactory
         $this->pageLinks = $pageLinks ?? $wpArchive;
         $this->archiveBuilder = $archiveBuilder ?? new ArchiveViewModelBuilder();
         $this->comments = $comments ?? new WordPressCommentsRenderer();
+        $this->posts = $posts ?? new PostRepository();
+        $this->postBuilder = $postBuilder ?? new PostViewModelBuilder();
     }
 
     /** @return array<string, mixed> */
     public function createPageContext(?\WP_Post $post = null): array
     {
         $post = $post ?? get_post();
-        $page = $post instanceof \WP_Post ? $this->post($post, true) : null;
+        $page = $post instanceof \WP_Post ? $this->postData($post, true) : null;
         $site = $this->siteInfo->site();
         $context = array_merge($this->common($site), [
             'page' => $page,
@@ -78,7 +89,7 @@ final class ContextFactory
         ]);
 
         if (is_front_page()) {
-            $context['posts'] = $this->recentPosts(6);
+            $context['posts'] = $this->viewModels($this->posts->recent(6));
         }
 
         return apply_filters('wpfasty_context', $context, $post);
@@ -91,67 +102,23 @@ final class ContextFactory
      */
     public function postData(\WP_Post $post, bool $singular = false): array
     {
-        return $this->post($post, $singular);
+        return $this->viewModel($this->posts->fromWordPress($post, $singular));
     }
 
     /**
-     * Batch-loads everything a list of post view-models touches (ADR-001 §4):
-     * post meta, taxonomy terms, featured image posts + meta, authors. Avoids N+1.
+     * Batch-loads everything a list of post view-models touches (PostRepository::prime). Avoids N+1.
      *
      * @param list<\WP_Post> $posts
      */
     public function prime(array $posts): void
     {
-        $ids = [];
-        $byType = [];
-        $authors = [];
-        foreach ($posts as $post) {
-            if ($post instanceof \WP_Post) {
-                $ids[] = $post->ID;
-                $byType[$post->post_type][] = $post->ID;
-                $authors[] = (int) $post->post_author;
-            }
-        }
-        if ([] === $ids) {
-            return;
-        }
-        update_meta_cache('post', $ids);
-        foreach ($byType as $type => $typeIds) {
-            update_object_term_cache($typeIds, $type);
-        }
-        $thumbs = [];
-        foreach ($ids as $id) {
-            $thumb = (int) get_post_meta($id, '_thumbnail_id', true);
-            if ($thumb > 0) {
-                $thumbs[] = $thumb;
-            }
-        }
-        if ([] !== $thumbs) {
-            _prime_post_caches(array_values(array_unique($thumbs)), false, true);
-        }
-        if (function_exists('cache_users')) {
-            cache_users(array_values(array_unique(array_filter($authors))));
-        }
+        $this->posts->prime($posts);
     }
 
     /** @return array<string, mixed> */
     public function createArchiveContext(): array
     {
-        $posts = [];
-        global $wp_query;
-        if ($wp_query instanceof \WP_Query) {
-            $this->prime(array_values(array_filter($wp_query->posts, static fn ($p): bool => $p instanceof \WP_Post)));
-        }
-        if (have_posts()) {
-            while (have_posts()) {
-                the_post();
-                $p = get_post();
-                if ($p instanceof \WP_Post) {
-                    $posts[] = $this->post($p, false);
-                }
-            }
-            wp_reset_postdata();
-        }
+        $posts = $this->viewModels($this->posts->mainQuery());
 
         $state = $this->archiveState->current();
         $searchTitle = null !== $state->searchQuery ? $this->labels->searchResultsTitle($state->searchQuery) : null;
@@ -177,12 +144,13 @@ final class ContextFactory
     }
 
     /**
-     * WP returns texturized, entity-encoded strings (&#8217;, &hellip;); Latte escapes
-     * on output, so decode to plain text here to avoid double-encoding.
+     * Plain text of a WordPress string (entities decoded, tags stripped).
+     *
+     * @deprecated since the PostRepository split; use WPFasty\Adapter\WordPress\PlainText::from()
      */
     public static function text(string $value): string
     {
-        return html_entity_decode(wp_strip_all_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        return PlainText::from($value);
     }
 
     /**
@@ -221,161 +189,32 @@ final class ContextFactory
         ];
     }
 
-    /** @return array<string, mixed> */
-    private function post(\WP_Post $post, bool $singular): array
+    /**
+     * The view-model of one post after the `wpfasty_post_data` filter (receives the Core Post DTO).
+     *
+     * @return array<string, mixed>
+     */
+    private function viewModel(Post $post): array
     {
-        $data = [
-            'id' => $post->ID,
-            'title' => self::text(get_the_title($post)),
-            // a password-protected post shows the password form (and no excerpt) until the visitor has entered it,
-            // like the_content() / get_the_excerpt() of core templates
-            'content' => post_password_required($post)
-                ? get_the_password_form($post)
-                : apply_filters('the_content', $post->post_content),
-            'slug' => $post->post_name,
-            'url' => (string) get_permalink($post),
-            'excerpt' => self::text(has_excerpt($post) || post_password_required($post)
-                ? get_the_excerpt($post)
-            : wp_trim_words(wp_strip_all_tags(strip_shortcodes($post->post_content)), 40)),
-            'featuredImage' => null,
-            'thumbnail' => null,
-            'categories' => [],
-            'tags' => [],
-            'author' => null,
-            'postClass' => implode(' ', get_post_class('', $post)),
-            'linkPages' => '',
-            'prev' => null,
-            'next' => null,
-            'mimeType' => $post->post_mime_type,
-            'isAttachment' => 'attachment' === $post->post_type,
-            'date' => [
-                'display' => get_the_date('', $post),
-                'iso' => get_the_date('c', $post),
-            ],
-        ];
-
-        if (has_post_thumbnail($post)) {
-            $id = (int) get_post_thumbnail_id($post);
-            $alt = (string) get_post_meta($id, '_wp_attachment_image_alt', true);
-            $data['featuredImage'] = $this->image($id, 'large', $alt);
-            $data['thumbnail'] = $this->image($id, 'medium', $alt);
-        }
-
-        if ('attachment' === $post->post_type) {
-            $alt = (string) get_post_meta($post->ID, '_wp_attachment_image_alt', true);
-            $data['featuredImage'] = $this->image($post->ID, 'large', $alt) ?? $data['featuredImage'];
-            $data['attachmentUrl'] = (string) wp_get_attachment_url($post->ID);
-        }
-
-        $hasCategories = is_object_in_taxonomy($post->post_type, 'category');
-        foreach (($hasCategories ? get_the_category($post->ID) : []) ?: [] as $cat) {
-            $data['categories'][] = [
-                'name' => $cat->name,
-                'url' => get_category_link($cat->term_id),
-                'slug' => $cat->slug,
-            ];
-        }
-
-        $tags = is_object_in_taxonomy($post->post_type, 'post_tag') ? get_the_tags($post->ID) : false;
-        if (is_array($tags)) {
-            foreach ($tags as $tag) {
-                $data['tags'][] = [
-                    'name' => $tag->name,
-                    'url' => get_tag_link($tag->term_id),
-                    'slug' => $tag->slug,
-                ];
-            }
-        }
-
-        $authorId = (int) $post->post_author;
-        if ($authorId > 0) {
-            $data['author'] = [
-                'name' => (string) get_the_author_meta('display_name', $authorId),
-                'url' => (string) get_author_posts_url($authorId),
-            ];
-        }
-
-        if ($singular && 'attachment' !== $post->post_type) {
-            $data['linkPages'] = wp_link_pages([
-                'before' => '<nav class="post-pages mt-8 text-sm text-muted-foreground" aria-label="'
-                    .esc_attr__('Pages', 'latte').'"><span class="mr-2">'
-                    .esc_html__('Pages:', 'latte').'</span>',
-                'after' => '</nav>',
-                'echo' => false,
-            ]) ?: '';
-
-            if ('post' === $post->post_type) {
-                $prev = get_adjacent_post(false, '', true);
-                $next = get_adjacent_post(false, '', false);
-                if ($prev instanceof \WP_Post) {
-                    $data['prev'] = [
-                        'title' => self::text(get_the_title($prev)),
-                        'url' => (string) get_permalink($prev),
-                    ];
-                }
-                if ($next instanceof \WP_Post) {
-                    $data['next'] = [
-                        'title' => self::text(get_the_title($next)),
-                        'url' => (string) get_permalink($next),
-                    ];
-                }
-            }
-        }
-
         /** @var array<string, mixed> $data */
-        $data = apply_filters('wpfasty_post_data', $data, $post, $singular);
+        $data = apply_filters('wpfasty_post_data', $this->postBuilder->build($post), $post, $post->singular);
 
         return $data;
     }
 
-    /** @return array<string, mixed>|null */
-    private function image(int $id, string $size, string $alt): ?array
+    /**
+     * @param list<Post> $posts
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function viewModels(array $posts): array
     {
-        $src = wp_get_attachment_image_src($id, $size);
-        if (!$src) {
-            return null;
-        }
-
-        return [
-            'url' => $src[0],
-            'width' => (string) $src[1],
-            'height' => (string) $src[2],
-            'alt' => $alt,
-            'srcset' => (string) (wp_get_attachment_image_srcset($id, $size) ?: ''),
-            'sizes' => (string) (wp_get_attachment_image_sizes($id, $size) ?: ''),
-        ];
+        return array_map($this->viewModel(...), $posts);
     }
 
     /** @return array<string, array{items: list<array<string, mixed>>}> */
     private function menus(): array
     {
         return $this->menuBuilder->build($this->menuProvider->itemsByLocation());
-    }
-
-    /** @return list<array<string, mixed>> */
-    private function recentPosts(int $count): array
-    {
-        $query = new \WP_Query([
-            'posts_per_page' => $count,
-            'post_status' => 'publish',
-            'ignore_sticky_posts' => true,
-            'no_found_rows' => true,
-            // meta and terms are batch-loaded by prime() below together with thumbnails and authors
-            'update_post_meta_cache' => false,
-            'update_post_term_cache' => false,
-        ]);
-        $list = array_values(array_filter(
-            is_array($query->posts) ? $query->posts : [],
-            static fn ($p): bool => $p instanceof \WP_Post,
-        ));
-        // one query per kind (meta, terms, featured images, authors) for the whole list instead of N+1
-        $this->prime($list);
-        $posts = [];
-        foreach ($list as $p) {
-            $posts[] = $this->post($p, false);
-        }
-        wp_reset_postdata();
-
-        return $posts;
     }
 }

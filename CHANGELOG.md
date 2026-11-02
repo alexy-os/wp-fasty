@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### Breaking (theme PHP: Post DTO)
+- Filter `wpfasty_post_data` now receives the readonly `WPFasty\Core\Model\Post` DTO instead of `WP_Post`:
+  `fn (array $data, Post $post, bool $singular): array`. Use `$post->id`, `$post->kind` (post type), `$post->slug`,
+  `$post->title`… instead of `$post->ID`, `$post->post_type`, `$post->post_name`; call `get_post($post->id)` if a
+  callback really needs the WP object. For archive lists the filter now runs after the loop (`wp_reset_postdata()`),
+  so callbacks must not rely on the global `$post`. Module `context` callables (`types/*.php`) keep their `WP_Post`
+  argument.
+- `ContextFactory::text()` is deprecated: use `WPFasty\Adapter\WordPress\PlainText::from()`.
+
+### Changed (theme PHP)
+- `ContextFactory` is a thin facade: data comes through Core ports (`PostRepositoryInterface`, menu, site info, labels,
+  widget areas, archive state, comments) with WordPress adapters in `WPFasty\Adapter\WordPress`, and view-models are
+  built by `WPFasty\Data\*\*ViewModelBuilder`. Context keys and HTML are unchanged. Deptrac is blocking.
+
 ### Breaking (K7: isolated engines)
 - Latte and Twig are isolated runtimes. A Twig site never loads or falls back to Latte, and vice versa:
   - Twig parent theme is now `twig.zip` (theme slug `twig`, Twig only); `latte.zip` is Latte only. `latte-twig.zip`

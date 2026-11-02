@@ -6,13 +6,14 @@ namespace WPFasty\Tests;
 
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
-use WPFasty\Data\ContextFactory;
+use WPFasty\Adapter\WordPress\PostRepository;
+use WPFasty\Core\Model\Post;
 
 /**
- * recentPosts() (front page "latest posts") batch-loads meta, terms, featured images and authors for the whole
- * list (ContextFactory::prime) instead of one lookup per post (N+1).
+ * PostRepository::recent() (front page "latest posts") batch-loads meta, terms, featured images and authors for
+ * the whole list (PostRepository::prime) instead of one lookup per post (N+1).
  */
-final class ContextFactoryRecentPostsTest extends TestCase
+final class PostRepositoryRecentTest extends TestCase
 {
     #[RunInSeparateProcess]
     public function testRecentPostsPrimesCachesOncePerKind(): void
@@ -30,9 +31,10 @@ final class ContextFactoryRecentPostsTest extends TestCase
         }
         $GLOBALS['wpfasty_recent'] = ['posts' => $posts, 'thumbs' => [101 => 901, 103 => 903], 'log' => []];
 
-        $recent = (new \ReflectionMethod(ContextFactory::class, 'recentPosts'))->invoke(new ContextFactory(), 6);
+        $recent = (new PostRepository())->recent(6);
 
-        $this->assertSame([101, 102, 103], array_column($recent, 'id'));
+        $this->assertContainsOnlyInstancesOf(Post::class, $recent);
+        $this->assertSame([101, 102, 103], array_map(static fn (Post $p): int => $p->id, $recent));
 
         $log = $GLOBALS['wpfasty_recent']['log'];
         $calls = array_count_values(array_column($log, 0));
@@ -58,7 +60,7 @@ final class ContextFactoryRecentPostsTest extends TestCase
         require __DIR__.'/fixtures/recent-posts-stubs.php';
         $GLOBALS['wpfasty_recent'] = ['posts' => [], 'thumbs' => [], 'log' => []];
 
-        $recent = (new \ReflectionMethod(ContextFactory::class, 'recentPosts'))->invoke(new ContextFactory(), 6);
+        $recent = (new PostRepository())->recent(6);
 
         $this->assertSame([], $recent);
         $this->assertSame(['WP_Query'], array_column($GLOBALS['wpfasty_recent']['log'], 0));
