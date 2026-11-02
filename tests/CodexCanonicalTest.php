@@ -83,6 +83,17 @@ final class CodexCanonicalTest extends TestCase
         self::assertCount(6, $doc['cases']);
     }
 
+    public function testNumberZeroIsComparedStrictlyAsFloat(): void
+    {
+        // Json::number() compares with 0.0 === $f: both IEEE zeros are "0", the smallest non-zero doubles are not
+        self::assertSame('0', Json::number(0.0));
+        self::assertSame('0', Json::number(-0.0));
+        self::assertSame('5e-324', Json::number(5e-324));
+        self::assertSame('-5e-324', Json::number(-5e-324));
+        self::assertSame('2.2250738585072014e-308', Json::number(PHP_FLOAT_MIN));
+        self::assertSame('1', Json::number(1.0));
+    }
+
     public function testPhpTraps(): void
     {
         self::assertSame('{"a":{}}', Json::jcs(Json::parse('{"a":{}}')));

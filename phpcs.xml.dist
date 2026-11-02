@@ -99,6 +99,11 @@
         <exclude-pattern>themes/latte-*/inc/*</exclude-pattern>
     </rule>
 
+    <!-- strict comparison is required (approved 2026-11-02): a Symfony warning, an error here -->
+    <rule ref="Symfony.ControlStructure.IdenticalComparison">
+        <type>error</type>
+    </rule>
+
     <!-- OWNER DECISION (reported, not blocking): public → protected → private method order, a big move-only diff -->
     <rule ref="Symfony.Functions.ScopeOrder">
         <type>warning</type>

@@ -274,7 +274,8 @@ final class Json
         if (!is_finite($f)) {
             throw new CanonicalError('canonical.invalid_number', '$', 'number is not finite');
         }
-        if (0.0 == $f) {
+        // strict float comparison: -0.0 === 0.0 holds in PHP (IEEE 754), so both zeros print "0"
+        if (0.0 === $f) {
             return '0';
         }
         $prev = ini_get('serialize_precision');

@@ -23,6 +23,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/recipes.php';
+
 $root = dirname(__DIR__, 2);
 $check = in_array('--check', $argv, true);
 $legacy = $root.'/.workspaces/ui8kit-latte/php/UI8Kit/Classes.php';
@@ -123,7 +125,7 @@ foreach (CODEGEN as $name) {
         $v = json_decode((string) file_get_contents("{$cgx}/packages/kit-compose/variants/{$name}.variants.json"), true, 512, JSON_THROW_ON_ERROR);
         unset($v['id']);
         $v['compound'] ??= [];
-        if ($v != $r) {
+        if (!ui8kit3_same_recipe($v, $r)) {
             fwrite(STDERR, "✗ {$name}: {$cgx}/packages/kit-compose/variants/{$name}.variants.json differs from the pinned compose.json ({$commit})\n");
             exit(1);
         }
