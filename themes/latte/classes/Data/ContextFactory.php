@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace WPFasty\Data;
 
 use WPFasty\Adapter\WordPress\WordPressArchiveStateProvider;
+use WPFasty\Adapter\WordPress\WordPressCommentsRenderer;
 use WPFasty\Adapter\WordPress\WordPressLabelProvider;
 use WPFasty\Adapter\WordPress\WordPressMenuProvider;
 use WPFasty\Adapter\WordPress\WordPressSiteInfoProvider;
 use WPFasty\Adapter\WordPress\WordPressWidgetAreaProvider;
 use WPFasty\Core\Model\SiteInfo;
 use WPFasty\Core\Port\ArchiveStateProviderInterface;
+use WPFasty\Core\Port\CommentsRendererInterface;
 use WPFasty\Core\Port\LabelProviderInterface;
 use WPFasty\Core\Port\MenuProviderInterface;
 use WPFasty\Core\Port\PageLinkProviderInterface;
@@ -36,6 +38,7 @@ final class ContextFactory
     private readonly ArchiveStateProviderInterface $archiveState;
     private readonly PageLinkProviderInterface $pageLinks;
     private readonly ArchiveViewModelBuilder $archiveBuilder;
+    private readonly CommentsRendererInterface $comments;
 
     public function __construct(
         ?MenuProviderInterface $menuProvider = null,
@@ -47,6 +50,7 @@ final class ContextFactory
         ?ArchiveStateProviderInterface $archiveState = null,
         ?PageLinkProviderInterface $pageLinks = null,
         ?ArchiveViewModelBuilder $archiveBuilder = null,
+        ?CommentsRendererInterface $comments = null,
     ) {
         $wpArchive = new WordPressArchiveStateProvider();
         $this->menuProvider = $menuProvider ?? new WordPressMenuProvider();
@@ -58,6 +62,7 @@ final class ContextFactory
         $this->archiveState = $archiveState ?? $wpArchive;
         $this->pageLinks = $pageLinks ?? $wpArchive;
         $this->archiveBuilder = $archiveBuilder ?? new ArchiveViewModelBuilder();
+        $this->comments = $comments ?? new WordPressCommentsRenderer();
     }
 
     /** @return array<string, mixed> */
@@ -69,7 +74,7 @@ final class ContextFactory
         $context = array_merge($this->common($site), [
             'page' => $page,
             'hero' => $this->siteBuilder->hero($site, $this->labels->hero()),
-            'comments' => $post instanceof \WP_Post && is_singular() ? $this->comments($post) : '',
+            'comments' => $post instanceof \WP_Post && is_singular() ? (string) $this->comments->render($post->ID) : '',
         ]);
 
         if (is_front_page()) {
@@ -321,52 +326,6 @@ final class ContextFactory
         $data = apply_filters('wpfasty_post_data', $data, $post, $singular);
 
         return $data;
-    }
-
-    /**
-     * Comment list + form as WP-generated (core-escaped) HTML.
-     * Empty unless a theme opts in via the `wpfasty_comments_enabled` filter.
-     */
-    private function comments(\WP_Post $post): string
-    {
-        if (!apply_filters('wpfasty_comments_enabled', false) || !function_exists('wp_list_comments')) {
-            return '';
-        }
-        if (!comments_open($post) && 0 === (int) get_comments_number($post)) {
-            return '';
-        }
-        if (post_password_required($post)) {
-            return ''; // comments of a protected post stay behind its password (core comments_template())
-        }
-
-        $list = wp_list_comments([
-            'style' => 'ol',
-            'short_ping' => true,
-            'avatar_size' => 40,
-            'echo' => false,
-        ], get_comments(['post_id' => $post->ID, 'status' => 'approve', 'order' => 'ASC']));
-
-        ob_start();
-        comment_form([
-            'class_submit' => 'inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium '
-                .'text-primary-foreground',
-            'title_reply_before' => '<h3 id="reply-title" class="comment-reply-title mb-4 text-xl font-semibold">',
-            'title_reply_after' => '</h3>',
-        ], $post);
-        $form = (string) ob_get_clean();
-
-        $count = (int) get_comments_number($post);
-        $heading = $count > 0
-            ? '<h2 class="mb-6 text-2xl font-semibold">'.esc_html(sprintf(
-                /* translators: %d: number of comments */
-                _n('%d comment', '%d comments', $count, 'latte'),
-                $count
-            )).'</h2>'
-            : '';
-
-        return '<section id="comments" class="comments-area">'.$heading
-            .($list ? '<ol class="comment-list mb-8 flex flex-col gap-6">'.$list.'</ol>' : '')
-            .$form.'</section>';
     }
 
     /** @return array<string, mixed>|null */

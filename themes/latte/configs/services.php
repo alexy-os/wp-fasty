@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use WPFasty\Adapter\WordPress\WordPressArchiveStateProvider;
+use WPFasty\Adapter\WordPress\WordPressCommentsRenderer;
 use WPFasty\Adapter\WordPress\WordPressLabelProvider;
 use WPFasty\Adapter\WordPress\WordPressMenuProvider;
 use WPFasty\Adapter\WordPress\WordPressSiteInfoProvider;
@@ -93,6 +94,7 @@ return function (Container $container): void {
             $archive,
             $archive,
             new ArchiveViewModelBuilder(),
+            new WordPressCommentsRenderer(),
         );
     });
 
