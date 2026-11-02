@@ -157,6 +157,9 @@ jobs:
       - name: Deptrac (architecture layers, deptrac.yaml; a violation fails the build)
         run: composer deptrac
 
+      - name: Rector dry-run (rector.php; a pending change fails the build)
+        run: composer rector
+
       - name: Pack parent zips (isolated engines — latte.zip ships only Latte, twig.zip only Twig)
         run: |
           bun run theme:pack -- latte
