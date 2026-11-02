@@ -181,10 +181,15 @@ final class Registry implements BootableServiceInterface
         }
     }
 
-    /** Module `archive.title` overrides the post type archive title. */
-    public function archiveTitle(string $title, string $postType): string
+    /**
+     * Module `archive.title` overrides the post type archive title.
+     *
+     * WordPress passes a null title (and may pass a non-string post type) through `post_type_archive_title`
+     * when the post type object has no labels->name, so the filter accepts both and keeps WP's value as is.
+     */
+    public function archiveTitle(?string $title, mixed $postType = ''): ?string
     {
-        $custom = $this->get($postType)?->archive()['title'] ?? null;
+        $custom = is_string($postType) ? ($this->get($postType)?->archive()['title'] ?? null) : null;
 
         return is_string($custom) && '' !== $custom ? $custom : $title;
     }

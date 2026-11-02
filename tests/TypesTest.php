@@ -120,6 +120,15 @@ final class TypesTest extends TestCase
         self::assertSame(1, preg_match('/'.Field::DATE_PATTERN.'/', '2026-10-19'));
     }
 
+    public function testArchiveTitleKeepsNullTitleFromWordPress(): void
+    {
+        $r = $this->registry();
+        self::assertNull($r->archiveTitle(null, 'book'));
+        self::assertNull($r->archiveTitle(null, 'unknown'));
+        self::assertSame('Books', $r->archiveTitle('Books', 'book'));
+        self::assertSame('Books', $r->archiveTitle('Books', null));
+    }
+
     private function registry(): Registry
     {
         $r = new Registry([__DIR__.'/fixtures/types']);
