@@ -1,6 +1,7 @@
 # Deptrac — architecture layers (report-only: `composer deptrac` never fails the build yet).
 # Layers follow the current structure of themes/latte/classes and the builder/types plugins.
 deptrac:
+  cache_file: var/cache/.deptrac.cache
   paths:
     - ./themes/latte/classes
     - ./themes/latte

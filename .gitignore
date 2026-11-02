@@ -45,3 +45,4 @@ Thumbs.db
 /phpstan.neon
 /phpcs.xml.local
 /.php-cs-fixer.php
+/.deptrac.cache
