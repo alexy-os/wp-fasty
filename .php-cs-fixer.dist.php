@@ -25,7 +25,12 @@ $finder = (new PhpCsFixer\Finder())
         'wpfasty-builder/sources',
         'wpfasty-builder/editor',
     ])
-    ->notName(['*.latte', '*.twig']);
+    ->notName(['*.latte', '*.twig'])
+    // theme:generate output (byte-identical round-trip in CI): change the generator, not these files
+    ->notPath([
+        '#^latte-(folio|press|shop)/functions\.php$#',
+        '#^latte-[a-z]+/types/#',
+    ]);
 
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(false)

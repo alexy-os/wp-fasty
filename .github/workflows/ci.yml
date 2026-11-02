@@ -151,7 +151,7 @@ jobs:
           OUT="$RUNNER_TEMP/gates" bash tools/qa/ui-gates.sh
           { echo "### UI8Kit gates"; echo "theme html: $(tail -1 "$RUNNER_TEMP/gates/theme-html.txt")"; } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: PHPCS (errors and warnings fail the build; themes + wpfasty-types + wpfasty-builder)
+      - name: PHPCS (Symfony standard + WordPress security, phpcs.xml.dist; errors fail the build)
         run: composer phpcs
 
       - name: Pack parent zips (isolated engines — latte.zip ships only Latte, twig.zip only Twig)

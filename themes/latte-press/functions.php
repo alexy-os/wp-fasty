@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Latte Press — classic blog child theme of Latte.
+ *
+ * @package Latte_Press
  */
-
-declare(strict_types=1);
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +16,7 @@ if (!defined('ABSPATH')) {
 add_filter('wpfasty_comments_enabled', '__return_true');
 
 add_action('after_setup_theme', static function (): void {
-    load_child_theme_textdomain('latte-press', get_stylesheet_directory().'/languages');
+    load_child_theme_textdomain('latte-press', get_stylesheet_directory() . '/languages');
     add_theme_support('custom-background', ['default-color' => 'fcfbf8']);
 });
 
@@ -24,7 +26,7 @@ add_action('wp_enqueue_scripts', static function (): void {
     }
 });
 
-/*
+/**
  * Blog index shows a friendly heading instead of the bare "Archives".
  *
  * @param array<string, mixed> $context
@@ -36,6 +38,5 @@ add_filter('wpfasty_context', static function (array $context): array {
         $context['archive']['description'] = esc_html(get_bloginfo('description'));
     }
     $context['labels']['read_more'] = __('Continue reading', 'latte-press');
-
     return $context;
 });

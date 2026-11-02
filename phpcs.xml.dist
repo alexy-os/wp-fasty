@@ -39,6 +39,11 @@
     <exclude-pattern>packages/*</exclude-pattern>
     <exclude-pattern>.workspaces/*</exclude-pattern>
     <exclude-pattern>tests/fixtures/*</exclude-pattern>
+    <!-- theme:generate output (byte-identical round-trip in CI): change the generator, not these files -->
+    <exclude-pattern>themes/latte-folio/functions.php</exclude-pattern>
+    <exclude-pattern>themes/latte-press/functions.php</exclude-pattern>
+    <exclude-pattern>themes/latte-shop/functions.php</exclude-pattern>
+    <exclude-pattern>themes/latte-*/types/*</exclude-pattern>
 
     <!-- Symfony coding standard (includes PSR-12 basics) -->
     <rule ref="PSR12"/>
