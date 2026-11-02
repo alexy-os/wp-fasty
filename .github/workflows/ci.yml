@@ -489,6 +489,7 @@ jobs:
             cat "/tmp/validate-$site.txt"
             echo "- latte-$site contract: $(tail -1 "/tmp/validate-$site.txt")" >> "$GITHUB_STEP_SUMMARY"
           done
+          [ "$fail" = 0 ] || { echo "::group::php -S log"; tail -60 /tmp/php-server.log; echo "::endgroup::"; }
           exit $fail
 
       - name: HTML snapshot parity — parent theme at this commit vs the previous one (latte, press, folio, shop) + template contexts vs JSON Schema
