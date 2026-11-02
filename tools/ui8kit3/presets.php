@@ -67,7 +67,7 @@ foreach (COMPONENTS as $name) {
             continue;
         }
         $part = substr($const, strlen($prefix));
-        if ($part === strtoupper($name)) {
+        if (strtoupper($name) === $part) {
             $recipe = $value;
         } else {
             $parts[str_replace(' ', '', ucwords(strtolower(str_replace('_', ' ', $part))))] = $value;

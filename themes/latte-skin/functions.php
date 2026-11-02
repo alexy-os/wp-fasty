@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Latte Skin — thin child theme (no Composer, no Application boot).
  */
+
+declare(strict_types=1);
+
 if (!defined('ABSPATH')) {
     exit;
 }

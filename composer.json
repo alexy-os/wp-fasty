@@ -28,15 +28,19 @@
     },
     "scripts": {
         "test": "phpunit",
-        "phpcs": "phpcs --standard=phpcs.xml",
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf",
         "phpstan": "phpstan analyse --configuration=phpstan.dist.neon --memory-limit=1G",
         "phpstan:baseline": "phpstan analyse --configuration=phpstan.dist.neon --memory-limit=1G --generate-baseline=phpstan-baseline.neon",
         "deptrac": "deptrac analyse --config-file=deptrac.yaml --no-progress || exit 0",
         "cs": [
-            "phpcs --standard=phpcs.xml.dist --report=summary || exit 0",
-            "php-cs-fixer check --config=.php-cs-fixer.dist.php || exit 0"
+            "php-cs-fixer check --config=.php-cs-fixer.dist.php",
+            "phpcs"
         ],
-        "cs-fix": "php-cs-fixer fix --config=.php-cs-fixer.dist.php",
+        "cs-fix": [
+            "php-cs-fixer fix --config=.php-cs-fixer.dist.php",
+            "phpcbf || exit 0"
+        ],
         "qa": [
             "@phpstan",
             "@deptrac",
@@ -46,12 +50,13 @@
     },
     "scripts-descriptions": {
         "test": "Run the PHPUnit suite",
-        "phpcs": "Legacy WordPress/PSR-2 ruleset (phpcs.xml), blocking",
+        "phpcs": "PHPCS: Symfony standard + WordPress security (phpcs.xml.dist), blocking",
         "phpstan": "Static analysis (level 8 + baseline)",
         "phpstan:baseline": "Regenerate phpstan-baseline.neon",
         "deptrac": "Architecture layers report (report-only)",
-        "cs": "Symfony coding standard report: PHPCS (phpcs.xml.dist) + PHP-CS-Fixer @Symfony dry-run (report-only)",
-        "cs-fix": "Apply PHP-CS-Fixer @Symfony (pass paths: composer cs-fix -- path/File.php)",
-        "qa": "phpstan + deptrac + cs + test"
+        "cs": "Coding standard check, blocking: PHP-CS-Fixer @Symfony dry-run + PHPCS",
+        "cs-fix": "Apply PHP-CS-Fixer @Symfony, then phpcbf",
+        "qa": "phpstan + deptrac + cs + test",
+        "phpcbf": "PHPCBF over phpcs.xml.dist"
     }
 }

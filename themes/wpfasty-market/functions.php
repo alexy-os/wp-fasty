@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * WP FastY Market — brand child: tokens, logo, footer. Shop templates come from Latte Shop ("Extends: latte-shop",
  * layered by Latte), digital features from ModulY modules through Latte Shop extension points.
  */
+
+declare(strict_types=1);
 
 // Loaded at once (not on after_setup_theme): the base-theme layer can request strings earlier,
 // which would cache a no-op domain.

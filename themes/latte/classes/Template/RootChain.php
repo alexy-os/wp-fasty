@@ -44,7 +44,7 @@ final class RootChain
     public static function ensureDir(string $dir): void
     {
         if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
-            throw new \RuntimeException('Cannot create cache directory: '.htmlspecialchars($dir, ENT_QUOTES));
+            throw new \RuntimeException(sprintf('Cannot create cache directory: %s', htmlspecialchars($dir, ENT_QUOTES)));
         }
     }
 }

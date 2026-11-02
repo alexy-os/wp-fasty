@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Latte Press — classic blog child theme of Latte.
  */
+
+declare(strict_types=1);
+
 if (!defined('ABSPATH')) {
     exit;
 }

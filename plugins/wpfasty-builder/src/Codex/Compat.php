@@ -54,7 +54,7 @@ final class Compat
             return $exact;
         }
         if ('title' === $base || 'name' === $base) {
-            if ($term === ('name' === $base)) {
+            if (('name' === $base) === $term) {
                 return $exact;
             }
 

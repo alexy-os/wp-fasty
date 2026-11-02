@@ -43,6 +43,6 @@ Thumbs.db
 # Symfony-style tool caches / local overrides
 /var/
 /phpstan.neon
-/phpcs.xml.local
+/phpcs.xml
 /.php-cs-fixer.php
 /.deptrac.cache

@@ -1,28 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Symfony coding standard (escapestudios/symfony2-coding-standard, built on PSR-12).
-    Report-only for now: run `composer cs`. The legacy WordPress/PSR-2 ruleset stays in phpcs.xml
-    (used by plain `vendor/bin/phpcs` and CI) until the codebase is migrated.
+    WP FastY coding standard: Symfony (escapestudios/symfony2-coding-standard, on top of PSR-12),
+    aligned with PHP-CS-Fixer @Symfony (.php-cs-fixer.dist.php), plus the WordPress security, i18n and
+    PHP-compatibility sniffs. Blocking: `composer cs` (CI runs `composer phpcs`); errors fail, warnings are reported.
+    Local override: copy to phpcs.xml (git-ignored).
 -->
-<ruleset name="WPFasty-Symfony"
+<ruleset name="WPFasty"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
-    <description>Symfony coding standard for WP FastY PHP sources</description>
+    <description>Symfony coding standard + WordPress security for WP FastY</description>
 
     <arg name="basepath" value="."/>
     <arg name="cache" value="var/cache/phpcs.cache"/>
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
+    <arg name="parallel" value="8"/>
     <arg value="sp"/>
+    <!-- errors block, warnings (line length, …) are reported -->
+    <config name="ignore_warnings_on_exit" value="1"/>
 
-    <file>themes/latte/classes</file>
-    <file>plugins/wpfasty-builder/src</file>
-    <file>plugins/wpfasty-types/src</file>
+    <file>index.php</file>
+    <file>themes</file>
+    <file>plugins</file>
+    <file>presets</file>
+    <file>tools</file>
     <file>tests</file>
 
+    <!-- third-party / generated code: Composer, UI8Kit 3 primitives (npx ui8kit@3, never hand-edited),
+         builder sources and editor bundles (xgen / codegen-x), test fixtures, caches -->
     <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/~cache/*</exclude-pattern>
+    <exclude-pattern>themes/latte/ui8kit/*</exclude-pattern>
+    <exclude-pattern>themes/latte/twig/ui8kit/*</exclude-pattern>
+    <exclude-pattern>plugins/wpfasty-builder/primitives/*</exclude-pattern>
+    <exclude-pattern>plugins/wpfasty-builder/sources/*</exclude-pattern>
+    <exclude-pattern>plugins/wpfasty-builder/editor/*</exclude-pattern>
+    <exclude-pattern>packages/*</exclude-pattern>
+    <exclude-pattern>.workspaces/*</exclude-pattern>
     <exclude-pattern>tests/fixtures/*</exclude-pattern>
 
+    <!-- Symfony coding standard (includes PSR-12 basics) -->
     <rule ref="PSR12"/>
-    <rule ref="Symfony"/>
+    <rule ref="Symfony">
+        <!-- aligned with PHP-CS-Fixer @Symfony, the canonical Symfony formatter: concatenation without spaces
+             (concat_space: none), typed signatures without redundant docblocks (no_superfluous_phpdoc_tags) -->
+        <exclude name="PSR12.Operators.OperatorSpacing"/>
+        <exclude name="Symfony.Commenting.FunctionComment.Missing"/>
+        <exclude name="Symfony.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Symfony.Commenting.FunctionComment.MissingReturn"/>
+        <exclude name="Symfony.Commenting.ClassComment.Missing"/>
+        <!-- layout owned by PHP-CS-Fixer (no_blank_lines_after_phpdoc, multi-line conditions, array_indentation,
+             `new class()`): these PHPCS sniffs would fight it -->
+        <exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
+        <exclude name="PSR12.ControlStructures.ControlStructureSpacing"/>
+        <exclude name="Symfony.Arrays.MultiLineArrayComma"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature.Indent"/>
+        <exclude name="PSR2.Methods.FunctionCallSignature.Indent"/>
+        <exclude name="PSR12.Classes.AnonClassDeclaration.SpaceAfterKeyword"/>
+        <exclude name="Symfony.Objects.ObjectInstantiation"/><!-- `new class extends X` (new_with_parentheses) -->
+        <exclude name="Symfony.Functions.Arguments"/><!-- multi-line promoted constructors / long signatures -->
+        <!-- false positive on promoted constructor properties -->
+        <exclude name="Symfony.Classes.PropertyDeclaration"/>
+        <!-- positional @param check misreads partial docblocks (only generics documented); PHPStan level 8
+             verifies every @param name against the signature -->
+        <exclude name="Symfony.Commenting.FunctionComment.ParamNameNoMatch"/>
+        <!-- WordPress naming: template-hierarchy and plugin files are kebab-case (front-page.php,
+             wpfasty-builder.php, sheet-ids.php) by WordPress convention -->
+        <exclude name="Symfony.Files.AlphanumericFilename"/>
+        <!-- OWNER DECISION: renaming would touch WP globals/object fields ($wp_query, $post->post_title), REST/JSON
+             keys and shared template context; kept snake_case where it mirrors WordPress -->
+        <exclude name="Zend.NamingConventions.ValidVariableName"/>
+        <!-- OWNER DECISION: public API names (EngineUnavailable, CanonicalError) -->
+        <exclude name="Symfony.NamingConventions.ValidClassName.InvalidExceptionName"/>
+        <!-- Symfony's own MIT file header does not apply: the project is GPL-2.0-or-later (LICENSE) -->
+        <exclude name="Symfony.Commenting.License"/>
+    </rule>
+    <rule ref="PSR12.Operators.OperatorSpacing">
+        <severity>0</severity>
+    </rule>
+    <!-- 120 soft limit (PSR-12), no hard limit -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="0"/>
+        </properties>
+    </rule>
+
+    <!-- PSR-4: class name matches file name under each Composer root -->
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+        <properties>
+            <property name="rootNamespaces" type="array">
+                <element key="themes/latte/classes" value="WPFasty"/>
+                <element key="plugins/wpfasty-types/src" value="WPFastyTypes"/>
+                <element key="plugins/wpfasty-builder/src" value="WPFastyBuilder"/>
+            </property>
+        </properties>
+        <exclude-pattern>themes/latte-*/inc/*</exclude-pattern>
+    </rule>
+
+    <!-- OWNER DECISION (reported, not blocking): public → protected → private method order, a big move-only diff -->
+    <rule ref="Symfony.Functions.ScopeOrder">
+        <type>warning</type>
+    </rule>
+
+    <!-- tests (global PHPUnit classes, classmap via phpunit.xml) and preset sources (copied into child themes,
+         no autoload): OWNER DECISION to namespace them (autoload-dev "WPFasty\\Tests\\") -->
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName.NoMatchBetweenTypeNameAndFileName">
+        <exclude-pattern>tests/*</exclude-pattern>
+        <exclude-pattern>presets/*</exclude-pattern>
+    </rule>
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <!-- tools/security: CLI harnesses (fuzz matrix, DOM check) with long payload lines, run as scripts -->
+    <rule ref="Generic.Files.LineLength">
+        <exclude-pattern>tools/security/*</exclude-pattern>
+    </rule>
+    <rule ref="PSR1.Files.SideEffects">
+        <exclude-pattern>tools/*</exclude-pattern>
+    </rule>
+
+    <!-- WordPress: the whole Security category (escaping, nonces, validated + sanitized + unslashed input,
+         safe redirects; security audit 2026-10-28), i18n, enqueued resources -->
+    <rule ref="WordPress.Security"/>
+    <rule ref="WordPress.WP.I18n"/>
+    <rule ref="WordPress.WP.EnqueuedResources"/>
+    <config name="text_domain" value="latte,latte-skin,latte-press,latte-folio,latte-shop,wpfasty-market,wpfasty-types,wpfasty-builder"/>
+    <!-- CLI scripts (wp eval-file / php tools/…) and test stubs print to a terminal, not to a browser -->
+    <rule ref="WordPress.Security.EscapeOutput.OutputNotEscaped">
+        <exclude-pattern>tools/*</exclude-pattern>
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+    <!-- preset sources carry the {{theme.textDomain}} placeholder, replaced when a child theme is generated -->
+    <rule ref="WordPress.WP.I18n.TextDomainMismatch">
+        <exclude-pattern>presets/archetypes/*</exclude-pattern>
+    </rule>
+    <!-- Exception messages are never rendered as HTML -->
+    <rule ref="WordPress.Security.EscapeOutput.ExceptionNotEscaped">
+        <severity>0</severity>
+    </rule>
+
+    <!-- PHP compatibility: release minimum (Requires PHP 8.2) up to the FrankenPHP runtime (8.5) -->
+    <config name="testVersion" value="8.2-8.5"/>
+    <config name="php_version" value="80200"/>
+    <rule ref="PHPCompatibilityWP"/>
 </ruleset>

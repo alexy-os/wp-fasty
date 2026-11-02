@@ -98,7 +98,7 @@ final class RemoteSource implements SourceInterface
         }
         $errors = Catalog::check($catalog);
         if ([] !== $errors) {
-            throw new \RuntimeException('catalog.json: '.implode('; ', array_slice($errors, 0, 5)));
+            throw new \RuntimeException(sprintf('catalog.json: %s', implode('; ', array_slice($errors, 0, 5))));
         }
         if ($format >= 2) {
             $archive = (array) ($catalog['archive'] ?? []);
@@ -109,7 +109,7 @@ final class RemoteSource implements SourceInterface
             }
             $zip = ($this->fetch)($base.'/'.$file);
             if (!hash_equals($sha, hash('sha256', $zip))) {
-                throw new \RuntimeException($file.' does not match the sha256 of catalog.json');
+                throw new \RuntimeException(sprintf('%s does not match the sha256 of catalog.json', $file));
             }
         } else {
             $file = $this->runtime.'.zip';
@@ -121,12 +121,12 @@ final class RemoteSource implements SourceInterface
             $catalog = Catalog::forRuntime($catalog, $this->runtime);
         }
         if ('' === $zip || strlen($zip) > self::MAX_BYTES) {
-            throw new \RuntimeException($file.' is empty or larger than 20 MB');
+            throw new \RuntimeException(sprintf('%s is empty or larger than 20 MB', $file));
         }
         $tmp = $this->dir.'.tmp';
         self::rmrf($tmp);
         if (!mkdir($tmp, 0775, true)) {
-            throw new \RuntimeException('cannot create '.$tmp);
+            throw new \RuntimeException(sprintf('cannot create %s', $tmp));
         }
         file_put_contents($tmp.'/.archive.zip', $zip);
         try {
@@ -161,7 +161,7 @@ final class RemoteSource implements SourceInterface
     {
         $zip = new \ZipArchive();
         if (true !== $zip->open($zipFile)) {
-            throw new \RuntimeException('the '.$runtime.' package is not a zip archive');
+            throw new \RuntimeException(sprintf('the %s package is not a zip archive', $runtime));
         }
         $allowed = ['json', 'md', 'twig' === $runtime ? 'twig' : 'latte'];
         for ($i = 0; $i < $zip->numFiles; ++$i) {

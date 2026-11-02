@@ -24,7 +24,7 @@ function latte_base_theme_dir(): string
     }
     $style = get_stylesheet_directory().'/style.css';
     $slug = is_file($style) ? (string) (get_file_data($style, ['Extends' => 'Extends'])['Extends'] ?? '') : '';
-    if (1 !== preg_match('/^[a-z0-9_-]{1,64}$/', $slug) || $slug === get_stylesheet() || $slug === get_template()) {
+    if (1 !== preg_match('/^[a-z0-9_-]{1,64}$/', $slug) || get_stylesheet() === $slug || get_template() === $slug) {
         return $dir;
     }
     $candidate = get_theme_root().'/'.$slug;
@@ -34,7 +34,7 @@ function latte_base_theme_dir(): string
     }
     // The base must itself be a direct child of the same parent (one extra generation, no chains).
     $template = (string) (get_file_data($baseStyle, ['Template' => 'Template'])['Template'] ?? '');
-    if ($template === get_template()) {
+    if (get_template() === $template) {
         $dir = $candidate;
     }
 

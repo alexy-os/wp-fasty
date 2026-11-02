@@ -402,7 +402,7 @@ final class BuilderTest extends TestCase
             'blocks' => [['id' => 'hero', 'variants' => [['id' => 'a', 'template' => 'blocks/hero.html.twig', 'props' => []]]]],
             'collections' => [],
         ]);
-        $fetchOf = static fn (string $cat, string $z): \Closure => static fn (string $url): string => str_ends_with($url, 'catalog.json') ? $cat : (str_ends_with($url, 'blocks.zip') ? $z : throw new \RuntimeException('404 '.$url));
+        $fetchOf = static fn (string $cat, string $z): \Closure => static fn (string $url): string => str_ends_with($url, 'catalog.json') ? $cat : (str_ends_with($url, 'blocks.zip') ? $z : throw new \RuntimeException(sprintf('404 %s', $url)));
         $twig = new RemoteSource('reg', 'https://registry.example/twig/wpfasty/v1.2.0', $dir, 'twig', $fetchOf($catalog(), $zip));
         $this->assertSame(['blocks' => 1, 'collections' => 0, 'runtime' => 'twig', 'version' => '1.2.0'], $twig->import());
         $this->assertFileExists($dir.'/blocks/hero.html.twig');

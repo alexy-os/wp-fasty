@@ -168,9 +168,10 @@ $builder = static function () use (
             $rawA = $render($latte, $fx);
             $rawB = $render($twig, $fx);
             // a block that failed to render leaves an HTML comment (dropped by the DOM normalizer): fail on it
-            $at = strpos($rawA.$rawB, '<!-- wpfasty-builder');
+            $raw = $rawA.$rawB;
+            $at = strpos($raw, '<!-- wpfasty-builder');
             if (false !== $at) {
-                throw new RuntimeException('a block did not render: '.substr($rawA.$rawB, $at, 160));
+                throw new RuntimeException(sprintf('a block did not render: %s', substr($raw, $at, 160)));
             }
             $a = $normalize($rawA);
             $b = $normalize($rawB);
@@ -225,7 +226,7 @@ $blocksSuite = static function () use ($root, $out): int {
     }
     $latte = new WPFastyBuilder\BlockRenderer(['ui8kit' => new LocalSource('ui8kit', $src.'/latte', 'latte')], null);
     $twig = (new WPFastyBuilder\BlockRenderer(['ui8kit' => new LocalSource('ui8kit', $src.'/twig', 'twig')], null))
-        ->twig('ui8kit') ?? throw new RuntimeException('no Twig environment over '.$src.'/twig');
+        ->twig('ui8kit') ?? throw new RuntimeException(sprintf('no Twig environment over %s/twig', $src));
     $fail = 0;
     $n = 0;
     $blocks = 0;

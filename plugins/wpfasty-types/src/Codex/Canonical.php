@@ -76,7 +76,7 @@ final class Canonical
     {
         foreach (array_keys($o) as $k) {
             if (!in_array((string) $k, $keys, true)) {
-                throw new CanonicalError('canonical.unknown_field', "{$path}.{$k}", 'unknown field '.json_encode((string) $k));
+                throw new CanonicalError('canonical.unknown_field', "{$path}.{$k}", sprintf('unknown field %s', json_encode((string) $k)));
             }
         }
     }

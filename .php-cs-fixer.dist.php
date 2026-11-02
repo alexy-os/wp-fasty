@@ -2,16 +2,30 @@
 
 declare(strict_types=1);
 
-// PHP-CS-Fixer with the @Symfony ruleset. Report-only for now: `composer cs` runs --dry-run --diff;
-// `composer cs-fix` applies fixes (do not mass-reformat, fix per touched file).
+// PHP-CS-Fixer, @Symfony ruleset. `composer cs` checks (blocking), `composer cs-fix` applies.
+// Same scope as phpcs.xml.dist: generated / third-party code (vendor, UI8Kit 3 primitives, builder sources and
+// editor bundles, test fixtures) is never touched.
 $finder = (new PhpCsFixer\Finder())
     ->in([
-        __DIR__.'/themes/latte/classes',
-        __DIR__.'/plugins/wpfasty-builder/src',
-        __DIR__.'/plugins/wpfasty-types/src',
+        __DIR__.'/themes',
+        __DIR__.'/plugins',
+        __DIR__.'/presets',
+        __DIR__.'/tools',
         __DIR__.'/tests',
     ])
-    ->exclude(['fixtures']);
+    ->append([__DIR__.'/index.php', __FILE__])
+    ->exclude([
+        'vendor',
+        'node_modules',
+        '~cache',
+        'fixtures',
+        'latte/ui8kit',
+        'latte/twig/ui8kit',
+        'wpfasty-builder/primitives',
+        'wpfasty-builder/sources',
+        'wpfasty-builder/editor',
+    ])
+    ->notName(['*.latte', '*.twig']);
 
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(false)

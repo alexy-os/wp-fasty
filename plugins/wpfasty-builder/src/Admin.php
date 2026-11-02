@@ -133,7 +133,7 @@ final class Admin
 
     public static function enqueue(string $hook): void
     {
-        if ($hook !== self::$hook || '' === self::$hook) {
+        if (self::$hook !== $hook || '' === self::$hook) {
             return;
         }
         $id = self::pageId();

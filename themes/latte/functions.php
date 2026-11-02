@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Latte — clean WP FastY theme (UI8Kit primitives).
  */
+
+declare(strict_types=1);
+
 if (!defined('ABSPATH')) {
     exit;
 }

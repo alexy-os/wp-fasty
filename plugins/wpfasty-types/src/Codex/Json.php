@@ -39,7 +39,7 @@ final class Json
 
     private function fail(string $code, string $msg, ?int $at = null): never
     {
-        throw new CanonicalError($code, '@'.($at ?? $this->i), $msg);
+        throw new CanonicalError($code, sprintf('@%d', $at ?? $this->i), $msg);
     }
 
     private function ws(): void
@@ -265,7 +265,7 @@ final class Json
 
             return '{'.implode(',', $parts).'}';
         }
-        throw new CanonicalError('canonical.invalid_type', '$', 'value is not JSON: '.get_debug_type($v));
+        throw new CanonicalError('canonical.invalid_type', '$', sprintf('value is not JSON: %s', get_debug_type($v)));
     }
 
     /** ECMAScript Number::toString of a finite double (RFC 8785 §3.2.2.3); -0 → "0". */
