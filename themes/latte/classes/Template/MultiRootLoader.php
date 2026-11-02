@@ -12,7 +12,7 @@ use Latte\Loaders\FileLoader;
 final class MultiRootLoader extends FileLoader
 {
     /** @var list<string> */
-    private array $roots;
+    private readonly array $roots;
 
     /** @param list<string> $roots Absolute directories; first match wins */
     public function __construct(array $roots)

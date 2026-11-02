@@ -12,10 +12,10 @@ use Latte\Engine;
 
 class LatteRenderer implements RendererInterface
 {
-    private Engine $latte;
+    private readonly Engine $latte;
 
     /** @var list<string> */
-    private array $roots;
+    private readonly array $roots;
 
     /**
      * @param array<int, mixed> $roots    views roots in lookup order

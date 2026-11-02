@@ -28,7 +28,7 @@ final class Registry implements BootableServiceInterface
     /**
      * @param list<string> $dirs Directories scanned for `*.php` modules.
      */
-    public function __construct(private array $dirs = [])
+    public function __construct(private readonly array $dirs = [])
     {
     }
 

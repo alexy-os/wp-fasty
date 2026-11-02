@@ -20,10 +20,10 @@ use WPFasty\Core\Cast;
 
 final class TwigRenderer implements RendererInterface
 {
-    private Environment $twig;
+    private readonly Environment $twig;
 
     /** @var list<string> */
-    private array $roots;
+    private readonly array $roots;
 
     /**
      * @param array<int, mixed> $roots    views roots in lookup order

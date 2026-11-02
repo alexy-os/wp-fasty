@@ -26,9 +26,7 @@ final class Container implements ContainerInterface
     public function singleton(string $id, callable $factory): void
     {
         $this->bindings[$id] = function () use ($id, $factory) {
-            if (!isset($this->instances[$id])) {
-                $this->instances[$id] = $factory($this);
-            }
+            $this->instances[$id] ??= $factory($this);
 
             return $this->instances[$id];
         };
