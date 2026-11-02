@@ -7,6 +7,14 @@
   (https://www.tenable.com/cve/CVE-2026-119977). CI runs on 7.1.4 and fails on an older core
   (`tools/qa/wp-min-version.sh`); `Requires at least` of the themes is unchanged.
 
+### Quality
+- PHPStan level max with no baseline; Infection (CI job `mutation`, MSI 97.9 %, gate 95) on Core + ViewModel builders;
+  Rector (PHP 8.2 + dead code / code quality / early return, dry-run in CI; skipped rules listed in `rector.php`);
+  `tools/qa/pot-check.sh` keeps every .pot file current in CI. New composer scripts: `infection`, `rector`, `rector:fix`.
+- Contract tests: Post DTO fields vs the `@ui8kit/contract` entry schema; one Post DTO renders the single page to the
+  same DOM through Latte and Twig.
+- CI: `php -S` runs without opcache (PHP 8.2.35 segfaulted on every request, chaosbun#120).
+
 ### Breaking (theme PHP: Post DTO)
 - Filter `wpfasty_post_data` now receives the readonly `WPFasty\Core\Model\Post` DTO instead of `WP_Post`:
   `fn (array $data, Post $post, bool $singular): array`. Use `$post->id`, `$post->kind` (post type), `$post->slug`,
@@ -14,7 +22,7 @@
   callback really needs the WP object. For archive lists the filter now runs after the loop (`wp_reset_postdata()`),
   so callbacks must not rely on the global `$post`. Module `context` callables (`types/*.php`) keep their `WP_Post`
   argument.
-- `ContextFactory::text()` is deprecated: use `WPFasty\Adapter\WordPress\PlainText::from()`.
+- `ContextFactory::text()` is removed: use `WPFasty\Adapter\WordPress\PlainText::from()`.
 - `ContextFactory` takes all its dependencies through the constructor (no defaults): `new ContextFactory()` is gone;
   get it from the container (`data.context_factory`) or call the factory in `configs/context.php`.
 
