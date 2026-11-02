@@ -16,27 +16,27 @@ if (!defined('ABSPATH')) {
 
 $_SERVER['SERVER_NAME'] ??= 'localhost';
 
-$wpfasty_perf_type = $args[0] ?? 'post';
-if ('macros' === $wpfasty_perf_type) {
+$wpfastyPerfType = $args[0] ?? 'post';
+if ('macros' === $wpfastyPerfType) {
     // builder record tokens on a page: wp eval-file tools/perf/queries.php macros [small] [large]
     require __DIR__.'/macros-queries.php';
 
     return;
 }
-if ('pager' === $wpfasty_perf_type) {
+if ('pager' === $wpfastyPerfType) {
     // builder posts pager (posts/listPaged, pages 1 and 2): wp eval-file tools/perf/queries.php pager [small] [large]
     require __DIR__.'/pager-queries.php';
 
     return;
 }
-if ('richtext' === $wpfasty_perf_type) {
+if ('richtext' === $wpfastyPerfType) {
     // builder richtext (the queried page's the_content): wp eval-file tools/perf/queries.php richtext [small] [large]
     require __DIR__.'/richtext-queries.php';
 
     return;
 }
-$wpfasty_perf_small = (int) ($args[1] ?? 2);
-$wpfasty_perf_large = (int) ($args[2] ?? 6);
+$wpfastyPerfSmall = (int) ($args[1] ?? 2);
+$wpfastyPerfLarge = (int) ($args[2] ?? 6);
 
 /**
  * Renders the archive of $type with $n posts per page as the main query; returns [queries, posts].
@@ -66,35 +66,35 @@ function wpfasty_perf_render(string $type, int $n): array
     return [$wpdb->num_queries - $before, $wp_query->post_count];
 }
 
-wpfasty_perf_render($wpfasty_perf_type, 1); // Warm-up: options, menus, compiled templates.
-[$wpfasty_perf_q1, $wpfasty_perf_p1] = wpfasty_perf_render($wpfasty_perf_type, $wpfasty_perf_small);
-[$wpfasty_perf_q2, $wpfasty_perf_p2] = wpfasty_perf_render($wpfasty_perf_type, $wpfasty_perf_large);
+wpfasty_perf_render($wpfastyPerfType, 1); // Warm-up: options, menus, compiled templates.
+[$wpfastyPerfQ1, $wpfastyPerfP1] = wpfasty_perf_render($wpfastyPerfType, $wpfastyPerfSmall);
+[$wpfastyPerfQ2, $wpfastyPerfP2] = wpfasty_perf_render($wpfastyPerfType, $wpfastyPerfLarge);
 
 // Same comparison with widget areas emptied: sidebar widgets (recent posts, comments, archives) have a constant size,
 // but they reuse posts the list already loaded, so with them a larger page can need *fewer* queries and hide an N+1.
 add_filter('sidebars_widgets', static fn (): array => []);
-wpfasty_perf_render($wpfasty_perf_type, 1);
-[$wpfasty_perf_l1] = wpfasty_perf_render($wpfasty_perf_type, $wpfasty_perf_small);
-[$wpfasty_perf_l2] = wpfasty_perf_render($wpfasty_perf_type, $wpfasty_perf_large);
+wpfasty_perf_render($wpfastyPerfType, 1);
+[$wpfastyPerfL1] = wpfasty_perf_render($wpfastyPerfType, $wpfastyPerfSmall);
+[$wpfastyPerfL2] = wpfasty_perf_render($wpfastyPerfType, $wpfastyPerfLarge);
 
 WP_CLI::log(sprintf(
     '%s: %d posts → %d queries; %d posts → %d queries (list only, no widgets: %d → %d)',
-    $wpfasty_perf_type,
-    $wpfasty_perf_p1,
-    $wpfasty_perf_q1,
-    $wpfasty_perf_p2,
-    $wpfasty_perf_q2,
-    $wpfasty_perf_l1,
-    $wpfasty_perf_l2
+    $wpfastyPerfType,
+    $wpfastyPerfP1,
+    $wpfastyPerfQ1,
+    $wpfastyPerfP2,
+    $wpfastyPerfQ2,
+    $wpfastyPerfL1,
+    $wpfastyPerfL2
 ));
-if ($wpfasty_perf_p2 <= $wpfasty_perf_p1) {
+if ($wpfastyPerfP2 <= $wpfastyPerfP1) {
     WP_CLI::warning('Not enough posts to compare; seed demo content first.');
-} elseif ($wpfasty_perf_q2 > $wpfasty_perf_q1 || $wpfasty_perf_l2 > $wpfasty_perf_l1) {
+} elseif ($wpfastyPerfQ2 > $wpfastyPerfQ1 || $wpfastyPerfL2 > $wpfastyPerfL1) {
     WP_CLI::error(sprintf(
         'N+1: %d extra queries (list only: %d) for %d extra posts',
-        $wpfasty_perf_q2 - $wpfasty_perf_q1,
-        $wpfasty_perf_l2 - $wpfasty_perf_l1,
-        $wpfasty_perf_p2 - $wpfasty_perf_p1
+        $wpfastyPerfQ2 - $wpfastyPerfQ1,
+        $wpfastyPerfL2 - $wpfastyPerfL1,
+        $wpfastyPerfP2 - $wpfastyPerfP1
     ));
 }
 WP_CLI::success('No N+1 detected');

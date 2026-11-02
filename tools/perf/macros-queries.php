@@ -12,40 +12,40 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$wpfasty_mq_small = max(1, (int) ($args[1] ?? 2));
-$wpfasty_mq_large = max($wpfasty_mq_small + 1, (int) ($args[2] ?? 6));
-$wpfasty_mq_site = WPFastyBuilder\Records::site();
-$wpfasty_mq_product = $wpfasty_mq_site['product'];
-if (null === $wpfasty_mq_product) {
+$wpfastyMqSmall = max(1, (int) ($args[1] ?? 2));
+$wpfastyMqLarge = max($wpfastyMqSmall + 1, (int) ($args[2] ?? 6));
+$wpfastyMqSite = WPFastyBuilder\Records::site();
+$wpfastyMqProduct = $wpfastyMqSite['product'];
+if (null === $wpfastyMqProduct) {
     WP_CLI::error('the active site has no purchasable post type (activate latte-shop with wpfasty-types)');
 }
-$wpfasty_mq_tax = in_array('product_cat', $wpfasty_mq_site['taxonomies'], true)
+$wpfastyMqTax = in_array('product_cat', $wpfastyMqSite['taxonomies'], true)
     ? 'product_cat'
-    : (string) ($wpfasty_mq_site['taxonomies'][0] ?? '');
-if ('' === $wpfasty_mq_tax) {
+    : (string) ($wpfastyMqSite['taxonomies'][0] ?? '');
+if ('' === $wpfastyMqTax) {
     WP_CLI::error('the active site has no taxonomy in its Codex manifest');
 }
 
 // records to name: the site's own, topped up with temporary posts and terms
-$wpfasty_mq_added = ['posts' => [], 'terms' => []];
-$wpfasty_mq_slugs = static fn (string $type): array => get_posts([
-    'post_type' => $type, 'post_status' => 'publish', 'numberposts' => $wpfasty_mq_large, 'fields' => 'ids',
+$wpfastyMqAdded = ['posts' => [], 'terms' => []];
+$wpfastyMqSlugs = static fn (string $type): array => get_posts([
+    'post_type' => $type, 'post_status' => 'publish', 'numberposts' => $wpfastyMqLarge, 'fields' => 'ids',
     'no_found_rows' => true,
 ]);
-for ($i = count($wpfasty_mq_slugs('post')); $i < $wpfasty_mq_large; ++$i) {
-    $wpfasty_mq_added['posts'][] = wp_insert_post([
+for ($i = count($wpfastyMqSlugs('post')); $i < $wpfastyMqLarge; ++$i) {
+    $wpfastyMqAdded['posts'][] = wp_insert_post([
         'post_type' => 'post', 'post_status' => 'publish', 'post_title' => "Perf macro post $i",
         'post_name' => "perf-macro-post-$i",
     ]);
 }
-$wpfasty_mq_terms = get_terms(['taxonomy' => $wpfasty_mq_tax, 'hide_empty' => false, 'fields' => 'slugs']);
-for ($i = count(is_array($wpfasty_mq_terms) ? $wpfasty_mq_terms : []); $i < $wpfasty_mq_large; ++$i) {
-    $wpfasty_mq_t = wp_insert_term("Perf macro term $i", $wpfasty_mq_tax, ['slug' => "perf-macro-term-$i"]);
-    if (is_array($wpfasty_mq_t)) {
-        $wpfasty_mq_added['terms'][] = (int) $wpfasty_mq_t['term_id'];
+$wpfastyMqTerms = get_terms(['taxonomy' => $wpfastyMqTax, 'hide_empty' => false, 'fields' => 'slugs']);
+for ($i = count(is_array($wpfastyMqTerms) ? $wpfastyMqTerms : []); $i < $wpfastyMqLarge; ++$i) {
+    $wpfastyMqT = wp_insert_term("Perf macro term $i", $wpfastyMqTax, ['slug' => "perf-macro-term-$i"]);
+    if (is_array($wpfastyMqT)) {
+        $wpfastyMqAdded['terms'][] = (int) $wpfastyMqT['term_id'];
     }
 }
-$wpfasty_mq_names = static function (string $type, int $n): array {
+$wpfastyMqNames = static function (string $type, int $n): array {
     $out = [];
     foreach (get_posts(['post_type' => $type, 'post_status' => 'publish', 'numberposts' => $n, 'no_found_rows' => true]) as $p) {
         $out[] = $p->post_name;
@@ -53,22 +53,22 @@ $wpfasty_mq_names = static function (string $type, int $n): array {
 
     return $out;
 };
-$wpfasty_mq_products = $wpfasty_mq_names($wpfasty_mq_product['post_type'], $wpfasty_mq_large);
-if (count($wpfasty_mq_products) < $wpfasty_mq_large) {
-    WP_CLI::error(sprintf('need %d products, the site has %d: seed demo content first', $wpfasty_mq_large, count($wpfasty_mq_products)));
+$wpfastyMqProducts = $wpfastyMqNames($wpfastyMqProduct['post_type'], $wpfastyMqLarge);
+if (count($wpfastyMqProducts) < $wpfastyMqLarge) {
+    WP_CLI::error(sprintf('need %d products, the site has %d: seed demo content first', $wpfastyMqLarge, count($wpfastyMqProducts)));
 }
-$wpfasty_mq_posts = $wpfasty_mq_names('post', $wpfasty_mq_large);
-$wpfasty_mq_termslugs = array_slice((array) get_terms(['taxonomy' => $wpfasty_mq_tax, 'hide_empty' => false, 'fields' => 'slugs']), 0, $wpfasty_mq_large);
+$wpfastyMqPosts = $wpfastyMqNames('post', $wpfastyMqLarge);
+$wpfastyMqTermslugs = array_slice((array) get_terms(['taxonomy' => $wpfastyMqTax, 'hide_empty' => false, 'fields' => 'slugs']), 0, $wpfastyMqLarge);
 
 /** blocks of a page naming $n records of each type (one block per record, like a product grid built by hand) */
-$wpfasty_mq_page = static function (int $n) use ($wpfasty_mq_posts, $wpfasty_mq_products, $wpfasty_mq_termslugs, $wpfasty_mq_tax): array {
+$wpfastyMqPage = static function (int $n) use ($wpfastyMqPosts, $wpfastyMqProducts, $wpfastyMqTermslugs, $wpfastyMqTax): array {
     $blocks = [];
     for ($i = 0; $i < $n; ++$i) {
-        $p = $wpfasty_mq_products[$i];
+        $p = $wpfastyMqProducts[$i];
         $blocks[] = [
-            'title' => "{post:{$wpfasty_mq_posts[$i]}}",
+            'title' => "{post:{$wpfastyMqPosts[$i]}}",
             'items' => [['href' => "{product:$p}", 'price' => "{price:$p}", 'stock' => "Now: {stock:$p}"]],
-            'href' => "{term:$wpfasty_mq_tax:{$wpfasty_mq_termslugs[$i]}}#top",
+            'href' => "{term:$wpfastyMqTax:{$wpfastyMqTermslugs[$i]}}#top",
         ];
     }
 
@@ -76,7 +76,7 @@ $wpfasty_mq_page = static function (int $n) use ($wpfasty_mq_posts, $wpfasty_mq_
 };
 
 /** @return array{0: int, 1: int, 2: string} queries, unresolved tokens, a sample */
-$wpfasty_mq_render = static function (array $blocks): array {
+$wpfastyMqRender = static function (array $blocks): array {
     global $wpdb;
     wp_cache_flush();
     WPFastyBuilder\Records::reset();
@@ -93,28 +93,28 @@ $wpfasty_mq_render = static function (array $blocks): array {
     return [$n, substr_count($flat, '"#') + preg_match_all('/\{(post|product|term|price|stock):/', $flat), $flat];
 };
 
-$wpfasty_mq_render($wpfasty_mq_page(1)); // warm-up: options, rewrite rules, the Codex manifest
-[$wpfasty_mq_q1, $wpfasty_mq_bad1] = $wpfasty_mq_render($wpfasty_mq_page($wpfasty_mq_small));
-[$wpfasty_mq_q2, $wpfasty_mq_bad2, $wpfasty_mq_sample] = $wpfasty_mq_render($wpfasty_mq_page($wpfasty_mq_large));
+$wpfastyMqRender($wpfastyMqPage(1)); // warm-up: options, rewrite rules, the Codex manifest
+[$wpfastyMqQ1, $wpfastyMqBad1] = $wpfastyMqRender($wpfastyMqPage($wpfastyMqSmall));
+[$wpfastyMqQ2, $wpfastyMqBad2, $wpfastyMqSample] = $wpfastyMqRender($wpfastyMqPage($wpfastyMqLarge));
 
-foreach ($wpfasty_mq_added['posts'] as $id) {
+foreach ($wpfastyMqAdded['posts'] as $id) {
     wp_delete_post((int) $id, true);
 }
-foreach ($wpfasty_mq_added['terms'] as $id) {
-    wp_delete_term($id, $wpfasty_mq_tax);
+foreach ($wpfastyMqAdded['terms'] as $id) {
+    wp_delete_term($id, $wpfastyMqTax);
 }
 
 WP_CLI::log(sprintf(
     'macros: %d blocks × 5 record tokens → %d queries; %d blocks × 5 → %d queries',
-    $wpfasty_mq_small,
-    $wpfasty_mq_q1,
-    $wpfasty_mq_large,
-    $wpfasty_mq_q2
+    $wpfastyMqSmall,
+    $wpfastyMqQ1,
+    $wpfastyMqLarge,
+    $wpfastyMqQ2
 ));
-if ($wpfasty_mq_bad1 + $wpfasty_mq_bad2 > 0) {
-    WP_CLI::error('unresolved record tokens: '.substr($wpfasty_mq_sample, 0, 400));
+if ($wpfastyMqBad1 + $wpfastyMqBad2 > 0) {
+    WP_CLI::error('unresolved record tokens: '.substr($wpfastyMqSample, 0, 400));
 }
-if ($wpfasty_mq_q2 > $wpfasty_mq_q1) {
+if ($wpfastyMqQ2 > $wpfastyMqQ1) {
     WP_CLI::error('N+1: the query count grows with the number of record tokens');
 }
 WP_CLI::success('No N+1 detected');

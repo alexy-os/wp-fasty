@@ -83,7 +83,7 @@ if (!function_exists('apply_filters')) {
     }
 }
 if (!function_exists('add_filter')) {
-    function add_filter(string $hook, callable $callback, int $priority = 10, int $accepted_args = 1): bool
+    function add_filter(string $hook, callable $callback, int $priority = 10, int $acceptedArgs = 1): bool
     {
         $GLOBALS['wp_test_filters'][$hook][] = $callback;
 

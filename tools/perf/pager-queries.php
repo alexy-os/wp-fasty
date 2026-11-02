@@ -13,42 +13,42 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$wpfasty_pq_small = max(1, (int) ($args[1] ?? 2));
-$wpfasty_pq_large = max($wpfasty_pq_small + 1, (int) ($args[2] ?? 6));
-$wpfasty_pq_catalog = WPFastyBuilder\Sources::catalog('ui8kit');
-if (null === $wpfasty_pq_catalog || null === $wpfasty_pq_catalog->variant('posts', 'listPaged')) {
+$wpfastyPqSmall = max(1, (int) ($args[1] ?? 2));
+$wpfastyPqLarge = max($wpfastyPqSmall + 1, (int) ($args[2] ?? 6));
+$wpfastyPqCatalog = WPFastyBuilder\Sources::catalog('ui8kit');
+if (null === $wpfastyPqCatalog || null === $wpfastyPqCatalog->variant('posts', 'listPaged')) {
     WP_CLI::error('the ui8kit source has no posts/listPaged variant');
 }
 if (!isset(WPFastyBuilder\DataSources::all()['posts'])) {
     WP_CLI::error('the site has no posts data source');
 }
-$wpfasty_pq_added = [];
-$wpfasty_pq_have = count(get_posts([
+$wpfastyPqAdded = [];
+$wpfastyPqHave = count(get_posts([
     'post_type' => 'post', 'post_status' => 'publish', 'numberposts' => -1, 'fields' => 'ids', 'no_found_rows' => true,
 ]));
-for ($i = $wpfasty_pq_have; $i < 2 * $wpfasty_pq_large + 1; ++$i) {
-    $wpfasty_pq_added[] = wp_insert_post([
+for ($i = $wpfastyPqHave; $i < 2 * $wpfastyPqLarge + 1; ++$i) {
+    $wpfastyPqAdded[] = wp_insert_post([
         'post_type' => 'post', 'post_status' => 'publish', 'post_title' => "Perf pager post $i",
         'post_name' => "perf-pager-post-$i", 'post_content' => 'Perf pager body', 'post_author' => 1,
     ]);
 }
-$wpfasty_pq_page = wp_insert_post([
+$wpfastyPqPage = wp_insert_post([
     'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'Perf pager', 'post_name' => 'perf-pager',
 ]);
-$wpfasty_pq_total = (int) wp_count_posts('post')->publish;
+$wpfastyPqTotal = (int) wp_count_posts('post')->publish;
 
 /** @return array{0: int, 1: string} queries, problem ('' = none) */
-$wpfasty_pq_render = static function (int $n, int $paged) use ($wpfasty_pq_catalog, $wpfasty_pq_page, $wpfasty_pq_total): array {
+$wpfastyPqRender = static function (int $n, int $paged) use ($wpfastyPqCatalog, $wpfastyPqPage, $wpfastyPqTotal): array {
     global $wpdb, $wp_query, $wp_the_query, $post;
     [$entry] = WPFastyBuilder\Layout::normalize(['blocks' => [[
         'id' => 'pg', 'block' => 'posts', 'variant' => 'listPaged',
         'bindings' => ['posts' => ['source' => 'posts', 'limit' => $n]],
-    ], ], ], 'ui8kit', $wpfasty_pq_catalog, array_keys(WPFastyBuilder\DataSources::all()), [
+    ], ], ], 'ui8kit', $wpfastyPqCatalog, array_keys(WPFastyBuilder\DataSources::all()), [
         'id' => 'perf', 'slug' => 'perf', 'title' => 'Perf',
     ]);
     wp_cache_flush();
     // phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
-    $wp_query = new WP_Query(['page_id' => $wpfasty_pq_page, 'paged' => $paged]);
+    $wp_query = new WP_Query(['page_id' => $wpfastyPqPage, 'paged' => $paged]);
     $wp_the_query = $wp_query;
     $post = $wp_query->post;
     // phpcs:enable
@@ -56,8 +56,8 @@ $wpfasty_pq_render = static function (int $n, int $paged) use ($wpfasty_pq_catal
     $bound = WPFastyBuilder\Front::bound($entry);
     $q = $wpdb->num_queries - $before;
     $pager = $bound['pg']['pager'] ?? null;
-    $pages = (int) ceil($wpfasty_pq_total / $n);
-    $want = min($n, max(0, $wpfasty_pq_total - ($paged - 1) * $n));
+    $pages = (int) ceil($wpfastyPqTotal / $n);
+    $want = min($n, max(0, $wpfastyPqTotal - ($paged - 1) * $n));
     $problem = match (true) {
         count($bound['pg']['posts'] ?? []) !== $want => sprintf('%d posts on page %d, want %d', count($bound['pg']['posts'] ?? []), $paged, $want),
         !is_array($pager) => 'no pager',
@@ -69,34 +69,34 @@ $wpfasty_pq_render = static function (int $n, int $paged) use ($wpfasty_pq_catal
     return [$q, $problem];
 };
 
-$wpfasty_pq_render(1, 1); // warm-up: options, the Codex manifest, the catalog
-$wpfasty_pq_runs = [];
-foreach ([$wpfasty_pq_small, $wpfasty_pq_large] as $n) {
+$wpfastyPqRender(1, 1); // warm-up: options, the Codex manifest, the catalog
+$wpfastyPqRuns = [];
+foreach ([$wpfastyPqSmall, $wpfastyPqLarge] as $n) {
     foreach ([1, 2] as $paged) {
-        $wpfasty_pq_runs["$n/$paged"] = $wpfasty_pq_render($n, $paged);
+        $wpfastyPqRuns["$n/$paged"] = $wpfastyPqRender($n, $paged);
     }
 }
-foreach ($wpfasty_pq_added as $id) {
+foreach ($wpfastyPqAdded as $id) {
     wp_delete_post((int) $id, true);
 }
-wp_delete_post((int) $wpfasty_pq_page, true);
+wp_delete_post((int) $wpfastyPqPage, true);
 
 WP_CLI::log(sprintf(
     'pager: %d posts/page → %d queries (page 1), %d (page 2); %d posts/page → %d (page 1), %d (page 2)',
-    $wpfasty_pq_small,
-    $wpfasty_pq_runs["$wpfasty_pq_small/1"][0],
-    $wpfasty_pq_runs["$wpfasty_pq_small/2"][0],
-    $wpfasty_pq_large,
-    $wpfasty_pq_runs["$wpfasty_pq_large/1"][0],
-    $wpfasty_pq_runs["$wpfasty_pq_large/2"][0]
+    $wpfastyPqSmall,
+    $wpfastyPqRuns["$wpfastyPqSmall/1"][0],
+    $wpfastyPqRuns["$wpfastyPqSmall/2"][0],
+    $wpfastyPqLarge,
+    $wpfastyPqRuns["$wpfastyPqLarge/1"][0],
+    $wpfastyPqRuns["$wpfastyPqLarge/2"][0]
 ));
-foreach ($wpfasty_pq_runs as $k => [, $problem]) {
+foreach ($wpfastyPqRuns as $k => [, $problem]) {
     if ('' !== $problem) {
         WP_CLI::error("pager $k: $problem");
     }
 }
-$wpfasty_pq_counts = array_unique(array_column($wpfasty_pq_runs, 0));
-if (count($wpfasty_pq_counts) > 1) {
+$wpfastyPqCounts = array_unique(array_column($wpfastyPqRuns, 0));
+if (count($wpfastyPqCounts) > 1) {
     WP_CLI::error('N+1: the query count of the paged posts block changes with the posts per page or the page');
 }
 WP_CLI::success('No N+1 detected');

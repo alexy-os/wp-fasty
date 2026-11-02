@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<ruleset name="WPFasty">
+    <description>WP FastY sniffs: Symfony camelCase naming that leaves the WordPress API alone.</description>
+</ruleset>

@@ -14,8 +14,8 @@ require_once ABSPATH.'wp-admin/includes/media.php';
 require_once ABSPATH.'wp-admin/includes/file.php';
 require_once ABSPATH.'wp-admin/includes/image.php';
 
-$wpfasty_seed_type = $args[0] ?? 'post';
-$wpfasty_seed_count = (int) ($args[1] ?? 7);
+$wpfastySeedType = $args[0] ?? 'post';
+$wpfastySeedCount = (int) ($args[1] ?? 7);
 
 /**
  * Small generated JPEG as attachment (one per item, so thumbnails must be primed per post).
@@ -51,10 +51,10 @@ function wpfasty_seed_terms(string $taxonomy, string $prefix): array
     return $ids;
 }
 
-$wpfasty_seed_authors = [];
+$wpfastySeedAuthors = [];
 foreach (['ann', 'bob', 'cid'] as $login) {
     $u = get_user_by('login', "perf-$login");
-    $wpfasty_seed_authors[] = $u ? $u->ID : (int) wp_insert_user([
+    $wpfastySeedAuthors[] = $u ? $u->ID : (int) wp_insert_user([
         'user_login' => "perf-$login",
         'user_pass' => wp_generate_password(),
         'display_name' => ucfirst($login),
@@ -62,37 +62,37 @@ foreach (['ann', 'bob', 'cid'] as $login) {
     ]);
 }
 
-$wpfasty_seed_module = 'post' === $wpfasty_seed_type
+$wpfastySeedModule = 'post' === $wpfastySeedType
     ? null
-    : WPFasty\Core\Application::getInstance()->get('types.registry')->get($wpfasty_seed_type);
-if ('post' !== $wpfasty_seed_type && null === $wpfasty_seed_module) {
-    WP_CLI::error("Unknown post type module: $wpfasty_seed_type (is its theme active?)");
+    : WPFasty\Core\Application::getInstance()->get('types.registry')->get($wpfastySeedType);
+if ('post' !== $wpfastySeedType && null === $wpfastySeedModule) {
+    WP_CLI::error("Unknown post type module: $wpfastySeedType (is its theme active?)");
 }
-$wpfasty_seed_tax = 'post' === $wpfasty_seed_type
+$wpfastySeedTax = 'post' === $wpfastySeedType
     ? ['category' => wpfasty_seed_terms('category', 'perf'), 'post_tag' => wpfasty_seed_terms('post_tag', 'perf')]
     : [];
-foreach (array_keys($wpfasty_seed_module?->taxonomies() ?? []) as $tax) {
-    $wpfasty_seed_tax[$tax] = wpfasty_seed_terms((string) $tax, 'perf');
+foreach (array_keys($wpfastySeedModule?->taxonomies() ?? []) as $tax) {
+    $wpfastySeedTax[$tax] = wpfasty_seed_terms((string) $tax, 'perf');
 }
 
-for ($i = 1; $i <= $wpfasty_seed_count; ++$i) {
+for ($i = 1; $i <= $wpfastySeedCount; ++$i) {
     $id = wp_insert_post([
-        'post_type' => $wpfasty_seed_type,
+        'post_type' => $wpfastySeedType,
         'post_status' => 'publish',
-        'post_title' => ucfirst($wpfasty_seed_type)." $i",
+        'post_title' => ucfirst($wpfastySeedType)." $i",
         'post_excerpt' => "Excerpt $i",
         'post_content' => "<p>Body of item $i.</p>",
-        'post_author' => $wpfasty_seed_authors[$i % 3],
+        'post_author' => $wpfastySeedAuthors[$i % 3],
         'post_date' => gmdate('Y-m-d H:i:s', time() - $i * DAY_IN_SECONDS),
     ], true);
     if (is_wp_error($id)) {
         WP_CLI::error($id->get_error_message());
     }
-    set_post_thumbnail($id, wpfasty_seed_image("$wpfasty_seed_type-$i", $i));
-    foreach ($wpfasty_seed_tax as $tax => $terms) {
+    set_post_thumbnail($id, wpfasty_seed_image("$wpfastySeedType-$i", $i));
+    foreach ($wpfastySeedTax as $tax => $terms) {
         wp_set_object_terms($id, [$terms[$i % 3], $terms[($i + 1) % 3]], $tax);
     }
-    foreach ($wpfasty_seed_module?->fields ?? [] as $name => $field) {
+    foreach ($wpfastySeedModule?->fields ?? [] as $name => $field) {
         $value = match ($field->type) {
             'money' => 'sale_price' === $name ? ($i % 2 ? 900 + $i : '') : 1000 + $i * 100,
             'integer' => 5 + $i,
@@ -104,4 +104,4 @@ for ($i = 1; $i <= $wpfasty_seed_count; ++$i) {
         }
     }
 }
-WP_CLI::success(sprintf('%d %s items seeded (thumbnail, %d taxonomies, %d fields)', $wpfasty_seed_count, $wpfasty_seed_type, count($wpfasty_seed_tax), count($wpfasty_seed_module?->fields ?? [])));
+WP_CLI::success(sprintf('%d %s items seeded (thumbnail, %d taxonomies, %d fields)', $wpfastySeedCount, $wpfastySeedType, count($wpfastySeedTax), count($wpfastySeedModule?->fields ?? [])));

@@ -38,6 +38,7 @@
     <exclude-pattern>plugins/wpfasty-builder/editor/*</exclude-pattern>
     <exclude-pattern>packages/*</exclude-pattern>
     <exclude-pattern>.workspaces/*</exclude-pattern>
+    <exclude-pattern>.phpcs/*</exclude-pattern>
     <exclude-pattern>tests/fixtures/*</exclude-pattern>
     <!-- theme:generate output (byte-identical round-trip in CI): change the generator, not these files -->
     <exclude-pattern>themes/latte-folio/functions.php</exclude-pattern>
@@ -73,8 +74,7 @@
         <!-- WordPress naming: template-hierarchy and plugin files are kebab-case (front-page.php,
              wpfasty-builder.php, sheet-ids.php) by WordPress convention -->
         <exclude name="Symfony.Files.AlphanumericFilename"/>
-        <!-- OWNER DECISION: renaming would touch WP globals/object fields ($wp_query, $post->post_title), REST/JSON
-             keys and shared template context; kept snake_case where it mirrors WordPress -->
+        <!-- replaced by WPFasty.NamingConventions.ValidVariableName (WordPress globals / fields allowed) -->
         <exclude name="Zend.NamingConventions.ValidVariableName"/>
         <!-- Symfony's own MIT file header does not apply: the project is GPL-2.0-or-later (LICENSE) -->
         <exclude name="Symfony.Commenting.License"/>
@@ -89,6 +89,9 @@
             <property name="absoluteLineLimit" value="0"/>
         </properties>
     </rule>
+
+    <!-- camelCase for our variables, parameters and properties; WordPress globals and fields of WP objects stay -->
+    <rule ref="./.phpcs/WPFasty/Sniffs/NamingConventions/ValidVariableNameSniff.php"/>
 
     <!-- PSR-4: class name matches file name under each Composer root -->
     <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">

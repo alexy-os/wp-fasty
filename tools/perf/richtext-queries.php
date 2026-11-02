@@ -13,37 +13,37 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$wpfasty_rq_small = max(1, (int) ($args[1] ?? 2));
-$wpfasty_rq_large = max($wpfasty_rq_small + 1, (int) ($args[2] ?? 6));
-$wpfasty_rq_catalog = WPFastyBuilder\Sources::catalog('ui8kit');
-if (null === $wpfasty_rq_catalog || null === $wpfasty_rq_catalog->block('richtext')) {
+$wpfastyRqSmall = max(1, (int) ($args[1] ?? 2));
+$wpfastyRqLarge = max($wpfastyRqSmall + 1, (int) ($args[2] ?? 6));
+$wpfastyRqCatalog = WPFastyBuilder\Sources::catalog('ui8kit');
+if (null === $wpfastyRqCatalog || null === $wpfastyRqCatalog->block('richtext')) {
     WP_CLI::error('the ui8kit source has no richtext block');
 }
-$wpfasty_rq_thumb = (int) (get_posts([
+$wpfastyRqThumb = (int) (get_posts([
     'post_type' => 'attachment', 'post_status' => 'inherit', 'numberposts' => 1, 'fields' => 'ids',
 ])[0] ?? 0);
-$wpfasty_rq_body = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Perf</h2>\n<!-- /wp:heading -->\n"
+$wpfastyRqBody = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Perf</h2>\n<!-- /wp:heading -->\n"
     ."<!-- wp:paragraph -->\n<p>Body with a [caption width=\"10\"]caption[/caption].</p>\n<!-- /wp:paragraph -->";
-$wpfasty_rq_pages = [];
+$wpfastyRqPages = [];
 foreach ([1, 2, 3] as $i) {
-    $wpfasty_rq_pages[] = wp_insert_post([
+    $wpfastyRqPages[] = wp_insert_post([
         'post_type' => 'page', 'post_status' => 'publish', 'post_title' => "Perf richtext $i",
-        'post_name' => "perf-richtext-$i", 'post_content' => $wpfasty_rq_body, 'post_author' => 1,
+        'post_name' => "perf-richtext-$i", 'post_content' => $wpfastyRqBody, 'post_author' => 1,
     ]);
-    if ($wpfasty_rq_thumb > 0) {
-        set_post_thumbnail((int) end($wpfasty_rq_pages), $wpfasty_rq_thumb);
+    if ($wpfastyRqThumb > 0) {
+        set_post_thumbnail((int) end($wpfastyRqPages), $wpfastyRqThumb);
     }
 }
 
 /** @return array{0: int, 1: int} queries, blocks without the body */
-$wpfasty_rq_render = static function (int $pageId, int $n) use ($wpfasty_rq_catalog): array {
+$wpfastyRqRender = static function (int $pageId, int $n) use ($wpfastyRqCatalog): array {
     global $wpdb, $wp_query, $wp_the_query, $post;
-    $variants = array_column((array) $wpfasty_rq_catalog->block('richtext')['variants'], 'id');
+    $variants = array_column((array) $wpfastyRqCatalog->block('richtext')['variants'], 'id');
     $blocks = [];
     for ($i = 0; $i < $n; ++$i) {
         $blocks[] = ['id' => "rt$i", 'block' => 'richtext', 'variant' => $variants[$i % count($variants)]];
     }
-    [$entry] = WPFastyBuilder\Layout::normalize(['blocks' => $blocks], 'ui8kit', $wpfasty_rq_catalog, [], [
+    [$entry] = WPFastyBuilder\Layout::normalize(['blocks' => $blocks], 'ui8kit', $wpfastyRqCatalog, [], [
         'id' => 'perf', 'slug' => 'perf', 'title' => 'Perf',
     ]);
     wp_cache_flush();
@@ -61,24 +61,24 @@ $wpfasty_rq_render = static function (int $pageId, int $n) use ($wpfasty_rq_cata
     return [$q, $missing];
 };
 
-$wpfasty_rq_render($wpfasty_rq_pages[0], 1); // warm-up: options, the Codex manifest, the catalog
-[$wpfasty_rq_q1, $wpfasty_rq_m1] = $wpfasty_rq_render($wpfasty_rq_pages[1], $wpfasty_rq_small);
-[$wpfasty_rq_q2, $wpfasty_rq_m2] = $wpfasty_rq_render($wpfasty_rq_pages[2], $wpfasty_rq_large);
-foreach ($wpfasty_rq_pages as $id) {
+$wpfastyRqRender($wpfastyRqPages[0], 1); // warm-up: options, the Codex manifest, the catalog
+[$wpfastyRqQ1, $wpfastyRqM1] = $wpfastyRqRender($wpfastyRqPages[1], $wpfastyRqSmall);
+[$wpfastyRqQ2, $wpfastyRqM2] = $wpfastyRqRender($wpfastyRqPages[2], $wpfastyRqLarge);
+foreach ($wpfastyRqPages as $id) {
     wp_delete_post((int) $id, true);
 }
 
 WP_CLI::log(sprintf(
     'richtext: %d blocks → %d queries; %d blocks → %d queries',
-    $wpfasty_rq_small,
-    $wpfasty_rq_q1,
-    $wpfasty_rq_large,
-    $wpfasty_rq_q2
+    $wpfastyRqSmall,
+    $wpfastyRqQ1,
+    $wpfastyRqLarge,
+    $wpfastyRqQ2
 ));
-if ($wpfasty_rq_m1 + $wpfasty_rq_m2 > 0) {
+if ($wpfastyRqM1 + $wpfastyRqM2 > 0) {
     WP_CLI::error('richtext blocks without the_content of the queried page');
 }
-if ($wpfasty_rq_q2 > $wpfasty_rq_q1) {
+if ($wpfastyRqQ2 > $wpfastyRqQ1) {
     WP_CLI::error('N+1: the query count grows with the number of richtext blocks');
 }
 WP_CLI::success('No N+1 detected');

@@ -165,7 +165,7 @@ foreach ($found['views'] as $key => $count) {
     if (!isset($views[$key])) {
         $fail[] = "$file:$lines raw print of a view not reviewed: $expr";
     } elseif ((int) ($views[$key]['count'] ?? 1) !== $count) {
-        $fail[] = "$file:$lines $expr printed raw $count× (reviewed: ".(int) ($views[$key]['count'] ?? 1).'×)';
+        $fail[] = "$file:$lines $expr printed raw {$count}× (reviewed: ".(int) ($views[$key]['count'] ?? 1).'×)';
     }
 }
 foreach ($views as $key => $v) {

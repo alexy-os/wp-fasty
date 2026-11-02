@@ -10,27 +10,27 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$wpfasty_pin_seeder = (string) ($args[0] ?? '');
-$wpfasty_pin_at = (string) ($args[1] ?? '2026-01-01 00:00:00');
-if (!is_file($wpfasty_pin_seeder)) {
-    WP_CLI::error("seeder not found: $wpfasty_pin_seeder");
+$wpfastyPinSeeder = (string) ($args[0] ?? '');
+$wpfastyPinAt = (string) ($args[1] ?? '2026-01-01 00:00:00');
+if (!is_file($wpfastyPinSeeder)) {
+    WP_CLI::error("seeder not found: $wpfastyPinSeeder");
 }
-$wpfasty_pin_ts = (int) strtotime($wpfasty_pin_at.' UTC');
+$wpfastyPinTs = (int) strtotime($wpfastyPinAt.' UTC');
 update_option('uploads_use_yearmonth_folders', 0);
 global $wpdb;
 // unix seconds, as Mapper::stampTerm reads the filter
-add_filter('wpfasty_codex_now', static fn (): int => $wpfasty_pin_ts);
-require $wpfasty_pin_seeder;
+add_filter('wpfasty_codex_now', static fn (): int => $wpfastyPinTs);
+require $wpfastyPinSeeder;
 
 // insertion order stays the date order: ID minutes after the pinned instant
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- test fixture normalization.
 $wpdb->query($wpdb->prepare(
     "UPDATE {$wpdb->posts} SET post_date = DATE_ADD(%s, INTERVAL ID MINUTE), post_date_gmt = DATE_ADD(%s, INTERVAL ID MINUTE),"
     .' post_modified = DATE_ADD(%s, INTERVAL ID MINUTE), post_modified_gmt = DATE_ADD(%s, INTERVAL ID MINUTE)',
-    $wpfasty_pin_at,
-    $wpfasty_pin_at,
-    $wpfasty_pin_at,
-    $wpfasty_pin_at,
+    $wpfastyPinAt,
+    $wpfastyPinAt,
+    $wpfastyPinAt,
+    $wpfastyPinAt,
 ));
 wp_cache_flush();
-WP_CLI::success("dates pinned at $wpfasty_pin_at UTC");
+WP_CLI::success("dates pinned at $wpfastyPinAt UTC");
