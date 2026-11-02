@@ -39,42 +39,6 @@ final class RichTextTest extends TestCase
     private const BODY = '<h2>Heading</h2><p>A <a href="/x">link</a> &amp; <code>code</code>.</p>'
         .'<figure class="wp-caption alignwide"><img src="/a.jpg" alt="A"><figcaption class="wp-caption-text">C</figcaption></figure>';
 
-    /** @return array{0: Catalog, 1: BlockRenderer} */
-    private static function runtime(string $engine): array
-    {
-        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
-
-        return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
-    }
-
-    /** the record the WordPress adapter (DataSources::current) gives for a page */
-    private static function record(): array
-    {
-        return [
-            'id' => 'page-7', 'title' => 'About <us>', 'content' => ['__html' => self::BODY], 'date' => 'Oct 1, 2026',
-            'author' => 'Ann', 'image' => 'https://example.test/c.jpg', 'aside' => ['__html' => '<p>Side <em>note</em></p>'],
-        ];
-    }
-
-    /** @return array<string, string> block id => HTML of the compiled page of the six variants */
-    private static function page(string $engine, Catalog $catalog, BlockRenderer $r, array $entry, array $wpfb): array
-    {
-        $tpl = Compiler::compile($entry, $catalog, $engine);
-        $fn = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
-        if ('latte' === $engine) {
-            $l = new Engine();
-            $l->setLoader(new StringLoader(['page' => $tpl]));
-            $l->addFunction('wpfb_block', $fn);
-            $html = $l->renderToString('page', ['wpfb' => $wpfb]);
-        } else {
-            $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
-            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
-            $html = $env->render('page', ['wpfb' => $wpfb]);
-        }
-
-        return (require dirname(__DIR__).'/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>'.$html.'</body></html>');
-    }
-
     public function testCatalogDeclaresTheCurrentRecord(): void
     {
         foreach (['latte', 'twig'] as $engine) {
@@ -173,5 +137,41 @@ final class RichTextTest extends TestCase
             self::assertStringNotContainsString('richtext-content', $none['html'], $engine);
             self::assertStringNotContainsString('wpfasty-builder:', $none['html'], $engine);
         }
+    }
+
+    /** @return array{0: Catalog, 1: BlockRenderer} */
+    private static function runtime(string $engine): array
+    {
+        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
+
+        return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
+    }
+
+    /** the record the WordPress adapter (DataSources::current) gives for a page */
+    private static function record(): array
+    {
+        return [
+            'id' => 'page-7', 'title' => 'About <us>', 'content' => ['__html' => self::BODY], 'date' => 'Oct 1, 2026',
+            'author' => 'Ann', 'image' => 'https://example.test/c.jpg', 'aside' => ['__html' => '<p>Side <em>note</em></p>'],
+        ];
+    }
+
+    /** @return array<string, string> block id => HTML of the compiled page of the six variants */
+    private static function page(string $engine, Catalog $catalog, BlockRenderer $r, array $entry, array $wpfb): array
+    {
+        $tpl = Compiler::compile($entry, $catalog, $engine);
+        $fn = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
+        if ('latte' === $engine) {
+            $l = new Engine();
+            $l->setLoader(new StringLoader(['page' => $tpl]));
+            $l->addFunction('wpfb_block', $fn);
+            $html = $l->renderToString('page', ['wpfb' => $wpfb]);
+        } else {
+            $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
+            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
+            $html = $env->render('page', ['wpfb' => $wpfb]);
+        }
+
+        return (require dirname(__DIR__).'/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>'.$html.'</body></html>');
     }
 }

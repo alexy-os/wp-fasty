@@ -85,19 +85,6 @@ final class DataSources
         return (array) apply_filters('wpfasty_builder_data_sources', $out);
     }
 
-    /** @param array<string, mixed> $m */
-    private static function label(array $m): string
-    {
-        if ($m['term']) {
-            $t = get_taxonomy((string) $m['taxonomy']);
-
-            return $t ? html_entity_decode((string) $t->labels->name, ENT_QUOTES, 'UTF-8') : (string) $m['label'];
-        }
-        $o = get_post_type_object((string) $m['post_type']);
-
-        return $o ? html_entity_decode((string) $o->labels->name, ENT_QUOTES, 'UTF-8') : (string) $m['label'];
-    }
-
     /**
      * Level of a catalog slot for a source: required = the record fields that are not optional.
      *
@@ -109,31 +96,6 @@ final class DataSources
         [$required, $needs] = self::required($slot);
 
         return Compat::slot($required, $m, $needs)['level'];
-    }
-
-    /**
-     * @param array<string, mixed> $slot
-     *
-     * @return array{0: list<string>, 1: array<string, array{0: string, 1: list<string>}>}
-     */
-    private static function required(array $slot): array
-    {
-        $required = [];
-        $needs = [];
-        foreach ($slot['defs'] as $def) {
-            $path = $slot['fields'][(string) ($def['name'] ?? '')] ?? null;
-            if (null === $path || !empty($def['optional'])) {
-                continue;
-            }
-            $required[] = $path;
-            // a string record field takes any scalar (record() casts it: year 2024 → "2024")
-            $type = self::TYPES[(string) ($def['type'] ?? '')] ?? null;
-            if (null !== $type && 'string' !== $type) {
-                $needs[$path] = [$type, []];
-            }
-        }
-
-        return [$required, $needs];
     }
 
     /**
@@ -162,34 +124,6 @@ final class DataSources
     public static function paged(array $binding, string $kind, ?array $slot, int $page): array
     {
         return self::run($binding, $slot, max(1, $page));
-    }
-
-    /**
-     * @param array<string, mixed>      $binding
-     * @param array<string, mixed>|null $slot
-     *
-     * @return array{0: list<array<string, mixed>>, 1: int} records, pages
-     */
-    private static function run(array $binding, ?array $slot, ?int $page): array
-    {
-        $m = self::models()[$binding['source']] ?? null;
-        $site = self::site();
-        if (null === $m || null === $site || null === $slot) {
-            return [[], 1];
-        }
-        $mapper = new Mapper($site);
-        $limit = max(1, min(self::MAX, (int) ($binding['limit'] ?? 6)));
-        [$entries, $pages] = $m['term']
-            ? [self::terms($m, $limit, $mapper), 1]
-            : self::posts($m, $binding, $limit, $mapper, $site, $page);
-        $plan = self::plan($slot, $m, (array) ($binding['map'] ?? []));
-        $opts = self::opts($plan, $entries, $mapper, $site);
-        $out = [];
-        foreach ($entries as $e) {
-            $out[] = self::record(self::project($e, $m), $plan, $opts, $m);
-        }
-
-        return [$out, $pages];
     }
 
     /**
@@ -234,23 +168,6 @@ final class DataSources
         return $memo[$key];
     }
 
-    /** the body of a post as the theme prints it: get_the_content() through the `the_content` filters */
-    private static function content(\WP_Post $post): string
-    {
-        $prev = $GLOBALS['post'] ?? null;
-        // the_content filters (blocks, shortcodes) read the global post: set for the call, restored after it
-        $GLOBALS['post'] = $post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-        setup_postdata($post);
-        $html = (string) apply_filters('the_content', get_the_content(null, false, $post));
-        $html = str_replace(']]>', ']]&gt;', $html);
-        $GLOBALS['post'] = $prev; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-        if ($prev instanceof \WP_Post) {
-            setup_postdata($prev);
-        }
-
-        return $html;
-    }
-
     /**
      * Record field → [path|null, default, type]: the effective readPath of every record field.
      *
@@ -283,6 +200,110 @@ final class DataSources
     }
 
     /**
+     * A TrustedHtml value as the templates may print it unescaped (og_html): only the {"__html": string} marker of the
+     * `|html` pipe. The body of the current record (`content|html` = the_content after its filters: post_content was
+     * filtered by kses on save for users without unfiltered_html, like the theme's single view) passes as it is;
+     * any other markup (a meta or settings field read with `|html`, e.g. metadata.aside.value, never filtered on save)
+     * goes through wp_kses_post — the same tags an author may post. Anything else is null, and so is markup that is
+     * blank (PHP trim()) after kses: the `|html` rule of codegen-x / ReadPath (blank = absent), so a part shown only
+     * when its markup is set (the RichText side note) stays out.
+     *
+     * @return array{__html: string}|null
+     */
+    public static function trusted(mixed $v, bool $theContent): ?array
+    {
+        if (!is_array($v) || !is_string($v['__html'] ?? null)) {
+            return null;
+        }
+        $html = $theContent ? $v['__html'] : self::kses($v['__html']);
+
+        return '' === trim($html) ? null : ['__html' => $html];
+    }
+
+    /** @param array<string, mixed> $m */
+    private static function label(array $m): string
+    {
+        if ($m['term']) {
+            $t = get_taxonomy((string) $m['taxonomy']);
+
+            return $t ? html_entity_decode((string) $t->labels->name, ENT_QUOTES, 'UTF-8') : (string) $m['label'];
+        }
+        $o = get_post_type_object((string) $m['post_type']);
+
+        return $o ? html_entity_decode((string) $o->labels->name, ENT_QUOTES, 'UTF-8') : (string) $m['label'];
+    }
+
+    /**
+     * @param array<string, mixed> $slot
+     *
+     * @return array{0: list<string>, 1: array<string, array{0: string, 1: list<string>}>}
+     */
+    private static function required(array $slot): array
+    {
+        $required = [];
+        $needs = [];
+        foreach ($slot['defs'] as $def) {
+            $path = $slot['fields'][(string) ($def['name'] ?? '')] ?? null;
+            if (null === $path || !empty($def['optional'])) {
+                continue;
+            }
+            $required[] = $path;
+            // a string record field takes any scalar (record() casts it: year 2024 → "2024")
+            $type = self::TYPES[(string) ($def['type'] ?? '')] ?? null;
+            if (null !== $type && 'string' !== $type) {
+                $needs[$path] = [$type, []];
+            }
+        }
+
+        return [$required, $needs];
+    }
+
+    /**
+     * @param array<string, mixed>      $binding
+     * @param array<string, mixed>|null $slot
+     *
+     * @return array{0: list<array<string, mixed>>, 1: int} records, pages
+     */
+    private static function run(array $binding, ?array $slot, ?int $page): array
+    {
+        $m = self::models()[$binding['source']] ?? null;
+        $site = self::site();
+        if (null === $m || null === $site || null === $slot) {
+            return [[], 1];
+        }
+        $mapper = new Mapper($site);
+        $limit = max(1, min(self::MAX, (int) ($binding['limit'] ?? 6)));
+        [$entries, $pages] = $m['term']
+            ? [self::terms($m, $limit, $mapper), 1]
+            : self::posts($m, $binding, $limit, $mapper, $site, $page);
+        $plan = self::plan($slot, $m, (array) ($binding['map'] ?? []));
+        $opts = self::opts($plan, $entries, $mapper, $site);
+        $out = [];
+        foreach ($entries as $e) {
+            $out[] = self::record(self::project($e, $m), $plan, $opts, $m);
+        }
+
+        return [$out, $pages];
+    }
+
+    /** the body of a post as the theme prints it: get_the_content() through the `the_content` filters */
+    private static function content(\WP_Post $post): string
+    {
+        $prev = $GLOBALS['post'] ?? null;
+        // the_content filters (blocks, shortcodes) read the global post: set for the call, restored after it
+        $GLOBALS['post'] = $post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+        setup_postdata($post);
+        $html = (string) apply_filters('the_content', get_the_content(null, false, $post));
+        $html = str_replace(']]>', ']]&gt;', $html);
+        $GLOBALS['post'] = $prev; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+        if ($prev instanceof \WP_Post) {
+            setup_postdata($prev);
+        }
+
+        return $html;
+    }
+
+    /**
      * @param array<string, array{0: ?string, 1: mixed, 2: string}> $plan
      * @param array<string, mixed>                                  $e
      * @param array<string, mixed>                                  $opts
@@ -310,27 +331,6 @@ final class DataSources
         }
 
         return $rec;
-    }
-
-    /**
-     * A TrustedHtml value as the templates may print it unescaped (og_html): only the {"__html": string} marker of the
-     * `|html` pipe. The body of the current record (`content|html` = the_content after its filters: post_content was
-     * filtered by kses on save for users without unfiltered_html, like the theme's single view) passes as it is;
-     * any other markup (a meta or settings field read with `|html`, e.g. metadata.aside.value, never filtered on save)
-     * goes through wp_kses_post — the same tags an author may post. Anything else is null, and so is markup that is
-     * blank (PHP trim()) after kses: the `|html` rule of codegen-x / ReadPath (blank = absent), so a part shown only
-     * when its markup is set (the RichText side note) stays out.
-     *
-     * @return array{__html: string}|null
-     */
-    public static function trusted(mixed $v, bool $theContent): ?array
-    {
-        if (!is_array($v) || !is_string($v['__html'] ?? null)) {
-            return null;
-        }
-        $html = $theContent ? $v['__html'] : self::kses($v['__html']);
-
-        return '' === trim($html) ? null : ['__html' => $html];
     }
 
     /** wp_kses_post; without WordPress (offline tools) the text, escaped */

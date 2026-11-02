@@ -11,24 +11,6 @@ use WPFasty\Theme\ThemeService;
 
 final class ThemeServiceTest extends TestCase
 {
-    private function service(): ThemeService
-    {
-        $engine = new class implements TemplateEngineInterface {
-            public function render(string $template, array $context = []): string
-            {
-                return $template;
-            }
-        };
-
-        return new ThemeService($engine, new ContextFactory());
-    }
-
-    protected function setUp(): void
-    {
-        $GLOBALS['wp_test_flags'] = [];
-        $GLOBALS['wp_test_filters'] = [];
-    }
-
     public function testResolveView404(): void
     {
         $GLOBALS['wp_test_flags'] = ['is_404' => true];
@@ -100,5 +82,23 @@ final class ThemeServiceTest extends TestCase
         $GLOBALS['wp_test_flags'] = ['is_singular' => true, 'singular_type' => 'book'];
         add_filter('wpfasty_resolve_view', static fn (string $view): string => 'pages/custom-book');
         $this->assertSame('pages/custom-book', $this->service()->resolveView());
+    }
+
+    protected function setUp(): void
+    {
+        $GLOBALS['wp_test_flags'] = [];
+        $GLOBALS['wp_test_filters'] = [];
+    }
+
+    private function service(): ThemeService
+    {
+        $engine = new class implements TemplateEngineInterface {
+            public function render(string $template, array $context = []): string
+            {
+                return $template;
+            }
+        };
+
+        return new ThemeService($engine, new ContextFactory());
     }
 }

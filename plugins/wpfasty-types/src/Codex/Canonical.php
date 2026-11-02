@@ -55,6 +55,38 @@ final class Canonical
         return Profile::MANIFEST_DIGEST.hash('sha256', Json::jcs($manifest));
     }
 
+    /** RFC 3339 → YYYY-MM-DDTHH:MM:SSZ (UTC); zero fractions dropped, others rejected. */
+    public static function date(mixed $v, string $path = '$'): string
+    {
+        if (!is_string($v)) {
+            throw new CanonicalError('canonical.invalid_date', $path, 'date-time must be a string');
+        }
+        if (1 === preg_match('/^\d{4}-\d{2}-\d{2}$/', $v)) {
+            throw new CanonicalError('canonical.invalid_date', $path, "date without time: {$v}");
+        }
+        if (1 !== preg_match(self::RFC3339, $v, $m)) {
+            throw new CanonicalError('canonical.invalid_date', $path, "not an RFC 3339 date-time: {$v}");
+        }
+        if (($m[7] ?? '') !== '' && 1 === preg_match('/[1-9]/', $m[7])) {
+            throw new CanonicalError('canonical.fractional_seconds', $path, "fractional seconds are not allowed: {$v}");
+        }
+        [$y, $mo, $d, $h, $mi, $s] = array_map('intval', array_slice($m, 1, 6));
+        $oh = (int) ($m[10] ?? 0);
+        $om = (int) ($m[11] ?? 0);
+        if (!checkdate($mo, $d, $y) || $h > 23 || $mi > 59 || $s > 59 || $oh > 23 || $om > 59) {
+            throw new CanonicalError('canonical.invalid_date', $path, "date-time out of range: {$v}");
+        }
+        $t = gmmktime($h, $mi, $s, $mo, $d, $y);
+        $off = ($oh * 60 + $om) * 60;
+        $t += ($m[9] ?? '') === '+' ? -$off : (($m[9] ?? '') === '-' ? $off : 0);
+        $yy = (int) gmdate('Y', $t);
+        if ($yy < 0 || $yy > 9999) {
+            throw new CanonicalError('canonical.invalid_date', $path, "year out of range after UTC conversion: {$v}");
+        }
+
+        return gmdate('Y-m-d\TH:i:s\Z', $t);
+    }
+
     /** @return array<string, mixed> */
     private static function arr(mixed $v): array
     {
@@ -184,37 +216,5 @@ final class Canonical
         usort($out, static fn (\stdClass $a, \stdClass $b): int => strcmp($a->taxonomy, $b->taxonomy) ?: strcmp($a->term_id, $b->term_id));
 
         return $out;
-    }
-
-    /** RFC 3339 → YYYY-MM-DDTHH:MM:SSZ (UTC); zero fractions dropped, others rejected. */
-    public static function date(mixed $v, string $path = '$'): string
-    {
-        if (!is_string($v)) {
-            throw new CanonicalError('canonical.invalid_date', $path, 'date-time must be a string');
-        }
-        if (1 === preg_match('/^\d{4}-\d{2}-\d{2}$/', $v)) {
-            throw new CanonicalError('canonical.invalid_date', $path, "date without time: {$v}");
-        }
-        if (1 !== preg_match(self::RFC3339, $v, $m)) {
-            throw new CanonicalError('canonical.invalid_date', $path, "not an RFC 3339 date-time: {$v}");
-        }
-        if (($m[7] ?? '') !== '' && 1 === preg_match('/[1-9]/', $m[7])) {
-            throw new CanonicalError('canonical.fractional_seconds', $path, "fractional seconds are not allowed: {$v}");
-        }
-        [$y, $mo, $d, $h, $mi, $s] = array_map('intval', array_slice($m, 1, 6));
-        $oh = (int) ($m[10] ?? 0);
-        $om = (int) ($m[11] ?? 0);
-        if (!checkdate($mo, $d, $y) || $h > 23 || $mi > 59 || $s > 59 || $oh > 23 || $om > 59) {
-            throw new CanonicalError('canonical.invalid_date', $path, "date-time out of range: {$v}");
-        }
-        $t = gmmktime($h, $mi, $s, $mo, $d, $y);
-        $off = ($oh * 60 + $om) * 60;
-        $t += ($m[9] ?? '') === '+' ? -$off : (($m[9] ?? '') === '-' ? $off : 0);
-        $yy = (int) gmdate('Y', $t);
-        if ($yy < 0 || $yy > 9999) {
-            throw new CanonicalError('canonical.invalid_date', $path, "year out of range after UTC conversion: {$v}");
-        }
-
-        return gmdate('Y-m-d\TH:i:s\Z', $t);
     }
 }

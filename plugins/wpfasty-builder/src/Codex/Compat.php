@@ -163,6 +163,30 @@ final class Compat
         return ['level' => $worst, 'notes' => $notes];
     }
 
+    /**
+     * @param array{0:string,1:list<string>}|null $need
+     * @param array{0:string,1:list<string>}      $have
+     */
+    public static function typeOk(?array $need, array $have): bool
+    {
+        if (null === $need) {
+            return true;
+        }
+        [$nt, $nr] = $need;
+        [$ht, $hr] = $have;
+        if (in_array($nt, self::STRINGY, true) && in_array($ht, self::STRINGY, true)) {
+            return true;
+        }
+        if ($nt !== $ht) {
+            return false;
+        }
+        if (in_array('money', $nr, true) && !in_array('money', $hr, true)) {
+            return false;
+        }
+
+        return !in_array('integer', $nr, true) || [] !== array_intersect(['integer', 'money'], $hr);
+    }
+
     /** @param array<string, mixed> $src */
     private static function terms(string $pipe, array $src, ?string $wantTax): array
     {
@@ -209,29 +233,5 @@ final class Compat
         }
 
         return false;
-    }
-
-    /**
-     * @param array{0:string,1:list<string>}|null $need
-     * @param array{0:string,1:list<string>}      $have
-     */
-    public static function typeOk(?array $need, array $have): bool
-    {
-        if (null === $need) {
-            return true;
-        }
-        [$nt, $nr] = $need;
-        [$ht, $hr] = $have;
-        if (in_array($nt, self::STRINGY, true) && in_array($ht, self::STRINGY, true)) {
-            return true;
-        }
-        if ($nt !== $ht) {
-            return false;
-        }
-        if (in_array('money', $nr, true) && !in_array('money', $hr, true)) {
-            return false;
-        }
-
-        return !in_array('integer', $nr, true) || [] !== array_intersect(['integer', 'money'], $hr);
     }
 }

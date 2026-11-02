@@ -23,47 +23,6 @@ final class ReadPath
     public const EXCERPT_WORDS = 24;
     public const WORDS_PER_MINUTE = 200;
 
-    private static function field(mixed $o, string|int $k): mixed
-    {
-        return is_array($o) ? ($o[$k] ?? null) : null;
-    }
-
-    private static function at(mixed $source, string $dotted): mixed
-    {
-        $cur = $source;
-        foreach (explode('.', $dotted) as $part) {
-            if (!is_array($cur) || !array_key_exists($part, $cur)) {
-                return null;
-            }
-            $cur = $cur[$part];
-        }
-
-        return $cur;
-    }
-
-    /**
-     * @param list<mixed> $records
-     */
-    private static function byLocale(array $records, string $locale): mixed
-    {
-        foreach ($records as $r) {
-            if (self::field($r, 'locale') === $locale) {
-                return $r;
-            }
-        }
-
-        return $records[0] ?? null;
-    }
-
-    /** @return list<string> */
-    private static function words(mixed $html): array
-    {
-        $text = preg_replace('/<[^>]*>/', ' ', is_scalar($html) ? (string) $html : '');
-        $parts = preg_split('/\s+/u', (string) $text) ?: [];
-
-        return array_values(array_filter($parts, static fn ($w): bool => '' !== $w));
-    }
-
     /**
      * Records of the `fields` mapping of a block slot (fromCodex).
      *
@@ -228,6 +187,53 @@ final class ReadPath
         throw new \InvalidArgumentException("readPath: unknown formatter \"{$pipe}\" in \"{$path}\"");
     }
 
+    /** JS encodeURIComponent. */
+    public static function encodeUriComponent(string $s): string
+    {
+        return strtr(rawurlencode($s), ['%21' => '!', '%2A' => '*', '%27' => "'", '%28' => '(', '%29' => ')']);
+    }
+
+    private static function field(mixed $o, string|int $k): mixed
+    {
+        return is_array($o) ? ($o[$k] ?? null) : null;
+    }
+
+    private static function at(mixed $source, string $dotted): mixed
+    {
+        $cur = $source;
+        foreach (explode('.', $dotted) as $part) {
+            if (!is_array($cur) || !array_key_exists($part, $cur)) {
+                return null;
+            }
+            $cur = $cur[$part];
+        }
+
+        return $cur;
+    }
+
+    /**
+     * @param list<mixed> $records
+     */
+    private static function byLocale(array $records, string $locale): mixed
+    {
+        foreach ($records as $r) {
+            if (self::field($r, 'locale') === $locale) {
+                return $r;
+            }
+        }
+
+        return $records[0] ?? null;
+    }
+
+    /** @return list<string> */
+    private static function words(mixed $html): array
+    {
+        $text = preg_replace('/<[^>]*>/', ' ', is_scalar($html) ? (string) $html : '');
+        $parts = preg_split('/\s+/u', (string) $text) ?: [];
+
+        return array_values(array_filter($parts, static fn ($w): bool => '' !== $w));
+    }
+
     /** @param array<string, mixed> $opts */
     private static function term(array $opts, string $tax, mixed $id, string $locale): mixed
     {
@@ -237,11 +243,5 @@ final class ReadPath
         ));
 
         return self::byLocale($list, $locale);
-    }
-
-    /** JS encodeURIComponent. */
-    public static function encodeUriComponent(string $s): string
-    {
-        return strtr(rawurlencode($s), ['%21' => '!', '%2A' => '*', '%27' => "'", '%28' => '(', '%29' => ')']);
     }
 }

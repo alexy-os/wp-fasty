@@ -16,30 +16,6 @@ use WPFastyBuilder\Rest;
 #[RunTestsInSeparateProcesses]
 final class LinksRestTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
-        require_once __DIR__.'/fixtures/links-stubs.php';
-        require_once __DIR__.'/fixtures/links-index-stubs.php';
-        require_once __DIR__.'/fixtures/rest-stubs.php';
-        require_once dirname(__DIR__).'/plugins/wpfasty-builder/src/Links.php';
-        require_once dirname(__DIR__).'/plugins/wpfasty-builder/src/Records.php';
-        require_once dirname(__DIR__).'/plugins/wpfasty-builder/src/Rest.php';
-        $GLOBALS['wpfb_links'] = [
-            'pages' => [
-                new \WP_Post(['ID' => 11, 'post_name' => 'about', 'post_title' => 'About <b>us</b>', 'post_type' => 'page']),
-                new \WP_Post(['ID' => 12, 'post_name' => 'contact', 'post_title' => '', 'post_type' => 'page']),
-                // not addressable by {page:<slug>}: skipped
-                new \WP_Post(['ID' => 13, 'post_name' => '%d0%be-%d0%bd%d0%b0%d1%81', 'post_title' => 'О нас', 'post_type' => 'page']),
-            ],
-            'terms' => [new \WP_Term(['term_id' => 5, 'name' => 'News', 'slug' => 'news'])],
-            'types' => ['product' => 'Products'],
-            'posts_page' => 0,
-            'calls' => [],
-            'args' => [],
-        ];
-    }
-
     public function testRouteNeedsEditPages(): void
     {
         $GLOBALS['wp_test_routes'] = [];
@@ -149,27 +125,6 @@ final class LinksRestTest extends TestCase
         foreach ([...$data['contact'], ...$data['data']] as $t) {
             $this->assertSame($t['url'] ?? $t['value'], Links::resolve($t['token']), $t['token']);
         }
-    }
-
-    /** @return array<string, mixed> the settings contact block of the demo shop (SettingsV04 contact, hours, map) */
-    private static function block(): array
-    {
-        return [
-            'contact' => [
-                'phone' => '+12025550143', 'email' => 'hello@example.com', 'address' => '1 Example Street, Springfield',
-                'links' => [
-                    ['network' => 'instagram', 'handle' => 'example.shop'],
-                    ['network' => 'telegram', 'handle' => 'example_shop'],
-                    ['network' => 'whatsapp', 'handle' => '+12025550188'],
-                ],
-            ],
-            'hours' => [
-                ['days' => ['mon', 'tue', 'wed', 'thu', 'fri'], 'open' => '09:00', 'close' => '18:00'],
-                ['days' => ['sat'], 'open' => '10:00', 'close' => '14:00'],
-            ],
-            'hours_exceptions' => [['date' => '2026-12-25', 'closed' => true]],
-            'map' => ['provider' => 'google', 'lat' => 38.8977, 'lng' => -77.0365],
-        ];
     }
 
     public function testSiteDataAndContactLinksComeFromTheSettingsContactBlock(): void
@@ -298,5 +253,50 @@ final class LinksRestTest extends TestCase
         $out = json_decode((string) shell_exec(escapeshellarg($bin).' '.escapeshellarg($file)), true);
         unlink($file);
         $this->assertSame('closed|Closed now', $out['2026-10-28T13:30:00Z'] ?? null); // 08:30 at UTC-5
+    }
+
+    protected function setUp(): void
+    {
+        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
+        require_once __DIR__.'/fixtures/links-stubs.php';
+        require_once __DIR__.'/fixtures/links-index-stubs.php';
+        require_once __DIR__.'/fixtures/rest-stubs.php';
+        require_once dirname(__DIR__).'/plugins/wpfasty-builder/src/Links.php';
+        require_once dirname(__DIR__).'/plugins/wpfasty-builder/src/Records.php';
+        require_once dirname(__DIR__).'/plugins/wpfasty-builder/src/Rest.php';
+        $GLOBALS['wpfb_links'] = [
+            'pages' => [
+                new \WP_Post(['ID' => 11, 'post_name' => 'about', 'post_title' => 'About <b>us</b>', 'post_type' => 'page']),
+                new \WP_Post(['ID' => 12, 'post_name' => 'contact', 'post_title' => '', 'post_type' => 'page']),
+                // not addressable by {page:<slug>}: skipped
+                new \WP_Post(['ID' => 13, 'post_name' => '%d0%be-%d0%bd%d0%b0%d1%81', 'post_title' => 'О нас', 'post_type' => 'page']),
+            ],
+            'terms' => [new \WP_Term(['term_id' => 5, 'name' => 'News', 'slug' => 'news'])],
+            'types' => ['product' => 'Products'],
+            'posts_page' => 0,
+            'calls' => [],
+            'args' => [],
+        ];
+    }
+
+    /** @return array<string, mixed> the settings contact block of the demo shop (SettingsV04 contact, hours, map) */
+    private static function block(): array
+    {
+        return [
+            'contact' => [
+                'phone' => '+12025550143', 'email' => 'hello@example.com', 'address' => '1 Example Street, Springfield',
+                'links' => [
+                    ['network' => 'instagram', 'handle' => 'example.shop'],
+                    ['network' => 'telegram', 'handle' => 'example_shop'],
+                    ['network' => 'whatsapp', 'handle' => '+12025550188'],
+                ],
+            ],
+            'hours' => [
+                ['days' => ['mon', 'tue', 'wed', 'thu', 'fri'], 'open' => '09:00', 'close' => '18:00'],
+                ['days' => ['sat'], 'open' => '10:00', 'close' => '14:00'],
+            ],
+            'hours_exceptions' => [['date' => '2026-12-25', 'closed' => true]],
+            'map' => ['provider' => 'google', 'lat' => 38.8977, 'lng' => -77.0365],
+        ];
     }
 }

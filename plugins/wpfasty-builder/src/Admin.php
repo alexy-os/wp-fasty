@@ -93,17 +93,6 @@ final class Admin
         return $actions;
     }
 
-    /** a GET parameter of the screen URL (display state only; every action checks a nonce) */
-    private static function query(string $key): string
-    {
-        return isset($_GET[$key]) && is_string($_GET[$key]) ? sanitize_text_field(wp_unslash($_GET[$key])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-    }
-
-    private static function pageId(): int
-    {
-        return absint(self::query('post'));
-    }
-
     /**
      * Pages list (edit.php?post_type=page): "Add New with Builder" right after the core "Add New" button
      * (.page-title-action), added by a small inline script — the core heading has no hook for a second button.
@@ -415,5 +404,16 @@ final class Admin
         $type = ($n['type'] ?? '') === 'error' ? 'error' : 'success';
 
         return '<div class="notice notice-'.$type.'"><p>'.esc_html($n['text']).'</p></div>';
+    }
+
+    /** a GET parameter of the screen URL (display state only; every action checks a nonce) */
+    private static function query(string $key): string
+    {
+        return isset($_GET[$key]) && is_string($_GET[$key]) ? sanitize_text_field(wp_unslash($_GET[$key])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+    }
+
+    private static function pageId(): int
+    {
+        return absint(self::query('post'));
     }
 }

@@ -195,15 +195,6 @@ final class Compiler
         return "'".strtr(Safe::text($s), ['\\' => '\\\\', "'" => "\\'"])."'";
     }
 
-    /** an attribute value in the static part of the template: HTML-escaped, and no brace can open a tag of either engine */
-    private static function attr(string $s): string
-    {
-        return strtr(htmlspecialchars(Safe::text($s), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), [
-            '{' => '&#123;',
-            '}' => '&#125;',
-        ]);
-    }
-
     /**
      * Text inside a template comment ({* … *} / {# … #}): no brace at all, so nothing (`**}}`, `#}`, `*}`) can close
      * the comment and open template code (SSTI: the page title is a layout field), no control character or newline.
@@ -211,5 +202,14 @@ final class Compiler
     public static function comment(string $s): string
     {
         return trim((string) preg_replace('/[{}\x00-\x1F\x7F]+/', ' ', $s));
+    }
+
+    /** an attribute value in the static part of the template: HTML-escaped, and no brace can open a tag of either engine */
+    private static function attr(string $s): string
+    {
+        return strtr(htmlspecialchars(Safe::text($s), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), [
+            '{' => '&#123;',
+            '}' => '&#125;',
+        ]);
     }
 }

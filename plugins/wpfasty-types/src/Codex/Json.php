@@ -37,6 +37,107 @@ final class Json
         return $v;
     }
 
+    // ---------- RFC 8785 ----------
+
+    /** JCS text of a value tree (\stdClass / assoc array = object, list = array). */
+    public static function jcs(mixed $v): string
+    {
+        if (null === $v) {
+            return 'null';
+        }
+        if (is_bool($v)) {
+            return $v ? 'true' : 'false';
+        }
+        if (is_int($v)) {
+            if (abs($v) > Profile::MAX_SAFE) {
+                throw new CanonicalError('canonical.unsafe_integer', '$', "integer {$v} is outside ±(2^53-1)");
+            }
+
+            return (string) $v;
+        }
+        if (is_float($v)) {
+            return self::number($v);
+        }
+        if (is_string($v)) {
+            return self::string($v);
+        }
+        if (is_array($v) && array_is_list($v)) {
+            return '['.implode(',', array_map([self::class, 'jcs'], $v)).']';
+        }
+        if (is_array($v) || $v instanceof \stdClass) {
+            $o = (array) $v;
+            $keys = array_map('strval', array_keys($o));
+            usort($keys, [self::class, 'utf16Compare']);
+            $parts = [];
+            foreach ($keys as $k) {
+                $parts[] = self::string($k).':'.self::jcs($o[$k]);
+            }
+
+            return '{'.implode(',', $parts).'}';
+        }
+        throw new CanonicalError('canonical.invalid_type', '$', sprintf('value is not JSON: %s', get_debug_type($v)));
+    }
+
+    /** ECMAScript Number::toString of a finite double (RFC 8785 §3.2.2.3); -0 → "0". */
+    public static function number(float $f): string
+    {
+        if (!is_finite($f)) {
+            throw new CanonicalError('canonical.invalid_number', '$', 'number is not finite');
+        }
+        // strict float comparison: -0.0 === 0.0 holds in PHP (IEEE 754), so both zeros print "0"
+        if (0.0 === $f) {
+            return '0';
+        }
+        $prev = ini_get('serialize_precision');
+        ini_set('serialize_precision', '-1'); // shortest round-trip digits
+        $repr = (string) json_encode($f);
+        ini_set('serialize_precision', (string) $prev);
+        preg_match('/^(-?)(\d+)(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/', $repr, $m);
+        $sign = $m[1];
+        $int = $m[2];
+        $fr = $m[3] ?? '';
+        $e = (int) ($m[4] ?? 0);
+        $digits = ltrim($int.$fr, '0');
+        $point = strlen($int) + $e - (strlen($int.$fr) - strlen($digits)); // decimal point position in $digits
+        $digits = rtrim($digits, '0');
+        $k = strlen($digits);
+        $n = $point;
+        if ($k <= $n && $n <= 21) {
+            $s = $digits.str_repeat('0', $n - $k);
+        } elseif (0 < $n && $n <= 21) {
+            $s = substr($digits, 0, $n).'.'.substr($digits, $n);
+        } elseif (-6 < $n && $n <= 0) {
+            $s = '0.'.str_repeat('0', -$n).$digits;
+        } else {
+            $x = $n - 1;
+            $s = $digits[0].($k > 1 ? '.'.substr($digits, 1) : '').'e'.($x >= 0 ? '+' : '-').abs($x);
+        }
+
+        return $sign.$s;
+    }
+
+    /** JSON string: only " \ and controls escaped; / U+2028 U+2029 and non-ASCII as is. */
+    public static function string(string $s): string
+    {
+        $out = json_encode(
+            $s,
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_LINE_TERMINATORS | JSON_THROW_ON_ERROR,
+        );
+
+        return $out;
+    }
+
+    /** Compare two UTF-8 strings as sequences of UTF-16 code units (JCS key order). */
+    public static function utf16Compare(string $a, string $b): int
+    {
+        // BMP only: UTF-8 byte order == code point order == UTF-16 order
+        if (1 !== preg_match('/[\xF0-\xF4]/', $a.$b)) {
+            return strcmp($a, $b);
+        }
+
+        return strcmp(self::utf16($a), self::utf16($b));
+    }
+
     private function fail(string $code, string $msg, ?int $at = null): never
     {
         throw new CanonicalError($code, sprintf('@%d', $at ?? $this->i), $msg);
@@ -225,107 +326,6 @@ final class Json
         }
 
         return $f;
-    }
-
-    // ---------- RFC 8785 ----------
-
-    /** JCS text of a value tree (\stdClass / assoc array = object, list = array). */
-    public static function jcs(mixed $v): string
-    {
-        if (null === $v) {
-            return 'null';
-        }
-        if (is_bool($v)) {
-            return $v ? 'true' : 'false';
-        }
-        if (is_int($v)) {
-            if (abs($v) > Profile::MAX_SAFE) {
-                throw new CanonicalError('canonical.unsafe_integer', '$', "integer {$v} is outside ±(2^53-1)");
-            }
-
-            return (string) $v;
-        }
-        if (is_float($v)) {
-            return self::number($v);
-        }
-        if (is_string($v)) {
-            return self::string($v);
-        }
-        if (is_array($v) && array_is_list($v)) {
-            return '['.implode(',', array_map([self::class, 'jcs'], $v)).']';
-        }
-        if (is_array($v) || $v instanceof \stdClass) {
-            $o = (array) $v;
-            $keys = array_map('strval', array_keys($o));
-            usort($keys, [self::class, 'utf16Compare']);
-            $parts = [];
-            foreach ($keys as $k) {
-                $parts[] = self::string($k).':'.self::jcs($o[$k]);
-            }
-
-            return '{'.implode(',', $parts).'}';
-        }
-        throw new CanonicalError('canonical.invalid_type', '$', sprintf('value is not JSON: %s', get_debug_type($v)));
-    }
-
-    /** ECMAScript Number::toString of a finite double (RFC 8785 §3.2.2.3); -0 → "0". */
-    public static function number(float $f): string
-    {
-        if (!is_finite($f)) {
-            throw new CanonicalError('canonical.invalid_number', '$', 'number is not finite');
-        }
-        // strict float comparison: -0.0 === 0.0 holds in PHP (IEEE 754), so both zeros print "0"
-        if (0.0 === $f) {
-            return '0';
-        }
-        $prev = ini_get('serialize_precision');
-        ini_set('serialize_precision', '-1'); // shortest round-trip digits
-        $repr = (string) json_encode($f);
-        ini_set('serialize_precision', (string) $prev);
-        preg_match('/^(-?)(\d+)(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/', $repr, $m);
-        $sign = $m[1];
-        $int = $m[2];
-        $fr = $m[3] ?? '';
-        $e = (int) ($m[4] ?? 0);
-        $digits = ltrim($int.$fr, '0');
-        $point = strlen($int) + $e - (strlen($int.$fr) - strlen($digits)); // decimal point position in $digits
-        $digits = rtrim($digits, '0');
-        $k = strlen($digits);
-        $n = $point;
-        if ($k <= $n && $n <= 21) {
-            $s = $digits.str_repeat('0', $n - $k);
-        } elseif (0 < $n && $n <= 21) {
-            $s = substr($digits, 0, $n).'.'.substr($digits, $n);
-        } elseif (-6 < $n && $n <= 0) {
-            $s = '0.'.str_repeat('0', -$n).$digits;
-        } else {
-            $x = $n - 1;
-            $s = $digits[0].($k > 1 ? '.'.substr($digits, 1) : '').'e'.($x >= 0 ? '+' : '-').abs($x);
-        }
-
-        return $sign.$s;
-    }
-
-    /** JSON string: only " \ and controls escaped; / U+2028 U+2029 and non-ASCII as is. */
-    public static function string(string $s): string
-    {
-        $out = json_encode(
-            $s,
-            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_LINE_TERMINATORS | JSON_THROW_ON_ERROR,
-        );
-
-        return $out;
-    }
-
-    /** Compare two UTF-8 strings as sequences of UTF-16 code units (JCS key order). */
-    public static function utf16Compare(string $a, string $b): int
-    {
-        // BMP only: UTF-8 byte order == code point order == UTF-16 order
-        if (1 !== preg_match('/[\xF0-\xF4]/', $a.$b)) {
-            return strcmp($a, $b);
-        }
-
-        return strcmp(self::utf16($a), self::utf16($b));
     }
 
     /** UTF-16BE bytes of a UTF-8 string (no mbstring needed). */

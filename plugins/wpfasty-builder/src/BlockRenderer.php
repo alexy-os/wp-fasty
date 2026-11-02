@@ -38,37 +38,6 @@ final class BlockRenderer
         return dirname(__DIR__).'/sources/ui8kit/'.$runtime;
     }
 
-    /** loads the codegen-x runtime of the bundled package: UI8Kit 3 primitives, compositions and og_* organisms */
-    private static function loadPackage(string $runtime, string $probe): bool
-    {
-        if (class_exists($probe, false)) {
-            return true;
-        }
-        if (!Primitives::loadRuntime($runtime)) {
-            return false;
-        }
-        $root = self::bundled($runtime);
-        // compose/*.php declare CodegenX\Compose\{Latte,Twig}\<file>; the parent theme ships the same classes
-        // (ui8kit/compose, twig/ui8kit/compose: kit-compose form fields, same commit and compose.json), so a class
-        // already defined or autoloadable is used, not redeclared (like Primitives::loadRuntime)
-        $ns = 'twig' === $runtime ? 'CodegenX\\Compose\\Twig\\' : 'CodegenX\\Compose\\Latte\\';
-        $files = array_values(array_filter(
-            glob($root.'/compose/*.php') ?: [],
-            static fn (string $f): bool => !class_exists($ns.basename($f, '.php'))
-        ));
-        foreach (['CnMerge', 'Runtime', 'OrganismExtension'] as $f) {
-            $files[] = "$root/php/$f.php";
-        }
-        foreach ($files as $file) {
-            if (!is_file($file)) {
-                return false;
-            }
-            require_once $file;
-        }
-
-        return class_exists($probe, false);
-    }
-
     /** loads the Latte runtime of the bundled source (needs latte/latte) */
     public static function loadRuntime(): bool
     {
@@ -111,13 +80,6 @@ final class BlockRenderer
             $msg = function_exists('current_user_can') && current_user_can('edit_pages') ? $e->getMessage() : '';
 
             return '<!-- wpfasty-builder: '.htmlspecialchars($template.' '.$msg, ENT_QUOTES).' -->';
-        }
-    }
-
-    private static function missing(string $source, string $template): void
-    {
-        if (function_exists('do_action')) {
-            do_action('wpfasty_builder_missing_block', $source, $template);
         }
     }
 
@@ -217,6 +179,44 @@ final class BlockRenderer
         return null !== $policy
             ? new \Twig\Extension\SandboxExtension($security, false, $policy)
             : new \Twig\Extension\SandboxExtension($security, true);
+    }
+
+    /** loads the codegen-x runtime of the bundled package: UI8Kit 3 primitives, compositions and og_* organisms */
+    private static function loadPackage(string $runtime, string $probe): bool
+    {
+        if (class_exists($probe, false)) {
+            return true;
+        }
+        if (!Primitives::loadRuntime($runtime)) {
+            return false;
+        }
+        $root = self::bundled($runtime);
+        // compose/*.php declare CodegenX\Compose\{Latte,Twig}\<file>; the parent theme ships the same classes
+        // (ui8kit/compose, twig/ui8kit/compose: kit-compose form fields, same commit and compose.json), so a class
+        // already defined or autoloadable is used, not redeclared (like Primitives::loadRuntime)
+        $ns = 'twig' === $runtime ? 'CodegenX\\Compose\\Twig\\' : 'CodegenX\\Compose\\Latte\\';
+        $files = array_values(array_filter(
+            glob($root.'/compose/*.php') ?: [],
+            static fn (string $f): bool => !class_exists($ns.basename($f, '.php'))
+        ));
+        foreach (['CnMerge', 'Runtime', 'OrganismExtension'] as $f) {
+            $files[] = "$root/php/$f.php";
+        }
+        foreach ($files as $file) {
+            if (!is_file($file)) {
+                return false;
+            }
+            require_once $file;
+        }
+
+        return class_exists($probe, false);
+    }
+
+    private static function missing(string $source, string $template): void
+    {
+        if (function_exists('do_action')) {
+            do_action('wpfasty_builder_missing_block', $source, $template);
+        }
     }
 
     private function cache(string $sub): ?string

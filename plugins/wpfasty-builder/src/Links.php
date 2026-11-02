@@ -54,6 +54,34 @@ final class Links
     /** most pages / categories listed (the picker searches the list; a token still works for any slug) */
     public const MAX = 500;
 
+    /**
+     * Client side of {open-now}: now in the site zone (Intl, else the fixed offset), intervals of today (the exception
+     * of the date, else the weekly rules) and yesterday's intervals that run past midnight; refreshed every minute and
+     * for elements added later (editor preview swaps).
+     */
+    public const OPEN_NOW_JS = 'var W=["mon","tue","wed","thu","fri","sat","sun"];'
+        .'function m(t){return +t.slice(0,2)*60+ +t.slice(3,5)}'
+        .'function now(){var t=new Date(),p;try{if(d.tz){p={};new Intl.DateTimeFormat("en-US",{timeZone:d.tz,'
+        .'year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"})'
+        .'.formatToParts(t).forEach(function(x){p[x.type]=x.value});'
+        .'return{y:+p.year,mo:+p.month,da:+p.day,mi:(+p.hour%24)*60+ +p.minute}}}catch(e){}'
+        .'t=new Date(t.getTime()+d.offset*6e4);'
+        .'return{y:t.getUTCFullYear(),mo:t.getUTCMonth()+1,da:t.getUTCDate(),mi:t.getUTCHours()*60+t.getUTCMinutes()}}'
+        .'function day(u){var t=new Date(u),s=t.toISOString().slice(0,10),w=W[(t.getUTCDay()+6)%7],r=[],x,i;'
+        .'for(i=0;i<d.exceptions.length;i++)if(d.exceptions[i].date===s)x=d.exceptions[i];'
+        .'if(x)return x.closed?[]:[[m(x.open),m(x.close)]];'
+        .'d.hours.forEach(function(h){if(h.days.indexOf(w)>=0)r.push([m(h.open),m(h.close)])});return r}'
+        .'function open(){var n=now(),u=Date.UTC(n.y,n.mo-1,n.da),k=n.mi;'
+        .'return day(u).some(function(i){return k>=i[0]&&k<(i[1]>i[0]?i[1]:1440)})'
+        .'||day(u-864e5).some(function(i){return i[1]<i[0]&&k<i[1]})}'
+        .'function paint(){var o=open(),l=document.querySelectorAll("[data-wpfb-open-now]");'
+        .'for(var i=0;i<l.length;i++){if(l[i].textContent!==(o?d.open:d.closed))l[i].textContent=o?d.open:d.closed;'
+        .'l[i].setAttribute("data-state",o?"open":"closed")}}'
+        .'paint();setInterval(paint,6e4);'
+        .'if(window.MutationObserver)new MutationObserver(function(){'
+        .'if(document.querySelector("[data-wpfb-open-now]:not([data-state])"))paint()})'
+        .'.observe(document.body,{childList:true,subtree:true});';
+
     /** @var array<string, mixed>|null the contact block; null = read WPFastyTypes\Contact::block() */
     private static ?array $block = null;
     private static bool $footer = false;
@@ -308,52 +336,12 @@ final class Links
         echo '<script id="wpfb-open-now">'.$js.'</script>';
     }
 
-    /**
-     * Client side of {open-now}: now in the site zone (Intl, else the fixed offset), intervals of today (the exception
-     * of the date, else the weekly rules) and yesterday's intervals that run past midnight; refreshed every minute and
-     * for elements added later (editor preview swaps).
-     */
-    public const OPEN_NOW_JS = 'var W=["mon","tue","wed","thu","fri","sat","sun"];'
-        .'function m(t){return +t.slice(0,2)*60+ +t.slice(3,5)}'
-        .'function now(){var t=new Date(),p;try{if(d.tz){p={};new Intl.DateTimeFormat("en-US",{timeZone:d.tz,'
-        .'year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"})'
-        .'.formatToParts(t).forEach(function(x){p[x.type]=x.value});'
-        .'return{y:+p.year,mo:+p.month,da:+p.day,mi:(+p.hour%24)*60+ +p.minute}}}catch(e){}'
-        .'t=new Date(t.getTime()+d.offset*6e4);'
-        .'return{y:t.getUTCFullYear(),mo:t.getUTCMonth()+1,da:t.getUTCDate(),mi:t.getUTCHours()*60+t.getUTCMinutes()}}'
-        .'function day(u){var t=new Date(u),s=t.toISOString().slice(0,10),w=W[(t.getUTCDay()+6)%7],r=[],x,i;'
-        .'for(i=0;i<d.exceptions.length;i++)if(d.exceptions[i].date===s)x=d.exceptions[i];'
-        .'if(x)return x.closed?[]:[[m(x.open),m(x.close)]];'
-        .'d.hours.forEach(function(h){if(h.days.indexOf(w)>=0)r.push([m(h.open),m(h.close)])});return r}'
-        .'function open(){var n=now(),u=Date.UTC(n.y,n.mo-1,n.da),k=n.mi;'
-        .'return day(u).some(function(i){return k>=i[0]&&k<(i[1]>i[0]?i[1]:1440)})'
-        .'||day(u-864e5).some(function(i){return i[1]<i[0]&&k<i[1]})}'
-        .'function paint(){var o=open(),l=document.querySelectorAll("[data-wpfb-open-now]");'
-        .'for(var i=0;i<l.length;i++){if(l[i].textContent!==(o?d.open:d.closed))l[i].textContent=o?d.open:d.closed;'
-        .'l[i].setAttribute("data-state",o?"open":"closed")}}'
-        .'paint();setInterval(paint,6e4);'
-        .'if(window.MutationObserver)new MutationObserver(function(){'
-        .'if(document.querySelector("[data-wpfb-open-now]:not([data-state])"))paint()})'
-        .'.observe(document.body,{childList:true,subtree:true});';
-
     /** {year} / {today} now in the site time zone ({today} in the date_format setting) */
     public static function date(string $kind): string
     {
         $format = 'year' === $kind ? 'Y' : (string) get_option('date_format', 'F j, Y');
 
         return (string) wp_date('' !== $format ? $format : 'F j, Y');
-    }
-
-    private static function value(string $kind, string $arg, string $arg2 = ''): string
-    {
-        return match ($kind) {
-            'post', 'product', 'term', 'price', 'stock' => Records::value($kind, $arg, $arg2),
-            'site' => in_array($arg, self::SITE, true) ? self::data()[$arg] : '',
-            'tel', 'mailto', 'whatsapp', 'telegram', 'map' => self::contact($kind, self::data()),
-            'open-now' => null !== self::openNow() ? self::OPEN_NOW : '',
-            'year', 'today' => self::date($kind),
-            default => self::url($kind, $arg),
-        };
     }
 
     /**
@@ -481,6 +469,18 @@ final class Links
             'home' => $home, 'site' => $site, 'pages' => $pages, 'sections' => $sections,
             'contact' => $contact, 'data' => $values,
         ] + Records::index();
+    }
+
+    private static function value(string $kind, string $arg, string $arg2 = ''): string
+    {
+        return match ($kind) {
+            'post', 'product', 'term', 'price', 'stock' => Records::value($kind, $arg, $arg2),
+            'site' => in_array($arg, self::SITE, true) ? self::data()[$arg] : '',
+            'tel', 'mailto', 'whatsapp', 'telegram', 'map' => self::contact($kind, self::data()),
+            'open-now' => null !== self::openNow() ? self::OPEN_NOW : '',
+            'year', 'today' => self::date($kind),
+            default => self::url($kind, $arg),
+        };
     }
 
     private static function str(mixed $url, string $fallback): string

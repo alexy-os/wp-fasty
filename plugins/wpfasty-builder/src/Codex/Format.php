@@ -82,23 +82,6 @@ final class Format
         return $d < 7 ? self::relative($d, 'day', $locale, $style) : self::relative($w, 'week', $locale, $style);
     }
 
-    private static function relative(int $n, string $unit, string $locale, string $style): string
-    {
-        $en = self::english($locale);
-        if ($en && ('minute' === $unit || 'hour' === $unit || ('day' === $unit && 'ago-short' === $style))) {
-            return $n.' '.['minute' => 'min', 'hour' => 'h', 'day' => 'd'][$unit].' ago';
-        }
-        // Intl.RelativeTimeFormat en, long; numeric "auto" only in the "ago" style
-        if ('ago' === $style && 1 === $n) {
-            return 'day' === $unit ? 'Yesterday' : 'Last week';
-        }
-        if ('ago' === $style && 0 === $n) {
-            return 'day' === $unit ? 'Today' : 'This week';
-        }
-
-        return $n.' '.$unit.(1 === $n ? '' : 's').' ago';
-    }
-
     /** "12,400" with max 2 fraction digits (en grouping). */
     public static function decimal(float|int $v, int $max = 2, int $min = 0): string
     {
@@ -180,5 +163,22 @@ final class Format
         $num = self::decimal(abs($value), $digits, $whole ? 0 : $digits);
 
         return ($value < 0 ? '-' : '').$sym.$num;
+    }
+
+    private static function relative(int $n, string $unit, string $locale, string $style): string
+    {
+        $en = self::english($locale);
+        if ($en && ('minute' === $unit || 'hour' === $unit || ('day' === $unit && 'ago-short' === $style))) {
+            return $n.' '.['minute' => 'min', 'hour' => 'h', 'day' => 'd'][$unit].' ago';
+        }
+        // Intl.RelativeTimeFormat en, long; numeric "auto" only in the "ago" style
+        if ('ago' === $style && 1 === $n) {
+            return 'day' === $unit ? 'Yesterday' : 'Last week';
+        }
+        if ('ago' === $style && 0 === $n) {
+            return 'day' === $unit ? 'Today' : 'This week';
+        }
+
+        return $n.' '.$unit.(1 === $n ? '' : 's').' ago';
     }
 }

@@ -22,22 +22,6 @@ final class PreviewsTest extends TestCase
 {
     private string $plugin;
 
-    protected function setUp(): void
-    {
-        $this->plugin = dirname(__DIR__).'/plugins/wpfasty-builder';
-        $src = $this->plugin.'/src/';
-        spl_autoload_register(static function (string $class) use ($src): void {
-            if (str_starts_with($class, 'WPFastyBuilder\\')) {
-                require_once $src.str_replace('\\', '/', substr($class, 15)).'.php';
-            }
-        });
-        if (!function_exists('plugins_url')) {
-            eval('function plugins_url(string $path = "", string $plugin = ""): string { return "http://example.test/wp-content/plugins/" . basename(dirname($plugin)) . "/" . ltrim($path, "/"); }');
-        }
-        Plugin::$file = $this->plugin.'/wpfasty-builder.php';
-        Plugin::$dir = $this->plugin;
-    }
-
     public function testEveryBundledVariantGetsItsPreview(): void
     {
         foreach (['latte', 'twig'] as $runtime) {
@@ -127,5 +111,21 @@ final class PreviewsTest extends TestCase
         $plain = ['id' => 'hero', 'label' => 'Hero', 'blocks' => ['hero']];
         $this->assertSame($plain, Previews::attachPages($plain, $src));
         $this->assertSame(['id' => 'x', 'pages' => [['id' => 'y']]], Previews::attachPages(['id' => 'x', 'pages' => [['id' => 'y']]], null));
+    }
+
+    protected function setUp(): void
+    {
+        $this->plugin = dirname(__DIR__).'/plugins/wpfasty-builder';
+        $src = $this->plugin.'/src/';
+        spl_autoload_register(static function (string $class) use ($src): void {
+            if (str_starts_with($class, 'WPFastyBuilder\\')) {
+                require_once $src.str_replace('\\', '/', substr($class, 15)).'.php';
+            }
+        });
+        if (!function_exists('plugins_url')) {
+            eval('function plugins_url(string $path = "", string $plugin = ""): string { return "http://example.test/wp-content/plugins/" . basename(dirname($plugin)) . "/" . ltrim($path, "/"); }');
+        }
+        Plugin::$file = $this->plugin.'/wpfasty-builder.php';
+        Plugin::$dir = $this->plugin;
     }
 }

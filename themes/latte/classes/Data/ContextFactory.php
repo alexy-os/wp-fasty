@@ -136,6 +136,15 @@ final class ContextFactory
     }
 
     /**
+     * WP returns texturized, entity-encoded strings (&#8217;, &hellip;); Latte escapes
+     * on output, so decode to plain text here to avoid double-encoding.
+     */
+    public static function text(string $value): string
+    {
+        return html_entity_decode(wp_strip_all_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+
+    /**
      * @return array{
      *   site: array<string, mixed>,
      *   menu: array<string, mixed>,
@@ -400,15 +409,6 @@ final class ContextFactory
         $data = apply_filters('wpfasty_post_data', $data, $post, $singular);
 
         return $data;
-    }
-
-    /**
-     * WP returns texturized, entity-encoded strings (&#8217;, &hellip;); Latte escapes
-     * on output, so decode to plain text here to avoid double-encoding.
-     */
-    public static function text(string $value): string
-    {
-        return html_entity_decode(wp_strip_all_tags($value), ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     /**

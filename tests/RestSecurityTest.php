@@ -50,36 +50,6 @@ final class RestSecurityTest extends TestCase
         'POST /sources' => ['administrator'],
     ];
 
-    protected function setUp(): void
-    {
-        require_once __DIR__.'/fixtures/rest-stubs.php';
-        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
-        foreach (['Rest', 'Sources'] as $f) {
-            require_once dirname(__DIR__)."/plugins/wpfasty-builder/src/$f.php";
-        }
-        $GLOBALS['wpfasty_wp']['posts'] = [self::PAGE => 'page', self::OWN_PAGE => 'page', self::POST => 'post'];
-        $GLOBALS['wp_test_routes'] = [];
-        Rest::routes();
-    }
-
-    /** @return callable(\WP_REST_Request): bool */
-    private static function permission(string $route, string $method): callable
-    {
-        $r = $GLOBALS['wp_test_routes'][Rest::NS.$route] ?? null;
-        self::assertIsArray($r, $route);
-        if (!isset($r['permission_callback'])) {
-            foreach ($r as $handler) {
-                if (is_array($handler) && ($handler['methods'] ?? '') === $method) {
-                    $r = $handler;
-                }
-            }
-        }
-        self::assertArrayHasKey('permission_callback', $r, "$method $route");
-        self::assertNotSame('__return_true', $r['permission_callback'], "$method $route is not public");
-
-        return $r['permission_callback'];
-    }
-
     public function testEveryRouteRefusesWhoMayNotEdit(): void
     {
         $routes = array_keys($GLOBALS['wp_test_routes']);
@@ -129,5 +99,35 @@ final class RestSecurityTest extends TestCase
             $GLOBALS['wp_test_caps'] = $caps;
             self::assertSame('administrator' === $role, \WPFastyBuilder\Sources::canImport(), $role);
         }
+    }
+
+    protected function setUp(): void
+    {
+        require_once __DIR__.'/fixtures/rest-stubs.php';
+        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
+        foreach (['Rest', 'Sources'] as $f) {
+            require_once dirname(__DIR__)."/plugins/wpfasty-builder/src/$f.php";
+        }
+        $GLOBALS['wpfasty_wp']['posts'] = [self::PAGE => 'page', self::OWN_PAGE => 'page', self::POST => 'post'];
+        $GLOBALS['wp_test_routes'] = [];
+        Rest::routes();
+    }
+
+    /** @return callable(\WP_REST_Request): bool */
+    private static function permission(string $route, string $method): callable
+    {
+        $r = $GLOBALS['wp_test_routes'][Rest::NS.$route] ?? null;
+        self::assertIsArray($r, $route);
+        if (!isset($r['permission_callback'])) {
+            foreach ($r as $handler) {
+                if (is_array($handler) && ($handler['methods'] ?? '') === $method) {
+                    $r = $handler;
+                }
+            }
+        }
+        self::assertArrayHasKey('permission_callback', $r, "$method $route");
+        self::assertNotSame('__return_true', $r['permission_callback'], "$method $route is not public");
+
+        return $r['permission_callback'];
     }
 }

@@ -26,11 +26,6 @@ final class TwigSourceLoader implements LoaderInterface, SourcePolicyInterface
         $this->bundled = new FilesystemLoader([$bundled]);
     }
 
-    private function pick(string $name): FilesystemLoader
-    {
-        return SourceLoader::shared(ltrim($name, '/')) ? $this->bundled : $this->own;
-    }
-
     public function getSourceContext(string $name): Source
     {
         return $this->pick($name)->getSourceContext($name);
@@ -54,5 +49,10 @@ final class TwigSourceLoader implements LoaderInterface, SourcePolicyInterface
     public function enableSandbox(Source $source): bool
     {
         return !SourceLoader::shared(ltrim($source->getName(), '/'));
+    }
+
+    private function pick(string $name): FilesystemLoader
+    {
+        return SourceLoader::shared(ltrim($name, '/')) ? $this->bundled : $this->own;
     }
 }

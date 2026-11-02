@@ -16,36 +16,6 @@ final class RendererTest extends TestCase
 {
     private string $cache;
 
-    protected function setUp(): void
-    {
-        $this->cache = sys_get_temp_dir().'/renderer-'.uniqid('', true);
-    }
-
-    private function views(): string
-    {
-        return __DIR__.'/fixtures/views';
-    }
-
-    private function latte(): LatteRenderer
-    {
-        return new LatteRenderer([$this->views(), ...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte')], $this->cache);
-    }
-
-    private function twig(): TwigRenderer
-    {
-        $prims = PrimitivesLocator::twigRoots(dirname(__DIR__).'/themes/latte');
-        if ([] === $prims || !class_exists(\Twig\Environment::class)) {
-            $this->markTestSkipped('Twig primitives not installed (themes/latte/twig: npx ui8kit@3 add --all)');
-        }
-
-        return new TwigRenderer([$this->views(), ...$prims], $this->cache.'/twig');
-    }
-
-    private static function normalize(string $html): string
-    {
-        return trim((string) preg_replace('/\s+/', ' ', $html));
-    }
-
     public function testLatteRendersViewNameWithoutExtension(): void
     {
         $r = $this->latte();
@@ -125,5 +95,35 @@ final class RendererTest extends TestCase
         $r = RendererFactory::create('latte', [$this->views()], ['latte' => [...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte')]], $this->cache);
         self::assertInstanceOf(LatteRenderer::class, $r);
         self::assertSame($r, RendererFactory::create($r, [], [], $this->cache));
+    }
+
+    protected function setUp(): void
+    {
+        $this->cache = sys_get_temp_dir().'/renderer-'.uniqid('', true);
+    }
+
+    private function views(): string
+    {
+        return __DIR__.'/fixtures/views';
+    }
+
+    private function latte(): LatteRenderer
+    {
+        return new LatteRenderer([$this->views(), ...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte')], $this->cache);
+    }
+
+    private function twig(): TwigRenderer
+    {
+        $prims = PrimitivesLocator::twigRoots(dirname(__DIR__).'/themes/latte');
+        if ([] === $prims || !class_exists(\Twig\Environment::class)) {
+            $this->markTestSkipped('Twig primitives not installed (themes/latte/twig: npx ui8kit@3 add --all)');
+        }
+
+        return new TwigRenderer([$this->views(), ...$prims], $this->cache.'/twig');
+    }
+
+    private static function normalize(string $html): string
+    {
+        return trim((string) preg_replace('/\s+/', ' ', $html));
     }
 }

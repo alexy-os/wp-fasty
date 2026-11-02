@@ -31,49 +31,6 @@ final class BuilderTest extends TestCase
     private static ?Catalog $catalog = null;
     private static ?Catalog $twigCatalog = null;
 
-    private static function catalog(): Catalog
-    {
-        return self::$catalog ??= new Catalog((new LocalSource('ui8kit', self::LATTE, 'latte'))->catalog());
-    }
-
-    private static function twigCatalog(): Catalog
-    {
-        return self::$twigCatalog ??= new Catalog((new LocalSource('ui8kit', self::TWIG, 'twig'))->catalog());
-    }
-
-    private static function latteSource(bool $sandboxed = false): LocalSource
-    {
-        return new LocalSource('ui8kit', self::LATTE, 'latte', '', $sandboxed);
-    }
-
-    private static function twigSource(): LocalSource
-    {
-        return new LocalSource('ui8kit', self::TWIG, 'twig');
-    }
-
-    /** a zip of $files (name → content) */
-    private static function zip(string $file, array $files): string
-    {
-        @mkdir(dirname($file), 0777, true);
-        $zip = new \ZipArchive();
-        $zip->open($file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-        foreach ($files as $name => $content) {
-            $zip->addFromString($name, $content);
-        }
-        $zip->close();
-
-        return (string) file_get_contents($file);
-    }
-
-    /** @return array<string, mixed> */
-    private static function base(): array
-    {
-        return [
-            'id' => 'layout-7', 'slug' => 'home', 'title' => 'Home', 'page_id' => 7, 'version' => 1,
-            'created_at' => '2026-10-17T01:00:00Z', 'updated_at' => '2026-10-17T01:00:00Z',
-        ];
-    }
-
     public function testBundledCatalogIsValid(): void
     {
         $data = (new LocalSource('ui8kit', self::LATTE, 'latte'))->catalog();
@@ -448,5 +405,48 @@ final class BuilderTest extends TestCase
         $twig = new RemoteSource('old', 'u', $dir, 'twig', $nofetch);
         $this->assertFalse($twig->imported(), 'a pre-K7 copy without twig/ is no Twig source');
         $this->assertSame('', (new BlockRenderer(['old' => $twig], null))->render('old', 'blocks/hero.html.twig', ['title' => 'x']));
+    }
+
+    private static function catalog(): Catalog
+    {
+        return self::$catalog ??= new Catalog((new LocalSource('ui8kit', self::LATTE, 'latte'))->catalog());
+    }
+
+    private static function twigCatalog(): Catalog
+    {
+        return self::$twigCatalog ??= new Catalog((new LocalSource('ui8kit', self::TWIG, 'twig'))->catalog());
+    }
+
+    private static function latteSource(bool $sandboxed = false): LocalSource
+    {
+        return new LocalSource('ui8kit', self::LATTE, 'latte', '', $sandboxed);
+    }
+
+    private static function twigSource(): LocalSource
+    {
+        return new LocalSource('ui8kit', self::TWIG, 'twig');
+    }
+
+    /** a zip of $files (name → content) */
+    private static function zip(string $file, array $files): string
+    {
+        @mkdir(dirname($file), 0777, true);
+        $zip = new \ZipArchive();
+        $zip->open($file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+        foreach ($files as $name => $content) {
+            $zip->addFromString($name, $content);
+        }
+        $zip->close();
+
+        return (string) file_get_contents($file);
+    }
+
+    /** @return array<string, mixed> */
+    private static function base(): array
+    {
+        return [
+            'id' => 'layout-7', 'slug' => 'home', 'title' => 'Home', 'page_id' => 7, 'version' => 1,
+            'created_at' => '2026-10-17T01:00:00Z', 'updated_at' => '2026-10-17T01:00:00Z',
+        ];
     }
 }

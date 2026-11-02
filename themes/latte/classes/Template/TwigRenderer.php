@@ -80,6 +80,12 @@ final class TwigRenderer implements RendererInterface
         return $this->twig;
     }
 
+    /** @deprecated kept for callers of K6.2; use ViewHelpers::safeUrl() */
+    public static function safeUrl(mixed $url): string
+    {
+        return ViewHelpers::safeUrl($url);
+    }
+
     /** Shared filters/functions of the thin-view subset (ADR-001 §2). */
     private function registerCommonSubset(): void
     {
@@ -92,12 +98,6 @@ final class TwigRenderer implements RendererInterface
         $this->twig->addFilter(new TwigFilter('safe_url', [ViewHelpers::class, 'safeUrl']));
         $this->registerWordPressHooks();
         $this->twig->addFunction(new TwigFunction('t', [ViewHelpers::class, 't']));
-    }
-
-    /** @deprecated kept for callers of K6.2; use ViewHelpers::safeUrl() */
-    public static function safeUrl(mixed $url): string
-    {
-        return ViewHelpers::safeUrl($url);
     }
 
     /**

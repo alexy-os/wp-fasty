@@ -37,33 +37,6 @@ final class PagerTest extends TestCase
 {
     private const SRC = __DIR__.'/../plugins/wpfasty-builder/sources/ui8kit';
 
-    /** @return array{0: Catalog, 1: BlockRenderer} */
-    private static function runtime(string $engine): array
-    {
-        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
-
-        return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
-    }
-
-    /** @return array<string, string> block id => HTML */
-    private static function page(string $engine, Catalog $catalog, BlockRenderer $r, array $entry, array $wpfb): array
-    {
-        $tpl = Compiler::compile($entry, $catalog, $engine);
-        $fn = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
-        if ('latte' === $engine) {
-            $l = new Engine();
-            $l->setLoader(new StringLoader(['page' => $tpl]));
-            $l->addFunction('wpfb_block', $fn);
-            $html = $l->renderToString('page', ['wpfb' => $wpfb]);
-        } else {
-            $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
-            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
-            $html = $env->render('page', ['wpfb' => $wpfb]);
-        }
-
-        return (require dirname(__DIR__).'/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>'.$html.'</body></html>');
-    }
-
     public function testCatalogDeclaresThePagerOfThePostsBlock(): void
     {
         foreach (['latte', 'twig'] as $engine) {
@@ -186,5 +159,32 @@ final class PagerTest extends TestCase
             $by[$engine] = $dom($one);
         }
         self::assertSame($by['latte'], $by['twig'], 'pager links: Latte = Twig');
+    }
+
+    /** @return array{0: Catalog, 1: BlockRenderer} */
+    private static function runtime(string $engine): array
+    {
+        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
+
+        return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
+    }
+
+    /** @return array<string, string> block id => HTML */
+    private static function page(string $engine, Catalog $catalog, BlockRenderer $r, array $entry, array $wpfb): array
+    {
+        $tpl = Compiler::compile($entry, $catalog, $engine);
+        $fn = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
+        if ('latte' === $engine) {
+            $l = new Engine();
+            $l->setLoader(new StringLoader(['page' => $tpl]));
+            $l->addFunction('wpfb_block', $fn);
+            $html = $l->renderToString('page', ['wpfb' => $wpfb]);
+        } else {
+            $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
+            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
+            $html = $env->render('page', ['wpfb' => $wpfb]);
+        }
+
+        return (require dirname(__DIR__).'/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>'.$html.'</body></html>');
     }
 }

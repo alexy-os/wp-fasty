@@ -11,11 +11,6 @@ use WPFasty\Theme\PrimitivesLocator;
 
 final class PrimitivesLocatorTest extends TestCase
 {
-    private function theme(): string
-    {
-        return dirname(__DIR__).'/themes/latte';
-    }
-
     public function testResolvesUi8Kit3Primitives(): void
     {
         $dir = PrimitivesLocator::resolve($this->theme());
@@ -96,5 +91,10 @@ final class PrimitivesLocatorTest extends TestCase
         $this->assertMatchesRegularExpression('/<span class="[^"]*rounded-full h-6 px-3 text-xs bg-muted text-foreground[^"]*">B<\/span>/', $html, 'badge: kit-compose span');
         $this->assertStringContainsString('focus-visible:inset-ring-ring rounded aria-invalid:inset-ring-destructive min-h-20', $html, 'cn keeps the codegen textarea recipe');
         $this->assertMatchesRegularExpression("/<textarea[^>]*>  a\nb<\/textarea>/", $r2->render('probe'), 'exact value');
+    }
+
+    private function theme(): string
+    {
+        return dirname(__DIR__).'/themes/latte';
     }
 }

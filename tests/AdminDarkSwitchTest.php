@@ -15,38 +15,6 @@ use WPFastyBuilder\Admin;
 #[RunTestsInSeparateProcesses]
 final class AdminDarkSwitchTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $src = dirname(__DIR__).'/plugins/wpfasty-builder/src/';
-        spl_autoload_register(static function (string $class) use ($src): void {
-            if (str_starts_with($class, 'WPFastyBuilder\\')) {
-                require_once $src.str_replace('\\', '/', substr($class, 15)).'.php';
-            }
-        });
-        if (!class_exists('WP_Admin_Bar', false)) {
-            eval('class WP_Admin_Bar { public array $nodes = []; public function add_node(array $n): void { $this->nodes[] = $n; } }');
-        }
-        if (!function_exists('get_current_screen')) {
-            eval('function get_current_screen(): ?object { return $GLOBALS["wpfb_test_screen"] ?? null; }');
-        }
-    }
-
-    private function state(string $hook, bool $editor, ?string $screen): void
-    {
-        (new \ReflectionProperty(Admin::class, 'hook'))->setValue(null, $hook);
-        (new \ReflectionProperty(Admin::class, 'editor'))->setValue(null, $editor);
-        $GLOBALS['wpfb_test_screen'] = null === $screen ? null : (object) ['id' => $screen];
-    }
-
-    /** @return list<array<string, mixed>> */
-    private function nodes(): array
-    {
-        $bar = new \WP_Admin_Bar();
-        Admin::darkSwitch($bar);
-
-        return $bar->nodes;
-    }
-
     public function testTheSwitchIsTheLastToolbarNodeOnTheBuilderScreen(): void
     {
         $this->state('pages_page_wpfasty-builder', true, 'pages_page_wpfasty-builder');
@@ -79,5 +47,37 @@ final class AdminDarkSwitchTest extends TestCase
         $this->assertSame(2, substr_count($html, 'aria-hidden="true"'));
         $this->assertStringContainsString('class="wpfb-dark-moon"', $html);
         $this->assertStringContainsString('class="wpfb-dark-sun"', $html);
+    }
+
+    protected function setUp(): void
+    {
+        $src = dirname(__DIR__).'/plugins/wpfasty-builder/src/';
+        spl_autoload_register(static function (string $class) use ($src): void {
+            if (str_starts_with($class, 'WPFastyBuilder\\')) {
+                require_once $src.str_replace('\\', '/', substr($class, 15)).'.php';
+            }
+        });
+        if (!class_exists('WP_Admin_Bar', false)) {
+            eval('class WP_Admin_Bar { public array $nodes = []; public function add_node(array $n): void { $this->nodes[] = $n; } }');
+        }
+        if (!function_exists('get_current_screen')) {
+            eval('function get_current_screen(): ?object { return $GLOBALS["wpfb_test_screen"] ?? null; }');
+        }
+    }
+
+    private function state(string $hook, bool $editor, ?string $screen): void
+    {
+        (new \ReflectionProperty(Admin::class, 'hook'))->setValue(null, $hook);
+        (new \ReflectionProperty(Admin::class, 'editor'))->setValue(null, $editor);
+        $GLOBALS['wpfb_test_screen'] = null === $screen ? null : (object) ['id' => $screen];
+    }
+
+    /** @return list<array<string, mixed>> */
+    private function nodes(): array
+    {
+        $bar = new \WP_Admin_Bar();
+        Admin::darkSwitch($bar);
+
+        return $bar->nodes;
     }
 }

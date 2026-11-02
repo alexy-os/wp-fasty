@@ -124,32 +124,6 @@ final class Records
         }
     }
 
-    /**
-     * @param array<mixed>                       $props
-     * @param array<string, array<string, true>> $want
-     */
-    private static function scan(array $props, array &$want): void
-    {
-        foreach ($props as $v) {
-            if (is_array($v)) {
-                self::scan($v, $want);
-                continue;
-            }
-            if (!is_string($v) || !str_contains($v, '{') || preg_match_all(self::SCAN, $v, $all, PREG_SET_ORDER) < 1) {
-                continue;
-            }
-            foreach ($all as $m) {
-                if ('term' === $m[1]) {
-                    if (($m[3] ?? '') !== '') {
-                        $want['term'][$m[2].':'.$m[3]] = true;
-                    }
-                } elseif (($m[3] ?? '') === '') {
-                    $want['post' === $m[1] ? 'post' : 'product'][$m[2]] = true;
-                }
-            }
-        }
-    }
-
     /** What a record token gives: a URL ("#" when the record is not there) or text ("" when not there). */
     public static function value(string $kind, string $arg, string $arg2 = ''): string
     {
@@ -185,53 +159,6 @@ final class Records
             'stock' => null !== $p ? (string) $p['stock'] : '',
             default => '',
         };
-    }
-
-    /** @param list<string> $slugs */
-    private static function loadPosts(array $slugs): void
-    {
-        foreach ($slugs as $s) {
-            self::$posts[$s] = null;
-        }
-        $found = get_posts([
-            'post_type' => 'post', 'post_status' => 'publish', 'post_name__in' => $slugs,
-            'numberposts' => count($slugs), 'no_found_rows' => true, 'ignore_sticky_posts' => true,
-            'update_post_meta_cache' => false, 'update_post_term_cache' => false,
-        ]);
-        foreach (is_array($found) ? $found : [] as $p) {
-            if ($p instanceof \WP_Post && array_key_exists((string) $p->post_name, self::$posts)) {
-                $url = get_permalink($p);
-                self::$posts[(string) $p->post_name] = is_string($url) && '' !== $url ? $url : null;
-            }
-        }
-    }
-
-    /** @param list<string> $slugs */
-    private static function loadProducts(array $slugs): void
-    {
-        foreach ($slugs as $s) {
-            self::$products[$s] = null;
-        }
-        $kind = self::site()['product'];
-        if (null === $kind) {
-            return;
-        }
-        // one query for the posts, one for their meta (price, stock…); no term cache
-        $found = get_posts([
-            'post_type' => $kind['post_type'], 'post_status' => 'publish', 'post_name__in' => $slugs,
-            'numberposts' => count($slugs), 'no_found_rows' => true,
-            'update_post_meta_cache' => true, 'update_post_term_cache' => false,
-        ]);
-        foreach (is_array($found) ? $found : [] as $p) {
-            if ($p instanceof \WP_Post && array_key_exists((string) $p->post_name, self::$products)) {
-                $product = self::product($p);
-                if ('' !== (string) $p->post_password) {
-                    // a password-protected product: its link stays, its fields are behind the password
-                    $product = ['amount' => null, 'price' => '', 'in_stock' => false, 'stock' => ''] + $product;
-                }
-                self::$products[(string) $p->post_name] = $product;
-            }
-        }
     }
 
     /**
@@ -274,65 +201,6 @@ final class Records
             'in_stock' => $inStock,
             'stock' => $inStock ? __('In stock', 'wpfasty-builder') : __('Out of stock', 'wpfasty-builder'),
         ];
-    }
-
-    /**
-     * The Codex entry part the tokens read: id, slug and typed metadata (field → {value}) from the post meta of the
-     * delivery mapping (meta cache primed by the batch query).
-     *
-     * @param array<string, mixed> $kind
-     *
-     * @return array{id: string, slug: string, metadata: array<string, array{value: mixed}>}
-     */
-    private static function entry(\WP_Post $p, array $kind): array
-    {
-        $md = [];
-        foreach ((array) $kind['meta'] as $field => $key) {
-            $def = (array) ($kind['fields'][$field] ?? ['type' => 'string']);
-            $raw = get_post_meta($p->ID, (string) $key, true);
-            $value = class_exists(\WPFastyTypes\Codex\Mapper::class)
-                ? \WPFastyTypes\Codex\Mapper::typed($def, $raw)
-                : (is_numeric($raw) ? (int) round((float) $raw) : ('' === $raw || null === $raw ? null : $raw));
-            if (null !== $value) {
-                $md[(string) $field] = ['value' => $value];
-            }
-        }
-
-        return [
-            'id' => ($kind['kind'] ?? 'product').'-'.$p->ID,
-            'slug' => (string) $p->post_name,
-            'metadata' => $md,
-        ];
-    }
-
-    /** @param list<string> $keys "<taxonomy>:<slug>" */
-    private static function loadTerms(array $keys): void
-    {
-        $taxes = [];
-        $slugs = [];
-        foreach ($keys as $k) {
-            self::$terms[$k] = null;
-            [$tax, $slug] = explode(':', $k, 2);
-            if (in_array($tax, self::site()['taxonomies'], true)) {
-                $taxes[$tax] = true;
-                $slugs[$slug] = true;
-            }
-        }
-        if ([] === $taxes) {
-            return;
-        }
-        // one query for every taxonomy and slug of the page
-        $found = get_terms([
-            'taxonomy' => array_keys($taxes), 'slug' => array_keys($slugs), 'hide_empty' => false,
-            'update_term_meta_cache' => false,
-        ]);
-        foreach (is_array($found) ? $found : [] as $t) {
-            $key = $t instanceof \WP_Term ? $t->taxonomy.':'.$t->slug : '';
-            if ('' !== $key && array_key_exists($key, self::$terms)) {
-                $url = get_term_link($t);
-                self::$terms[$key] = is_string($url) && '' !== $url ? $url : null;
-            }
-        }
     }
 
     /**
@@ -410,5 +278,137 @@ final class Records
         }
 
         return ['posts' => $posts, 'products' => $products, 'terms' => $terms];
+    }
+
+    /**
+     * @param array<mixed>                       $props
+     * @param array<string, array<string, true>> $want
+     */
+    private static function scan(array $props, array &$want): void
+    {
+        foreach ($props as $v) {
+            if (is_array($v)) {
+                self::scan($v, $want);
+                continue;
+            }
+            if (!is_string($v) || !str_contains($v, '{') || preg_match_all(self::SCAN, $v, $all, PREG_SET_ORDER) < 1) {
+                continue;
+            }
+            foreach ($all as $m) {
+                if ('term' === $m[1]) {
+                    if (($m[3] ?? '') !== '') {
+                        $want['term'][$m[2].':'.$m[3]] = true;
+                    }
+                } elseif (($m[3] ?? '') === '') {
+                    $want['post' === $m[1] ? 'post' : 'product'][$m[2]] = true;
+                }
+            }
+        }
+    }
+
+    /** @param list<string> $slugs */
+    private static function loadPosts(array $slugs): void
+    {
+        foreach ($slugs as $s) {
+            self::$posts[$s] = null;
+        }
+        $found = get_posts([
+            'post_type' => 'post', 'post_status' => 'publish', 'post_name__in' => $slugs,
+            'numberposts' => count($slugs), 'no_found_rows' => true, 'ignore_sticky_posts' => true,
+            'update_post_meta_cache' => false, 'update_post_term_cache' => false,
+        ]);
+        foreach (is_array($found) ? $found : [] as $p) {
+            if ($p instanceof \WP_Post && array_key_exists((string) $p->post_name, self::$posts)) {
+                $url = get_permalink($p);
+                self::$posts[(string) $p->post_name] = is_string($url) && '' !== $url ? $url : null;
+            }
+        }
+    }
+
+    /** @param list<string> $slugs */
+    private static function loadProducts(array $slugs): void
+    {
+        foreach ($slugs as $s) {
+            self::$products[$s] = null;
+        }
+        $kind = self::site()['product'];
+        if (null === $kind) {
+            return;
+        }
+        // one query for the posts, one for their meta (price, stock…); no term cache
+        $found = get_posts([
+            'post_type' => $kind['post_type'], 'post_status' => 'publish', 'post_name__in' => $slugs,
+            'numberposts' => count($slugs), 'no_found_rows' => true,
+            'update_post_meta_cache' => true, 'update_post_term_cache' => false,
+        ]);
+        foreach (is_array($found) ? $found : [] as $p) {
+            if ($p instanceof \WP_Post && array_key_exists((string) $p->post_name, self::$products)) {
+                $product = self::product($p);
+                if ('' !== (string) $p->post_password) {
+                    // a password-protected product: its link stays, its fields are behind the password
+                    $product = ['amount' => null, 'price' => '', 'in_stock' => false, 'stock' => ''] + $product;
+                }
+                self::$products[(string) $p->post_name] = $product;
+            }
+        }
+    }
+
+    /**
+     * The Codex entry part the tokens read: id, slug and typed metadata (field → {value}) from the post meta of the
+     * delivery mapping (meta cache primed by the batch query).
+     *
+     * @param array<string, mixed> $kind
+     *
+     * @return array{id: string, slug: string, metadata: array<string, array{value: mixed}>}
+     */
+    private static function entry(\WP_Post $p, array $kind): array
+    {
+        $md = [];
+        foreach ((array) $kind['meta'] as $field => $key) {
+            $def = (array) ($kind['fields'][$field] ?? ['type' => 'string']);
+            $raw = get_post_meta($p->ID, (string) $key, true);
+            $value = class_exists(\WPFastyTypes\Codex\Mapper::class)
+                ? \WPFastyTypes\Codex\Mapper::typed($def, $raw)
+                : (is_numeric($raw) ? (int) round((float) $raw) : ('' === $raw || null === $raw ? null : $raw));
+            if (null !== $value) {
+                $md[(string) $field] = ['value' => $value];
+            }
+        }
+
+        return [
+            'id' => ($kind['kind'] ?? 'product').'-'.$p->ID,
+            'slug' => (string) $p->post_name,
+            'metadata' => $md,
+        ];
+    }
+
+    /** @param list<string> $keys "<taxonomy>:<slug>" */
+    private static function loadTerms(array $keys): void
+    {
+        $taxes = [];
+        $slugs = [];
+        foreach ($keys as $k) {
+            self::$terms[$k] = null;
+            [$tax, $slug] = explode(':', $k, 2);
+            if (in_array($tax, self::site()['taxonomies'], true)) {
+                $taxes[$tax] = true;
+                $slugs[$slug] = true;
+            }
+        }
+        if ([] === $taxes) {
+            return;
+        }
+        // one query for every taxonomy and slug of the page
+        $found = get_terms([
+            'taxonomy' => array_keys($taxes), 'slug' => array_keys($slugs), 'hide_empty' => false,
+            'update_term_meta_cache' => false,
+        ]);
+        foreach (is_array($found) ? $found : [] as $t) {
+            $key = $t instanceof \WP_Term ? $t->taxonomy.':'.$t->slug : '';
+            if ('' !== $key && array_key_exists($key, self::$terms)) {
+                $url = get_term_link($t);
+                self::$terms[$key] = is_string($url) && '' !== $url ? $url : null;
+            }
+        }
     }
 }

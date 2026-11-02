@@ -21,6 +21,8 @@ final class Rest
     private const RAW = 'wpfasty_codex_raw';
     private const CT = 'application/json; charset=utf-8';
 
+    private const QUERY = ['locale', 'page', 'per_page'];
+
     public static function attach(): void
     {
         add_action('rest_api_init', [self::class, 'routes']);
@@ -45,17 +47,6 @@ final class Rest
         $add('/settings/(?P<id>[^/]+)', [self::class, 'setting']);
     }
 
-    private static function raw(string $bytes, int $status = 200, array $headers = []): \WP_REST_Response
-    {
-        $r = new \WP_REST_Response(null, $status, ['Content-Type' => self::CT] + $headers);
-        $r->header('Content-Type', self::CT);
-        $r->set_data([self::RAW => $bytes]);
-
-        return $r;
-    }
-
-    private const QUERY = ['locale', 'page', 'per_page'];
-
     public static function error(string $code, string $message, int $status, ?array $details = null): \WP_REST_Response
     {
         $e = ['code' => $code, 'message' => $message, 'status' => $status];
@@ -78,68 +69,6 @@ final class Rest
         echo $data[self::RAW];
 
         return true;
-    }
-
-    private static function envelope(array $items, int $page, int $per, int $total): string
-    {
-        $p = Json::jcs([
-            'page' => $page, 'per_page' => $per, 'total' => $total,
-            'total_pages' => $per > 0 ? (int) ceil($total / $per) : 0,
-        ]);
-
-        return '{"data":['.implode(',', $items).'],"pagination":'.$p.'}';
-    }
-
-    /**
-     * Query of every route (as fastygo/backend /codex/v1): only locale, page, per_page; anything else is 400.
-     *
-     * @return array{0: string, 1: int, 2: int}|\WP_REST_Response locale, page, per_page
-     */
-    private static function query(\WP_REST_Request $req): array|\WP_REST_Response
-    {
-        $q = $req->get_query_params();
-        unset($q['rest_route']); // plain permalinks route through ?rest_route=
-        foreach (array_keys($q) as $k) {
-            if (!in_array((string) $k, self::QUERY, true)) {
-                return self::error('validation_error', 'unknown query parameter', 400, ['parameter' => (string) $k]);
-            }
-        }
-        $locale = Mapper::locale();
-        if (isset($q['locale'])) {
-            $l = is_string($q['locale']) ? $q['locale'] : '';
-            if (1 !== preg_match('/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/', $l)) {
-                return self::error('validation_error', 'locale is invalid', 400, ['locale' => $l]);
-            }
-            if ($l !== $locale) {
-                return self::error('not_found', 'locale was not found', 404);
-            }
-        }
-        $page = 1;
-        $per = Profile::PER_PAGE;
-        foreach (['page' => &$page, 'per_page' => &$per] as $k => &$v) {
-            if (isset($q[$k])) {
-                $raw = is_string($q[$k]) ? $q[$k] : '';
-                if (1 !== preg_match('/^\+?0*[1-9][0-9]{0,17}$/', $raw)) {
-                    return self::error('validation_error', "{$k} must be a positive integer", 400, [$k => $raw]);
-                }
-                // per_page above the maximum is clamped, not rejected (fastygo/backend /codex/v1)
-                $v = 'per_page' === $k ? min((int) $raw, Profile::MAX_PER_PAGE) : (int) $raw;
-            }
-        }
-        unset($v);
-
-        return [$locale, $page, $per];
-    }
-
-    private static function site(): Site|\WP_REST_Response
-    {
-        return Site::current() ?? self::error('not_found', 'manifest was not found', 404);
-    }
-
-    private static function publicPost(mixed $post, string $postType): bool
-    {
-        return $post instanceof \WP_Post && $post->post_type === $postType && 'publish' === $post->post_status
-            && '' === $post->post_password;
     }
 
     public static function discovery(\WP_REST_Request $req): \WP_REST_Response
@@ -325,14 +254,6 @@ final class Rest
         return self::raw(self::envelope($items, $page, $per, count($terms)));
     }
 
-    /** SettingsV04 bytes of the site (empty values dropped, as the contract adapter does). */
-    private static function settingsBytes(Site $site): string
-    {
-        $s = (new Mapper($site))->settings();
-
-        return Json::jcs(array_filter($s, static fn ($v): bool => '' !== $v && null !== $v));
-    }
-
     public static function settings(\WP_REST_Request $req): \WP_REST_Response
     {
         $site = self::site();
@@ -370,5 +291,84 @@ final class Rest
             'Codex-Digest' => Profile::SETTINGS_PROFILE.':sha256:'.$hex,
             'ETag' => "\"{$hex}\"",
         ]);
+    }
+
+    private static function raw(string $bytes, int $status = 200, array $headers = []): \WP_REST_Response
+    {
+        $r = new \WP_REST_Response(null, $status, ['Content-Type' => self::CT] + $headers);
+        $r->header('Content-Type', self::CT);
+        $r->set_data([self::RAW => $bytes]);
+
+        return $r;
+    }
+
+    private static function envelope(array $items, int $page, int $per, int $total): string
+    {
+        $p = Json::jcs([
+            'page' => $page, 'per_page' => $per, 'total' => $total,
+            'total_pages' => $per > 0 ? (int) ceil($total / $per) : 0,
+        ]);
+
+        return '{"data":['.implode(',', $items).'],"pagination":'.$p.'}';
+    }
+
+    /**
+     * Query of every route (as fastygo/backend /codex/v1): only locale, page, per_page; anything else is 400.
+     *
+     * @return array{0: string, 1: int, 2: int}|\WP_REST_Response locale, page, per_page
+     */
+    private static function query(\WP_REST_Request $req): array|\WP_REST_Response
+    {
+        $q = $req->get_query_params();
+        unset($q['rest_route']); // plain permalinks route through ?rest_route=
+        foreach (array_keys($q) as $k) {
+            if (!in_array((string) $k, self::QUERY, true)) {
+                return self::error('validation_error', 'unknown query parameter', 400, ['parameter' => (string) $k]);
+            }
+        }
+        $locale = Mapper::locale();
+        if (isset($q['locale'])) {
+            $l = is_string($q['locale']) ? $q['locale'] : '';
+            if (1 !== preg_match('/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/', $l)) {
+                return self::error('validation_error', 'locale is invalid', 400, ['locale' => $l]);
+            }
+            if ($l !== $locale) {
+                return self::error('not_found', 'locale was not found', 404);
+            }
+        }
+        $page = 1;
+        $per = Profile::PER_PAGE;
+        foreach (['page' => &$page, 'per_page' => &$per] as $k => &$v) {
+            if (isset($q[$k])) {
+                $raw = is_string($q[$k]) ? $q[$k] : '';
+                if (1 !== preg_match('/^\+?0*[1-9][0-9]{0,17}$/', $raw)) {
+                    return self::error('validation_error', "{$k} must be a positive integer", 400, [$k => $raw]);
+                }
+                // per_page above the maximum is clamped, not rejected (fastygo/backend /codex/v1)
+                $v = 'per_page' === $k ? min((int) $raw, Profile::MAX_PER_PAGE) : (int) $raw;
+            }
+        }
+        unset($v);
+
+        return [$locale, $page, $per];
+    }
+
+    private static function site(): Site|\WP_REST_Response
+    {
+        return Site::current() ?? self::error('not_found', 'manifest was not found', 404);
+    }
+
+    private static function publicPost(mixed $post, string $postType): bool
+    {
+        return $post instanceof \WP_Post && $post->post_type === $postType && 'publish' === $post->post_status
+            && '' === $post->post_password;
+    }
+
+    /** SettingsV04 bytes of the site (empty values dropped, as the contract adapter does). */
+    private static function settingsBytes(Site $site): string
+    {
+        $s = (new Mapper($site))->settings();
+
+        return Json::jcs(array_filter($s, static fn ($v): bool => '' !== $v && null !== $v));
     }
 }

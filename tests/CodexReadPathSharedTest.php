@@ -57,12 +57,6 @@ final class CodexReadPathSharedTest extends TestCase
         self::assertCount(38, $doc['cases']);
     }
 
-    /** "W<n>" stands for n words "w" (as the codegen-x test expands it) */
-    private static function expand(mixed $s): mixed
-    {
-        return is_string($s) && 1 === preg_match('/^W(\d+)$/', $s, $m) ? implode(' ', array_fill(0, (int) $m[1], 'w')) : $s;
-    }
-
     /**
      * @param array<string, mixed> $case
      * @param array<string, mixed> $opts
@@ -82,5 +76,11 @@ final class CodexReadPathSharedTest extends TestCase
         self::assertSame([24, 200], [ReadPath::EXCERPT_WORDS, ReadPath::WORDS_PER_MINUTE]);
         $doc = json_decode((string) file_get_contents(__DIR__.'/fixtures/codex-shared/readpath-wpfasty.json'), true);
         self::assertGreaterThanOrEqual(40, count($doc['cases']));
+    }
+
+    /** "W<n>" stands for n words "w" (as the codegen-x test expands it) */
+    private static function expand(mixed $s): mixed
+    {
+        return is_string($s) && 1 === preg_match('/^W(\d+)$/', $s, $m) ? implode(' ', array_fill(0, (int) $m[1], 'w')) : $s;
     }
 }

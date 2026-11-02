@@ -17,6 +17,10 @@ use WPFasty\Types\Registry;
  */
 final class Plugin
 {
+    /** Option holding the field types the stored meta was last normalized to: {post type: {meta key: type}}. */
+    public const SCHEMA_OPTION = 'wpfasty_types_schema';
+    private const TYPED = ['integer', 'number', 'money', 'boolean', 'date'];
+
     public function __construct(private readonly Registry $types)
     {
     }
@@ -102,10 +106,6 @@ final class Plugin
             }
         }
     }
-
-    /** Option holding the field types the stored meta was last normalized to: {post type: {meta key: type}}. */
-    public const SCHEMA_OPTION = 'wpfasty_types_schema';
-    private const TYPED = ['integer', 'number', 'money', 'boolean', 'date'];
 
     /**
      * Data migration when a field's declared type changes (e.g. folio `year` string → integer): every stored value
@@ -201,61 +201,6 @@ final class Plugin
         );
     }
 
-    private function renderMetaBox(PostType $type, \WP_Post $post): void
-    {
-        wp_nonce_field('wpfasty_save_'.$type->name, 'wpfasty_'.$type->name.'_nonce');
-        foreach ($type->fields as $name => $field) {
-            $value = $field->toInput(get_post_meta($post->ID, $field->metaKey, true));
-            $id = 'wpfasty-'.$type->name.'-'.$name;
-            $input = $field->inputType();
-            if ('checkbox' === $input) {
-                printf(
-                    '<p><label for="%1$s"><input type="checkbox" id="%1$s"'
-                        .' name="wpfasty_fields[%2$s]" value="1"%3$s> %4$s</label></p>',
-                    esc_attr($id),
-                    esc_attr($name),
-                    checked($value, '1', false),
-                    esc_html($field->label)
-                );
-                continue;
-            }
-            if ('select' === $input) {
-                $opts = '<option value=""></option>';
-                foreach ($field->options() as $option) {
-                    $opts .= sprintf(
-                        '<option value="%1$s"%2$s>%3$s</option>',
-                        esc_attr($option),
-                        selected($value, $option, false),
-                        esc_html((string) ($field->def['option_labels'][$option] ?? $option))
-                    );
-                }
-                printf(
-                    '<p><label for="%1$s"><strong>%2$s</strong></label><br>'
-                        .'<select class="widefat" id="%1$s" name="wpfasty_fields[%3$s]">%4$s</select></p>',
-                    esc_attr($id),
-                    esc_html($field->label),
-                    esc_attr($name),
-                    $opts // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per option above.
-                );
-                continue;
-            }
-            $step = 'integer' === $field->type ? '1' : '0.01';
-            // money may be negative (Q9); integer / number stay >= 0
-            $min = 'money' === $field->type ? '' : ' min="0"';
-            $extra = 'number' === $input ? $min.' step="'.esc_attr($step).'"' : '';
-            printf(
-                '<p><label for="%1$s"><strong>%2$s</strong></label><br>'
-                    .'<input class="widefat" type="%3$s"%4$s id="%1$s" name="wpfasty_fields[%5$s]" value="%6$s"></p>',
-                esc_attr($id),
-                esc_html($field->label),
-                esc_attr($input),
-                $extra, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from esc_attr above.
-                esc_attr($name),
-                esc_attr($value)
-            );
-        }
-    }
-
     public function save(int $postId, \WP_Post $post): void
     {
         $type = $this->types->get($post->post_type);
@@ -308,6 +253,61 @@ final class Plugin
                     echo esc_html((string) $columns[$col]['value']($id));
                 }
             }, 10, 2);
+        }
+    }
+
+    private function renderMetaBox(PostType $type, \WP_Post $post): void
+    {
+        wp_nonce_field('wpfasty_save_'.$type->name, 'wpfasty_'.$type->name.'_nonce');
+        foreach ($type->fields as $name => $field) {
+            $value = $field->toInput(get_post_meta($post->ID, $field->metaKey, true));
+            $id = 'wpfasty-'.$type->name.'-'.$name;
+            $input = $field->inputType();
+            if ('checkbox' === $input) {
+                printf(
+                    '<p><label for="%1$s"><input type="checkbox" id="%1$s"'
+                        .' name="wpfasty_fields[%2$s]" value="1"%3$s> %4$s</label></p>',
+                    esc_attr($id),
+                    esc_attr($name),
+                    checked($value, '1', false),
+                    esc_html($field->label)
+                );
+                continue;
+            }
+            if ('select' === $input) {
+                $opts = '<option value=""></option>';
+                foreach ($field->options() as $option) {
+                    $opts .= sprintf(
+                        '<option value="%1$s"%2$s>%3$s</option>',
+                        esc_attr($option),
+                        selected($value, $option, false),
+                        esc_html((string) ($field->def['option_labels'][$option] ?? $option))
+                    );
+                }
+                printf(
+                    '<p><label for="%1$s"><strong>%2$s</strong></label><br>'
+                        .'<select class="widefat" id="%1$s" name="wpfasty_fields[%3$s]">%4$s</select></p>',
+                    esc_attr($id),
+                    esc_html($field->label),
+                    esc_attr($name),
+                    $opts // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped per option above.
+                );
+                continue;
+            }
+            $step = 'integer' === $field->type ? '1' : '0.01';
+            // money may be negative (Q9); integer / number stay >= 0
+            $min = 'money' === $field->type ? '' : ' min="0"';
+            $extra = 'number' === $input ? $min.' step="'.esc_attr($step).'"' : '';
+            printf(
+                '<p><label for="%1$s"><strong>%2$s</strong></label><br>'
+                    .'<input class="widefat" type="%3$s"%4$s id="%1$s" name="wpfasty_fields[%5$s]" value="%6$s"></p>',
+                esc_attr($id),
+                esc_html($field->label),
+                esc_attr($input),
+                $extra, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from esc_attr above.
+                esc_attr($name),
+                esc_attr($value)
+            );
         }
     }
 }

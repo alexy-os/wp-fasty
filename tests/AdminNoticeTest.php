@@ -15,19 +15,6 @@ use WPFastyBuilder\Admin;
 #[RunTestsInSeparateProcesses]
 final class AdminNoticeTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        require_once dirname(__DIR__).'/plugins/wpfasty-builder/src/Admin.php';
-        if (!function_exists('set_transient')) {
-            eval('function set_transient(string $k, mixed $v, int $ttl = 0): bool { $GLOBALS["wp_test_transients"][$k] = [$v, $ttl]; return true; }
-                function get_transient(string $k): mixed { return $GLOBALS["wp_test_transients"][$k][0] ?? false; }
-                function delete_transient(string $k): bool { unset($GLOBALS["wp_test_transients"][$k]); return true; }
-                function get_current_user_id(): int { return (int) ($GLOBALS["wp_test_user"] ?? 0); }');
-        }
-        $GLOBALS['wp_test_transients'] = [];
-        $GLOBALS['wp_test_user'] = 3;
-    }
-
     public function testNoticeIsPerUserShownOnceAndEscaped(): void
     {
         Admin::notice('error', 'Bad <img src=x onerror=alert(1)> registry');
@@ -50,5 +37,18 @@ final class AdminNoticeTest extends TestCase
         self::assertSame('', Admin::takeNotice());
         $src = (string) file_get_contents(dirname(__DIR__).'/plugins/wpfasty-builder/src/Admin.php');
         self::assertStringNotContainsString('wpfb_msg', $src, 'the import result is not passed in the URL');
+    }
+
+    protected function setUp(): void
+    {
+        require_once dirname(__DIR__).'/plugins/wpfasty-builder/src/Admin.php';
+        if (!function_exists('set_transient')) {
+            eval('function set_transient(string $k, mixed $v, int $ttl = 0): bool { $GLOBALS["wp_test_transients"][$k] = [$v, $ttl]; return true; }
+                function get_transient(string $k): mixed { return $GLOBALS["wp_test_transients"][$k][0] ?? false; }
+                function delete_transient(string $k): bool { unset($GLOBALS["wp_test_transients"][$k]); return true; }
+                function get_current_user_id(): int { return (int) ($GLOBALS["wp_test_user"] ?? 0); }');
+        }
+        $GLOBALS['wp_test_transients'] = [];
+        $GLOBALS['wp_test_user'] = 3;
     }
 }

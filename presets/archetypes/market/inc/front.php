@@ -81,13 +81,6 @@ final class Front
         };
     }
 
-    private static function param(string $key, array $allowed): string
-    {
-        $raw = isset($_GET[$key]) ? sanitize_key(wp_unslash($_GET[$key])) : '';
-
-        return in_array($raw, $allowed, true) ? $raw : $allowed[0];
-    }
-
     /** Catalog sort and price/rating filters on the product archive (main query only). */
     public static function catalogQuery(\WP_Query $q): void
     {
@@ -305,6 +298,24 @@ final class Front
         ], $postId);
     }
 
+    /** Admin list column value (types/product.php `columns`). */
+    public static function column(int $postId, string $column): string
+    {
+        $product = self::product($postId);
+        if ('stock' === $column) {
+            return null === $product['stock'] ? '∞' : (string) $product['stock'];
+        }
+
+        return (string) ($product[$column] ?? '');
+    }
+
+    private static function param(string $key, array $allowed): string
+    {
+        $raw = isset($_GET[$key]) ? sanitize_key(wp_unslash($_GET[$key])) : '';
+
+        return in_array($raw, $allowed, true) ? $raw : $allowed[0];
+    }
+
     /**
      * Digital-goods details from the product fields (types/product.php); author profiles of the demo authors come
      * from Fixtures when the `author` field has no user.
@@ -354,17 +365,6 @@ final class Front
             'reviews_available' => !empty($product['reviews_available']),
             'review_action' => (string) ($product['review_action'] ?? ''),
         ];
-    }
-
-    /** Admin list column value (types/product.php `columns`). */
-    public static function column(int $postId, string $column): string
-    {
-        $product = self::product($postId);
-        if ('stock' === $column) {
-            return null === $product['stock'] ? '∞' : (string) $product['stock'];
-        }
-
-        return (string) ($product[$column] ?? '');
     }
 
     /**

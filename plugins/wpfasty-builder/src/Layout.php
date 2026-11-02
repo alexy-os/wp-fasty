@@ -21,6 +21,9 @@ final class Layout
     private const LOCALE = '/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/';
     private const RFC3339 = '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/';
 
+    /** readPath grammar of a manual field mapping (record field → path[|pipe[:arg]]) */
+    public const MAP_PATH = '/^[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)*(\\|[a-z][a-z-]*(:[A-Za-z0-9_-]+)?)?$/';
+
     /**
      * Sanitizes a layout payload against a catalog and the known data sources.
      *
@@ -304,6 +307,56 @@ final class Layout
         self::set($a[$k], $path, $value);
     }
 
+    /**
+     * Props without trusted markup: every TrustedHtml marker ({"__html": "…"}) becomes its plain text, which the
+     * templates escape. Applied to the props of a catalog variant and a layout; trusted markup reaches a block only
+     * through the current record of the data adapter (DataSources::current), filled after this.
+     *
+     * @param array<array-key, mixed> $v
+     *
+     * @return array<array-key, mixed>
+     */
+    public static function untrust(array $v): array
+    {
+        foreach ($v as $k => $x) {
+            if (is_array($x)) {
+                $v[$k] = array_key_exists('__html', $x) ? (is_scalar($x['__html']) ? (string) $x['__html'] : '')
+                    : self::untrust($x);
+            }
+        }
+
+        return $v;
+    }
+
+    public static function safeHref(string $h): bool
+    {
+        // a site path (/x, not //host or /\host), a fragment, a query, or http(s)/mailto/tel
+        $plain = 1 === preg_match('#^(https?://|/(?![/\\\\])|\#|\?|mailto:|tel:)#i', $h) && Safe::url($h) === $h;
+
+        return '' === $h || $plain
+            || (1 === preg_match(Links::TOKEN, $h, $m, PREG_OFFSET_CAPTURE) && 0 === $m[0][1]
+                && !in_array($m[1][0], ['open-now', 'price', 'stock'], true)); // text tokens are never a link
+    }
+
+    /**
+     * Manual mapping of a binding: {record field: readPath}, invalid pairs dropped.
+     *
+     * @return array<string, string>
+     */
+    public static function map(mixed $map): array
+    {
+        $out = [];
+        foreach (is_array($map) ? $map : [] as $field => $path) {
+            if (is_string($field) && 1 === preg_match('/^[A-Za-z][A-Za-z0-9_]{0,62}$/', $field)
+                && is_string($path) && strlen($path) <= 200 && 1 === preg_match(self::MAP_PATH, $path)) {
+                $out[$field] = $path;
+            }
+        }
+        ksort($out, SORT_STRING);
+
+        return $out;
+    }
+
     /** @param array<string, mixed> $a */
     private static function unset(array &$a, array $path): void
     {
@@ -406,62 +459,9 @@ final class Layout
         };
     }
 
-    /**
-     * Props without trusted markup: every TrustedHtml marker ({"__html": "…"}) becomes its plain text, which the
-     * templates escape. Applied to the props of a catalog variant and a layout; trusted markup reaches a block only
-     * through the current record of the data adapter (DataSources::current), filled after this.
-     *
-     * @param array<array-key, mixed> $v
-     *
-     * @return array<array-key, mixed>
-     */
-    public static function untrust(array $v): array
-    {
-        foreach ($v as $k => $x) {
-            if (is_array($x)) {
-                $v[$k] = array_key_exists('__html', $x) ? (is_scalar($x['__html']) ? (string) $x['__html'] : '')
-                    : self::untrust($x);
-            }
-        }
-
-        return $v;
-    }
-
-    public static function safeHref(string $h): bool
-    {
-        // a site path (/x, not //host or /\host), a fragment, a query, or http(s)/mailto/tel
-        $plain = 1 === preg_match('#^(https?://|/(?![/\\\\])|\#|\?|mailto:|tel:)#i', $h) && Safe::url($h) === $h;
-
-        return '' === $h || $plain
-            || (1 === preg_match(Links::TOKEN, $h, $m, PREG_OFFSET_CAPTURE) && 0 === $m[0][1]
-                && !in_array($m[1][0], ['open-now', 'price', 'stock'], true)); // text tokens are never a link
-    }
-
     /** @return array{code: string, path: string, message: string} */
     private static function issue(string $code, string $path, string $message): array
     {
         return ['code' => $code, 'path' => $path, 'message' => $message];
-    }
-
-    /** readPath grammar of a manual field mapping (record field → path[|pipe[:arg]]) */
-    public const MAP_PATH = '/^[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)*(\\|[a-z][a-z-]*(:[A-Za-z0-9_-]+)?)?$/';
-
-    /**
-     * Manual mapping of a binding: {record field: readPath}, invalid pairs dropped.
-     *
-     * @return array<string, string>
-     */
-    public static function map(mixed $map): array
-    {
-        $out = [];
-        foreach (is_array($map) ? $map : [] as $field => $path) {
-            if (is_string($field) && 1 === preg_match('/^[A-Za-z][A-Za-z0-9_]{0,62}$/', $field)
-                && is_string($path) && strlen($path) <= 200 && 1 === preg_match(self::MAP_PATH, $path)) {
-                $out[$field] = $path;
-            }
-        }
-        ksort($out, SORT_STRING);
-
-        return $out;
     }
 }

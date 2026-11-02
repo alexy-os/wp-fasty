@@ -24,6 +24,48 @@ final class CodexWpSamplesTest extends TestCase
 {
     private const DIR = __DIR__.'/fixtures/codex/wordpress';
 
+    public function testMediaEditMatchesContractAdapter(): void
+    {
+        $map = self::mapper();
+        $got = array_map(static fn (array $m): string => Canonical::entryBytes($map->media(self::attachment($m))), self::sample('media.edit'));
+        self::assertSame(self::expected()['media'], $got);
+    }
+
+    public function testUsersEditMatchesContractAdapter(): void
+    {
+        $map = self::mapper();
+        $got = array_map(static fn (array $u): string => Canonical::entryBytes($map->user(self::user($u))), self::sample('users.edit'));
+        self::assertSame(self::expected()['users'], $got);
+    }
+
+    public function testMediaViewIsRefused(): void
+    {
+        self::mapper();
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('title.raw missing: Codex export needs context=edit');
+        self::attachment(self::sample('media.view')[0]);
+    }
+
+    public function testUsersViewIsRefused(): void
+    {
+        self::mapper();
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('username missing: Codex export needs context=edit');
+        self::user(self::sample('users.view')[0]);
+    }
+
+    /** persisted_preferences (editor UI state) is dropped even when it has a value; other REST meta is kept. */
+    public function testPersistedPreferencesNeverInMetadata(): void
+    {
+        $map = self::mapper();
+        $u = self::sample('users.edit')[0];
+        $u['meta'] = ['persisted_preferences' => ['core' => ['fixedToolbar' => true]], 'demo_badge' => 'gold'];
+        $e = $map->user(self::user($u));
+        self::assertArrayNotHasKey('persisted_preferences', $e['metadata']);
+        self::assertSame(['value' => 'gold'], $e['metadata']['demo_badge']);
+        self::assertStringNotContainsString('persisted_preferences', Canonical::entryBytes($e));
+    }
+
     /** @return list<array<string, mixed>> */
     private static function sample(string $name): array
     {
@@ -98,47 +140,5 @@ final class CodexWpSamplesTest extends TestCase
     private static function expected(): array
     {
         return json_decode((string) file_get_contents(self::DIR.'/expected.json'), true);
-    }
-
-    public function testMediaEditMatchesContractAdapter(): void
-    {
-        $map = self::mapper();
-        $got = array_map(static fn (array $m): string => Canonical::entryBytes($map->media(self::attachment($m))), self::sample('media.edit'));
-        self::assertSame(self::expected()['media'], $got);
-    }
-
-    public function testUsersEditMatchesContractAdapter(): void
-    {
-        $map = self::mapper();
-        $got = array_map(static fn (array $u): string => Canonical::entryBytes($map->user(self::user($u))), self::sample('users.edit'));
-        self::assertSame(self::expected()['users'], $got);
-    }
-
-    public function testMediaViewIsRefused(): void
-    {
-        self::mapper();
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('title.raw missing: Codex export needs context=edit');
-        self::attachment(self::sample('media.view')[0]);
-    }
-
-    public function testUsersViewIsRefused(): void
-    {
-        self::mapper();
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('username missing: Codex export needs context=edit');
-        self::user(self::sample('users.view')[0]);
-    }
-
-    /** persisted_preferences (editor UI state) is dropped even when it has a value; other REST meta is kept. */
-    public function testPersistedPreferencesNeverInMetadata(): void
-    {
-        $map = self::mapper();
-        $u = self::sample('users.edit')[0];
-        $u['meta'] = ['persisted_preferences' => ['core' => ['fixedToolbar' => true]], 'demo_badge' => 'gold'];
-        $e = $map->user(self::user($u));
-        self::assertArrayNotHasKey('persisted_preferences', $e['metadata']);
-        self::assertSame(['value' => 'gold'], $e['metadata']['demo_badge']);
-        self::assertStringNotContainsString('persisted_preferences', Canonical::entryBytes($e));
     }
 }

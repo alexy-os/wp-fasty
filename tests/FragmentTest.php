@@ -37,45 +37,6 @@ final class FragmentTest extends TestCase
         'author' => 'Ann', 'date' => 'Oct 1, 2026', 'minutes' => 2, 'icon' => 'file-text',
         'href' => 'https://example.test/a/', 'image' => 'https://example.test/a.jpg', ];
 
-    /** @return array{0: Catalog, 1: BlockRenderer} */
-    private static function runtime(string $engine): array
-    {
-        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
-
-        return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
-    }
-
-    /** @return list<array<string, mixed>> */
-    private static function layoutBlocks(): array
-    {
-        return [
-            ['id' => 'intro', 'block' => 'pagehead', 'variant' => 'start', 'props' => ['title' => "It's <b>Builder</b> \\ page"]],
-            ['id' => 'news', 'block' => 'posts', 'variant' => 'grid', 'bindings' => ['posts' => ['source' => 'posts', 'limit' => 3]]],
-            ['id' => 'about', 'block' => 'about', 'variant' => 'split', 'props' => ['stats' => [['id' => 's', 'label' => 'L', 'value' => '1', 'icon' => 'zap', 'hint' => 'h']]]],
-            ['id' => 'cta', 'block' => 'cta', 'variant' => 'card', 'props' => ['content' => ['title' => 'Go & see']]],
-        ];
-    }
-
-    /** @return array<string, string> block id => fragment of the compiled page, rendered with bound posts */
-    private static function page(string $engine, Catalog $catalog, BlockRenderer $r, array $entry): array
-    {
-        $tpl = Compiler::compile($entry, $catalog, $engine);
-        $ctx = ['wpfb' => ['news' => ['posts' => [self::POST]]]];
-        $fn = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
-        if ('latte' === $engine) {
-            $l = new Engine();
-            $l->setLoader(new StringLoader(['page' => $tpl]));
-            $l->addFunction('wpfb_block', $fn);
-            $html = $l->renderToString('page', $ctx);
-        } else {
-            $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
-            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
-            $html = $env->render('page', $ctx);
-        }
-
-        return (require dirname(__DIR__).'/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>'.$html.'</body></html>');
-    }
-
     public function testFragmentEqualsTheBlockInTheCompiledPage(): void
     {
         $html = require dirname(__DIR__).'/tools/builder/fragment-html.php';
@@ -180,5 +141,44 @@ final class FragmentTest extends TestCase
         $this->assertInstanceOf(\WP_Error::class, $src);
         $this->assertSame(404, $src->get_error_data()['status']);
         unset($GLOBALS['wp_test_filters']['wpfasty_builder_engine'], $GLOBALS['wp_test_caps']);
+    }
+
+    /** @return array{0: Catalog, 1: BlockRenderer} */
+    private static function runtime(string $engine): array
+    {
+        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
+
+        return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
+    }
+
+    /** @return list<array<string, mixed>> */
+    private static function layoutBlocks(): array
+    {
+        return [
+            ['id' => 'intro', 'block' => 'pagehead', 'variant' => 'start', 'props' => ['title' => "It's <b>Builder</b> \\ page"]],
+            ['id' => 'news', 'block' => 'posts', 'variant' => 'grid', 'bindings' => ['posts' => ['source' => 'posts', 'limit' => 3]]],
+            ['id' => 'about', 'block' => 'about', 'variant' => 'split', 'props' => ['stats' => [['id' => 's', 'label' => 'L', 'value' => '1', 'icon' => 'zap', 'hint' => 'h']]]],
+            ['id' => 'cta', 'block' => 'cta', 'variant' => 'card', 'props' => ['content' => ['title' => 'Go & see']]],
+        ];
+    }
+
+    /** @return array<string, string> block id => fragment of the compiled page, rendered with bound posts */
+    private static function page(string $engine, Catalog $catalog, BlockRenderer $r, array $entry): array
+    {
+        $tpl = Compiler::compile($entry, $catalog, $engine);
+        $ctx = ['wpfb' => ['news' => ['posts' => [self::POST]]]];
+        $fn = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
+        if ('latte' === $engine) {
+            $l = new Engine();
+            $l->setLoader(new StringLoader(['page' => $tpl]));
+            $l->addFunction('wpfb_block', $fn);
+            $html = $l->renderToString('page', $ctx);
+        } else {
+            $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
+            $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
+            $html = $env->render('page', $ctx);
+        }
+
+        return (require dirname(__DIR__).'/tools/builder/fragment-html.php')['blocks']('<!doctype html><html><body>'.$html.'</body></html>');
     }
 }

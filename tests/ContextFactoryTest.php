@@ -9,14 +9,6 @@ use WPFasty\Data\ContextFactory;
 
 final class ContextFactoryTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $GLOBALS['wp_test_flags'] = [];
-        $GLOBALS['wp_test_menus'] = ['locations' => [], 'items' => []];
-        $GLOBALS['wp_test_filters'] = [];
-        $GLOBALS['wp_test_sidebars'] = [];
-    }
-
     public function testTextDecodesWpEntitiesOnce(): void
     {
         $this->assertSame('It’s fine…', ContextFactory::text('It&#8217;s fine&hellip;'));
@@ -96,5 +88,13 @@ final class ContextFactoryTest extends TestCase
         $ctx = (new ContextFactory())->createErrorContext();
         $this->assertStringContainsString('Sidebar', $ctx['widgets']['sidebar']);
         $this->assertStringContainsString('Footer', $ctx['widgets']['footer']);
+    }
+
+    protected function setUp(): void
+    {
+        $GLOBALS['wp_test_flags'] = [];
+        $GLOBALS['wp_test_menus'] = ['locations' => [], 'items' => []];
+        $GLOBALS['wp_test_filters'] = [];
+        $GLOBALS['wp_test_sidebars'] = [];
     }
 }

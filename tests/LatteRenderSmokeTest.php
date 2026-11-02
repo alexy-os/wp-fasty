@@ -13,108 +13,6 @@ final class LatteRenderSmokeTest extends TestCase
 {
     private string $cacheDir;
 
-    protected function setUp(): void
-    {
-        $this->cacheDir = sys_get_temp_dir().'/latte-smoke-'.uniqid('', true);
-        mkdir($this->cacheDir, 0755, true);
-    }
-
-    protected function tearDown(): void
-    {
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($this->cacheDir, \FilesystemIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST
-        );
-        foreach ($files as $file) {
-            $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());
-        }
-        rmdir($this->cacheDir);
-    }
-
-    private function engine(): Engine
-    {
-        $theme = dirname(__DIR__).'/themes/latte';
-        $roots = [
-            $theme.'/views',
-            ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte'),
-        ];
-        $latte = new Engine();
-        $latte->setTempDirectory($this->cacheDir);
-        $latte->setStrictTypes(true);
-        $latte->setLoader(new MultiRootLoader($roots));
-        $latte->addExtension(new WordPressExtension());
-
-        return $latte;
-    }
-
-    /** @return array<string, mixed> */
-    private function baseContext(): array
-    {
-        return [
-            'site' => [
-                'title' => 'Latte',
-                'url' => 'http://example.test/',
-                'theme_url' => 'http://example.test/theme',
-                'stylesheet_url' => 'http://example.test/theme',
-                'lang' => 'en-US',
-                'description' => 'Smoke',
-                'charset' => 'UTF-8',
-                'year' => '2026',
-                'logo' => null,
-            ],
-            'menu' => [
-                'primary' => ['items' => []],
-                'footer' => ['items' => []],
-            ],
-            'shell' => 'classic',
-            'sheet' => [
-                'trigger' => 'classic-mobile-sheet-trigger',
-                'panel' => 'classic-mobile-sheet-panel',
-                'title' => 'classic-mobile-sheet-title',
-            ],
-            'search' => [
-                'action' => 'http://example.test/',
-                'query' => '',
-                'placeholder' => 'Search…',
-                'submit' => 'Search',
-                'label' => 'Search',
-            ],
-            'widgets' => [
-                'sidebar' => '',
-                'footer' => '',
-            ],
-            'labels' => [
-                'featured' => 'Featured',
-                'latest_articles' => 'Latest articles',
-                'no_posts' => 'No posts found.',
-                'previous' => 'Previous',
-                'next' => 'Next',
-                'skip_to_content' => 'Skip to content',
-                'open_menu' => 'Open menu',
-                'close_menu' => 'Close menu',
-                'dark_mode' => 'Dark mode',
-                'primary_nav' => 'Primary',
-                'footer_nav' => 'Footer',
-                'sidebar' => 'Sidebar',
-                'pagination' => 'Pagination',
-                'posted_on' => 'Posted on',
-                'by_author' => 'By',
-                'categories' => 'Categories',
-                'tags' => 'Tags',
-                'previous_post' => 'Previous post',
-                'next_post' => 'Next post',
-                'attachment' => 'Attachment',
-                'pages' => 'Pages:',
-            ],
-            'hero' => [
-                'primary_label' => 'Explore',
-                'primary_url' => 'http://example.test/blog',
-                'secondary_label' => 'Learn more',
-                'secondary_url' => 'http://example.test/',
-            ],
-        ];
-    }
-
     public function testFrontPageRenders(): void
     {
         $latte = $this->engine();
@@ -247,5 +145,107 @@ final class LatteRenderSmokeTest extends TestCase
         $html = $latte->renderToString('blocks/hero-centered.latte', $this->baseContext());
         $this->assertStringContainsString('latte-skin-hero', $html);
         $this->assertStringContainsString('text-primary', $html);
+    }
+
+    protected function setUp(): void
+    {
+        $this->cacheDir = sys_get_temp_dir().'/latte-smoke-'.uniqid('', true);
+        mkdir($this->cacheDir, 0755, true);
+    }
+
+    protected function tearDown(): void
+    {
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($this->cacheDir, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+        foreach ($files as $file) {
+            $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());
+        }
+        rmdir($this->cacheDir);
+    }
+
+    private function engine(): Engine
+    {
+        $theme = dirname(__DIR__).'/themes/latte';
+        $roots = [
+            $theme.'/views',
+            ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte'),
+        ];
+        $latte = new Engine();
+        $latte->setTempDirectory($this->cacheDir);
+        $latte->setStrictTypes(true);
+        $latte->setLoader(new MultiRootLoader($roots));
+        $latte->addExtension(new WordPressExtension());
+
+        return $latte;
+    }
+
+    /** @return array<string, mixed> */
+    private function baseContext(): array
+    {
+        return [
+            'site' => [
+                'title' => 'Latte',
+                'url' => 'http://example.test/',
+                'theme_url' => 'http://example.test/theme',
+                'stylesheet_url' => 'http://example.test/theme',
+                'lang' => 'en-US',
+                'description' => 'Smoke',
+                'charset' => 'UTF-8',
+                'year' => '2026',
+                'logo' => null,
+            ],
+            'menu' => [
+                'primary' => ['items' => []],
+                'footer' => ['items' => []],
+            ],
+            'shell' => 'classic',
+            'sheet' => [
+                'trigger' => 'classic-mobile-sheet-trigger',
+                'panel' => 'classic-mobile-sheet-panel',
+                'title' => 'classic-mobile-sheet-title',
+            ],
+            'search' => [
+                'action' => 'http://example.test/',
+                'query' => '',
+                'placeholder' => 'Search…',
+                'submit' => 'Search',
+                'label' => 'Search',
+            ],
+            'widgets' => [
+                'sidebar' => '',
+                'footer' => '',
+            ],
+            'labels' => [
+                'featured' => 'Featured',
+                'latest_articles' => 'Latest articles',
+                'no_posts' => 'No posts found.',
+                'previous' => 'Previous',
+                'next' => 'Next',
+                'skip_to_content' => 'Skip to content',
+                'open_menu' => 'Open menu',
+                'close_menu' => 'Close menu',
+                'dark_mode' => 'Dark mode',
+                'primary_nav' => 'Primary',
+                'footer_nav' => 'Footer',
+                'sidebar' => 'Sidebar',
+                'pagination' => 'Pagination',
+                'posted_on' => 'Posted on',
+                'by_author' => 'By',
+                'categories' => 'Categories',
+                'tags' => 'Tags',
+                'previous_post' => 'Previous post',
+                'next_post' => 'Next post',
+                'attachment' => 'Attachment',
+                'pages' => 'Pages:',
+            ],
+            'hero' => [
+                'primary_label' => 'Explore',
+                'primary_url' => 'http://example.test/blog',
+                'secondary_label' => 'Learn more',
+                'secondary_url' => 'http://example.test/',
+            ],
+        ];
     }
 }

@@ -31,35 +31,6 @@ final class SecurityXssTest extends TestCase
 {
     private const SRC = __DIR__.'/../plugins/wpfasty-builder/sources/ui8kit';
 
-    /** @return array{0: Catalog, 1: BlockRenderer} */
-    private static function runtime(string $engine): array
-    {
-        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
-
-        return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
-    }
-
-    /** WP stubs per process: get_post_type & co. must not exist for ShopCartTest, {page:} lookups are cached per request */
-    protected function setUp(): void
-    {
-        require_once __DIR__.'/fixtures/links-stubs.php';
-        require_once __DIR__.'/fixtures/rest-stubs.php';
-        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
-        spl_autoload_register(static function (string $class): void {
-            if (str_starts_with($class, 'WPFastyBuilder\\')) {
-                $file = dirname(__DIR__).'/plugins/wpfasty-builder/src/'.str_replace('\\', '/', substr($class, 15)).'.php';
-                if (is_file($file)) {
-                    require_once $file;
-                }
-            }
-        });
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['wp_test_kses'], $GLOBALS['wp_test_pages']);
-    }
-
     public function testDangerousUrlSchemesAreDroppedThroughObfuscation(): void
     {
         $bad = [
@@ -279,5 +250,34 @@ final class SecurityXssTest extends TestCase
                 self::assertSame($out['latte'], $out['twig'], "$block/$variant Latte = Twig: $payload");
             }
         }
+    }
+
+    /** WP stubs per process: get_post_type & co. must not exist for ShopCartTest, {page:} lookups are cached per request */
+    protected function setUp(): void
+    {
+        require_once __DIR__.'/fixtures/links-stubs.php';
+        require_once __DIR__.'/fixtures/rest-stubs.php';
+        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
+        spl_autoload_register(static function (string $class): void {
+            if (str_starts_with($class, 'WPFastyBuilder\\')) {
+                $file = dirname(__DIR__).'/plugins/wpfasty-builder/src/'.str_replace('\\', '/', substr($class, 15)).'.php';
+                if (is_file($file)) {
+                    require_once $file;
+                }
+            }
+        });
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['wp_test_kses'], $GLOBALS['wp_test_pages']);
+    }
+
+    /** @return array{0: Catalog, 1: BlockRenderer} */
+    private static function runtime(string $engine): array
+    {
+        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
+
+        return [new Catalog($src->catalog()), new BlockRenderer(['ui8kit' => $src], null)];
     }
 }

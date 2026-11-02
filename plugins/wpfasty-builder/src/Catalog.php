@@ -373,24 +373,6 @@ final class Catalog
     }
 
     /**
-     * @param array<string, mixed> $d
-     * @param array<string, mixed> $data
-     *
-     * @return array{kind: string, record: string, fields: array<string, string>, defs: list<array<string, mixed>>}
-     */
-    private static function slotOf(array $d, array $data): array
-    {
-        $record = (string) ($d['record'] ?? '');
-
-        return [
-            'kind' => (string) ($d['kind'] ?? ''),
-            'record' => $record,
-            'fields' => array_map('strval', (array) ($d['fields'] ?? [])),
-            'defs' => array_values(array_filter((array) ($data['records'][$record] ?? []), 'is_array')),
-        ];
-    }
-
-    /**
      * The blocks the editor offers: those of a collection (with its pages), or all of them.
      *
      * @return array{
@@ -414,5 +396,23 @@ final class Catalog
         }
 
         return ['meta' => $this->meta(), 'collection' => $col, 'blocks' => $blocks];
+    }
+
+    /**
+     * @param array<string, mixed> $d
+     * @param array<string, mixed> $data
+     *
+     * @return array{kind: string, record: string, fields: array<string, string>, defs: list<array<string, mixed>>}
+     */
+    private static function slotOf(array $d, array $data): array
+    {
+        $record = (string) ($d['record'] ?? '');
+
+        return [
+            'kind' => (string) ($d['kind'] ?? ''),
+            'record' => $record,
+            'fields' => array_map('strval', (array) ($d['fields'] ?? [])),
+            'defs' => array_values(array_filter((array) ($data['records'][$record] ?? []), 'is_array')),
+        ];
     }
 }

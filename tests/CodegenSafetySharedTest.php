@@ -55,12 +55,6 @@ final class CodegenSafetySharedTest extends TestCase
         '&sol;a:b',
     ];
 
-    /** @return array<string, mixed> */
-    private static function vectors(): array
-    {
-        return json_decode((string) file_get_contents(__DIR__.'/fixtures/codex-shared/safety-vectors.json'), true);
-    }
-
     /** @return iterable<string, array{class-string}> */
     public static function runtimes(): iterable
     {
@@ -171,5 +165,11 @@ final class CodegenSafetySharedTest extends TestCase
         $some = $r->render('ui8kit', $tpl, $base + ['aside' => ['title' => 'Note', 'content' => ['__html' => '<p>N</p>']]]);
         self::assertStringContainsString('data-testid="richtext-aside"', $some);
         self::assertStringContainsString('<p>N</p>', $some);
+    }
+
+    /** @return array<string, mixed> */
+    private static function vectors(): array
+    {
+        return json_decode((string) file_get_contents(__DIR__.'/fixtures/codex-shared/safety-vectors.json'), true);
     }
 }

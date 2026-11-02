@@ -30,54 +30,6 @@ final class RecordsTest extends TestCase
         'price' => 'price', 'sale' => 'sale_price', 'stock' => 'stock',
     ];
 
-    protected function setUp(): void
-    {
-        require_once __DIR__.'/fixtures/records-stubs.php';
-        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
-        require_once __DIR__.'/fixtures/links-stubs.php';
-        $src = dirname(__DIR__).'/plugins/wpfasty-builder/src/';
-        foreach (['Links', 'Records', 'Layout', 'Codex/ReadPath', 'Codex/Format'] as $f) {
-            require_once $src.$f.'.php';
-        }
-        require_once dirname(__DIR__).'/plugins/wpfasty-types/src/Codex/Mapper.php';
-        $post = static fn (int $id, string $type, string $slug, string $title): \WP_Post => new \WP_Post(['ID' => $id, 'post_type' => $type, 'post_name' => $slug, 'post_title' => $title]);
-        $GLOBALS['wpfb_records'] = [
-            'posts' => [
-                $post(1, 'post', 'hello-world', 'Hello world'),
-                $post(2, 'post', 'second', 'Second'),
-                $post(10, 'product', 'mug', 'Ceramic mug'),
-                $post(11, 'product', 'wallet', 'Leather wallet'),
-                $post(12, 'product', 'tray', 'Oak tray'),
-                $post(13, 'product', 'gift', 'Gift card'),
-            ],
-            'meta' => [
-                10 => ['_shop_price' => '1800'],
-                11 => ['_shop_price' => '4800', '_shop_sale_price' => '3900', '_shop_stock' => '20'],
-                12 => ['_shop_price' => '6450', '_shop_stock' => '0'],
-            ],
-            'terms' => [
-                new \WP_Term(['term_id' => 5, 'name' => 'Kitchen', 'slug' => 'kitchen', 'taxonomy' => 'product_cat']),
-                new \WP_Term(['term_id' => 6, 'name' => 'Sale', 'slug' => 'sale', 'taxonomy' => 'post_tag']),
-            ],
-            'log' => [],
-        ];
-        $GLOBALS['wp_test_permalinks'] = [
-            1 => 'http://example.test/hello-world/', 2 => 'http://example.test/second/',
-            10 => 'http://example.test/product/mug/', 11 => 'http://example.test/product/wallet/',
-            12 => 'http://example.test/product/tray/', 13 => 'http://example.test/product/gift/',
-        ];
-        Records::setSite([
-            'product' => self::PRODUCT, 'taxonomies' => ['category', 'post_tag', 'product_cat'],
-            'currency' => 'USD', 'locale' => 'en-US',
-        ]);
-    }
-
-    /** @return list<string> functions of the queries made so far */
-    private static function queries(): array
-    {
-        return array_column($GLOBALS['wpfb_records']['log'], 0);
-    }
-
     public function testPageTokensLoadInOneQueryPerType(): void
     {
         $props = [
@@ -203,5 +155,53 @@ final class RecordsTest extends TestCase
         foreach (self::queries() as $i => $fn) {
             $this->assertSame('publish', $GLOBALS['wpfb_records']['log'][$i][1]['post_status'] ?? null, "$fn: published only");
         }
+    }
+
+    protected function setUp(): void
+    {
+        require_once __DIR__.'/fixtures/records-stubs.php';
+        require_once __DIR__.'/fixtures/wp-objects-stubs.php';
+        require_once __DIR__.'/fixtures/links-stubs.php';
+        $src = dirname(__DIR__).'/plugins/wpfasty-builder/src/';
+        foreach (['Links', 'Records', 'Layout', 'Codex/ReadPath', 'Codex/Format'] as $f) {
+            require_once $src.$f.'.php';
+        }
+        require_once dirname(__DIR__).'/plugins/wpfasty-types/src/Codex/Mapper.php';
+        $post = static fn (int $id, string $type, string $slug, string $title): \WP_Post => new \WP_Post(['ID' => $id, 'post_type' => $type, 'post_name' => $slug, 'post_title' => $title]);
+        $GLOBALS['wpfb_records'] = [
+            'posts' => [
+                $post(1, 'post', 'hello-world', 'Hello world'),
+                $post(2, 'post', 'second', 'Second'),
+                $post(10, 'product', 'mug', 'Ceramic mug'),
+                $post(11, 'product', 'wallet', 'Leather wallet'),
+                $post(12, 'product', 'tray', 'Oak tray'),
+                $post(13, 'product', 'gift', 'Gift card'),
+            ],
+            'meta' => [
+                10 => ['_shop_price' => '1800'],
+                11 => ['_shop_price' => '4800', '_shop_sale_price' => '3900', '_shop_stock' => '20'],
+                12 => ['_shop_price' => '6450', '_shop_stock' => '0'],
+            ],
+            'terms' => [
+                new \WP_Term(['term_id' => 5, 'name' => 'Kitchen', 'slug' => 'kitchen', 'taxonomy' => 'product_cat']),
+                new \WP_Term(['term_id' => 6, 'name' => 'Sale', 'slug' => 'sale', 'taxonomy' => 'post_tag']),
+            ],
+            'log' => [],
+        ];
+        $GLOBALS['wp_test_permalinks'] = [
+            1 => 'http://example.test/hello-world/', 2 => 'http://example.test/second/',
+            10 => 'http://example.test/product/mug/', 11 => 'http://example.test/product/wallet/',
+            12 => 'http://example.test/product/tray/', 13 => 'http://example.test/product/gift/',
+        ];
+        Records::setSite([
+            'product' => self::PRODUCT, 'taxonomies' => ['category', 'post_tag', 'product_cat'],
+            'currency' => 'USD', 'locale' => 'en-US',
+        ]);
+    }
+
+    /** @return list<string> functions of the queries made so far */
+    private static function queries(): array
+    {
+        return array_column($GLOBALS['wpfb_records']['log'], 0);
     }
 }

@@ -99,12 +99,6 @@ final class Field
         return array_values(array_map('strval', (array) ($this->def['options'] ?? [])));
     }
 
-    /** @param list<string> $options */
-    private static function option(string $value, array $options): string
-    {
-        return [] === $options || in_array($value, $options, true) ? $value : '';
-    }
-
     /** register_post_meta() type for this field. */
     public function metaType(): string
     {
@@ -193,15 +187,6 @@ final class Field
         return checkdate((int) $m[2], (int) $m[3], (int) $m[1]) ? "{$m[1]}-{$m[2]}-{$m[3]}" : '';
     }
 
-    private static function url(string $raw): string
-    {
-        if (function_exists('esc_url_raw')) {
-            return esc_url_raw($raw);
-        }
-
-        return filter_var($raw, FILTER_VALIDATE_URL) ? $raw : '';
-    }
-
     /** Decimal with max 2 places, comma accepted; non-negative unless $signed (money); '' when empty/invalid. */
     public static function number(string $raw, bool $signed = false): string
     {
@@ -212,5 +197,20 @@ final class Field
         $n = round((float) $raw, 2);
 
         return (string) ($signed ? $n : max(0, $n));
+    }
+
+    /** @param list<string> $options */
+    private static function option(string $value, array $options): string
+    {
+        return [] === $options || in_array($value, $options, true) ? $value : '';
+    }
+
+    private static function url(string $raw): string
+    {
+        if (function_exists('esc_url_raw')) {
+            return esc_url_raw($raw);
+        }
+
+        return filter_var($raw, FILTER_VALIDATE_URL) ? $raw : '';
     }
 }

@@ -164,16 +164,6 @@ final class Rest
         return is_numeric($page) ? max(0, (int) $page) : 0;
     }
 
-    /** a request body over MAX_BODY bytes (a layout of 40 blocks is far below): 413 */
-    private static function tooLarge(\WP_REST_Request $r): ?\WP_Error
-    {
-        return strlen((string) $r->get_body()) > self::MAX_BODY ? new \WP_Error(
-            'wpfb_too_large',
-            __('The request is too large.', 'wpfasty-builder'),
-            ['status' => 413],
-        ) : null;
-    }
-
     public static function renderBlock(\WP_REST_Request $r): \WP_REST_Response|\WP_Error
     {
         if (($e = self::tooLarge($r)) !== null) {
@@ -236,5 +226,15 @@ final class Rest
         }
 
         return new \WP_REST_Response($stats);
+    }
+
+    /** a request body over MAX_BODY bytes (a layout of 40 blocks is far below): 413 */
+    private static function tooLarge(\WP_REST_Request $r): ?\WP_Error
+    {
+        return strlen((string) $r->get_body()) > self::MAX_BODY ? new \WP_Error(
+            'wpfb_too_large',
+            __('The request is too large.', 'wpfasty-builder'),
+            ['status' => 413],
+        ) : null;
     }
 }

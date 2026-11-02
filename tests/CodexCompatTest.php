@@ -13,17 +13,6 @@ use WPFastyBuilder\DataSources;
 /** Builder sources from the Codex manifest, Compat rules R1–R9, the record plan (no WordPress needed). */
 final class CodexCompatTest extends TestCase
 {
-    /** @return array<string, array<string, mixed>> */
-    private static function sources(string $site): array
-    {
-        $t = dirname(__DIR__)."/themes/latte-$site/types";
-
-        return Sources::fromManifest(
-            json_decode((string) file_get_contents("$t/codex.manifest.json"), true),
-            json_decode((string) file_get_contents("$t/codex.delivery.json"), true),
-        );
-    }
-
     public function testSourcesComeFromTheManifest(): void
     {
         $shop = self::sources('shop');
@@ -78,5 +67,16 @@ final class CodexCompatTest extends TestCase
         $this->assertSame('manual', DataSources::level((array) $catalog->slot('products', 'grid3', 'products'), $folio['posts']));
         $products = (array) $catalog->slot('products', 'grid3', 'products');
         $this->assertSame('auto', DataSources::level($products, self::sources('shop')['products']), 'R1/R2/R5/R6');
+    }
+
+    /** @return array<string, array<string, mixed>> */
+    private static function sources(string $site): array
+    {
+        $t = dirname(__DIR__)."/themes/latte-$site/types";
+
+        return Sources::fromManifest(
+            json_decode((string) file_get_contents("$t/codex.manifest.json"), true),
+            json_decode((string) file_get_contents("$t/codex.delivery.json"), true),
+        );
     }
 }

@@ -26,29 +26,6 @@ final class PagesTest extends TestCase
 {
     private string $plugin;
 
-    protected function setUp(): void
-    {
-        $this->plugin = dirname(__DIR__).'/plugins/wpfasty-builder';
-        $src = $this->plugin.'/src/';
-        spl_autoload_register(static function (string $class) use ($src): void {
-            if (str_starts_with($class, 'WPFastyBuilder\\')) {
-                $file = $src.str_replace('\\', '/', substr($class, 15)).'.php';
-                if (is_file($file)) {
-                    require_once $file;
-                }
-            }
-        });
-        require_once __DIR__.'/fixtures/rest-stubs.php';
-        require_once __DIR__.'/fixtures/pages-stubs.php';
-        Plugin::$file = $this->plugin.'/wpfasty-builder.php';
-        Plugin::$dir = $this->plugin;
-        $GLOBALS['wp_test_filters']['wpfasty_builder_engine'] = [static fn (): string => 'latte'];
-        $GLOBALS['wp_test_filters']['wpfasty_builder_data_sources'] = [
-            static fn (): array => ['posts' => [], 'products' => [], 'projects' => []],
-        ];
-        $GLOBALS['wpfb_pages'] = ['inserted' => [], 'deleted' => [], 'taken' => ['about']];
-    }
-
     public function testStartersAreTheDemoLandings(): void
     {
         $shipped = Starters::shipped();
@@ -190,5 +167,28 @@ final class PagesTest extends TestCase
         $this->assertStringContainsString('a.after(b)', $js);
         $this->assertStringContainsString('aria-haspopup="dialog"', Admin::newPageButton());
         $this->assertStringContainsString('>New page</button>', Admin::newPageButton());
+    }
+
+    protected function setUp(): void
+    {
+        $this->plugin = dirname(__DIR__).'/plugins/wpfasty-builder';
+        $src = $this->plugin.'/src/';
+        spl_autoload_register(static function (string $class) use ($src): void {
+            if (str_starts_with($class, 'WPFastyBuilder\\')) {
+                $file = $src.str_replace('\\', '/', substr($class, 15)).'.php';
+                if (is_file($file)) {
+                    require_once $file;
+                }
+            }
+        });
+        require_once __DIR__.'/fixtures/rest-stubs.php';
+        require_once __DIR__.'/fixtures/pages-stubs.php';
+        Plugin::$file = $this->plugin.'/wpfasty-builder.php';
+        Plugin::$dir = $this->plugin;
+        $GLOBALS['wp_test_filters']['wpfasty_builder_engine'] = [static fn (): string => 'latte'];
+        $GLOBALS['wp_test_filters']['wpfasty_builder_data_sources'] = [
+            static fn (): array => ['posts' => [], 'products' => [], 'projects' => []],
+        ];
+        $GLOBALS['wpfb_pages'] = ['inserted' => [], 'deleted' => [], 'taken' => ['about']];
     }
 }

@@ -52,11 +52,6 @@ final class Mapper
         return 1 === preg_match('/^'.preg_quote($kind, '/').'-([1-9][0-9]{0,18})$/', $id, $m) ? (int) $m[1] : 0;
     }
 
-    private static function gmt(string $mysql): string
-    {
-        return str_replace(' ', 'T', $mysql).'Z';
-    }
-
     /** @return array<string, mixed> */
     public function entry(\WP_Post $post, string $kind): array
     {
@@ -123,34 +118,6 @@ final class Mapper
         }
 
         return $e;
-    }
-
-    /**
-     * Typed metadata of the manifest fields that WordPress stores as meta (delivery `meta`). Unset / empty meta is
-     * "no value": the key is left out (nullable). Sensitive fields are marked private.
-     *
-     * @param array<string, array<string, mixed>> $fields
-     *
-     * @return array<string, array{value: mixed, private?: bool}>
-     */
-    private function metadata(int $postId, string $kind, array $fields): array
-    {
-        $md = [];
-        foreach ((array) ($this->site->wp($kind)['meta'] ?? []) as $id => $key) {
-            $f = $fields[(string) $id] ?? null;
-            if (null === $f) {
-                continue;
-            }
-            $raw = get_post_meta($postId, (string) $key, true);
-            $value = self::typed($f, $raw);
-            if (null === $value) {
-                continue;
-            }
-            $md[(string) $id] = !empty($f['sensitive']) ? ['value' => $value, 'private' => true] : ['value' => $value];
-        }
-        ksort($md, SORT_STRING);
-
-        return $md;
     }
 
     /** Stored meta → Codex value of a manifest field; null = no value. */
@@ -260,35 +227,6 @@ final class Mapper
     }
 
     /**
-     * Adds the REST-registered meta of an object (show_in_rest) to adapter fields; a meta key equal to an adapter
-     * field is an error, never an overwrite. `_` keys are private (contract metaIn).
-     *
-     * @param array<string, array<string, mixed>> $md
-     *
-     * @return array<string, array<string, mixed>>
-     */
-    private static function withRestMeta(array $md, string $type, string $sub, int $id, string $what): array
-    {
-        foreach (get_registered_meta_keys($type, $sub) as $key => $args) {
-            $key = (string) $key;
-            if (empty($args['show_in_rest']) || in_array($key, Profile::DROPPED_META, true)) {
-                continue;
-            }
-            if (isset($md[$key])) {
-                throw new \LogicException("wordpress: meta key \"{$key}\" of {$what} collides with an adapter field");
-            }
-            $v = get_metadata($type, $id, $key, !empty($args['single']));
-            if ('' === $v || null === $v || [] === $v) {
-                continue;
-            }
-            $md[$key] = str_starts_with($key, '_') ? ['value' => $v, 'private' => true] : ['value' => $v];
-        }
-        ksort($md, SORT_STRING);
-
-        return $md;
-    }
-
-    /**
      * codex-term/v1 record. `count` is not part of the canonical term (nor of any digest) and the REST list does not
      * serve it; $withCount adds it as metadata.count for the builder's own record view.
      *
@@ -379,5 +317,67 @@ final class Mapper
             update_term_meta($termId, self::TERM_CREATED, $now);
         }
         update_term_meta($termId, self::TERM_UPDATED, $now);
+    }
+
+    private static function gmt(string $mysql): string
+    {
+        return str_replace(' ', 'T', $mysql).'Z';
+    }
+
+    /**
+     * Typed metadata of the manifest fields that WordPress stores as meta (delivery `meta`). Unset / empty meta is
+     * "no value": the key is left out (nullable). Sensitive fields are marked private.
+     *
+     * @param array<string, array<string, mixed>> $fields
+     *
+     * @return array<string, array{value: mixed, private?: bool}>
+     */
+    private function metadata(int $postId, string $kind, array $fields): array
+    {
+        $md = [];
+        foreach ((array) ($this->site->wp($kind)['meta'] ?? []) as $id => $key) {
+            $f = $fields[(string) $id] ?? null;
+            if (null === $f) {
+                continue;
+            }
+            $raw = get_post_meta($postId, (string) $key, true);
+            $value = self::typed($f, $raw);
+            if (null === $value) {
+                continue;
+            }
+            $md[(string) $id] = !empty($f['sensitive']) ? ['value' => $value, 'private' => true] : ['value' => $value];
+        }
+        ksort($md, SORT_STRING);
+
+        return $md;
+    }
+
+    /**
+     * Adds the REST-registered meta of an object (show_in_rest) to adapter fields; a meta key equal to an adapter
+     * field is an error, never an overwrite. `_` keys are private (contract metaIn).
+     *
+     * @param array<string, array<string, mixed>> $md
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private static function withRestMeta(array $md, string $type, string $sub, int $id, string $what): array
+    {
+        foreach (get_registered_meta_keys($type, $sub) as $key => $args) {
+            $key = (string) $key;
+            if (empty($args['show_in_rest']) || in_array($key, Profile::DROPPED_META, true)) {
+                continue;
+            }
+            if (isset($md[$key])) {
+                throw new \LogicException("wordpress: meta key \"{$key}\" of {$what} collides with an adapter field");
+            }
+            $v = get_metadata($type, $id, $key, !empty($args['single']));
+            if ('' === $v || null === $v || [] === $v) {
+                continue;
+            }
+            $md[$key] = str_starts_with($key, '_') ? ['value' => $v, 'private' => true] : ['value' => $v];
+        }
+        ksort($md, SORT_STRING);
+
+        return $md;
     }
 }

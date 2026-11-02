@@ -12,11 +12,6 @@ use WPFasty\Hooks\ThemeHooks;
  */
 final class MarkupHooksTest extends TestCase
 {
-    private static function hooks(): ThemeHooks
-    {
-        return (new \ReflectionClass(ThemeHooks::class))->newInstanceWithoutConstructor();
-    }
-
     public function testSearchBlockGetsUniqueLandmarkLabel(): void
     {
         $hooks = self::hooks();
@@ -38,5 +33,10 @@ final class MarkupHooksTest extends TestCase
         $out = self::hooks()->attachmentLink("<a href='https://example.test/a.jpg'><img src=\"a.jpg\" alt=\"\"></a>", 0);
         self::assertStringStartsWith('<a ', $out);
         self::assertStringNotContainsString("href='", $out);
+    }
+
+    private static function hooks(): ThemeHooks
+    {
+        return (new \ReflectionClass(ThemeHooks::class))->newInstanceWithoutConstructor();
     }
 }
