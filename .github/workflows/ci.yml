@@ -655,7 +655,7 @@ jobs:
           for t in latte-press latte-folio latte-shop; do unzip -q "$D/$t/$t.zip" -d wp-content/themes/; done
           unzip -q "$D/latte-shop/wpfasty-types.zip" -d wp-content/plugins/
           unzip -q /tmp/builder/latte.zip -d wp-content/plugins/
-          nohup php -S 127.0.0.1:8081 -t /tmp/wpc > /tmp/php-server-codex.log 2>&1 &
+          nohup php -S 127.0.0.1:8081 -d opcache.enable=0 -t /tmp/wpc > /tmp/php-server-codex.log 2>&1 &
           for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8081/wp-login.php && break; sleep 1; done
           cd "$GITHUB_WORKSPACE"
           code=0

@@ -104,7 +104,7 @@ jobs:
           for s in latte-shop latte-shop-twig; do unzip -q "$D/$s/$s.zip" -d wp-content/themes/; done
           unzip -q "$D/latte-shop/wpfasty-types.zip" -d wp-content/plugins/
           wp rewrite structure '/%postname%/' --hard
-          nohup php -S 127.0.0.1:8080 -t /tmp/wp > /tmp/php-server.log 2>&1 &
+          nohup php -S 127.0.0.1:8080 -d opcache.enable=0 -t /tmp/wp > /tmp/php-server.log 2>&1 &
           for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8080/wp-login.php && break; sleep 1; done
           V=$(bun -e "console.log(require('$D/registry/latte/wpfasty/latest/catalog.json').version)")
           fail=0
