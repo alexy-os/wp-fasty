@@ -2,20 +2,8 @@
 
 declare(strict_types=1);
 
-use WPFasty\Adapter\WordPress\PostRepository;
-use WPFasty\Adapter\WordPress\WordPressArchiveStateProvider;
-use WPFasty\Adapter\WordPress\WordPressCommentsRenderer;
-use WPFasty\Adapter\WordPress\WordPressLabelProvider;
-use WPFasty\Adapter\WordPress\WordPressMenuProvider;
-use WPFasty\Adapter\WordPress\WordPressSiteInfoProvider;
-use WPFasty\Adapter\WordPress\WordPressWidgetAreaProvider;
 use WPFasty\Core\Container;
 use WPFasty\Core\ContainerInterface;
-use WPFasty\Data\Archive\ArchiveViewModelBuilder;
-use WPFasty\Data\ContextFactory;
-use WPFasty\Data\Menu\MenuViewModelBuilder;
-use WPFasty\Data\Post\PostViewModelBuilder;
-use WPFasty\Data\Site\SiteViewModelBuilder;
 use WPFasty\Hooks\AssetsHooks;
 use WPFasty\Hooks\ThemeHooks;
 use WPFasty\Template\Engines;
@@ -83,24 +71,7 @@ return function (Container $container): void {
     ]))));
     $container->addTag('types.registry', ContainerInterface::TAG_BOOTABLE);
 
-    $container->singleton('data.context_factory', static function (): ContextFactory {
-        $archive = new WordPressArchiveStateProvider();
-
-        return new ContextFactory(
-            new WordPressMenuProvider(),
-            new MenuViewModelBuilder(),
-            new WordPressSiteInfoProvider(),
-            new WordPressLabelProvider(),
-            new WordPressWidgetAreaProvider(),
-            new SiteViewModelBuilder(),
-            $archive,
-            $archive,
-            new ArchiveViewModelBuilder(),
-            new WordPressCommentsRenderer(),
-            new PostRepository(),
-            new PostViewModelBuilder(),
-        );
-    });
+    $container->singleton('data.context_factory', require __DIR__.'/context.php');
 
     $container->singleton('theme', static function (Container $c): ThemeService {
         return new ThemeService(

@@ -99,6 +99,12 @@ final class ThemeServiceTest extends TestCase
             }
         };
 
-        return new ThemeService($engine, new ContextFactory());
+        return new ThemeService($engine, self::contextFactory());
+    }
+
+    /** The production wiring (configs/context.php) over the test stubs. */
+    private static function contextFactory(): ContextFactory
+    {
+        return (require \dirname(__DIR__).'/themes/latte/configs/context.php')();
     }
 }

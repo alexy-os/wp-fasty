@@ -17,7 +17,7 @@ final class ContextFactoryTest extends TestCase
 
     public function testErrorContextShape(): void
     {
-        $ctx = (new ContextFactory())->createErrorContext();
+        $ctx = self::contextFactory()->createErrorContext();
         $this->assertArrayHasKey('site', $ctx);
         $this->assertArrayHasKey('menu', $ctx);
         $this->assertArrayHasKey('shell', $ctx);
@@ -34,7 +34,7 @@ final class ContextFactoryTest extends TestCase
     public function testArchiveSearchContext(): void
     {
         $GLOBALS['wp_test_flags'] = ['is_search' => true, 'search_query' => 'latte'];
-        $ctx = (new ContextFactory())->createArchiveContext();
+        $ctx = self::contextFactory()->createArchiveContext();
         $this->assertStringContainsString('latte', $ctx['archive']['title']);
         $this->assertSame('latte', $ctx['archive']['searchQuery']);
         $this->assertSame('search', $ctx['archive']['type']);
@@ -63,7 +63,7 @@ final class ContextFactoryTest extends TestCase
             'items' => [1 => [$parent, $child]],
         ];
 
-        $ctx = (new ContextFactory())->createErrorContext();
+        $ctx = self::contextFactory()->createErrorContext();
         $items = $ctx['menu']['primary']['items'];
         $this->assertCount(1, $items);
         $this->assertSame('Parent', $items[0]['title']);
@@ -75,7 +75,7 @@ final class ContextFactoryTest extends TestCase
     public function testCategoryArchiveType(): void
     {
         $GLOBALS['wp_test_flags'] = ['is_archive' => true, 'is_category' => true];
-        $ctx = (new ContextFactory())->createArchiveContext();
+        $ctx = self::contextFactory()->createArchiveContext();
         $this->assertSame('category', $ctx['archive']['type']);
     }
 
@@ -85,7 +85,7 @@ final class ContextFactoryTest extends TestCase
             'sidebar-1' => '<section class="widget">Sidebar</section>',
             'footer-1' => '<section class="widget">Footer</section>',
         ];
-        $ctx = (new ContextFactory())->createErrorContext();
+        $ctx = self::contextFactory()->createErrorContext();
         $this->assertStringContainsString('Sidebar', $ctx['widgets']['sidebar']);
         $this->assertStringContainsString('Footer', $ctx['widgets']['footer']);
     }
@@ -96,5 +96,11 @@ final class ContextFactoryTest extends TestCase
         $GLOBALS['wp_test_menus'] = ['locations' => [], 'items' => []];
         $GLOBALS['wp_test_filters'] = [];
         $GLOBALS['wp_test_sidebars'] = [];
+    }
+
+    /** The production wiring (configs/context.php) over the test stubs. */
+    private static function contextFactory(): ContextFactory
+    {
+        return (require \dirname(__DIR__).'/themes/latte/configs/context.php')();
     }
 }
