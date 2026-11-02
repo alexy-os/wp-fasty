@@ -490,6 +490,36 @@ jobs:
           done
           exit $fail
 
+      - name: HTML snapshot parity — parent theme at this commit vs the previous one (latte, press, folio, shop) + template contexts vs JSON Schema
+        run: |
+          # Same site, same plugins and child themes; only themes/latte differs (from this commit vs from the parent
+          # commit, both from git). Normalized: mailto obfuscation, line order. An intended markup change is declared
+          # with [html-change] in the commit message (the diff is then reported, not gated).
+          cd "$GITHUB_WORKSPACE"
+          composer install --no-interaction --no-progress --quiet
+          WP=/tmp/wp; T=$WP/wp-content/themes
+          BASE="${{ github.event.before }}"
+          if [ -z "$BASE" ] || [ "$BASE" = 0000000000000000000000000000000000000000 ]; then BASE=""; fi
+          if [ -n "$BASE" ]; then git fetch -q --depth=1 origin "$BASE"; else git fetch -q --deepen=1 origin; BASE=$(git rev-parse HEAD^); fi
+          theme_from() { rm -rf "/tmp/src-$1" && mkdir -p "/tmp/src-$1" && git archive "$2" themes/latte | tar -x -C "/tmp/src-$1" \
+            && composer install --no-interaction --no-progress --quiet --no-dev --working-dir="/tmp/src-$1/themes/latte"; }
+          theme_from head HEAD && theme_from base "$BASE"
+          mv "$T/latte" /tmp/latte-zip
+          cp -r /tmp/src-head/themes/latte "$T/latte"
+          cp tools/qa/snapshot-context.php "$WP/wp-content/mu-plugins/" && rm -rf /tmp/wpfasty-contexts && mkdir -p /tmp/wpfasty-contexts
+          bash tools/qa/snapshots.sh capture /tmp/snap-head "$WP"
+          rm "$WP/wp-content/mu-plugins/snapshot-context.php"
+          rm -rf "$T/latte" && cp -r /tmp/src-base/themes/latte "$T/latte"
+          bash tools/qa/snapshots.sh capture /tmp/snap-base "$WP"
+          rm -rf "$T/latte" && mv /tmp/latte-zip "$T/latte"
+          php tools/qa/context-schema.php /tmp/wpfasty-contexts | tee /tmp/context-schema.txt
+          code=0; bash tools/qa/snapshots.sh compare /tmp/snap-base /tmp/snap-head > /tmp/snapshots.txt || code=$?
+          cat /tmp/snapshots.txt
+          echo "### HTML snapshots vs ${BASE:0:7}: $(tail -1 /tmp/snapshots.txt); $(tail -1 /tmp/context-schema.txt)" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$code" -ne 0 ]; then
+            if git log -1 --format=%B | grep -q '\[html-change\]'; then echo "::notice::markup changed ([html-change])"; else echo "::error::HTML snapshots differ from ${BASE:0:7}"; exit 1; fi
+          fi
+
       - name: Isolated engines — every site on its own parent (only its engine loaded), parity of Latte ↔ Twig twins incl. builder landings
         run: |
           cd /tmp/wp
