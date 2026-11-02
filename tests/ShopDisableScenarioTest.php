@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace WPFasty\Tests;
+
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -18,7 +20,7 @@ final class ShopDisableScenarioTest extends TestCase
         yield 'archetype' => [dirname(__DIR__).'/presets/archetypes/shop'];
     }
 
-    #[PHPUnit\Framework\Attributes\DataProvider('roots')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('roots')]
     public function testFormsAreGatedByAvailabilityFlags(string $root): void
     {
         $front = (string) file_get_contents($root.'/inc/front.php');

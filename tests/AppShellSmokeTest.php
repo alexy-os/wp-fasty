@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace WPFasty\Tests;
+
 use Latte\Engine;
 use PHPUnit\Framework\TestCase;
 use WPFasty\Template\MultiRootLoader;
@@ -20,7 +22,7 @@ final class AppShellSmokeTest extends TestCase
         $latte->setStrictTypes(true);
         $latte->setLoader(new MultiRootLoader([
             $theme.'/views',
-            ...WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte'),
+            ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte'),
         ]));
         $latte->addExtension(new WordPressExtension());
 

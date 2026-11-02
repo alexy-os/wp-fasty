@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace WPFasty\Tests;
+
 use PHPUnit\Framework\TestCase;
 use WPFasty\Types\Field;
 use WPFasty\Types\PostType;
@@ -62,13 +64,13 @@ final class TypesTest extends TestCase
 
     public function testRejectsInvalidDefinitions(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         PostType::fromArray(['name' => 'Bad Name']);
     }
 
     public function testRejectsUnknownFieldType(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         Field::fromArray('x', ['type' => 'color'], 'p');
     }
 

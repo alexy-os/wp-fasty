@@ -2,8 +2,12 @@
 
 declare(strict_types=1);
 
+namespace WPFasty\Tests;
+
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
+use WP_Post;
+use WP_User;
 use WPFastyTypes\Codex\Canonical;
 use WPFastyTypes\Codex\Mapper;
 use WPFastyTypes\Codex\Site;
@@ -30,7 +34,7 @@ final class CodexWpSamplesTest extends TestCase
     private static function raw(array $item, string $field): string
     {
         if (!is_array($item[$field] ?? null) || !array_key_exists('raw', $item[$field])) {
-            throw new InvalidArgumentException("{$field}.raw missing: Codex export needs context=edit");
+            throw new \InvalidArgumentException("{$field}.raw missing: Codex export needs context=edit");
         }
 
         return (string) $item[$field]['raw'];
@@ -42,7 +46,7 @@ final class CodexWpSamplesTest extends TestCase
     }
 
     /** /wp/v2/media item (context=edit) → the WP_Post + attachment data WordPress holds for it. */
-    private static function attachment(array $m): WP_Post
+    private static function attachment(array $m): \WP_Post
     {
         $d = (array) ($m['media_details'] ?? []);
         $GLOBALS['wpfasty_wp']['att'][$m['id']] = [
@@ -50,7 +54,7 @@ final class CodexWpSamplesTest extends TestCase
             'meta' => array_intersect_key($d, ['width' => 1, 'height' => 1, 'filesize' => 1]),
         ];
 
-        return new WP_Post([
+        return new \WP_Post([
             'ID' => $m['id'], 'post_type' => 'attachment', 'post_status' => $m['status'], 'post_name' => $m['slug'],
             'post_title' => self::raw($m, 'title'), 'post_content' => self::raw($m, 'description'),
             'post_excerpt' => self::raw($m, 'caption'), 'post_mime_type' => $m['mime_type'],
@@ -61,11 +65,11 @@ final class CodexWpSamplesTest extends TestCase
     }
 
     /** /wp/v2/users item (context=edit: username, roles, registered_date) → WP_User. */
-    private static function user(array $u): WP_User
+    private static function user(array $u): \WP_User
     {
         foreach (['username', 'roles', 'registered_date'] as $k) {
             if (!array_key_exists($k, $u)) {
-                throw new InvalidArgumentException("{$k} missing: Codex export needs context=edit");
+                throw new \InvalidArgumentException("{$k} missing: Codex export needs context=edit");
             }
         }
         $GLOBALS['wpfasty_wp']['user_meta'][$u['id']]['description'] = $u['description'];
@@ -74,7 +78,7 @@ final class CodexWpSamplesTest extends TestCase
             $GLOBALS['wpfasty_wp']['meta']['user'][$u['id']][$k] = $v;
         }
 
-        return new WP_User([
+        return new \WP_User([
             'ID' => $u['id'], 'user_login' => $u['username'], 'user_nicename' => $u['slug'], 'user_url' => $u['url'],
             'user_registered' => self::mysql($u['registered_date']), 'display_name' => $u['name'],
             'roles' => $u['roles'],
@@ -113,7 +117,7 @@ final class CodexWpSamplesTest extends TestCase
     public function testMediaViewIsRefused(): void
     {
         self::mapper();
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('title.raw missing: Codex export needs context=edit');
         self::attachment(self::sample('media.view')[0]);
     }
@@ -121,7 +125,7 @@ final class CodexWpSamplesTest extends TestCase
     public function testUsersViewIsRefused(): void
     {
         self::mapper();
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('username missing: Codex export needs context=edit');
         self::user(self::sample('users.view')[0]);
     }

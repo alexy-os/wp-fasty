@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace WPFasty\Tests;
+
 use PHPUnit\Framework\TestCase;
 use WPFasty\Template\Engines;
 use WPFasty\Template\EngineUnavailable;
@@ -32,7 +34,7 @@ final class RendererTest extends TestCase
     private function twig(): TwigRenderer
     {
         $prims = PrimitivesLocator::twigRoots(dirname(__DIR__).'/themes/latte');
-        if ([] === $prims || !class_exists(Twig\Environment::class)) {
+        if ([] === $prims || !class_exists(\Twig\Environment::class)) {
             $this->markTestSkipped('Twig primitives not installed (themes/latte/twig: npx ui8kit@3 add --all)');
         }
 
@@ -66,11 +68,11 @@ final class RendererTest extends TestCase
     {
         foreach (['https://a.test/x?y=1', '/rel', '#frag', '?q=1', 'mailto:a@b.c', 'page'] as $ok) {
             self::assertSame($ok, TwigRenderer::safeUrl($ok));
-            self::assertSame($ok, Latte\Essential\Filters::checkUrl($ok));
+            self::assertSame($ok, \Latte\Essential\Filters::checkUrl($ok));
         }
         foreach (['javascript:alert(1)', 'data:text/html,x', 'vbscript:x'] as $bad) {
             self::assertSame('', TwigRenderer::safeUrl($bad));
-            self::assertSame('', Latte\Essential\Filters::checkUrl($bad));
+            self::assertSame('', \Latte\Essential\Filters::checkUrl($bad));
         }
     }
 
@@ -78,11 +80,11 @@ final class RendererTest extends TestCase
     {
         $twig = $this->twig()->twig();
         $latte = $this->latte()->latte();
-        foreach (WPFasty\Template\ViewHelpers::FILTERS as $f) {
+        foreach (\WPFasty\Template\ViewHelpers::FILTERS as $f) {
             self::assertNotFalse($twig->getFilter($f), "twig filter $f");
             self::assertArrayHasKey($f, $latte->getFilters(), "latte filter $f");
         }
-        foreach (WPFasty\Template\ViewHelpers::FUNCTIONS as $fn) {
+        foreach (\WPFasty\Template\ViewHelpers::FUNCTIONS as $fn) {
             self::assertNotFalse($twig->getFunction($fn), "twig function $fn");
         }
         self::assertArrayHasKey('icon', $latte->getFunctions());

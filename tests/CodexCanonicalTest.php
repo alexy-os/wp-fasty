@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace WPFasty\Tests;
+
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use WPFastyTypes\Codex\Canonical;

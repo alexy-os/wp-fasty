@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace WPFasty\Tests;
+
 use PHPUnit\Framework\TestCase;
 use WPFasty\Template\Kit;
 use WPFasty\Template\LatteRenderer;
@@ -19,7 +21,7 @@ final class PrimitivesLocatorTest extends TestCase
         $dir = PrimitivesLocator::resolve($this->theme());
         $this->assertSame($this->theme().'/ui8kit/ui', $dir);
         $this->assertFileExists($dir.'/button/Button.latte');
-        $this->assertTrue(class_exists(UI8Kit\Latte\Classes::class), 'PSR-4 UI8Kit\\Latte\\ → ui8kit/runtime/');
+        $this->assertTrue(class_exists(\UI8Kit\Latte\Classes::class), 'PSR-4 UI8Kit\\Latte\\ → ui8kit/runtime/');
     }
 
     public function testLatteRootsPutKitBeforeUi8Kit3(): void
@@ -35,7 +37,7 @@ final class PrimitivesLocatorTest extends TestCase
         // kit-compose form fields (ui8kit/compose, tools/builder/export-ui8kit.ts): state error → recipe + aria-invalid
         $this->assertFileExists($this->theme().'/ui8kit/compose/Input.latte');
         $this->assertFileExists($this->theme().'/twig/ui8kit/compose/Input.html.twig');
-        foreach ([CodegenX\Compose\Latte\Compose::class, CodegenX\Compose\Twig\Compose::class] as $compose) {
+        foreach ([\CodegenX\Compose\Latte\Compose::class, \CodegenX\Compose\Twig\Compose::class] as $compose) {
             foreach (['Input', 'Textarea', 'Select'] as $field) {
                 $err = $compose::props($field, ['state' => 'error', 'class' => 'x']);
                 $this->assertSame('true', $err['ariaInvalid'] ?? null, "{$compose} {$field}");

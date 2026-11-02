@@ -94,6 +94,7 @@
                 <element key="themes/latte/classes" value="WPFasty"/>
                 <element key="plugins/wpfasty-types/src" value="WPFastyTypes"/>
                 <element key="plugins/wpfasty-builder/src" value="WPFastyBuilder"/>
+                <element key="tests" value="WPFasty\Tests"/>
             </property>
         </properties>
         <exclude-pattern>themes/latte-*/inc/*</exclude-pattern>
@@ -109,14 +110,10 @@
         <type>warning</type>
     </rule>
 
-    <!-- tests (global PHPUnit classes, classmap via phpunit.xml) and preset sources (copied into child themes,
-         no autoload): OWNER DECISION to namespace them (autoload-dev "WPFasty\\Tests\\") -->
+    <!-- tests are WPFasty\Tests\ (autoload-dev PSR-4). Preset sources are child-theme code copied by the theme
+         generator as inc/<name>.php (WordPress file naming, own namespaces such as LatteShop\Front): kept -->
     <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName.NoMatchBetweenTypeNameAndFileName">
-        <exclude-pattern>tests/*</exclude-pattern>
         <exclude-pattern>presets/*</exclude-pattern>
-    </rule>
-    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
-        <exclude-pattern>tests/*</exclude-pattern>
     </rule>
 
     <!-- tools/security: CLI harnesses (fuzz matrix, DOM check) with long payload lines, run as scripts -->

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace WPFasty\Tests;
+
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__).'/tools/ui8kit3/recipes.php';
