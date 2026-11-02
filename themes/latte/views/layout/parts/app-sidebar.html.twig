@@ -9,7 +9,7 @@
 		{% if menu.primary.items ?? false %}
 			{% include 'layout/parts/nav-items.html.twig' with { items: menu.primary.items } %}
 		{% endif %}
-	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'flex-1 overflow-y-auto px-4 py-4', 'children': c_ui2, 'attrs': {'aria-label': (labels.primary_nav)}} only %}
+	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'flex-1 overflow-y-auto px-4 py-4', 'children': c_ui2, 'attrs': {'aria-label': (labels.primaryNav)}} only %}
 	{% if widgets.sidebar ?? false %}
 		{% set c_ui3 %}
 			{{ widgets.sidebar|raw }}

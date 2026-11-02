@@ -274,7 +274,7 @@ function parity(m: J, err: (msg: string) => void): void {
   if ((f.background?.slice(1) ?? undefined) !== bg) err(`features.background ${f.background} ≠ functions.php custom-background ${bg}`);
   if (((f.blogIndexTitle ?? "archive") === "site") !== /is_home\(\)[\s\S]{0,200}get_bloginfo\('name'\)/.test(fn))
     err(`features.blogIndexTitle disagrees with functions.php`);
-  const rm = fn.match(/\['read_more'\]\s*=\s*__\('([^']+)'/)?.[1];
+  const rm = fn.match(/\['readMore'\]\s*=\s*__\('([^']+)'/)?.[1];
   if (m.labels?.readMore !== rm) err(`labels.readMore "${m.labels?.readMore}" ≠ functions.php "${rm}"`);
 }
 

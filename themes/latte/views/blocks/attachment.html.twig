@@ -21,9 +21,9 @@
 				} %}
 			{% endset %}
 			{% include 'box/Box.html.twig' with { class: 'mb-8 overflow-hidden rounded-lg', children: img } %}
-		{% elseif page.attachment_url ?? false %}
+		{% elseif page.attachmentUrl ?? false %}
 			{% set fileLink %}{{ labels.attachment ?? 'Attachment' }}{% endset %}
-			{% include 'link/Link.html.twig' with { href: page.attachment_url, class: kit('link', {}), children: fileLink } %}
+			{% include 'link/Link.html.twig' with { href: page.attachmentUrl, class: kit('link', {}), children: fileLink } %}
 		{% endif %}
 
 		{% if page.content ?? false %}
@@ -35,5 +35,5 @@
 	{% set box %}
 		{% include 'box/Box.html.twig' with { class: 'container mx-auto max-w-3xl px-4 py-12 md:px-6', children: inner } %}
 	{% endset %}
-	{% include 'block/Block.html.twig' with { tag: 'article', class: page.post_class ?? '', children: box } %}
+	{% include 'block/Block.html.twig' with { tag: 'article', class: page.postClass ?? '', children: box } %}
 {% endif %}

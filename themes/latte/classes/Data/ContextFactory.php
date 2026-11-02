@@ -109,7 +109,7 @@ final class ContextFactory
             'archive' => [
                 'title' => $title,
                 'description' => null !== $searchQuery ? '' : wp_kses_post(get_the_archive_description()),
-                'search_query' => $searchQuery,
+                'searchQuery' => $searchQuery,
                 'type' => $this->archiveType(),
             ],
             'posts' => $posts,
@@ -127,8 +127,8 @@ final class ContextFactory
                 'code' => $code,
                 'title' => __('Page not found', 'latte'),
                 'message' => __('The page you are looking for could not be found.', 'latte'),
-                'home_url' => home_url('/'),
-                'home_label' => __('Back to home', 'latte'),
+                'homeUrl' => home_url('/'),
+                'homeLabel' => __('Back to home', 'latte'),
             ],
         ]);
 
@@ -164,8 +164,8 @@ final class ContextFactory
             'site' => [
                 'title' => get_bloginfo('name'),
                 'url' => home_url('/'),
-                'theme_url' => get_template_directory_uri(),
-                'stylesheet_url' => get_stylesheet_directory_uri(),
+                'themeUrl' => get_template_directory_uri(),
+                'stylesheetUrl' => get_stylesheet_directory_uri(),
                 'lang' => get_bloginfo('language'),
                 'description' => get_bloginfo('description'),
                 'charset' => get_bloginfo('charset'),
@@ -210,28 +210,28 @@ final class ContextFactory
     {
         return [
             'featured' => __('Featured', 'latte'),
-            'latest_articles' => __('Latest articles', 'latte'),
-            'no_posts' => __('No posts found.', 'latte'),
+            'latestArticles' => __('Latest articles', 'latte'),
+            'noPosts' => __('No posts found.', 'latte'),
             'previous' => __('Previous', 'latte'),
             'next' => __('Next', 'latte'),
-            'skip_to_content' => __('Skip to content', 'latte'),
-            'open_menu' => __('Open menu', 'latte'),
-            'close_menu' => __('Close menu', 'latte'),
-            'dark_mode' => __('Dark mode', 'latte'),
-            'primary_nav' => __('Primary', 'latte'),
-            'mobile_nav' => __('Mobile menu', 'latte'),
-            'search_site' => __('Site search', 'latte'),
-            'search_mobile' => __('Mobile menu search', 'latte'),
-            'search_404' => __('Search again', 'latte'),
-            'footer_nav' => __('Footer', 'latte'),
+            'skipToContent' => __('Skip to content', 'latte'),
+            'openMenu' => __('Open menu', 'latte'),
+            'closeMenu' => __('Close menu', 'latte'),
+            'darkMode' => __('Dark mode', 'latte'),
+            'primaryNav' => __('Primary', 'latte'),
+            'mobileNav' => __('Mobile menu', 'latte'),
+            'searchSite' => __('Site search', 'latte'),
+            'searchMobile' => __('Mobile menu search', 'latte'),
+            'search404' => __('Search again', 'latte'),
+            'footerNav' => __('Footer', 'latte'),
             'sidebar' => __('Sidebar', 'latte'),
             'pagination' => __('Pagination', 'latte'),
-            'posted_on' => __('Posted on', 'latte'),
-            'by_author' => __('By', 'latte'),
+            'postedOn' => __('Posted on', 'latte'),
+            'byAuthor' => __('By', 'latte'),
             'categories' => __('Categories', 'latte'),
             'tags' => __('Tags', 'latte'),
-            'previous_post' => __('Previous post', 'latte'),
-            'next_post' => __('Next post', 'latte'),
+            'previousPost' => __('Previous post', 'latte'),
+            'nextPost' => __('Next post', 'latte'),
             'attachment' => __('Attachment', 'latte'),
             'pages' => __('Pages:', 'latte'),
         ];
@@ -274,10 +274,10 @@ final class ContextFactory
         $blogUrl = $postsPageId > 0 ? (string) get_permalink($postsPageId) : home_url('/');
 
         return [
-            'primary_label' => __('Explore', 'latte'),
-            'primary_url' => $blogUrl,
-            'secondary_label' => __('Learn more', 'latte'),
-            'secondary_url' => home_url('/'),
+            'primaryLabel' => __('Explore', 'latte'),
+            'primaryUrl' => $blogUrl,
+            'secondaryLabel' => __('Learn more', 'latte'),
+            'secondaryUrl' => home_url('/'),
         ];
     }
 
@@ -325,12 +325,12 @@ final class ContextFactory
             'categories' => [],
             'tags' => [],
             'author' => null,
-            'post_class' => implode(' ', get_post_class('', $post)),
-            'link_pages' => '',
+            'postClass' => implode(' ', get_post_class('', $post)),
+            'linkPages' => '',
             'prev' => null,
             'next' => null,
-            'mime_type' => $post->post_mime_type,
-            'is_attachment' => 'attachment' === $post->post_type,
+            'mimeType' => $post->post_mime_type,
+            'isAttachment' => 'attachment' === $post->post_type,
             'date' => [
                 'display' => get_the_date('', $post),
                 'iso' => get_the_date('c', $post),
@@ -347,7 +347,7 @@ final class ContextFactory
         if ('attachment' === $post->post_type) {
             $alt = (string) get_post_meta($post->ID, '_wp_attachment_image_alt', true);
             $data['featuredImage'] = $this->image($post->ID, 'large', $alt) ?? $data['featuredImage'];
-            $data['attachment_url'] = (string) wp_get_attachment_url($post->ID);
+            $data['attachmentUrl'] = (string) wp_get_attachment_url($post->ID);
         }
 
         $hasCategories = is_object_in_taxonomy($post->post_type, 'category');
@@ -379,7 +379,7 @@ final class ContextFactory
         }
 
         if ($singular && 'attachment' !== $post->post_type) {
-            $data['link_pages'] = wp_link_pages([
+            $data['linkPages'] = wp_link_pages([
                 'before' => '<nav class="post-pages mt-8 text-sm text-muted-foreground" aria-label="'
                     .esc_attr__('Pages', 'latte').'"><span class="mr-2">'
                     .esc_html__('Pages:', 'latte').'</span>',
@@ -581,12 +581,12 @@ final class ContextFactory
         return [
             'current' => $paged,
             'total' => $max,
-            'prev_url' => $paged > 1 ? get_pagenum_link($paged - 1) : null,
-            'next_url' => $paged < $max ? get_pagenum_link($paged + 1) : null,
+            'prevUrl' => $paged > 1 ? get_pagenum_link($paged - 1) : null,
+            'nextUrl' => $paged < $max ? get_pagenum_link($paged + 1) : null,
             // link mode of the builder Pager (codegen-x pageUrl / firstUrl): page {0}, page 1; unescaped (the
             // builder passes them through its Safe URL check, esc_url would drop the braces)
             'url' => str_replace('987654321', '{0}', (string) get_pagenum_link(987654321, false)),
-            'first_url' => (string) get_pagenum_link(1, false),
+            'firstUrl' => (string) get_pagenum_link(1, false),
         ];
     }
 }

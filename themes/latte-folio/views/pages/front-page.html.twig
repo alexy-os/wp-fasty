@@ -11,8 +11,8 @@
 			{% set c_ui3 %}{{ page.excerpt }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'max-w-2xl text-lg text-muted-foreground', 'children': c_ui3, 'attrs': {}} only %}
 		{% endif %}
 		{% set c_ui6 %}
-			{% set c_ui4 %}{{ labels.selected_work }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': '#work', 'class': kit('button', {'size': 'lg'}, 'gap-2'), 'children': c_ui4, 'attrs': {}} only %}
-			{% set c_ui5 %}{{ icon('mail') }}{{ labels.contact }}{% endset %}{% include 'link/Link.html.twig' with {'href': contact_url|default(''), 'class': kit('button', {'variant': 'outline', 'size': 'lg'}, 'gap-2'), 'children': c_ui5, 'attrs': {}} only %}
+			{% set c_ui4 %}{{ labels.selectedWork }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': '#work', 'class': kit('button', {'size': 'lg'}, 'gap-2'), 'children': c_ui4, 'attrs': {}} only %}
+			{% set c_ui5 %}{{ icon('mail') }}{{ labels.contact }}{% endset %}{% include 'link/Link.html.twig' with {'href': contactUrl|default(''), 'class': kit('button', {'variant': 'outline', 'size': 'lg'}, 'gap-2'), 'children': c_ui5, 'attrs': {}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-wrap gap-4', 'children': c_ui6, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex max-w-4xl flex-col gap-6', 'children': c_ui7, 'attrs': {}} only %}
 {% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 pb-16 pt-24 md:px-6 md:pt-32', 'children': c_ui8, 'attrs': {}} only %}
@@ -20,8 +20,8 @@
 {% if projects ?? false %}
 	{% set c_ui13 %}
 		{% set c_ui11 %}
-			{% set c_ui9 %}{{ labels.selected_work }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'text-2xl font-semibold tracking-tight md:text-3xl', 'children': c_ui9, 'attrs': {}} only %}
-			{% set c_ui10 %}{{ labels.all_work }}{{ icon('arrow-up-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': work.url|default(''), 'class': kit('link', {'size': 'sm'}), 'children': c_ui10, 'attrs': {}} only %}
+			{% set c_ui9 %}{{ labels.selectedWork }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'text-2xl font-semibold tracking-tight md:text-3xl', 'children': c_ui9, 'attrs': {}} only %}
+			{% set c_ui10 %}{{ labels.allWork }}{{ icon('arrow-up-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': work.url|default(''), 'class': kit('link', {'size': 'sm'}), 'children': c_ui10, 'attrs': {}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mb-8 flex items-end justify-between gap-4', 'children': c_ui11, 'attrs': {}} only %}
 		{% set c_ui12 %}
 			{% for project in projects %}
@@ -57,6 +57,6 @@
 {% set c_ui25 %}
 	{% set c_ui24 %}
 		{% set c_ui22 %}{{ labels.contact }}?{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'text-2xl font-semibold tracking-tight md:text-3xl', 'children': c_ui22, 'attrs': {}} only %}
-		{% set c_ui23 %}{{ icon('send') }}{{ labels.contact }}{% endset %}{% include 'link/Link.html.twig' with {'href': contact_url|default(''), 'class': kit('button', {'size': 'lg'}, 'gap-2'), 'children': c_ui23, 'attrs': {}} only %}
+		{% set c_ui23 %}{{ icon('send') }}{{ labels.contact }}{% endset %}{% include 'link/Link.html.twig' with {'href': contactUrl|default(''), 'class': kit('button', {'size': 'lg'}, 'gap-2'), 'children': c_ui23, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col items-start gap-6 rounded-2xl border border-border bg-card p-8 md:flex-row md:items-center md:justify-between md:p-12', 'children': c_ui24, 'attrs': {}} only %}
 {% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 py-16 md:px-6', 'children': c_ui25, 'attrs': {}} only %}

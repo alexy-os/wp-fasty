@@ -26,20 +26,20 @@ add_filter('wpfasty_context', static function (array $context): array {
         'strval',
         $company + ['name' => '', 'ogrn' => '', 'inn' => '', 'address' => '', 'email' => '']
     );
-    $context['legal_menu'] = [];
+    $context['legalMenu'] = [];
     $locations = get_nav_menu_locations();
     $items = isset($locations['legal']) ? wp_get_nav_menu_items($locations['legal']) : false;
     foreach (is_array($items) ? $items : [] as $item) {
-        $context['legal_menu'][] = ['title' => (string) $item->title, 'url' => (string) $item->url];
+        $context['legalMenu'][] = ['title' => (string) $item->title, 'url' => (string) $item->url];
     }
     $context['labels'] = (array) ($context['labels'] ?? []) + [
-        'footer_about' => __(
+        'footerAbout' => __(
             'Ready-made WordPress sites, themes and plugins. Fast, accessible, no page builders.',
             'wpfasty-market'
         ),
-        'footer_market' => __('Catalog', 'wpfasty-market'),
-        'footer_docs' => __('Documents', 'wpfasty-market'),
-        'footer_company' => __('Seller', 'wpfasty-market'),
+        'footerMarket' => __('Catalog', 'wpfasty-market'),
+        'footerDocs' => __('Documents', 'wpfasty-market'),
+        'footerCompany' => __('Seller', 'wpfasty-market'),
         'ogrn' => __('OGRN', 'wpfasty-market'),
         'inn' => __('INN', 'wpfasty-market'),
         'rights' => __('All rights reserved.', 'wpfasty-market'),

@@ -43,7 +43,7 @@
 	{% set sectionInner %}
 		{% set heading %}{{ labels.featured ?? 'Featured' }}{% endset %}
 		{% include 'title/Title.html.twig' with { as: 2, size: '3xl', weight: 'bold', class: 'mb-2 text-center tracking-tight', children: heading } %}
-		{% set c_ui2 %}{{ labels.latest_articles ?? 'Latest articles' }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'mb-10 text-center text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}
+		{% set c_ui2 %}{{ labels.latestArticles ?? 'Latest articles' }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'mb-10 text-center text-muted-foreground', 'children': c_ui2, 'attrs': {}} only %}
 		{% include 'grid/Grid.html.twig' with { class: 'grid gap-6 md:grid-cols-2 lg:grid-cols-3', children: cards } %}
 	{% endset %}
 

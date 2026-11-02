@@ -185,7 +185,7 @@ final class Front
             'email' => 'support@'.wp_parse_url(home_url(), PHP_URL_HOST),
         ]);
 
-        $context['cookie_consent'] = (array) apply_filters('wpfasty_cookie_consent', ['enabled' => false]);
+        $context['cookieConsent'] = (array) apply_filters('wpfasty_cookie_consent', ['enabled' => false]);
 
         if (is_page(['cart', 'checkout'])) {
             $context['cart'] = (array) apply_filters('wpfasty_shop_cart', [
@@ -242,10 +242,10 @@ final class Front
         $context['labels'] = array_merge($context['labels'], self::labels($context));
         $context['search'] = array_merge((array) ($context['search'] ?? []), [
             'label' => $context['labels']['search'],
-            'placeholder' => $context['labels']['search_placeholder'],
+            'placeholder' => $context['labels']['searchPlaceholder'],
             'submit' => $context['labels']['search'],
         ]);
-        $context['labels']['search_site'] = $context['labels']['search'];
+        $context['labels']['searchSite'] = $context['labels']['search'];
 
         return $context;
     }
@@ -272,7 +272,7 @@ final class Front
     {
         $fields = (array) ($data['fields'] ?? []);
         $data['product'] = self::product($post->ID, (string) ($fields['sku'] ?? ''));
-        $data['product_cats'] = $data['terms']['product_cat'] ?? [];
+        $data['productCats'] = $data['terms']['product_cat'] ?? [];
         $data['rating'] = (float) ($fields['rating'] ?? 0);
         $data['reviews'] = (int) ($fields['reviews'] ?? 0);
         $data['badge'] = (string) ($fields['badge'] ?? '');
@@ -375,36 +375,36 @@ final class Front
     private static function labels(array $context): array
     {
         return [
-            'add_to_cart' => __('Add to cart', 'wpfasty-market'),
-            'buy_now' => __('Buy now', 'wpfasty-market'),
+            'addToCart' => __('Add to cart', 'wpfasty-market'),
+            'buyNow' => __('Buy now', 'wpfasty-market'),
             'cart' => __('Cart', 'wpfasty-market'),
             'checkout' => __('Checkout', 'wpfasty-market'),
             'subtotal' => __('Subtotal', 'wpfasty-market'),
             'total' => __('Total', 'wpfasty-market'),
             'qty' => __('Quantity', 'wpfasty-market'),
             'remove' => __('Remove', 'wpfasty-market'),
-            'update_cart' => __('Update cart', 'wpfasty-market'),
-            'empty_cart' => __('Your cart is empty.', 'wpfasty-market'),
-            'continue_shopping' => __('Continue shopping', 'wpfasty-market'),
-            'place_order' => __('Pay and download', 'wpfasty-market'),
-            'out_of_stock' => __('Unavailable', 'wpfasty-market'),
+            'updateCart' => __('Update cart', 'wpfasty-market'),
+            'emptyCart' => __('Your cart is empty.', 'wpfasty-market'),
+            'continueShopping' => __('Continue shopping', 'wpfasty-market'),
+            'placeOrder' => __('Pay and download', 'wpfasty-market'),
+            'outOfStock' => __('Unavailable', 'wpfasty-market'),
             'sale' => __('Sale', 'wpfasty-market'),
-            'all_products' => __('All items', 'wpfasty-market'),
-            'order_received' => __('Thank you! Download links have been sent to your email.', 'wpfasty-market'),
-            'order_number' => __('Order', 'wpfasty-market'),
+            'allProducts' => __('All items', 'wpfasty-market'),
+            'orderReceived' => __('Thank you! Download links have been sent to your email.', 'wpfasty-market'),
+            'orderNumber' => __('Order', 'wpfasty-market'),
             'payment' => __('Payment method', 'wpfasty-market'),
-            'demo_notice' => __('Demo store — no real payment is taken.', 'wpfasty-market'),
-            'no_products' => __('Nothing found. Try another filter.', 'wpfasty-market'),
+            'demoNotice' => __('Demo store — no real payment is taken.', 'wpfasty-market'),
+            'noProducts' => __('Nothing found. Try another filter.', 'wpfasty-market'),
             'breadcrumb' => __('Breadcrumb', 'wpfasty-market'),
-            'hero_kicker' => __('Marketplace of WordPress products', 'wpfasty-market'),
-            'hero_title' => __('Ready-made WordPress sites, themes and plugins that launch fast', 'wpfasty-market'),
-            'hero_text' => __(
+            'heroKicker' => __('Marketplace of WordPress products', 'wpfasty-market'),
+            'heroTitle' => __('Ready-made WordPress sites, themes and plugins that launch fast', 'wpfasty-market'),
+            'heroText' => __(
                 'Reviewed by humans, built on clean code, updated for the latest PHP and WordPress.',
                 'wpfasty-market'
             ),
-            'search_placeholder' => __('Search sites, themes and plugins', 'wpfasty-market'),
+            'searchPlaceholder' => __('Search sites, themes and plugins', 'wpfasty-market'),
             'search' => __('Search', 'wpfasty-market'),
-            'popular_tags' => __('Popular:', 'wpfasty-market'),
+            'popularTags' => __('Popular:', 'wpfasty-market'),
             'cat_sites' => __('Ready-made sites', 'wpfasty-market'),
             'cat_sites_text' => __('Full sites with content, ready to launch in a day', 'wpfasty-market'),
             'cat_themes' => __('Themes', 'wpfasty-market'),
@@ -414,12 +414,12 @@ final class Front
             'items' => __('items', 'wpfasty-market'),
             'popular' => __('Popular this week', 'wpfasty-market'),
             'newest' => __('New arrivals', 'wpfasty-market'),
-            'view_all' => __('View all', 'wpfasty-market'),
+            'viewAll' => __('View all', 'wpfasty-market'),
             'authors' => __('Top authors', 'wpfasty-market'),
-            'authors_text' => __('Independent studios and developers who sell on WP FastY.', 'wpfasty-market'),
+            'authorsText' => __('Independent studios and developers who sell on WP FastY.', 'wpfasty-market'),
             'sales' => __('sales', 'wpfasty-market'),
             'since' => __('Author since', 'wpfasty-market'),
-            'trust_title' => __('Why buy on WP FastY', 'wpfasty-market'),
+            'trustTitle' => __('Why buy on WP FastY', 'wpfasty-market'),
             'trust_review' => __('Every item is reviewed by hand', 'wpfasty-market'),
             'trust_review_text' => __('Code, security and performance are checked before release.', 'wpfasty-market'),
             'trust_updates' => __('Lifetime updates', 'wpfasty-market'),
@@ -435,11 +435,11 @@ final class Front
             'rating' => __('Rating', 'wpfasty-market'),
             'rating_4' => __('4 stars and up', 'wpfasty-market'),
             'rating_any' => __('Any rating', 'wpfasty-market'),
-            'sort_by' => __('Sort by', 'wpfasty-market'),
+            'sortBy' => __('Sort by', 'wpfasty-market'),
             'apply' => __('Apply', 'wpfasty-market'),
             'reset' => __('Reset', 'wpfasty-market'),
             'results' => __('results', 'wpfasty-market'),
-            'live_preview' => __('Live preview', 'wpfasty-market'),
+            'livePreview' => __('Live preview', 'wpfasty-market'),
             'license' => __('License', 'wpfasty-market'),
             'license_regular' => __('Regular license', 'wpfasty-market'),
             'license_regular_text' => __('One end product, end users are not charged.', 'wpfasty-market'),
@@ -453,16 +453,16 @@ final class Front
             'changelog' => __('Changelog', 'wpfasty-market'),
             'description' => __('Description', 'wpfasty-market'),
             'support' => __('Support', 'wpfasty-market'),
-            'support_text' => __(
+            'supportText' => __(
                 'The author replies within one business day. Bugs and feature questions are covered.',
                 'wpfasty-market'
             ),
             'reviews' => __('Reviews', 'wpfasty-market'),
             'by' => __('by', 'wpfasty-market'),
-            'author_items' => __('Items by this author', 'wpfasty-market'),
+            'authorItems' => __('Items by this author', 'wpfasty-market'),
             'gallery' => __('Screenshots', 'wpfasty-market'),
-            'your_details' => __('Your details', 'wpfasty-market'),
-            'digital_delivery' => __(
+            'yourDetails' => __('Your details', 'wpfasty-market'),
+            'digitalDelivery' => __(
                 'Digital delivery: download links arrive by email right after payment.',
                 'wpfasty-market'
             ),
@@ -470,14 +470,14 @@ final class Front
             'consent_pd' => __('I consent to the processing of my personal data', 'wpfasty-market'),
             'required' => __('Required', 'wpfasty-market'),
             'secure' => __('Secure checkout', 'wpfasty-market'),
-            'refund_note' => __('Refunds follow the refund policy for digital goods.', 'wpfasty-market'),
-            'footer_about' => __(
+            'refundNote' => __('Refunds follow the refund policy for digital goods.', 'wpfasty-market'),
+            'footerAbout' => __(
                 'WP FastY is a marketplace of ready-made WordPress sites, themes and plugins.',
                 'wpfasty-market'
             ),
-            'footer_market' => __('Marketplace', 'wpfasty-market'),
-            'footer_docs' => __('Documents', 'wpfasty-market'),
-            'footer_company' => __('Seller', 'wpfasty-market'),
+            'footerMarket' => __('Marketplace', 'wpfasty-market'),
+            'footerDocs' => __('Documents', 'wpfasty-market'),
+            'footerCompany' => __('Seller', 'wpfasty-market'),
             'ogrn' => __('OGRN', 'wpfasty-market'),
             'inn' => __('INN', 'wpfasty-market'),
             'address' => __('Address', 'wpfasty-market'),
@@ -489,41 +489,41 @@ final class Front
             'legal_refund' => __('Refund policy', 'wpfasty-market'),
             'legal_requisites' => __('Seller details', 'wpfasty-market'),
             'consent_news' => __('I want to receive news and offers by email (optional)', 'wpfasty-market'),
-            'cookie_text' => __(
+            'cookieText' => __(
                 'We use necessary cookies to run the store and, with your consent, analytics cookies.',
                 'wpfasty-market'
             ),
-            'cookie_accept' => __('Accept all', 'wpfasty-market'),
-            'cookie_necessary' => __('Necessary only', 'wpfasty-market'),
-            'cookie_settings' => __('Cookie settings', 'wpfasty-market'),
+            'cookieAccept' => __('Accept all', 'wpfasty-market'),
+            'cookieNecessary' => __('Necessary only', 'wpfasty-market'),
+            'cookieSettings' => __('Cookie settings', 'wpfasty-market'),
             'rights' => __('All rights reserved.', 'wpfasty-market'),
             'previous' => __('Previous', 'wpfasty-market'),
             'next' => __('Next', 'wpfasty-market'),
             'pagination' => __('Pagination', 'wpfasty-market'),
-            'unavailable_title' => __('Temporarily unavailable', 'wpfasty-market'),
-            'unavailable_text' => __(
+            'unavailableTitle' => __('Temporarily unavailable', 'wpfasty-market'),
+            'unavailableText' => __(
                 'This feature is temporarily unavailable. Please try again later.',
                 'wpfasty-market'
             ),
-            'back_to_site' => __('Back to site', 'wpfasty-market'),
+            'backToSite' => __('Back to site', 'wpfasty-market'),
             'downloads' => __('Downloads', 'wpfasty-market'),
             'download' => __('Download', 'wpfasty-market'),
-            'downloads_pending' => __(
+            'downloadsPending' => __(
                 'Download links appear here and in your email as soon as the payment is confirmed.',
                 'wpfasty-market'
             ),
-            'link_expires' => __('Link valid until', 'wpfasty-market'),
-            'downloads_left' => __('downloads left', 'wpfasty-market'),
-            'verified_buyer' => __('Verified buyer', 'wpfasty-market'),
-            'write_review' => __('Write a review', 'wpfasty-market'),
-            'review_note' => __('Only buyers can review: use the email of your paid order.', 'wpfasty-market'),
+            'linkExpires' => __('Link valid until', 'wpfasty-market'),
+            'downloadsLeft' => __('downloads left', 'wpfasty-market'),
+            'verifiedBuyer' => __('Verified buyer', 'wpfasty-market'),
+            'writeReview' => __('Write a review', 'wpfasty-market'),
+            'reviewNote' => __('Only buyers can review: use the email of your paid order.', 'wpfasty-market'),
             'your_name' => __('Name', 'wpfasty-market'),
             'your_email' => __('Order email', 'wpfasty-market'),
-            'your_rating' => __('Rating', 'wpfasty-market'),
-            'review_text' => __('Your review', 'wpfasty-market'),
-            'submit_review' => __('Send review', 'wpfasty-market'),
-            'no_reviews' => __('No reviews yet.', 'wpfasty-market'),
-            'license_tier' => __('License', 'wpfasty-market'),
+            'yourRating' => __('Rating', 'wpfasty-market'),
+            'reviewText' => __('Your review', 'wpfasty-market'),
+            'submitReview' => __('Send review', 'wpfasty-market'),
+            'noReviews' => __('No reviews yet.', 'wpfasty-market'),
+            'licenseTier' => __('License', 'wpfasty-market'),
         ];
     }
 

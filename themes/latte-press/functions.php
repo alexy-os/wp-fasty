@@ -37,6 +37,6 @@ add_filter('wpfasty_context', static function (array $context): array {
         $context['archive']['title'] = get_bloginfo('name');
         $context['archive']['description'] = esc_html(get_bloginfo('description'));
     }
-    $context['labels']['read_more'] = __('Continue reading', 'latte-press');
+    $context['labels']['readMore'] = __('Continue reading', 'latte-press');
     return $context;
 });

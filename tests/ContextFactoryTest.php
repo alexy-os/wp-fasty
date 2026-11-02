@@ -27,7 +27,7 @@ final class ContextFactoryTest extends TestCase
         $this->assertArrayHasKey('error', $ctx);
         $this->assertSame(404, $ctx['error']['code']);
         $this->assertSame('Page not found', $ctx['error']['title']);
-        $this->assertNotEmpty($ctx['error']['home_url']);
+        $this->assertNotEmpty($ctx['error']['homeUrl']);
         $this->assertSame('classic-mobile-sheet-panel', $ctx['sheet']['panel']);
     }
 
@@ -36,7 +36,7 @@ final class ContextFactoryTest extends TestCase
         $GLOBALS['wp_test_flags'] = ['is_search' => true, 'search_query' => 'latte'];
         $ctx = (new ContextFactory())->createArchiveContext();
         $this->assertStringContainsString('latte', $ctx['archive']['title']);
-        $this->assertSame('latte', $ctx['archive']['search_query']);
+        $this->assertSame('latte', $ctx['archive']['searchQuery']);
         $this->assertSame('search', $ctx['archive']['type']);
         $this->assertArrayHasKey('labels', $ctx);
         $this->assertArrayHasKey('footer', $ctx['menu']);

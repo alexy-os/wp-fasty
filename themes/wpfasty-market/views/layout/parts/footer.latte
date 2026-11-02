@@ -2,27 +2,27 @@
 {capture $cols}
 	{capture $about}
 		{include 'layout/parts/brand.latte'}
-		{capture $t}{$labels['footer_about']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'max-w-xs text-sm text-muted-foreground', children: (string) $t, attrs: []}
+		{capture $t}{$labels['footerAbout']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'max-w-xs text-sm text-muted-foreground', children: (string) $t, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4', children: (string) $about, attrs: []}
 	{capture $market}
-		{capture $h}{$labels['footer_market']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-sm font-semibold', children: (string) $h, attrs: []}
+		{capture $h}{$labels['footerMarket']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-sm font-semibold', children: (string) $h, attrs: []}
 		{capture $list}
 			{foreach ($shop['categories'] ?? []) as $cat}
 				{capture $l}{capture $n}{$cat['name']}{/capture}{include 'link/Link.latte', href: $cat['url'] ?? '', class: 'text-sm text-muted-foreground no-underline hover:text-foreground', children: (string) $n, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $l, attrs: []}
 			{/foreach}
 		{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2', children: (string) $list, attrs: []}
-	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'flex flex-col gap-4', children: (string) $market, attrs: ['aria-label' => ($labels['footer_market'])]}
+	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'flex flex-col gap-4', children: (string) $market, attrs: ['aria-label' => ($labels['footerMarket'])]}
 	{capture $docs}
-		{capture $h}{$labels['footer_docs']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-sm font-semibold', children: (string) $h, attrs: []}
+		{capture $h}{$labels['footerDocs']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-sm font-semibold', children: (string) $h, attrs: []}
 		{capture $list}
-			{foreach $legal_menu as $doc}
+			{foreach $legalMenu as $doc}
 				{capture $l}{capture $n}{$doc['title']}{/capture}{include 'link/Link.latte', href: $doc['url'], class: 'text-sm text-muted-foreground no-underline hover:text-foreground', children: (string) $n, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $l, attrs: []}
 			{/foreach}
 			{include 'blocks/slot.latte', name: 'footer.links'}
 		{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2', children: (string) $list, attrs: []}
-	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'flex flex-col gap-4', children: (string) $docs, attrs: ['aria-label' => ($labels['footer_docs'])]}
+	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'flex flex-col gap-4', children: (string) $docs, attrs: ['aria-label' => ($labels['footerDocs'])]}
 	{capture $seller}
-		{capture $h}{$labels['footer_company']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-sm font-semibold', children: (string) $h, attrs: []}
+		{capture $h}{$labels['footerCompany']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'text-sm font-semibold', children: (string) $h, attrs: []}
 		{capture $req}
 			{if $company['name'] !== ''}{capture $r}{$company['name']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'font-medium text-foreground', children: (string) $r, attrs: []}{/if}
 			{if $company['ogrn'] !== ''}{capture $r}{$labels['ogrn']} {$company['ogrn']} · {$labels['inn']} {$company['inn']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $r, attrs: []}{/if}

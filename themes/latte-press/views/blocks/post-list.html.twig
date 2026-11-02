@@ -4,7 +4,7 @@
  #}
 {% set list %}
 	{% if posts is empty %}
-		{% set c_ui1 %}{{ labels.no_posts ?? 'No posts found.' }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'py-16 text-center text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}
+		{% set c_ui1 %}{{ labels.noPosts ?? 'No posts found.' }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'py-16 text-center text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}
 	{% else %}
 		{% set items %}
 			{% for post in posts %}
@@ -39,9 +39,9 @@
 						{% if post.excerpt is not empty %}
 							{% set c_ui10 %}{{ post.excerpt }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}
 						{% endif %}
-						{% set c_ui11 %}{{ labels.read_more ?? 'Read more' }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': post.url|default(''), 'class': kit('link', {'size': 'sm'}), 'children': c_ui11, 'attrs': {}} only %}
+						{% set c_ui11 %}{{ labels.readMore ?? 'Read more' }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': post.url|default(''), 'class': kit('link', {'size': 'sm'}), 'children': c_ui11, 'attrs': {}} only %}
 					{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-2', 'children': c_ui12, 'attrs': {}} only %}
-				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'article', 'class': ((post.post_class ?? '') ~ ' grid gap-6 border-b border-border pb-8 md:grid-cols-[240px_1fr]'), 'children': c_ui13, 'attrs': {}} only %}
+				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'article', 'class': ((post.postClass ?? '') ~ ' grid gap-6 border-b border-border pb-8 md:grid-cols-[240px_1fr]'), 'children': c_ui13, 'attrs': {}} only %}
 			{% endfor %}
 		{% endset %}
 		{% include 'stack/Stack.html.twig' with { gap: '8', children: items } %}
@@ -49,12 +49,12 @@
 
 	{% if pagination is not empty %}
 		{% set c_ui17 %}
-			{% if pagination.prev_url %}
-				{% set c_ui14 %}{{ icon('arrow-left') }}{{ labels.previous ?? 'Previous' }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination.prev_url|default(''), 'class': kit('link', {'size': 'sm'}), 'children': c_ui14, 'attrs': {}} only %}
+			{% if pagination.prevUrl %}
+				{% set c_ui14 %}{{ icon('arrow-left') }}{{ labels.previous ?? 'Previous' }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination.prevUrl|default(''), 'class': kit('link', {'size': 'sm'}), 'children': c_ui14, 'attrs': {}} only %}
 			{% endif %}
 			{% set c_ui15 %}{{ pagination.current }} / {{ pagination.total }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui15, 'attrs': {}} only %}
-			{% if pagination.next_url %}
-				{% set c_ui16 %}{{ labels.next ?? 'Next' }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination.next_url|default(''), 'class': kit('link', {'size': 'sm'}), 'children': c_ui16, 'attrs': {}} only %}
+			{% if pagination.nextUrl %}
+				{% set c_ui16 %}{{ labels.next ?? 'Next' }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination.nextUrl|default(''), 'class': kit('link', {'size': 'sm'}), 'children': c_ui16, 'attrs': {}} only %}
 			{% endif %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mt-10 flex items-center justify-center gap-4', 'children': c_ui17, 'attrs': {'aria-label': (labels.pagination ?? 'Pagination')}} only %}
 	{% endif %}

@@ -16,7 +16,7 @@
 			{capture $grp}
 				{capture $lg}{$labels['category']}{/capture}{include 'text/Text.latte', tag: 'h3', class: 'text-xs font-semibold uppercase tracking-widest text-muted-foreground', children: (string) $lg, attrs: []}
 				{capture $list}
-					{capture $li}{capture $n}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: ($shop['current_cat'] === '' ? 'flex rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground no-underline' : 'flex rounded-lg px-3 py-2 text-sm text-foreground no-underline hover:bg-muted'), children: (string) $n, attrs: ['data-control' => 'chip']}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $li, attrs: []}
+					{capture $li}{capture $n}{$labels['allProducts']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: ($shop['current_cat'] === '' ? 'flex rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground no-underline' : 'flex rounded-lg px-3 py-2 text-sm text-foreground no-underline hover:bg-muted'), children: (string) $n, attrs: ['data-control' => 'chip']}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $li, attrs: []}
 					{foreach $shop['categories'] as $cat}
 						{capture $li}{capture $n}{$cat['name']}{/capture}{include 'link/Link.latte', href: $cat['url'] ?? '', class: ($shop['current_cat'] === $cat['slug'] ? 'flex rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground no-underline' : 'flex rounded-lg px-3 py-2 text-sm text-foreground no-underline hover:bg-muted'), children: (string) $n, attrs: ['data-control' => 'chip']}{/capture}{include 'box/Box.latte', tag: 'li', children: (string) $li, attrs: []}
 					{/foreach}
@@ -56,7 +56,7 @@
 		{capture $bar}
 			{capture $cnt}{count($posts ?? [])} {$labels['results']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-sm text-muted-foreground', children: (string) $cnt, attrs: []}
 			{capture $sf}
-				{capture $sl}{$labels['sort_by']}{/capture}{include 'label/Label.latte', htmlFor: 'market-sort', class: 'text-sm text-muted-foreground', children: (string) $sl}
+				{capture $sl}{$labels['sortBy']}{/capture}{include 'label/Label.latte', htmlFor: 'market-sort', class: 'text-sm text-muted-foreground', children: (string) $sl}
 				{capture $opts}
 					{foreach $shop['sorts'] as $s}{capture $o}{$s['label']}{/capture}{include 'select/SelectOption.latte', value: $s['id'], selected: $shop['sort'] === $s['id'], children: (string) $o}{/foreach}
 				{/capture}{include 'select/Select.latte', id: 'market-sort', name: 'sort', class: 'h-10 rounded-lg border border-input bg-card px-4 text-sm text-foreground', children: (string) $opts}
@@ -66,7 +66,7 @@
 			{/capture}{include 'form/Form.latte', action: '', class: 'flex items-center gap-2', children: (string) $sf, attrs: ['method' => 'get']}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-6 flex flex-wrap items-center justify-between gap-4', children: (string) $bar, attrs: []}
 		{if empty($posts)}
-			{capture $e}{$labels['no_products']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground', children: (string) $e, attrs: []}
+			{capture $e}{$labels['noProducts']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground', children: (string) $e, attrs: []}
 		{else}
 			{capture $grid}
 				{foreach $posts as $product}
@@ -75,9 +75,9 @@
 			{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-6 sm:grid-cols-2 xl:grid-cols-3', children: (string) $grid, attrs: []}
 			{if !empty($pagination)}
 				{capture $pg}
-					{if $pagination['prev_url']}{capture $pv}{icon('arrow-left')}{$labels['previous']}{/capture}{include 'link/Link.latte', href: $pagination['prev_url'] ?? '', class: kit('button', ['variant' => 'outline'], 'rounded-lg no-underline'), children: (string) $pv, attrs: []}{/if}
+					{if $pagination['prevUrl']}{capture $pv}{icon('arrow-left')}{$labels['previous']}{/capture}{include 'link/Link.latte', href: $pagination['prevUrl'] ?? '', class: kit('button', ['variant' => 'outline'], 'rounded-lg no-underline'), children: (string) $pv, attrs: []}{/if}
 					{capture $cur}{$pagination['current']} / {$pagination['total']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $cur, attrs: []}
-					{if $pagination['next_url']}{capture $nx}{$labels['next']}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: $pagination['next_url'] ?? '', class: kit('button', ['variant' => 'outline'], 'rounded-lg no-underline'), children: (string) $nx, attrs: []}{/if}
+					{if $pagination['nextUrl']}{capture $nx}{$labels['next']}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: $pagination['nextUrl'] ?? '', class: kit('button', ['variant' => 'outline'], 'rounded-lg no-underline'), children: (string) $nx, attrs: []}{/if}
 				{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-10 flex items-center justify-center gap-4', children: (string) $pg, attrs: ['aria-label' => ($labels['pagination'] ?? 'Pagination')]}
 			{/if}
 		{/if}

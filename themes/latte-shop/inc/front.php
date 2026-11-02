@@ -159,8 +159,8 @@ final class Front
         }
 
         $context['labels'] += [
-            'add_to_cart' => __('Add to cart', 'latte-shop'),
-            'buy_now' => __('Buy now', 'latte-shop'),
+            'addToCart' => __('Add to cart', 'latte-shop'),
+            'buyNow' => __('Buy now', 'latte-shop'),
             'cart' => __('Cart', 'latte-shop'),
             'checkout' => __('Checkout', 'latte-shop'),
             'subtotal' => __('Subtotal', 'latte-shop'),
@@ -168,36 +168,36 @@ final class Front
             'total' => __('Total', 'latte-shop'),
             'qty' => __('Quantity', 'latte-shop'),
             'remove' => __('Remove', 'latte-shop'),
-            'update_cart' => __('Update cart', 'latte-shop'),
-            'empty_cart' => __('Your cart is empty.', 'latte-shop'),
-            'continue_shopping' => __('Continue shopping', 'latte-shop'),
-            'place_order' => __('Place order', 'latte-shop'),
-            'out_of_stock' => __('Out of stock', 'latte-shop'),
+            'updateCart' => __('Update cart', 'latte-shop'),
+            'emptyCart' => __('Your cart is empty.', 'latte-shop'),
+            'continueShopping' => __('Continue shopping', 'latte-shop'),
+            'placeOrder' => __('Place order', 'latte-shop'),
+            'outOfStock' => __('Out of stock', 'latte-shop'),
             'sale' => __('Sale', 'latte-shop'),
-            'all_products' => __('All', 'latte-shop'),
-            'shop_now' => __('Shop now', 'latte-shop'),
+            'allProducts' => __('All', 'latte-shop'),
+            'shopNow' => __('Shop now', 'latte-shop'),
             'featured' => __('Featured products', 'latte-shop'),
-            'order_received' => __('Thank you — your order has been received.', 'latte-shop'),
-            'order_number' => __('Order', 'latte-shop'),
+            'orderReceived' => __('Thank you — your order has been received.', 'latte-shop'),
+            'orderNumber' => __('Order', 'latte-shop'),
             'address' => __('Address', 'latte-shop'),
-            'check_fields' => __('Please check', 'latte-shop'),
+            'checkFields' => __('Please check', 'latte-shop'),
             'payment' => __('Payment', 'latte-shop'),
-            'demo_notice' => __('Demo store — no real payment is taken.', 'latte-shop'),
-            'unavailable_title' => __('Temporarily unavailable', 'latte-shop'),
-            'unavailable_text' => __('This feature is temporarily unavailable. Please try again later.', 'latte-shop'),
-            'back_to_site' => __('Back to site', 'latte-shop'),
-            'no_products' => __('No products found.', 'latte-shop'),
+            'demoNotice' => __('Demo store — no real payment is taken.', 'latte-shop'),
+            'unavailableTitle' => __('Temporarily unavailable', 'latte-shop'),
+            'unavailableText' => __('This feature is temporarily unavailable. Please try again later.', 'latte-shop'),
+            'backToSite' => __('Back to site', 'latte-shop'),
+            'noProducts' => __('No products found.', 'latte-shop'),
             'breadcrumb' => __('Breadcrumb', 'latte-shop'),
-            'author_items' => __('items', 'latte-shop'),
-            'author_since' => __('author since', 'latte-shop'),
-            'by_author' => __('by', 'latte-shop'),
+            'authorItems' => __('items', 'latte-shop'),
+            'authorSince' => __('author since', 'latte-shop'),
+            'byAuthor' => __('by', 'latte-shop'),
             'account' => __('Account', 'latte-shop'),
-            'account_search' => __('Search', 'latte-shop'),
+            'accountSearch' => __('Search', 'latte-shop'),
             'returns' => __('30-day easy returns', 'latte-shop'),
-            'instant_download' => __('Instant download after payment', 'latte-shop'),
-            'updates_included' => __('Updates included', 'latte-shop'),
-            'pay_options' => __('Pay on delivery or by bank transfer', 'latte-shop'),
-            'free_shipping_over' => '' !== $context['shop']['free_shipping']
+            'instantDownload' => __('Instant download after payment', 'latte-shop'),
+            'updatesIncluded' => __('Updates included', 'latte-shop'),
+            'payOptions' => __('Pay on delivery or by bank transfer', 'latte-shop'),
+            'freeShippingOver' => '' !== $context['shop']['free_shipping']
                 ? sprintf(
                     /* translators: %s: order amount for free shipping */
                     __('Free shipping over %s', 'latte-shop'),
@@ -353,7 +353,7 @@ final class Front
     public static function productViewModel(array $data, \WP_Post $post): array
     {
         $data['product'] = self::product($post->ID, (string) ($data['fields']['sku'] ?? ''));
-        $data['product_cats'] = $data['terms']['product_cat'] ?? [];
+        $data['productCats'] = $data['terms']['product_cat'] ?? [];
         $user = get_userdata((int) $post->post_author);
         $isSeller = $user instanceof \WP_User && user_can($user, 'edit_posts') && !user_can($user, 'manage_options');
         $data['seller'] = $isSeller && $user instanceof \WP_User

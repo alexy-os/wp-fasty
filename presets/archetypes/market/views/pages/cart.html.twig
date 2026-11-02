@@ -7,8 +7,8 @@
 	{% elseif ((cart['items']) is empty) %}
 		{% set c_ui5 %}
 			{% set c_ui2 %}{{ icon('shopping-cart', 'size-8') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-muted-foreground', 'children': c_ui2, 'attrs': []} only %}
-			{% set c_ui3 %}{{ labels['empty_cart'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui3, 'attrs': []} only %}
-			{% set c_ui4 %}{{ labels['continue_shopping'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': 'inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui4, 'attrs': []} only %}
+			{% set c_ui3 %}{{ labels['emptyCart'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui3, 'attrs': []} only %}
+			{% set c_ui4 %}{{ labels['continueShopping'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': 'inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui4, 'attrs': []} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center', 'children': c_ui5, 'attrs': []} only %}
 	{% else %}
 		{% set c_ui20 %}
@@ -22,7 +22,7 @@
 							{% if item['image'] %}{% include 'image/Image.html.twig' with {'src': item['image'] ?? '', 'class': 'size-16 rounded-lg object-cover', 'attrs': {'alt': '', 'loading': 'lazy'}} only %}{% else %}{% set c_ui6 %}{{ icon('package') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'flex size-16 items-center justify-center rounded-lg bg-muted text-muted-foreground', 'children': c_ui6, 'attrs': []} only %}{% endif %}
 							{% set c_ui9 %}
 								{% set c_ui7 %}{{ item['title'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': item['url'] ?? '', 'class': 'font-medium text-foreground no-underline hover:text-primary', 'children': c_ui7, 'attrs': []} only %}
-								{% if not ((item['tier_label']) is empty) %}{% set tl %}{{ labels['license_tier'] }}: {{ item['tier_label'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs font-semibold uppercase tracking-widest text-primary', 'children': tl, 'attrs': []} only %}{% endif %}
+								{% if not ((item['tier_label']) is empty) %}{% set tl %}{{ labels['licenseTier'] }}: {{ item['tier_label'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs font-semibold uppercase tracking-widest text-primary', 'children': tl, 'attrs': []} only %}{% endif %}
 								{% set c_ui8 %}{{ item['unit_display'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': c_ui8, 'attrs': []} only %}
 							{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex min-w-0 flex-1 flex-col gap-2', 'children': c_ui9, 'attrs': []} only %}
 							{% set c_ui10 %}{{ labels['qty'] }}{% endset %}{% include 'label/Label.html.twig' with {'class': 'sr-only', 'children': c_ui10, 'attrs': {'for': ('qty-' ~ loop.index)}} only %}
@@ -33,8 +33,8 @@
 					{% endfor %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', 'children': c_ui15, 'attrs': []} only %}
 				{% set c_ui17 %}
-					{% set c_ui16 %}{{ icon('arrow-left') }}{{ labels['continue_shopping'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui16, 'attrs': []} only %}
-					{% set upd %}{{ icon('rotate-ccw') }}{{ labels['update_cart'] }}{% endset %}
+					{% set c_ui16 %}{{ icon('arrow-left') }}{{ labels['continueShopping'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': 'inline-flex items-center gap-2 text-sm text-primary no-underline', 'children': c_ui16, 'attrs': []} only %}
+					{% set upd %}{{ icon('rotate-ccw') }}{{ labels['updateCart'] }}{% endset %}
 					{% include 'button/Button.html.twig' with {'type': 'submit', 'class': kit('button', {'variant': 'outline'}), 'children': upd} only %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-wrap justify-between gap-4', 'children': c_ui17, 'attrs': []} only %}
 			{% endset %}{% include 'form/Form.html.twig' with {'action': shop['action'] ?? '', 'class': 'flex flex-col gap-4 lg:col-span-2', 'children': c_ui18, 'attrs': {'method': 'post'}} only %}

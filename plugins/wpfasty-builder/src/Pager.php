@@ -13,7 +13,7 @@ namespace WPFastyBuilder;
  *          query (the theme context `pagination` of ContextFactory, else max_num_pages)
  *   texts  translatable (text domain wpfasty-builder), so the previous / next buttons always have a name
  *   url    link mode (codegen-x 000ee4a6 Pager `pageUrl` / `firstUrl`): on the page (Front) the address of page {0}
- *          and of page 1, get_pagenum_link() of the request (urls(); ContextFactory `pagination.url` / `first_url` on
+ *          and of page 1, get_pagenum_link() of the request (urls(); ContextFactory `pagination.url` / `firstUrl` on
  *          a main-query route) through Safe::url — the pages and previous / next are <a href>; the editor preview
  *          (Fragment) keeps buttons. A layout never sets them (Layout keeps only `mode`).
  * With pages ≤ 1 there is no pager (the value is null and the template prints nothing). The head also gets
@@ -76,7 +76,7 @@ final class Pager
 
     /**
      * Addresses of the link mode: [address of page {0}, address of page 1] of the request (get_pagenum_link, no
-     * query), through Safe::url ("" when refused). The theme context (ContextFactory `pagination.url`, `first_url`)
+     * query), through Safe::url ("" when refused). The theme context (ContextFactory `pagination.url`, `firstUrl`)
      * is used when it has them.
      *
      * @param array<string, mixed> $context
@@ -87,7 +87,7 @@ final class Pager
     {
         $p = is_array($context['pagination'] ?? null) ? $context['pagination'] : [];
         $url = is_string($p['url'] ?? null) ? $p['url'] : self::template();
-        $first = is_string($p['first_url'] ?? null) ? $p['first_url'] : (string) get_pagenum_link(1, false);
+        $first = is_string($p['firstUrl'] ?? null) ? $p['firstUrl'] : (string) get_pagenum_link(1, false);
         $url = str_contains($url, '{0}') ? Safe::url(Safe::text($url)) : '';
 
         return ['url' => $url, 'firstUrl' => Safe::url(Safe::text($first))];

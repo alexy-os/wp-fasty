@@ -1,10 +1,10 @@
 {
   "view": "blocks/post-list",
   "context": {
-    "labels": { "read_more": "Read more", "pagination": "Posts navigation", "previous": "Newer", "next": "Older" },
+    "labels": { "readMore": "Read more", "pagination": "Posts navigation", "previous": "Newer", "next": "Older" },
     "posts": [
       {
-        "post_class": "post-1 post type-post status-publish",
+        "postClass": "post-1 post type-post status-publish",
         "url": "https://example.test/hello-world/",
         "title": "Hello <world> & \"friends\" 'quoted'",
         "thumbnail": { "url": "https://example.test/wp-content/uploads/a.jpg", "alt": "A \"photo\"", "srcset": "https://example.test/a-300.jpg 300w, https://example.test/a-768.jpg 768w" },
@@ -23,6 +23,6 @@
         "excerpt": ""
       }
     ],
-    "pagination": { "prev_url": "https://example.test/page/1/", "next_url": "https://example.test/page/3/", "current": 2, "total": 3 }
+    "pagination": { "prevUrl": "https://example.test/page/1/", "nextUrl": "https://example.test/page/3/", "current": 2, "total": 3 }
   }
 }

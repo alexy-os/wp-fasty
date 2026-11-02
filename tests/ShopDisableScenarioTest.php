@@ -44,7 +44,7 @@ final class ShopDisableScenarioTest extends TestCase
         }
         foreach (['blocks/unavailable.latte', 'blocks/unavailable.html.twig'] as $b) {
             $src = (string) file_get_contents($root.'/views/'.$b);
-            $this->assertStringContainsString('back_to_site', $src);
+            $this->assertStringContainsString('backToSite', $src);
             $this->assertStringNotContainsString('apply_filters', $src);
             $this->assertStringNotContainsString('get_', $src, 'no WP calls in templates');
         }

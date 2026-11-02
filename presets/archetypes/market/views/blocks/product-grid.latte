@@ -3,7 +3,7 @@
 	{capture $sec}
 		{capture $head}
 			{capture $h}{$title}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'font-heading text-2xl font-bold tracking-tight md:text-3xl', children: (string) $h, attrs: []}
-			{capture $all}{$labels['view_all']}{icon('arrow-right', 'size-4')}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'inline-flex items-center gap-2 text-sm font-semibold text-primary no-underline hover:underline', children: (string) $all, attrs: []}
+			{capture $all}{$labels['viewAll']}{icon('arrow-right', 'size-4')}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'inline-flex items-center gap-2 text-sm font-semibold text-primary no-underline hover:underline', children: (string) $all, attrs: []}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-6 flex items-end justify-between gap-4', children: (string) $head, attrs: []}
 		{capture $grid}
 			{foreach $products as $product}

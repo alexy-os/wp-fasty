@@ -3,6 +3,6 @@
   "context": {
     "labels": {},
     "posts": [ { "url": "https://example.test/only/", "title": "Only post", "thumbnail": { "url": "https://example.test/o.jpg" }, "excerpt": "Short." } ],
-    "pagination": { "prev_url": "", "next_url": "https://example.test/page/2/", "current": 1, "total": 2 }
+    "pagination": { "prevUrl": "", "nextUrl": "https://example.test/page/2/", "current": 1, "total": 2 }
   }
 }

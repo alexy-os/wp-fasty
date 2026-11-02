@@ -11,8 +11,8 @@
 		{% endif %}
 	{% endset %}{% include 'link/Link.html.twig' with {'href': product.url|default(''), 'class': 'relative block overflow-hidden bg-muted no-underline', 'children': c_ui3, 'attrs': {'aria-label': (product.title)}} only %}
 	{% set c_ui12 %}
-		{% if product.product_cats ?? false %}
-			{% set c_ui4 %}{{ product.product_cats[0].name }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs uppercase tracking-wide text-muted-foreground', 'children': c_ui4, 'attrs': {}} only %}
+		{% if product.productCats ?? false %}
+			{% set c_ui4 %}{{ product.productCats[0].name }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs uppercase tracking-wide text-muted-foreground', 'children': c_ui4, 'attrs': {}} only %}
 		{% endif %}
 		{% set c_ui6 %}
 			{% set c_ui5 %}{{ product.title }}{% endset %}{% include 'link/Link.html.twig' with {'href': product.url|default(''), 'class': 'text-foreground no-underline hover:text-primary', 'children': c_ui5, 'attrs': {}} only %}
@@ -29,10 +29,10 @@
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'product_id', 'value': (product.id)}} only %}
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop.cart_nonce)}} only %}
 					{% set addIcon %}{{ icon('plus') }}{% endset %}
-					{% include 'button/Button.html.twig' with { type: 'submit', ariaLabel: labels.add_to_cart ~ ': ' ~ product.title, class: kit('button', {'layout': 'icon'}), children: addIcon } %}
+					{% include 'button/Button.html.twig' with { type: 'submit', ariaLabel: labels.addToCart ~ ': ' ~ product.title, class: kit('button', {'layout': 'icon'}), children: addIcon } %}
 				{% endset %}{% include 'form/Form.html.twig' with {'action': shop.action|default(''), 'children': c_ui9, 'attrs': {'method': 'post'}} only %}
 			{% elseif shop.enabled ?? false %}
-				{% set c_ui10 %}{{ labels.out_of_stock }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}
+				{% set c_ui10 %}{{ labels.outOfStock }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-xs text-muted-foreground', 'children': c_ui10, 'attrs': {}} only %}
 			{% endif %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mt-auto flex items-center justify-between gap-2 pt-2', 'children': c_ui11, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-1 flex-col gap-2 p-4', 'children': c_ui12, 'attrs': {}} only %}

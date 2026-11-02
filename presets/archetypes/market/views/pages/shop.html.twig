@@ -16,7 +16,7 @@
 			{% set grp %}
 				{% set lg %}{{ labels['category'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h3', 'class': 'text-xs font-semibold uppercase tracking-widest text-muted-foreground', 'children': lg, 'attrs': []} only %}
 				{% set list %}
-					{% set li %}{% set n %}{{ labels['all_products'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': (shop['current_cat'] == '' ? 'flex rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground no-underline' : 'flex rounded-lg px-3 py-2 text-sm text-foreground no-underline hover:bg-muted'), 'children': n, 'attrs': {'data-control': 'chip'}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'children': li, 'attrs': []} only %}
+					{% set li %}{% set n %}{{ labels['allProducts'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': (shop['current_cat'] == '' ? 'flex rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground no-underline' : 'flex rounded-lg px-3 py-2 text-sm text-foreground no-underline hover:bg-muted'), 'children': n, 'attrs': {'data-control': 'chip'}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'children': li, 'attrs': []} only %}
 					{% for cat in shop['categories'] %}
 						{% set li %}{% set n %}{{ cat['name'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': cat['url'] ?? '', 'class': (shop['current_cat'] == cat['slug'] ? 'flex rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground no-underline' : 'flex rounded-lg px-3 py-2 text-sm text-foreground no-underline hover:bg-muted'), 'children': n, 'attrs': {'data-control': 'chip'}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'children': li, 'attrs': []} only %}
 					{% endfor %}
@@ -56,7 +56,7 @@
 		{% set bar %}
 			{% set cnt %}{{ ((posts ?? [])|length) }} {{ labels['results'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-sm text-muted-foreground', 'children': cnt, 'attrs': []} only %}
 			{% set sf %}
-				{% set sl %}{{ labels['sort_by'] }}{% endset %}{% include 'label/Label.html.twig' with {'htmlFor': 'market-sort', 'class': 'text-sm text-muted-foreground', 'children': sl} only %}
+				{% set sl %}{{ labels['sortBy'] }}{% endset %}{% include 'label/Label.html.twig' with {'htmlFor': 'market-sort', 'class': 'text-sm text-muted-foreground', 'children': sl} only %}
 				{% set opts %}
 					{% for s in shop['sorts'] %}{% set o %}{{ s['label'] }}{% endset %}{% include 'select/SelectOption.html.twig' with {'value': s['id'], 'selected': shop['sort'] == s['id'], 'children': o} only %}{% endfor %}
 				{% endset %}{% include 'select/Select.html.twig' with {'id': 'market-sort', 'name': 'sort', 'class': 'h-10 rounded-lg border border-input bg-card px-4 text-sm text-foreground', 'children': opts} only %}
@@ -66,7 +66,7 @@
 			{% endset %}{% include 'form/Form.html.twig' with {'action': '', 'class': 'flex items-center gap-2', 'children': sf, 'attrs': {'method': 'get'}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mb-6 flex flex-wrap items-center justify-between gap-4', 'children': bar, 'attrs': []} only %}
 		{% if ((posts) is empty) %}
-			{% set e %}{{ labels['no_products'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground', 'children': e, 'attrs': []} only %}
+			{% set e %}{{ labels['noProducts'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'rounded-xl border border-dashed border-border py-16 text-center text-muted-foreground', 'children': e, 'attrs': []} only %}
 		{% else %}
 			{% set grid %}
 				{% for product in posts %}
@@ -75,9 +75,9 @@
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-6 sm:grid-cols-2 xl:grid-cols-3', 'children': grid, 'attrs': []} only %}
 			{% if not ((pagination) is empty) %}
 				{% set pg %}
-					{% if pagination['prev_url'] %}{% set pv %}{{ icon('arrow-left') }}{{ labels['previous'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination['prev_url'] ?? '', 'class': kit('button', {'variant': 'outline'}, 'rounded-lg no-underline'), 'children': pv, 'attrs': []} only %}{% endif %}
+					{% if pagination['prevUrl'] %}{% set pv %}{{ icon('arrow-left') }}{{ labels['previous'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination['prevUrl'] ?? '', 'class': kit('button', {'variant': 'outline'}, 'rounded-lg no-underline'), 'children': pv, 'attrs': []} only %}{% endif %}
 					{% set cur %}{{ pagination['current'] }} / {{ pagination['total'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-sm text-muted-foreground', 'children': cur, 'attrs': []} only %}
-					{% if pagination['next_url'] %}{% set nx %}{{ labels['next'] }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination['next_url'] ?? '', 'class': kit('button', {'variant': 'outline'}, 'rounded-lg no-underline'), 'children': nx, 'attrs': []} only %}{% endif %}
+					{% if pagination['nextUrl'] %}{% set nx %}{{ labels['next'] }}{{ icon('arrow-right') }}{% endset %}{% include 'link/Link.html.twig' with {'href': pagination['nextUrl'] ?? '', 'class': kit('button', {'variant': 'outline'}, 'rounded-lg no-underline'), 'children': nx, 'attrs': []} only %}{% endif %}
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'mt-10 flex items-center justify-center gap-4', 'children': pg, 'attrs': {'aria-label': (labels['pagination'] ?? 'Pagination')}} only %}
 			{% endif %}
 		{% endif %}

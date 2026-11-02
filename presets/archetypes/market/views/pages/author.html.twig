@@ -15,5 +15,5 @@
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'dl', 'class': 'flex gap-8', 'children': stats, 'attrs': []} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-6 rounded-2xl bg-secondary p-8 text-secondary-foreground md:flex-row md:items-center md:p-12', 'children': inner, 'attrs': []} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto px-4 pt-8 md:px-6', 'children': hero, 'attrs': []} only %}
-	{% include 'blocks/product-grid.html.twig' with {'title': labels['author_items'], 'products': products ?? []} %}
+	{% include 'blocks/product-grid.html.twig' with {'title': labels['authorItems'], 'products': products ?? []} %}
 {% endif %}

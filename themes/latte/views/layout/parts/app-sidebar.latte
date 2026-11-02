@@ -9,7 +9,7 @@
 		{if !empty($menu['primary']['items'])}
 			{include 'nav-items.latte', items: $menu['primary']['items']}
 		{/if}
-	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'flex-1 overflow-y-auto px-4 py-4', children: (string) $c_ui2, attrs: ['aria-label' => ($labels['primary_nav'])]}
+	{/capture}{include 'box/Box.latte', tag: 'nav', class: 'flex-1 overflow-y-auto px-4 py-4', children: (string) $c_ui2, attrs: ['aria-label' => ($labels['primaryNav'])]}
 	{if !empty($widgets['sidebar'])}
 		{capture $c_ui3}
 			{$widgets['sidebar']|noescape}

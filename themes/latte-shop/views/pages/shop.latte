@@ -5,16 +5,16 @@
 	{if !empty($archive['description'])}{capture $c_ui2}{$archive['description']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'mt-4 max-w-2xl text-muted-foreground', children: (string) $c_ui2, attrs: []}{/if}
 	{if !empty($shop['categories'])}
 		{capture $c_ui5}
-			{capture $c_ui3}{$labels['all_products']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: kit('button', ['variant' => $shop['current_cat'] === '' ? 'default' : 'outline']), children: (string) $c_ui3, attrs: ['aria-current' => ($shop['current_cat'] === '' ? 'page' : null)]}
+			{capture $c_ui3}{$labels['allProducts']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: kit('button', ['variant' => $shop['current_cat'] === '' ? 'default' : 'outline']), children: (string) $c_ui3, attrs: ['aria-current' => ($shop['current_cat'] === '' ? 'page' : null)]}
 			{foreach $shop['categories'] as $cat}
 				{capture $c_ui4}{$cat['name']}{/capture}{include 'link/Link.latte', href: $cat['url'] ?? '', class: kit('button', ['variant' => $shop['current_cat'] === $cat['slug'] ? 'default' : 'outline']), children: (string) $c_ui4, attrs: ['aria-current' => ($shop['current_cat'] === $cat['slug'] ? 'page' : null)]}
 			{/foreach}
-		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-8 flex flex-wrap gap-2', children: (string) $c_ui5, attrs: ['aria-label' => ($labels['all_products'])]}
+		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-8 flex flex-wrap gap-2', children: (string) $c_ui5, attrs: ['aria-label' => ($labels['allProducts'])]}
 	{/if}
 {/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 pb-8 pt-16 md:px-6', children: (string) $c_ui6, attrs: []}
 {capture $c_ui13}
 	{if empty($posts)}
-		{capture $c_ui7}{$labels['no_products']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'py-16 text-center text-muted-foreground', children: (string) $c_ui7, attrs: []}
+		{capture $c_ui7}{$labels['noProducts']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'py-16 text-center text-muted-foreground', children: (string) $c_ui7, attrs: []}
 	{else}
 		{capture $c_ui8}
 			{foreach $posts as $product}
@@ -23,9 +23,9 @@
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4', children: (string) $c_ui8, attrs: []}
 		{if !empty($pagination)}
 			{capture $c_ui12}
-				{if $pagination['prev_url']}{capture $c_ui9}{icon('arrow-left')}{$labels['previous']}{/capture}{include 'link/Link.latte', href: $pagination['prev_url'] ?? '', class: kit('link', ['size' => 'sm']), children: (string) $c_ui9, attrs: []}{/if}
+				{if $pagination['prevUrl']}{capture $c_ui9}{icon('arrow-left')}{$labels['previous']}{/capture}{include 'link/Link.latte', href: $pagination['prevUrl'] ?? '', class: kit('link', ['size' => 'sm']), children: (string) $c_ui9, attrs: []}{/if}
 				{capture $c_ui10}{$pagination['current']} / {$pagination['total']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui10, attrs: []}
-				{if $pagination['next_url']}{capture $c_ui11}{$labels['next']}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: $pagination['next_url'] ?? '', class: kit('link', ['size' => 'sm']), children: (string) $c_ui11, attrs: []}{/if}
+				{if $pagination['nextUrl']}{capture $c_ui11}{$labels['next']}{icon('arrow-right')}{/capture}{include 'link/Link.latte', href: $pagination['nextUrl'] ?? '', class: kit('link', ['size' => 'sm']), children: (string) $c_ui11, attrs: []}{/if}
 			{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-10 flex items-center justify-center gap-4', children: (string) $c_ui12, attrs: ['aria-label' => ($labels['pagination'] ?? 'Pagination')]}
 		{/if}
 	{/if}

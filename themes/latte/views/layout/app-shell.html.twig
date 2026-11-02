@@ -1,7 +1,7 @@
 {#
  # App-shell body chrome — used when context shell === app-shell. Twig twin of app-shell.latte.
  #}
-{% set c_ui1 %}{{ labels.skip_to_content }}{% endset %}{% include 'link/Link.html.twig' with {'class': 'skip-link screen-reader-text', 'href': '#content', 'children': c_ui1, 'attrs': {}} only %}
+{% set c_ui1 %}{{ labels.skipToContent }}{% endset %}{% include 'link/Link.html.twig' with {'class': 'skip-link screen-reader-text', 'href': '#content', 'children': c_ui1, 'attrs': {}} only %}
 {% include 'layout/parts/mobile-sheet.html.twig' %}
 
 {% set c_ui4 %}

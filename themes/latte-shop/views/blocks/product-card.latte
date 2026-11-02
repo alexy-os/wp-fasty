@@ -11,8 +11,8 @@
 		{/if}
 	{/capture}{include 'link/Link.latte', href: $product['url'] ?? '', class: 'relative block overflow-hidden bg-muted no-underline', children: (string) $c_ui3, attrs: ['aria-label' => ($product['title'])]}
 	{capture $c_ui12}
-		{if !empty($product['product_cats'])}
-			{capture $c_ui4}{$product['product_cats'][0]['name']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-xs uppercase tracking-wide text-muted-foreground', children: (string) $c_ui4, attrs: []}
+		{if !empty($product['productCats'])}
+			{capture $c_ui4}{$product['productCats'][0]['name']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-xs uppercase tracking-wide text-muted-foreground', children: (string) $c_ui4, attrs: []}
 		{/if}
 		{capture $c_ui6}
 			{capture $c_ui5}{$product['title']}{/capture}{include 'link/Link.latte', href: $product['url'] ?? '', class: 'text-foreground no-underline hover:text-primary', children: (string) $c_ui5, attrs: []}
@@ -29,10 +29,10 @@
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'product_id', 'value' => ($product['id'])]}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['cart_nonce'])]}
 					{capture $addIcon}{icon('plus')}{/capture}
-					{include 'button/Button.latte', type: 'submit', ariaLabel: $labels['add_to_cart'] . ': ' . $product['title'], class: kit('button', ['layout' => 'icon']), children: (string) $addIcon}
+					{include 'button/Button.latte', type: 'submit', ariaLabel: $labels['addToCart'] . ': ' . $product['title'], class: kit('button', ['layout' => 'icon']), children: (string) $addIcon}
 				{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', children: (string) $c_ui9, attrs: ['method' => 'post']}
 			{elseif !empty($shop['enabled'])}
-				{capture $c_ui10}{$labels['out_of_stock']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-xs text-muted-foreground', children: (string) $c_ui10, attrs: []}
+				{capture $c_ui10}{$labels['outOfStock']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-xs text-muted-foreground', children: (string) $c_ui10, attrs: []}
 			{/if}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mt-auto flex items-center justify-between gap-2 pt-2', children: (string) $c_ui11, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-1 flex-col gap-2 p-4', children: (string) $c_ui12, attrs: []}

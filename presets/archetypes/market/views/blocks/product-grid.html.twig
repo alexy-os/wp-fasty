@@ -3,7 +3,7 @@
 	{% set sec %}
 		{% set head %}
 			{% set h %}{{ title }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'font-heading text-2xl font-bold tracking-tight md:text-3xl', 'children': h, 'attrs': []} only %}
-			{% set all %}{{ labels['view_all'] }}{{ icon('arrow-right', 'size-4') }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': 'inline-flex items-center gap-2 text-sm font-semibold text-primary no-underline hover:underline', 'children': all, 'attrs': []} only %}
+			{% set all %}{{ labels['viewAll'] }}{{ icon('arrow-right', 'size-4') }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop['url'] ?? '', 'class': 'inline-flex items-center gap-2 text-sm font-semibold text-primary no-underline hover:underline', 'children': all, 'attrs': []} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mb-6 flex items-end justify-between gap-4', 'children': head, 'attrs': []} only %}
 		{% set grid %}
 			{% for product in products %}

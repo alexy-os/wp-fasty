@@ -6,17 +6,17 @@
 	{/if}
 	{if !empty($work['types'])}
 		{capture $c_ui5}
-			{capture $c_ui3}{$labels['all_work']}{/capture}{include 'link/Link.latte', href: $work['url'] ?? '', class: kit('button', ['variant' => $work['current'] === '' ? 'default' : 'outline']), children: (string) $c_ui3, attrs: ['aria-current' => ($work['current'] === '' ? 'page' : null)]}
+			{capture $c_ui3}{$labels['allWork']}{/capture}{include 'link/Link.latte', href: $work['url'] ?? '', class: kit('button', ['variant' => $work['current'] === '' ? 'default' : 'outline']), children: (string) $c_ui3, attrs: ['aria-current' => ($work['current'] === '' ? 'page' : null)]}
 			{foreach $work['types'] as $type}
 				{capture $c_ui4}{$type['name']}{/capture}{include 'link/Link.latte', href: $type['url'] ?? '', class: kit('button', ['variant' => $work['current'] === $type['slug'] ? 'default' : 'outline']), children: (string) $c_ui4, attrs: ['aria-current' => ($work['current'] === $type['slug'] ? 'page' : null)]}
 			{/foreach}
-		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-8 flex flex-wrap gap-2', children: (string) $c_ui5, attrs: ['aria-label' => ($labels['all_work'])]}
+		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-8 flex flex-wrap gap-2', children: (string) $c_ui5, attrs: ['aria-label' => ($labels['allWork'])]}
 	{/if}
 {/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 pb-8 pt-16 md:px-6', children: (string) $c_ui6, attrs: []}
 
 {capture $c_ui9}
 	{if empty($posts)}
-		{capture $c_ui7}{$labels['no_projects']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'py-16 text-center text-muted-foreground', children: (string) $c_ui7, attrs: []}
+		{capture $c_ui7}{$labels['noProjects']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'py-16 text-center text-muted-foreground', children: (string) $c_ui7, attrs: []}
 	{else}
 		{capture $c_ui8}
 			{foreach $posts as $project}

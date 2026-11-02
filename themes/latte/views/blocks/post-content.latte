@@ -7,11 +7,11 @@
 		{if !empty($page['date']['display']) || !empty($page['author']) || !empty($page['categories'])}
 			{capture $metaBits}
 				{if !empty($page['date']['display'])}
-					{capture $c_ui2}{$labels['posted_on']} {capture $c_ui1}{$page['date']['display']}{/capture}{include 'text/Text.latte', tag: 'time', children: (string) $c_ui1, attrs: ['datetime' => ($page['date']['iso'] ?? '')]}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui2, attrs: []}
+					{capture $c_ui2}{$labels['postedOn']} {capture $c_ui1}{$page['date']['display']}{/capture}{include 'text/Text.latte', tag: 'time', children: (string) $c_ui1, attrs: ['datetime' => ($page['date']['iso'] ?? '')]}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui2, attrs: []}
 				{/if}
 				{if !empty($page['author']['name'])}
 					{capture $authorName}{$page['author']['name']}{/capture}
-					{capture $c_ui3}{$labels['by_author']}
+					{capture $c_ui3}{$labels['byAuthor']}
 						{include 'link/Link.latte', href: $page['author']['url'], class: kit('link', ['variant' => 'muted', 'size' => 'sm']), children: (string) $authorName}
 					{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui3, attrs: []}
 				{/if}
@@ -54,8 +54,8 @@
 		{capture $body}{capture $c_ui5}{$page['content']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none text-foreground', children: (string) $c_ui5, attrs: []}{/capture}
 		{include 'box/Box.latte', children: (string) $body}
 
-		{if !empty($page['link_pages'])}
-			{$page['link_pages']|noescape}
+		{if !empty($page['linkPages'])}
+			{$page['linkPages']|noescape}
 		{/if}
 
 		{if !empty($page['tags'])}
@@ -73,11 +73,11 @@
 		{if !empty($page['prev']) || !empty($page['next'])}
 			{capture $navBits}
 				{if !empty($page['prev']['url'])}
-					{capture $prevLabel}{$labels['previous_post']}: {$page['prev']['title']}{/capture}
+					{capture $prevLabel}{$labels['previousPost']}: {$page['prev']['title']}{/capture}
 					{include 'link/Link.latte', href: $page['prev']['url'], class: kit('link', ['size' => 'sm']), children: (string) $prevLabel}
 				{/if}
 				{if !empty($page['next']['url'])}
-					{capture $nextLabel}{$labels['next_post']}: {$page['next']['title']}{/capture}
+					{capture $nextLabel}{$labels['nextPost']}: {$page['next']['title']}{/capture}
 					{include 'link/Link.latte', href: $page['next']['url'], class: kit('link', ['size' => 'sm']), children: (string) $nextLabel}
 				{/if}
 			{/capture}
@@ -88,5 +88,5 @@
 	{capture $box}
 		{include 'box/Box.latte', class: 'container mx-auto max-w-3xl px-4 py-12 md:px-6', children: (string) $inner}
 	{/capture}
-	{include 'block/Block.latte', tag: 'article', class: $page['post_class'] ?? '', children: (string) $box}
+	{include 'block/Block.latte', tag: 'article', class: $page['postClass'] ?? '', children: (string) $box}
 {/if}

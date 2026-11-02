@@ -19,13 +19,13 @@ if (!defined('ABSPATH')) {
  */
 add_filter('wpfasty_context', static function (array $context): array {
     $context['labels'] += [
-        'view_project' => __('View case study', 'latte-folio'),
-        'all_work' => __('All', 'latte-folio'),
-        'selected_work' => __('Selected work', 'latte-folio'),
-        'visit_site' => __('Visit site', 'latte-folio'),
-        'next_project' => __('Next project', 'latte-folio'),
+        'viewProject' => __('View case study', 'latte-folio'),
+        'allWork' => __('All', 'latte-folio'),
+        'selectedWork' => __('Selected work', 'latte-folio'),
+        'visitSite' => __('Visit site', 'latte-folio'),
+        'nextProject' => __('Next project', 'latte-folio'),
         'contact' => __('Start a project', 'latte-folio'),
-        'no_projects' => __('Nothing here yet.', 'latte-folio'),
+        'noProjects' => __('Nothing here yet.', 'latte-folio'),
     ];
 
     $filter = wpfasty_term_filter('project_type');
@@ -36,7 +36,7 @@ add_filter('wpfasty_context', static function (array $context): array {
     ];
 
     $contact = get_page_by_path('contact');
-    $context['contact_url'] = $contact
+    $context['contactUrl'] = $contact
         ? (string) get_permalink($contact)
         : 'mailto:'.antispambot((string) get_option('admin_email'));
 
@@ -64,7 +64,7 @@ add_filter('wpfasty_context', static function (array $context): array {
     if (is_singular('project')) {
         $next = get_adjacent_post(false, '', false)
             ?: (get_posts(['post_type' => 'project', 'numberposts' => 1, 'order' => 'ASC'])[0] ?? null);
-        $context['next_project'] = $next instanceof WP_Post
+        $context['nextProject'] = $next instanceof WP_Post
             && $next->ID !== get_the_ID()
             && function_exists('wpfasty_posts')
             ? (wpfasty_posts([$next])[0] ?? null)

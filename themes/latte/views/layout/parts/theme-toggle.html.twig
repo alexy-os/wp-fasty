@@ -2,4 +2,4 @@
 {% set c_ui1 %}
 	{{ icon('moon', 'dark:hidden') }}
 	{{ icon('sun', 'hidden dark:block') }}
-{% endset %}{% include 'button/Button.html.twig' with {'class': kit('button', {'variant': 'ghost', 'layout': 'icon'}), 'children': c_ui1, 'attrs': {'type': 'button', 'data-wpfasty-theme-toggle': 'true', 'aria-pressed': 'false', 'aria-label': (labels.dark_mode)}} only %}
+{% endset %}{% include 'button/Button.html.twig' with {'class': kit('button', {'variant': 'ghost', 'layout': 'icon'}), 'children': c_ui1, 'attrs': {'type': 'button', 'data-wpfasty-theme-toggle': 'true', 'aria-pressed': 'false', 'aria-label': (labels.darkMode)}} only %}

@@ -1,7 +1,7 @@
 {**
  * Site header — classic top nav + mobile sheet trigger.
  *}
-{capture $c_ui1}{$labels['skip_to_content']}{/capture}{include 'link/Link.latte', class: 'skip-link screen-reader-text', href: '#content', children: (string) $c_ui1, attrs: []}
+{capture $c_ui1}{$labels['skipToContent']}{/capture}{include 'link/Link.latte', class: 'skip-link screen-reader-text', href: '#content', children: (string) $c_ui1, attrs: []}
 
 {capture $c_ui8}
 	{capture $c_ui7}
@@ -9,7 +9,7 @@
 			{if !empty($menu['primary']['items'])}
 				{capture $c_ui2}
 					{icon('menu', 'size-5')}
-				{/capture}{include 'button/Button.latte', class: kit('button', ['variant' => 'outline', 'layout' => 'icon'], 'md:hidden'), children: (string) $c_ui2, attrs: ['type' => 'button', 'id' => ($sheet['trigger']), 'data-ui8kit-dialog-open' => 'true', 'data-ui8kit-dialog-target' => ($sheet['panel']), 'aria-controls' => ($sheet['panel']), 'aria-haspopup' => 'dialog', 'aria-expanded' => 'false', 'aria-label' => ($labels['open_menu'])]}
+				{/capture}{include 'button/Button.latte', class: kit('button', ['variant' => 'outline', 'layout' => 'icon'], 'md:hidden'), children: (string) $c_ui2, attrs: ['type' => 'button', 'id' => ($sheet['trigger']), 'data-ui8kit-dialog-open' => 'true', 'data-ui8kit-dialog-target' => ($sheet['panel']), 'aria-controls' => ($sheet['panel']), 'aria-haspopup' => 'dialog', 'aria-expanded' => 'false', 'aria-label' => ($labels['openMenu'])]}
 			{/if}
 			{include 'brand.latte'}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex items-center gap-2 md:gap-4', children: (string) $c_ui3, attrs: []}
@@ -21,7 +21,7 @@
 					listClass: 'flex items-center gap-6',
 					linkClass: 'text-sm font-medium text-muted-foreground no-underline hover:text-foreground'
 				}
-			{/capture}{include 'box/Box.latte', tag: 'nav', class: 'hidden md:block', children: (string) $c_ui4, attrs: ['aria-label' => ($labels['primary_nav'])]}
+			{/capture}{include 'box/Box.latte', tag: 'nav', class: 'hidden md:block', children: (string) $c_ui4, attrs: ['aria-label' => ($labels['primaryNav'])]}
 		{/if}
 
 		{capture $c_ui6}

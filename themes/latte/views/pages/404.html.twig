@@ -9,12 +9,12 @@
 	{% set c_ui1 %}{{ error.message }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'mt-4 max-w-xl text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}
 
 	{% set c_ui2 %}
-		{% include 'blocks/search-form.html.twig' with {searchId: 'latte-search-field-404', searchLabel: labels.search_404 ?? null} %}
+		{% include 'blocks/search-form.html.twig' with {searchId: 'latte-search-field-404', searchLabel: labels.search404 ?? null} %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mt-8 max-w-md', 'children': c_ui2, 'attrs': {}} only %}
 
-	{% set ctaLabel %}{{ error.home_label }}{% endset %}
+	{% set ctaLabel %}{{ error.homeLabel }}{% endset %}
 	{% set cta %}
-		{% include 'link/Link.html.twig' with { href: error.home_url, class: kit('link', {}), children: ctaLabel } %}
+		{% include 'link/Link.html.twig' with { href: error.homeUrl, class: kit('link', {}), children: ctaLabel } %}
 	{% endset %}
 	{% set c_ui3 %}
 		{{ cta }}

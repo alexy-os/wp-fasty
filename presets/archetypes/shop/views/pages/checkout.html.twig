@@ -6,8 +6,8 @@
 		{% set c_ui16 %}
 			{% set c_ui4 %}
 				{% set c_ui1 %}{{ icon('circle-check', 'size-12') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-primary', 'children': c_ui1, 'attrs': {}} only %}
-				{% set c_ui2 %}{{ labels.order_received }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'text-3xl font-bold tracking-tight', 'children': c_ui2, 'attrs': {}} only %}
-				{% set c_ui3 %}{{ labels.order_number }} #{{ order.id }} · {{ order.email }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui3, 'attrs': {}} only %}
+				{% set c_ui2 %}{{ labels.orderReceived }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'text-3xl font-bold tracking-tight', 'children': c_ui2, 'attrs': {}} only %}
+				{% set c_ui3 %}{{ labels.orderNumber }} #{{ order.id }} · {{ order.email }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui3, 'attrs': {}} only %}
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col items-center gap-4 text-center', 'children': c_ui4, 'attrs': {}} only %}
 			{% set c_ui14 %}
 				{% for item in order.items %}
@@ -17,17 +17,17 @@
 				{% set c_ui13 %}{% set c_ui11 %}{{ labels.total }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui11, 'attrs': {}} only %}{% set c_ui12 %}{{ order.total_display }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'children': c_ui12, 'attrs': {}} only %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex justify-between gap-4 p-4 text-lg font-semibold', 'children': c_ui13, 'attrs': {}} only %}
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', 'children': c_ui14, 'attrs': {}} only %}
 			{% include 'blocks/slot.html.twig' with {'name': 'checkout.order'} %}
-			{% set c_ui15 %}{{ labels.continue_shopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': 'mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui15, 'attrs': {}} only %}
+			{% set c_ui15 %}{{ labels.continueShopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': 'mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui15, 'attrs': {}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mx-auto flex max-w-2xl flex-col gap-6', 'children': c_ui16, 'attrs': {}} only %}
 	{% elseif not cart.items %}
 		{% set c_ui19 %}
-			{% set c_ui17 %}{{ labels.empty_cart }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui17, 'attrs': {}} only %}
-			{% set c_ui18 %}{{ labels.continue_shopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui18, 'attrs': {}} only %}
+			{% set c_ui17 %}{{ labels.emptyCart }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': c_ui17, 'attrs': {}} only %}
+			{% set c_ui18 %}{{ labels.continueShopping }}{% endset %}{% include 'link/Link.html.twig' with {'href': shop.url|default(''), 'class': 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', 'children': c_ui18, 'attrs': {}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center', 'children': c_ui19, 'attrs': {}} only %}
 	{% else %}
 		{% set c_ui20 %}{{ labels.checkout }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'mb-8 text-3xl font-bold tracking-tight', 'children': c_ui20, 'attrs': {}} only %}
 		{% if checkout.errors ?? false %}
-			{% set errText %}{% set c_ui21 %}{{ icon('x') }}{{ labels.check_fields }}: {{ (checkout.error_labels ?? checkout.errors)|join(', ') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex items-center gap-2', 'children': c_ui21, 'attrs': {}} only %}{% endset %}
+			{% set errText %}{% set c_ui21 %}{{ icon('x') }}{{ labels.checkFields }}: {{ (checkout.error_labels ?? checkout.errors)|join(', ') }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'inline-flex items-center gap-2', 'children': c_ui21, 'attrs': {}} only %}{% endset %}
 			{% set c_ui22 %}{% include 'alert/Alert.html.twig' with { variant: 'destructive', role: 'alert', class: 'px-4 py-2', children: errText } %}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mb-6', 'children': c_ui22, 'attrs': {}} only %}
 		{% endif %}
 		{% set v = checkout.values %}
@@ -76,9 +76,9 @@
 				{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm', 'children': c_ui37, 'attrs': {}} only %}
 				{% include 'blocks/order-summary.html.twig' with { cart: cart, labels: labels, showCheckout: false } %}
 				{% include 'blocks/slot.html.twig' with {'name': 'checkout.consents'} %}
-				{% set place %}{{ icon('check') }}{{ labels.place_order }}{% endset %}
+				{% set place %}{{ icon('check') }}{{ labels.placeOrder }}{% endset %}
 				{% include 'button/Button.html.twig' with { type: 'submit', class: kit('button', {'size': 'lg'}, 'w-full'), children: place } %}
-				{% set c_ui38 %}{{ labels.demo_notice }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-xs text-muted-foreground', 'children': c_ui38, 'attrs': {}} only %}
+				{% set c_ui38 %}{{ labels.demoNotice }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-xs text-muted-foreground', 'children': c_ui38, 'attrs': {}} only %}
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-4', 'children': c_ui39, 'attrs': {}} only %}
 		{% endset %}{% include 'form/Form.html.twig' with {'action': shop.action|default(''), 'class': 'grid gap-8 lg:grid-cols-[1fr_360px]', 'children': c_ui40, 'attrs': {'method': 'post', 'novalidate': true}} only %}
 	{% endif %}

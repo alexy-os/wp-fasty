@@ -21,9 +21,9 @@
 				}
 			{/capture}
 			{include 'box/Box.latte', class: 'mb-8 overflow-hidden rounded-lg', children: (string) $img}
-		{elseif !empty($page['attachment_url'])}
+		{elseif !empty($page['attachmentUrl'])}
 			{capture $fileLink}{$labels['attachment'] ?? 'Attachment'}{/capture}
-			{include 'link/Link.latte', href: $page['attachment_url'], class: kit('link', []), children: (string) $fileLink}
+			{include 'link/Link.latte', href: $page['attachmentUrl'], class: kit('link', []), children: (string) $fileLink}
 		{/if}
 
 		{if !empty($page['content'])}
@@ -35,5 +35,5 @@
 	{capture $box}
 		{include 'box/Box.latte', class: 'container mx-auto max-w-3xl px-4 py-12 md:px-6', children: (string) $inner}
 	{/capture}
-	{include 'block/Block.latte', tag: 'article', class: $page['post_class'] ?? '', children: (string) $box}
+	{include 'block/Block.latte', tag: 'article', class: $page['postClass'] ?? '', children: (string) $box}
 {/if}

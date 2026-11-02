@@ -2,7 +2,7 @@
 {if $page}
 {capture $c_ui17}
 	{capture $c_ui13}
-		{capture $c_ui1}{icon('arrow-left')}{$labels['all_work']}{/capture}{include 'link/Link.latte', href: $work['url'] ?? '', class: kit('link', ['variant' => 'muted', 'size' => 'sm'], 'mb-8'), children: (string) $c_ui1, attrs: []}
+		{capture $c_ui1}{icon('arrow-left')}{$labels['allWork']}{/capture}{include 'link/Link.latte', href: $work['url'] ?? '', class: kit('link', ['variant' => 'muted', 'size' => 'sm'], 'mb-8'), children: (string) $c_ui1, attrs: []}
 		{capture $c_ui12}
 			{capture $c_ui5}
 				{if !empty($page['types'])}
@@ -27,8 +27,8 @@
 					{/foreach}
 					{if !empty($page['project']['url']['value'])}
 						{capture $c_ui10}
-							{capture $c_uiDt}{$page['project']['url']['label'] ?? $labels['visit_site']}{/capture}{include 'box/Box.latte', tag: 'dt', class: 'sr-only', children: (string) $c_uiDt, attrs: []}
-							{capture $c_uiDd}{capture $c_ui9}{$labels['visit_site']}{icon('external-link')}{/capture}{include 'link/Link.latte', href: $page['project']['url']['value'] ?? '', class: kit('button', [], 'gap-2'), children: (string) $c_ui9, attrs: ['rel' => 'noopener', 'target' => '_blank']}{/capture}{include 'box/Box.latte', tag: 'dd', class: '', children: (string) $c_uiDd, attrs: []}
+							{capture $c_uiDt}{$page['project']['url']['label'] ?? $labels['visitSite']}{/capture}{include 'box/Box.latte', tag: 'dt', class: 'sr-only', children: (string) $c_uiDt, attrs: []}
+							{capture $c_uiDd}{capture $c_ui9}{$labels['visitSite']}{icon('external-link')}{/capture}{include 'link/Link.latte', href: $page['project']['url']['value'] ?? '', class: kit('button', [], 'gap-2'), children: (string) $c_ui9, attrs: ['rel' => 'noopener', 'target' => '_blank']}{/capture}{include 'box/Box.latte', tag: 'dd', class: '', children: (string) $c_uiDd, attrs: []}
 						{/capture}{include 'box/Box.latte', tag: 'div', class: 'col-span-2', children: (string) $c_ui10, attrs: []}
 					{/if}
 				{/capture}{include 'box/Box.latte', tag: 'dl', class: 'grid grid-cols-2 gap-6 self-end rounded-xl border border-border bg-card p-6', children: (string) $c_ui11, attrs: []}
@@ -45,17 +45,17 @@
 	{capture $c_ui16}
 		{capture $c_ui15}{$page['content']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none', children: (string) $c_ui15, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'div', class: 'container mx-auto max-w-3xl px-4 py-16 md:px-6', children: (string) $c_ui16, attrs: []}
-{/capture}{include 'box/Box.latte', tag: 'article', class: ($page['post_class'] ?? ''), children: (string) $c_ui17, attrs: []}
+{/capture}{include 'box/Box.latte', tag: 'article', class: ($page['postClass'] ?? ''), children: (string) $c_ui17, attrs: []}
 
-{if !empty($next_project)}
+{if !empty($nextProject)}
 	{capture $c_ui23}
 		{capture $c_ui22}
 			{capture $c_ui20}
-				{capture $c_ui18}{$labels['next_project']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui18, attrs: []}
-				{capture $c_ui19}{$next_project['title']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-2xl font-semibold text-foreground', children: (string) $c_ui19, attrs: []}
+				{capture $c_ui18}{$labels['nextProject']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui18, attrs: []}
+				{capture $c_ui19}{$nextProject['title']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-2xl font-semibold text-foreground', children: (string) $c_ui19, attrs: []}
 			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-2', children: (string) $c_ui20, attrs: []}
 			{capture $c_ui21}{icon('arrow-right', 'size-8')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-primary', children: (string) $c_ui21, attrs: []}
-		{/capture}{include 'link/Link.latte', href: $next_project['url'] ?? '', class: 'group flex items-center justify-between gap-6 rounded-2xl border border-border bg-card p-8 no-underline hover:border-primary', children: (string) $c_ui22, attrs: []}
+		{/capture}{include 'link/Link.latte', href: $nextProject['url'] ?? '', class: 'group flex items-center justify-between gap-6 rounded-2xl border border-border bg-card p-8 no-underline hover:border-primary', children: (string) $c_ui22, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'section', class: 'container mx-auto px-4 pb-16 md:px-6', children: (string) $c_ui23, attrs: []}
 {/if}
 {/if}

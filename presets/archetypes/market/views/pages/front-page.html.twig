@@ -4,13 +4,13 @@
 
 {% set hero %}
 	{% set heroInner %}
-		{% set k %}{{ icon('sparkles', 'size-4') }}{{ labels['hero_kicker'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'badge inline-flex w-fit items-center gap-2 rounded-full border border-primary px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary', 'children': k, 'attrs': []} only %}
-		{% set h %}{{ labels['hero_title'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'max-w-4xl font-heading text-4xl font-extrabold leading-none tracking-tighter md:text-6xl', 'children': h, 'attrs': []} only %}
-		{% set p %}{{ labels['hero_text'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'max-w-2xl text-lg text-secondary-foreground/70', 'children': p, 'attrs': []} only %}
+		{% set k %}{{ icon('sparkles', 'size-4') }}{{ labels['heroKicker'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'badge inline-flex w-fit items-center gap-2 rounded-full border border-primary px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary', 'children': k, 'attrs': []} only %}
+		{% set h %}{{ labels['heroTitle'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h1', 'class': 'max-w-4xl font-heading text-4xl font-extrabold leading-none tracking-tighter md:text-6xl', 'children': h, 'attrs': []} only %}
+		{% set p %}{{ labels['heroText'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'max-w-2xl text-lg text-secondary-foreground/70', 'children': p, 'attrs': []} only %}
 		{% include 'blocks/search-bar.html.twig' %}
 		{% if not ((shop['categories']) is empty) %}
 			{% set tags %}
-				{% set pl %}{{ labels['popular_tags'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-secondary-foreground/70', 'children': pl, 'attrs': []} only %}
+				{% set pl %}{{ labels['popularTags'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'text-secondary-foreground/70', 'children': pl, 'attrs': []} only %}
 				{% for cat in shop['categories'] %}
 					{% set n %}{{ cat['name'] }}{% endset %}{% include 'link/Link.html.twig' with {'href': cat['url'] ?? '', 'class': 'rounded-full border border-secondary-foreground/20 px-4 py-2 text-secondary-foreground no-underline hover:border-primary hover:text-primary', 'children': n, 'attrs': []} only %}
 				{% endfor %}
@@ -43,7 +43,7 @@
 	{% set sec %}
 		{% set head %}
 			{% set h %}{{ labels['authors'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'font-heading text-2xl font-bold tracking-tight md:text-3xl', 'children': h, 'attrs': []} only %}
-			{% set p %}{{ labels['authors_text'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': p, 'attrs': []} only %}
+			{% set p %}{{ labels['authorsText'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'text-muted-foreground', 'children': p, 'attrs': []} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'mb-6 flex flex-col gap-2', 'children': head, 'attrs': []} only %}
 		{% set grid %}
 			{% for a in authors %}
@@ -62,7 +62,7 @@
 
 {% set trust %}
 	{% set panel %}
-		{% set h %}{{ labels['trust_title'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'font-heading text-2xl font-bold tracking-tight md:text-3xl', 'children': h, 'attrs': []} only %}
+		{% set h %}{{ labels['trustTitle'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'h2', 'class': 'font-heading text-2xl font-bold tracking-tight md:text-3xl', 'children': h, 'attrs': []} only %}
 		{% set list %}
 			{% for c_row in [['shield-check', 'trust_review'], ['rotate-ccw', 'trust_updates'], ['message-circle', 'trust_support'], ['credit-card', 'trust_pay']] %}{% set ic = c_row[0] %}{% set key = c_row[1] %}
 				{% set li %}

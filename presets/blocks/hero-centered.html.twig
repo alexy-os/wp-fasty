@@ -12,17 +12,17 @@
 	{% endif %}
 
 	{% set actions %}
-		{% set explore %}{{ hero.primary_label ?? 'Explore' }}{% endset %}
-		{% set learn %}{{ hero.secondary_label ?? 'Learn more' }}{% endset %}
-		{% if hero.primary_url ?? false %}
+		{% set explore %}{{ hero.primaryLabel ?? 'Explore' }}{% endset %}
+		{% set learn %}{{ hero.secondaryLabel ?? 'Learn more' }}{% endset %}
+		{% if hero.primaryUrl ?? false %}
 			{% set primary %}
-				{% include 'link/Link.html.twig' with { href: hero.primary_url, class: kit('button', {}), children: explore } %}
+				{% include 'link/Link.html.twig' with { href: hero.primaryUrl, class: kit('button', {}), children: explore } %}
 			{% endset %}
 			{{ primary }}
 		{% endif %}
-		{% if hero.secondary_url ?? false %}
+		{% if hero.secondaryUrl ?? false %}
 			{% set secondary %}
-				{% include 'link/Link.html.twig' with { href: hero.secondary_url, class: kit('button', {'variant': 'secondary'}), children: learn } %}
+				{% include 'link/Link.html.twig' with { href: hero.secondaryUrl, class: kit('button', {'variant': 'secondary'}), children: learn } %}
 			{% endset %}
 			{{ secondary }}
 		{% endif %}

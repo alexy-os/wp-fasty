@@ -196,7 +196,7 @@
     },
     {
       "file": "presets/blocks/post-content.html.twig",
-      "expr": "page.link_pages",
+      "expr": "page.linkPages",
       "count": 1,
       "source": "ContextFactory::page()",
       "why": "wp_link_pages() markup (core)"
@@ -217,7 +217,7 @@
     },
     {
       "file": "presets/blocks/post-content.latte",
-      "expr": "$page['link_pages']",
+      "expr": "$page['linkPages']",
       "count": 1,
       "source": "ContextFactory::page()",
       "why": "wp_link_pages() markup (core)"
@@ -399,7 +399,7 @@
     },
     {
       "file": "themes/latte/views/blocks/post-content.html.twig",
-      "expr": "page.link_pages",
+      "expr": "page.linkPages",
       "count": 1,
       "source": "ContextFactory::page()",
       "why": "wp_link_pages() markup (core)"
@@ -420,7 +420,7 @@
     },
     {
       "file": "themes/latte/views/blocks/post-content.latte",
-      "expr": "$page['link_pages']",
+      "expr": "$page['linkPages']",
       "count": 1,
       "source": "ContextFactory::page()",
       "why": "wp_link_pages() markup (core)"

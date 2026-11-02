@@ -4,7 +4,7 @@
  *}
 {capture $list}
 	{if empty($posts)}
-		{capture $c_ui1}{$labels['no_posts'] ?? 'No posts found.'}{/capture}{include 'text/Text.latte', tag: 'p', class: 'py-16 text-center text-muted-foreground', children: (string) $c_ui1, attrs: []}
+		{capture $c_ui1}{$labels['noPosts'] ?? 'No posts found.'}{/capture}{include 'text/Text.latte', tag: 'p', class: 'py-16 text-center text-muted-foreground', children: (string) $c_ui1, attrs: []}
 	{else}
 		{capture $cards}
 			{foreach $posts as $post}
@@ -22,7 +22,7 @@
 						{include 'card/CardFooter.latte', children: (string) $ft}
 					{/if}
 				{/capture}
-				{include 'card/Card.latte', variant: 'compact', class: $post['post_class'] ?? '', children: (string) $body}
+				{include 'card/Card.latte', variant: 'compact', class: $post['postClass'] ?? '', children: (string) $body}
 			{/foreach}
 		{/capture}
 		{include 'stack/Stack.latte', gap: '6', children: (string) $cards}
@@ -30,14 +30,14 @@
 
 	{if !empty($pagination)}
 		{capture $c_ui5}
-			{if $pagination['prev_url']}
+			{if $pagination['prevUrl']}
 				{capture $prevL}{$labels['previous'] ?? 'Previous'}{/capture}
-				{include 'link/Link.latte', href: $pagination['prev_url'], class: kit('link', ['size' => 'sm']), children: (string) $prevL}
+				{include 'link/Link.latte', href: $pagination['prevUrl'], class: kit('link', ['size' => 'sm']), children: (string) $prevL}
 			{/if}
 			{capture $c_ui4}{$pagination['current']} / {$pagination['total']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-sm text-muted-foreground', children: (string) $c_ui4, attrs: []}
-			{if $pagination['next_url']}
+			{if $pagination['nextUrl']}
 				{capture $nextL}{$labels['next'] ?? 'Next'}{/capture}
-				{include 'link/Link.latte', href: $pagination['next_url'], class: kit('link', ['size' => 'sm']), children: (string) $nextL}
+				{include 'link/Link.latte', href: $pagination['nextUrl'], class: kit('link', ['size' => 'sm']), children: (string) $nextL}
 			{/if}
 		{/capture}{include 'box/Box.latte', tag: 'nav', class: 'mt-10 flex justify-center gap-4', children: (string) $c_ui5, attrs: ['aria-label' => ($labels['pagination'] ?? 'Pagination')]}
 	{/if}

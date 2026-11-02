@@ -128,9 +128,9 @@ final class PagerTest extends TestCase
     {
         self::assertSame('http://example.test/page/{0}', Pager::template());
         self::assertSame(['url' => 'http://example.test/page/{0}', 'firstUrl' => 'http://example.test/page/1'], Pager::urls());
-        $ctx = ['pagination' => ['current' => 2, 'total' => 3, 'url' => '/blog/page/{0}/?s=a', 'first_url' => '/blog/?s=a']];
+        $ctx = ['pagination' => ['current' => 2, 'total' => 3, 'url' => '/blog/page/{0}/?s=a', 'firstUrl' => '/blog/?s=a']];
         self::assertSame(['url' => '/blog/page/{0}/?s=a', 'firstUrl' => '/blog/?s=a'], Pager::urls($ctx));
-        $bad = Pager::urls(['pagination' => ['url' => 'javascript:alert({0})', 'first_url' => '//evil.test/']]);
+        $bad = Pager::urls(['pagination' => ['url' => 'javascript:alert({0})', 'firstUrl' => '//evil.test/']]);
         self::assertSame(['url' => '', 'firstUrl' => ''], $bad);
         self::assertArrayNotHasKey('url', Pager::value(2, 5, $bad), 'no address: buttons');
         self::assertArrayNotHasKey('url', Pager::value(2, 5, ['url' => '/x', 'firstUrl' => '/']), 'no {0}: buttons');

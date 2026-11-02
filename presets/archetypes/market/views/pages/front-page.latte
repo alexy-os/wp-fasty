@@ -4,13 +4,13 @@
 
 {capture $hero}
 	{capture $heroInner}
-		{capture $k}{icon('sparkles', 'size-4')}{$labels['hero_kicker']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'badge inline-flex w-fit items-center gap-2 rounded-full border border-primary px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary', children: (string) $k, attrs: []}
-		{capture $h}{$labels['hero_title']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'max-w-4xl font-heading text-4xl font-extrabold leading-none tracking-tighter md:text-6xl', children: (string) $h, attrs: []}
-		{capture $p}{$labels['hero_text']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'max-w-2xl text-lg text-secondary-foreground/70', children: (string) $p, attrs: []}
+		{capture $k}{icon('sparkles', 'size-4')}{$labels['heroKicker']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'badge inline-flex w-fit items-center gap-2 rounded-full border border-primary px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary', children: (string) $k, attrs: []}
+		{capture $h}{$labels['heroTitle']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'max-w-4xl font-heading text-4xl font-extrabold leading-none tracking-tighter md:text-6xl', children: (string) $h, attrs: []}
+		{capture $p}{$labels['heroText']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'max-w-2xl text-lg text-secondary-foreground/70', children: (string) $p, attrs: []}
 		{include 'blocks/search-bar.latte'}
 		{if !empty($shop['categories'])}
 			{capture $tags}
-				{capture $pl}{$labels['popular_tags']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-secondary-foreground/70', children: (string) $pl, attrs: []}
+				{capture $pl}{$labels['popularTags']}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-secondary-foreground/70', children: (string) $pl, attrs: []}
 				{foreach $shop['categories'] as $cat}
 					{capture $n}{$cat['name']}{/capture}{include 'link/Link.latte', href: $cat['url'] ?? '', class: 'rounded-full border border-secondary-foreground/20 px-4 py-2 text-secondary-foreground no-underline hover:border-primary hover:text-primary', children: (string) $n, attrs: []}
 				{/foreach}
@@ -43,7 +43,7 @@
 	{capture $sec}
 		{capture $head}
 			{capture $h}{$labels['authors']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'font-heading text-2xl font-bold tracking-tight md:text-3xl', children: (string) $h, attrs: []}
-			{capture $p}{$labels['authors_text']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $p, attrs: []}
+			{capture $p}{$labels['authorsText']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $p, attrs: []}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-6 flex flex-col gap-2', children: (string) $head, attrs: []}
 		{capture $grid}
 			{foreach $authors as $a}
@@ -62,7 +62,7 @@
 
 {capture $trust}
 	{capture $panel}
-		{capture $h}{$labels['trust_title']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'font-heading text-2xl font-bold tracking-tight md:text-3xl', children: (string) $h, attrs: []}
+		{capture $h}{$labels['trustTitle']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'font-heading text-2xl font-bold tracking-tight md:text-3xl', children: (string) $h, attrs: []}
 		{capture $list}
 			{foreach [['shield-check', 'trust_review'], ['rotate-ccw', 'trust_updates'], ['message-circle', 'trust_support'], ['credit-card', 'trust_pay']] as [$ic, $key]}
 				{capture $li}

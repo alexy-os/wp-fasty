@@ -1,7 +1,7 @@
 {**
  * App-shell body chrome — used when context shell === app-shell.
  *}
-{capture $c_ui1}{$labels['skip_to_content']}{/capture}{include 'link/Link.latte', class: 'skip-link screen-reader-text', href: '#content', children: (string) $c_ui1, attrs: []}
+{capture $c_ui1}{$labels['skipToContent']}{/capture}{include 'link/Link.latte', class: 'skip-link screen-reader-text', href: '#content', children: (string) $c_ui1, attrs: []}
 {include 'layout/parts/mobile-sheet.latte'}
 
 {capture $c_ui4}

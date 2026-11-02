@@ -55,7 +55,7 @@ add_filter('wpfasty_context', static function (array $context): array {
     }
 {{/if}}
 {{#if readMorePhp}}
-    $context['labels']['read_more'] = __('{{readMorePhp}}', '{{theme.textDomain}}');
+    $context['labels']['readMore'] = __('{{readMorePhp}}', '{{theme.textDomain}}');
 {{/if}}
     return $context;
 });

@@ -1,7 +1,7 @@
 {#
  # Site header — classic top nav + mobile sheet trigger. Twig twin of header.latte.
  #}
-{% set c_ui1 %}{{ labels.skip_to_content }}{% endset %}{% include 'link/Link.html.twig' with {'class': 'skip-link screen-reader-text', 'href': '#content', 'children': c_ui1, 'attrs': {}} only %}
+{% set c_ui1 %}{{ labels.skipToContent }}{% endset %}{% include 'link/Link.html.twig' with {'class': 'skip-link screen-reader-text', 'href': '#content', 'children': c_ui1, 'attrs': {}} only %}
 
 {% set c_ui8 %}
 	{% set c_ui7 %}
@@ -9,7 +9,7 @@
 			{% if menu.primary.items ?? false %}
 				{% set c_ui2 %}
 					{{ icon('menu', 'size-5') }}
-				{% endset %}{% include 'button/Button.html.twig' with {'class': kit('button', {'variant': 'outline', 'layout': 'icon'}, 'md:hidden'), 'children': c_ui2, 'attrs': {'type': 'button', 'id': (sheet.trigger), 'data-ui8kit-dialog-open': 'true', 'data-ui8kit-dialog-target': (sheet.panel), 'aria-controls': (sheet.panel), 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'aria-label': (labels.open_menu)}} only %}
+				{% endset %}{% include 'button/Button.html.twig' with {'class': kit('button', {'variant': 'outline', 'layout': 'icon'}, 'md:hidden'), 'children': c_ui2, 'attrs': {'type': 'button', 'id': (sheet.trigger), 'data-ui8kit-dialog-open': 'true', 'data-ui8kit-dialog-target': (sheet.panel), 'aria-controls': (sheet.panel), 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'aria-label': (labels.openMenu)}} only %}
 			{% endif %}
 			{% include 'layout/parts/brand.html.twig' %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex items-center gap-2 md:gap-4', 'children': c_ui3, 'attrs': {}} only %}
@@ -21,7 +21,7 @@
 					listClass: 'flex items-center gap-6',
 					linkClass: 'text-sm font-medium text-muted-foreground no-underline hover:text-foreground'
 				} %}
-			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'hidden md:block', 'children': c_ui4, 'attrs': {'aria-label': (labels.primary_nav)}} only %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'hidden md:block', 'children': c_ui4, 'attrs': {'aria-label': (labels.primaryNav)}} only %}
 		{% endif %}
 
 		{% set c_ui6 %}

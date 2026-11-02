@@ -6,8 +6,8 @@
 		{capture $c_ui16}
 			{capture $c_ui4}
 				{capture $c_ui1}{icon('circle-check', 'size-12')}{/capture}{include 'text/Text.latte', tag: 'span', class: 'text-primary', children: (string) $c_ui1, attrs: []}
-				{capture $c_ui2}{$labels['order_received']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'text-3xl font-bold tracking-tight', children: (string) $c_ui2, attrs: []}
-				{capture $c_ui3}{$labels['order_number']} #{$order['id']} · {$order['email']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_ui3, attrs: []}
+				{capture $c_ui2}{$labels['orderReceived']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'text-3xl font-bold tracking-tight', children: (string) $c_ui2, attrs: []}
+				{capture $c_ui3}{$labels['orderNumber']} #{$order['id']} · {$order['email']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_ui3, attrs: []}
 			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col items-center gap-4 text-center', children: (string) $c_ui4, attrs: []}
 			{capture $c_ui14}
 				{foreach $order['items'] as $item}
@@ -17,17 +17,17 @@
 				{capture $c_ui13}{capture $c_ui11}{$labels['total']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui11, attrs: []}{capture $c_ui12}{$order['total_display']}{/capture}{include 'text/Text.latte', tag: 'span', children: (string) $c_ui12, attrs: []}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex justify-between gap-4 p-4 text-lg font-semibold', children: (string) $c_ui13, attrs: []}
 			{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col divide-y divide-border rounded-xl border border-border bg-card', children: (string) $c_ui14, attrs: []}
 			{include 'blocks/slot.latte', name: 'checkout.order'}
-			{capture $c_ui15}{$labels['continue_shopping']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui15, attrs: []}
+			{capture $c_ui15}{$labels['continueShopping']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'mx-auto inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui15, attrs: []}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'mx-auto flex max-w-2xl flex-col gap-6', children: (string) $c_ui16, attrs: []}
 	{elseif empty($cart['items'])}
 		{capture $c_ui19}
-			{capture $c_ui17}{$labels['empty_cart']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_ui17, attrs: []}
-			{capture $c_ui18}{$labels['continue_shopping']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui18, attrs: []}
+			{capture $c_ui17}{$labels['emptyCart']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-muted-foreground', children: (string) $c_ui17, attrs: []}
+			{capture $c_ui18}{$labels['continueShopping']}{/capture}{include 'link/Link.latte', href: $shop['url'] ?? '', class: 'inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline', children: (string) $c_ui18, attrs: []}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col items-center gap-6 rounded-2xl border border-dashed border-border py-16 text-center', children: (string) $c_ui19, attrs: []}
 	{else}
 		{capture $c_ui20}{$labels['checkout']}{/capture}{include 'text/Text.latte', tag: 'h1', class: 'mb-8 text-3xl font-bold tracking-tight', children: (string) $c_ui20, attrs: []}
 		{if !empty($checkout['errors'])}
-			{capture $errText}{capture $c_ui21}{icon('x')}{$labels['check_fields']}: {implode(', ', $checkout['error_labels'] ?? $checkout['errors'])}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex items-center gap-2', children: (string) $c_ui21, attrs: []}{/capture}
+			{capture $errText}{capture $c_ui21}{icon('x')}{$labels['checkFields']}: {implode(', ', $checkout['error_labels'] ?? $checkout['errors'])}{/capture}{include 'text/Text.latte', tag: 'span', class: 'inline-flex items-center gap-2', children: (string) $c_ui21, attrs: []}{/capture}
 			{capture $c_ui22}{include 'alert/Alert.latte', variant: 'destructive', role: 'alert', class: 'px-4 py-2', children: (string) $errText}{/capture}{include 'box/Box.latte', tag: 'div', class: 'mb-6', children: (string) $c_ui22, attrs: []}
 		{/if}
 		{var $v = $checkout['values']}
@@ -75,9 +75,9 @@
 				{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2 rounded-xl border border-border bg-card p-6 text-sm', children: (string) $c_ui37, attrs: []}
 				{include 'blocks/order-summary.latte', cart: $cart, labels: $labels, showCheckout: false}
 				{include 'blocks/slot.latte', name: 'checkout.consents'}
-				{capture $place}{icon('check')}{$labels['place_order']}{/capture}
+				{capture $place}{icon('check')}{$labels['placeOrder']}{/capture}
 				{include 'button/Button.latte', type: 'submit', class: kit('button', ['size' => 'lg'], 'w-full'), children: (string) $place}
-				{capture $c_ui38}{$labels['demo_notice']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-xs text-muted-foreground', children: (string) $c_ui38, attrs: []}
+				{capture $c_ui38}{$labels['demoNotice']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-xs text-muted-foreground', children: (string) $c_ui38, attrs: []}
 			{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-4', children: (string) $c_ui39, attrs: []}
 		{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', class: 'grid gap-8 lg:grid-cols-[1fr_360px]', children: (string) $c_ui40, attrs: ['method' => 'post', 'novalidate' => true]}
 	{/if}
