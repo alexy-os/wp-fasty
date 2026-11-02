@@ -4,14 +4,17 @@
  * N+1 guard of the builder posts pager (posts/listPaged, Pager): a page with one paged posts block bound to the posts
  * source, [small] then [large] posts per page, on page 1 and page 2 of the request (`paged` of the main query), gets
  * its bound data as Front does it (Front::bound: one list query with its found rows, the Codex entries, media,
- * authors, terms in one query each). The query count must not grow with the posts per page and must be the same on
- * page 2 as on page 1. Temporary posts top the site up to 2 × [large] + 1 and are removed after the run.
+ * authors, terms in one query each). No query shape may run twice in one render (guard.php), and the query count
+ * must not grow above the [small] page 1 count. Fewer queries are fine: a page whose posts have no author or media
+ * skips that batched query. Temporary posts top the site up to 2 × [large] + 1 and are removed after the run.
  *   wp eval-file tools/perf/queries.php pager [small] [large]
- * Exit 1 when a count grows, or when the pager or the page of posts is wrong.
+ * Exit 1 on a repeated query shape or a growing count, or when the pager or the page of posts is wrong.
  */
 if (!defined('ABSPATH')) {
     exit;
 }
+
+require_once __DIR__.'/guard.php';
 
 $wpfastyPqSmall = max(1, (int) ($args[1] ?? 2));
 $wpfastyPqLarge = max($wpfastyPqSmall + 1, (int) ($args[2] ?? 6));
@@ -52,13 +55,27 @@ $wpfastyPqRender = static function (int $n, int $paged) use ($wpfastyPqCatalog, 
     $wp_the_query = $wp_query;
     $post = $wp_query->post;
     // phpcs:enable
+    $sqls = [];
+    $collect = static function (string $sql) use (&$sqls): string {
+        $sqls[] = $sql;
+
+        return $sql;
+    };
+    add_filter('query', $collect);
     $before = $wpdb->num_queries;
     $bound = WPFastyBuilder\Front::bound($entry);
     $q = $wpdb->num_queries - $before;
+    remove_filter('query', $collect);
+    $repeated = wpfasty_perf_repeated_shapes($sqls);
     $pager = $bound['pg']['pager'] ?? null;
     $pages = (int) ceil($wpfastyPqTotal / $n);
     $want = min($n, max(0, $wpfastyPqTotal - ($paged - 1) * $n));
     $problem = match (true) {
+        [] !== $repeated => sprintf('N+1: %s', implode('; ', array_map(
+            static fn (string $shape, int $n): string => sprintf('%d× %s', $n, substr($shape, 0, 120)),
+            array_keys($repeated),
+            $repeated
+        ))),
         count($bound['pg']['posts'] ?? []) !== $want => sprintf('%d posts on page %d, want %d', count($bound['pg']['posts'] ?? []), $paged, $want),
         !is_array($pager) => 'no pager',
         $pager['page'] !== $paged || $pager['pages'] !== $pages => sprintf('pager %d/%d, want %d/%d', $pager['page'], $pager['pages'], $paged, $pages),
@@ -95,8 +112,8 @@ foreach ($wpfastyPqRuns as $k => [, $problem]) {
         WP_CLI::error("pager $k: $problem");
     }
 }
-$wpfastyPqCounts = array_unique(array_column($wpfastyPqRuns, 0));
-if (count($wpfastyPqCounts) > 1) {
-    WP_CLI::error('N+1: the query count of the paged posts block changes with the posts per page or the page');
+$wpfastyPqBase = $wpfastyPqRuns["$wpfastyPqSmall/1"][0];
+if (max(array_column($wpfastyPqRuns, 0)) > $wpfastyPqBase) {
+    WP_CLI::error('N+1: the query count of the paged posts block grows with the posts per page or the page');
 }
 WP_CLI::success('No N+1 detected');
