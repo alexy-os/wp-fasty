@@ -26,7 +26,7 @@ result to equal `themes/<slug>` byte for byte (only the `.pot` `POT-Creation-Dat
 
 | File | When | Content |
 |---|---|---|
-| `latte.zip` | always | parent from `theme:pack` (`dist/latte.zip`, built if missing) |
+| `wp-fasty.zip` | always | parent from `theme:pack` (`dist/wp-fasty.zip`, built if missing) |
 | `<slug>.zip` | always | the generated child theme (same tree `theme:roundtrip` checks) |
 | `wpfasty-types.zip` | `output.typesPlugin = companion` and post types | companion plugin; reads the active theme's `types/` (no generated config) |
 | `wpfasty-builder.zip` | `builder.enabled` | builder plugin without `editor/` sources |

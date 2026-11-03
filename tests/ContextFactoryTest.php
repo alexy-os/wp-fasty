@@ -105,6 +105,6 @@ final class ContextFactoryTest extends TestCase
     /** The production wiring (configs/context.php) over the test stubs. */
     private static function contextFactory(): ContextFactory
     {
-        return (require \dirname(__DIR__).'/themes/latte/configs/context.php')();
+        return (require \dirname(__DIR__).'/themes/wp-fasty/configs/context.php')();
     }
 }

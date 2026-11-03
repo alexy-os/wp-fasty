@@ -31,8 +31,8 @@
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/~cache/*</exclude-pattern>
-    <exclude-pattern>themes/latte/ui8kit/*</exclude-pattern>
-    <exclude-pattern>themes/latte/twig/ui8kit/*</exclude-pattern>
+    <exclude-pattern>themes/wp-fasty/ui8kit/*</exclude-pattern>
+    <exclude-pattern>themes/wp-fasty/twig/ui8kit/*</exclude-pattern>
     <exclude-pattern>plugins/wpfasty-builder/primitives/*</exclude-pattern>
     <exclude-pattern>plugins/wpfasty-builder/sources/*</exclude-pattern>
     <exclude-pattern>plugins/wpfasty-builder/editor/*</exclude-pattern>
@@ -97,7 +97,7 @@
     <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
         <properties>
             <property name="rootNamespaces" type="array">
-                <element key="themes/latte/classes" value="WPFasty"/>
+                <element key="themes/wp-fasty/classes" value="WPFasty"/>
                 <element key="plugins/wpfasty-types/src" value="WPFastyTypes"/>
                 <element key="plugins/wpfasty-builder/src" value="WPFastyBuilder"/>
                 <element key="tests" value="WPFasty\Tests"/>
@@ -113,8 +113,13 @@
 
     <!-- deprecated class_alias files of the renamed exceptions (EngineUnavailable, CanonicalError) -->
     <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
-        <exclude-pattern>themes/latte/classes/Template/EngineUnavailable.php</exclude-pattern>
+        <exclude-pattern>themes/wp-fasty/classes/Template/EngineUnavailable.php</exclude-pattern>
         <exclude-pattern>plugins/wpfasty-types/src/Codex/CanonicalError.php</exclude-pattern>
+    </rule>
+
+    <!-- deprecated latte_* aliases of the renamed base-theme functions (2.0, removed in 3.0) -->
+    <rule ref="Squiz.Functions.GlobalFunction">
+        <exclude-pattern>themes/wp-fasty/includes/deprecated.php</exclude-pattern>
     </rule>
 
     <!-- tests are WPFasty\Tests\ (autoload-dev PSR-4). Preset sources are child-theme code copied by the theme
@@ -136,7 +141,7 @@
     <rule ref="WordPress.Security"/>
     <rule ref="WordPress.WP.I18n"/>
     <rule ref="WordPress.WP.EnqueuedResources"/>
-    <config name="text_domain" value="latte,latte-skin,latte-press,latte-folio,latte-shop,wpfasty-market,wpfasty-types,wpfasty-builder"/>
+    <config name="text_domain" value="wp-fasty,latte-skin,latte-press,latte-folio,latte-shop,wpfasty-market,wpfasty-types,wpfasty-builder"/>
     <!-- CLI scripts (wp eval-file / php tools/…) and test stubs print to a terminal, not to a browser -->
     <rule ref="WordPress.Security.EscapeOutput.OutputNotEscaped">
         <exclude-pattern>tools/*</exclude-pattern>

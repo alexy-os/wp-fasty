@@ -29,7 +29,7 @@ const ROOT = resolve(import.meta.dir, "../..");
 const PLUGIN = join(ROOT, "plugins/wpfasty-builder");
 const DIR = join(PLUGIN, "sources/ui8kit/page-previews");
 const MANIFEST = join(DIR, "manifest.json");
-const CSS = [join(ROOT, "themes/latte/assets/css/tokens.css"), join(ROOT, "themes/latte/assets/css/theme.min.css"), join(PLUGIN, "assets/blocks.css")];
+const CSS = [join(ROOT, "themes/wp-fasty/assets/css/tokens.css"), join(ROOT, "themes/wp-fasty/assets/css/theme.min.css"), join(PLUGIN, "assets/blocks.css")];
 /** desktop viewport; the page is shot over its whole height up to MAX_HEIGHT and scaled by SCALE */
 const VIEW = { width: 1280, height: 800 };
 const MAX_HEIGHT = 4800;

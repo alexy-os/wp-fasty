@@ -1,8 +1,8 @@
 {
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
   "meta": {
-    "title": "WP FastY Latte demo",
-    "description": "Latte theme (themes/latte) with demo posts, including a multipage post",
+    "title": "WP FastY demo",
+    "description": "WP FastY base theme (themes/wp-fasty) with demo posts, including a multipage post",
     "author": "alexy-os"
   },
   "landingPage": "/multipage-post/2/",
@@ -19,7 +19,7 @@
       "step": "installTheme",
       "themeData": {
         "resource": "url",
-        "url": "https://raw.githubusercontent.com/alexy-os/wp-fasty/main/playground/zips/latte.zip"
+        "url": "https://raw.githubusercontent.com/alexy-os/wp-fasty/main/playground/zips/wp-fasty.zip"
       },
       "options": {
         "activate": true
@@ -28,14 +28,14 @@
     {
       "step": "setSiteOptions",
       "options": {
-        "blogname": "WP FastY Latte",
+        "blogname": "WP FastY",
         "blogdescription": "Latte templates for classic WordPress",
         "permalink_structure": "/%postname%/"
       }
     },
     {
       "step": "runPHP",
-      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n$cat = wp_insert_term('Guides', 'category');\n$catId = is_wp_error($cat) ? (int) get_cat_ID('Guides') : (int) $cat['term_id'];\n$posts = [\n    ['Welcome to Latte', \"<!-- wp:paragraph --><p>A classic WordPress theme rendered with Latte templates: typed view contexts, auto-escaping, no raw sinks.</p><!-- /wp:paragraph -->\"],\n    ['Multipage post', \"<!-- wp:paragraph --><p>Page one of three. Use the page links below the post.</p><!-- /wp:paragraph -->\\n<!--nextpage-->\\n<!-- wp:paragraph --><p>Page two of three: the theme exposes the pages primitive in the view context.</p><!-- /wp:paragraph -->\\n<!--nextpage-->\\n<!-- wp:paragraph --><p>Page three of three. The end.</p><!-- /wp:paragraph -->\"],\n    ['Escaping by default', \"<!-- wp:paragraph --><p>Every value is escaped by Latte unless it is a reviewed TrustedHtml value.</p><!-- /wp:paragraph -->\"],\n    ['Fast by design', \"<!-- wp:paragraph --><p>Repositories batch their queries, so archive pages have no N+1.</p><!-- /wp:paragraph -->\"],\n];\nforeach ($posts as $i => [$title, $content]) {\n    wp_insert_post(['post_title' => $title, 'post_content' => $content, 'post_status' => 'publish', 'post_category' => [$catId], 'post_date' => gmdate('Y-m-d H:i:s', time() - $i * 3600)]);\n}\n$about = wp_insert_post(['post_type' => 'page', 'post_title' => 'About', 'post_status' => 'publish', 'post_content' => '<!-- wp:paragraph --><p>WP FastY Latte demo running in WordPress Playground.</p><!-- /wp:paragraph -->']);\n$menu = wp_create_nav_menu('Primary');\nif (!is_wp_error($menu)) {\n    wp_update_nav_menu_item($menu, 0, ['menu-item-title' => 'Home', 'menu-item-url' => home_url('/'), 'menu-item-status' => 'publish']);\n    wp_update_nav_menu_item($menu, 0, ['menu-item-object-id' => $about, 'menu-item-object' => 'page', 'menu-item-type' => 'post_type', 'menu-item-status' => 'publish']);\n    $locations = array_keys(get_registered_nav_menus());\n    if ($locations !== []) { set_theme_mod('nav_menu_locations', array_fill_keys($locations, $menu)); }\n}\nflush_rewrite_rules();\n"
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n$cat = wp_insert_term('Guides', 'category');\n$catId = is_wp_error($cat) ? (int) get_cat_ID('Guides') : (int) $cat['term_id'];\n$posts = [\n    ['Welcome to WP FastY', \"<!-- wp:paragraph --><p>A classic WordPress theme rendered with Latte templates: typed view contexts, auto-escaping, no raw sinks.</p><!-- /wp:paragraph -->\"],\n    ['Multipage post', \"<!-- wp:paragraph --><p>Page one of three. Use the page links below the post.</p><!-- /wp:paragraph -->\\n<!--nextpage-->\\n<!-- wp:paragraph --><p>Page two of three: the theme exposes the pages primitive in the view context.</p><!-- /wp:paragraph -->\\n<!--nextpage-->\\n<!-- wp:paragraph --><p>Page three of three. The end.</p><!-- /wp:paragraph -->\"],\n    ['Escaping by default', \"<!-- wp:paragraph --><p>Every value is escaped by Latte unless it is a reviewed TrustedHtml value.</p><!-- /wp:paragraph -->\"],\n    ['Fast by design', \"<!-- wp:paragraph --><p>Repositories batch their queries, so archive pages have no N+1.</p><!-- /wp:paragraph -->\"],\n];\nforeach ($posts as $i => [$title, $content]) {\n    wp_insert_post(['post_title' => $title, 'post_content' => $content, 'post_status' => 'publish', 'post_category' => [$catId], 'post_date' => gmdate('Y-m-d H:i:s', time() - $i * 3600)]);\n}\n$about = wp_insert_post(['post_type' => 'page', 'post_title' => 'About', 'post_status' => 'publish', 'post_content' => '<!-- wp:paragraph --><p>WP FastY demo running in WordPress Playground.</p><!-- /wp:paragraph -->']);\n$menu = wp_create_nav_menu('Primary');\nif (!is_wp_error($menu)) {\n    wp_update_nav_menu_item($menu, 0, ['menu-item-title' => 'Home', 'menu-item-url' => home_url('/'), 'menu-item-status' => 'publish']);\n    wp_update_nav_menu_item($menu, 0, ['menu-item-object-id' => $about, 'menu-item-object' => 'page', 'menu-item-type' => 'post_type', 'menu-item-status' => 'publish']);\n    $locations = array_keys(get_registered_nav_menus());\n    if ($locations !== []) { set_theme_mod('nav_menu_locations', array_fill_keys($locations, $menu)); }\n}\nflush_rewrite_rules();\n"
     }
   ]
 }

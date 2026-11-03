@@ -60,7 +60,7 @@ export function buildManifest(a: Answers, data: Data): { manifest: J; warnings: 
   const m = clone(base);
   const slug = a.slug ?? slugify(a.name ?? "");
   if (!/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(slug)) problems.push(`slug "${slug}" must be lowercase words joined by dashes`);
-  if (slug === (m.parent?.preset ?? "latte")) problems.push(`slug "${slug}" is the parent theme`);
+  if (slug === (m.parent?.preset ?? "wp-fasty")) problems.push(`slug "${slug}" is the parent theme`);
   const prefix = a.prefix ?? slugify(slug.split("-").pop() ?? slug).replace(/-/g, "").slice(0, 16);
   if (!/^[a-z][a-z0-9]{1,15}$/.test(prefix)) problems.push(`prefix "${prefix}" must be 2–16 lowercase letters/digits`);
 

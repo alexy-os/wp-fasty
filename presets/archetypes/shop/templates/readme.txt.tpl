@@ -7,13 +7,13 @@ Stable tag: {{theme.version}}
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Lightweight shop child theme of Latte without WooCommerce: product catalog and categories. Cart and checkout are optional modules (cart, orders) installed through the ModulY plugin; without them the theme shows a read-only catalog.
+Lightweight shop child theme of WP FastY without WooCommerce: product catalog and categories. Cart and checkout are optional modules (cart, orders) installed through the ModulY plugin; without them the theme shows a read-only catalog.
 
 Note: the Product/Order post types are plugin territory under wordpress.org rules; they are declared in types/*.php so they can be moved into a companion plugin.
 
 == Description ==
 
-Child theme of Latte (parent theme required). Colors come from design tokens (tokens.css), icons are Lucide, UI is built from UI8Kit Latte primitives.
+Child theme of WP FastY (parent theme required). Colors come from design tokens (tokens.css), icons are Lucide, UI is built from UI8Kit Latte primitives.
 
 == Copyright ==
 

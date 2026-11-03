@@ -1,15 +1,15 @@
 # AGENTS.md — WP FastY
 
-- Primitives are **UI8Kit 3** (`npx ui8kit@3`, registry 3.2.0): `themes/latte/ui8kit` (Latte), `themes/latte/twig/ui8kit` (Twig).
+- Primitives are **UI8Kit 3** (`npx ui8kit@3`, registry 3.2.0): `themes/wp-fasty/ui8kit` (Latte), `themes/wp-fasty/twig/ui8kit` (Twig).
   They are unstyled and generated: never hand-edit; update with `add --all --force`, verify with `npx ui8kit@3 check` in both dirs.
-- Styling lives in the kit: `presets/components/*.json` → `php tools/ui8kit3/presets.php` → `themes/latte/kit/presets.json`;
+- Styling lives in the kit: `presets/components/*.json` → `php tools/ui8kit3/presets.php` → `themes/wp-fasty/kit/presets.json`;
   use `kit('<component>', {variant, size, …}, extra)` and pass the result as `class`. alert, badge, button, card, iconbadge,
   input, textarea, label, link, stack, title are the codegen-x kit-compose recipes (`packages/kit-compose/variants`, pinned
   with the builder source): never edit them here; a missing variant is a question to codegen-x, not a theme class.
-- Middle layer (legacy prop API): `themes/latte/kit/ui` and `themes/latte/twig/kit/ui`. Twig includes of kit compositions use `only`.
-- Engines are isolated: no Twig in latte.zip, no Latte in twig.zip (CI greps enforce it).
+- Middle layer (legacy prop API): `themes/wp-fasty/kit/ui` and `themes/wp-fasty/twig/kit/ui`. Twig includes of kit compositions use `only`.
+- Engines are isolated: no Twig in wp-fasty.zip, no Latte in twig.zip (CI greps enforce it).
 - Checks before commit: `bun run test`, `composer cs` (Symfony standard: PHP-CS-Fixer @Symfony + PHPCS phpcs.xml.dist with WordPress security), `composer phpstan`, `composer deptrac`, `bun run lint:design`, `bun run parity`, `php tools/ui8kit3/presets.php --check`,
-  `npx ui8kit@3 check` (both dirs), `bun run theme:pack -- latte` and `-- latte --engine twig`.
+  `npx ui8kit@3 check` (both dirs), `bun run theme:pack -- wp-fasty` and `-- wp-fasty --engine twig`.
 - Builder plugin: UI8Kit 3 primitives in `plugins/wpfasty-builder/primitives/{latte,twig}` (`npx ui8kit@3 check` there);
   the bricks `sources/ui8kit/<engine>/ui/**` are adapters calling `ui_prim('<primitive>', {...})` (WPFastyBuilder\Primitives,
   trusted engine, so sandboxed remote sources need no primitive templates). Blocks stay xgen-generated (`blocks/**`).

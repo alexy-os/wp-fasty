@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Latte Folio — portfolio child theme of Latte.
+ * Latte Folio — portfolio child theme of WP FastY.
  *
  * @package Latte_Folio
  */

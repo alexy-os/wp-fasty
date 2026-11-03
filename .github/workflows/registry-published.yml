@@ -91,7 +91,7 @@ jobs:
           done
           exit $fail
 
-      - name: WordPress imports the published registry of its runtime (latte-shop on latte.zip, latte-shop-twig on twig.zip)
+      - name: WordPress imports the published registry of its runtime (latte-shop on wp-fasty.zip, latte-shop-twig on twig.zip)
         run: |
           mkdir -p /tmp/wp && cd /tmp/wp
           curl -sSfL --retry 5 --retry-all-errors -o /tmp/wp.tar.gz "https://wordpress.org/wordpress-${WP_VERSION}.tar.gz"
@@ -103,7 +103,7 @@ jobs:
           mkdir -p wp-content/mu-plugins
           cp "$GITHUB_WORKSPACE/tools/qa/offline.php" "$GITHUB_WORKSPACE/tools/qa/engine-marker.php" wp-content/mu-plugins/
           D="$GITHUB_WORKSPACE/dist"
-          unzip -q "$D/latte.zip" -d wp-content/themes/ && unzip -q "$D/twig.zip" -d wp-content/themes/
+          unzip -q "$D/wp-fasty.zip" -d wp-content/themes/ && unzip -q "$D/twig.zip" -d wp-content/themes/
           for s in latte-shop latte-shop-twig; do unzip -q "$D/$s/$s.zip" -d wp-content/themes/; done
           unzip -q "$D/latte-shop/wpfasty-types.zip" -d wp-content/plugins/
           wp rewrite structure '/%postname%/' --hard

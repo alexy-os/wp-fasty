@@ -9,7 +9,7 @@
     "textDomain": "latte-press",
     "prefix": "press",
     "namespace": "LattePress",
-    "description": "A classic, readable blog theme in the spirit of wordpress.org themes — sidebar widgets, comments, featured images, menus and custom logo. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons).",
+    "description": "A classic, readable blog theme in the spirit of wordpress.org themes — sidebar widgets, comments, featured images, menus and custom logo. Child of WP FastY (UI8Kit Latte primitives, token-only colors, Lucide icons).",
     "version": "1.0.0",
     "uri": "https://github.com/alexy-os/wp-fasty",
     "author": {
@@ -35,7 +35,7 @@
     ]
   },
   "parent": {
-    "preset": "latte",
+    "preset": "wp-fasty",
     "layout": "classic",
     "style": "default"
   },

@@ -4,7 +4,7 @@
 Read this first, then execute the next open cycle. Do not invent a parallel roadmap.
 
 **Last updated:** 2026-10-28 (themes on the codegen-x kit-compose recipes: alert, badge, button, card, iconbadge, input, textarea, label, link, stack, title)
-**Active theme:** `themes/latte` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
+**Active theme:** `themes/wp-fasty` · demo skin: `themes/latte-skin` · child themes: `latte-press`, `latte-folio`, `latte-shop`  
 **Plugins:** `plugins/wpfasty-types` (data registration) · `plugins/wpfasty-builder` (landing builder)  
 **Repo:** `alexy-os/wp-fasty` · monorepo with UI8Kit Codegen Latte primitives  
 **Monorepo version:** `0.3.0` (`package.json`)
@@ -23,7 +23,7 @@ Read this first, then execute the next open cycle. Do not invent a parallel road
 
 ```
 [x] bun / PHP available (Composer via tools/composer.sh or composer.phar)
-[x] themes/latte + themes/latte-skin (child has no composer/vendor)
+[x] themes/wp-fasty + themes/latte-skin (child has no composer/vendor)
 [x] .workspaces/ui8kit-latte exists
 [x] PHPUnit 26/26 green (Cycle H)
 [x] theme:pack → dist/latte.zip works
@@ -81,7 +81,7 @@ Audited claimed Cycles A–G against the tree and ran tooling.
 |------|--------|
 | Codegen Latte bundle | Done |
 | Docs + `.cursor/rules` + `.project` KB | Done |
-| Parent `themes/latte` | Done (v1.1.0) |
+| Parent `themes/wp-fasty` | Done (v1.1.0) |
 | Cycles A–H (code) | Done |
 | PHPUnit 26 tests | Done (green) |
 | `theme:pack` → `dist/latte.zip` | Done |
@@ -99,7 +99,7 @@ packages/ui8kit-codegen/     SOURCE
         ↓  bun run ui:primitives
 .workspaces/ui8kit-latte/    Layer 1
 presets/                     Layer 2
-themes/latte/                Layer 3 parent (Composer)
+themes/wp-fasty/                Layer 3 parent (Composer)
 themes/latte-skin/           Layer 3b child (no Composer)
 themes/latte-press|folio|shop/  Layer 3b child themes (blog / portfolio / shop)
 plugins/wpfasty-types/       companion plugin: CPTs, taxonomies, typed meta, metaboxes
@@ -147,7 +147,7 @@ dist/latte.zip               release artifact (gitignored)
 | 11 | XSS / template-injection audit (report: ui8kit3 `audit/security-xss.md`): page title could close the compiled template's comment and run Latte/Twig code (fixed in `Compiler`), props sanitized in the adapter for both engines (`Safe`: URL schemes through obfuscation, control characters; `Layout::clean`: sample types, depth), `{__html}` of meta through `wp_kses_post`, `{page:}`/records published only, password-protected posts closed in the theme, REST body limit, remote source import needs `unfiltered_html`, editor preview iframe sandboxed. CI job `security`: `tools/security/xss-fuzz.php` (480 variants × 57 payloads, render-block + raw + page, Latte = Twig, 4 shards), raw-output gate `tools/security/raw-sinks.php` (+ `raw-sinks.json`), `sandbox-check.sh` (headless Chrome); PHPUnit `SecurityXssTest`, `RestSecurityTest`; PHPCS `WordPress.Security` in full | [x] 2026-10-28 |
 | 12 | codegen-x security fixes `832d7f17` (`fb4652ce..832d7f17`): builder source re-exported (organism runtime: URL allowlist `og_url`/`og_srcset`, attribute names without `on*`, slot props through `og_markup`→`og_slot`, richtext side note only with its markup; block HTML of all 481 variants and 63 template pages unchanged); `\|html` of a blank string → null (ReadPath, `DataSources::trusted` after kses); shared vectors `readpath-null.json` + `safety-vectors.json` in `tests/fixtures/codex-shared` (`CodexReadPathSharedTest`, `CodegenSafetySharedTest`; byte-equal to codegen-x with the CI token); raw-sinks: `og_slot(` replaces the raw slot-prop pattern and its catalog-template restriction. Input guards unchanged (`Safe::props`, `Layout::clean`, `wp_kses_post`, 1 MB REST limit, iframe sandbox). Open questions to XGenBot: `?q=a:b` / `#fn:1` relative links and `sms:`/`ftp:` lose their href in the runtime; `packages/kit` primitives keep a denylist; `children` raw on the server runtimes | [x] 2026-10-28 |
 | 13 | codegen-x `d7f9fff9` (`832d7f17..d7f9fff9`: Pager link mode `pageUrl`/`firstUrl`, PostGrid `pager.url`/`pager.firstUrl`, gallery `posts.listLinks`; organism `children` through `og_markup`/`og_slot`, a plain string escaped; #92 recipes: link `text-primary`, button hover, alert success/warning, Input/Textarea/Select `state` + `aria-invalid:inset-ring-destructive`): source re-exported, `assets/blocks.css` rebuilt, previews reshot (482 variants). Adapter: `Pager::urls()` — address of page `{0}` from get_pagenum_link (sentinel page, no query) and page 1, through `Safe::url`, ContextFactory `pagination.url`/`first_url` on main-query routes; on the page (Front) every pager is links, the editor preview keeps buttons, a layout still sets only `mode`. The adapter passes no organism `children` (audit: none; `__html` only from DataSources). latte-shop checkout: invalid fields get `aria-invalid` (theme primitives of @ui8kit/registry 3.3.0 have no `state`). Rendered: 250 variants / 61 template pages change classes only (recipes), `posts/listLinks` new; live p1: pager on /journal/, /rt-b/ becomes `<a href>`, theme archive/search unchanged; query counts unchanged | [x] 2026-10-29 |
-| 14 | codegen-x `4be6a994` (`d7f9fff9..4be6a994`: kit-compose `state: 'error'` implies `aria-invalid="true"` on Input/Textarea/Select, explicit `ariaInvalid` wins, absent by default): builder source re-exported (`compose/Compose.php` + `compose.json` `implies` only, no block template changes; blocks.css and previews unchanged), builder registries bumped to v3.1.0 (`CATALOG_VERSION`). latte-shop checkout keeps `ariaInvalid` + `border-destructive`: the theme primitives (`themes/latte/ui8kit`, @ui8kit/registry) still have no `state` | [x] 2026-10-29 |
+| 14 | codegen-x `4be6a994` (`d7f9fff9..4be6a994`: kit-compose `state: 'error'` implies `aria-invalid="true"` on Input/Textarea/Select, explicit `ariaInvalid` wins, absent by default): builder source re-exported (`compose/Compose.php` + `compose.json` `implies` only, no block template changes; blocks.css and previews unchanged), builder registries bumped to v3.1.0 (`CATALOG_VERSION`). latte-shop checkout keeps `ariaInvalid` + `border-destructive`: the theme primitives (`themes/wp-fasty/ui8kit`, @ui8kit/registry) still have no `state` | [x] 2026-10-29 |
 
 **saas-design rules to port (item 7):**
 
@@ -275,7 +275,7 @@ A Parent correctness ✓
 | I5 | `latte-folio` — portfolio: `project` CPT + types, filterable work grid, case-study page; `wpfasty_posts()` child API | `6354935`, `themes/latte-folio/types/project.php` | [x] |
 | I6 | `latte-shop` — WooCommerce-free: `product` CPT + categories, price/sale/SKU/stock, HMAC-signed cookie cart, nonce-protected cart/checkout, private orders with admin status; cart/money tests | `4a77f4d`, `themes/latte-shop/inc/cart.php`, `tests/ShopCartTest.php` | [x] |
 | I7 | Declarative post-type modules `types/<name>.php` (DI `types.registry`); folio/shop moved onto it (identical HTML) | `891c48f`, `db37f6a`, `dc56371`, `6f93ce9` | [x] |
-| I8 | `RendererInterface` with `LatteRenderer` + `TwigRenderer` (`wpfasty_renderer` filter, shared root chain) | `8aa29db`, `themes/latte/classes/Template/` | [x] |
+| I8 | `RendererInterface` with `LatteRenderer` + `TwigRenderer` (`wpfasty_renderer` filter, shared root chain) | `8aa29db`, `themes/wp-fasty/classes/Template/` | [x] |
 | I9 | No N+1: batch-prime meta/terms/thumbnails/authors for post lists; guard `tools/perf/queries.php` (`bun run perf:queries`) | `3ebdc4f` | [x] |
 | I10 | i18n: remaining shop/folio strings translated; `.pot` for all four themes (`bun run i18n:pot`) | `7cf822e`, `themes/*/languages/*.pot` | [x] |
 | I11 | Companion plugin `plugins/wpfasty-types` (CPT/taxonomy/meta/metabox registration); cart cookie without base64; `widgets_init`, core CSS classes, readme/copyright | `e175b8a`, ADR-001 §3a | [x] |
@@ -363,7 +363,7 @@ A Parent correctness ✓
 
 Owner policy: UI8Kit first — the themes take the codegen-x kit-compose recipe, never their own variant of it.
 
-- [x] alert, badge, button, card (+ parts), iconbadge, input, textarea, label, link, stack, title: `presets/components/*.json` and `themes/latte/kit/presets.json` are imported by `php tools/ui8kit3/presets.php` from codegen-x `packages/kit-compose/variants` at the builder source pin (`compose/compose.json`, `fb4652ce`; `--cgx <dir>` compares with a checkout); `Kit` applies `compound` (button `layout: icon`)
+- [x] alert, badge, button, card (+ parts), iconbadge, input, textarea, label, link, stack, title: `presets/components/*.json` and `themes/wp-fasty/kit/presets.json` are imported by `php tools/ui8kit3/presets.php` from codegen-x `packages/kit-compose/variants` at the builder source pin (`compose/compose.json`, `fb4652ce`; `--cgx <dir>` compares with a checkout); `Kit` applies `compound` (button `layout: icon`)
 - [x] Middle layer: `title` size/weight, `stack` gap/align/justify, `badge` a `<span>` (kit-compose Badge); Latte + Twig
 - [x] Views (parent, skin, press/folio/shop archetypes + children): button-styled links → `kit('button')`, icon buttons → `layout: icon`, links → link recipe keys, titles/stacks → keys, post-list cards `compact`, alert extras dropped, checkout `aria-invalid`, shop chips `aria-current`; `rounded` follows `--radius` (`@theme inline reference`)
 - [ ] Open (questions to XGenBot, nothing invented in the themes): link primary colour / size inherit (heading links keep their classes), nav-item, media card, input invalid state, alert role status, destructive-foreground token (sale badges keep their classes), button hover/gap/focus
@@ -401,7 +401,7 @@ Owner policy: UI8Kit first — the themes take the codegen-x kit-compose recipe,
 ```bash
 bun run ui:primitives
 bun run ui:install
-bash tools/composer.sh install --working-dir=themes/latte
+bash tools/composer.sh install --working-dir=themes/wp-fasty
 bun run theme:build -- latte
 bun run theme:build -- latte-skin
 bun run theme:pack -- latte          # → dist/latte.zip
@@ -428,7 +428,7 @@ bun run dev:wp -- theme activate latte-skin
 |---------|---------|
 | `wpfasty` (root `package.json`) | `0.3.0` |
 | `@wpfasty/theme-builder` | `0.3.0` |
-| `themes/latte` style.css | `1.1.0` |
+| `themes/wp-fasty` style.css | `1.1.0` |
 | `latte-press` / `latte-folio` / `latte-shop` / `latte-skin` style.css | `1.0.0` |
 | `plugins/wpfasty-types` | `1.0.0` |
 | `plugins/wpfasty-builder` | `0.1.0` |
@@ -443,7 +443,7 @@ bun run dev:wp -- theme activate latte-skin
 |------|----------|
 | 2026-10-29 | Dark mode toggle in the parent header (rightmost, all children inherit): inline head script (`wp_print_inline_script_tag`, wp_head prio 1, before CSS) sets `.dark` from localStorage `wpfasty-color-scheme` else prefers-color-scheme; `assets/js/theme-toggle.js` (defer, footer) toggles + aria-pressed; Lucide sun/moon; no Customizer option (theme has no Customizer section yet) |
 | 2026-10-28 | Output safety of builder blocks is codegen-x's (organism runtime allowlist, codegen-x `832d7f17`); wp-fasty keeps its input guards (adapter `Safe`, `Layout::clean`, kses, REST limit, sandbox) as the first layer and drops a guard only where a shared-vector test proves codegen-x does the same |
-| 2026-07 | YM deleted; `themes/latte` is reference parent |
+| 2026-07 | YM deleted; `themes/wp-fasty` is reference parent |
 | 2026-07 | Child skins = WP child themes, no Composer |
 | 2026-07 | Release zip bundles primitives under `lib/ui8kit-latte` |
 | 2026-07 | Presets SSOT for blocks; builder emits page views |
@@ -476,7 +476,7 @@ bun run dev:wp -- theme activate latte-skin
 
 > Continue WP FastY from `.project/PROGRESS.md`.  
 > Cycles A–J are complete; follow-ups: Theme Check on `dist/latte.zip` (manual re-verify), Theme Unit Test import + keyboard sweep, Docker smoke (A7/B9), saas-design rules, optional Packagist. CI (`.github/workflows/ci.yml`) runs PHPUnit, strict PHPCS, lint:design, Theme Check and the N+1 guard.  
-> Active theme: `themes/latte` (v1.1.0); demo skin: `themes/latte-skin`; child themes `latte-press`, `latte-folio`, `latte-shop`; plugins `wpfasty-types`, `wpfasty-builder`.  
+> Active theme: `themes/wp-fasty` (v1.1.0); demo skin: `themes/latte-skin`; child themes `latte-press`, `latte-folio`, `latte-shop`; plugins `wpfasty-types`, `wpfasty-builder`.  
 > Use `bash tools/composer.sh` for Composer; `bun run theme:pack -- latte` for zip.  
 > Discipline: `docs/` + `.cursor/rules/`. Do not revive YM. Do not hand-edit `ui8kit-latte`.  
 > Do not add contact forms or WooCommerce for .org; comments stay opt-in. CPTs belong in `wpfasty-types`, never in a theme.
@@ -492,8 +492,8 @@ bun run dev:wp -- theme activate latte-skin
 | [constructor/shell-composition.md](./constructor/shell-composition.md) | App shell recipe |
 | [docs/install.md](../docs/install.md) | Zip + monorepo install |
 | [docs/architecture.md](../docs/architecture.md) | Layers |
-| [themes/latte/README.md](../themes/latte/README.md) | Parent setup |
-| [themes/latte/readme.txt](../themes/latte/readme.txt) | WP.org readme |
+| [themes/wp-fasty/README.md](../themes/wp-fasty/README.md) | Parent setup |
+| [themes/wp-fasty/readme.txt](../themes/wp-fasty/readme.txt) | WP.org readme |
 | [themes/latte-skin/README.md](../themes/latte-skin/README.md) | Skin demo |
 | [docs/agent/README.md](../docs/agent/README.md) | Agent KB (ADR-001, tooling, Theme Check results) |
 | [playground/README.md](../playground/README.md) | Playground previews |

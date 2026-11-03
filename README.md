@@ -8,23 +8,23 @@ catalog of layout / block / style presets.
 ## Architecture (UI8Kit 3)
 
 ```
-themes/latte/ui8kit/          # UI8Kit 3 Latte primitives (npx ui8kit@3, registry 3.2.0) — unstyled, never hand-edit
-themes/latte/twig/ui8kit/     # UI8Kit 3 Twig primitives (npx ui8kit@3 --framework twig) — never hand-edit
-themes/latte/kit/presets.json # our classes: variant/size recipes (generated from presets/components/*.json; 11 of them are codegen-x kit-compose recipes)
-themes/latte/kit/ui/          # Latte middle layer: Block, Title, Card*, Badge, Alert … (legacy prop API → v3 + kit())
-themes/latte/twig/kit/ui/     # the same compositions for Twig
+themes/wp-fasty/ui8kit/          # UI8Kit 3 Latte primitives (npx ui8kit@3, registry 3.2.0) — unstyled, never hand-edit
+themes/wp-fasty/twig/ui8kit/     # UI8Kit 3 Twig primitives (npx ui8kit@3 --framework twig) — never hand-edit
+themes/wp-fasty/kit/presets.json # our classes: variant/size recipes (generated from presets/components/*.json; 11 of them are codegen-x kit-compose recipes)
+themes/wp-fasty/kit/ui/          # Latte middle layer: Block, Title, Card*, Badge, Alert … (legacy prop API → v3 + kit())
+themes/wp-fasty/twig/kit/ui/     # the same compositions for Twig
 presets/                      # layouts × blocks × styles
-themes/<slug>/                # WordPress theme instances (latte + press/folio/shop/skin children)
+themes/<slug>/                # WordPress theme instances (wp-fasty parent + latte-press/folio/shop/skin children)
 ```
 
 | Layer | What | Edit? |
 |-------|------|-------|
 | Primitives | `ui8kit/ui/**`, `twig/ui8kit/ui/**`, runtimes | No: `npx ui8kit@3 add --all --force`, then `npx ui8kit@3 check` |
 | Kit | `presets/components/*.json` → `kit/presets.json`, `kit/ui`, `twig/kit/ui` | Yes: `php tools/ui8kit3/presets.php` |
-| Presets / theme | `presets/blocks`, `themes/latte/views` | Yes |
+| Presets / theme | `presets/blocks`, `themes/wp-fasty/views` | Yes |
 
 Classes come from `kit('button', {variant: 'outline', size: 'sm'}, extra)` (Latte `{kit(...)}`, Twig `kit(...)`), and are passed to
-primitives through `class`. Latte and Twig stay isolated: `latte.zip` ships no `twig/`, `twig.zip` ships no `ui8kit/` and `kit/ui/`.
+primitives through `class`. Latte and Twig stay isolated: `wp-fasty.zip` ships no `twig/`, `twig.zip` ships no `ui8kit/` and `kit/ui/`.
 The legacy codegen bundle (`packages/ui8kit-codegen`, `.workspaces/ui8kit-latte`) is still in the tree as a fallback until the deletion commit.
 
 ## Quick start
@@ -38,14 +38,14 @@ cd wp-fasty
 bun run ui:primitives
 bun run ui:install          # composer → .workspaces/ui8kit-latte/php/vendor
 
-bun run theme:build -- latte
-composer install --working-dir=themes/latte
+bun run theme:build -- wp-fasty
+composer install --working-dir=themes/wp-fasty
 composer install   # PHPUnit / PHPCS tooling
 composer test
 ```
 
 Child skin (no Composer): activate **Latte Skin** after parent.  
-Release zip: `bun run theme:pack -- latte` → see [docs/install.md](docs/install.md).
+Release zip: `bun run theme:pack -- wp-fasty` → see [docs/install.md](docs/install.md).
 
 ### Local WordPress (Docker / WSL)
 
@@ -111,7 +111,7 @@ See [docs/principles.md](docs/principles.md) and [docs/manifesto.md](docs/manife
 {% include 'button/Button.html.twig' with { class: kit('button', {'variant': 'outline', 'size': 'sm'}), children: 'Go' } only %}
 ```
 
-Update: `cd themes/latte && npx ui8kit@3 add --all --force && npx ui8kit@3 check` (and the same in `themes/latte/twig`).
+Update: `cd themes/wp-fasty && npx ui8kit@3 add --all --force && npx ui8kit@3 check` (and the same in `themes/wp-fasty/twig`).
 Parity: `bun run parity` (Latte ↔ Twig, DOM + class token sets, `tools/parity/compare-classes.php`).
 
 ## Security

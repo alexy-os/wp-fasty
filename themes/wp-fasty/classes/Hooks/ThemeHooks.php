@@ -1,0 +1,251 @@
+<?php
+
+declare(strict_types=1);
+
+namespace WPFasty\Hooks;
+
+use WPFasty\Adapter\WordPress\WordPressMetaDescription;
+use WPFasty\Data\Seo\MetaDescriptionBuilder;
+use WPFasty\Template\Engines;
+use WPFasty\Template\EngineUnavailableException;
+use WPFasty\Theme\PrimitivesLocator;
+
+final class ThemeHooks extends AbstractHooks
+{
+    public function register(): void
+    {
+        $this->addAction('after_setup_theme', 'setup');
+        $this->addAction('init', 'menus');
+        // Direct add_action so static checks (Theme Check) see the widgets_init hook.
+        add_action('widgets_init', [$this, 'sidebars']);
+        $this->addAction('admin_notices', 'primitivesNotice');
+        // Accessible core markup: labelled widget search landmark, double-quoted archive/attachment links.
+        add_filter('render_block_core/search', [$this, 'labelSearchBlock']);
+        add_filter('get_archives_link', [$this, 'quoteHref']);
+        add_filter('wp_get_attachment_link', [$this, 'attachmentLink'], 10, 2);
+        // SEO: a meta description out of the box (skipped when an SEO plugin prints its own)
+        add_action('wp_head', [$this, 'metaDescription'], 1);
+    }
+
+    public function metaDescription(): void
+    {
+        echo (new WordPressMetaDescription(new MetaDescriptionBuilder()))->tag(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr() in tag()
+    }
+
+    public function labelSearchBlock(string $html): string
+    {
+        if (str_contains($html, 'aria-label=') || !str_contains($html, 'role="search"')) {
+            return $html;
+        }
+
+        return (string) preg_replace(
+            '/<form role="search"/',
+            '<form role="search" aria-label="'.esc_attr__('Sidebar search', 'wp-fasty').'"',
+            $html,
+            1
+        );
+    }
+
+    public function quoteHref(string $html): string
+    {
+        return (string) preg_replace("/href='([^'\"]*)'/", 'href="$1"', $html);
+    }
+
+    public function attachmentLink(string $html, mixed $id = 0): string
+    {
+        $html = $this->quoteHref($html);
+        if (str_contains($html, 'aria-label=') || !preg_match('/<a [^>]*>\s*<img/', $html)) {
+            return $html;
+        }
+        $title = trim(wp_strip_all_tags(get_the_title(\WPFasty\Core\Cast::int($id))));
+        if ('' === $title) {
+            return $html;
+        }
+
+        return (string) preg_replace('/<a /', '<a aria-label="'.esc_attr($title).'" ', $html, 1);
+    }
+
+    public function setup(): void
+    {
+        add_theme_support('title-tag');
+        add_theme_support('post-thumbnails');
+        add_theme_support('automatic-feed-links');
+        add_theme_support('custom-logo', [
+            'height' => 80,
+            'width' => 240,
+            'flex-height' => true,
+            'flex-width' => true,
+        ]);
+        add_theme_support('responsive-embeds');
+        add_theme_support('align-wide');
+        add_theme_support('editor-styles');
+        add_editor_style('assets/css/tokens.css');
+        add_theme_support('html5', [
+            'search-form',
+            'comment-form',
+            'comment-list',
+            'gallery',
+            'caption',
+            'style',
+            'script',
+        ]);
+
+        // Comments off by default (no PII collection); themes opt in via `wpfasty_comments_enabled`.
+        if (!apply_filters('wpfasty_comments_enabled', false)) {
+            add_filter('comments_open', '__return_false', 20);
+            add_filter('pings_open', '__return_false', 20);
+            add_filter('comments_array', static fn (): array => [], 20);
+        }
+
+        add_theme_support('starter-content', $this->starterContent());
+    }
+
+    public function menus(): void
+    {
+        register_nav_menus([
+            'primary' => esc_html__('Primary', 'wp-fasty'),
+            'footer' => esc_html__('Footer', 'wp-fasty'),
+        ]);
+    }
+
+    public function sidebars(): void
+    {
+        register_sidebar([
+            'name' => esc_html__('Sidebar', 'wp-fasty'),
+            'id' => 'sidebar-1',
+            'description' => esc_html__('Widgets in the content sidebar.', 'wp-fasty'),
+            'before_widget' => '<section id="%1$s" class="widget %2$s mb-8">',
+            'after_widget' => '</section>',
+            'before_title' => '<h2 class="widget-title mb-3 text-lg font-semibold">',
+            'after_title' => '</h2>',
+        ]);
+
+        register_sidebar([
+            'name' => esc_html__('Footer', 'wp-fasty'),
+            'id' => 'footer-1',
+            'description' => esc_html__('Widgets in the site footer.', 'wp-fasty'),
+            'before_widget' => '<section id="%1$s" class="widget %2$s mb-4">',
+            'after_widget' => '</section>',
+            'before_title' => '<h2 class="widget-title mb-2 text-base font-semibold">',
+            'after_title' => '</h2>',
+        ]);
+    }
+
+    /**
+     * Fail loud in wp-admin when UI8Kit Latte primitives are missing.
+     */
+    public function primitivesNotice(): void
+    {
+        if (!current_user_can('switch_themes')) {
+            return;
+        }
+
+        $engine = Engines::requested();
+        if (is_string($engine) && !Engines::available($engine)) {
+            echo '<div class="notice notice-error"><p>'.esc_html(EngineUnavailableException::for($engine)->getMessage())
+                .'</p></div>';
+
+            return;
+        }
+        if ('twig' === $engine) {
+            if ([] === PrimitivesLocator::twigRoots()) {
+                echo '<div class="notice notice-error"><p>';
+                echo esc_html__('WP FastY theme: UI8Kit Twig primitives not found (twig/ui8kit).', 'wp-fasty');
+                echo '</p></div>';
+            }
+
+            return;
+        }
+        if (!is_string($engine) || null !== PrimitivesLocator::resolve()) {
+            return;
+        }
+
+        echo '<div class="notice notice-error"><p>';
+        echo esc_html__(
+            // phpcs:ignore Generic.Files.LineLength.TooLong -- a translatable literal must stay one string (msgid).
+            'WP FastY theme: UI8Kit Latte primitives not found. Run npx ui8kit@3 add --all in themes/wp-fasty, then composer install.',
+            'wp-fasty'
+        );
+        echo '</p></div>';
+    }
+
+    /** @return array<string, mixed> */
+    private function starterContent(): array
+    {
+        return [
+            'nav_menus' => [
+                'primary' => [
+                    'name' => __('Primary', 'wp-fasty'),
+                    'items' => [
+                        'link_home',
+                        'page_blog',
+                        'page_about',
+                    ],
+                ],
+                'footer' => [
+                    'name' => __('Footer', 'wp-fasty'),
+                    'items' => [
+                        'link_home',
+                        'page_about',
+                    ],
+                ],
+            ],
+            'posts' => [
+                'home' => [
+                    'post_type' => 'page',
+                    'post_title' => __('Home', 'wp-fasty'),
+                    'post_content' => __(
+                        'Welcome to WP FastY — a clean WordPress theme built on UI8Kit primitives.',
+                        'wp-fasty'
+                    ),
+                ],
+                'about' => [
+                    'post_type' => 'page',
+                    'post_title' => __('About', 'wp-fasty'),
+                    'post_content' => __(
+                        'This is an example About page. Edit it in the admin to introduce your site.',
+                        'wp-fasty'
+                    ),
+                ],
+                'blog' => [
+                    'post_type' => 'page',
+                    'post_title' => __('Blog', 'wp-fasty'),
+                ],
+                'post_one' => [
+                    'post_type' => 'post',
+                    'post_title' => __('Hello WP FastY', 'wp-fasty'),
+                    'post_content' => __(
+                        'This is your first sample post. Replace it with your own content.',
+                        'wp-fasty'
+                    ),
+                    'post_category' => ['news'],
+                ],
+                'post_two' => [
+                    'post_type' => 'post',
+                    'post_title' => __('Design with primitives', 'wp-fasty'),
+                    'post_content' => __(
+                        'Compose pages from UI8Kit blocks — Button, Card, Stack, and more.',
+                        'wp-fasty'
+                    ),
+                    'post_category' => ['news'],
+                ],
+                'post_three' => [
+                    'post_type' => 'post',
+                    'post_title' => __('Server-rendered and fast', 'wp-fasty'),
+                    'post_content' => __(
+                        'Latte templates stay free of WordPress queries; context is built in PHP.',
+                        'wp-fasty'
+                    ),
+                    'post_category' => ['updates'],
+                ],
+            ],
+            'options' => [
+                'show_on_front' => 'page',
+                'page_on_front' => '{{home}}',
+                'page_for_posts' => '{{blog}}',
+                'blogname' => __('WP FastY', 'wp-fasty'),
+                'blogdescription' => __('Clean, fast WordPress theme', 'wp-fasty'),
+            ],
+        ];
+    }
+}

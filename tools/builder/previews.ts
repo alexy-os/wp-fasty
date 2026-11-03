@@ -2,7 +2,7 @@
  * Preview images of the bundled ui8kit catalog: two WebP cards per variant (480 = every variant of every block), a
  * light one and a dark one (class "dark" on the root: the shadcn tokens of tokens.css :root / .dark — colours only through
  * tokens), shown by the editor's block list in its light or dark mode. Rendered on Latte exactly as POST /render-block returns a variant (sample props:
- * tools/builder/preview-html.php), styled like a site of the default skin (themes/latte tokens.css + theme.min.css,
+ * tools/builder/preview-html.php), styled like a site of the default skin (themes/wp-fasty tokens.css + theme.min.css,
  * light and dark theme) plus the plugin's assets/blocks.css, shot by a
  * headless Chromium at 1280×720 and scaled to 640×360, a 320×180 card at 2×. One 16:9 frame for every card, so the
  * grid rows line up: 720px holds the whole block for about 80% of the variants (median height 488px); a taller block is
@@ -34,8 +34,8 @@ const ROOT = resolve(import.meta.dir, "../..");
 const PLUGIN = join(ROOT, "plugins/wpfasty-builder");
 const DIR = join(PLUGIN, "sources/ui8kit/previews");
 const MANIFEST = join(DIR, "manifest.json");
-/** the default skin (themes/latte: tokens, light theme, base styles) under the plugin's block styles, as on a site */
-const CSS = [join(ROOT, "themes/latte/assets/css/tokens.css"), join(ROOT, "themes/latte/assets/css/theme.min.css"), join(PLUGIN, "assets/blocks.css")];
+/** the default skin (themes/wp-fasty: tokens, light theme, base styles) under the plugin's block styles, as on a site */
+const CSS = [join(ROOT, "themes/wp-fasty/assets/css/tokens.css"), join(ROOT, "themes/wp-fasty/assets/css/theme.min.css"), join(PLUGIN, "assets/blocks.css")];
 const VIEW = { width: 1280, height: 720 };
 /** the file: 2× the 320×180 card it fills (sharp on high-density screens) */
 const CARD = { width: 640, height: 360 };

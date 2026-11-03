@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build WordPress Playground preview artifacts into playground/:
-#   latte.zip (parent, vendored), latte-press.zip, latte-folio.zip, latte-shop.zip, wpfasty-market.zip, wpfasty-types.zip,
+#   wp-fasty.zip (parent, vendored), latte-press.zip, latte-folio.zip, latte-shop.zip, wpfasty-market.zip, wpfasty-types.zip,
 #   wpfasty-builder.zip, demo.zip (seeders, images, builder landings);
 #   Twig shop: twig.zip (Twig parent, no Latte), latte-shop-twig.zip (generated Twig twin of latte-shop, only .html.twig
 #   views), wpfasty-builder-twig.zip (Twig runtime only)
@@ -10,9 +10,9 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/playground"
 cd "$ROOT"
 
-bun run theme:pack -- latte >/dev/null 2>&1
-cp dist/latte.zip "$OUT/latte.zip"
-bun run theme:pack -- latte --engine twig >/dev/null 2>&1
+bun run theme:pack -- wp-fasty >/dev/null 2>&1
+cp dist/wp-fasty.zip "$OUT/wp-fasty.zip"
+bun run theme:pack -- wp-fasty --engine twig >/dev/null 2>&1
 cp dist/twig.zip "$OUT/twig.zip"
 # Files on disk that git does not track (stale build leftovers) never go into a preview zip.
 untracked() { git ls-files --others --exclude-standard -- "$1" | sed "s#^$1/##"; }

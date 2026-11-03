@@ -46,7 +46,7 @@ curl -sSLo /tmp/tc.zip https://downloads.wordpress.org/plugin/theme-check.latest
 wp plugin install /tmp/tc.zip --activate     # `wp plugin install theme-check` failed in this sandbox (no wp.org API)
 PAGER=cat wp theme-check run <theme-slug>    # PAGER needed: `less` not installed on the box
 ```
-Note: Theme Check also scans `~cache/` (compiled Latte) — delete `themes/latte/~cache` before running.
+Note: Theme Check also scans `~cache/` (compiled Latte) — delete `themes/wp-fasty/~cache` before running.
 
 ### Baseline results 2026-10-16 (before ADR-001 refactor), local WP 7.1.3, `/workspace/sites/std`
 | theme | REQUIRED | WARNING | RECOMMENDED |
@@ -58,7 +58,7 @@ Note: Theme Check also scans `~cache/` (compiled Latte) — delete `themes/latte
 
 REQUIRED items: sidebars not *visibly* registered on `widgets_init` (all 4 — registration goes through `AbstractHooks::addAction`,
 which the static check cannot follow); `register_post_type`/`register_taxonomy` (folio, shop); `base64_encode/decode` in
-`latte-shop/inc/cart.php`. WARNINGs: no copyright notice, two text domains (child + `latte`), hard-coded `role="search"` form
+`latte-shop/inc/cart.php`. WARNINGs: no copyright notice, two text domains (child + `wp-fasty`), hard-coded `role="search"` form
 (compiled Latte cache) instead of `get_search_form()`. Results after the refactor: see [tooling.md](tooling.md#theme-check).
 
 ## Theme Unit Test data (verified counts in `themeunittestdata.wordpress.xml`, fetched 2026-10-16)

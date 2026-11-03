@@ -40,7 +40,7 @@ const ARCHETYPE_TYPES: Record<string, { name: string; capability?: string }[]> =
 function semantic(m: J, err: (msg: string) => void): void {
   const t = m.theme;
   if (t.textDomain !== t.slug) err(`theme.textDomain "${t.textDomain}" must equal theme.slug "${t.slug}"`);
-  const preset = m.parent?.preset ?? "latte";
+  const preset = m.parent?.preset ?? "wp-fasty";
   if (!existsSync(join(root, `presets/themes/${preset}.json`))) err(`parent.preset: presets/themes/${preset}.json not found`);
   const layout = m.parent?.layout ?? "classic";
   if (!existsSync(join(root, `presets/layouts/${layout}`)) && !existsSync(join(root, `presets/layouts/${layout}.latte`)))
@@ -236,7 +236,7 @@ function parity(m: J, err: (msg: string) => void): void {
     ["Requires PHP", t.requires?.php ?? "8.2", h("Requires PHP")],
     ["Tested up to", t.testedUpTo ?? "7.1", h("Tested up to")],
     ["Text Domain", t.textDomain, h("Text Domain")],
-    ["Template", m.parent?.preset ?? "latte", h("Template")],
+    ["Template", m.parent?.preset ?? "wp-fasty", h("Template")],
     ["Tags", (t.tags ?? []).join(", "), h("Tags")?.split(",").map((s) => s.trim()).join(", ")],
   ];
   for (const [k, want, got] of expect) if (want !== got) err(`style.css ${k}: manifest "${want}" ≠ theme "${got}"`);

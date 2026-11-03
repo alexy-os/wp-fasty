@@ -26,7 +26,7 @@ Ruleset: PSR2 + selected Squiz/Slevomat rules + `WordPress.WP.I18n`, `WordPress.
 
 | Package | Files scanned | Errors | Warnings |
 |---------|---------------|--------|----------|
-| `themes/latte` | 38 | 0 | 13 |
+| `themes/wp-fasty` | 38 | 0 | 13 |
 | `themes/latte-press` | 1 | 0 | 0 |
 | `themes/latte-folio` | 3 | 0 | 8 |
 | `themes/latte-shop` | 9 | 0 | 22 |
@@ -37,7 +37,7 @@ Ruleset: PSR2 + selected Squiz/Slevomat rules + `WordPress.WP.I18n`, `WordPress.
 | Sniff | Count |
 |-------|-------|
 | `Generic.Files.LineLength.TooLong` (>120 chars) | 46 |
-| `PSR1.Files.SideEffects.FoundWithSymbols` | 3 (`themes/latte/functions.php`, `themes/latte-shop/inc/catalog.php`, `plugins/wpfasty-types/src/Plugin.php`) |
+| `PSR1.Files.SideEffects.FoundWithSymbols` | 3 (`themes/wp-fasty/functions.php`, `themes/latte-shop/inc/catalog.php`, `plugins/wpfasty-types/src/Plugin.php`) |
 
 Worst files: `latte-shop/inc/orders.php` (8), `latte-folio/inc/projects.php` (6), `latte-shop/inc/front.php` (5), `wpfasty-types/src/Plugin.php` (5).  
 CI (`.github/workflows/ci.yml`) still runs PHPCS with `continue-on-error: true`; `phpcs` exits 1 on warnings, so dropping it needs 0 warnings (or `--warning-severity=0`).

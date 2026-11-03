@@ -92,11 +92,14 @@ final class PostPagesTest extends TestCase
         self::assertIsArray($fx);
         $ctx = ContextHtml::trust($fx['context']);
         $cache = sys_get_temp_dir().'/wpfasty-post-pages-'.getmypid();
-        $views = [$root.'/themes/latte-press/views', $root.'/themes/latte/views'];
+        $views = [$root.'/themes/latte-press/views', $root.'/themes/wp-fasty/views'];
         $renderers = [
-            'latte' => new LatteRenderer([...$views, ...PrimitivesLocator::latteRoots($root.'/themes/latte')], $cache),
+            'latte' => new LatteRenderer(
+                [...$views, ...PrimitivesLocator::latteRoots($root.'/themes/wp-fasty')],
+                $cache
+            ),
             'twig' => new TwigRenderer(
-                [...$views, ...PrimitivesLocator::twigRoots($root.'/themes/latte')],
+                [...$views, ...PrimitivesLocator::twigRoots($root.'/themes/wp-fasty')],
                 $cache.'/twig',
             ),
         ];

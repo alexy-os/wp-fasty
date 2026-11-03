@@ -6,9 +6,12 @@ if (!defined('ABSPATH')) {
     define('ABSPATH', sys_get_temp_dir().'/');
 }
 
-$themeVendor = dirname(__DIR__).'/themes/latte/vendor/autoload.php';
+$themeVendor = dirname(__DIR__).'/themes/wp-fasty/vendor/autoload.php';
 if (!is_file($themeVendor)) {
-    fwrite(STDERR, "Missing themes/latte/vendor — run: bash tools/composer.sh install --working-dir=themes/latte\n");
+    fwrite(
+        STDERR,
+        "Missing themes/wp-fasty/vendor — run: bash tools/composer.sh install --working-dir=themes/wp-fasty\n"
+    );
     exit(1);
 }
 require $themeVendor;
@@ -111,25 +114,25 @@ if (!function_exists('get_bloginfo')) {
 if (!function_exists('get_template_directory')) {
     function get_template_directory(): string
     {
-        return dirname(__DIR__).'/themes/latte';
+        return dirname(__DIR__).'/themes/wp-fasty';
     }
 }
 if (!function_exists('get_stylesheet_directory')) {
     function get_stylesheet_directory(): string
     {
-        return dirname(__DIR__).'/themes/latte';
+        return dirname(__DIR__).'/themes/wp-fasty';
     }
 }
 if (!function_exists('get_template_directory_uri')) {
     function get_template_directory_uri(): string
     {
-        return 'http://example.test/wp-content/themes/latte';
+        return 'http://example.test/wp-content/themes/wp-fasty';
     }
 }
 if (!function_exists('get_stylesheet_directory_uri')) {
     function get_stylesheet_directory_uri(): string
     {
-        return 'http://example.test/wp-content/themes/latte';
+        return 'http://example.test/wp-content/themes/wp-fasty';
     }
 }
 if (!function_exists('get_nav_menu_locations')) {

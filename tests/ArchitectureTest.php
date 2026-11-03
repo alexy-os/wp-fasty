@@ -17,7 +17,7 @@ use WPFasty\Data\Post\PostViewModelBuilder;
  */
 final class ArchitectureTest extends TestCase
 {
-    private const ROOT = __DIR__.'/../themes/latte/classes';
+    private const ROOT = __DIR__.'/../themes/wp-fasty/classes';
 
     /** Files allowed to talk to WordPress inside the checked namespaces. */
     private const FACADES = ['Data/ContextFactory.php'];
@@ -60,7 +60,7 @@ final class ArchitectureTest extends TestCase
     {
         $GLOBALS['wp_test_sidebars'] = ['sidebar-1' => '<b>s</b>', 'footer-1' => ''];
         $GLOBALS['wp_test_menus'] = ['locations' => [], 'items' => []];
-        $ctx = (require \dirname(__DIR__).'/themes/latte/configs/context.php')()->createErrorContext();
+        $ctx = (require \dirname(__DIR__).'/themes/wp-fasty/configs/context.php')()->createErrorContext();
         foreach (ContextHtml::WIDGET_FIELDS as $k) {
             self::assertInstanceOf(TrustedHtml::class, $ctx['widgets'][$k], "widgets.$k");
         }

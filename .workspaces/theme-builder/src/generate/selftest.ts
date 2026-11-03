@@ -72,8 +72,8 @@ try {
       writeFileSync(lm, JSON.stringify(latteM, null, 2));
       const ldir = generate(lm, join(tmp, `latte-${manifest.theme.slug}`), { pot: false });
       const list = (d: string) => walk(d).map((f) => relative(d, f)).sort();
-      // style.css differs only in its parent: `Template: twig` (twig.zip) vs `Template: latte` (ADR-001, K7).
-      const read = (d: string, r: string) => readFileSync(join(d, r), "utf8").replace(/^Template: (latte|twig)$/m, "Template: <parent>");
+      // style.css differs only in its parent: `Template: twig` (twig.zip) vs `Template: wp-fasty` (ADR-001, K7).
+      const read = (d: string, r: string) => readFileSync(join(d, r), "utf8").replace(/^Template: (wp-fasty|twig)$/m, "Template: <parent>");
       const diff = [...new Set([...list(dir), ...list(ldir)])].filter((r) => r !== "functions.php"
         && (!existsSync(join(dir, r)) || !existsSync(join(ldir, r)) || read(dir, r) !== read(ldir, r)));
       check(`${arch} twig: same files as the latte child except functions.php and the style.css parent`, !diff.length, diff.join(", "));

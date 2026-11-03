@@ -34,7 +34,7 @@ When a post type module (`types/<name>.php`, ADR-001 §3) declares `fields`, the
 - TODO: replace picsum in demos with CC0 images (e.g. own generated SVG/PNG placeholders), record each in a
   `tools/demo/images/LICENSES.md`.
 - Child themes `latte-press`, `latte-folio`, `latte-shop` currently have **no screenshot.png** (verified: only
-  `latte` and `latte-skin` have one, both 1200×900).
+  `wp-fasty` and `latte-skin` have one, both 1200×900).
 
 ## D. Money and typed fields
 - `money` fields are stored as **integer minor units** (cents): `_shop_price = 4800` is $48.00. The admin metabox shows and

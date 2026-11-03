@@ -7,11 +7,11 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A classic, readable blog child theme of Latte: sidebar widgets, threaded comments, featured images, menus and custom logo.
+A classic, readable blog child theme of WP FastY: sidebar widgets, threaded comments, featured images, menus and custom logo.
 
 == Description ==
 
-Child theme of Latte (parent theme required). Colors come from design tokens (tokens.css), icons are Lucide, UI is built from UI8Kit Latte primitives.
+Child theme of WP FastY (parent theme required). Colors come from design tokens (tokens.css), icons are Lucide, UI is built from UI8Kit Latte primitives.
 
 == Copyright ==
 

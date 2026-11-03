@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Latte Press — classic blog child theme of Latte.
+ * Latte Press — classic blog child theme of WP FastY.
  *
  * @package Latte_Press
  */

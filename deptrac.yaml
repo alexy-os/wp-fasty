@@ -1,10 +1,10 @@
 # Deptrac — architecture layers (blocking: `composer deptrac` fails on a violation; CI runs it).
-# Layers follow the current structure of themes/latte/classes and the builder/types plugins.
+# Layers follow the current structure of themes/wp-fasty/classes and the builder/types plugins.
 deptrac:
   cache_file: var/cache/.deptrac.cache
   paths:
-    - ./themes/latte/classes
-    - ./themes/latte
+    - ./themes/wp-fasty/classes
+    - ./themes/wp-fasty
     - ./plugins/wpfasty-builder/src
     - ./plugins/wpfasty-types/src
     - ./vendor/php-stubs/wordpress-stubs
@@ -48,7 +48,7 @@ deptrac:
     # Templates: WordPress template-hierarchy entry files (index.php, single.php, functions.php, ...)
     - name: Templates
       collectors:
-        - { type: directory, value: 'themes/latte/[^/]+\.php$' }
+        - { type: directory, value: 'themes/wp-fasty/[^/]+\.php$' }
     # WordPress itself (php-stubs/wordpress-stubs: WP_Post, WP_Query, ...)
     - name: WordPress
       collectors:

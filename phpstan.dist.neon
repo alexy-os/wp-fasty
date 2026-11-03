@@ -5,13 +5,13 @@ parameters:
     level: max
     phpVersion: 80200
     paths:
-        - themes/latte/classes
+        - themes/wp-fasty/classes
         - plugins/wpfasty-builder/src
         - plugins/wpfasty-types/src
     bootstrapFiles:
-        - themes/latte/vendor/autoload.php
+        - themes/wp-fasty/vendor/autoload.php
     scanFiles:
-        - themes/latte/includes/base-theme.php
+        - themes/wp-fasty/includes/base-theme.php
         - plugins/wpfasty-builder/sources/ui8kit/latte/php/OrganismExtension.php
         - plugins/wpfasty-builder/sources/ui8kit/twig/php/OrganismExtension.php
     tmpDir: var/cache/phpstan

@@ -1,6 +1,6 @@
 # Latte Skin
 
-Demo **child theme** for `themes/latte`.
+Demo **child theme** for `themes/wp-fasty`.
 
 - No `composer.json`, no `vendor/`, no `classes/`
 - Does **not** boot `Application`

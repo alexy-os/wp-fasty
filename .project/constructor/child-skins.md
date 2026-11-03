@@ -5,7 +5,7 @@ Child themes restyle and override Latte views **without** Composer or a second P
 ## Layout
 
 ```
-themes/latte/                 PARENT — Composer, Latte, UI8Kit, PHP runtime
+themes/wp-fasty/                 PARENT — Composer, Latte, UI8Kit, PHP runtime
 themes/latte-<skin>/          CHILD  — no composer.json, no vendor/
   style.css                   Header: Template: latte
   functions.php               Thin: optional filters only (no Application boot)

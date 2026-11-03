@@ -3,8 +3,8 @@
 Status: **accepted** (decisions by the project owner, 2026-10-16). Implementation status per item below.
 
 ## 0. Context — audit of the current state (commit 4895c4d, 2026-10-16)
-- DI container exists only in the parent: `themes/latte/classes/Core/{Application,Container}.php`, services in
-  `themes/latte/configs/services.php`. Child themes do not use it.
+- DI container exists only in the parent: `themes/wp-fasty/classes/Core/{Application,Container}.php`, services in
+  `themes/wp-fasty/configs/services.php`. Child themes do not use it.
 - Children are inconsistent: `latte-press` = tokens + one view; `latte-folio` = procedural `inc/projects.php`;
   `latte-shop` = six procedural `inc/*.php` files with their own namespace style.
 - CPT code is copy-pasted between folio (`project`) and shop (`product`, `shop_order`): register_post_type,
@@ -36,7 +36,7 @@ Allowed: include/embed with params, block, if/else, for, variable print, filters
 **Engines are isolated runtimes (K7, supersedes the fallbacks of K6.9/K6.12).** A site picks its engine once, at
 creation (`engine` in the site manifest); there is no live engine switch. Latte and Twig never require, load or fall
 back to each other:
-- Parent builds: `latte.zip` (slug `latte`, Latte only: latte/latte + UI8Kit Latte, `.latte` views) and `twig.zip`
+- Parent builds: `wp-fasty.zip` (slug `wp-fasty`, Latte only: latte/latte + UI8Kit Latte, `.latte` views) and `twig.zip`
   (slug `twig`, Twig only: twig/twig + UI8Kit Twig, `.html.twig` views). A child's `Template:` is its engine's parent;
   a packaged child ships only its engine's views. The renderer of a build is fixed (`WPFasty\Template\Engines`);
   asking for an engine the build lacks is an error (admin notice; no rendering through the other engine).
@@ -46,7 +46,7 @@ back to each other:
 - Remote block sources are **two independent registries**, one per runtime (`docs/agent/builder-registry.md`):
   `https://registry.buildy.tw/<runtime>/wpfasty/` (latest) and `…/wpfasty/v<semver>/` (immutable), each
   `catalog.json` (`wpfasty-catalog@2`, `runtime`) + `blocks.zip`. Importing a registry of the other runtime fails.
-- The repo keeps one source for both: `themes/latte` holds both view sets and both renderers (dev/QA only; builds
+- The repo keeps one source for both: `themes/wp-fasty` holds both view sets and both renderers (dev/QA only; builds
   strip the other engine), codegen-x generates both block packages from one commit. **Parity** (fixtures, blocks,
   builder landings, live pages of a Latte site vs its Twig twin) stays a quality check that both runtimes produce the
   same DOM (codegen-x DOM contract: text trimmed, attributes/classes sorted, comments dropped) — it is not a
@@ -92,13 +92,13 @@ should always emit the plugin, or inline it for non-wp.org builds.
 - Compiled template cache (`~cache/`, excluded from zips). Per-page CSS possible later.
 
 ## 5. Skins
-Parent `:root` / `.dark` tokens (`themes/latte/assets/css/tokens.css`) → child `tokens.css` override →
+Parent `:root` / `.dark` tokens (`themes/wp-fasty/assets/css/tokens.css`) → child `tokens.css` override →
 optional Customizer token block (**postponed**). Token names stay shadcn-compatible.
 
 ## 6. Implementation status (2026-10-16, branch `improved`)
 | Item | Status |
 |---|---|
-| RendererInterface + LatteRenderer + TwigRenderer, `wpfasty_renderer`, `wpfasty_view_roots` | done (8aa29db); Twig↔Latte identical DOM for Button tested; Twig views for parent + press/folio/shop written (K6.2–K6.3), parity fixtures + live CI check (K6.5); `engine: twig` → `latte-twig` parent build, wordpress.org-eligible like Latte (K6.7); builder Latte+Twig (K6.8); shared helpers, both view sets in every child, Twig→Latte fallback, CI engine matrix (K6.9); **K7: isolated runtimes** — `latte.zip` / `twig.zip` (slug `twig`) ship one engine each, no fallback (`EngineUnavailableException`), per-runtime builder registries at registry.buildy.tw/<runtime>/wpfasty/ (b35e660…b0a2c76) |
+| RendererInterface + LatteRenderer + TwigRenderer, `wpfasty_renderer`, `wpfasty_view_roots` | done (8aa29db); Twig↔Latte identical DOM for Button tested; Twig views for parent + press/folio/shop written (K6.2–K6.3), parity fixtures + live CI check (K6.5); `engine: twig` → `latte-twig` parent build, wordpress.org-eligible like Latte (K6.7); builder Latte+Twig (K6.8); shared helpers, both view sets in every child, Twig→Latte fallback, CI engine matrix (K6.9); **K7: isolated runtimes** — `wp-fasty.zip` / `twig.zip` (slug `twig`) ship one engine each, no fallback (`EngineUnavailableException`), per-runtime builder registries at registry.buildy.tw/<runtime>/wpfasty/ (b35e660…b0a2c76) |
 | types modules + Registry (DI `types.registry`) | done (891c48f); data part moved to plugin `wpfasty-types` (e175b8a) |
 | folio `project`, shop `product`/`shop_order` migrated; purchasable capability | done (db37f6a, dc56371); HTML output byte-identical before/after |
 | folio/shop dedupe (archive title/prefix, term filter, latest posts, full-width support) | done (6f93ce9) |

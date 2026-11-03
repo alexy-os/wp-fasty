@@ -1,5 +1,5 @@
 // theme:package — manifest → installable release set in dist/<slug>/:
-//   latte.zip or twig.zip (the parent of the site engine, reused from theme:pack), <slug>.zip (generated child, only
+//   wp-fasty.zip or twig.zip (the parent of the site engine, reused from theme:pack), <slug>.zip (generated child, only
 //   the site engine's views), wpfasty-types.zip (typesPlugin=companion), wpfasty-builder.zip (builder.enabled; the
 //   site engine's build — only that runtime's bundled blocks), demo.zip (output.includeDemo), blueprint.json + <slug>-playground.zip
 //   (output.playground; a Playground blueprint bundle — every resource is `bundled`, no external URLs).
@@ -117,7 +117,7 @@ export async function packageSite(manifestPath: string, outArg?: string): Promis
   const files: string[] = [];
   const add = (name: string) => files.push(name);
 
-  const preset = m.parent?.preset ?? "latte";
+  const preset = m.parent?.preset ?? "wp-fasty";
   const parent = parentSlug(m);
   const engine = m.engine === "twig" ? "twig" : "latte";
   copyFileSync(parentZip(preset, engine), join(out, `${parent}.zip`));

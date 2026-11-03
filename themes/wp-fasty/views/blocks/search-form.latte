@@ -1,0 +1,21 @@
+{**
+ * Block: search-form — GET search only (no PII storage).
+ *}
+{var $sid = $searchId ?? 'wpfasty-search-field'}
+{var $slabel = $searchLabel ?? ($labels['searchSite'] ?? $search['label'])}
+{capture $fields}
+	{capture $c_ui1}{$search['label']}{/capture}{include 'label/Label.latte', class: 'sr-only', children: (string) $c_ui1, attrs: ['for' => $sid]}
+	{include 'input/Input.latte',
+		type: 'search',
+		name: 's',
+		id: $sid,
+		value: $search['query'] ?? '',
+		placeholder: $search['placeholder'] ?? '',
+		class: kit('input', [], 'w-full')
+	}
+	{capture $submitLabel}{$search['submit']}{/capture}
+	{include 'button/Button.latte', type: 'submit', class: kit('button', ['variant' => 'default', 'size' => 'default']), children: (string) $submitLabel}
+{/capture}
+{capture $c_ui2}
+	{$fields|noescape}
+{/capture}{include 'form/Form.latte', action: $search['action'] ?? '', class: 'flex w-full max-w-md items-center gap-2', children: (string) $c_ui2, attrs: ['role' => 'search', 'method' => 'get', 'aria-label' => $slabel]}

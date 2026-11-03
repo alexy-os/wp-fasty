@@ -88,19 +88,19 @@ final class PostRenderContractTest extends TestCase
 
     private function views(): string
     {
-        return \dirname(__DIR__).'/themes/latte/views';
+        return \dirname(__DIR__).'/themes/wp-fasty/views';
     }
 
     private function latte(): LatteRenderer
     {
-        return new LatteRenderer([$this->views(), ...PrimitivesLocator::latteRoots(\dirname(__DIR__).'/themes/latte')], $this->cache);
+        return new LatteRenderer([$this->views(), ...PrimitivesLocator::latteRoots(\dirname(__DIR__).'/themes/wp-fasty')], $this->cache);
     }
 
     private function twig(): TwigRenderer
     {
-        $prims = PrimitivesLocator::twigRoots(\dirname(__DIR__).'/themes/latte');
+        $prims = PrimitivesLocator::twigRoots(\dirname(__DIR__).'/themes/wp-fasty');
         if ([] === $prims || !class_exists(\Twig\Environment::class)) {
-            self::markTestSkipped('Twig primitives not installed (themes/latte/twig: npx ui8kit@3 add --all)');
+            self::markTestSkipped('Twig primitives not installed (themes/wp-fasty/twig: npx ui8kit@3 add --all)');
         }
 
         return new TwigRenderer([$this->views(), ...$prims], $this->cache.'/twig');

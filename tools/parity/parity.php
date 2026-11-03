@@ -45,13 +45,13 @@ spl_autoload_register(static function (string $class) use ($root): void {
 
 /** Suite → child-first view roots (relative to the repo). */
 $suites = [
-    'latte' => ['themes/latte/views'],
-    'press' => ['themes/latte-press/views', 'themes/latte/views'],
-    'folio' => ['themes/latte-folio/views', 'themes/latte/views'],
-    'shop' => ['themes/latte-shop/views', 'themes/latte/views'],
-    'market' => ['themes/wpfasty-market/views', 'themes/latte-shop/views', 'themes/latte/views'],
+    'latte' => ['themes/wp-fasty/views'],
+    'press' => ['themes/latte-press/views', 'themes/wp-fasty/views'],
+    'folio' => ['themes/latte-folio/views', 'themes/wp-fasty/views'],
+    'shop' => ['themes/latte-shop/views', 'themes/wp-fasty/views'],
+    'market' => ['themes/wpfasty-market/views', 'themes/latte-shop/views', 'themes/wp-fasty/views'],
     // theme authoring example (docs/theme-authoring.md): a child theme with a Latte view and its Twig twin
-    'skin' => ['themes/latte-skin/views', 'themes/latte/views'],
+    'skin' => ['themes/latte-skin/views', 'themes/wp-fasty/views'],
     'builder' => [],
     'blocks' => [],
 ];
@@ -59,7 +59,7 @@ $out = static function (string $line): void {
     fwrite(STDOUT, $line."\n");
 };
 
-$twigPrims = PrimitivesLocator::twigRoots($root.'/themes/latte');
+$twigPrims = PrimitivesLocator::twigRoots($root.'/themes/wp-fasty');
 if ([] === $twigPrims || !class_exists(Twig\Environment::class)) {
     fwrite(STDERR, "✗ Twig primitives or twig/twig missing (npx ui8kit@3 add --all in twig/; composer install)\n");
     exit(1);
@@ -67,7 +67,7 @@ if ([] === $twigPrims || !class_exists(Twig\Environment::class)) {
 
 $normalize = require __DIR__.'/normalize.php';
 $compareClasses = require __DIR__.'/compare-classes.php';
-$lattePrims = PrimitivesLocator::latteRoots($root.'/themes/latte');
+$lattePrims = PrimitivesLocator::latteRoots($root.'/themes/wp-fasty');
 
 $render = static function (RendererInterface $r, array $fx): string {
     if (empty($fx['page'])) {
@@ -356,7 +356,7 @@ foreach ($wanted as $suite) {
             $out("✓ {$name}: {$kind} identical (".strlen($a).' B)');
             continue;
         }
-        // UI8Kit 3 pilot (themes/latte on UI8Kit 3, Twig legacy): strict DOM, class lists per compare-classes.php.
+        // UI8Kit 3 pilot (themes/wp-fasty on UI8Kit 3, Twig legacy): strict DOM, class lists per compare-classes.php.
         $why = $compareClasses($rawA, $rawB);
         if (null === $why) {
             $out("✓ {$name}: {$kind} same DOM; class lists differ only by the UI8Kit 3 merge (pilot rule)");

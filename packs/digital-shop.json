@@ -6,7 +6,7 @@
   "license": "GPL-2.0-or-later",
   "locale": "ru_RU",
   "themes": [
-    { "slug": "latte", "role": "parent", "path": "themes/latte" },
+    { "slug": "wp-fasty", "role": "parent", "path": "themes/wp-fasty" },
     { "slug": "latte-shop", "role": "base", "path": "themes/latte-shop", "note": "layered by the child's `Extends: latte-shop` header (WordPress allows two theme generations)" },
     { "slug": "wpfasty-market", "role": "active", "path": "themes/wpfasty-market" }
   ],

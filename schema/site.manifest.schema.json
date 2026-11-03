@@ -142,11 +142,11 @@
       "additionalProperties": false,
       "required": ["preset"],
       "properties": {
-        "preset": { "$ref": "#/$defs/slug", "default": "latte" },
+        "preset": { "$ref": "#/$defs/slug", "default": "wp-fasty" },
         "layout": { "enum": ["classic", "app-shell"], "default": "classic" },
         "style": { "$ref": "#/$defs/slug", "default": "default" }
       },
-      "default": { "preset": "latte" }
+      "default": { "preset": "wp-fasty" }
     },
     "features": {
       "description": "Theme behaviour switches (platform-neutral).",

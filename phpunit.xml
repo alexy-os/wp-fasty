@@ -11,7 +11,7 @@
     </testsuites>
     <source>
         <include>
-            <directory>themes/latte/classes</directory>
+            <directory>themes/wp-fasty/classes</directory>
         </include>
     </source>
 </phpunit>

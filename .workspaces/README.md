@@ -24,5 +24,5 @@ themes/<slug>/              →  Layer 3 theme instance
 ```bash
 bun run ui:primitives    # regenerate Latte bundle
 bun run ui:install       # composer install in ui8kit-latte
-bun run theme:build -- latte
+bun run theme:build -- wp-fasty
 ```

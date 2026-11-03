@@ -16,10 +16,10 @@
     },
     {
       "step": "writeFile",
-      "path": "/tmp/latte.zip.b64",
+      "path": "/tmp/wp-fasty.zip.b64",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/latte.zip.b64"
+        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wp-fasty.zip.b64"
       }
     },
     {
@@ -140,7 +140,7 @@
     },
     {
       "step": "unzip",
-      "zipPath": "/tmp/latte.zip",
+      "zipPath": "/tmp/wp-fasty.zip",
       "extractToPath": "/wordpress/wp-content/themes"
     },
     {

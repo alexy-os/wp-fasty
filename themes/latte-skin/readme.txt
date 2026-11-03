@@ -7,11 +7,11 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A thin demo child theme of Latte: app-shell layout, token overrides and a hero view override, without Composer.
+A thin demo child theme of WP FastY: app-shell layout, token overrides and a hero view override, without Composer.
 
 == Description ==
 
-Child theme of Latte (parent theme required). It switches the parent to the app-shell layout (sidebar + mobile sheet), overrides design tokens (tokens.css) and replaces the centered hero view to show how a child view wins over the parent.
+Child theme of WP FastY (parent theme required). It switches the parent to the app-shell layout (sidebar + mobile sheet), overrides design tokens (tokens.css) and replaces the centered hero view to show how a child view wins over the parent.
 
 == Copyright ==
 

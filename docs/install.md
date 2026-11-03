@@ -1,12 +1,12 @@
-# Install Latte theme
+# Install the WP FastY theme
 
 ## From monorepo (development)
 
 ```bash
 bun run ui:primitives
 bun run ui:install
-composer install --working-dir=themes/latte
-bun run theme:build -- latte
+composer install --working-dir=themes/wp-fasty
+bun run theme:build -- wp-fasty
 ```
 
 Activate **Latte** in WP Admin. Optional child skin: activate **Latte Skin** (no Composer on the child).
@@ -14,12 +14,12 @@ Activate **Latte** in WP Admin. Optional child skin: activate **Latte Skin** (no
 ## From release zip
 
 ```bash
-bun run theme:pack -- latte
-# → dist/latte.zip
+bun run theme:pack -- wp-fasty
+# → dist/wp-fasty.zip
 ```
 
 1. WP Admin → Appearance → Themes → Add New → Upload Theme
-2. Upload `dist/latte.zip` and activate
+2. Upload `dist/wp-fasty.zip` and activate
 3. Optional: upload / copy a child skin folder (no `vendor/`) and activate it
 
 The zip includes:

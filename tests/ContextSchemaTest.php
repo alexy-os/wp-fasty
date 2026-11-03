@@ -106,6 +106,6 @@ final class ContextSchemaTest extends TestCase
 
     private static function contextFactory(): ContextFactory
     {
-        return (require \dirname(__DIR__).'/themes/latte/configs/context.php')();
+        return (require \dirname(__DIR__).'/themes/wp-fasty/configs/context.php')();
     }
 }

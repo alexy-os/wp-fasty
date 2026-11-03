@@ -16,8 +16,8 @@
  * Each runtime folder is self-contained; a registry serves one of them (tools/builder/pack-source.ts).
  * The same run also writes the kit-compose form fields of the parent theme (THEME_COMPOSE: Input, Textarea, Select with
  * their `state` recipe key; `state: 'error'` implies aria-invalid="true") from the same commit:
- *   themes/latte/ui8kit/compose/        Input/Textarea/Select.latte + Compose.php + compose.json
- *   themes/latte/twig/ui8kit/compose/   the .html.twig twins + Compose.php + ComposeExtension.php + compose.json
+ *   themes/wp-fasty/ui8kit/compose/        Input/Textarea/Select.latte + Compose.php + compose.json
+ *   themes/wp-fasty/twig/ui8kit/compose/   the .html.twig twins + Compose.php + ComposeExtension.php + compose.json
  * All copied unchanged: CodegenX\Compose\{Latte,Twig} is the same class as in the builder source (BlockRenderer skips
  * its copy when the theme's is loadable), so compose.json stays the full file of that commit. --check compares these
  * files too (they are not part of the offline digest).
@@ -246,7 +246,7 @@ for (const r of ["latte", "twig"] as const) {
 }
 
 // the theme copy of the kit-compose form fields (see the header); tracked files, compared by --check
-const THEME = resolve(import.meta.dir, "../../themes/latte");
+const THEME = resolve(import.meta.dir, "../../themes/wp-fasty");
 const THEME_COMPOSE = ["Input", "Textarea", "Select"];
 const theme = new Map<string, Buffer>();
 for (const [r, dir, ext, php] of [["latte", "ui8kit/compose", ".latte", ["Compose.php"]], ["twig", "twig/ui8kit/compose", ".html.twig", ["Compose.php", "ComposeExtension.php"]]] as const) {
@@ -256,13 +256,13 @@ for (const [r, dir, ext, php] of [["latte", "ui8kit/compose", ".latte", ["Compos
 const themeDiffs: string[] = [];
 for (const dir of ["ui8kit/compose", "twig/ui8kit/compose"]) {
   if (!CHECK) { rmSync(join(THEME, dir), { recursive: true, force: true }); continue; }
-  for (const f of files(join(THEME, dir))) if (!theme.has(`${dir}/${f}`)) themeDiffs.push(`- themes/latte/${dir}/${f}`);
+  for (const f of files(join(THEME, dir))) if (!theme.has(`${dir}/${f}`)) themeDiffs.push(`- themes/wp-fasty/${dir}/${f}`);
 }
 for (const [f, buf] of theme) {
   const abs = join(THEME, f);
   if (!CHECK) { mkdirSync(join(abs, ".."), { recursive: true }); writeFileSync(abs, buf); }
-  else if (!existsSync(abs)) themeDiffs.push(`+ themes/latte/${f}`);
-  else if (!readFileSync(abs).equals(buf)) themeDiffs.push(`~ themes/latte/${f}`);
+  else if (!existsSync(abs)) themeDiffs.push(`+ themes/wp-fasty/${f}`);
+  else if (!readFileSync(abs).equals(buf)) themeDiffs.push(`~ themes/wp-fasty/${f}`);
 }
 
 if (CHECK) {
@@ -277,9 +277,9 @@ if (CHECK) {
   }
   rmSync(OUT, { recursive: true, force: true });
   if (diffs.length) { console.error(`✗ sources/ui8kit + theme compose are not the export of codegen-x ${commit.slice(0, 8)} (${diffs.length}):\n  ${diffs.slice(0, 30).join("\n  ")}`); process.exit(1); }
-  console.log(`✓ sources/ui8kit + themes/latte compose reproduce from codegen-x ${commit.slice(0, 8)}`);
+  console.log(`✓ sources/ui8kit + themes/wp-fasty compose reproduce from codegen-x ${commit.slice(0, 8)}`);
 } else {
   const size = readFileSync(join(OUT, "latte", "catalog.json")).length;
-  console.log(`themes/latte: ${theme.size} kit-compose files (${THEME_COMPOSE.join(", ")}; latte + twig)`);
+  console.log(`themes/wp-fasty: ${theme.size} kit-compose files (${THEME_COMPOSE.join(", ")}; latte + twig)`);
   console.log(`${blocks.length} blocks, ${blocks.reduce((n, b) => n + b.variants.length, 0)} variants, ${collections.length} collections, ${Object.keys(records).length} records; catalog ${(size / 1024).toFixed(0)} KB; codegen-x ${commit.slice(0, 8)} ${relative(process.cwd(), OUT) || "."}`);
 }

@@ -12,10 +12,10 @@ Reject PRs that reintroduce:
 - React/Babel → Latte transpile
 - `data-slot` → semantic CSS extractor
 - Parallel UI kits as second codegen
-- Hand-edit of `.workspaces/ui8kit-latte`, `themes/latte/ui8kit`, `themes/latte/twig/ui8kit`
+- Hand-edit of `.workspaces/ui8kit-latte`, `themes/wp-fasty/ui8kit`, `themes/wp-fasty/twig/ui8kit`
 - Variant recipes hardcoded in views instead of `kit()`
 - WP API calls inside Latte
 - Shipping codegen TS in theme zips
 - Controlled React-style `open` with `behavior="ui8kit"`
 - Twin/hand-copied variant maps
-- Treating experimental/dirty theme views as the design system (use `themes/latte`)
+- Treating experimental/dirty theme views as the design system (use `themes/wp-fasty`)

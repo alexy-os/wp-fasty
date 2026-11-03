@@ -1,5 +1,5 @@
 /*
- * Tailwind v4 source for themes/latte/assets/css/theme.min.css.
+ * Tailwind v4 source for themes/wp-fasty/assets/css/theme.min.css.
  * Colors: ONLY via CSS variable tokens (themes/<theme>/assets/css/tokens.css).
  * Build: bun run css:build
  */
@@ -8,11 +8,11 @@
 @source "../../themes";
 @source "./moduly-classes.txt";
 /* UI8Kit 3 runtime (tailwind-merge tables name every utility) and CLI rules are not markup: classes come from
-   the kit presets (themes/latte/kit/presets.json) and the views. */
-@source not "../../themes/latte/ui8kit/runtime/**";
-@source not "../../themes/latte/.cursor/**";
-@source not "../../themes/latte/twig/ui8kit/runtime/**";
-@source not "../../themes/latte/twig/.cursor/**";
+   the kit presets (themes/wp-fasty/kit/presets.json) and the views. */
+@source not "../../themes/wp-fasty/ui8kit/runtime/**";
+@source not "../../themes/wp-fasty/.cursor/**";
+@source not "../../themes/wp-fasty/twig/ui8kit/runtime/**";
+@source not "../../themes/wp-fasty/twig/.cursor/**";
 
 @custom-variant dark (&:is(.dark *));
 

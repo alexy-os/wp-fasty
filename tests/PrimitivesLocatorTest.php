@@ -95,6 +95,6 @@ final class PrimitivesLocatorTest extends TestCase
 
     private function theme(): string
     {
-        return dirname(__DIR__).'/themes/latte';
+        return dirname(__DIR__).'/themes/wp-fasty';
     }
 }

@@ -1,13 +1,13 @@
 #!/usr/bin/env bun
 /**
  * Copies the Lucide icons used by the themes from lucide-static into
- * themes/latte/assets/icons (minified, no size/class attrs). Rendered via {icon('name')}.
+ * themes/wp-fasty/assets/icons (minified, no size/class attrs). Rendered via {icon('name')}.
  */
 import { mkdir, readdir, rm } from "node:fs/promises";
 
 const root = new URL("..", import.meta.url).pathname;
 const src = `${root}.workspaces/css-build/node_modules/lucide-static/icons/`;
-const out = `${root}themes/latte/assets/icons/`;
+const out = `${root}themes/wp-fasty/assets/icons/`;
 const ICONS = [
   "arrow-left", "arrow-right", "arrow-up-right", "calendar", "check", "chevron-down", "chevron-right",
   "circle-check", "clock", "credit-card", "external-link", "folder", "image", "mail", "map-pin",
@@ -31,4 +31,4 @@ for (const name of ICONS) {
   await Bun.write(out + name + ".svg", svg + "\n");
   n++;
 }
-console.log(`icons: ${n} Lucide SVGs -> themes/latte/assets/icons`);
+console.log(`icons: ${n} Lucide SVGs -> themes/wp-fasty/assets/icons`);

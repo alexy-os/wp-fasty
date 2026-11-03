@@ -7,7 +7,7 @@ Stable tag: {{theme.version}}
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Marketplace child theme of Latte for selling ready-made WordPress sites, themes and plugins.
+Marketplace child theme of WP FastY for selling ready-made WordPress sites, themes and plugins.
 
 == Description ==
 
@@ -15,7 +15,7 @@ Marketplace child theme of Latte for selling ready-made WordPress sites, themes 
 
 The theme is presentation only. Cart (license tiers), checkout, orders, downloads (signed links after payment), checkout consents, cookie consent and reviews are ModulY modules (phpfasty/wpmodules: cart, orders, downloads, consent-log, cookie-consent, reviews) installed through the ModulY plugin; without them the theme shows a read-only catalog and "temporarily unavailable" on the cart and checkout pages.
 
-Child theme of Latte (parent theme required). Product post type fields are declared in types/product.php (data via the ModulY types module or the companion plugin "WP FastY Types"). Colors come from design tokens (assets/css/tokens.css, light and dark), icons are Lucide, UI is built from UI8Kit Latte primitives. Russian translation included.
+Child theme of WP FastY (parent theme required). Product post type fields are declared in types/product.php (data via the ModulY types module or the companion plugin "WP FastY Types"). Colors come from design tokens (assets/css/tokens.css, light and dark), icons are Lucide, UI is built from UI8Kit Latte primitives. Russian translation included.
 
 == Copyright ==
 

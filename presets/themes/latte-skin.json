@@ -3,7 +3,7 @@
   "name": "Latte Skin",
   "slug": "latte-skin",
   "textDomain": "latte-skin",
-  "parent": "latte",
+  "parent": "wp-fasty",
   "kind": "skin",
   "layout": "layouts/classic",
   "style": "styles/default",

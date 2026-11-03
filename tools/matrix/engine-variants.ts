@@ -23,7 +23,7 @@ for (const file of readdirSync(join(root, "manifests/answers")).filter((f) => f.
 }
 // Reference sites (latte-press/folio/shop, Latte): their Twig twins as full site manifests — same archetype, brand,
 // prefix, demo and builder landings; only the engine and the theme identity differ (<slug>-twig). CI packages them with
-// theme:package and compares every page of the pair live (Latte site on latte.zip vs Twig site on twig.zip).
+// theme:package and compares every page of the pair live (Latte site on wp-fasty.zip vs Twig site on twig.zip).
 for (const file of readdirSync(join(root, "manifests/examples")).filter((f) => f.endsWith(".json")).sort()) {
   const m = JSON.parse(readFileSync(join(root, "manifests/examples", file), "utf8"));
   const slug = `${m.theme.slug}-twig`;

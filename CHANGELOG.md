@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Breaking
+- Base theme renamed `latte` → `wp-fasty` (directory and slug `themes/wp-fasty`, Theme Name "WP FastY", text domain `wp-fasty`, `languages/wp-fasty.pot`, release zip `dist/wp-fasty.zip`). Child themes: `Template: wp-fasty` (`Extends:` unchanged); the children keep their names (latte-press, latte-folio, latte-shop, latte-skin). Functions `latte_base_theme_dir/uri/hooks()` and `latte_load_base_theme()` → `wpfasty_*`; the old names remain as deprecated aliases (`includes/deprecated.php`, removed in 3.0). Asset handles and ids `latte-*` → `wpfasty-*` (`wpfasty-theme`, `wpfasty-tokens`, `wpfasty-base-tokens`, `wpfasty-a11y`, `wpfasty-wp-core`, `wpfasty-ui8kit`, `wpfasty-theme-toggle`, `wpfasty-color-scheme`, search field ids `wpfasty-search-field*`). Manifest `parent.preset` default `wp-fasty`; preset `presets/themes/wp-fasty.json`. Engine names are unchanged (`engine: latte`, LatteRenderer, `.latte`). Existing sites: activate `wp-fasty` (or keep the child active; its `Template:` changes). [html-change] (only handle/id renames in the markup)
 - Module `context` callables in `types/*.php` now receive the Core `WPFasty\Core\Model\Post` DTO instead of a `WP_Post`: `fn (array $data, Post $post, PostType $type): array`. Use `$post->id`, `->kind`, `->slug` and `->author?->id`. Updated: latte-folio `types/project.php`, the `productViewModel` of latte-shop, and the presets of the folio, shop and market archetypes. Admin column `value` callables are unchanged (`int $postId`).
 
 ### Added

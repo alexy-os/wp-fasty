@@ -21,11 +21,11 @@ use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__.'/themes/latte/classes',
+        __DIR__.'/themes/wp-fasty/classes',
         __DIR__.'/plugins/wpfasty-builder/src',
         __DIR__.'/plugins/wpfasty-types/src',
     ])
-    ->withBootstrapFiles([__DIR__.'/themes/latte/vendor/autoload.php'])
+    ->withBootstrapFiles([__DIR__.'/themes/wp-fasty/vendor/autoload.php'])
     ->withCache(__DIR__.'/var/cache/rector')
     ->withPhpSets(php82: true)
     ->withPreparedSets(deadCode: true, codeQuality: true, earlyReturn: true)

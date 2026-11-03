@@ -29,7 +29,7 @@ msgstr "https://wpfasty.ru"
 
 #. Description of the theme
 #: style.css
-msgid "WP FastY — marketplace of ready-made WordPress sites, themes and plugins. Catalog with filters, item pages with live preview, licenses, changelog and reviews, author pages, signed-cookie cart and digital checkout that creates Orders. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons). Seller: IT Garage Ltd."
+msgid "WP FastY — marketplace of ready-made WordPress sites, themes and plugins. Catalog with filters, item pages with live preview, licenses, changelog and reviews, author pages, signed-cookie cart and digital checkout that creates Orders. Child of WP FastY (UI8Kit Latte primitives, token-only colors, Lucide icons). Seller: IT Garage Ltd."
 msgstr "WP FastY — маркетплейс готовых сайтов, тем и плагинов WordPress. Каталог с фильтрами, карточки с Live Preview, лицензиями, changelog и отзывами, страницы авторов, корзина в подписанной cookie и цифровой checkout, создающий заказы. Дочерняя тема Latte. Продавец: ООО «ИТ Гараж»."
 
 #. Author of the theme

@@ -15,5 +15,5 @@ php .phpcs/phpcs-wrapper.php [параметры] [пути]
 
 Например:
 ```bash
-php .phpcs/phpcs-wrapper.php --standard=WordPress --extensions=php -p themes/latte
+php .phpcs/phpcs-wrapper.php --standard=WordPress --extensions=php -p themes/wp-fasty
 ```

@@ -6,7 +6,7 @@
     "site": {
       "title": "WP FastY",
       "url": "https://market.example/",
-      "themeUrl": "https://market.example/wp-content/themes/latte",
+      "themeUrl": "https://market.example/wp-content/themes/wp-fasty",
       "stylesheetUrl": "https://market.example/wp-content/themes/wpfasty-market",
       "lang": "ru-RU",
       "description": "Маркетплейс готовых сайтов, тем и плагинов WordPress",

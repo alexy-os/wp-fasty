@@ -58,7 +58,7 @@ both zips uploaded through the admin screen, then add to cart works. Screens: ui
 
 https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/alexy-os/wp-fasty/main/playground/blueprint.json
 
-Parent theme `latte` only (no plugins), PHP 8.5, demo posts in a "Guides" category, an About page with a menu, and a
-three-page post (`<!--nextpage-->`); lands on `/multipage-post/2/`. The theme zip is committed at `playground/zips/latte.zip`
+Parent theme `wp-fasty` only (no plugins), PHP 8.5, demo posts in a "Guides" category, an About page with a menu, and a
+three-page post (`<!--nextpage-->`); lands on `/multipage-post/2/`. The theme zip is committed at `playground/zips/wp-fasty.zip`
 (built by `tools/playground-build.sh`; raw.githubusercontent.com sends CORS headers) because the gist above hit its size
-quota on 2026-11-03. Refresh it by rebuilding and copying `playground/latte.zip` there.
+quota on 2026-11-03. Refresh it by rebuilding and copying `playground/wp-fasty.zip` there.

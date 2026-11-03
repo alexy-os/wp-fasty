@@ -80,7 +80,7 @@ docker compose --profile tools run --rm composer
 This runs `composer install` in:
 
 - `.workspaces/ui8kit-latte`
-- `themes/latte` (path repo → `ui8kit/latte-primitives`)
+- `themes/wp-fasty` (path repo → `ui8kit/latte-primitives`)
 
 ### 4) Activate the theme
 
@@ -89,7 +89,7 @@ This runs `composer install` in:
 **or CLI:**
 
 ```bash
-docker compose --profile tools run --rm wpcli theme activate latte
+docker compose --profile tools run --rm wpcli theme activate wp-fasty
 docker compose --profile tools run --rm wpcli theme list
 ```
 
@@ -116,7 +116,7 @@ docker compose down -v       # WIPE database + WP files volume
 docker compose logs -f wordpress
 
 # Clear Latte cache after template changes
-rm -rf themes/latte/~cache
+rm -rf themes/wp-fasty/~cache
 # or:
 docker compose --profile tools run --rm wpcli eval 'echo "ok";'
 
@@ -129,7 +129,7 @@ docker compose --profile tools run --rm composer
 
 | Host | Container |
 |------|-----------|
-| `themes/latte` | `/var/www/html/wp-content/themes/latte` |
+| `themes/wp-fasty` | `/var/www/html/wp-content/themes/wp-fasty` |
 | `.workspaces` | `/var/www/html/wp-content/.workspaces` |
 
 Relative path `../../.workspaces/ui8kit-latte` from the theme stays valid
@@ -142,7 +142,7 @@ Relative path `../../.workspaces/ui8kit-latte` from the theme stays valid
 | `Missing vendor/autoload.php` | `docker compose --profile tools run --rm composer` |
 | Theme missing / white screen | `bun run ui:primitives` then composer again; check `docker compose logs wordpress` |
 | Port 8080 busy | `WP_PORT=8081 docker compose up -d` |
-| Permission on `~cache` | `mkdir -p themes/latte/~cache && chmod 777 themes/latte/~cache` |
+| Permission on `~cache` | `mkdir -p themes/wp-fasty/~cache && chmod 777 themes/wp-fasty/~cache` |
 | Slow on `/mnt/d` | Clone repo into `~/code/wpfasty` inside WSL |
 | DB not ready | Wait for healthcheck; `docker compose ps` |
 

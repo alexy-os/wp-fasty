@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Latte Shop — WooCommerce-free shop child theme of Latte.
+ * Latte Shop — WooCommerce-free shop child theme of WP FastY.
  *
  * @package Latte_Shop
  */

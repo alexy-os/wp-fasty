@@ -55,11 +55,11 @@ If a PR reintroduces any of these, reject it.
 | Anti-pattern | Do instead |
 |--------------|------------|
 | Hand-edit `.workspaces/ui8kit-latte` | Change codegen bricks → `ui:primitives` |
-| Revive the deleted experimental YM theme as the design system | Keep `themes/latte` + presets as the reference |
+| Revive the deleted experimental YM theme as the design system | Keep `themes/wp-fasty` + presets as the reference |
 | Copy Templ `examples/` as production theme | Extract **recipes** into `presets/` |
 | Docker rebuild for every Latte edit | Bind-mount + clear `~cache` |
 
-## Reference runtime (`themes/latte`)
+## Reference runtime (`themes/wp-fasty`)
 
 - DI `Container`, bootable services
 - `ContextFactory` / typed context

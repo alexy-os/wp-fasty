@@ -129,12 +129,12 @@ final class LatteRenderSmokeTest extends TestCase
 
     public function testChildViewRootWins(): void
     {
-        $theme = dirname(__DIR__).'/themes/latte';
+        $theme = dirname(__DIR__).'/themes/wp-fasty';
         $skin = dirname(__DIR__).'/themes/latte-skin';
         $roots = [
             $skin.'/views',
             $theme.'/views',
-            ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte'),
+            ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/wp-fasty'),
         ];
         $latte = new Engine();
         $latte->setTempDirectory($this->cacheDir);
@@ -167,10 +167,10 @@ final class LatteRenderSmokeTest extends TestCase
 
     private function engine(): Engine
     {
-        $theme = dirname(__DIR__).'/themes/latte';
+        $theme = dirname(__DIR__).'/themes/wp-fasty';
         $roots = [
             $theme.'/views',
-            ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte'),
+            ...\WPFasty\Theme\PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/wp-fasty'),
         ];
         $latte = new Engine();
         $latte->setTempDirectory($this->cacheDir);

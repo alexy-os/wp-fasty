@@ -38,7 +38,7 @@ Theme PHP (ContextFactory, Application)
 
 WordPress is a **data adapter**. Presentation is Latte. Primitives are codegen.
 
-### Theme PHP layers (`themes/latte/classes`, enforced by `deptrac.yaml` + `tests/ArchitectureTest.php`)
+### Theme PHP layers (`themes/wp-fasty/classes`, enforced by `deptrac.yaml` + `tests/ArchitectureTest.php`)
 
 | Layer | Namespace | May use | Contents |
 |---|---|---|---|

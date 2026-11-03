@@ -1,7 +1,7 @@
 {**
  * Block: search-form — GET search only (no PII storage).
  *}
-{var $sid = $searchId ?? 'latte-search-field'}
+{var $sid = $searchId ?? 'wpfasty-search-field'}
 {var $slabel = $searchLabel ?? ($labels['searchSite'] ?? $search['label'])}
 {capture $fields}
 	{capture $c_ui1}{$search['label']}{/capture}{include 'label/Label.latte', class: 'sr-only', children: (string) $c_ui1, attrs: ['for' => $sid]}

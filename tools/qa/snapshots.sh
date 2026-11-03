@@ -6,7 +6,7 @@
 # same date come back in any order); tags are split one per line first.
 # THEMES / URLS can be overridden through the environment.
 set -euo pipefail
-THEMES=${THEMES:-"latte latte-press latte-folio latte-shop"}
+THEMES=${THEMES:-"wp-fasty latte-press latte-folio latte-shop"}
 URLS=${URLS:-"/ /?p=1 /?cat=1 /?s=hello /?author=1 /?page_id=999999 /?cat=1&paged=2"}
 
 normalize() { sed 's/></>\n</g; s/mailto:[^"]*/mailto:X/g' "$1" | sort; }

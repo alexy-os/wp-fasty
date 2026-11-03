@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Parity of the UI8Kit 3 pilot without class canonicalization: themes/latte renders UI8Kit 3 primitives (classes
+ * Parity of the UI8Kit 3 pilot without class canonicalization: themes/wp-fasty renders UI8Kit 3 primitives (classes
  * merged once by \UI8Kit\Latte\CnMerge), its Twig twin still the legacy line (classes joined verbatim).
  *
  *   $cmp = require 'compare-classes.php'; $cmp($latteHtml, $twigHtml) → null when equal, else the first difference

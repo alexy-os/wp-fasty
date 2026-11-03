@@ -54,6 +54,6 @@ rejects("unknown palette rejected", { archetype: "press", name: "Nope", palette:
 check("engine twig + wporg accepted", buildManifest({ archetype: "press", name: "Twig Org", engine: "twig", output: { wporg: true } }, data).manifest.output.wporg === true);
 check("engine twig + landings accepted", buildManifest({ archetype: "press", name: "Twig Land", engine: "twig", landings: ["tools/builder/landings/press.json"] }, data).manifest.builder.landings.length === 1);
 rejects("unknown engine rejected", { archetype: "press", name: "Blade", engine: "blade" }, "must be latte or twig");
-rejects("parent slug rejected", { archetype: "press", name: "Latte" }, "is the parent theme");
+rejects("parent slug rejected", { archetype: "press", name: "WP FastY" }, "is the parent theme");
 console.log(fail ? `${fail} failed` : "configure self-test OK");
 process.exit(fail ? 1 : 0);

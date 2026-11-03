@@ -130,7 +130,7 @@ async function emitPageViews(preset: ThemePreset, themeDir: string): Promise<voi
 }
 
 async function scaffoldSkin(preset: ThemePreset): Promise<void> {
-  const parent = preset.parent ?? "latte";
+  const parent = preset.parent ?? "wp-fasty";
   const out = join(themesRoot, preset.slug);
   await mkdir(join(out, "assets", "css"), { recursive: true });
   await mkdir(join(out, "views", "blocks"), { recursive: true });
@@ -213,7 +213,7 @@ async function buildTheme(id: string): Promise<void> {
 
 /** Files of the other engine that a single-engine parent build must not ship (ADR-001, K7: isolated runtimes). */
 const OTHER_ENGINE: Record<"latte" | "twig", (rel: string) => boolean> = {
-  // latte.zip: no Twig views, no Twig renderer, no UI8Kit 3 Twig install (twig/)
+  // wp-fasty.zip: no Twig views, no Twig renderer, no UI8Kit 3 Twig install (twig/)
   latte: (rel) => rel.endsWith(".html.twig") || rel === "classes/Template/TwigRenderer.php" || rel === "twig" || rel.startsWith("twig/"),
   // twig.zip: no Latte views, no Latte renderer / loader / extension, no UI8Kit 3 Latte primitives / kit layer
   twig: (rel) =>
@@ -222,7 +222,7 @@ const OTHER_ENGINE: Record<"latte" | "twig", (rel: string) => boolean> = {
     ["LatteRenderer", "LatteEngine", "MultiRootLoader", "WordPressExtension"].some((c) => rel === `classes/Template/${c}.php`),
 };
 
-/** UI8Kit 3 Latte install of themes/latte (`npx ui8kit@3 add --all`) and our kit layer over it (Latte only). */
+/** UI8Kit 3 Latte install of themes/wp-fasty (`npx ui8kit@3 add --all`) and our kit layer over it (Latte only). */
 const UI8KIT3_LATTE = ["ui8kit", "kit/ui"];
 /** ui8kit CLI metadata: kept in the repo (`npx ui8kit@3 check`), never shipped (.cursor is a hidden dir for Theme Check). */
 const UI8KIT3_DEV = [".cursor", "ui8kit.lock.json", "ui8kit.config.json", "twig/.cursor", "twig/ui8kit.lock.json", "twig/ui8kit.config.json"];
@@ -255,10 +255,10 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
     throw new Error(`Theme not found: themes/${preset.slug}`);
   }
   if (engine === "latte" && !existsSync(join(themeDir, "ui8kit", "ui"))) {
-    throw new Error("Missing themes/latte/ui8kit — run npx ui8kit@3 add --all in themes/latte");
+    throw new Error("Missing themes/wp-fasty/ui8kit — run npx ui8kit@3 add --all in themes/wp-fasty");
   }
   if (engine === "twig" && !existsSync(join(themeDir, "twig", "ui8kit", "ui"))) {
-    throw new Error("Missing themes/latte/twig/ui8kit — run npx ui8kit@3 add --all in themes/latte/twig");
+    throw new Error("Missing themes/wp-fasty/twig/ui8kit — run npx ui8kit@3 add --all in themes/wp-fasty/twig");
   }
   const slug = engine === "twig" ? "twig" : preset.slug;
 
@@ -305,13 +305,13 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
       if (f.endsWith(".php")) {
         const src = await readFile(p, "utf8");
         const out = src
-          .replace(/'latte'(\s*,?\s*\))/g, "'twig'$1") // last argument of __(), esc_html__(), … and defaults like = 'latte')
-          .replace("load_theme_textdomain('latte',", "load_theme_textdomain('twig',")
-          .replace("$domain !== 'latte'", "$domain !== 'twig'")
-          .replace(/Latte theme:/g, "Twig theme:")
-          .replace(/themes\/latte\b/g, "themes/twig");
+          .replace(/'wp-fasty'(\s*,?\s*\))/g, "'twig'$1") // last argument of __(), esc_html__(), … and defaults like = 'wp-fasty')
+          .replace("load_theme_textdomain('wp-fasty',", "load_theme_textdomain('twig',")
+          .replace("'wp-fasty' !== $domain", "'twig' !== $domain")
+          .replace(/WP FastY theme:/g, "Twig theme:")
+          .replace(/themes\/wp-fasty\b/g, "themes/twig");
         // starter content / notices name the theme
-        const named = f === "classes/Hooks/ThemeHooks.php" ? out.replace(/\bLatte\b/g, "Twig") : out;
+        const named = f === "classes/Hooks/ThemeHooks.php" ? out.replace(/\bLatte\b|WP FastY/g, "Twig") : out;
         if (named !== src) await writeFile(p, named);
       }
     }
@@ -326,9 +326,10 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
       .split("\n")
       .filter((l) => !/^\* (Latte template engine|UI8Kit Latte primitives)/.test(l))
       .join("\n")
+      .replace(/WP FastY/g, "Twig")
       .replace(/Latte/g, "Twig")
       .replace(/ui8kit-latte/g, "ui8kit-twig")
-      .replace(/themes\/latte/g, "themes/twig");
+      .replace(/themes\/wp-fasty/g, "themes/twig");
     const credits = [
       "* Twig template engine (bundled in vendor/twig/twig) — BSD-3-Clause — https://twig.symfony.com/",
       "* Symfony polyfills / deprecation-contracts (bundled in vendor/symfony, Twig dependencies) — MIT — https://symfony.com/",
@@ -338,7 +339,7 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
     txt = txt.replace("== Resources ==\n", `== Resources ==\n\n${credits}\n`).replace(/\n\n\n/g, "\n\n");
     await writeFile(readme, txt);
     // Translation template of the `twig` text domain.
-    await rm(join(stagedTheme, "languages", "latte.pot"), { force: true });
+    await rm(join(stagedTheme, "languages", "wp-fasty.pot"), { force: true });
     const pot = spawnSync("wp", ["i18n", "make-pot", stagedTheme, join(stagedTheme, "languages", "twig.pot"), "--domain=twig",
       "--exclude=vendor,lib,~cache,node_modules", "--quiet",
       `--headers=${JSON.stringify({ "Report-Msgid-Bugs-To": "https://wordpress.org/support/theme/twig" })}`], { encoding: "utf8" });
@@ -444,17 +445,17 @@ async function newTheme(): Promise<void> {
 theme:new — scaffold instructions
 
 Parent:
-  1. Copy presets/themes/latte.json → presets/themes/<id>.json
+  1. Copy presets/themes/wp-fasty.json → presets/themes/<id>.json
   2. Edit layout / style / templates
   3. bun run theme:build -- <id>
 
 Skin (no Composer):
   1. Copy presets/themes/latte-skin.json → presets/themes/<id>.json
-  2. Set parent: "latte", kind: "skin"
+  2. Set parent: "wp-fasty", kind: "skin"
   3. bun run theme:build -- <id>
 
 Pack release zip:
-  bun run theme:pack -- latte [--engine twig] [--vendor-cache dir]   (or WPFASTY_VENDOR_CACHE=dir)
+  bun run theme:pack -- wp-fasty [--engine twig] [--vendor-cache dir]   (or WPFASTY_VENDOR_CACHE=dir)
 `);
 }
 
@@ -478,7 +479,7 @@ async function main(): Promise<void> {
       return;
     }
     case "build": {
-      await buildTheme(arg ?? "latte");
+      await buildTheme(arg ?? "wp-fasty");
       return;
     }
     case "pack": {
@@ -487,7 +488,7 @@ async function main(): Promise<void> {
       if (eng !== "latte" && eng !== "twig") throw new Error(`--engine must be latte or twig (got ${eng})`);
       const vi = process.argv.indexOf("--vendor-cache");
       const vc = vi > 0 ? process.argv[vi + 1] : process.env.WPFASTY_VENDOR_CACHE;
-      await packTheme(arg && !arg.startsWith("--") ? arg : "latte", eng, vc ? resolve(vc) : undefined);
+      await packTheme(arg && !arg.startsWith("--") ? arg : "wp-fasty", eng, vc ? resolve(vc) : undefined);
       return;
     }
     case "new":

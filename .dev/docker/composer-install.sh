@@ -3,7 +3,7 @@ set -eu
 
 ROOT="/var/www/wpfasty"
 PRIMITIVES="$ROOT/.workspaces/ui8kit-latte"
-THEME="$ROOT/themes/latte"
+THEME="$ROOT/themes/wp-fasty"
 
 if [ ! -f "$PRIMITIVES/composer.json" ]; then
   echo "ERROR: $PRIMITIVES/composer.json missing."
@@ -19,7 +19,7 @@ if [ ! -f "$THEME/composer.json" ]; then
   exit 1
 fi
 
-echo "==> composer install: latte"
+echo "==> composer install: wp-fasty"
 composer install --working-dir="$THEME" --no-interaction --prefer-dist
 
 echo "==> done"

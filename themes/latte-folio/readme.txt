@@ -7,13 +7,13 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Portfolio child theme of Latte: projects, project types, filterable work grid and case-study pages.
+Portfolio child theme of WP FastY: projects, project types, filterable work grid and case-study pages.
 
 Note: the Projects post type is plugin territory under wordpress.org rules; it is declared in types/project.php so it can be moved into a companion plugin.
 
 == Description ==
 
-Child theme of Latte (parent theme required). Colors come from design tokens (tokens.css), icons are Lucide, UI is built from UI8Kit Latte primitives.
+Child theme of WP FastY (parent theme required). Colors come from design tokens (tokens.css), icons are Lucide, UI is built from UI8Kit Latte primitives.
 
 == Copyright ==
 

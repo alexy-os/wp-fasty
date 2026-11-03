@@ -27,8 +27,8 @@ await call("validate_manifest", { answers: { archetype: "press", name: "Twig Smo
 await call("validate_manifest", { answers: { archetype: "press", name: "Bad", tokens: { light: { background: "#fff000", foreground: "#ffffff" } } } }, true);
 await call("validate_manifest", { manifest: { theme: { slug: "../../etc" } } }, true);
 await call("generate_site", { answers: { archetype: "press", name: "MCP Smoke" }, pot: false });
-if (existsSync(join(root, "dist/latte.zip"))) await call("package_site", { answers: { archetype: "folio", name: "MCP Folio" } });
-else console.log("- package_site skipped (no dist/latte.zip; run theme:pack first)");
+if (existsSync(join(root, "dist/wp-fasty.zip"))) await call("package_site", { answers: { archetype: "folio", name: "MCP Folio" } });
+else console.log("- package_site skipped (no dist/wp-fasty.zip; run theme:pack first)");
 await client.close();
 console.log(fail ? `${fail} failed` : "MCP smoke OK");
 process.exit(fail ? 1 : 0);

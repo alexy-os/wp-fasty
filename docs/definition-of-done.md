@@ -32,10 +32,10 @@ check runs in CI (or the stated script) and passes. Status is measured on **2026
 
 - [x] ✅ No WordPress calls in Core or ViewModel — `composer deptrac` (WordPress layer from php-stubs; 0 violations) +
   `vendor/bin/phpunit --filter ArchitectureTest` (global WP function calls, which Deptrac cannot see).
-- [x] ✅ `ContextFactory` is a thin facade, ~100 lines, delegation only — `wc -l themes/latte/classes/Data/ContextFactory.php`:
+- [x] ✅ `ContextFactory` is a thin facade, ~100 lines, delegation only — `wc -l themes/wp-fasty/classes/Data/ContextFactory.php`:
   **101** lines (was 592): 12 constructor dependencies wired in `configs/context.php`, filters behind
   `Adapter\WordPress\ContextFilters`, one `viewModels()` path; `text()` removed (use `PlainText::from()`).
-- [x] ✅ Constructor DI, no `Application::getInstance()` or globals in new code — review + `rg "getInstance|global \$" themes/latte/classes/Data themes/latte/classes/Core/Port themes/latte/classes/Core/Model`
+- [x] ✅ Constructor DI, no `Application::getInstance()` or globals in new code — review + `rg "getInstance|global \$" themes/wp-fasty/classes/Data themes/wp-fasty/classes/Core/Port themes/wp-fasty/classes/Core/Model`
   (globals only in `Adapter\WordPress`, which reads `$wp_query` by design).
 - [x] ✅ Views get DTO-derived arrays checked against a JSON Schema — `schema/theme-context.schema.json` (post fields
   named after the Codex v0.4 entry: id, slug, title, content, excerpt); `vendor/bin/phpunit --filter ContextSchemaTest`
@@ -78,7 +78,7 @@ check runs in CI (or the stated script) and passes. Status is measured on **2026
 
 - [x] ✅ HTML snapshots of home / post / archive / search / author / 404 identical before and after each commit — CI
   step "HTML snapshot parity" (`tools/qa/snapshots.sh`: latte, latte-press, latte-folio, latte-shop × 7 URLs = 28
-  pages, `themes/latte` of this commit vs the previous one; `[html-change]` in the commit message declares an
+  pages, `themes/wp-fasty` of this commit vs the previous one; `[html-change]` in the commit message declares an
   intended change). Locally also 60 pages incl. a multi-page post, attachment, project/product. Normalized:
   `antispambot()` mailto links and the order of posts with equal dates.
 - [x] ✅ SQL query count does not grow with the post count — CI "N+1 guard" (`wp eval-file tools/perf/queries.php
@@ -94,7 +94,7 @@ check runs in CI (or the stated script) and passes. Status is measured on **2026
 ## 4. Performance
 
 Environment: box dev site (`dev.sh`: `wp server` = PHP 8.4.23 built-in server, opcache on, MariaDB 11.4 on the same
-host, 8 vCPU), WordPress 7.1.4, theme `latte`, no page cache, no optimization plugins. Numbers are server-dependent.
+host, 8 vCPU), WordPress 7.1.4, theme `wp-fasty` (measured as `latte` before the 2.0 rename), no page cache, no optimization plugins. Numbers are server-dependent.
 
 - [x] ✅ TTFB ≈ 150 ms or less — `bash tools/perf/ttfb.sh http://127.0.0.1:8080 20` (median of 20 warm runs):
   home 41 ms, post 37 ms, category 43 ms, search 43 ms, author 38 ms, 404 37 ms (p90 ≤ 47 ms).

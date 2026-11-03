@@ -17,7 +17,7 @@ check() { # <dir> <pot> <domain> <exclude>
     echo "$2 up to date ($(grep -c '^msgid ' "$root/$2") msgids)"
   fi
 }
-for t in latte latte-press latte-folio latte-shop latte-skin; do
+for t in wp-fasty latte-press latte-folio latte-shop latte-skin; do
   check "themes/$t" "themes/$t/languages/$t.pot" "$t" vendor,~cache,node_modules
 done
 check plugins/wpfasty-builder plugins/wpfasty-builder/languages/wpfasty-builder.pot wpfasty-builder \

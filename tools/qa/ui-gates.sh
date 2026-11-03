@@ -9,9 +9,9 @@ cd "$(dirname "$0")/../.."
 G="node tools/ui-gates/bin/ui-gates.mjs"
 OUT=${OUT:-${TMPDIR:-/tmp}/wpfasty-gates}  # not under dist/ (dist/*/ are site packages)
 mkdir -p "$OUT"
-$G source themes/latte/views presets/blocks presets/archetypes themes/latte-press/views themes/latte-folio/views \
+$G source themes/wp-fasty/views presets/blocks presets/archetypes themes/latte-press/views themes/latte-folio/views \
   themes/latte-shop/views themes/latte-skin plugins/wpfasty-builder/sources/ui8kit/latte plugins/wpfasty-builder/sources/ui8kit/twig \
-  --exclude themes/latte/kit --exclude themes/latte/twig/kit \
+  --exclude themes/wp-fasty/kit --exclude themes/wp-fasty/twig/kit \
   --exclude plugins/wpfasty-builder/sources/ui8kit/latte/ui --exclude plugins/wpfasty-builder/sources/ui8kit/twig/ui
 php tools/qa/gate-cases.php blocks "$OUT/blocks.json"
 $G html "$OUT/blocks.json"

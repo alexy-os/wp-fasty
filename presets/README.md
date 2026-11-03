@@ -12,10 +12,10 @@ Catalog for `theme-builder` — the Underscores-style “questions”, expanded.
 
 ## Example preset
 
-See `themes/latte.json`. Whole-site examples (child theme + types + brand + landings): [`manifests/examples/`](../manifests/examples/).
+See `themes/wp-fasty.json`. Whole-site examples (child theme + types + brand + landings): [`manifests/examples/`](../manifests/examples/).
 
 ## Adding a theme preset
 
-1. Copy `themes/latte.json` → `themes/<id>.json`
+1. Copy `themes/wp-fasty.json` → `themes/<id>.json`
 2. Point `layout` / `style` / `templates` at existing or new presets
 3. `bun run theme:build -- <id>`

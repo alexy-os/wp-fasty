@@ -181,84 +181,84 @@
       "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
     },
     {
-      "file": "themes/latte/views/blocks/archive-header.html.twig",
+      "file": "themes/wp-fasty/views/blocks/archive-header.html.twig",
       "expr": "archive.description",
       "count": 1,
       "source": "ContextFactory archive",
       "why": "wp_kses_post(get_the_archive_description()), '' on search"
     },
     {
-      "file": "themes/latte/views/blocks/archive-header.latte",
+      "file": "themes/wp-fasty/views/blocks/archive-header.latte",
       "expr": "$archive['description']",
       "count": 1,
       "source": "ContextFactory archive",
       "why": "wp_kses_post(get_the_archive_description()), '' on search"
     },
     {
-      "file": "themes/latte/views/blocks/hero-centered.latte",
+      "file": "themes/wp-fasty/views/blocks/hero-centered.latte",
       "expr": "$descHtml",
       "count": 1,
       "source": "same template",
       "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
     },
     {
-      "file": "themes/latte/views/blocks/hero-centered.latte",
+      "file": "themes/wp-fasty/views/blocks/hero-centered.latte",
       "expr": "$primary",
       "count": 1,
       "source": "same template",
       "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
     },
     {
-      "file": "themes/latte/views/blocks/hero-centered.latte",
+      "file": "themes/wp-fasty/views/blocks/hero-centered.latte",
       "expr": "$secondary",
       "count": 1,
       "source": "same template",
       "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
     },
     {
-      "file": "themes/latte/views/blocks/post-content.latte",
+      "file": "themes/wp-fasty/views/blocks/post-content.latte",
       "expr": "$meta",
       "count": 1,
       "source": "same template",
       "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
     },
     {
-      "file": "themes/latte/views/blocks/search-form.latte",
+      "file": "themes/wp-fasty/views/blocks/search-form.latte",
       "expr": "$fields",
       "count": 1,
       "source": "same template",
       "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
     },
     {
-      "file": "themes/latte/views/layout/app-shell.html.twig",
+      "file": "themes/wp-fasty/views/layout/app-shell.html.twig",
       "expr": "content",
       "count": 1,
       "source": "TemplateRenderer layout",
       "why": "rendered HTML of the child view (an autoescaped template)"
     },
     {
-      "file": "themes/latte/views/layout/app-shell.latte",
+      "file": "themes/wp-fasty/views/layout/app-shell.latte",
       "expr": "$content",
       "count": 1,
       "source": "TemplateRenderer layout",
       "why": "rendered HTML of the child view (an autoescaped template)"
     },
     {
-      "file": "themes/latte/views/layout/default.html.twig",
+      "file": "themes/wp-fasty/views/layout/default.html.twig",
       "expr": "content",
       "count": 2,
       "source": "TemplateRenderer layout",
       "why": "rendered HTML of the child view (an autoescaped template)"
     },
     {
-      "file": "themes/latte/views/layout/default.latte",
+      "file": "themes/wp-fasty/views/layout/default.latte",
       "expr": "$content",
       "count": 2,
       "source": "TemplateRenderer layout",
       "why": "rendered HTML of the child view (an autoescaped template)"
     },
     {
-      "file": "themes/latte/views/pages/404.latte",
+      "file": "themes/wp-fasty/views/pages/404.latte",
       "expr": "$cta",
       "count": 1,
       "source": "same template",
@@ -272,7 +272,7 @@
       "why": "attribute string; values are esc_attr'd, names come from primitive templates (literals)"
     },
     {
-      "file": "themes/latte/twig/ui8kit/runtime/TwigExtension.php",
+      "file": "themes/wp-fasty/twig/ui8kit/runtime/TwigExtension.php",
       "name": "ui8kit_attrs",
       "why": "same runtime as the builder primitives (theme copy)"
     },
@@ -292,17 +292,17 @@
       "why": "renders one catalog block through Front::block (props through Links::walk + Safe::props, template autoescaped)"
     },
     {
-      "file": "themes/latte/classes/Template/TwigRenderer.php",
+      "file": "themes/wp-fasty/classes/Template/TwigRenderer.php",
       "name": "kses",
       "why": "wp_kses_post filter"
     },
     {
-      "file": "themes/latte/classes/Template/TwigRenderer.php",
+      "file": "themes/wp-fasty/classes/Template/TwigRenderer.php",
       "name": "apply_filters",
       "why": "WordPress filter output (e.g. the_content) — same trust as core templates calling apply_filters"
     },
     {
-      "file": "themes/latte/classes/Template/TwigRenderer.php",
+      "file": "themes/wp-fasty/classes/Template/TwigRenderer.php",
       "name": "$name",
       "why": "Twig twins of the Latte WP tags (wp_head, wp_footer, wp_body_open, language_attributes, body_class, do_action): output of the core functions, same as a PHP template echoing them"
     }

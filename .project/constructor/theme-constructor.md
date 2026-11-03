@@ -66,7 +66,7 @@ validate manifest
 - Emit layout shell Latte from `presets/layouts/<name>/`
 - Compose template views from block list
 - Copy style CSS into theme assets entry
-- Scaffold missing PHP files from a clean skeleton (extend `themes/latte`)
+- Scaffold missing PHP files from a clean skeleton (extend `themes/wp-fasty`)
 
 ### v0.3
 
@@ -102,7 +102,7 @@ Layouts compose **primitives + composites**, not raw flex divs.
 
 ## PHP skeleton (clean baseline)
 
-Emit or maintain as the clean baseline (`themes/latte`):
+Emit or maintain as the clean baseline (`themes/wp-fasty`):
 
 - `functions.php` → boot container
 - `classes/` — Container, ThemeService, ContextFactory, LatteEngine, WordPressExtension, MultiRootLoader
@@ -110,7 +110,7 @@ Emit or maintain as the clean baseline (`themes/latte`):
 - `views/layout/default.latte` — `{wp_head}`, `{body_class}`, `{wp_footer}`
 - `views/pages/*.latte` — thin includes of preset blocks
 
-Use `themes/latte` as the reference skeleton for the generator.
+Use `themes/wp-fasty` as the reference skeleton for the generator.
 
 ## Commands
 

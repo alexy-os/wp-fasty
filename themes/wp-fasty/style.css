@@ -1,0 +1,17 @@
+/*
+Theme Name: WP FastY
+Theme URI: https://github.com/alexy-os/wp-fasty
+Author: AlexY OS
+Author URI: https://github.com/alexy-os
+Description: WP FastY base theme — Latte engine, UI8Kit Codegen primitives, DI context, classic shell.
+Version: 1.1.0
+Requires at least: 6.4
+Tested up to: 7.1
+Requires PHP: 8.2
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: wp-fasty
+Tags: blog, custom-menu, featured-images, custom-logo, one-column, two-columns, translation-ready
+*/
+
+/* Styles live in assets/css/ — this file is the WordPress theme header only. */

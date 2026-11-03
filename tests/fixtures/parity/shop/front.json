@@ -6,7 +6,7 @@
         "site": {
             "title": "QA",
             "url": "http://127.0.0.1:8099/",
-            "themeUrl": "http://127.0.0.1:8099/wp-content/themes/latte",
+            "themeUrl": "http://127.0.0.1:8099/wp-content/themes/wp-fasty",
             "stylesheetUrl": "http://127.0.0.1:8099/wp-content/themes/latte-shop",
             "lang": "en-US",
             "description": "",

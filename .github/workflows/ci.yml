@@ -91,9 +91,9 @@ jobs:
           bun run configure:form
           git diff --exit-code -- configurator
 
-      - name: UI8Kit 3 primitives of themes/latte match ui8kit.lock.json; kit presets up to date
+      - name: UI8Kit 3 primitives of themes/wp-fasty match ui8kit.lock.json; kit presets up to date
         run: |
-          (cd themes/latte && npx --yes ui8kit@3 check) && (cd themes/latte/twig && npx --yes ui8kit@3 check) && (cd plugins/wpfasty-builder/primitives/latte && npx --yes ui8kit@3 check) && (cd plugins/wpfasty-builder/primitives/twig && npx --yes ui8kit@3 check)
+          (cd themes/wp-fasty && npx --yes ui8kit@3 check) && (cd themes/wp-fasty/twig && npx --yes ui8kit@3 check) && (cd plugins/wpfasty-builder/primitives/latte && npx --yes ui8kit@3 check) && (cd plugins/wpfasty-builder/primitives/twig && npx --yes ui8kit@3 check)
           php tools/ui8kit3/presets.php --check
 
       - name: Builder ui8kit source reproduces from its pinned codegen-x commit (source.commit / source.digest)
@@ -127,13 +127,13 @@ jobs:
           echo "Template page previews: $(bun tools/builder/page-previews.ts --check)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Composer install (theme)
-        run: composer install --no-interaction --no-progress --working-dir=themes/latte
+        run: composer install --no-interaction --no-progress --working-dir=themes/wp-fasty
 
       - name: Composer audit (theme)
-        run: composer audit --no-interaction --working-dir=themes/latte
+        run: composer audit --no-interaction --working-dir=themes/wp-fasty
 
       - name: Build theme views from presets
-        run: bun run theme:build -- latte
+        run: bun run theme:build -- wp-fasty
 
       - name: Design lint (tokens, 8px grid, no half-steps / arbitrary px)
         run: bun run lint:design
@@ -142,7 +142,7 @@ jobs:
         run: |
           bun install --cwd .workspaces/css-build
           bun run css:build
-          git diff --exit-code -- themes/latte/assets/css
+          git diff --exit-code -- themes/wp-fasty/assets/css
 
       - name: Builder editor (Svelte 5, Vite IIFE) — svelte-check, field-type tests, build, committed assets must match
         run: |
@@ -180,22 +180,22 @@ jobs:
       - name: Translation templates up to date (latte.pot + child themes + builder; strings, not line refs)
         run: bash tools/qa/pot-check.sh
 
-      - name: Pack parent zips (isolated engines — latte.zip ships only Latte, twig.zip only Twig)
+      - name: Pack parent zips (isolated engines — wp-fasty.zip ships only Latte, twig.zip only Twig)
         run: |
-          bun run theme:pack -- latte
-          bun run theme:pack -- latte --engine twig
-          L=$(unzip -Z1 dist/latte.zip); T=$(unzip -Z1 dist/twig.zip)
-          echo "$L" | grep -q '^latte/vendor/latte/latte/'
+          bun run theme:pack -- wp-fasty
+          bun run theme:pack -- wp-fasty --engine twig
+          L=$(unzip -Z1 dist/wp-fasty.zip); T=$(unzip -Z1 dist/twig.zip)
+          echo "$L" | grep -q '^wp-fasty/vendor/latte/latte/'
           echo "$T" | grep -q '^twig/vendor/twig/twig/LICENSE'
           ! echo "$L" | grep -iE 'vendor/twig|\.html\.twig$|TwigRenderer|ui8kit-twig'
           ! echo "$T" | grep -iE 'vendor/latte|\.latte$|LatteRenderer|LatteEngine|ui8kit-latte|latte-primitives|^twig/ui8kit/|^twig/kit/ui/'
           echo "$T" | grep -q '^twig/twig/ui8kit/runtime/TwigExtension.php' && echo "$T" | grep -q '^twig/kit/presets.json' && echo "$T" | grep -q '^twig/classes/Template/Kit.php'
-          ! echo "$L" | grep -q '^latte/twig/'
-          echo "$L" | grep -q '^latte/ui8kit/runtime/Classes.php' && echo "$L" | grep -q '^latte/kit/presets.json'
+          ! echo "$L" | grep -q '^wp-fasty/twig/'
+          echo "$L" | grep -q '^wp-fasty/ui8kit/runtime/Classes.php' && echo "$L" | grep -q '^wp-fasty/kit/presets.json'
           ! echo "$L$T" | grep -E '/\.cursor/|ui8kit\.(lock|config)\.json'
           unzip -p dist/twig.zip twig/style.css | grep -q '^Text Domain: twig'
           unzip -p dist/twig.zip twig/classes/Template/Engines.php | grep -q "BUILT = \['twig'\]"
-          unzip -p dist/latte.zip latte/classes/Template/Engines.php | grep -q "BUILT = \['latte'\]"
+          unzip -p dist/wp-fasty.zip wp-fasty/classes/Template/Engines.php | grep -q "BUILT = \['latte'\]"
 
       - name: Builder registries — one per runtime (wpfasty-catalog@2), reproducible, immutable versions, verify rules
         run: |
@@ -238,13 +238,13 @@ jobs:
             [ ! -f "dist/$s/wpfasty-builder.zip" ] || ! unzip -Z1 "dist/$s/wpfasty-builder.zip" | grep -qE "sources/ui8kit/$o/|primitives/$o/"
           done
           { echo "### Packages"; echo "| file | bytes |"; echo "|---|---|"
-            for f in dist/latte.zip dist/twig.zip $(sed 's#^#dist/#; s#$#/*#' dist/sites.txt); do echo "| \`$f\` | $(stat -c %s "$f") |"; done; } >> "$GITHUB_STEP_SUMMARY"
+            for f in dist/wp-fasty.zip dist/twig.zip $(sed 's#^#dist/#; s#$#/*#' dist/sites.txt); do echo "| \`$f\` | $(stat -c %s "$f") |"; done; } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@v4
         with:
           name: dist-php${{ matrix.php }}
           path: |
-            dist/latte.zip
+            dist/wp-fasty.zip
             dist/twig.zip
             dist/registry/
             dist/sites.txt
@@ -255,7 +255,7 @@ jobs:
 
   mutation:
     name: mutation (Infection, Core + ViewModel builders)
-    # MSI and covered MSI >= 95 on themes/latte/classes/{Core,Data} (infection.json5); escaped mutants as annotations.
+    # MSI and covered MSI >= 95 on themes/wp-fasty/classes/{Core,Data} (infection.json5); escaped mutants as annotations.
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -282,7 +282,7 @@ jobs:
       - name: Install PHP tooling, theme vendor and @ui8kit/contract (the test suite needs all three)
         run: |
           composer install --no-interaction --prefer-dist
-          composer install --no-interaction --no-progress --working-dir=themes/latte
+          composer install --no-interaction --no-progress --working-dir=themes/wp-fasty
           bun install --frozen-lockfile
 
       - name: Infection — minMsi / minCoveredMsi 95
@@ -323,7 +323,7 @@ jobs:
       - name: Composer install (root + theme)
         run: |
           composer install --no-interaction --no-progress --prefer-dist
-          composer install --no-interaction --no-progress --prefer-dist --working-dir=themes/latte
+          composer install --no-interaction --no-progress --prefer-dist --working-dir=themes/wp-fasty
 
       - name: Raw-output gate — every |noescape / |raw / is_safe html reviewed (tools/security/raw-sinks.json)
         if: matrix.shard == 1
@@ -426,7 +426,7 @@ jobs:
           # Everything under test comes from the theme:package zips (dist artifact), not from repo folders. Both parents
           # are installed side by side (latte, twig): every site runs on its own engine's parent (ADR-001, K7).
           D="$GITHUB_WORKSPACE/dist"
-          unzip -q "$D/latte.zip" -d wp-content/themes/
+          unzip -q "$D/wp-fasty.zip" -d wp-content/themes/
           unzip -q "$D/twig.zip" -d wp-content/themes/
           for s in $(cat "$D/sites.txt"); do unzip -q "$D/$s/$s.zip" -d wp-content/themes/; done
           for t in latte-press latte-folio latte-shop; do mkdir -p "/tmp/demo-$t" && unzip -q "$D/$t/demo.zip" -d "/tmp/demo-$t"; done
@@ -442,11 +442,11 @@ jobs:
           wp rewrite structure '/%postname%/' --hard
           wp theme list --fields=name,version,status
 
-      - name: Theme Check — no REQUIRED issues (latte.zip, twig.zip, every packaged site, latte-skin from repo)
+      - name: Theme Check — no REQUIRED issues (wp-fasty.zip, twig.zip, every packaged site, latte-skin from repo)
         run: |
           cd /tmp/wp
           fail=0
-          for t in latte twig latte-skin $(cat "$GITHUB_WORKSPACE/dist/sites.txt"); do
+          for t in wp-fasty twig latte-skin $(cat "$GITHUB_WORKSPACE/dist/sites.txt"); do
             code=0
             PAGER=cat wp theme-check run "$t" > "/tmp/tc-$t.txt" 2>&1 || code=$?
             r=$(grep -c '^REQUIRED' "/tmp/tc-$t.txt" || true)
@@ -559,7 +559,7 @@ jobs:
 
       - name: HTML snapshot parity — parent theme at this commit vs the previous one (latte, press, folio, shop) + template contexts vs JSON Schema
         run: |
-          # Same site, same plugins and child themes; only themes/latte differs (from this commit vs from the parent
+          # Same site, same plugins and child themes; only themes/wp-fasty differs (from this commit vs from the parent
           # commit, both from git). Normalized: mailto obfuscation, line order. An intended markup change is declared
           # with [html-change] in the commit message (the diff is then reported, not gated).
           cd "$GITHUB_WORKSPACE"
@@ -568,17 +568,20 @@ jobs:
           BASE="${{ github.event.before }}"
           if [ -z "$BASE" ] || [ "$BASE" = 0000000000000000000000000000000000000000 ]; then BASE=""; fi
           if [ -n "$BASE" ]; then git fetch -q --depth=1 origin "$BASE"; else git fetch -q --deepen=1 origin; BASE=$(git rev-parse HEAD^); fi
-          theme_from() { rm -rf "/tmp/src-$1" && mkdir -p "/tmp/src-$1" && git archive "$2" themes/latte | tar -x -C "/tmp/src-$1" \
-            && composer install --no-interaction --no-progress --quiet --no-dev --working-dir="/tmp/src-$1/themes/latte"; }
+          # the parent was themes/latte before the 2.0 rename: a base commit from before it is read from there
+          theme_from() { local p=themes/wp-fasty; git cat-file -e "$2:$p" 2>/dev/null || p=themes/latte
+            rm -rf "/tmp/src-$1" && mkdir -p "/tmp/src-$1" && git archive "$2" "$p" | tar -x -C "/tmp/src-$1" \
+            && { [ "$p" = themes/wp-fasty ] || mv "/tmp/src-$1/$p" "/tmp/src-$1/themes/wp-fasty"; } \
+            && composer install --no-interaction --no-progress --quiet --no-dev --working-dir="/tmp/src-$1/themes/wp-fasty"; }
           theme_from head HEAD && theme_from base "$BASE"
-          mv "$T/latte" /tmp/latte-zip
-          cp -r /tmp/src-head/themes/latte "$T/latte"
+          mv "$T/wp-fasty" /tmp/parent-zip
+          cp -r /tmp/src-head/themes/wp-fasty "$T/wp-fasty"
           cp tools/qa/snapshot-context.php "$WP/wp-content/mu-plugins/" && rm -rf /tmp/wpfasty-contexts && mkdir -p /tmp/wpfasty-contexts
           bash tools/qa/snapshots.sh capture /tmp/snap-head "$WP"
           rm "$WP/wp-content/mu-plugins/snapshot-context.php"
-          rm -rf "$T/latte" && cp -r /tmp/src-base/themes/latte "$T/latte"
+          rm -rf "$T/wp-fasty" && cp -r /tmp/src-base/themes/wp-fasty "$T/wp-fasty"
           bash tools/qa/snapshots.sh capture /tmp/snap-base "$WP"
-          rm -rf "$T/latte" && mv /tmp/latte-zip "$T/latte"
+          rm -rf "$T/wp-fasty" && mv /tmp/parent-zip "$T/wp-fasty"
           php tools/qa/context-schema.php /tmp/wpfasty-contexts | tee /tmp/context-schema.txt
           code=0; bash tools/qa/snapshots.sh compare /tmp/snap-base /tmp/snap-head > /tmp/snapshots.txt || code=$?
           cat /tmp/snapshots.txt
@@ -716,7 +719,7 @@ jobs:
           wp config set WP_DEBUG_LOG "'/tmp/wp-debug.log'" --raw
           mkdir -p wp-content/mu-plugins && cp "$GITHUB_WORKSPACE/tools/qa/offline.php" wp-content/mu-plugins/
           D="$GITHUB_WORKSPACE/dist"
-          unzip -q "$D/latte.zip" -d wp-content/themes/
+          unzip -q "$D/wp-fasty.zip" -d wp-content/themes/
           for t in latte-press latte-folio latte-shop; do unzip -q "$D/$t/$t.zip" -d wp-content/themes/; done
           unzip -q "$D/latte-shop/wpfasty-types.zip" -d wp-content/plugins/
           unzip -q /tmp/builder/latte.zip -d wp-content/plugins/

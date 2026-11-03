@@ -9,7 +9,7 @@
     "textDomain": "latte-folio",
     "prefix": "folio",
     "namespace": "LatteFolio",
-    "description": "Portfolio theme — Projects post type with types, client/year/role meta, filterable work grid and case-study pages. Child of Latte (UI8Kit Latte primitives, token-only colors, Lucide icons).",
+    "description": "Portfolio theme — Projects post type with types, client/year/role meta, filterable work grid and case-study pages. Child of WP FastY (UI8Kit Latte primitives, token-only colors, Lucide icons).",
     "version": "1.0.0",
     "uri": "https://github.com/alexy-os/wp-fasty",
     "author": {
@@ -31,7 +31,7 @@
     ]
   },
   "parent": {
-    "preset": "latte",
+    "preset": "wp-fasty",
     "layout": "classic",
     "style": "default"
   },

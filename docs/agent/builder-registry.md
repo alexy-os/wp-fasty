@@ -42,7 +42,7 @@ variants as v3.0.0, v3.0.0 stays published unchanged.
 Workflow `Published registries` (`.github/workflows/registry-published.yml`, separate from CI, never blocks it; after
 each green CI run on main, daily and on demand) compares the published `v<version>/` and `latest/` byte for byte
 (sha256, size) with `dist/registry` built from source in that CI run, runs `registry:verify` on the URLs, and imports
-both published registries into a real WordPress (latte-shop on latte.zip, latte-shop-twig on twig.zip): import from
+both published registries into a real WordPress (latte-shop on wp-fasty.zip, latte-shop-twig on twig.zip): import from
 `https://registry.buildy.tw/…`, render with only the site engine loaded, other runtime refused. Network calls retry.
 
 ## Files

@@ -71,7 +71,7 @@ final class RendererTest extends TestCase
     public function testNoFallbackBetweenEngines(): void
     {
         // Isolated runtimes (K7): an engine without its primitives (or library) is an error, never the other engine.
-        $latte = ['latte' => [...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte')], 'twig' => []];
+        $latte = ['latte' => [...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/wp-fasty')], 'twig' => []];
         try {
             RendererFactory::create('twig', [$this->views()], $latte, $this->cache);
             self::fail('twig without Twig primitives must not render');
@@ -92,7 +92,7 @@ final class RendererTest extends TestCase
 
     public function testFactoryPicksEngine(): void
     {
-        $r = RendererFactory::create('latte', [$this->views()], ['latte' => [...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte')]], $this->cache);
+        $r = RendererFactory::create('latte', [$this->views()], ['latte' => [...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/wp-fasty')]], $this->cache);
         self::assertInstanceOf(LatteRenderer::class, $r);
         self::assertSame($r, RendererFactory::create($r, [], [], $this->cache));
     }
@@ -109,14 +109,14 @@ final class RendererTest extends TestCase
 
     private function latte(): LatteRenderer
     {
-        return new LatteRenderer([$this->views(), ...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/latte')], $this->cache);
+        return new LatteRenderer([$this->views(), ...PrimitivesLocator::latteRoots(dirname(__DIR__).'/themes/wp-fasty')], $this->cache);
     }
 
     private function twig(): TwigRenderer
     {
-        $prims = PrimitivesLocator::twigRoots(dirname(__DIR__).'/themes/latte');
+        $prims = PrimitivesLocator::twigRoots(dirname(__DIR__).'/themes/wp-fasty');
         if ([] === $prims || !class_exists(\Twig\Environment::class)) {
-            $this->markTestSkipped('Twig primitives not installed (themes/latte/twig: npx ui8kit@3 add --all)');
+            $this->markTestSkipped('Twig primitives not installed (themes/wp-fasty/twig: npx ui8kit@3 add --all)');
         }
 
         return new TwigRenderer([$this->views(), ...$prims], $this->cache.'/twig');

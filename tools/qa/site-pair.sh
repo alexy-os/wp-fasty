@@ -4,7 +4,7 @@
 #     activate <theme>, fetch every path: expected HTTP code (default 200), no PHP notices, the site engine's library
 #     loaded and the other engine's library NOT loaded (class markers). The engine is the active parent (latte|twig).
 #   tools/qa/site-pair.sh compare <dir-a> <slug-a> <dir-b> <slug-b>
-#     parity as a quality check: the same site in both engines (X on latte.zip vs its twin on twig.zip) renders the
+#     parity as a quality check: the same site in both engines (X on wp-fasty.zip vs its twin on twig.zip) renders the
 #     same normalized DOM; both theme slugs and the parent (dir, body class) are normalized before comparing.
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -36,8 +36,8 @@ compare)
   for a in "$A"/*.html; do
     case "$a" in *.norm) continue ;; esac
     b="$B/$(basename "$a")"; [ -f "$b" ] || { echo "✗ $SB: no $(basename "$a")"; fail=1; continue; }
-    sed -e "s#/themes/twig/#/themes/latte/#g" -e "s#wp-theme-twig#wp-theme-latte#g" -e "s#$SB#@site@#g" "$b" > "$b.norm"
-    sed -e "s#/themes/twig/#/themes/latte/#g" -e "s#wp-theme-twig#wp-theme-latte#g" -e "s#$SA#@site@#g" "$a" > "$a.norm"
+    sed -e "s#/themes/twig/#/themes/wp-fasty/#g" -e "s#wp-theme-twig#wp-theme-latte#g" -e "s#$SB#@site@#g" "$b" > "$b.norm"
+    sed -e "s#/themes/twig/#/themes/wp-fasty/#g" -e "s#wp-theme-twig#wp-theme-latte#g" -e "s#$SA#@site@#g" "$a" > "$a.norm"
     if r=$(php "$ROOT/tools/parity/compare.php" "$a.norm" "$b.norm"); then
       echo "✓ $SA = $SB $(basename "$a" .html): $r"
     else

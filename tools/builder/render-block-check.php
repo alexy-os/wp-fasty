@@ -21,7 +21,7 @@ $html = require __DIR__.'/fragment-html.php';
 $args = getopt('', ['live:', 'page:', 'jar:', 'runs:', 'timing-only']);
 
 if (!isset($args['live'])) {
-    require $root.'/themes/latte/vendor/autoload.php';
+    require $root.'/themes/wp-fasty/vendor/autoload.php';
     require $root.'/vendor/autoload.php';
     spl_autoload_register(static function (string $class) use ($root): void {
         if (str_starts_with($class, 'WPFastyBuilder\\')) {

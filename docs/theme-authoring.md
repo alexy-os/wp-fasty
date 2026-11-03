@@ -1,6 +1,6 @@
 # Theme authoring: Latte and Twig themes against view/v1
 
-A WP FastY theme is a **child theme of `themes/latte`**. The parent boots the engine and builds the template context. The child supplies views (Latte, Twig or both), CSS tokens and optional context filters. It ships no PHP classes and no `vendor/`. The working example is `themes/latte-skin`, which overrides one block in both engines. It is covered by the parity suite `skin`.
+A WP FastY theme is a **child theme of `themes/wp-fasty`**. The parent boots the engine and builds the template context. The child supplies views (Latte, Twig or both), CSS tokens and optional context filters. It ships no PHP classes and no `vendor/`. The working example is `themes/latte-skin`, which overrides one block in both engines. It is covered by the parity suite `skin`.
 
 ## 1. The contract: view profile view/v1
 
@@ -46,7 +46,7 @@ The parent default is Latte. Select Twig with `add_filter('wpfasty_renderer', fn
 
 ## 5. Checking a theme
 
-1. **Parity:** add the theme's root chain to `$suites` in `tools/parity/parity.php` (for example `'skin' => ['themes/latte-skin/views', 'themes/latte/views']`). Add fixtures in `tests/fixtures/parity/<suite>/*.json` (`{view, context, page?}`). Copy them from `tests/fixtures/parity/latte` or dump a real context with `tools/parity/dump-context.php`. Then run `bun run parity`: Latte and Twig must render identical normalized HTML.
+1. **Parity:** add the theme's root chain to `$suites` in `tools/parity/parity.php` (for example `'skin' => ['themes/latte-skin/views', 'themes/wp-fasty/views']`). Add fixtures in `tests/fixtures/parity/<suite>/*.json` (`{view, context, page?}`). Copy them from `tests/fixtures/parity/latte` or dump a real context with `tools/parity/dump-context.php`. Then run `bun run parity`: Latte and Twig must render identical normalized HTML.
 2. **Contexts:** run `php tools/qa/context-schema.php schema/examples` (and your own dumps).
 3. **Raw output:** `php tools/security/raw-sinks.php`.
 4. **On WordPress:** activate the child and switch engines with `wp option update wpfasty_qa_renderer twig|latte` (QA mu-plugin `tools/qa/renderer-switch.php`), then compare pages.
