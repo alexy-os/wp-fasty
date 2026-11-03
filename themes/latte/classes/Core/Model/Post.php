@@ -37,7 +37,7 @@ final class Post
         public readonly ?Author $author = null,
         /** get_post_class() */
         public readonly string $cssClass = '',
-        /** @deprecated since view/v1 `pages`; always empty, kept for child templates. Removed in the next major. */
+        /** wp_link_pages() of a multi-page single view (compat for child templates; parent views render `pages`) */
         public readonly ?TrustedHtml $linkPages = null,
         public readonly ?PostLink $previous = null,
         public readonly ?PostLink $next = null,

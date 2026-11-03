@@ -141,6 +141,7 @@ final class PostRepository implements WordPressPostRepositoryInterface
         ) : null;
 
         $pages = null;
+        $linkPages = TrustedHtml::empty();
         $content = $post->post_content;
         $previous = null;
         $next = null;
@@ -154,6 +155,7 @@ final class PostRepository implements WordPressPostRepositoryInterface
                 $current = max(1, min(count($parts), \WPFasty\Core\Cast::int($postdata['page'] ?? 1)));
                 $content = $parts[$current - 1];
                 $pages = new PostPages($current, array_map(fn (int $i): string => $this->pageUrl($post, $i), range(1, count($parts))));
+                $linkPages = $this->linkPages($post);
             }
             if ('post' === $post->post_type) {
                 $previous = $this->link(get_adjacent_post(false, '', true));
@@ -181,7 +183,7 @@ final class PostRepository implements WordPressPostRepositoryInterface
             tags: $tags,
             author: $author,
             cssClass: implode(' ', get_post_class('', $post)),
-            linkPages: TrustedHtml::empty(),
+            linkPages: $linkPages,
             previous: $previous,
             next: $next,
             mimeType: $post->post_mime_type,
@@ -206,6 +208,25 @@ final class PostRepository implements WordPressPostRepositoryInterface
             (string) (wp_get_attachment_image_srcset($id, $size) ?: ''),
             (string) (wp_get_attachment_image_sizes($id, $size) ?: ''),
         );
+    }
+
+    /**
+     * wp_link_pages() of a multi-page entry, kept as `linkPages` for child templates that print it (the parent views
+     * render the structured `pages`). It reads the post globals, so they are set for this post and restored after.
+     */
+    private function linkPages(\WP_Post $post): TrustedHtml
+    {
+        setup_postdata($post);
+        $html = (string) (wp_link_pages([
+            'before' => '<nav class="post-pages mt-8 text-sm text-muted-foreground" aria-label="'
+                .esc_attr__('Pages', 'latte').'"><span class="mr-2">'
+                .esc_html__('Pages:', 'latte').'</span>',
+            'after' => '</nav>',
+            'echo' => false,
+        ]) ?: '');
+        wp_reset_postdata();
+
+        return new TrustedHtml($html);
     }
 
     /** URL of page $i of a multi-page entry, as _wp_link_page() builds it (without the preview arguments). */

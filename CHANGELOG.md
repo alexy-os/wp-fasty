@@ -12,7 +12,7 @@
 - chaosbun#120: the WordPress job serves with `php -S` and opcache **on** for PHP 8.5 (8.5.12 floor), with `revalidate_freq=0`. PHP 8.2 stays off. A new step fails the job on a server crash (139/134/136 or a segfault). On the box, PHP 8.5.12 with opcache gave identical HTML with opcache on and off: 84 pages, cold and warm, 658 scripts cached, no crash.
 
 ### Fixed
-- chaosbun#119: multi-page entries (`<!--nextpage-->`) had no Pages nav, and the single view printed every page at once. `PostRepository` now splits the content the way `WP_Query::generate_postdata()` does, without touching the globals, and shows only the current page. It also builds the view/v1 `pages` primitive (`PostPages`: current, total, links). Latte and Twig render the nav from that data (`blocks/post-content`), with no raw HTML. `linkPages` is deprecated and always empty. [html-change]
+- chaosbun#119: multi-page entries (`<!--nextpage-->`) had no Pages nav, and the single view printed every page at once. `PostRepository` now splits the content the way `WP_Query::generate_postdata()` does, without touching the globals, and shows only the current page. It also builds the view/v1 `pages` primitive (`PostPages`: current, total, links). Latte and Twig render the nav from that data (`blocks/post-content`), with no raw HTML. `linkPages` (the wp_link_pages() HTML) is still filled for child templates that print it. [html-change]
 
 
 - View schema source switched to npm: `@ui8kit/contract` is pinned exactly at `0.3.0` (devDependency). `tools/qa/view-schema-sync.sh` compares the committed `schema/theme-context.schema.json` with `node_modules/@ui8kit/contract/schemas/view.schema.json`.
