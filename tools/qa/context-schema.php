@@ -1,7 +1,9 @@
 <?php
 
 /**
- * Validates template contexts against schema/theme-context.schema.json.
+ * Validates template contexts against schema/theme-context.schema.json (view profile view/v1, a copy of.
+ *
+ * @ui8kit/contract schemas/view.schema.json pinned in schema/VIEW_SCHEMA_SOURCE; registered under its own $id).
  *   php tools/qa/context-schema.php <dir-or-file.json>...   (files: {"kind": "page|archive|error", "context": {...}})
  * Exit 1 on the first invalid context. Library use: wpfasty_context_schema_errors($context, $kind).
  */
@@ -23,18 +25,22 @@ if (!function_exists('wpfasty_context_schema_errors')) {
     function wpfasty_context_schema_errors(mixed $data, string $def): array
     {
         static $validator = null;
+        static $schemaId = '';
         $schemaFile = dirname(__DIR__, 2).'/schema/theme-context.schema.json';
         if (null === $validator) {
             $validator = new Validator();
-            $validator->resolver()?->registerFile('https://wpfasty.dev/schema/theme-context.schema.json', $schemaFile);
+            $schemaId = (string) (json_decode((string) file_get_contents($schemaFile), true)['$id'] ?? '');
+            $validator->resolver()?->registerFile($schemaId, $schemaFile);
             // Codex v0.4 record schemas the view profile references (https://schema.buildy.tw/*), from @ui8kit/contract
             foreach (glob(dirname(__DIR__, 2).'/node_modules/@ui8kit/contract/schemas/*.schema.json') ?: [] as $codex) {
-                $validator->resolver()?->registerFile('https://schema.buildy.tw/'.basename($codex), $codex);
+                if ('https://schema.buildy.tw/'.basename($codex) !== $schemaId) {
+                    $validator->resolver()?->registerFile('https://schema.buildy.tw/'.basename($codex), $codex);
+                }
             }
         }
         // arrays -> objects the way json_decode() gives them (lists stay arrays, maps become objects)
         $json = json_decode((string) json_encode($data, JSON_PRESERVE_ZERO_FRACTION));
-        $result = $validator->validate($json, 'https://wpfasty.dev/schema/theme-context.schema.json#/$defs/'.$def);
+        $result = $validator->validate($json, $schemaId.'#/$defs/'.$def);
         if ($result->isValid()) {
             return [];
         }

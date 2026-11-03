@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://wpfasty.dev/schema/theme-context.schema.json",
+  "$id": "https://schema.buildy.tw/view.schema.json",
   "title": "View profile view/v1 — template context projected from Codex v0.4",
-  "version": "1.0.0",
-  "x-profile": "view/v1",
+  "x-view-profile": "view/v1",
+  "x-view-version": "1.0.0",
   "x-codex-version": "0.4.0",
-  "description": "The data a view (Latte, Twig, any SSG or front-end) renders a page from, for any backend that speaks Codex v0.4 (github.com/fastygo/codex, @ui8kit/contract). RULE: a view context is a PROJECTION of Codex records (Settings, Dictionary, Menu, Entry of any kind, Term, Comment, Manifest — referenced from https://schema.buildy.tw/*.schema.json, mirror https://raw.githubusercontent.com/ui8kit/contract/main/schemas/) plus a closed set of render-time primitives defined here: link, image, trustedHtml, pagination, menuTree (menuItem), head (seo), date, and the shell (site + labels + request). No new entity types. Arbitrary kinds and fields: `entry.kind` + `entry.fields` typed by Manifest Field types (see fieldValue). Escaping: only trustedHtml values are printed raw. Versioning: profile view/v1; minor versions only ADD optional keys; objects are open (backends and themes may add keys). Root: one of pageContext, archiveContext, errorContext; examples per page type: schema/examples/*.json (each file {\"kind\": \"page|archive|error\", \"context\": …}). Page type is in request.pageType when sent, else inferred: error -> 404, archive.type -> archive family / search, page null -> front with posts, else single/page/attachment by page.kind.",
+  "description": "The data a view (Latte, Twig, any SSG or front-end) renders a page from, for any backend that speaks Codex v0.4 (github.com/fastygo/codex, @ui8kit/contract). RULE: a view context is a PROJECTION of Codex records (Settings, Dictionary, Menu, Entry of any kind, Term, Comment, Manifest — referenced from https://schema.buildy.tw/*.schema.json, mirror https://raw.githubusercontent.com/ui8kit/contract/main/schemas/) plus a closed set of render-time primitives defined here: link, image, trustedHtml, pagination, menuTree (menuItem), head (seo), date, and the shell (site + labels + request). No new entity types. Arbitrary kinds and fields: `entry.kind` + `entry.fields` typed by Manifest Field types (see fieldValue). Escaping: only trustedHtml values are printed raw. Versioning: profile view/v1; minor versions only ADD optional keys; objects are open (backends and themes may add keys). Root: one of pageContext, archiveContext, errorContext; examples per page type: fixtures/view/*.json of @ui8kit/contract, mirrored in wp-fasty schema/examples/*.json (each file {\"kind\": \"page|archive|error\", \"context\": …}). Page type is in request.pageType when sent, else inferred: error -> 404, archive.type -> archive family / search, page null -> front with posts, else single/page/attachment by page.kind.",
   "oneOf": [
     {
       "$ref": "#/$defs/pageContext"
@@ -195,7 +195,7 @@
       }
     },
     "fieldValue": {
-      "description": "A value of a Manifest Field (manifest.schema.json $defs/Field) projected for the view, by Field.type:\n- text, string, textarea, select (option value), computed -> string (plain text; select also gives the option value; label via Field.options)\n- richtext, markdown -> trustedHtml string (rendered)\n- number -> number or numeric string\n- boolean -> boolean (or '1'/'' from string backends)\n- datetime -> date object {display, iso} or ISO string\n- relation -> link, or entry view, or list of them\n- collection -> array of fieldValue\n- json, object -> object\n- encrypted -> never sent to views\nUnknown types: any JSON value. Backends that store everything as strings (WordPress meta) may send strings for every type; a view must accept them.",
+      "description": "A value of a Manifest Field (manifest.schema.json $defs/Field) projected for the view, by Field.type:\n- text -> string (plain text)\n- string -> string (plain text)\n- textarea -> string (plain text)\n- select -> string (the option value; its label via Field.options)\n- computed -> string\n- richtext -> trustedHtml (rendered)\n- markdown -> trustedHtml (rendered)\n- number -> number or numeric string\n- boolean -> boolean (or '1' / '' from string backends)\n- datetime -> date {display, iso} or an ISO 8601 string\n- relation -> link, entry view, or a list of them\n- collection -> array of field values\n- json -> object\n- object -> object\n- encrypted -> never sent to views\nUnknown types: any JSON value. Backends that store everything as strings (WordPress meta) may send strings for every type; a view must accept them.",
       "anyOf": [
         {
           "type": "string"
@@ -806,21 +806,7 @@
               "type": "null"
             },
             {
-              "type": "object",
-              "required": [
-                "url",
-                "width",
-                "height",
-                "alt"
-              ],
-              "properties": {
-                "url": {
-                  "$ref": "#/$defs/url"
-                },
-                "alt": {
-                  "$ref": "#/$defs/text"
-                }
-              }
+              "$ref": "#/$defs/image"
             }
           ]
         },
@@ -888,6 +874,23 @@
             "action",
             "query"
           ],
+          "properties": {
+            "action": {
+              "$ref": "#/$defs/url"
+            },
+            "query": {
+              "type": "string"
+            },
+            "placeholder": {
+              "type": "string"
+            },
+            "submit": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            }
+          },
           "additionalProperties": {
             "type": "string"
           },

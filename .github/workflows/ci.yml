@@ -55,6 +55,9 @@ jobs:
       - name: Composer audit (root)
         run: composer audit --no-interaction
 
+      - name: View profile schema = byte copy of @ui8kit/contract view.schema.json at the pinned commit
+        run: tools/qa/view-schema-sync.sh
+
       - name: Site manifests (schema v0.2, rules, parity with press/folio/shop)
         run: |
           bun install --frozen-lockfile

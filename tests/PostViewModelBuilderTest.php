@@ -38,7 +38,7 @@ final class PostViewModelBuilderTest extends TestCase
             null,
         ));
         self::assertSame([
-            'id', 'title', 'content', 'slug', 'url', 'excerpt', 'featuredImage', 'thumbnail', 'categories', 'tags',
+            'id', 'kind', 'title', 'content', 'slug', 'url', 'excerpt', 'featuredImage', 'thumbnail', 'categories', 'tags',
             'author', 'postClass', 'linkPages', 'prev', 'next', 'mimeType', 'isAttachment', 'date',
         ], array_keys($vm));
         self::assertInstanceOf(TrustedHtml::class, $vm['content']);

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- `schema/theme-context.schema.json` is now a byte copy of the @ui8kit/contract view profile view/v1 (`schemas/view.schema.json`, $id `https://schema.buildy.tw/view.schema.json`), pinned in `schema/VIEW_SCHEMA_SOURCE` ([fa81e13](https://github.com/ui8kit/contract/commit/fa81e13)). The CI step `tools/qa/view-schema-sync.sh` fails when the copy drifts. The validator registers the schema under its own $id. The context adds `kind` on every entry view and `profile: view/v1` in the shell. Templates are untouched and the HTML is unchanged.
+
 ### Security
 - WordPress core 7.1.4+ recommended (README → Security): CVE-2026-119977, core RCE in 4.7–7.1.3
   (https://www.tenable.com/cve/CVE-2026-119977). CI runs on 7.1.4 and fails on an older core

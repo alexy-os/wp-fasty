@@ -17,7 +17,7 @@ use WPFasty\Core\Model\Post;
  * Mapping (docs/definition-of-done.md, "Contract mapping"): id -> "<kind>-<id>" (Mapper::entry), kind, slug, title,
  * content (rendered HTML string), excerpt. The template context is a view projection, not an entry: locale, status,
  * visibility, version, created_at, updated_at and the other entry fields are not in it, so the whole context is
- * validated by the local schema/theme-context.schema.json (ContextSchemaTest); the contract has no view-context schema.
+ * validated by schema/theme-context.schema.json (ContextSchemaTest), the view profile view/v1 copied from the contract.
  */
 final class PostContractSchemaTest extends TestCase
 {

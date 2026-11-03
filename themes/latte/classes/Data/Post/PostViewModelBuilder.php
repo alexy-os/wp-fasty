@@ -18,6 +18,7 @@ final class PostViewModelBuilder
     {
         $data = [
             'id' => $post->id,
+            'kind' => $post->kind,
             'title' => $post->title,
             'content' => $post->content,
             'slug' => $post->slug,

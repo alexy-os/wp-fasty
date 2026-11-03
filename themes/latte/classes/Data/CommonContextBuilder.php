@@ -27,6 +27,7 @@ final class CommonContextBuilder
 
     /**
      * @return array{
+     *   profile: 'view/v1',
      *   site: array<string, mixed>,
      *   menu: array<string, mixed>,
      *   shell: string,
@@ -41,6 +42,7 @@ final class CommonContextBuilder
         $shell = $this->siteBuilder->shell($request->shell);
 
         return [
+            'profile' => 'view/v1',
             'site' => $this->siteBuilder->site($site, $request->year),
             'menu' => $this->menuBuilder->build($this->menus->itemsByLocation()),
             'shell' => $shell,
