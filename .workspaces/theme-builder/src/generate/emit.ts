@@ -60,7 +60,7 @@ export function styleCss(m: J, body: string): string {
 
 /**
  * The parent theme a child runs on: the engine's own parent build (ADR-001, K7: isolated runtimes) — `twig` for
- * engine twig (twig.zip), the preset (`latte`, wp-fasty.zip) otherwise.
+ * engine twig (twig.zip), the preset (`wp-fasty`, wp-fasty.zip) otherwise.
  */
 export function parentSlug(m: J): string {
   return m.engine === "twig" ? "twig" : (m.parent?.preset ?? "wp-fasty");

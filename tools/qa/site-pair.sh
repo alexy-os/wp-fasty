@@ -14,7 +14,7 @@ fetch)
   WP="$2"; BASE="$3"; THEME="$4"; OUT="$5"; shift 5
   mkdir -p "$OUT"; cd "$WP" || exit 2
   wp theme activate "$THEME" --quiet || { echo "✗ $THEME: wp theme activate failed"; exit 1; }
-  eng=$(wp eval 'echo get_template();'); other=$([ "$eng" = twig ] && echo latte || echo twig)
+  tpl=$(wp eval 'echo get_template();'); eng=$([ "$tpl" = twig ] && echo twig || echo latte); other=$([ "$eng" = twig ] && echo latte || echo twig)
   fail=0
   for spec in "$@"; do
     IFS='|' read -r path want <<<"$spec"; want="${want:-200}"
@@ -36,8 +36,8 @@ compare)
   for a in "$A"/*.html; do
     case "$a" in *.norm) continue ;; esac
     b="$B/$(basename "$a")"; [ -f "$b" ] || { echo "✗ $SB: no $(basename "$a")"; fail=1; continue; }
-    sed -e "s#/themes/twig/#/themes/wp-fasty/#g" -e "s#wp-theme-twig#wp-theme-latte#g" -e "s#$SB#@site@#g" "$b" > "$b.norm"
-    sed -e "s#/themes/twig/#/themes/wp-fasty/#g" -e "s#wp-theme-twig#wp-theme-latte#g" -e "s#$SA#@site@#g" "$a" > "$a.norm"
+    sed -e "s#/themes/twig/#/themes/wp-fasty/#g" -e "s#wp-theme-twig#wp-theme-wp-fasty#g" -e "s#$SB#@site@#g" "$b" > "$b.norm"
+    sed -e "s#/themes/twig/#/themes/wp-fasty/#g" -e "s#wp-theme-twig#wp-theme-wp-fasty#g" -e "s#$SA#@site@#g" "$a" > "$a.norm"
     if r=$(php "$ROOT/tools/parity/compare.php" "$a.norm" "$b.norm"); then
       echo "✓ $SA = $SB $(basename "$a" .html): $r"
     else

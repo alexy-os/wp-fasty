@@ -232,8 +232,10 @@ jobs:
           # Every site ships only its engine: the parent of that engine, its views, its builder runtime.
           for s in $(cat dist/sites.txt); do
             e=$(bun -e "console.log(require('./dist/$s/site.manifest.json').engine ?? 'latte')"); o=$([ "$e" = twig ] && echo latte || echo twig)
-            test -f "dist/$s/$e.zip"; test ! -f "dist/$s/$o.zip"
-            unzip -p "dist/$s/$s.zip" "$s/style.css" | grep -q "^Template: $e\$"
+            # parent of the engine: wp-fasty (Latte) or twig
+            pe=$([ "$e" = twig ] && echo twig || echo wp-fasty); po=$([ "$e" = twig ] && echo wp-fasty || echo twig)
+            test -f "dist/$s/$pe.zip"; test ! -f "dist/$s/$po.zip"
+            unzip -p "dist/$s/$s.zip" "$s/style.css" | grep -q "^Template: $pe\$"
             ! unzip -Z1 "dist/$s/$s.zip" | grep -E "$([ "$e" = twig ] && echo '\.latte$' || echo '\.html\.twig$')"
             [ ! -f "dist/$s/wpfasty-builder.zip" ] || ! unzip -Z1 "dist/$s/wpfasty-builder.zip" | grep -qE "sources/ui8kit/$o/|primitives/$o/"
           done
