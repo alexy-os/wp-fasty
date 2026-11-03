@@ -62,3 +62,19 @@ Parent theme `wp-fasty` only (no plugins), PHP 8.5, demo posts in a "Guides" cat
 three-page post (`<!--nextpage-->`); lands on `/multipage-post/2/`. The theme zip is committed at `playground/zips/wp-fasty.zip`
 (built by `tools/playground-build.sh`; raw.githubusercontent.com sends CORS headers) because the gist above hit its size
 quota on 2026-11-03. Refresh it by rebuilding and copying `playground/wp-fasty.zip` there.
+
+## Shop + Builder: `playground/shop/blueprint.json`
+
+https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/alexy-os/wp-fasty/main/playground/shop/blueprint.json
+
+Child theme `latte-shop` on the `wp-fasty` parent, PHP 8.5, plugins WP FastY Types + WP FastY Builder (page builder:
+wp-admin → Pages → Builder, `/wp-admin/edit.php?post_type=page&page=wpfasty-builder`; the shop landings are seeded) and
+ModulY with the signed `cart` and `orders` modules; demo products, `/shop/`, `/cart/`, `/checkout/`. The ModulY `types`
+module is not installed: it still types `wpfasty_post_data` with `WP_Post` (the theme passes the Core Post DTO since
+3e69f59) and ModulY disables it with a fatal; the theme's own type registry serves the product type.
+
+The zips are assets of the rolling GitHub release `playground` (https://github.com/alexy-os/wp-fasty/releases/tag/playground),
+loaded through the WordPress Playground CORS proxy (`https://wordpress-playground-cors-proxy.net/?<asset url>`: release
+asset downloads send no CORS headers). The **Playground** workflow rebuilds them and replaces the changed ones with
+`tools/playground-release.sh --push`, then downloads every asset back through the proxy and fails on any mismatch.
+The gist mirror above is frozen (size quota, 2026-11-03); the inline `urls.txt` previews still point at it.

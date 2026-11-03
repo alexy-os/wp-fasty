@@ -1,0 +1,151 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "meta": {
+    "title": "WP FastY Shop + Builder",
+    "description": "Child theme latte-shop on the wp-fasty parent, WP FastY Builder (page builder) with seeded landings, ModulY cart and orders modules (post types from the theme registry; the ModulY types module still expects WP_Post in wpfasty_post_data, so it is not installed), demo products. Zips: GitHub release `playground` (rolling, rebuilt by the Playground workflow).",
+    "author": "alexy-os"
+  },
+  "landingPage": "/",
+  "preferredVersions": {
+    "php": "8.5",
+    "wp": "latest"
+  },
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin"
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wp-fasty.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/wp-fasty.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/latte-shop.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/latte-shop.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/demo.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/demo.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wpfasty-types.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/wpfasty-types.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wpfasty-builder.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/wpfasty-builder.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/moduly.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-cart.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/moduly-cart.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-orders.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/moduly-orders.zip"
+      }
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wp-fasty.zip",
+      "extractToPath": "/wordpress/wp-content/themes"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/latte-shop.zip",
+      "extractToPath": "/wordpress/wp-content/themes"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/demo.zip",
+      "extractToPath": "/wordpress/wp-content"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wpfasty-types.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "wpfasty-types/wpfasty-types.php"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wpfasty-builder.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "wpfasty-builder/wpfasty-builder.php"
+    },
+    {
+      "step": "activateTheme",
+      "themeFolderName": "latte-shop"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/moduly.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "moduly/moduly.php"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php @mkdir('/wordpress/wp-content/uploads/moduly', 0755, true); copy('/tmp/moduly-cart.zip', '/wordpress/wp-content/uploads/moduly/cart.zip'); copy('/tmp/moduly-orders.zip', '/wordpress/wp-content/uploads/moduly/orders.zip');"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; $p = PhpFasty\\Moduly\\Wp\\Plugin::instance(); if (!$p) { throw new Exception('ModulY did not boot'); } foreach (['cart', 'orders'] as $id) { $p->modules->install('/tmp/moduly-' . $id . '.zip', true); }"
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "permalink_structure": "/%postname%/"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; require '/wordpress/wp-content/wpfasty-demo/shop.php'; flush_rewrite_rules();"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; $files = glob('/wordpress/wp-content/wpfasty-demo/landings/shop*.json'); usort($files, static fn ($a, $b) => strlen($a) <=> strlen($b)); foreach ($files as $f) { $r = WPFastyBuilder\\Seeder::landing(json_decode(file_get_contents($f), true)); if (is_wp_error($r)) { throw new Exception(basename($f) . ': ' . $r->get_error_message()); } }"
+    }
+  ]
+}

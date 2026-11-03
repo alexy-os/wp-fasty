@@ -1,9 +1,9 @@
 name: Playground
 
 # Rebuild the WordPress Playground preview zips (tools/playground-build.sh, the same script as locally) and publish
-# them to the preview gist (tools/playground-publish.sh) as <name>.zip.b64. The raw URLs carry no revision, so
-# playground/urls.txt and the blueprints never change. Only zips whose content changed are rewritten; no change → no
-# gist commit. Manual run: `gh workflow run playground.yml --repo alexy-os/wp-fasty` (or Actions → Playground → Run).
+# them as assets of the rolling GitHub release `playground` (tools/playground-release.sh; the gist hit its size quota on
+# 2026-11-03 and its push failure was hidden by `| tee`). Only zips whose content changed are replaced; the step fails
+# when an upload fails or an asset does not come back identical through the Playground CORS proxy. Manual run: `gh workflow run playground.yml --repo alexy-os/wp-fasty` (or Actions → Playground → Run).
 
 on:
   workflow_dispatch:
@@ -22,6 +22,8 @@ on:
       - "tools/playground-build.sh"
       - "tools/playground-publish.sh"
       - "playground/*.json"
+      - "playground/shop/**"
+      - "tools/playground-release.sh"
       - "presets/**"
       - "manifests/examples/**"
       - ".workspaces/theme-builder/**"
@@ -29,13 +31,13 @@ on:
       - "composer.lock"
       - ".github/workflows/playground.yml"
 
-# one publish at a time; a newer push waits for the running one instead of racing it on the gist
+# one publish at a time; a newer push waits for the running one instead of racing it on the release assets
 concurrency:
-  group: playground-gist
+  group: playground-release
   cancel-in-progress: false
 
 permissions:
-  contents: read
+  contents: write  # release assets of the rolling `playground` release
 
 jobs:
   publish:
@@ -67,21 +69,10 @@ jobs:
       - name: Build the ten zips (tools/playground-build.sh)
         run: bash tools/playground-build.sh
 
-      - name: Clone the preview gist
+      - name: Publish changed zips to the rolling release `playground`, check every asset via the CORS proxy (200 + content)
         env:
-          GIST_TOKEN: ${{ secrets.PLAYGROUND_GIST_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          # the token goes through a credential helper reading the env, never into a URL, argv or the log
-          git config --global credential.helper '!f() { echo username=x-access-token; echo "password=$GIST_TOKEN"; }; f'
-          git clone -q https://gist.github.com/534c59bcd01563580218570cfac273ca.git "$RUNNER_TEMP/gist"
-
-      - name: Publish changed zips, check raw URLs (200 + sha256)
-        env:
-          GIST_TOKEN: ${{ secrets.PLAYGROUND_GIST_TOKEN }}
-        run: |
-          bash tools/playground-publish.sh "$RUNNER_TEMP/gist" --push | tee "$RUNNER_TEMP/publish.txt"
-          { echo "### Playground gist"; echo '```'; cat "$RUNNER_TEMP/publish.txt"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Forget the credential helper
-        if: always()
-        run: git config --global --unset credential.helper || true
+          set -o pipefail
+          bash tools/playground-release.sh --push | tee "$RUNNER_TEMP/publish.txt"
+          { echo "### Playground release assets"; echo '```'; cat "$RUNNER_TEMP/publish.txt"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
