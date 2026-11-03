@@ -83,7 +83,7 @@ wpfasty/
 ├── .project/                 # theme constructor KB
 ├── docs/                     # human-facing documentation
 ├── presets/                  # layouts × blocks × styles × parent presets
-├── schema/                   # site.manifest.schema.json (v0.2)
+├── schema/                   # site.manifest.schema.json (v0.2); theme-context.schema.json = view/v1 copy from @ui8kit/contract (schema/README.md)
 ├── manifests/examples/       # press / folio / shop site manifests
 ├── themes/<slug>/            # WordPress theme instances
 └── tools/

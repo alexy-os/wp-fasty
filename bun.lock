@@ -6,7 +6,7 @@
       "name": "wpfasty",
       "devDependencies": {
         "@modelcontextprotocol/sdk": "^1.32.1",
-        "@ui8kit/contract": "^0.2.0",
+        "@ui8kit/contract": "0.3.0",
         "ajv": "^8",
         "ajv-formats": "^3",
         "zod": "^4.6.7",
@@ -98,7 +98,7 @@
 
     "@tailwindcss/oxide-win32-x64-msvc": ["@tailwindcss/oxide-win32-x64-msvc@4.3.3", "", { "os": "win32", "cpu": "x64" }, "sha512-yJ0pwIVc/nYeGoV02WtsN8KYyLQv7kyI2wDnkezyJlGGjkd4QLwDGAwl47YpPJeuI0M0ObaXGSPjvWDPeTPggw=="],
 
-    "@ui8kit/contract": ["@ui8kit/contract@0.2.0", "", {}, "sha512-Ba+YQPjwSmgFNh3nUYSyt3+Ap/fYUK6IQCXEj33WoDbeT6j0ejmq1ln8wGLHVe5dgBcRhI5/QDPprjgOYkYeXg=="],
+    "@ui8kit/contract": ["@ui8kit/contract@0.3.0", "", {}, "sha512-X5sAUzHnoXpfHT5NT+ntm4Yk7h/f4XMFAsr9XIwDCHYIVrcSwcbCF4AXzk8/qu/m+1kzpbFjvZ73bqgnkFQ0uQ=="],
 
     "@wpfasty/theme-builder": ["@wpfasty/theme-builder@workspace:.workspaces/theme-builder"],
 

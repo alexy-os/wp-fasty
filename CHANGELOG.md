@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- View schema source switched to npm: `@ui8kit/contract` is pinned exactly at `0.3.0` (devDependency). `tools/qa/view-schema-sync.sh` compares the committed `schema/theme-context.schema.json` with `node_modules/@ui8kit/contract/schemas/view.schema.json`.
+
 - `schema/theme-context.schema.json` is now a byte copy of the @ui8kit/contract view profile view/v1 (`schemas/view.schema.json`, $id `https://schema.buildy.tw/view.schema.json`), pinned in `schema/VIEW_SCHEMA_SOURCE` ([fa81e13](https://github.com/ui8kit/contract/commit/fa81e13)). The CI step `tools/qa/view-schema-sync.sh` fails when the copy drifts. The validator registers the schema under its own $id. The context adds `kind` on every entry view and `profile: view/v1` in the shell. Templates are untouched and the HTML is unchanged.
 
 ### Security
