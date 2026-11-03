@@ -654,7 +654,8 @@ jobs:
             o=$([ "$e" = twig ] && echo latte || echo twig); site=$([ "$e" = twig ] && echo latte-press-twig || echo latte-press)
             echo "::group::$e sites, $o absent"
             use-builder "$e"
-            mv "wp-content/themes/$o" "/tmp/parent-$o"
+            po=$([ "$o" = twig ] && echo twig || echo wp-fasty)  # parent theme dir of the absent engine
+            mv "wp-content/themes/$po" "/tmp/parent-$o"
             # Physically absent: no class of the other library anywhere in wp-content, no other-runtime builder source.
             if grep -rlE --include='*.php' "^namespace $(ns "$o")(\\\\|;)" wp-content | head -3 | grep .; then echo "::error::$o classes present in the $e phase"; fail=1; fi
             [ ! -d "wp-content/plugins/wpfasty-builder/sources/ui8kit/$o" ] || { echo "::error::builder ships the $o source"; fail=1; }
@@ -683,7 +684,7 @@ jobs:
             wp option delete wpfasty_qa_renderer --quiet
             echo "- $site forced to $o ($o absent): HTTP $code, engine error $m, notices $n"
             [ "$code" = 500 ] && [ "$m" -ge 1 ] && [ "$n" -eq 0 ] || { echo "::error::$site forced to $o: HTTP $code, engine error $m, notices $n"; fail=1; }
-            mv "/tmp/parent-$o" "wp-content/themes/$o"
+            mv "/tmp/parent-$o" "wp-content/themes/$po"
             echo "::endgroup::"
             echo "- Mirror $e (with $o physically absent): sites, remote $e registry v$V import + render, negatives: $([ $fail -eq 0 ] && echo ok || echo FAIL)" >> "$GITHUB_STEP_SUMMARY"
           done
