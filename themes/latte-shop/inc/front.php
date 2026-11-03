@@ -344,7 +344,8 @@ final class Front
     }
 
     /**
-     * Product view-model (module `context` of types/product.php, receives the Core Post DTO): prices and stock from the cart module.
+     * Product view-model (module `context` of types/product.php, receives the Core Post DTO): prices and stock from
+     * the cart module.
      *
      * @param array<string, mixed> $data
      *

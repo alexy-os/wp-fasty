@@ -261,7 +261,8 @@ final class Front
     }
 
     /**
-     * Product view-model (module `context` of types/product.php, receives the Core Post DTO): prices, licenses and reviews from the modules,
+     * Product view-model (module `context` of types/product.php, receives the Core Post DTO): prices, licenses and
+     * reviews from the modules,
      * digital-goods details from the product fields.
      *
      * @param array<string, mixed> $data

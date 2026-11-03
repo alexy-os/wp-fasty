@@ -53,7 +53,8 @@ final class PostRepository implements WordPressPostRepositoryInterface
         $posts = [];
         global $wp_query;
         if ($wp_query instanceof \WP_Query) {
-            $this->prime(array_values(array_filter(is_array($wp_query->posts) ? $wp_query->posts : [], static fn ($p): bool => $p instanceof \WP_Post)));
+            $queried = is_array($wp_query->posts) ? $wp_query->posts : [];
+            $this->prime(array_values(array_filter($queried, static fn ($p): bool => $p instanceof \WP_Post)));
         }
         if (have_posts()) {
             while (have_posts()) {
@@ -124,13 +125,24 @@ final class PostRepository implements WordPressPostRepositoryInterface
         }
 
         $categories = [];
-        foreach ((is_object_in_taxonomy($post->post_type, 'category') ? get_the_category($post->ID) : []) ?: [] as $cat) {
-            $categories[] = new Term('category', (string) $cat->name, (string) $cat->slug, (string) get_category_link($cat->term_id));
+        $wpCategories = is_object_in_taxonomy($post->post_type, 'category') ? get_the_category($post->ID) : [];
+        foreach ($wpCategories ?: [] as $cat) {
+            $categories[] = new Term(
+                'category',
+                (string) $cat->name,
+                (string) $cat->slug,
+                (string) get_category_link($cat->term_id),
+            );
         }
         $tags = [];
         $wpTags = is_object_in_taxonomy($post->post_type, 'post_tag') ? get_the_tags($post->ID) : false;
         foreach (is_array($wpTags) ? $wpTags : [] as $tag) {
-            $tags[] = new Term('post_tag', (string) $tag->name, (string) $tag->slug, (string) get_tag_link($tag->term_id));
+            $tags[] = new Term(
+                'post_tag',
+                (string) $tag->name,
+                (string) $tag->slug,
+                (string) get_tag_link($tag->term_id),
+            );
         }
 
         $authorId = (int) $post->post_author;
@@ -147,14 +159,16 @@ final class PostRepository implements WordPressPostRepositoryInterface
         $next = null;
         if ($singular && !$isAttachment) {
             // the split WP_Query::setup_postdata() does, without touching the globals: content of the current page
-            // only, plus the pages primitive (wp_link_pages() needs those globals and printed nothing here, chaosbun#119)
+            // only, plus the pages primitive (wp_link_pages() needs those globals and printed nothing here,
+            // chaosbun#119)
             global $wp_query;
             $postdata = !$locked && $wp_query instanceof \WP_Query ? $wp_query->generate_postdata($post) : false;
             if (is_array($postdata) && is_array($postdata['pages'] ?? null) && count($postdata['pages']) > 1) {
                 $parts = array_values(array_map(\WPFasty\Core\Cast::string(...), $postdata['pages']));
                 $current = max(1, min(count($parts), \WPFasty\Core\Cast::int($postdata['page'] ?? 1)));
                 $content = $parts[$current - 1];
-                $pages = new PostPages($current, array_map(fn (int $i): string => $this->pageUrl($post, $i), range(1, count($parts))));
+                $urls = array_map(fn (int $i): string => $this->pageUrl($post, $i), range(1, count($parts)));
+                $pages = new PostPages($current, $urls);
                 $linkPages = $this->linkPages($post);
             }
             if ('post' === $post->post_type) {
@@ -239,7 +253,9 @@ final class PostRepository implements WordPressPostRepositoryInterface
         if (!get_option('permalink_structure') || in_array($post->post_status, ['draft', 'pending'], true)) {
             return add_query_arg('page', $i, $url);
         }
-        if ('page' === get_option('show_on_front') && \WPFasty\Core\Cast::int(get_option('page_on_front')) === $post->ID) {
+        $isFrontPage = 'page' === get_option('show_on_front')
+            && \WPFasty\Core\Cast::int(get_option('page_on_front')) === $post->ID;
+        if ($isFrontPage) {
             global $wp_rewrite;
             $base = $wp_rewrite instanceof \WP_Rewrite ? $wp_rewrite->pagination_base : 'page';
 

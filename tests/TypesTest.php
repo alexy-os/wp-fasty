@@ -140,7 +140,8 @@ final class TypesTest extends TestCase
         $data = $r->postData(['id' => 5], $post);
         self::assertSame([Post::class, 5, 'note', 'n', 'note', 'calm'], $data['seen']);
         // a kind without a module keeps its view-model as is
-        self::assertSame(['id' => 6], $r->postData(['id' => 6], new Post(6, 'post', 'p', 'P', TrustedHtml::empty(), '', '/p/', '', '')));
+        $other = new Post(6, 'post', 'p', 'P', TrustedHtml::empty(), '', '/p/', '', '');
+        self::assertSame(['id' => 6], $r->postData(['id' => 6], $other));
     }
 
     private function registry(): Registry

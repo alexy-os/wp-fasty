@@ -15,8 +15,6 @@ use WPFasty\Template\RendererInterface;
 use WPFasty\Template\TwigRenderer;
 use WPFasty\Theme\PrimitivesLocator;
 
-require_once \dirname(__DIR__).'/tools/qa/context-schema.php';
-
 /**
  * chaosbun#119: a multi-page entry (`<!--nextpage-->`) gets the view/v1 `pages` primitive and both engines render the
  * Pages nav from it (escaped data, no raw HTML); the nav markup is pinned by an HTML snapshot.
@@ -24,6 +22,11 @@ require_once \dirname(__DIR__).'/tools/qa/context-schema.php';
 final class PostPagesTest extends TestCase
 {
     private const SNAPSHOT = __DIR__.'/fixtures/snapshots/post-pages-nav.html';
+
+    public static function setUpBeforeClass(): void
+    {
+        require_once \dirname(__DIR__).'/tools/qa/context-schema.php';
+    }
 
     /** @return iterable<string, array{int, list<string>}> */
     public static function invalidPages(): iterable
@@ -84,16 +87,23 @@ final class PostPagesTest extends TestCase
     public function testLatteAndTwigRenderTheSamePagesNavAsTheSnapshot(): void
     {
         $root = dirname(__DIR__);
-        $fx = json_decode((string) file_get_contents($root.'/tests/fixtures/parity/latte/single-multipage.json'), true, 512, JSON_THROW_ON_ERROR);
+        $fixture = (string) file_get_contents($root.'/tests/fixtures/parity/latte/single-multipage.json');
+        $fx = json_decode($fixture, true, 512, JSON_THROW_ON_ERROR);
         self::assertIsArray($fx);
         $ctx = ContextHtml::trust($fx['context']);
         $cache = sys_get_temp_dir().'/wpfasty-post-pages-'.getmypid();
         $views = [$root.'/themes/latte-press/views', $root.'/themes/latte/views'];
         $renderers = [
             'latte' => new LatteRenderer([...$views, ...PrimitivesLocator::latteRoots($root.'/themes/latte')], $cache),
-            'twig' => new TwigRenderer([...$views, ...PrimitivesLocator::twigRoots($root.'/themes/latte')], $cache.'/twig'),
+            'twig' => new TwigRenderer(
+                [...$views, ...PrimitivesLocator::twigRoots($root.'/themes/latte')],
+                $cache.'/twig',
+            ),
         ];
-        $navs = array_map(fn (RendererInterface $r): string => $this->nav($r->render('blocks/post-content', $ctx)), $renderers);
+        $navs = array_map(
+            fn (RendererInterface $r): string => $this->nav($r->render('blocks/post-content', $ctx)),
+            $renderers,
+        );
 
         self::assertSame($navs['latte'], $navs['twig']);
         self::assertSame(trim((string) file_get_contents(self::SNAPSHOT)), $navs['latte']);
