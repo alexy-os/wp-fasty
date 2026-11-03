@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-03T20:15:13+03:00\n"
+"POT-Creation-Date: 2026-11-03T17:50:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: latte\n"
@@ -40,11 +40,11 @@ msgstr ""
 msgid "https://github.com/alexy-os"
 msgstr ""
 
-#: classes/Adapter/WordPress/PostRepository.php:222
+#: classes/Adapter/WordPress/PostRepository.php:236
 msgid "Pages"
 msgstr ""
 
-#: classes/Adapter/WordPress/PostRepository.php:223
+#: classes/Adapter/WordPress/PostRepository.php:237
 #: classes/Adapter/WordPress/WordPressLabelProvider.php:39
 msgid "Pages:"
 msgstr ""
