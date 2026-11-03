@@ -1,0 +1,163 @@
+{
+  "kind": "page",
+  "context": {
+    "profile": "view/v1",
+    "site": {
+      "title": "Example",
+      "description": "A Codex site",
+      "url": "https://example.test/",
+      "lang": "en-US",
+      "dir": "ltr",
+      "charset": "UTF-8",
+      "locale": "en_US",
+      "year": "2026",
+      "logo": {
+        "url": "https://example.test/logo.svg",
+        "width": "120",
+        "height": "32",
+        "alt": "Example"
+      },
+      "currency": "USD"
+    },
+    "menu": {
+      "primary": {
+        "items": [
+          {
+            "id": 1,
+            "title": "Home",
+            "url": "https://example.test/",
+            "current": false,
+            "ancestor": false,
+            "children": []
+          },
+          {
+            "id": 2,
+            "title": "Blog",
+            "url": "https://example.test/blog/",
+            "current": false,
+            "ancestor": true,
+            "children": [
+              {
+                "id": 3,
+                "title": "News",
+                "url": "https://example.test/category/news/",
+                "current": true,
+                "ancestor": false,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "Shop",
+            "url": "https://example.test/shop/",
+            "current": false,
+            "ancestor": false,
+            "children": []
+          }
+        ]
+      },
+      "footer": {
+        "items": [
+          {
+            "id": 5,
+            "title": "Privacy",
+            "url": "https://example.test/privacy/",
+            "current": false,
+            "ancestor": false,
+            "children": []
+          }
+        ]
+      }
+    },
+    "labels": {
+      "skipToContent": "Skip to content",
+      "previous": "Previous",
+      "next": "Next",
+      "pagination": "Pagination",
+      "postedOn": "Posted on",
+      "byAuthor": "By",
+      "categories": "Categories",
+      "tags": "Tags",
+      "noPosts": "No posts found.",
+      "pages": "Pages:"
+    },
+    "search": {
+      "action": "https://example.test/",
+      "query": "",
+      "placeholder": "Search…",
+      "submit": "Search",
+      "label": "Search"
+    },
+    "widgets": {
+      "sidebar": "<section class=\"widget\"><h2>About</h2><p>Hello</p></section>",
+      "footer": ""
+    },
+    "head": {
+      "title": "Example",
+      "description": "A Codex site",
+      "canonical": "https://example.test/",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:title": "Example"
+      },
+      "twitter": {
+        "twitter:card": "summary"
+      },
+      "jsonLd": [
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Example",
+          "url": "https://example.test/"
+        }
+      ]
+    },
+    "request": {
+      "pageType": "single",
+      "paged": 1,
+      "loggedIn": false,
+      "canEdit": false,
+      "consent": {
+        "analytics": false
+      },
+      "kind": "post"
+    },
+    "breadcrumbs": [],
+    "page": {
+      "id": 9,
+      "kind": "post",
+      "title": "Protected: Secret",
+      "slug": "secret",
+      "url": "https://example.test/secret/",
+      "excerpt": "",
+      "content": "<form class=\"post-password-form\"><input type=\"password\" name=\"post_password\"></form>",
+      "status": "published",
+      "date": {
+        "display": "November 3, 2026",
+        "iso": "2026-11-03T10:00:00+03:00"
+      },
+      "featuredImage": null,
+      "thumbnail": null,
+      "categories": [],
+      "tags": [],
+      "terms": {},
+      "author": {
+        "name": "Ann",
+        "url": "https://example.test/author/ann/",
+        "id": 1
+      },
+      "fields": {},
+      "linkPages": "",
+      "prev": null,
+      "next": null,
+      "isAttachment": false,
+      "mimeType": "",
+      "commentsOpen": false,
+      "commentCount": 0,
+      "protected": true
+    },
+    "comments": ""
+  }
+}

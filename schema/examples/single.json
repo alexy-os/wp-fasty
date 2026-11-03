@@ -1,0 +1,282 @@
+{
+  "kind": "page",
+  "context": {
+    "profile": "view/v1",
+    "site": {
+      "title": "Example",
+      "description": "A Codex site",
+      "url": "https://example.test/",
+      "lang": "en-US",
+      "dir": "ltr",
+      "charset": "UTF-8",
+      "locale": "en_US",
+      "year": "2026",
+      "logo": {
+        "url": "https://example.test/logo.svg",
+        "width": "120",
+        "height": "32",
+        "alt": "Example"
+      },
+      "currency": "USD"
+    },
+    "menu": {
+      "primary": {
+        "items": [
+          {
+            "id": 1,
+            "title": "Home",
+            "url": "https://example.test/",
+            "current": false,
+            "ancestor": false,
+            "children": []
+          },
+          {
+            "id": 2,
+            "title": "Blog",
+            "url": "https://example.test/blog/",
+            "current": false,
+            "ancestor": true,
+            "children": [
+              {
+                "id": 3,
+                "title": "News",
+                "url": "https://example.test/category/news/",
+                "current": true,
+                "ancestor": false,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "Shop",
+            "url": "https://example.test/shop/",
+            "current": false,
+            "ancestor": false,
+            "children": []
+          }
+        ]
+      },
+      "footer": {
+        "items": [
+          {
+            "id": 5,
+            "title": "Privacy",
+            "url": "https://example.test/privacy/",
+            "current": false,
+            "ancestor": false,
+            "children": []
+          }
+        ]
+      }
+    },
+    "labels": {
+      "skipToContent": "Skip to content",
+      "previous": "Previous",
+      "next": "Next",
+      "pagination": "Pagination",
+      "postedOn": "Posted on",
+      "byAuthor": "By",
+      "categories": "Categories",
+      "tags": "Tags",
+      "noPosts": "No posts found.",
+      "pages": "Pages:"
+    },
+    "search": {
+      "action": "https://example.test/",
+      "query": "",
+      "placeholder": "Search…",
+      "submit": "Search",
+      "label": "Search"
+    },
+    "widgets": {
+      "sidebar": "<section class=\"widget\"><h2>About</h2><p>Hello</p></section>",
+      "footer": ""
+    },
+    "head": {
+      "title": "Example",
+      "description": "A Codex site",
+      "canonical": "https://example.test/hello-world/",
+      "robots": "index, follow",
+      "og": {
+        "og:type": "website",
+        "og:title": "Example"
+      },
+      "twitter": {
+        "twitter:card": "summary"
+      },
+      "jsonLd": [
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Example",
+          "url": "https://example.test/"
+        }
+      ]
+    },
+    "request": {
+      "pageType": "single",
+      "paged": 1,
+      "loggedIn": false,
+      "canEdit": false,
+      "consent": {
+        "analytics": false
+      },
+      "kind": "post",
+      "path": "/hello-world/"
+    },
+    "breadcrumbs": [
+      {
+        "title": "Home",
+        "url": "https://example.test/"
+      },
+      {
+        "title": "News",
+        "url": "https://example.test/category/news/"
+      }
+    ],
+    "page": {
+      "id": 7,
+      "kind": "post",
+      "title": "Hello world",
+      "slug": "hello-world",
+      "url": "https://example.test/hello-world/",
+      "excerpt": "Short plain excerpt.",
+      "content": "<p>Body of Hello world.</p>",
+      "status": "published",
+      "date": {
+        "display": "November 3, 2026",
+        "iso": "2026-11-03T10:00:00+03:00"
+      },
+      "featuredImage": {
+        "url": "https://example.test/m/cover-1200.jpg",
+        "width": 1200,
+        "height": 630,
+        "alt": "Cover",
+        "srcset": "https://example.test/m/cover-600.jpg 600w, https://example.test/m/cover-1200.jpg 1200w",
+        "sizes": "(max-width: 600px) 100vw, 1200px",
+        "mediaId": "media-12"
+      },
+      "thumbnail": {
+        "url": "https://example.test/m/cover-1200.jpg",
+        "width": 1200,
+        "height": 630,
+        "alt": "Cover",
+        "srcset": "https://example.test/m/cover-600.jpg 600w, https://example.test/m/cover-1200.jpg 1200w",
+        "sizes": "(max-width: 600px) 100vw, 1200px",
+        "mediaId": "media-12"
+      },
+      "categories": [
+        {
+          "name": "News",
+          "slug": "news",
+          "url": "https://example.test/category/news/",
+          "taxonomy": "category"
+        }
+      ],
+      "tags": [
+        {
+          "name": "Alpha",
+          "slug": "alpha",
+          "url": "https://example.test/tag/alpha/",
+          "taxonomy": "tag"
+        }
+      ],
+      "terms": {
+        "category": [
+          {
+            "name": "News",
+            "slug": "news",
+            "url": "https://example.test/category/news/",
+            "taxonomy": "category"
+          }
+        ],
+        "post_tag": [
+          {
+            "name": "Alpha",
+            "slug": "alpha",
+            "url": "https://example.test/tag/alpha/",
+            "taxonomy": "tag"
+          }
+        ]
+      },
+      "author": {
+        "name": "Ann",
+        "url": "https://example.test/author/ann/",
+        "id": 1
+      },
+      "fields": {},
+      "linkPages": "",
+      "prev": {
+        "title": "Older",
+        "url": "https://example.test/older/"
+      },
+      "next": {
+        "title": "Newer",
+        "url": "https://example.test/newer/"
+      },
+      "isAttachment": false,
+      "mimeType": "",
+      "commentsOpen": true,
+      "commentCount": 1,
+      "readingTime": 3,
+      "related": [
+        {
+          "id": 8,
+          "kind": "post",
+          "title": "Older",
+          "slug": "older",
+          "url": "https://example.test/older/",
+          "excerpt": "Short plain excerpt.",
+          "content": "<p>Body of Older.</p>",
+          "status": "published",
+          "date": {
+            "display": "November 3, 2026",
+            "iso": "2026-11-03T10:00:00+03:00"
+          },
+          "featuredImage": null,
+          "thumbnail": null,
+          "categories": [],
+          "tags": [],
+          "terms": {},
+          "author": {
+            "name": "Ann",
+            "url": "https://example.test/author/ann/",
+            "id": 1
+          },
+          "fields": {},
+          "linkPages": "",
+          "prev": null,
+          "next": null,
+          "isAttachment": false,
+          "mimeType": "",
+          "commentsOpen": false,
+          "commentCount": 0
+        }
+      ]
+    },
+    "comments": "<section id=\"comments\"><ol><li>Nice.</li></ol></section>",
+    "commentsView": {
+      "open": true,
+      "count": 1,
+      "items": [
+        {
+          "id": 31,
+          "author": {
+            "name": "Bob",
+            "url": ""
+          },
+          "content": "<p>Nice.</p>",
+          "date": {
+            "display": "Nov 3",
+            "iso": "2026-11-03T11:00:00+03:00"
+          },
+          "status": "approved",
+          "children": []
+        }
+      ],
+      "pagination": null,
+      "form": "<form class=\"comment-form\"></form>"
+    }
+  }
+}

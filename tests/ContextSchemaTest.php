@@ -46,11 +46,25 @@ final class ContextSchemaTest extends TestCase
         self::assertSame([], wpfasty_context_schema_errors($b->build($attachment), 'post'));
     }
 
+    /** schema/examples/*.json: one context per page type (view/v1), each valid against its root def. */
+    public function testExamplesPerPageTypeAreValid(): void
+    {
+        $files = glob(\dirname(__DIR__).'/schema/examples/*.json') ?: [];
+        self::assertGreaterThanOrEqual(19, \count($files));
+        foreach ($files as $file) {
+            $doc = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+            self::assertIsArray($doc);
+            self::assertContains($doc['kind'] ?? null, ['page', 'archive', 'error'], basename($file));
+            self::assertSame([], wpfasty_context_schema_errors($doc['context'], $doc['kind'].'Context'), basename($file));
+        }
+    }
+
     public function testSchemaRejectsABrokenPost(): void
     {
         $vm = (new PostViewModelBuilder())->build(new Post(1, 'post', 's', 'T', TrustedHtml::empty(), '', '/', '', ''));
-        unset($vm['excerpt']);
-        $vm['id'] = 'post-1';
+        unset($vm['url']);
+        $vm['title'] = 42;
+        $vm['kind'] = 'Not A Kind';
         self::assertNotSame([], wpfasty_context_schema_errors($vm, 'post'));
     }
 

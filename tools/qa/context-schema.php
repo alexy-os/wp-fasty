@@ -27,6 +27,10 @@ if (!function_exists('wpfasty_context_schema_errors')) {
         if (null === $validator) {
             $validator = new Validator();
             $validator->resolver()?->registerFile('https://wpfasty.dev/schema/theme-context.schema.json', $schemaFile);
+            // Codex v0.4 record schemas the view profile references (https://schema.buildy.tw/*), from @ui8kit/contract
+            foreach (glob(dirname(__DIR__, 2).'/node_modules/@ui8kit/contract/schemas/*.schema.json') ?: [] as $codex) {
+                $validator->resolver()?->registerFile('https://schema.buildy.tw/'.basename($codex), $codex);
+            }
         }
         // arrays -> objects the way json_decode() gives them (lists stay arrays, maps become objects)
         $json = json_decode((string) json_encode($data, JSON_PRESERVE_ZERO_FRACTION));

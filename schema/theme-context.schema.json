@@ -1,189 +1,1130 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://wpfasty.dev/schema/theme-context.schema.json",
-  "title": "WP FastY theme template context",
-  "description": "What ContextFactory hands to the Latte/Twig views (createPageContext / createArchiveContext / createErrorContext). The post view-model is built from WPFasty\\Core\\Model\\Post, whose id/slug/title/content/excerpt follow the Codex v0.4 entry (ui8kit/contract, WPFastyTypes\\Codex\\Mapper::entry); `kind` maps to isAttachment / the view choice. Filters (wpfasty_post_data, wpfasty_context) may add keys, so objects stay open; the keys below are the contract the parent views rely on.",
+  "title": "View profile view/v1 — template context projected from Codex v0.4",
+  "version": "1.0.0",
+  "x-profile": "view/v1",
+  "x-codex-version": "0.4.0",
+  "description": "The data a view (Latte, Twig, any SSG or front-end) renders a page from, for any backend that speaks Codex v0.4 (github.com/fastygo/codex, @ui8kit/contract). RULE: a view context is a PROJECTION of Codex records (Settings, Dictionary, Menu, Entry of any kind, Term, Comment, Manifest — referenced from https://schema.buildy.tw/*.schema.json, mirror https://raw.githubusercontent.com/ui8kit/contract/main/schemas/) plus a closed set of render-time primitives defined here: link, image, trustedHtml, pagination, menuTree (menuItem), head (seo), date, and the shell (site + labels + request). No new entity types. Arbitrary kinds and fields: `entry.kind` + `entry.fields` typed by Manifest Field types (see fieldValue). Escaping: only trustedHtml values are printed raw. Versioning: profile view/v1; minor versions only ADD optional keys; objects are open (backends and themes may add keys). Root: one of pageContext, archiveContext, errorContext; examples per page type: schema/examples/*.json (each file {\"kind\": \"page|archive|error\", \"context\": …}). Page type is in request.pageType when sent, else inferred: error -> 404, archive.type -> archive family / search, page null -> front with posts, else single/page/attachment by page.kind.",
   "oneOf": [
-    { "$ref": "#/$defs/pageContext" },
-    { "$ref": "#/$defs/archiveContext" },
-    { "$ref": "#/$defs/errorContext" }
+    {
+      "$ref": "#/$defs/pageContext"
+    },
+    {
+      "$ref": "#/$defs/archiveContext"
+    },
+    {
+      "$ref": "#/$defs/errorContext"
+    }
   ],
   "$defs": {
-    "url": { "type": "string" },
-    "html": { "type": "string", "description": "WPFasty\\Core\\Html\\TrustedHtml in PHP (ContextHtml: post content / linkPages, comments, widgets.sidebar / widgets.footer), serialized as its string; the renderers print it raw, every other string is escaped" },
+    "emptyMap": {
+      "type": "array",
+      "maxItems": 0,
+      "description": "An empty map as PHP json_encode writes it ([]); accept it wherever an object map is expected."
+    },
+    "url": {
+      "type": "string",
+      "description": "Absolute or root-relative URL, already resolved by the backend (permalink, term link, page link). Print through the engine's URL escaping."
+    },
+    "text": {
+      "type": "string",
+      "description": "Plain text (entities decoded). Always escaped on output."
+    },
+    "trustedHtml": {
+      "type": "string",
+      "description": "Primitive `trustedHtml`: markup the backend already rendered and sanitized (entry content, link pages, widget areas, comment list + form, richtext/markdown fields). The ONLY kind of value a view prints unescaped; every other string is escaped. In wp-fasty PHP it is WPFasty\\Core\\Html\\TrustedHtml (fields listed in WPFasty\\Core\\Html\\ContextHtml), serialized as its string."
+    },
+    "html": {
+      "$ref": "#/$defs/trustedHtml",
+      "description": "Alias of trustedHtml (kept for v1.0 consumers)."
+    },
+    "isoDate": {
+      "type": "string",
+      "description": "ISO 8601 date-time with offset, e.g. 2026-11-03T10:00:00+03:00 (machine value; for <time datetime>)."
+    },
+    "date": {
+      "type": "object",
+      "required": [
+        "display",
+        "iso"
+      ],
+      "description": "A date as both a localized display string and ISO 8601 (Codex published_at / updated_at / datetime fields projected).",
+      "properties": {
+        "display": {
+          "$ref": "#/$defs/text"
+        },
+        "iso": {
+          "type": "string",
+          "description": "ISO 8601; empty when the entry has no date"
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "required": [
+        "title",
+        "url"
+      ],
+      "description": "Primitive `link`: a resolved target. `title` is the label (plain text). `current` marks the link of the current request.",
+      "properties": {
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "url": {
+          "$ref": "#/$defs/url"
+        },
+        "current": {
+          "type": "boolean"
+        },
+        "rel": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        }
+      }
+    },
     "image": {
       "type": "object",
-      "required": ["url", "width", "height", "alt", "srcset", "sizes"],
+      "required": [
+        "url",
+        "width",
+        "height",
+        "alt"
+      ],
+      "description": "Primitive `image`: a media entry (Codex entry of kind `media`/attachment) resolved for one display size. `srcset`/`sizes` are ready for <img>; width/height are pixels (strings allowed: WordPress gives strings).",
       "properties": {
-        "url": { "$ref": "#/$defs/url" },
-        "width": { "type": ["string", "integer"], "description": "PostRepository gives strings; frozen fixtures may hold integers" },
-        "height": { "type": ["string", "integer"] },
-        "alt": { "type": "string" },
-        "srcset": { "type": "string" },
-        "sizes": { "type": "string" }
+        "url": {
+          "$ref": "#/$defs/url"
+        },
+        "width": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "height": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "alt": {
+          "$ref": "#/$defs/text"
+        },
+        "srcset": {
+          "type": "string"
+        },
+        "sizes": {
+          "type": "string"
+        },
+        "mediaId": {
+          "description": "Codex id of the media entry, when known",
+          "$ref": "https://schema.buildy.tw/entry.schema.json#/properties/id"
+        }
       }
     },
     "term": {
       "type": "object",
-      "required": ["name", "url", "slug"],
-      "properties": { "name": { "type": "string" }, "url": { "$ref": "#/$defs/url" }, "slug": { "type": "string" } }
-    },
-    "link": {
-      "type": "object",
-      "required": ["title", "url"],
-      "properties": { "title": { "type": "string" }, "url": { "$ref": "#/$defs/url" } }
-    },
-    "post": {
-      "type": "object",
-      "required": ["id", "title", "content", "slug", "url", "excerpt", "featuredImage", "thumbnail", "categories", "tags",
-        "author", "postClass", "linkPages", "prev", "next", "mimeType", "isAttachment", "date"],
+      "required": [
+        "name",
+        "url",
+        "slug"
+      ],
+      "description": "Projection of a Codex Term (term.schema.json): name, slug as in the record, plus the resolved archive url.",
       "properties": {
-        "id": { "type": "integer", "minimum": 0, "description": "Codex entry id = <kind>-<id>" },
-        "title": { "type": "string", "description": "Codex title (plain text)" },
-        "content": { "$ref": "#/$defs/html", "description": "Codex content, rendered" },
-        "slug": { "type": "string", "description": "Codex slug" },
-        "url": { "$ref": "#/$defs/url" },
-        "excerpt": { "type": "string", "description": "Codex excerpt (plain text)" },
-        "featuredImage": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/image" }] },
-        "thumbnail": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/image" }] },
-        "categories": { "type": "array", "items": { "$ref": "#/$defs/term" } },
-        "tags": { "type": "array", "items": { "$ref": "#/$defs/term" } },
-        "author": {
-          "oneOf": [
-            { "type": "null" },
-            { "type": "object", "required": ["name", "url"], "properties": { "name": { "type": "string" }, "url": { "$ref": "#/$defs/url" } } }
-          ]
+        "name": {
+          "$ref": "https://schema.buildy.tw/term.schema.json#/properties/name"
         },
-        "postClass": { "type": "string" },
-        "linkPages": { "$ref": "#/$defs/html" },
-        "prev": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/link" }] },
-        "next": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/link" }] },
-        "mimeType": { "type": "string" },
-        "isAttachment": { "type": "boolean" },
-        "attachmentUrl": { "$ref": "#/$defs/url" },
-        "date": {
-          "type": "object",
-          "required": ["display", "iso"],
-          "properties": { "display": { "type": "string" }, "iso": { "type": "string" } }
+        "slug": {
+          "$ref": "https://schema.buildy.tw/term.schema.json#/properties/slug"
+        },
+        "url": {
+          "$ref": "#/$defs/url"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "taxonomy": {
+          "type": "string",
+          "description": "taxonomy id (Codex Taxonomy.id, e.g. category, post_tag, project_type)"
+        },
+        "current": {
+          "type": "boolean"
         }
       }
     },
+    "author": {
+      "type": "object",
+      "required": [
+        "name",
+        "url"
+      ],
+      "description": "Projection of the entry author (Codex entry author_id -> user entry): display name and author archive url.",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "url": {
+          "$ref": "#/$defs/url"
+        },
+        "id": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "avatar": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/image"
+            }
+          ]
+        },
+        "bio": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "fieldValue": {
+      "description": "A value of a Manifest Field (manifest.schema.json $defs/Field) projected for the view, by Field.type:\n- text, string, textarea, select (option value), computed -> string (plain text; select also gives the option value; label via Field.options)\n- richtext, markdown -> trustedHtml string (rendered)\n- number -> number or numeric string\n- boolean -> boolean (or '1'/'' from string backends)\n- datetime -> date object {display, iso} or ISO string\n- relation -> link, or entry view, or list of them\n- collection -> array of fieldValue\n- json, object -> object\n- encrypted -> never sent to views\nUnknown types: any JSON value. Backends that store everything as strings (WordPress meta) may send strings for every type; a view must accept them.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/date"
+        },
+        {
+          "$ref": "#/$defs/link"
+        },
+        {
+          "type": "array"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "fields": {
+      "anyOf": [
+        {
+          "type": "object",
+          "description": "Arbitrary fields of the entry's kind: key = Manifest Field.id, value = fieldValue. The Manifest (`site.manifest`, optional) tells the type of each key; kind-specific display (price, rating, client …) is built from these generically, so a new kind needs no schema change.",
+          "additionalProperties": {
+            "$ref": "#/$defs/fieldValue"
+          }
+        },
+        {
+          "$ref": "#/$defs/emptyMap"
+        }
+      ],
+      "description": "Arbitrary fields of the entry's kind: key = Manifest Field.id, value = fieldValue. The Manifest (`site.manifest`, optional) tells the type of each key; kind-specific display (price, rating, client …) is built from these generically, so a new kind needs no schema change."
+    },
+    "entry": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "slug",
+        "url"
+      ],
+      "description": "Entry view: the projection of ONE Codex v0.4 entry (entry.schema.json) of ANY kind (post, page, media, user, product, custom) + render-time primitives. Core fields keep their Codex meaning: title, slug, excerpt (plain), content (rendered -> trustedHtml). `entry` may carry the full record as is. `id` is the backend's numeric id; the Codex id is `<kind>-<id>` (or entry.id). Keys marked 'wp-fasty theme' are extras of the reference theme; other backends may omit them.",
+      "properties": {
+        "id": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Backend id (WordPress post ID). Codex id = entry.id or `<kind>-<id>`."
+        },
+        "kind": {
+          "$ref": "https://schema.buildy.tw/entry.schema.json#/properties/kind"
+        },
+        "title": {
+          "$ref": "#/$defs/text",
+          "description": "Codex title (plain text)"
+        },
+        "slug": {
+          "type": "string",
+          "description": "Codex slug"
+        },
+        "url": {
+          "$ref": "#/$defs/url",
+          "description": "Resolved permalink"
+        },
+        "excerpt": {
+          "$ref": "#/$defs/text",
+          "description": "Codex excerpt (plain text)"
+        },
+        "content": {
+          "$ref": "#/$defs/trustedHtml",
+          "description": "Codex content, rendered (trustedHtml)"
+        },
+        "status": {
+          "$ref": "https://schema.buildy.tw/entry.schema.json#/properties/status"
+        },
+        "locale": {
+          "$ref": "https://schema.buildy.tw/entry.schema.json#/properties/locale"
+        },
+        "date": {
+          "$ref": "#/$defs/date",
+          "description": "published_at projected"
+        },
+        "modified": {
+          "$ref": "#/$defs/date",
+          "description": "updated_at projected"
+        },
+        "featuredImage": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/image"
+            }
+          ]
+        },
+        "thumbnail": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/image"
+            }
+          ]
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/term"
+          },
+          "description": "terms of taxonomy `category`"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/term"
+          },
+          "description": "terms of taxonomy `post_tag`"
+        },
+        "terms": {
+          "anyOf": [
+            {
+              "type": "object",
+              "description": "Every taxonomy of the kind: taxonomy id -> terms",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/term"
+                }
+              }
+            },
+            {
+              "$ref": "#/$defs/emptyMap"
+            }
+          ],
+          "description": "Every taxonomy of the kind: taxonomy id -> terms"
+        },
+        "author": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/author"
+            }
+          ]
+        },
+        "fields": {
+          "$ref": "#/$defs/fields"
+        },
+        "linkPages": {
+          "$ref": "#/$defs/trustedHtml",
+          "description": "Pages nav of a multi-page entry (rendered); '' when single-page"
+        },
+        "pages": {
+          "type": "object",
+          "description": "Multi-page entry, structured: current page and links",
+          "required": [
+            "current",
+            "total"
+          ],
+          "properties": {
+            "current": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "total": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "links": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/link"
+              }
+            }
+          }
+        },
+        "prev": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/link"
+            }
+          ]
+        },
+        "next": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/link"
+            }
+          ]
+        },
+        "related": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entry"
+          }
+        },
+        "readingTime": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "minutes"
+        },
+        "protected": {
+          "type": "boolean",
+          "description": "password-protected: content holds the password form"
+        },
+        "commentsOpen": {
+          "type": "boolean"
+        },
+        "commentCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "isAttachment": {
+          "type": "boolean",
+          "description": "kind is media/attachment"
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "media entries"
+        },
+        "attachmentUrl": {
+          "$ref": "#/$defs/url",
+          "description": "file URL of a media entry"
+        },
+        "postClass": {
+          "type": "string",
+          "description": "wp-fasty theme: get_post_class()"
+        },
+        "entry": {
+          "$ref": "https://schema.buildy.tw/entry.schema.json",
+          "description": "Optional: the full Codex v0.4 entry record as is (entry.schema.json)"
+        }
+      }
+    },
+    "post": {
+      "$ref": "#/$defs/entry",
+      "description": "Alias of entry (v1.0 name)."
+    },
     "menuItem": {
       "type": "object",
-      "required": ["title", "url", "id", "current", "children"],
+      "required": [
+        "title",
+        "url",
+        "id",
+        "current",
+        "children"
+      ],
+      "description": "Primitive `menuTree` node: a Codex menu item resolved to a url, with the current request marked (`current` = this item, `ancestor` = a descendant is current).",
       "properties": {
-        "id": { "type": "integer" },
-        "current": { "type": "boolean" },
-        "children": { "type": "array", "items": { "$ref": "#/$defs/menuItem" } }
+        "id": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "url": {
+          "$ref": "#/$defs/url"
+        },
+        "current": {
+          "type": "boolean"
+        },
+        "ancestor": {
+          "type": "boolean"
+        },
+        "target": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/menuItem"
+          }
+        }
+      }
+    },
+    "menuTree": {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "description": "One Codex menu (menu.schema.json) of a location, resolved",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/menuItem"
+          }
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        }
       }
     },
     "pagination": {
+      "description": "Primitive `pagination` of a list: null when there is one page. `url` is a pattern with {0} for the page number; firstUrl is page 1.",
       "oneOf": [
-        { "type": "null" },
+        {
+          "type": "null"
+        },
         {
           "type": "object",
-          "required": ["current", "total", "prevUrl", "nextUrl", "url", "firstUrl"],
+          "required": [
+            "current",
+            "total",
+            "prevUrl",
+            "nextUrl",
+            "url",
+            "firstUrl"
+          ],
           "properties": {
-            "current": { "type": "integer", "minimum": 1 },
-            "total": { "type": "integer", "minimum": 2 },
-            "prevUrl": { "type": ["string", "null"] },
-            "nextUrl": { "type": ["string", "null"] },
-            "url": { "type": "string", "pattern": "\\{0\\}" },
-            "firstUrl": { "type": "string" }
+            "current": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "total": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "prevUrl": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "nextUrl": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "url": {
+              "type": "string",
+              "pattern": "\\{0\\}"
+            },
+            "firstUrl": {
+              "type": "string"
+            },
+            "perPage": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "found": {
+              "type": "integer",
+              "minimum": 0
+            }
           }
         }
       ]
     },
-    "common": {
+    "head": {
       "type": "object",
-      "required": ["site", "menu", "shell", "sheet", "labels", "search", "widgets"],
+      "description": "Primitive `seo/head`: computed document head. All plain text except jsonLd (objects, serialized by the view).",
       "properties": {
-        "site": {
-          "type": "object",
-          "required": ["title", "url", "themeUrl", "stylesheetUrl", "lang", "description", "charset", "year", "logo"],
-          "properties": {
-            "year": { "type": "string", "pattern": "^[0-9]{4}$" },
-            "logo": {
-              "oneOf": [
-                { "type": "null" },
-                { "type": "object", "required": ["url", "width", "height", "alt"] }
-              ]
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "canonical": {
+          "$ref": "#/$defs/url"
+        },
+        "robots": {
+          "type": "string"
+        },
+        "og": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "og:* -> value"
+            },
+            {
+              "$ref": "#/$defs/emptyMap"
+            }
+          ],
+          "description": "og:* -> value"
+        },
+        "twitter": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            {
+              "$ref": "#/$defs/emptyMap"
+            }
+          ],
+          "description": ""
+        },
+        "jsonLd": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "alternates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "hreflang",
+              "url"
+            ],
+            "properties": {
+              "hreflang": {
+                "type": "string"
+              },
+              "url": {
+                "$ref": "#/$defs/url"
+              }
             }
           }
+        }
+      }
+    },
+    "comment": {
+      "type": "object",
+      "required": [
+        "id",
+        "author",
+        "content",
+        "date"
+      ],
+      "description": "Projection of a Codex Comment (comment.schema.json) as a tree node",
+      "properties": {
+        "id": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "author": {
+          "$ref": "#/$defs/author"
+        },
+        "content": {
+          "$ref": "#/$defs/trustedHtml"
+        },
+        "date": {
+          "$ref": "#/$defs/date"
+        },
+        "status": {
+          "$ref": "https://schema.buildy.tw/comment.schema.json#/properties/status"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/comment"
+          }
+        }
+      }
+    },
+    "commentsView": {
+      "type": "object",
+      "description": "Structured comments of an entry (optional; `comments` holds the rendered block)",
+      "properties": {
+        "open": {
+          "type": "boolean"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/comment"
+          }
+        },
+        "pagination": {
+          "$ref": "#/$defs/pagination"
+        },
+        "form": {
+          "$ref": "#/$defs/trustedHtml"
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "description": "Request / page state (shell). pageType tells which view a generator renders.",
+      "properties": {
+        "pageType": {
+          "enum": [
+            "front",
+            "home",
+            "single",
+            "page",
+            "attachment",
+            "archive",
+            "category",
+            "tag",
+            "taxonomy",
+            "author",
+            "date",
+            "post_type",
+            "search",
+            "404"
+          ],
+          "description": "front = static front page or latest posts at /; home = posts page; single/page/attachment = one entry; the archive family; search; 404"
+        },
+        "kind": {
+          "type": "string",
+          "description": "entry kind of a single view or a kind archive"
+        },
+        "paged": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "query": {
+          "type": "string"
+        },
+        "loggedIn": {
+          "type": "boolean"
+        },
+        "canEdit": {
+          "type": "boolean"
+        },
+        "editUrl": {
+          "$ref": "#/$defs/url"
+        },
+        "consent": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "type": "boolean"
+              },
+              "description": "consent flags (analytics, marketing …)"
+            },
+            {
+              "$ref": "#/$defs/emptyMap"
+            }
+          ],
+          "description": "consent flags (analytics, marketing …)"
+        }
+      }
+    },
+    "site": {
+      "type": "object",
+      "required": [
+        "title",
+        "url",
+        "lang"
+      ],
+      "description": "Shell `site`: projection of Codex Settings (settings.schema.json): title, description (tagline), language. Plus resolved urls and the logo image. `settings` may carry the full record.",
+      "properties": {
+        "title": {
+          "$ref": "https://schema.buildy.tw/settings.schema.json#/properties/title"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "url": {
+          "$ref": "#/$defs/url"
+        },
+        "lang": {
+          "type": "string",
+          "description": "BCP 47, html lang"
+        },
+        "dir": {
+          "enum": [
+            "ltr",
+            "rtl"
+          ]
+        },
+        "charset": {
+          "type": "string"
+        },
+        "locale": {
+          "type": "string"
+        },
+        "year": {
+          "type": "string",
+          "pattern": "^[0-9]{4}$"
+        },
+        "logo": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "url",
+                "width",
+                "height",
+                "alt"
+              ],
+              "properties": {
+                "url": {
+                  "$ref": "#/$defs/url"
+                },
+                "alt": {
+                  "$ref": "#/$defs/text"
+                }
+              }
+            }
+          ]
+        },
+        "themeUrl": {
+          "$ref": "#/$defs/url",
+          "description": "wp-fasty theme"
+        },
+        "stylesheetUrl": {
+          "$ref": "#/$defs/url",
+          "description": "wp-fasty theme"
+        },
+        "currency": {
+          "$ref": "https://schema.buildy.tw/settings.schema.json#/properties/currency"
+        },
+        "settings": {
+          "$ref": "https://schema.buildy.tw/settings.schema.json",
+          "description": "Optional full Codex settings record"
+        },
+        "manifest": {
+          "$ref": "https://schema.buildy.tw/manifest.schema.json",
+          "description": "Optional Codex Manifest: kinds, their Fields (types for `fields`) and taxonomies"
+        }
+      }
+    },
+    "common": {
+      "type": "object",
+      "required": [
+        "site",
+        "menu"
+      ],
+      "description": "Shell: what every page has. `labels` = Codex Dictionary messages (key -> text) of the locale; `menu` = location -> menuTree.",
+      "properties": {
+        "profile": {
+          "const": "view/v1",
+          "description": "View profile id; absent = view/v1"
+        },
+        "site": {
+          "$ref": "#/$defs/site"
         },
         "menu": {
           "type": "object",
-          "required": ["primary", "footer"],
+          "description": "menu location -> resolved tree (wp-fasty always sends primary and footer)",
           "additionalProperties": {
-            "type": "object",
-            "required": ["items"],
-            "properties": { "items": { "type": "array", "items": { "$ref": "#/$defs/menuItem" } } }
+            "$ref": "#/$defs/menuTree"
           }
         },
-        "shell": { "enum": ["classic", "app-shell"] },
-        "sheet": { "type": "object", "required": ["trigger", "panel", "title"], "additionalProperties": { "type": "string" } },
-        "labels": { "type": "object", "additionalProperties": { "type": "string" } },
+        "labels": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Codex Dictionary messages (plain text) used by the views: skipToContent, previous, next, …"
+            },
+            {
+              "$ref": "#/$defs/emptyMap"
+            }
+          ],
+          "description": "Codex Dictionary messages (plain text) used by the views: skipToContent, previous, next, …"
+        },
         "search": {
           "type": "object",
-          "required": ["action", "query", "placeholder", "submit", "label"],
-          "additionalProperties": { "type": "string" }
+          "required": [
+            "action",
+            "query"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "search form state: action url, current query, placeholder/submit/label texts"
         },
         "widgets": {
           "type": "object",
-          "required": ["sidebar", "footer"],
-          "properties": { "sidebar": { "$ref": "#/$defs/html" }, "footer": { "$ref": "#/$defs/html" } }
+          "description": "widget areas (rendered)",
+          "additionalProperties": {
+            "$ref": "#/$defs/trustedHtml"
+          }
+        },
+        "head": {
+          "$ref": "#/$defs/head"
+        },
+        "request": {
+          "$ref": "#/$defs/request"
+        },
+        "breadcrumbs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        },
+        "slots": {
+          "anyOf": [
+            {
+              "type": "object",
+              "description": "named extension slots (head, footer …): slot id -> content",
+              "additionalProperties": true
+            },
+            {
+              "$ref": "#/$defs/emptyMap"
+            }
+          ],
+          "description": "named extension slots (head, footer …): slot id -> content"
+        },
+        "shell": {
+          "type": "string",
+          "description": "wp-fasty theme: layout shell (classic | app-shell)"
+        },
+        "sheet": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "wp-fasty theme: ids of the mobile sheet"
         }
       }
     },
     "pageContext": {
+      "description": "One entry (front page, single, page, attachment, product, any kind). `page` null = front page with latest `posts`.",
       "allOf": [
-        { "$ref": "#/$defs/common" },
+        {
+          "$ref": "#/$defs/common"
+        },
         {
           "type": "object",
-          "required": ["page", "hero", "comments"],
+          "required": [
+            "page"
+          ],
           "properties": {
-            "page": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/post" }] },
-            "hero": { "type": "object", "required": ["primaryLabel", "primaryUrl", "secondaryLabel", "secondaryUrl"] },
-            "comments": { "$ref": "#/$defs/html" },
-            "posts": { "type": "array", "items": { "$ref": "#/$defs/post" } }
+            "page": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "$ref": "#/$defs/entry"
+                }
+              ]
+            },
+            "comments": {
+              "$ref": "#/$defs/trustedHtml",
+              "description": "rendered comments block ('' when none / closed)"
+            },
+            "commentsView": {
+              "$ref": "#/$defs/commentsView"
+            },
+            "posts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/entry"
+              },
+              "description": "latest entries (front page)"
+            },
+            "hero": {
+              "type": "object",
+              "description": "wp-fasty theme: hero call-to-action",
+              "properties": {
+                "primaryLabel": {
+                  "type": "string"
+                },
+                "primaryUrl": {
+                  "$ref": "#/$defs/url"
+                },
+                "secondaryLabel": {
+                  "type": "string"
+                },
+                "secondaryUrl": {
+                  "$ref": "#/$defs/url"
+                }
+              }
+            }
           }
         }
       ]
     },
     "archiveContext": {
+      "description": "A list of entries: posts page, term archive (category/tag/any taxonomy), kind archive, author, date, search (incl. empty).",
       "allOf": [
-        { "$ref": "#/$defs/common" },
+        {
+          "$ref": "#/$defs/common"
+        },
         {
           "type": "object",
-          "required": ["archive", "posts", "pagination"],
+          "required": [
+            "archive",
+            "posts",
+            "pagination"
+          ],
           "properties": {
             "archive": {
               "type": "object",
-              "required": ["title", "description", "searchQuery", "type"],
+              "required": [
+                "title",
+                "type"
+              ],
               "properties": {
-                "title": { "type": "string" },
-                "description": { "type": "string" },
-                "searchQuery": { "type": ["string", "null"] },
-                "type": { "enum": ["search", "category", "tag", "author", "date", "post_type", "taxonomy", "home", "archive"] }
+                "title": {
+                  "$ref": "#/$defs/text"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "term / author description (may contain markup from the backend: treat as trustedHtml)"
+                },
+                "searchQuery": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "type": {
+                  "enum": [
+                    "search",
+                    "category",
+                    "tag",
+                    "author",
+                    "date",
+                    "post_type",
+                    "taxonomy",
+                    "home",
+                    "archive"
+                  ]
+                },
+                "kind": {
+                  "type": "string",
+                  "description": "post_type archives: the kind"
+                },
+                "taxonomy": {
+                  "type": "string"
+                },
+                "term": {
+                  "$ref": "#/$defs/term"
+                },
+                "author": {
+                  "$ref": "#/$defs/author"
+                },
+                "date": {
+                  "type": "object",
+                  "properties": {
+                    "year": {
+                      "type": "integer"
+                    },
+                    "month": {
+                      "type": "integer"
+                    },
+                    "day": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "found": {
+                  "type": "integer",
+                  "minimum": 0
+                }
               }
             },
-            "posts": { "type": "array", "items": { "$ref": "#/$defs/post" } },
-            "pagination": { "$ref": "#/$defs/pagination" }
+            "posts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/entry"
+              }
+            },
+            "pagination": {
+              "$ref": "#/$defs/pagination"
+            }
           }
         }
       ]
     },
     "errorContext": {
+      "description": "Error page (404).",
       "allOf": [
-        { "$ref": "#/$defs/common" },
+        {
+          "$ref": "#/$defs/common"
+        },
         {
           "type": "object",
-          "required": ["error"],
+          "required": [
+            "error"
+          ],
           "properties": {
             "error": {
               "type": "object",
-              "required": ["code", "title", "message", "homeUrl", "homeLabel"],
-              "properties": { "code": { "type": "integer" } }
+              "required": [
+                "code",
+                "title",
+                "message"
+              ],
+              "properties": {
+                "code": {
+                  "type": "integer"
+                },
+                "title": {
+                  "$ref": "#/$defs/text"
+                },
+                "message": {
+                  "$ref": "#/$defs/text"
+                },
+                "homeUrl": {
+                  "$ref": "#/$defs/url"
+                },
+                "homeLabel": {
+                  "$ref": "#/$defs/text"
+                }
+              }
             }
           }
         }
