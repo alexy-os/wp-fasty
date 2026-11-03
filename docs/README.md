@@ -18,6 +18,7 @@ deep dive lives in [`.project/`](../.project/).
 | 8 | [latte-primitives.md](./latte-primitives.md) | 60/63, capture/include |
 | 9 | [anti-patterns.md](./anti-patterns.md) | Retired pipelines |
 | 10 | [validation.md](./validation.md) | Gates to run |
+| 11 | [theme-authoring.md](./theme-authoring.md) | Build a Latte / Twig theme against view/v1 |
 
 ## Related
 

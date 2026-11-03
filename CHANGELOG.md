@@ -5,6 +5,12 @@
 ### Breaking
 - Module `context` callables in `types/*.php` now receive the Core `WPFasty\Core\Model\Post` DTO instead of a `WP_Post`: `fn (array $data, Post $post, PostType $type): array`. Use `$post->id`, `->kind`, `->slug` and `->author?->id`. Updated: latte-folio `types/project.php`, the `productViewModel` of latte-shop, and the presets of the folio, shop and market archetypes. Admin column `value` callables are unchanged (`int $postId`).
 
+### Added
+- `docs/theme-authoring.md`: how to build a Latte or Twig child theme against view/v1, covering the contract, the layout, the root chain, engine choice, the view rules and the checks. `latte-skin` now ships the Twig twin of its override, and the new parity suite `skin` (front page plus a multi-page single) checks it.
+
+### CI
+- chaosbun#120: the WordPress job serves with `php -S` and opcache **on** for PHP 8.5 (8.5.12 floor), with `revalidate_freq=0`. PHP 8.2 stays off. A new step fails the job on a server crash (139/134/136 or a segfault). On the box, PHP 8.5.12 with opcache gave identical HTML with opcache on and off: 84 pages, cold and warm, 658 scripts cached, no crash.
+
 ### Fixed
 - chaosbun#119: multi-page entries (`<!--nextpage-->`) had no Pages nav, and the single view printed every page at once. `PostRepository` now splits the content the way `WP_Query::generate_postdata()` does, without touching the globals, and shows only the current page. It also builds the view/v1 `pages` primitive (`PostPages`: current, total, links). Latte and Twig render the nav from that data (`blocks/post-content`), with no raw HTML. `linkPages` is deprecated and always empty. [html-change]
 

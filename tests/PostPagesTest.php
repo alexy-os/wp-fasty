@@ -25,10 +25,29 @@ final class PostPagesTest extends TestCase
 {
     private const SNAPSHOT = __DIR__.'/fixtures/snapshots/post-pages-nav.html';
 
-    public function testPagesNeedTwoPagesAndACurrentOne(): void
+    /** @return iterable<string, array{int, list<string>}> */
+    public static function invalidPages(): iterable
+    {
+        yield 'one page' => [1, ['/a/']];
+        yield 'no pages' => [1, []];
+        yield 'current 0' => [0, ['/a/', '/a/2/']];
+        yield 'current past the last' => [3, ['/a/', '/a/2/']];
+    }
+
+    /** @param list<string> $urls */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidPages')]
+    public function testPagesNeedTwoPagesAndACurrentOneWithinThem(int $current, array $urls): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        new PostPages(3, ['/a/', '/a/2/']);
+        new PostPages($current, $urls);
+    }
+
+    public function testPagesBounds(): void
+    {
+        $first = new PostPages(1, ['/a/', '/a/2/']);
+        $last = new PostPages(2, ['/a/', '/a/2/']);
+        self::assertSame([1, 2, 2, 2], [$first->current, $first->total(), $last->current, $last->total()]);
+        self::assertSame(3, (new PostPages(3, ['/a/', '/a/2/', '/a/3/']))->total());
     }
 
     public function testViewModelHasPagesOnlyForMultiPageEntries(): void

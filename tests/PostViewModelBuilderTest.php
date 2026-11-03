@@ -43,7 +43,10 @@ final class PostViewModelBuilderTest extends TestCase
         ], array_keys($vm));
         self::assertInstanceOf(TrustedHtml::class, $vm['content']);
         self::assertSame('<p>Hi</p>', (string) $vm['content']);
-        self::assertSame('768', $vm['featuredImage']['height']);
+        self::assertSame([
+            'url' => '/l.jpg', 'width' => '1024', 'height' => '768', 'alt' => 'Alt',
+            'srcset' => '/l.jpg 1024w', 'sizes' => '(max-width: 1024px) 100vw',
+        ], $vm['featuredImage']);
         self::assertNull($vm['thumbnail']);
         self::assertSame([['name' => 'News', 'url' => '/c/news/', 'slug' => 'news']], $vm['categories']);
         self::assertSame(['name' => 'Ann', 'url' => '/a/ann/'], $vm['author']);

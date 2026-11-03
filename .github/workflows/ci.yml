@@ -513,9 +513,12 @@ jobs:
           cd /tmp/wp
           wp option update home http://127.0.0.1:8080 --quiet
           wp option update siteurl http://127.0.0.1:8080 --quiet
-          # Single process: php 8.3 -S with PHP_CLI_SERVER_WORKERS segfaulted intermittently on the runner, and php 8.2.35 -S
-          # segfaults (139) on every request with opcache on. No opcache here (renders are checked, not timed). Supervised.
-          nohup bash -c 'while true; do php -S 127.0.0.1:8080 -d opcache.enable=0 -t /tmp/wp >> /tmp/php-server.log 2>&1; echo "php -S exited ($?), restarting" >> /tmp/php-server.log; sleep 1; done' > /dev/null 2>&1 &
+          # Single process: php 8.3 -S with PHP_CLI_SERVER_WORKERS segfaulted intermittently on the runner. Opcache: on for
+          # PHP 8.5 (chaosbun#120: no segfault on 8.5.12; box smoke 84 pages identical on/off), still off on 8.2 (8.2.35 -S
+          # segfaulted with it). revalidate_freq=0: later steps swap theme files under the same paths. Supervised.
+          OPC=$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION === "8.5" ? 1 : 0;')
+          echo "php -S opcache.enable=$OPC ($(php -r 'echo PHP_VERSION;'))" | tee -a "$GITHUB_STEP_SUMMARY"
+          nohup bash -c "while true; do php -S 127.0.0.1:8080 -d opcache.enable=$OPC -d opcache.revalidate_freq=0 -t /tmp/wp >> /tmp/php-server.log 2>&1; echo \"php -S exited (\$?), restarting\" >> /tmp/php-server.log; sleep 1; done" > /dev/null 2>&1 &
           for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8080/wp-login.php && break; sleep 1; done
           mkdir -p /tmp/layouts
           php "$GITHUB_WORKSPACE/tools/builder/layout-manifest.php" > /tmp/layout-manifest.json
@@ -742,3 +745,13 @@ jobs:
             exit 1
           fi
           echo "debug.log empty"
+
+      - name: chaosbun#120 — php -S never crashed (opcache on for PHP 8.5)
+        if: always()
+        run: |
+          # restart() stops the server on purpose (exit 143); a crash is a segfault (139) or a fatal signal
+          if grep -E 'exited \((134|136|139)\)|Segmentation fault' /tmp/php-server.log 2>/dev/null; then
+            echo "::error::php -S crashed during the WordPress job ($(php -r 'echo PHP_VERSION;'))"
+            exit 1
+          fi
+          n=$(grep -c 'exited (' /tmp/php-server.log 2>/dev/null || true); echo "php -S: ${n:-0} planned restarts, no crash"

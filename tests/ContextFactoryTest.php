@@ -20,6 +20,7 @@ final class ContextFactoryTest extends TestCase
     public function testErrorContextShape(): void
     {
         $ctx = self::contextFactory()->createErrorContext();
+        $this->assertSame('view/v1', $ctx['profile']);
         $this->assertArrayHasKey('site', $ctx);
         $this->assertArrayHasKey('menu', $ctx);
         $this->assertArrayHasKey('shell', $ctx);

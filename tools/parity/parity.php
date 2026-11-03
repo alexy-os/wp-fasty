@@ -50,6 +50,8 @@ $suites = [
     'folio' => ['themes/latte-folio/views', 'themes/latte/views'],
     'shop' => ['themes/latte-shop/views', 'themes/latte/views'],
     'market' => ['themes/wpfasty-market/views', 'themes/latte-shop/views', 'themes/latte/views'],
+    // theme authoring example (docs/theme-authoring.md): a child theme with a Latte view and its Twig twin
+    'skin' => ['themes/latte-skin/views', 'themes/latte/views'],
     'builder' => [],
     'blocks' => [],
 ];

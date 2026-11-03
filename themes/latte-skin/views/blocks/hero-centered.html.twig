@@ -1,0 +1,37 @@
+{#
+ # Skin override: hero-centered (Twig twin of hero-centered.latte) — the child view root wins in both engines.
+ # Context: site, hero
+ #}
+{% set heroInner %}
+	{% set titleHtml %}{{ site.title }}{% endset %}
+	{% include 'title/Title.html.twig' with { as: 1, size: '4xl', weight: 'bold', class: 'tracking-tight text-primary md:text-6xl', children: titleHtml } %}
+
+	{% if site.description ?? false %}
+		{% set descHtml %}{% set c_ui1 %}{{ site.description }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'mt-4 text-lg text-muted-foreground', 'children': c_ui1, 'attrs': {}} only %}{% endset %}
+		{{ descHtml }}
+	{% endif %}
+
+	{% set actions %}
+		{% set explore %}{{ hero.primaryLabel ?? 'Explore' }}{% endset %}
+		{% set learn %}{{ hero.secondaryLabel ?? 'Learn more' }}{% endset %}
+		{% if hero.primaryUrl ?? false %}
+			{% set primary %}
+				{% include 'link/Link.html.twig' with { href: hero.primaryUrl, class: kit('button', {}), children: explore } %}
+			{% endset %}
+			{{ primary }}
+		{% endif %}
+		{% if hero.secondaryUrl ?? false %}
+			{% set secondary %}
+				{% include 'link/Link.html.twig' with { href: hero.secondaryUrl, class: kit('button', {'variant': 'secondary'}), children: learn } %}
+			{% endset %}
+			{{ secondary }}
+		{% endif %}
+	{% endset %}
+	{% include 'group/Group.html.twig' with { class: 'mt-8 flex flex-wrap justify-center gap-4', children: actions } %}
+{% endset %}
+
+{% set heroBox %}
+	{% include 'box/Box.html.twig' with { class: 'mx-auto max-w-3xl text-center', children: heroInner } %}
+{% endset %}
+
+{% include 'block/Block.html.twig' with { tag: 'section', class: 'bg-muted py-16 md:py-24 latte-skin-hero', children: heroBox } %}
