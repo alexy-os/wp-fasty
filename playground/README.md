@@ -53,3 +53,12 @@ manual step and no cross-repo token.
 Rebuild 2026-10-30 (ModulY 0.1.0, cart/orders modules): shop and shop-modules booted locally with `@wp-playground/cli` (Node 24,
 PHP 8.4): modules installed and enabled (signed by phpfasty), add to cart → cart → checkout → order #34 created; in shop-modules
 both zips uploaded through the admin screen, then add to cart works. Screens: ui8kit3/shots/moduly/.
+
+## One-link demo: `playground/blueprint.json`
+
+https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/alexy-os/wp-fasty/main/playground/blueprint.json
+
+Parent theme `latte` only (no plugins), PHP 8.5, demo posts in a "Guides" category, an About page with a menu, and a
+three-page post (`<!--nextpage-->`); lands on `/multipage-post/2/`. The theme zip is committed at `playground/zips/latte.zip`
+(built by `tools/playground-build.sh`; raw.githubusercontent.com sends CORS headers) because the gist above hit its size
+quota on 2026-11-03. Refresh it by rebuilding and copying `playground/latte.zip` there.
