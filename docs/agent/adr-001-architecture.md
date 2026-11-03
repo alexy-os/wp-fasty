@@ -63,7 +63,7 @@ return [
   'taxonomies' => ['project_type' => [...args...]],
   'fields' => ['client' => ['type'=>'string','label'=>'Client','sanitize'=>'sanitize_text_field'], ...],
   'views' => ['single' => 'pages/project', 'archive' => 'pages/work', 'card' => 'blocks/project-card'],
-  'context' => fn(array $post): array => [...],
+  'context' => fn(array $data, WPFasty\Core\Model\Post $post, WPFasty\Types\PostType $type): array => [...],
   'supports' => ['purchasable' => ['price_field' => 'price']],
   'archive' => ['per_page' => 9],
 ];

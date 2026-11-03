@@ -8,6 +8,7 @@ use WPFasty\Core\Html\TrustedHtml;
 use WPFasty\Core\Model\Image;
 use WPFasty\Core\Model\Post;
 use WPFasty\Core\Model\PostLink;
+use WPFasty\Core\Model\PostPages;
 use WPFasty\Core\Model\Term;
 
 /** Post DTO -> the `page` / `posts[]` view-model of the templates (keys and order are the template contract). */
@@ -40,6 +41,9 @@ final class PostViewModelBuilder
                 'iso' => $post->dateIso,
             ],
         ];
+        if (null !== $post->pages) {
+            $data['pages'] = $this->pages($post->pages);
+        }
         if ($post->isAttachment()) {
             $data['attachmentUrl'] = (string) $post->attachmentUrl;
         }
@@ -55,6 +59,21 @@ final class PostViewModelBuilder
     public function buildList(array $posts): array
     {
         return array_map($this->build(...), $posts);
+    }
+
+    /**
+     * view/v1 entry `pages`: current, total and one link per page (title = page number, `current` on the current one).
+     *
+     * @return array{current: int, total: int, links: list<array{title: string, url: string, current: bool}>}
+     */
+    private function pages(PostPages $pages): array
+    {
+        $links = [];
+        foreach ($pages->urls as $i => $url) {
+            $links[] = ['title' => (string) ($i + 1), 'url' => $url, 'current' => $i + 1 === $pages->current];
+        }
+
+        return ['current' => $pages->current, 'total' => $pages->total(), 'links' => $links];
     }
 
     /** @return array<string, string>|null */

@@ -344,17 +344,17 @@ final class Front
     }
 
     /**
-     * Product view-model (module `context` of types/product.php): prices and stock from the cart module.
+     * Product view-model (module `context` of types/product.php, receives the Core Post DTO): prices and stock from the cart module.
      *
      * @param array<string, mixed> $data
      *
      * @return array<string, mixed>
      */
-    public static function productViewModel(array $data, \WP_Post $post): array
+    public static function productViewModel(array $data, \WPFasty\Core\Model\Post $post): array
     {
-        $data['product'] = self::product($post->ID, (string) ($data['fields']['sku'] ?? ''));
+        $data['product'] = self::product($post->id, (string) ($data['fields']['sku'] ?? ''));
         $data['productCats'] = $data['terms']['product_cat'] ?? [];
-        $user = get_userdata((int) $post->post_author);
+        $user = null === $post->author ? false : get_userdata($post->author->id);
         $isSeller = $user instanceof \WP_User && user_can($user, 'edit_posts') && !user_can($user, 'manage_options');
         $data['seller'] = $isSeller && $user instanceof \WP_User
             ? ['name' => (string) $user->display_name, 'url' => (string) get_author_posts_url($user->ID)]

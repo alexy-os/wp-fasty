@@ -14,7 +14,7 @@ return [
      * @param array<string, mixed> $data
      * @return array<string, mixed>
      */
-    'context' => static function (array $data, WP_Post $post, WPFasty\Types\PostType $type): array {
+    'context' => static function (array $data, WPFasty\Core\Model\Post $post, WPFasty\Types\PostType $type): array {
         $data['project'] = [];
         foreach ($type->fields as $key => $field) {
             if (($data['fields'][$key] ?? '') !== '') {

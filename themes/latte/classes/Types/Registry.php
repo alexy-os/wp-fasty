@@ -112,7 +112,8 @@ final class Registry implements BootableServiceInterface
 
     /**
      * `wpfasty_post_data` (receives the Core Post DTO): adds `fields` (name → raw string) and `terms`
-     * (taxonomy → list) to the post view-model, then lets the module shape it via its `context` callable.
+     * (taxonomy → list) to the post view-model, then lets the module shape it via its `context` callable
+     * (`fn (array $data, Post $post, PostType $type): array`; breaking since 2026-11: was WP_Post).
      *
      * @param array<string, mixed> $data
      *
@@ -144,11 +145,9 @@ final class Registry implements BootableServiceInterface
         if (!is_callable($context)) {
             return $data;
         }
-        // module `context` callables keep their WP_Post argument (types/*.php contract); the post is in the object
-        // cache already (the list was primed), so get_post() runs no query
-        $wpPost = get_post($post->id);
 
-        return $wpPost instanceof \WP_Post ? Cast::map($context($data, $wpPost, $type)) : $data;
+        // module `context` callables receive the Core Post DTO (no WP_Post): ($data, Post $post, PostType $type)
+        return Cast::map($context($data, $post, $type));
     }
 
     public function resolveView(string $view): string

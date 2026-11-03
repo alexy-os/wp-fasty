@@ -54,8 +54,18 @@
 		{% set body %}{% set c_ui5 %}{{ page.content }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none text-foreground', 'children': c_ui5, 'attrs': {}} only %}{% endset %}
 		{% include 'box/Box.html.twig' with { children: body } %}
 
-		{% if page.linkPages ?? false %}
-			{{ page.linkPages }}
+		{% if page.pages.links ?? false %}
+			{% set pageBits %}
+				{% set pagesL %}{{ labels.pages ?? 'Pages:' }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'mr-2', 'children': pagesL, 'attrs': {}} only %}
+				{% for pageLink in page.pages.links %}
+					{% set pageNo %}{{ pageLink.title }}{% endset %}
+					{% if pageLink.current ?? false %}
+						{% include 'text/Text.html.twig' with {'tag': 'span', 'class': 'post-page-numbers current font-semibold text-foreground', 'children': pageNo, 'attrs': {'aria-current': 'page'}} only %}
+					{% else %}
+						{% include 'link/Link.html.twig' with { href: pageLink.url, class: kit('link', {'size': 'sm'}, 'post-page-numbers'), children: pageNo } %}
+					{% endif %}
+				{% endfor %}
+			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'post-pages mt-8 flex flex-wrap items-center gap-2 text-sm text-muted-foreground', 'children': pageBits, 'attrs': {'aria-label': ((labels.pages ?? 'Pages')|trim(':', 'right'))}} only %}
 		{% endif %}
 
 		{% if page.tags ?? false %}

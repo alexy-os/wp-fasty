@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Breaking
+- Module `context` callables in `types/*.php` now receive the Core `WPFasty\Core\Model\Post` DTO instead of a `WP_Post`: `fn (array $data, Post $post, PostType $type): array`. Use `$post->id`, `->kind`, `->slug` and `->author?->id`. Updated: latte-folio `types/project.php`, the `productViewModel` of latte-shop, and the presets of the folio, shop and market archetypes. Admin column `value` callables are unchanged (`int $postId`).
+
+### Fixed
+- chaosbun#119: multi-page entries (`<!--nextpage-->`) had no Pages nav, and the single view printed every page at once. `PostRepository` now splits the content the way `WP_Query::generate_postdata()` does, without touching the globals, and shows only the current page. It also builds the view/v1 `pages` primitive (`PostPages`: current, total, links). Latte and Twig render the nav from that data (`blocks/post-content`), with no raw HTML. `linkPages` is deprecated and always empty. [html-change]
+
+
 - View schema source switched to npm: `@ui8kit/contract` is pinned exactly at `0.3.0` (devDependency). `tools/qa/view-schema-sync.sh` compares the committed `schema/theme-context.schema.json` with `node_modules/@ui8kit/contract/schemas/view.schema.json`.
 
 - `schema/theme-context.schema.json` is now a byte copy of the @ui8kit/contract view profile view/v1 (`schemas/view.schema.json`, $id `https://schema.buildy.tw/view.schema.json`), pinned in `schema/VIEW_SCHEMA_SOURCE` ([fa81e13](https://github.com/ui8kit/contract/commit/fa81e13)). The CI step `tools/qa/view-schema-sync.sh` fails when the copy drifts. The validator registers the schema under its own $id. The context adds `kind` on every entry view and `profile: view/v1` in the shell. Templates are untouched and the HTML is unchanged.

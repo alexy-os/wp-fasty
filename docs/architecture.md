@@ -50,6 +50,7 @@ WordPress is a **data adapter**. Presentation is Latte. Primitives are codegen.
 Core-generated HTML (the_content, wp_link_pages, widgets, comments) travels as `TrustedHtml`.
 
 Filter `wpfasty_post_data` receives `(array $viewModel, WPFasty\Core\Model\Post $post, bool $singular)`.
+Module `context` callables in `types/*.php` receive `(array $viewModel, WPFasty\Core\Model\Post $post, WPFasty\Types\PostType $type)`. They get the Core DTO, never a `WP_Post`. A module that needs WordPress data looks it up by `$post->id`. Admin column `value` callables keep `(int $postId)`.
 
 ## What ships in a theme zip
 

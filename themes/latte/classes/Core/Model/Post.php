@@ -37,7 +37,7 @@ final class Post
         public readonly ?Author $author = null,
         /** get_post_class() */
         public readonly string $cssClass = '',
-        /** wp_link_pages() of a paginated single view */
+        /** @deprecated since view/v1 `pages`; always empty, kept for child templates. Removed in the next major. */
         public readonly ?TrustedHtml $linkPages = null,
         public readonly ?PostLink $previous = null,
         public readonly ?PostLink $next = null,
@@ -46,6 +46,8 @@ final class Post
         public readonly ?string $attachmentUrl = null,
         /** built for a single view (link pages, neighbours) */
         public readonly bool $singular = false,
+        /** pages of a multi-page single view (`<!--nextpage-->`), null when it has one page */
+        public readonly ?PostPages $pages = null,
     ) {
     }
 

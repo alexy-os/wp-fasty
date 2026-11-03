@@ -261,17 +261,17 @@ final class Front
     }
 
     /**
-     * Product view-model (module `context` of types/product.php): prices, licenses and reviews from the modules,
+     * Product view-model (module `context` of types/product.php, receives the Core Post DTO): prices, licenses and reviews from the modules,
      * digital-goods details from the product fields.
      *
      * @param array<string, mixed> $data
      *
      * @return array<string, mixed>
      */
-    public static function productViewModel(array $data, \WP_Post $post): array
+    public static function productViewModel(array $data, \WPFasty\Core\Model\Post $post): array
     {
         $fields = (array) ($data['fields'] ?? []);
-        $data['product'] = self::product($post->ID, (string) ($fields['sku'] ?? ''));
+        $data['product'] = self::product($post->id, (string) ($fields['sku'] ?? ''));
         $data['productCats'] = $data['terms']['product_cat'] ?? [];
         $data['rating'] = (float) ($fields['rating'] ?? 0);
         $data['reviews'] = (int) ($fields['reviews'] ?? 0);
@@ -325,7 +325,7 @@ final class Front
      *
      * @return array<string, mixed>
      */
-    private static function digital(array $fields, \WP_Post $post, array $product): array
+    private static function digital(array $fields, \WPFasty\Core\Model\Post $post, array $product): array
     {
         $changelog = [];
         foreach (preg_split('/\R/', (string) ($fields['changelog'] ?? '')) ?: [] as $line) {
@@ -339,7 +339,7 @@ final class Front
         $author = $user instanceof \WP_User
             ? ['name' => $user->display_name, 'slug' => $user->user_nicename, 'role' => '', 'items' => 0,
                 'url' => (string) get_author_posts_url($user->ID), ]
-            : Fixtures::productAuthor($post->post_name);
+            : Fixtures::productAuthor($post->slug);
 
         return [
             'version' => (string) ($fields['version'] ?? ''),
@@ -347,7 +347,7 @@ final class Front
             'php' => (string) ($fields['requires_php'] ?? ''),
             'sales' => (int) ($fields['sales_count'] ?? 0),
             'support_months' => (int) ($fields['support_months'] ?? 0),
-            'updated' => $changelog[0]['date'] ?? get_the_modified_date('Y-m-d', $post),
+            'updated' => $changelog[0]['date'] ?? get_the_modified_date('Y-m-d', $post->id),
             'author' => $author,
             'preview_url' => (string) ($fields['preview_url'] ?? ''),
             'licenses' => array_map(static fn (array $l): array => [

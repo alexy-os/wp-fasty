@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace WPFasty\Tests;
 
 use PHPUnit\Framework\TestCase;
+use WPFasty\Core\Html\TrustedHtml;
+use WPFasty\Core\Model\Post;
 use WPFasty\Types\Field;
 use WPFasty\Types\PostType;
 use WPFasty\Types\Registry;
@@ -127,6 +129,18 @@ final class TypesTest extends TestCase
         self::assertNull($r->archiveTitle(null, 'unknown'));
         self::assertSame('Books', $r->archiveTitle('Books', 'book'));
         self::assertSame('Books', $r->archiveTitle('Books', null));
+    }
+
+    public function testContextCallableReceivesThePostDto(): void
+    {
+        require_once __DIR__.'/fixtures/types-dto-stubs.php';
+        $r = new Registry([__DIR__.'/fixtures/types-dto']);
+        $r->load();
+        $post = new Post(5, 'note', 'n', 'N', TrustedHtml::empty(), '', '/n/', '', '');
+        $data = $r->postData(['id' => 5], $post);
+        self::assertSame([Post::class, 5, 'note', 'n', 'note', 'calm'], $data['seen']);
+        // a kind without a module keeps its view-model as is
+        self::assertSame(['id' => 6], $r->postData(['id' => 6], new Post(6, 'post', 'p', 'P', TrustedHtml::empty(), '', '/p/', '', '')));
     }
 
     private function registry(): Registry

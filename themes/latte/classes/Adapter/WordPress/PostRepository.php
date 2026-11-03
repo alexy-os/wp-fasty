@@ -9,6 +9,7 @@ use WPFasty\Core\Model\Author;
 use WPFasty\Core\Model\Image;
 use WPFasty\Core\Model\Post;
 use WPFasty\Core\Model\PostLink;
+use WPFasty\Core\Model\PostPages;
 use WPFasty\Core\Model\Term;
 
 /** WP_Post / WP_Query -> Core Post DTOs, with caches primed per list. */
@@ -139,17 +140,21 @@ final class PostRepository implements WordPressPostRepositoryInterface
             (string) get_author_posts_url($authorId),
         ) : null;
 
-        $linkPages = null;
+        $pages = null;
+        $content = $post->post_content;
         $previous = null;
         $next = null;
         if ($singular && !$isAttachment) {
-            $linkPages = new TrustedHtml((string) (wp_link_pages([
-                'before' => '<nav class="post-pages mt-8 text-sm text-muted-foreground" aria-label="'
-                    .esc_attr__('Pages', 'latte').'"><span class="mr-2">'
-                    .esc_html__('Pages:', 'latte').'</span>',
-                'after' => '</nav>',
-                'echo' => false,
-            ]) ?: ''));
+            // the split WP_Query::setup_postdata() does, without touching the globals: content of the current page
+            // only, plus the pages primitive (wp_link_pages() needs those globals and printed nothing here, chaosbun#119)
+            global $wp_query;
+            $postdata = !$locked && $wp_query instanceof \WP_Query ? $wp_query->generate_postdata($post) : false;
+            if (is_array($postdata) && is_array($postdata['pages'] ?? null) && count($postdata['pages']) > 1) {
+                $parts = array_values(array_map(\WPFasty\Core\Cast::string(...), $postdata['pages']));
+                $current = max(1, min(count($parts), \WPFasty\Core\Cast::int($postdata['page'] ?? 1)));
+                $content = $parts[$current - 1];
+                $pages = new PostPages($current, array_map(fn (int $i): string => $this->pageUrl($post, $i), range(1, count($parts))));
+            }
             if ('post' === $post->post_type) {
                 $previous = $this->link(get_adjacent_post(false, '', true));
                 $next = $this->link(get_adjacent_post(false, '', false));
@@ -163,7 +168,7 @@ final class PostRepository implements WordPressPostRepositoryInterface
             title: PlainText::from(get_the_title($post)),
             content: new TrustedHtml(\WPFasty\Core\Cast::string($locked
                 ? get_the_password_form($post)
-                : apply_filters('the_content', $post->post_content))),
+                : apply_filters('the_content', $content))),
             excerpt: PlainText::from(has_excerpt($post) || $locked
                 ? get_the_excerpt($post)
                 : wp_trim_words(wp_strip_all_tags(strip_shortcodes($post->post_content)), 40)),
@@ -176,12 +181,13 @@ final class PostRepository implements WordPressPostRepositoryInterface
             tags: $tags,
             author: $author,
             cssClass: implode(' ', get_post_class('', $post)),
-            linkPages: $linkPages,
+            linkPages: TrustedHtml::empty(),
             previous: $previous,
             next: $next,
             mimeType: $post->post_mime_type,
             attachmentUrl: $isAttachment ? (string) wp_get_attachment_url($post->ID) : null,
             singular: $singular,
+            pages: $pages,
         );
     }
 
@@ -200,6 +206,26 @@ final class PostRepository implements WordPressPostRepositoryInterface
             (string) (wp_get_attachment_image_srcset($id, $size) ?: ''),
             (string) (wp_get_attachment_image_sizes($id, $size) ?: ''),
         );
+    }
+
+    /** URL of page $i of a multi-page entry, as _wp_link_page() builds it (without the preview arguments). */
+    private function pageUrl(\WP_Post $post, int $i): string
+    {
+        $url = (string) get_permalink($post);
+        if (1 === $i) {
+            return $url;
+        }
+        if (!get_option('permalink_structure') || in_array($post->post_status, ['draft', 'pending'], true)) {
+            return add_query_arg('page', $i, $url);
+        }
+        if ('page' === get_option('show_on_front') && \WPFasty\Core\Cast::int(get_option('page_on_front')) === $post->ID) {
+            global $wp_rewrite;
+            $base = $wp_rewrite instanceof \WP_Rewrite ? $wp_rewrite->pagination_base : 'page';
+
+            return trailingslashit($url).user_trailingslashit($base.'/'.$i, 'single_paged');
+        }
+
+        return trailingslashit($url).user_trailingslashit((string) $i, 'single_paged');
     }
 
     private function link(mixed $post): ?PostLink

@@ -157,7 +157,7 @@
                 "url": "http://127.0.0.1:8099/author/admin/"
             },
             "postClass": "post-1 post type-post status-publish format-standard hentry category-uncategorized",
-            "linkPages": "<nav class=\"post-pages mt-8 text-sm text-muted-foreground\" aria-label=\"Pages\"><span class=\"mr-2\">Pages:</span><span class=\"post-page-numbers current\" aria-current=\"page\">1</span> <a href=\"http://127.0.0.1:8099/hello-world/2/\" class=\"post-page-numbers\">2</a></nav>",
+            "linkPages": "",
             "prev": {
                 "title": "Post 1",
                 "url": "http://127.0.0.1:8099/post-1/"

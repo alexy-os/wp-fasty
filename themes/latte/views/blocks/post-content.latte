@@ -54,8 +54,18 @@
 		{capture $body}{capture $c_ui5}{$page['content']}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none text-foreground', children: (string) $c_ui5, attrs: []}{/capture}
 		{include 'box/Box.latte', children: (string) $body}
 
-		{if !empty($page['linkPages'])}
-			{$page['linkPages']}
+		{if !empty($page['pages']['links'])}
+			{capture $pageBits}
+				{capture $pagesL}{$labels['pages'] ?? 'Pages:'}{/capture}{include 'text/Text.latte', tag: 'span', class: 'mr-2', children: (string) $pagesL, attrs: []}
+				{foreach $page['pages']['links'] as $pageLink}
+					{capture $pageNo}{$pageLink['title']}{/capture}
+					{if !empty($pageLink['current'])}
+						{include 'text/Text.latte', tag: 'span', class: 'post-page-numbers current font-semibold text-foreground', children: (string) $pageNo, attrs: ['aria-current' => 'page']}
+					{else}
+						{include 'link/Link.latte', href: $pageLink['url'], class: kit('link', ['size' => 'sm'], 'post-page-numbers'), children: (string) $pageNo}
+					{/if}
+				{/foreach}
+			{/capture}{include 'box/Box.latte', tag: 'nav', class: 'post-pages mt-8 flex flex-wrap items-center gap-2 text-sm text-muted-foreground', children: (string) $pageBits, attrs: ['aria-label' => rtrim($labels['pages'] ?? 'Pages', ':')]}
 		{/if}
 
 		{if !empty($page['tags'])}
