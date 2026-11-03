@@ -59,6 +59,9 @@ jobs:
           extensions: mysqli, gd
           coverage: none
 
+      - name: PHP security floor (8.5 >= 8.5.12, 8.2 >= 8.2.35; CVE-2026-109618/109619 fixed 2026-10-21)
+        run: php -r '$f=["8.5"=>"8.5.12","8.2"=>"8.2.35"][PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION]??null; echo PHP_VERSION,PHP_EOL; if($f&&version_compare(PHP_VERSION,$f,"<")){fwrite(STDERR,"::error::PHP ".PHP_VERSION." < safe floor $f\n");exit(1);}'
+
       - name: Build artifact of the CI run (registries built from source, packaged sites)
         env:
           GH_TOKEN: ${{ github.token }}

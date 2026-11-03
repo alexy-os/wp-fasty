@@ -19,7 +19,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 8.2 = release minimum (Requires PHP, composer platform); 8.5 = FrankenPHP runtime of the wpthemes service.
+        # 8.2 = release minimum (Requires PHP, composer platform; security-only until 2026-12-31); 8.5 = primary target
+        # (FrankenPHP runtime of the wpthemes service), floor 8.5.12 enforced by the "PHP security floor" step.
         php: ["8.2", "8.5"]
     # Static checks + build: audit, site manifests, codegen, design lint, CSS, PHPUnit, strict PHPCS, release zip.
     runs-on: ubuntu-latest
@@ -39,6 +40,17 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: composer, wp-cli
           coverage: none
+
+      - name: PHP security floor (8.5 >= 8.5.12, 8.2 >= 8.2.35; CVE-2026-109618/109619 fixed 2026-10-21)
+        run: php -r '$f=["8.5"=>"8.5.12","8.2"=>"8.2.35"][PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION]??null; echo PHP_VERSION,PHP_EOL; if($f&&version_compare(PHP_VERSION,$f,"<")){fwrite(STDERR,"::error::PHP ".PHP_VERSION." < safe floor $f\n");exit(1);}'
+
+      - name: chaosbun#120 probe — php -S with opcache on (informational, never fails the job)
+        continue-on-error: true
+        run: |
+          mkdir -p /tmp/opc && printf '<?php echo PHP_VERSION, " ok";' > /tmp/opc/index.php
+          php -d opcache.enable=1 -S 127.0.0.1:8099 -t /tmp/opc > /tmp/opc.log 2>&1 &
+          sleep 1
+          for i in 1 2 3 4 5; do curl -sf http://127.0.0.1:8099/ || { echo "::warning::php -S + opcache failed on $(php -r 'echo PHP_VERSION;')"; cat /tmp/opc.log; exit 1; }; echo; done
 
       - name: Cache bun + composer downloads
         uses: actions/cache@v4
@@ -252,7 +264,7 @@ jobs:
       - name: Setup PHP (pcov)
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.4"
+          php-version: "8.5"
           tools: composer
           coverage: pcov
 
@@ -340,7 +352,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 8.2 = release minimum (Requires PHP, composer platform); 8.5 = FrankenPHP runtime of the wpthemes service.
+        # 8.2 = release minimum (Requires PHP, composer platform; security-only until 2026-12-31); 8.5 = primary target
+        # (FrankenPHP runtime of the wpthemes service), floor 8.5.12 enforced by the "PHP security floor" step.
         php: ["8.2", "8.5"]
     # Integration on a real WordPress + MariaDB: Theme Check (0 REQUIRED) and the N+1 query guard.
     needs: verify
@@ -379,6 +392,9 @@ jobs:
           tools: wp-cli
           extensions: mysqli, gd
           coverage: none
+
+      - name: PHP security floor (8.5 >= 8.5.12, 8.2 >= 8.2.35; CVE-2026-109618/109619 fixed 2026-10-21)
+        run: php -r '$f=["8.5"=>"8.5.12","8.2"=>"8.2.35"][PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION]??null; echo PHP_VERSION,PHP_EOL; if($f&&version_compare(PHP_VERSION,$f,"<")){fwrite(STDERR,"::error::PHP ".PHP_VERSION." < safe floor $f\n");exit(1);}'
 
       - uses: actions/download-artifact@v4
         with:

@@ -64,6 +64,7 @@ check runs in CI (or the stated script) and passes. Status is measured on **2026
   `register_taxonomy` args built from module arrays, typed by the stubs as exact shapes).
 - [x] ✅ PHPCS (Symfony + WordPress.Security / I18n) and PHP-CS-Fixer clean — `composer cs` (CI step `composer phpcs`).
 - [x] ✅ PHPCompatibilityWP 8.2–8.5 — part of `phpcs.xml.dist`.
+- [x] ✅ PHP security floor — CI fails if PHP 8.5 < 8.5.12 or 8.2 < 8.2.35 (8.5.12/8.2.35, 2026-10-21, fix critical CVE-2026-109618 / CVE-2026-109619). 8.5 is the primary target (CI, mutation, docker-compose); `Requires PHP` stays 8.2 (security support until 2026-12-31).
 - [x] ✅ Infection MSI ≥ 80 % on Core and the ViewModel builders — `composer infection` (infection.json5:
   `classes/Core` + `classes/Data` without the ContextFactory facade), CI job `mutation` (pcov): **234** mutants,
   229 killed, 5 escaped (equivalent / fast-path), MSI and covered MSI **97.9 %**; gate `minMsi` / `minCoveredMsi` 95.
