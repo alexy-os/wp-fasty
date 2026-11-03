@@ -63,7 +63,7 @@ $front::ensurePages();
 $home = wpfasty_demo_post('home', [
     'post_type' => 'page',
     'post_title' => 'Everyday goods, simply made.',
-    'post_excerpt' => 'Small-batch kitchen and home essentials. A WooCommerce-free demo store built on '.ucfirst(get_template()).' + UI8Kit.',
+    'post_excerpt' => 'Small-batch kitchen and home essentials. A WooCommerce-free demo store built on '.('wp-fasty' === get_template() ? 'WP FastY' : ucfirst(get_template())).' + UI8Kit.',
     'post_content' => '',
 ]);
 $hero = wpfasty_demo_image('shop-hero-table', 1200, 900);
