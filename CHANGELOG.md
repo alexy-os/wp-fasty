@@ -15,6 +15,18 @@
   same DOM through Latte and Twig.
 - CI: `php -S` runs without opcache (PHP 8.2.35 segfaulted on every request, chaosbun#120).
 
+### Breaking (template context HTML is TrustedHtml, chaosbun#118)
+- The HTML fields of the template context are `WPFasty\Core\Html\TrustedHtml` objects, no longer strings:
+  `page.content`, `page.linkPages`, `posts[].content`, `posts[].linkPages`, `comments`, `widgets.sidebar`,
+  `widgets.footer` (list: `WPFasty\Core\Html\ContextHtml`). A `wpfasty_post_data` / `wpfasty_context` callback that
+  treats them as strings must cast (`(string) $data['content']`) and give back `new TrustedHtml($html)` for markup it
+  changes; a plain string put there is now **escaped**.
+- LatteRenderer / TwigRenderer print TrustedHtml raw (Latte `Html`, Twig `Markup`; an empty one is `''`, so `{if}`
+  tests are unchanged) and escape everything else; the views no longer use `|noescape` / `|raw` on those fields.
+  Child-theme views that print them with `|noescape` / `|raw` keep working. Output is unchanged (60 local pages, normalized like the CI snapshots).
+- `TrustedHtml` is `JsonSerializable` (the plain string); `ContextHtml::trust()` marks the fields of a frozen JSON
+  context (parity fixtures, snapshots).
+
 ### Breaking (theme PHP: Post DTO)
 - Filter `wpfasty_post_data` now receives the readonly `WPFasty\Core\Model\Post` DTO instead of `WP_Post`:
   `fn (array $data, Post $post, bool $singular): array`. Use `$post->id`, `$post->kind` (post type), `$post->slug`,

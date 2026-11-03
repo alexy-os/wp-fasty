@@ -12,7 +12,7 @@
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'nav', 'class': 'flex-1 overflow-y-auto px-4 py-4', 'children': c_ui2, 'attrs': {'aria-label': (labels.primaryNav)}} only %}
 	{% if widgets.sidebar ?? false %}
 		{% set c_ui3 %}
-			{{ widgets.sidebar|raw }}
+			{{ widgets.sidebar }}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'border-t border-border px-4 py-4 text-sm', 'children': c_ui3, 'attrs': {}} only %}
 	{% endif %}
 {% endset %}{% include 'box/Box.html.twig' with {'tag': 'aside', 'class': 'hidden w-64 shrink-0 flex-col border-r border-border bg-card md:flex', 'children': c_ui4, 'attrs': {'aria-label': (labels.sidebar)}} only %}

@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace WPFasty\Tests;
 
 use PHPUnit\Framework\TestCase;
+use WPFasty\Core\Html\ContextHtml;
+use WPFasty\Core\Html\TrustedHtml;
+use WPFasty\Core\Model\Post;
+use WPFasty\Data\Post\PostViewModelBuilder;
 
 /**
  * What Deptrac cannot see: calls to global WordPress functions. Core (ports, DTOs, kernel) and the ViewModel builders
@@ -49,6 +53,53 @@ final class ArchitectureTest extends TestCase
             ['get_bloginfo', 'sprintf'],
             self::functionCalls('<?php $a = \get_bloginfo("name"); $o->get_x(); X::y(); function z() {} sprintf("");')
         );
+    }
+
+    /** The HTML fields of the context (ContextHtml) are TrustedHtml objects, never strings. */
+    public function testContextHtmlFieldsAreTrustedHtml(): void
+    {
+        $GLOBALS['wp_test_sidebars'] = ['sidebar-1' => '<b>s</b>', 'footer-1' => ''];
+        $GLOBALS['wp_test_menus'] = ['locations' => [], 'items' => []];
+        $ctx = (require \dirname(__DIR__).'/themes/latte/configs/context.php')()->createErrorContext();
+        foreach (ContextHtml::WIDGET_FIELDS as $k) {
+            self::assertInstanceOf(TrustedHtml::class, $ctx['widgets'][$k], "widgets.$k");
+        }
+        $vm = (new PostViewModelBuilder())->build(new Post(1, 'post', 's', 'T', new TrustedHtml('<p>x</p>'), '', '/', '', ''));
+        foreach (ContextHtml::POST_FIELDS as $k) {
+            self::assertInstanceOf(TrustedHtml::class, $vm[$k], "post.$k");
+        }
+        unset($GLOBALS['wp_test_sidebars']);
+    }
+
+    /** No builder turns the HTML of a port back into a string, and no view marks a TrustedHtml field raw by hand. */
+    public function testNoStringCastOrRawPrintOfContextHtml(): void
+    {
+        foreach ([...glob(self::ROOT.'/Data/*.php') ?: [], ...glob(self::ROOT.'/Data/*/*.php') ?: []] as $file) {
+            $src = (string) file_get_contents($file);
+            self::assertDoesNotMatchRegularExpression(
+                '/\(string\)\s*\$(post->(content|linkPages)|this->(widgets|comments)->render)/',
+                $src,
+                basename($file).' casts TrustedHtml to string',
+            );
+        }
+        $views = [];
+        foreach (['themes', 'presets'] as $dir) {
+            $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(\dirname(__DIR__).'/'.$dir, \FilesystemIterator::SKIP_DOTS));
+            foreach ($it as $f) {
+                $path = (string) $f;
+                if (preg_match('#/(vendor|~cache|node_modules)/#', $path) || !preg_match('/\.(latte|twig)$/', $path)) {
+                    continue;
+                }
+                $views[] = $path;
+                $src = (string) file_get_contents($path);
+                self::assertDoesNotMatchRegularExpression(
+                    '/\{\$(page\[\'(content|linkPages)\'\]|comments|widgets\[\'(sidebar|footer)\'\])\|noescape\}|\{\{\s*(page\.(content|linkPages)|comments|widgets\.(sidebar|footer))\|raw\s*\}\}/',
+                    $src,
+                    "$path prints a TrustedHtml field with |noescape / |raw",
+                );
+            }
+        }
+        self::assertGreaterThan(100, \count($views));
     }
 
     /** @return list<string> global function names called in $code */

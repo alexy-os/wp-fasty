@@ -10,7 +10,7 @@
   ],
   "$defs": {
     "url": { "type": "string" },
-    "html": { "type": "string", "description": "TrustedHtml from a WordPress adapter, printed unescaped" },
+    "html": { "type": "string", "description": "WPFasty\\Core\\Html\\TrustedHtml in PHP (ContextHtml: post content / linkPages, comments, widgets.sidebar / widgets.footer), serialized as its string; the renderers print it raw, every other string is escaped" },
     "image": {
       "type": "object",
       "required": ["url", "width", "height", "alt", "srcset", "sizes"],

@@ -3,7 +3,7 @@
  # Context: comments (string, empty unless the theme enables `wpfasty_comments_enabled`)
  #}
 {% if comments ?? false %}
-	{% set inner %}{{ comments|raw }}{% endset %}
+	{% set inner %}{{ comments }}{% endset %}
 	{% set box %}
 		{% include 'box/Box.html.twig' with { class: 'container mx-auto max-w-3xl border-t border-border px-4 py-12 md:px-6', children: inner } %}
 	{% endset %}

@@ -72,6 +72,7 @@ $render = static function (RendererInterface $r, array $fx): string {
         return $r->render($fx['view'], $fx['context']);
     }
     $ctx = $fx['context'];
+    $ctx = WPFasty\Core\Html\ContextHtml::trust($ctx);
     $ctx['content'] = $r->render($fx['view'], $ctx);
 
     return $r->render('layout/default', $ctx);
@@ -324,6 +325,8 @@ foreach ($wanted as $suite) {
     $twig = new TwigRenderer([...$views, ...$twigPrims], "{$cache}/{$suite}/twig");
     foreach ($files as $file) {
         $fx = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
+        // frozen contexts hold the HTML fields as strings; mark them like the WordPress adapters do
+        $fx['context'] = WPFasty\Core\Html\ContextHtml::trust($fx['context']);
         $name = $suite.'/'.basename($file, '.json');
         $kind = empty($fx['page']) ? $fx['view'] : "{$fx['view']} + layout/default";
         if (!$twig->exists($fx['view'])) {

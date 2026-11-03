@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WPFasty\Tests;
 
 use PHPUnit\Framework\TestCase;
+use WPFasty\Core\Html\ContextHtml;
 use WPFasty\Core\Html\TrustedHtml;
 use WPFasty\Core\Model\Author;
 use WPFasty\Core\Model\Image;
@@ -50,7 +51,7 @@ final class PostRenderContractTest extends TestCase
         );
         $fx = json_decode((string) file_get_contents(__DIR__.'/fixtures/parity/latte/single.json'), true, 512, JSON_THROW_ON_ERROR);
         self::assertIsArray($fx);
-        $context = $fx['context'];
+        $context = ContextHtml::trust($fx['context']);
         $context['page'] = (new PostViewModelBuilder())->build($post);
 
         $latte = $this->page($this->latte(), $context);

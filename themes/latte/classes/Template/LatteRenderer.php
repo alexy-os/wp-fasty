@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace WPFasty\Template;
 
 use Latte\Engine;
+use Latte\Runtime\Html;
+use WPFasty\Core\Html\ContextHtml;
 
 class LatteRenderer implements RendererInterface
 {
@@ -50,7 +52,10 @@ class LatteRenderer implements RendererInterface
 
     public function render(string $template, array $context = []): string
     {
-        return $this->latte->renderToString($this->withExtension($template), $context);
+        return $this->latte->renderToString(
+            $this->withExtension($template),
+            ContextHtml::unwrap($context, static fn (string $html): Html => new Html($html)),
+        );
     }
 
     public function latte(): Engine

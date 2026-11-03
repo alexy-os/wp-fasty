@@ -67,7 +67,7 @@
 				{if !empty($page['product']['sku'])}{capture $c_ui19}{icon('tag')}SKU: {$page['product']['sku']}{/capture}{include 'box/Box.latte', tag: 'li', class: 'flex items-center gap-2', children: (string) $c_ui19, attrs: []}{/if}
 			{/capture}{include 'box/Box.latte', tag: 'ul', class: 'flex flex-col gap-2 text-sm text-muted-foreground', children: (string) $c_ui20, attrs: []}
 
-			{capture $c_ui21}{$page['content']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none border-t border-border pt-6', children: (string) $c_ui21, attrs: []}
+			{capture $c_ui21}{$page['content']}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none border-t border-border pt-6', children: (string) $c_ui21, attrs: []}
 		{/capture}{include 'box/Box.latte', tag: 'div', class: 'flex flex-col gap-6', children: (string) $c_ui22, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'div', class: 'grid gap-8 md:grid-cols-2 md:gap-16', children: (string) $c_ui23, attrs: []}
 	{include 'blocks/slot.latte', name: 'product.after'}

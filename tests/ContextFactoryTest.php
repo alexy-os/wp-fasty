@@ -6,6 +6,7 @@ namespace WPFasty\Tests;
 
 use PHPUnit\Framework\TestCase;
 use WPFasty\Adapter\WordPress\PlainText;
+use WPFasty\Core\Html\TrustedHtml;
 use WPFasty\Data\ContextFactory;
 
 final class ContextFactoryTest extends TestCase
@@ -87,8 +88,9 @@ final class ContextFactoryTest extends TestCase
             'footer-1' => '<section class="widget">Footer</section>',
         ];
         $ctx = self::contextFactory()->createErrorContext();
-        $this->assertStringContainsString('Sidebar', $ctx['widgets']['sidebar']);
-        $this->assertStringContainsString('Footer', $ctx['widgets']['footer']);
+        $this->assertInstanceOf(TrustedHtml::class, $ctx['widgets']['sidebar']);
+        $this->assertStringContainsString('Sidebar', (string) $ctx['widgets']['sidebar']);
+        $this->assertStringContainsString('Footer', (string) $ctx['widgets']['footer']);
     }
 
     protected function setUp(): void

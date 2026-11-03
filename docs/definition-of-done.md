@@ -1,10 +1,10 @@
 # Definition of Done — ContextFactory refactor and audit findings
 
 The key quality criteria for closing the ContextFactory refactor and every audit finding. An item is done when its
-check runs in CI (or the stated script) and passes. Status is measured on **2026-11-02** (updated 21:30 MSK) on `main`; ✅ green,
+check runs in CI (or the stated script) and passes. Status is measured on **2026-11-03** (updated 12:00 MSK) on `main`; ✅ green,
 ❌ red / not in place yet, 🟡 partly in place.
 
-## Status table (measured 2026-11-02, 21:30 MSK)
+## Status table (measured 2026-11-03, 12:00 MSK)
 
 | Item | Check | Measured | Status |
 |---|---|---|---|
@@ -12,13 +12,13 @@ check runs in CI (or the stated script) and passes. Status is measured on **2026
 | ContextFactory ~100 lines | `wc -l` | 101 (was 592) | ✅ |
 | Contexts vs JSON Schema | ContextSchemaTest, `tools/qa/context-schema.php` | 28 live contexts, 0 invalid | ✅ |
 | Post DTO vs @ui8kit/contract entry | PostContractSchemaTest | 6 fields × 4 posts valid; gap → #121 | 🟡 |
-| HTML only as TrustedHtml | review | ports yes, context strings → #118 | 🟡 |
+| HTML only as TrustedHtml | ArchitectureTest, ContextHtmlTest | 7 context fields TrustedHtml, 0 `\|noescape`/`\|raw` on them, 60 pages unchanged | ✅ |
 | DTO through Latte + Twig | PostRenderContractTest, `bun run parity` | same DOM | ✅ |
 | PHPStan max, empty baseline | `composer phpstan` | 0 errors, 0 baseline, 2 targeted ignores | ✅ |
 | PHPCS / CS-Fixer / PHPCompatibility | `composer cs` | 0 | ✅ |
 | Infection MSI ≥ 80 % | `composer infection` | 97.9 % (229/234), gate 95 | ✅ |
 | Rector dry-run clean | `composer rector` | 0 files | ✅ |
-| PHPUnit | `composer test` | 459 tests, 7114 assertions | ✅ |
+| PHPUnit | `composer test` | 465 tests, 7407 assertions | ✅ |
 | HTML snapshots | CI 28 pages; local 60 pages | 0 differ | ✅ |
 | N+1 guard | CI `tools/perf/queries.php` | flat | ✅ |
 | TTFB ≤ 150 ms | `tools/perf/ttfb.sh` | 37–43 ms median | ✅ |
@@ -46,9 +46,12 @@ check runs in CI (or the stated script) and passes. Status is measured on **2026
   schemas for Codex records only, none for a view context; `locale`, `status`, `visibility`, `version`,
   `created_at`, `updated_at` and the id references are not in the view-model — filed for XGenBot:
   [chaosbun#121](https://github.com/alexy-os/chaosbun/issues/121).
-- [ ] 🟡 HTML only as `TrustedHtml` — the_content, wp_link_pages, widget areas and comments cross the ports as
-  `TrustedHtml`; the context still carries them as strings (template contract) — `rg "TrustedHtml" themes/latte/classes`.
-  Filed: [chaosbun#118](https://github.com/alexy-os/chaosbun/issues/118) (PHPIngineer; template contract change).
+- [x] ✅ HTML only as `TrustedHtml` — the_content, wp_link_pages, widget areas and comments cross the ports and the
+  template context as `TrustedHtml` (`Core\Html\ContextHtml` lists the fields); the renderers print it raw, the views
+  have no `|noescape` / `|raw` on those fields — `vendor/bin/phpunit --filter 'ArchitectureTest|ContextHtmlTest'`;
+  `tools/security/raw-sinks.json` 69 → 34 reviewed view sinks. Closed [chaosbun#118](https://github.com/alexy-os/chaosbun/issues/118).
+  Still strings by design: `archive.description` (term description; latte-press sets an escaped tagline there) and
+  the view-local captures (`$content` of the layout, hero / search / 404 fragments).
 - [x] ✅ Contract test rendering the same DTO via Latte and a Twig adapter — `vendor/bin/phpunit --filter
   PostRenderContractTest`: one `Post` DTO → `PostViewModelBuilder` → `pages/single` in `layout/default`, same DOM
   through `LatteRenderer` and `TwigRenderer` (`tools/parity/compare-classes.php`), DTO values escaped alike;

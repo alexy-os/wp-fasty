@@ -43,7 +43,7 @@
 	{/if}
 
 	{capture $c_ui16}
-		{capture $c_ui15}{$page['content']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none', children: (string) $c_ui15, attrs: []}
+		{capture $c_ui15}{$page['content']}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none', children: (string) $c_ui15, attrs: []}
 	{/capture}{include 'box/Box.latte', tag: 'div', class: 'container mx-auto max-w-3xl px-4 py-16 md:px-6', children: (string) $c_ui16, attrs: []}
 {/capture}{include 'box/Box.latte', tag: 'article', class: ($page['postClass'] ?? ''), children: (string) $c_ui17, attrs: []}
 

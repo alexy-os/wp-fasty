@@ -51,11 +51,11 @@
 			{% include 'box/Box.html.twig' with { class: 'mb-8 overflow-hidden rounded-lg', children: img } %}
 		{% endif %}
 
-		{% set body %}{% set c_ui5 %}{{ page.content|raw }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none text-foreground', 'children': c_ui5, 'attrs': {}} only %}{% endset %}
+		{% set body %}{% set c_ui5 %}{{ page.content }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none text-foreground', 'children': c_ui5, 'attrs': {}} only %}{% endset %}
 		{% include 'box/Box.html.twig' with { children: body } %}
 
 		{% if page.linkPages ?? false %}
-			{{ page.linkPages|raw }}
+			{{ page.linkPages }}
 		{% endif %}
 
 		{% if page.tags ?? false %}

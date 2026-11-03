@@ -41,12 +41,13 @@ final class PostViewModelBuilderTest extends TestCase
             'id', 'title', 'content', 'slug', 'url', 'excerpt', 'featuredImage', 'thumbnail', 'categories', 'tags',
             'author', 'postClass', 'linkPages', 'prev', 'next', 'mimeType', 'isAttachment', 'date',
         ], array_keys($vm));
-        self::assertSame('<p>Hi</p>', $vm['content']);
+        self::assertInstanceOf(TrustedHtml::class, $vm['content']);
+        self::assertSame('<p>Hi</p>', (string) $vm['content']);
         self::assertSame('768', $vm['featuredImage']['height']);
         self::assertNull($vm['thumbnail']);
         self::assertSame([['name' => 'News', 'url' => '/c/news/', 'slug' => 'news']], $vm['categories']);
         self::assertSame(['name' => 'Ann', 'url' => '/a/ann/'], $vm['author']);
-        self::assertSame('<nav>1 2</nav>', $vm['linkPages']);
+        self::assertSame('<nav>1 2</nav>', (string) $vm['linkPages']);
         self::assertSame(['title' => 'Older', 'url' => '/older/'], $vm['prev']);
         self::assertNull($vm['next']);
         self::assertFalse($vm['isAttachment']);
@@ -76,7 +77,8 @@ final class PostViewModelBuilderTest extends TestCase
             attachmentUrl: '/pic.png',
         ));
         self::assertTrue($vm['isAttachment']);
-        self::assertSame('', $vm['linkPages']);
+        self::assertInstanceOf(TrustedHtml::class, $vm['linkPages']);
+        self::assertTrue($vm['linkPages']->isEmpty());
         self::assertSame('attachmentUrl', array_key_last($vm));
         self::assertSame('/pic.png', $vm['attachmentUrl']);
     }

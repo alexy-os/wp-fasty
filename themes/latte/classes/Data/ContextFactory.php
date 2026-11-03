@@ -6,6 +6,7 @@ namespace WPFasty\Data;
 
 use WPFasty\Adapter\WordPress\ContextFilters;
 use WPFasty\Adapter\WordPress\WordPressPostRepositoryInterface;
+use WPFasty\Core\Html\TrustedHtml;
 use WPFasty\Core\Model\Post;
 use WPFasty\Core\Port\ArchiveStateProviderInterface;
 use WPFasty\Core\Port\CommentsRendererInterface;
@@ -50,7 +51,7 @@ final class ContextFactory
         return $this->filters->context(array_merge($this->common->build($site, $request), [
             'page' => $page,
             'hero' => $this->siteBuilder->hero($site, $this->labels->hero()),
-            'comments' => $post instanceof \WP_Post && $request->singular ? (string) $this->comments->render($post->ID) : '',
+            'comments' => $post instanceof \WP_Post && $request->singular ? $this->comments->render($post->ID) : TrustedHtml::empty(),
         ], $request->frontPage ? ['posts' => $this->viewModels($this->posts->recent(6))] : []), $post);
     }
 

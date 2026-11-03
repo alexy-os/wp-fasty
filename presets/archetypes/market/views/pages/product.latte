@@ -44,7 +44,7 @@
 			{capture $desc}
 				{capture $h}{$labels['description']}{/capture}{include 'text/Text.latte', tag: 'h2', class: 'font-heading text-xl font-bold', children: (string) $h, attrs: []}
 				{if !empty($page['excerpt'])}{capture $ex}{$page['excerpt']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'text-lg text-muted-foreground', children: (string) $ex, attrs: []}{/if}
-				{capture $c}{$page['content']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none', children: (string) $c, attrs: []}
+				{capture $c}{$page['content']}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none', children: (string) $c, attrs: []}
 			{/capture}{include 'box/Box.latte', tag: 'section', class: 'flex flex-col gap-4 rounded-xl border border-border bg-card p-6', children: (string) $desc, attrs: ['id' => 'description']}
 
 			{if !empty($d['changelog'])}

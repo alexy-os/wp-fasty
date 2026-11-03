@@ -51,11 +51,11 @@
 			{include 'box/Box.latte', class: 'mb-8 overflow-hidden rounded-lg', children: (string) $img}
 		{/if}
 
-		{capture $body}{capture $c_ui5}{$page['content']|noescape}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none text-foreground', children: (string) $c_ui5, attrs: []}{/capture}
+		{capture $body}{capture $c_ui5}{$page['content']}{/capture}{include 'box/Box.latte', tag: 'div', class: 'prose max-w-none text-foreground', children: (string) $c_ui5, attrs: []}{/capture}
 		{include 'box/Box.latte', children: (string) $body}
 
 		{if !empty($page['linkPages'])}
-			{$page['linkPages']|noescape}
+			{$page['linkPages']}
 		{/if}
 
 		{if !empty($page['tags'])}

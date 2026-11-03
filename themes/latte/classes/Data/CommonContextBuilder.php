@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WPFasty\Data;
 
+use WPFasty\Core\Html\TrustedHtml;
 use WPFasty\Core\Model\RequestState;
 use WPFasty\Core\Model\SiteInfo;
 use WPFasty\Core\Port\LabelProviderInterface;
@@ -32,7 +33,7 @@ final class CommonContextBuilder
      *   sheet: array<string, string>,
      *   labels: array<string, string>,
      *   search: array<string, string>,
-     *   widgets: array<string, string>
+     *   widgets: array{sidebar: TrustedHtml, footer: TrustedHtml}
      * }
      */
     public function build(SiteInfo $site, RequestState $request): array
@@ -47,8 +48,8 @@ final class CommonContextBuilder
             'labels' => $this->labels->labels(),
             'search' => $this->siteBuilder->search($site, $request->searchQuery, $this->labels->search()),
             'widgets' => [
-                'sidebar' => $request->fullWidth ? '' : (string) $this->widgets->render('sidebar-1'),
-                'footer' => (string) $this->widgets->render('footer-1'),
+                'sidebar' => $request->fullWidth ? TrustedHtml::empty() : $this->widgets->render('sidebar-1'),
+                'footer' => $this->widgets->render('footer-1'),
             ],
         ];
     }

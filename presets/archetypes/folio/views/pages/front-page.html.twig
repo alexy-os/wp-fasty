@@ -50,7 +50,7 @@
 
 {% if page.content ?? false %}
 	{% set c_ui21 %}
-		{% set c_ui20 %}{{ page.content|raw }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none', 'children': c_ui20, 'attrs': {}} only %}
+		{% set c_ui20 %}{{ page.content }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none', 'children': c_ui20, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'section', 'class': 'container mx-auto max-w-3xl px-4 py-16 md:px-6', 'children': c_ui21, 'attrs': {}} only %}
 {% endif %}
 

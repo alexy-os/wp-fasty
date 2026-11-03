@@ -17,6 +17,7 @@ use Twig\Markup;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use WPFasty\Core\Cast;
+use WPFasty\Core\Html\ContextHtml;
 
 final class TwigRenderer implements RendererInterface
 {
@@ -73,7 +74,10 @@ final class TwigRenderer implements RendererInterface
 
     public function render(string $template, array $context = []): string
     {
-        return $this->twig->render($this->withExtension($template), $context);
+        return $this->twig->render(
+            $this->withExtension($template),
+            ContextHtml::unwrap($context, static fn (string $html): Markup => new Markup($html, 'UTF-8')),
+        );
     }
 
     public function twig(): Environment

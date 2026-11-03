@@ -67,7 +67,7 @@
 				{% if page.product.sku ?? false %}{% set c_ui19 %}{{ icon('tag') }}SKU: {{ page.product.sku }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'li', 'class': 'flex items-center gap-2', 'children': c_ui19, 'attrs': {}} only %}{% endif %}
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'ul', 'class': 'flex flex-col gap-2 text-sm text-muted-foreground', 'children': c_ui20, 'attrs': {}} only %}
 
-			{% set c_ui21 %}{{ page.content|raw }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none border-t border-border pt-6', 'children': c_ui21, 'attrs': {}} only %}
+			{% set c_ui21 %}{{ page.content }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none border-t border-border pt-6', 'children': c_ui21, 'attrs': {}} only %}
 		{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'flex flex-col gap-6', 'children': c_ui22, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'grid gap-8 md:grid-cols-2 md:gap-16', 'children': c_ui23, 'attrs': {}} only %}
 	{% include 'blocks/slot.html.twig' with {'name': 'product.after'} %}

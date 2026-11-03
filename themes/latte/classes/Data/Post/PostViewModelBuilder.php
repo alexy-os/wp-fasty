@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WPFasty\Data\Post;
 
+use WPFasty\Core\Html\TrustedHtml;
 use WPFasty\Core\Model\Image;
 use WPFasty\Core\Model\Post;
 use WPFasty\Core\Model\PostLink;
@@ -18,7 +19,7 @@ final class PostViewModelBuilder
         $data = [
             'id' => $post->id,
             'title' => $post->title,
-            'content' => (string) $post->content,
+            'content' => $post->content,
             'slug' => $post->slug,
             'url' => $post->url,
             'excerpt' => $post->excerpt,
@@ -28,7 +29,7 @@ final class PostViewModelBuilder
             'tags' => $this->terms($post->tags),
             'author' => null === $post->author ? null : ['name' => $post->author->name, 'url' => $post->author->url],
             'postClass' => $post->cssClass,
-            'linkPages' => (string) $post->linkPages,
+            'linkPages' => $post->linkPages ?? TrustedHtml::empty(),
             'prev' => $this->link($post->previous),
             'next' => $this->link($post->next),
             'mimeType' => $post->mimeType,

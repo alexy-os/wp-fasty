@@ -43,7 +43,7 @@
 	{% endif %}
 
 	{% set c_ui16 %}
-		{% set c_ui15 %}{{ page.content|raw }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none', 'children': c_ui15, 'attrs': {}} only %}
+		{% set c_ui15 %}{{ page.content }}{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'prose max-w-none', 'children': c_ui15, 'attrs': {}} only %}
 	{% endset %}{% include 'box/Box.html.twig' with {'tag': 'div', 'class': 'container mx-auto max-w-3xl px-4 py-16 md:px-6', 'children': c_ui16, 'attrs': {}} only %}
 {% endset %}{% include 'box/Box.html.twig' with {'tag': 'article', 'class': (page.postClass ?? ''), 'children': c_ui17, 'attrs': {}} only %}
 
