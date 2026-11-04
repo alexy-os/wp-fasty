@@ -136,9 +136,10 @@ final class Front
             'action' => admin_url('admin-post.php'),
             'cart_nonce' => '',
             'checkout_nonce' => '',
-            // admin-post actions: ModulY cart/orders >= 0.3 set moduly_cart / moduly_checkout; older modules only know these
-            'cart_action' => 'latte_shop_cart',
-            'checkout_action' => 'latte_shop_checkout',
+            // admin-post actions: moduly_* when ModulY cart/orders >= 0.3 registered them (they also set these keys),
+            // the deprecated latte_shop_* names for older modules
+            'cart_action' => self::action('cart'),
+            'checkout_action' => self::action('checkout'),
             'count' => 0,
             'free_shipping' => '',
         ]);
@@ -311,6 +312,14 @@ final class Front
         }
 
         return (string) ($product[$column] ?? '');
+    }
+
+    /** admin-post action of a shop form: `moduly_<form>` when a ModulY module handles it, else `latte_shop_<form>`. */
+    private static function action(string $form): string
+    {
+        $new = 'moduly_'.$form;
+
+        return has_action('admin_post_'.$new) || has_action('admin_post_nopriv_'.$new) ? $new : 'latte_shop_'.$form;
     }
 
     private static function param(string $key, array $allowed): string
