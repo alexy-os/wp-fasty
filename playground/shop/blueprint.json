@@ -2,7 +2,7 @@
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
   "meta": {
     "title": "WP FastY Shop + Builder",
-    "description": "Child theme latte-shop on the wp-fasty parent, WP FastY Builder (page builder) with seeded landings, ModulY cart and orders modules (post types from the theme registry; the ModulY types module still expects WP_Post in wpfasty_post_data, so it is not installed), demo products. Zips: GitHub release `playground` (rolling, rebuilt by the Playground workflow).",
+    "description": "Child theme latte-shop on the wp-fasty parent, WP FastY Builder (page builder) with seeded landings, ModulY types, cart and orders modules, demo products. Zips: GitHub release `playground` (rolling, rebuilt by the Playground workflow).",
     "author": "alexy-os"
   },
   "landingPage": "/",
@@ -73,6 +73,14 @@
     },
     {
       "step": "writeFile",
+      "path": "/tmp/moduly-types.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/moduly-types.zip"
+      }
+    },
+    {
+      "step": "writeFile",
       "path": "/tmp/moduly-orders.zip",
       "data": {
         "resource": "url",
@@ -127,11 +135,11 @@
     },
     {
       "step": "runPHP",
-      "code": "<?php @mkdir('/wordpress/wp-content/uploads/moduly', 0755, true); copy('/tmp/moduly-cart.zip', '/wordpress/wp-content/uploads/moduly/cart.zip'); copy('/tmp/moduly-orders.zip', '/wordpress/wp-content/uploads/moduly/orders.zip');"
+      "code": "<?php @mkdir('/wordpress/wp-content/uploads/moduly', 0755, true); copy('/tmp/moduly-types.zip', '/wordpress/wp-content/uploads/moduly/types.zip'); copy('/tmp/moduly-cart.zip', '/wordpress/wp-content/uploads/moduly/cart.zip'); copy('/tmp/moduly-orders.zip', '/wordpress/wp-content/uploads/moduly/orders.zip');"
     },
     {
       "step": "runPHP",
-      "code": "<?php require_once '/wordpress/wp-load.php'; $p = PhpFasty\\Moduly\\Wp\\Plugin::instance(); if (!$p) { throw new Exception('ModulY did not boot'); } foreach (['cart', 'orders'] as $id) { $p->modules->install('/tmp/moduly-' . $id . '.zip', true); }"
+      "code": "<?php require_once '/wordpress/wp-load.php'; $p = PhpFasty\\Moduly\\Wp\\Plugin::instance(); if (!$p) { throw new Exception('ModulY did not boot'); } foreach (['types', 'cart', 'orders'] as $id) { $p->modules->install('/tmp/moduly-' . $id . '.zip', true); }"
     },
     {
       "step": "setSiteOptions",
