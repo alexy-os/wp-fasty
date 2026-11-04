@@ -127,7 +127,7 @@
 				{% if ((shop['cart_available']) is empty) %}
 					{% set un %}{{ icon('circle-alert', 'size-4') }}{{ labels['unavailableText'] }}{% endset %}{% include 'text/Text.html.twig' with {'tag': 'p', 'class': 'flex gap-2 text-sm text-muted-foreground', 'children': un, 'attrs': {'role': 'status'}} only %}
 				{% elseif page['product']['purchasable'] %}
-					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': (shop.cart_action|default('latte_shop_cart'))}} only %}
+					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': (shop.cart_action|default('moduly_cart'))}} only %}
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'op', 'value': 'add'}} only %}
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'qty', 'value': '1'}} only %}
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'product_id', 'value': (page['id'])}} only %}

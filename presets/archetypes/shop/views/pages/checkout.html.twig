@@ -32,7 +32,7 @@
 		{% endif %}
 		{% set v = checkout.values %}
 		{% set c_ui40 %}
-			{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': (shop.checkout_action|default('latte_shop_checkout'))}} only %}
+			{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': (shop.checkout_action|default('moduly_checkout'))}} only %}
 			{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop.checkout_nonce)}} only %}
 			{% set c_ui33 %}
 				{% set c_ui24 %}

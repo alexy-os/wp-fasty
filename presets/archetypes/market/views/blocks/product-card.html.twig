@@ -35,7 +35,7 @@
 				{% endif %}
 				{% if product['product']['purchasable'] and not ((shop['cart_available']) is empty) %}
 					{% set f %}
-						{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': (shop.cart_action|default('latte_shop_cart'))}} only %}
+						{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': (shop.cart_action|default('moduly_cart'))}} only %}
 						{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'op', 'value': 'add'}} only %}
 						{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'product_id', 'value': (product['id'])}} only %}
 						{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop['cart_nonce'])}} only %}

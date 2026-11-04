@@ -18,7 +18,8 @@ fail=0
 for p in "${PATHS[@]}"; do
   code=$(get "$p")
   if [ "$code" != 200 ] || grep -qiE 'fatal error|critical error' "$BODY"; then echo "FAIL $p: HTTP $code"; fail=1; else echo "ok   $p: 200"; fi
-  grep -o 'name="action" value="\(moduly\|latte_shop\)_[a-z]*"' "$BODY" | sort | uniq -c | sed 's/^/       /' || true
+  grep -o 'name="action" value="moduly_[a-z]*"' "$BODY" | sort | uniq -c | sed 's/^/       /' || true
+  if grep -q 'value="latte_shop_' "$BODY"; then echo "FAIL $p: a form posts a removed latte_shop_* action"; fail=1; fi
 done
 get /wp-admin/plugins.php >/dev/null
 echo "ModulY plugin: $(tr '\n' ' ' < "$BODY" | grep -oE 'data-slug="moduly".{0,3000}' | grep -oE 'Version [0-9][0-9.]*' | head -1)"

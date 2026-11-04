@@ -32,7 +32,7 @@
 		{/if}
 		{var $v = $checkout['values']}
 		{capture $c_ui40}
-			{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => ($shop['checkout_action'] ?? 'latte_shop_checkout')]}
+			{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => ($shop['checkout_action'] ?? 'moduly_checkout')]}
 			{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['checkout_nonce'])]}
 			{capture $c_ui33}
 				{capture $c_ui24}

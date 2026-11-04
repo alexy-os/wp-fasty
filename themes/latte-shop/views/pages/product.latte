@@ -31,7 +31,7 @@
 
 			{if $page['product']['purchasable']}
 				{capture $c_ui16}
-					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => ($shop['cart_action'] ?? 'latte_shop_cart')]}
+					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => ($shop['cart_action'] ?? 'moduly_cart')]}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'op', 'value' => 'add']}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'product_id', 'value' => ($page['id'])]}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['cart_nonce'])]}
