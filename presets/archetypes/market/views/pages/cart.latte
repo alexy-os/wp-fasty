@@ -13,7 +13,7 @@
 	{else}
 		{capture $c_ui20}
 			{capture $c_ui18}
-				{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => 'latte_shop_cart']}
+				{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => ($shop['cart_action'] ?? 'latte_shop_cart')]}
 				{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'op', 'value' => 'update']}
 				{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => '_wpnonce', 'value' => ($shop['cart_nonce'])]}
 				{capture $c_ui15}
@@ -40,7 +40,7 @@
 			{/capture}{include 'form/Form.latte', action: $shop['action'] ?? '', class: 'flex flex-col gap-4 lg:col-span-2', children: (string) $c_ui18, attrs: ['method' => 'post']}
 			{foreach $cart['items'] as $item}
 				{capture $c_ui19}
-					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => 'latte_shop_cart']}
+					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'action', 'value' => ($shop['cart_action'] ?? 'latte_shop_cart')]}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'op', 'value' => 'remove']}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'product_id', 'value' => ($item['id'])]}
 					{include 'input/Input.latte', attrs: ['type' => 'hidden', 'name' => 'key', 'value' => ($item['key'] ?? $item['id'])]}

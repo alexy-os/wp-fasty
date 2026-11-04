@@ -136,6 +136,9 @@ final class Front
             'action' => admin_url('admin-post.php'),
             'cart_nonce' => '',
             'checkout_nonce' => '',
+            // admin-post actions: ModulY cart/orders >= 0.3 set moduly_cart / moduly_checkout; older modules only know these
+            'cart_action' => 'latte_shop_cart',
+            'checkout_action' => 'latte_shop_checkout',
             'count' => 0,
             'free_shipping' => '',
         ]);

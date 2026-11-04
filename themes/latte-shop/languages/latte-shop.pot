@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-03T19:46:07+00:00\n"
+"POT-Creation-Date: 2026-11-04T16:51:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: latte-shop\n"
@@ -43,244 +43,244 @@ msgstr ""
 msgid "This theme needs the \"WP FastY Types\" plugin (plugins/wpfasty-types) to register its content types."
 msgstr ""
 
-#: inc/front.php:162
+#: inc/front.php:165
 msgid "Add to cart"
 msgstr ""
 
-#: inc/front.php:163
+#: inc/front.php:166
 msgid "Buy now"
 msgstr ""
 
-#: inc/front.php:164
+#: inc/front.php:167
 msgid "Cart"
 msgstr ""
 
-#: inc/front.php:165
+#: inc/front.php:168
 msgid "Checkout"
 msgstr ""
 
-#: inc/front.php:166
+#: inc/front.php:169
 msgid "Subtotal"
 msgstr ""
 
-#: inc/front.php:167
+#: inc/front.php:170
 msgid "Shipping"
 msgstr ""
 
-#: inc/front.php:168
+#: inc/front.php:171
 msgid "Total"
 msgstr ""
 
-#: inc/front.php:169
+#: inc/front.php:172
 msgid "Quantity"
 msgstr ""
 
-#: inc/front.php:170
+#: inc/front.php:173
 msgid "Remove"
 msgstr ""
 
-#: inc/front.php:171
+#: inc/front.php:174
 msgid "Update cart"
 msgstr ""
 
-#: inc/front.php:172
-#: inc/front.php:412
+#: inc/front.php:175
+#: inc/front.php:415
 msgid "Your cart is empty."
 msgstr ""
 
-#: inc/front.php:173
+#: inc/front.php:176
 msgid "Continue shopping"
 msgstr ""
 
-#: inc/front.php:174
+#: inc/front.php:177
 msgid "Place order"
 msgstr ""
 
-#: inc/front.php:175
+#: inc/front.php:178
 msgid "Out of stock"
 msgstr ""
 
-#: inc/front.php:176
+#: inc/front.php:179
 msgid "Sale"
 msgstr ""
 
-#: inc/front.php:177
+#: inc/front.php:180
 msgid "All"
 msgstr ""
 
-#: inc/front.php:178
+#: inc/front.php:181
 msgid "Shop now"
 msgstr ""
 
-#: inc/front.php:179
+#: inc/front.php:182
 msgid "Featured products"
 msgstr ""
 
-#: inc/front.php:180
+#: inc/front.php:183
 msgid "Thank you — your order has been received."
 msgstr ""
 
-#: inc/front.php:181
+#: inc/front.php:184
 #: types/shop_order.php:21
 #: types/shop_order.php:22
 msgid "Order"
 msgstr ""
 
-#: inc/front.php:182
-#: inc/front.php:280
+#: inc/front.php:185
+#: inc/front.php:283
 msgid "Address"
 msgstr ""
 
-#: inc/front.php:183
+#: inc/front.php:186
 msgid "Please check"
 msgstr ""
 
-#: inc/front.php:184
-#: inc/front.php:281
+#: inc/front.php:187
+#: inc/front.php:284
 msgid "Payment"
 msgstr ""
 
-#: inc/front.php:185
+#: inc/front.php:188
 msgid "Demo store — no real payment is taken."
 msgstr ""
 
-#: inc/front.php:186
+#: inc/front.php:189
 msgid "Temporarily unavailable"
 msgstr ""
 
-#: inc/front.php:187
+#: inc/front.php:190
 msgid "This feature is temporarily unavailable. Please try again later."
 msgstr ""
 
-#: inc/front.php:188
+#: inc/front.php:191
 msgid "Back to site"
 msgstr ""
 
-#: inc/front.php:189
+#: inc/front.php:192
 msgid "No products found."
 msgstr ""
 
-#: inc/front.php:190
+#: inc/front.php:193
 msgid "Breadcrumb"
 msgstr ""
 
-#: inc/front.php:191
+#: inc/front.php:194
 msgid "items"
 msgstr ""
 
-#: inc/front.php:192
+#: inc/front.php:195
 msgid "author since"
 msgstr ""
 
-#: inc/front.php:193
+#: inc/front.php:196
 msgid "by"
 msgstr ""
 
-#: inc/front.php:194
+#: inc/front.php:197
 msgid "Account"
 msgstr ""
 
-#: inc/front.php:195
+#: inc/front.php:198
 msgid "Search"
 msgstr ""
 
-#: inc/front.php:196
+#: inc/front.php:199
 msgid "30-day easy returns"
 msgstr ""
 
-#: inc/front.php:197
+#: inc/front.php:200
 msgid "Instant download after payment"
 msgstr ""
 
-#: inc/front.php:198
+#: inc/front.php:201
 msgid "Updates included"
 msgstr ""
 
-#: inc/front.php:199
+#: inc/front.php:202
 msgid "Pay on delivery or by bank transfer"
 msgstr ""
 
 #. translators: %s: order amount for free shipping
-#: inc/front.php:203
+#: inc/front.php:206
 #, php-format
 msgid "Free shipping over %s"
 msgstr ""
 
-#: inc/front.php:206
+#: inc/front.php:209
 msgid "Fast delivery"
 msgstr ""
 
-#: inc/front.php:254
-#: inc/front.php:259
+#: inc/front.php:257
+#: inc/front.php:262
 msgid "Full name"
 msgstr ""
 
-#: inc/front.php:255
+#: inc/front.php:258
 msgid "Email for download links"
 msgstr ""
 
-#: inc/front.php:256
-#: inc/front.php:261
+#: inc/front.php:259
+#: inc/front.php:264
 msgid "Phone"
 msgstr ""
 
-#: inc/front.php:260
+#: inc/front.php:263
 msgid "Email"
 msgstr ""
 
-#: inc/front.php:262
+#: inc/front.php:265
 msgid "Country"
 msgstr ""
 
-#: inc/front.php:263
+#: inc/front.php:266
 msgid "City"
 msgstr ""
 
-#: inc/front.php:264
+#: inc/front.php:267
 msgid "Postcode"
 msgstr ""
 
-#: inc/front.php:282
+#: inc/front.php:285
 msgid "Acceptance of the offer"
 msgstr ""
 
-#: inc/front.php:283
+#: inc/front.php:286
 msgid "Consent to personal data processing"
 msgstr ""
 
-#: inc/front.php:302
+#: inc/front.php:305
 msgid "Bank card"
 msgstr ""
 
-#: inc/front.php:303
+#: inc/front.php:306
 msgid "Faster Payments System (SBP)"
 msgstr ""
 
-#: inc/front.php:304
+#: inc/front.php:307
 msgid "Invoice for companies"
 msgstr ""
 
-#: inc/front.php:307
+#: inc/front.php:310
 msgid "Cash on delivery"
 msgstr ""
 
-#: inc/front.php:308
+#: inc/front.php:311
 msgid "Bank transfer"
 msgstr ""
 
-#: inc/front.php:400
+#: inc/front.php:403
 msgid "Added to your cart."
 msgstr ""
 
-#: inc/front.php:402
+#: inc/front.php:405
 msgid "Item removed."
 msgstr ""
 
-#: inc/front.php:403
+#: inc/front.php:406
 msgid "Cart updated."
 msgstr ""
 
-#: inc/front.php:407
+#: inc/front.php:410
 msgid "Sorry, this product is unavailable."
 msgstr ""
 

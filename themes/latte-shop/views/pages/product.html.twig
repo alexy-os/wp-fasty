@@ -31,7 +31,7 @@
 
 			{% if page.product.purchasable %}
 				{% set c_ui16 %}
-					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': 'latte_shop_cart'}} only %}
+					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'action', 'value': (shop.cart_action|default('latte_shop_cart'))}} only %}
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'op', 'value': 'add'}} only %}
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': 'product_id', 'value': (page.id)}} only %}
 					{% include 'input/Input.html.twig' with {'attrs': {'type': 'hidden', 'name': '_wpnonce', 'value': (shop.cart_nonce)}} only %}
