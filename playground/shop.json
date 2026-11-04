@@ -12,79 +12,75 @@
     },
     {
       "step": "writeFile",
-      "path": "/tmp/wp-fasty.zip.b64",
+      "path": "/tmp/wp-fasty.zip",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wp-fasty.zip.b64"
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/wp-fasty.zip"
       }
     },
     {
       "step": "writeFile",
-      "path": "/tmp/latte-shop.zip.b64",
+      "path": "/tmp/latte-shop.zip",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/latte-shop.zip.b64"
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/latte-shop.zip"
       }
     },
     {
       "step": "writeFile",
-      "path": "/tmp/demo.zip.b64",
+      "path": "/tmp/demo.zip",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/demo.zip.b64"
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/demo.zip"
       }
     },
     {
       "step": "writeFile",
-      "path": "/tmp/wpfasty-types.zip.b64",
+      "path": "/tmp/wpfasty-types.zip",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wpfasty-types.zip.b64"
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/wpfasty-types.zip"
       }
     },
     {
       "step": "writeFile",
-      "path": "/tmp/wpfasty-builder.zip.b64",
+      "path": "/tmp/wpfasty-builder.zip",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/wpfasty-builder.zip.b64"
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/wpfasty-builder.zip"
       }
     },
     {
       "step": "writeFile",
-      "path": "/tmp/moduly.zip.b64",
+      "path": "/tmp/moduly.zip",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly.zip.b64"
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/moduly.zip"
       }
     },
     {
       "step": "writeFile",
-      "path": "/tmp/moduly-cart.zip.b64",
+      "path": "/tmp/moduly-cart.zip",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-cart.zip.b64"
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/moduly-cart.zip"
       }
     },
     {
       "step": "writeFile",
-      "path": "/tmp/moduly-orders.zip.b64",
+      "path": "/tmp/moduly-orders.zip",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-orders.zip.b64"
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/moduly-orders.zip"
       }
     },
     {
       "step": "writeFile",
-      "path": "/tmp/moduly-types.zip.b64",
+      "path": "/tmp/moduly-types.zip",
       "data": {
         "resource": "url",
-        "url": "https://gist.githubusercontent.com/alexy-os/534c59bcd01563580218570cfac273ca/raw/moduly-types.zip.b64"
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/moduly-types.zip"
       }
-    },
-    {
-      "step": "runPHP",
-      "code": "<?php foreach (glob('/tmp/*.zip.b64') as $f) { file_put_contents(substr($f, 0, -4), base64_decode(file_get_contents($f))); }"
     },
     {
       "step": "unzip",

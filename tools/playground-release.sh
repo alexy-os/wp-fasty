@@ -5,7 +5,7 @@
 #
 #   tools/playground-release.sh [--push]      (needs gh with a token that can write releases: GH_TOKEN)
 #
-# A zip is replaced only when its content changed (same normalization as tools/playground-publish.sh: zip
+# A zip is replaced only when its content changed (normalization: zip
 # timestamps, .pot dates, Composer autoloader suffixes and the source commit are ignored). Without --push only the
 # diff is shown. With --push every changed zip is uploaded (--clobber), then every asset is downloaded again through
 # the proxy and must match the local sha256 — any failure exits non-zero (the workflow step fails).

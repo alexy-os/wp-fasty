@@ -20,7 +20,6 @@ on:
       - "tools/builder/landings/**"
       - "tools/matrix/**"
       - "tools/playground-build.sh"
-      - "tools/playground-publish.sh"
       - "playground/*.json"
       - "playground/shop/**"
       - "tools/playground-release.sh"

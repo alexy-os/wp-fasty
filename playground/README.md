@@ -1,8 +1,10 @@
 # Live previews (WordPress Playground)
 
 The zips are not in git (`playground/*.zip` is gitignored): the **Playground** workflow builds them in CI with
-`tools/playground-build.sh` and mirrors them (base64) in a secret gist: https://gist.github.com/alexy-os/534c59bcd01563580218570cfac273ca (since 2026-10-30; the previous gist was deleted on 2026-11-01)
-and the blueprints (`press.json`, `folio.json`, `shop.json`, `shop-twig.json`) are passed inline in the Playground URL fragment.
+`tools/playground-build.sh` and publishes them as assets of the rolling prerelease `playground`
+(https://github.com/alexy-os/wp-fasty/releases/tag/playground, since 2026-11-04; loaded through the Playground CORS proxy
+`https://wordpress-playground-cors-proxy.net/?<asset url>`). The secret gist used until 2026-11-03 is retired (size quota).
+The blueprints (`press.json`, `folio.json`, `shop.json`, `shop-twig.json`) are passed inline in the Playground URL fragment.
 Everything runs in the visitor's browser — no server.
 
 - Latte Press (classic blog): see `urls.txt` → `press`
@@ -28,17 +30,14 @@ Rebuild: automatic. The **Playground** workflow (`.github/workflows/playground.y
 touches what goes into the zips (themes, plugins, demo seeders, landings, blueprints, presets, the generator, the two
 scripts) and on demand: `gh workflow run playground.yml --repo alexy-os/wp-fasty` (or Actions → Playground → Run
 workflow). It builds the theme/plugin zips with `tools/playground-build.sh` (the same script as locally) and publishes them with
-`tools/playground-publish.sh`: a zip is rewritten as `<name>.zip.b64` only when its content changed (timestamps, `.pot`
-dates and Composer's per-build ids ignored), one gist commit by Grok Designer, then every raw URL is checked — 200 and
-the zip's sha256. One run at a time (`concurrency`); the gist token is the repository secret `PLAYGROUND_GIST_TOKEN`.
-The raw URLs have no revision, so `urls.txt` and the blueprints never change.
+`tools/playground-release.sh --push`: a zip is replaced only when its content changed (timestamps, `.pot` dates and
+Composer's per-build ids ignored), then every asset is downloaded back through the CORS proxy and must match — the step
+fails otherwise. One run at a time (`concurrency`); the token is the workflow's own `GITHUB_TOKEN` (contents: write).
+The asset URLs have no revision, so `urls.txt` and the blueprints never change.
 
-Gist raw cache: after a publish, `gist.githubusercontent.com/.../raw/<file>` may serve the previous file for up to
-~5 minutes. A Playground opened right after a rebuild can still boot the old build — wait a few minutes and reload.
-
-Locally: `bash tools/playground-build.sh` (needs `zip`) writes the ten zips into `playground/` (ignored by git — never
-commit them), then `tools/playground-publish.sh <gist checkout>` shows what
-would change (dry run; `--push` publishes).
+Locally: `bash tools/playground-build.sh` (needs `zip`) writes the zips into `playground/` (ignored by git — never
+commit them), then `bash tools/playground-release.sh` shows what would change (dry run; `--push` publishes).
+History (rebuilds until 2026-11-03 were published to the gist):
 Last rebuild 2026-10-24 (UI8Kit 3): all four blueprints booted with `@wp-playground/cli` 3.1.60 server on Node 24 (PHP 8.5, WP_DEBUG display on) — front page, archive and a single entry 200 with no PHP notices; the Twig shop loads no `Latte\` class and ships no Latte file; all four URLs open on playground.wordpress.net.
 Rebuild 2026-10-24 (builder editor, Cycle L): shop and shop-twig booted locally from the new zips with `@wp-playground/cli` (Node 24, PHP 8.5): editor opens, overlay/typed fields/undo work, `render-block` checked live (`tools/builder/render-block-check.php --live`).
 Rebuild 2026-10-24 (@ui8kit/registry 3.3.0): all four blueprints booted locally from the new zips (Playground CLI, Node 24, PHP 8.5) — press, folio, shop, shop-twig pages 200 with no PHP notices; gist updated.
@@ -48,7 +47,7 @@ Rebuild 2026-10-28 (block previews, site contacts, builder tokens; built from 1c
 ModulY zips (`moduly.zip`, `moduly-cart.zip`, `moduly-orders.zip`, `moduly-types.zip`) are the signed public release assets of phpfasty/wpmodules
 (release `edge`, rebuilt by its CI on every push to main; `v*` tags give versioned releases). `tools/playground-build.sh`
 downloads them (sha256 checked against `SHA256SUMS`) unless a local wpmodules build exists (`$WPMODULES_DIST`, default
-`../wpmodules/dist`). The Playground workflow also runs every 2 hours, so a new wpmodules build reaches the gist with no
+`../wpmodules/dist`). The Playground workflow also runs every 2 hours, so a new wpmodules build reaches the release assets with no
 manual step and no cross-repo token.
 Rebuild 2026-10-30 (ModulY 0.1.0, cart/orders modules): shop and shop-modules booted locally with `@wp-playground/cli` (Node 24,
 PHP 8.4): modules installed and enabled (signed by phpfasty), add to cart → cart → checkout → order #34 created; in shop-modules
@@ -77,4 +76,4 @@ The zips are assets of the rolling GitHub release `playground` (https://github.c
 loaded through the WordPress Playground CORS proxy (`https://wordpress-playground-cors-proxy.net/?<asset url>`: release
 asset downloads send no CORS headers). The **Playground** workflow rebuilds them and replaces the changed ones with
 `tools/playground-release.sh --push`, then downloads every asset back through the proxy and fails on any mismatch.
-The gist mirror above is frozen (size quota, 2026-11-03); the inline `urls.txt` previews still point at it.
+Since 2026-11-04 all blueprints (`press`, `folio`, `shop`, `shop-twig`, `shop-modules`, `market`, `shop/`) and `urls.txt` load from this release.
