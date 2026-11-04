@@ -12,7 +12,6 @@ if (!defined('ABSPATH')) {
 
 require_once __DIR__.'/includes/api.php';
 require_once __DIR__.'/includes/base-theme.php';
-require_once __DIR__.'/includes/deprecated.php';
 
 if (!file_exists(__DIR__.'/vendor/autoload.php')) {
     add_action('admin_notices', static function (): void {
