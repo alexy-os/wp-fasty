@@ -17,7 +17,7 @@
 		{include 'link/Link.latte', href: $error['homeUrl'], class: kit('link', []), children: (string) $ctaLabel}
 	{/capture}
 	{capture $c_ui3}
-		{$cta|noescape}
+		{$cta}
 	{/capture}{include 'box/Box.latte', tag: 'div', class: 'mt-8', children: (string) $c_ui3, attrs: []}
 {/capture}
 {capture $box}

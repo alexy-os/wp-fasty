@@ -14,15 +14,15 @@
     },
     {
       "pattern": "^og_slot\\(",
-      "why": "slot props of sub-templates (section-frame, page-header, panel, section-head, …; codegen-x since 41706af7): og_slot (Runtime::slot = Runtime::html) prints only the TrustedHtml marker that og_markup() made of a fragment the calling generated template captured; any other value — a plain string, also one a layout could put on a catalog block — is escaped. Checked by tests/CodegenSafetySharedTest (direct render with a plain string, Latte and Twig) and the fuzz; so no longer restricted to templates outside the catalog"
+      "why": "slot props of sub-templates (section-frame, page-header, panel, section-head, \u2026; codegen-x since 41706af7): og_slot (Runtime::slot = Runtime::html) prints only the TrustedHtml marker that og_markup() made of a fragment the calling generated template captured; any other value \u2014 a plain string, also one a layout could put on a catalog block \u2014 is escaped. Checked by tests/CodegenSafetySharedTest (direct render with a plain string, Latte and Twig) and the fuzz; so no longer restricted to templates outside the catalog"
     },
     {
       "pattern": "^og_html\\(",
-      "why": "TrustedHtml ({__html}) printed by og_html (Runtime::html): a non-marker value is escaped, a blank marker never reaches it (ReadPath |html and DataSources::trusted give null); markers come only from DataSources — the_content of the current post as is, every other {__html} (meta, records) through wp_kses_post (DataSources::trusted); layouts cannot carry __html (Layout::untrust)"
+      "why": "TrustedHtml ({__html}) printed by og_html (Runtime::html): a non-marker value is escaped, a blank marker never reaches it (ReadPath |html and DataSources::trusted give null); markers come only from DataSources \u2014 the_content of the current post as is, every other {__html} (meta, records) through wp_kses_post (DataSources::trusted); layouts cannot carry __html (Layout::untrust)"
     },
     {
       "pattern": "^og_lucide\\(",
-      "why": "inline SVG of a bundled Lucide icon looked up by name in icons/lucide-icons.json (unknown name → circle); attributes come from the bundled JSON"
+      "why": "inline SVG of a bundled Lucide icon looked up by name in icons/lucide-icons.json (unknown name \u2192 circle); attributes come from the bundled JSON"
     }
   ],
   "views": [
@@ -90,41 +90,6 @@
       "why": "wp_kses_post(get_the_archive_description()), '' on search"
     },
     {
-      "file": "presets/blocks/hero-centered.latte",
-      "expr": "$descHtml",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
-      "file": "presets/blocks/hero-centered.latte",
-      "expr": "$primary",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
-      "file": "presets/blocks/hero-centered.latte",
-      "expr": "$secondary",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
-      "file": "presets/blocks/post-content.latte",
-      "expr": "$meta",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
-      "file": "presets/blocks/search-form.latte",
-      "expr": "$fields",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
       "file": "presets/layouts/app-shell/shell.latte",
       "expr": "$content",
       "count": 1,
@@ -160,27 +125,6 @@
       "why": "wp_kses_post(get_the_archive_description()), '' on search"
     },
     {
-      "file": "themes/latte-skin/views/blocks/hero-centered.latte",
-      "expr": "$descHtml",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
-      "file": "themes/latte-skin/views/blocks/hero-centered.latte",
-      "expr": "$primary",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
-      "file": "themes/latte-skin/views/blocks/hero-centered.latte",
-      "expr": "$secondary",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
       "file": "themes/wp-fasty/views/blocks/archive-header.html.twig",
       "expr": "archive.description",
       "count": 1,
@@ -193,41 +137,6 @@
       "count": 1,
       "source": "ContextFactory archive",
       "why": "wp_kses_post(get_the_archive_description()), '' on search"
-    },
-    {
-      "file": "themes/wp-fasty/views/blocks/hero-centered.latte",
-      "expr": "$descHtml",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
-      "file": "themes/wp-fasty/views/blocks/hero-centered.latte",
-      "expr": "$primary",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
-      "file": "themes/wp-fasty/views/blocks/hero-centered.latte",
-      "expr": "$secondary",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
-      "file": "themes/wp-fasty/views/blocks/post-content.latte",
-      "expr": "$meta",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
-    },
-    {
-      "file": "themes/wp-fasty/views/blocks/search-form.latte",
-      "expr": "$fields",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
     },
     {
       "file": "themes/wp-fasty/views/layout/app-shell.html.twig",
@@ -256,13 +165,6 @@
       "count": 2,
       "source": "TemplateRenderer layout",
       "why": "rendered HTML of the child view (an autoescaped template)"
-    },
-    {
-      "file": "themes/wp-fasty/views/pages/404.latte",
-      "expr": "$cta",
-      "count": 1,
-      "source": "same template",
-      "why": "{capture} of an escaped include/expression in the same view (Latte capture yields an Html object)"
     }
   ],
   "safe": [
@@ -299,7 +201,7 @@
     {
       "file": "themes/wp-fasty/classes/Template/TwigRenderer.php",
       "name": "apply_filters",
-      "why": "WordPress filter output (e.g. the_content) — same trust as core templates calling apply_filters"
+      "why": "WordPress filter output (e.g. the_content) \u2014 same trust as core templates calling apply_filters"
     },
     {
       "file": "themes/wp-fasty/classes/Template/TwigRenderer.php",

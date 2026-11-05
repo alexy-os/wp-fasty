@@ -8,7 +8,7 @@
 
 	{if !empty($site['description'])}
 		{capture $descHtml}{capture $c_ui1}{$site['description']}{/capture}{include 'text/Text.latte', tag: 'p', class: 'mt-4 text-lg text-muted-foreground', children: (string) $c_ui1, attrs: []}{/capture}
-		{$descHtml|noescape}
+		{$descHtml}
 	{/if}
 
 	{capture $actions}
@@ -18,13 +18,13 @@
 			{capture $primary}
 				{include 'link/Link.latte', href: $hero['primaryUrl'], class: kit('button', []), children: (string) $explore}
 			{/capture}
-			{$primary|noescape}
+			{$primary}
 		{/if}
 		{if !empty($hero['secondaryUrl'])}
 			{capture $secondary}
 				{include 'link/Link.latte', href: $hero['secondaryUrl'], class: kit('button', ['variant' => 'secondary']), children: (string) $learn}
 			{/capture}
-			{$secondary|noescape}
+			{$secondary}
 		{/if}
 	{/capture}
 	{include 'group/Group.latte', class: 'mt-8 flex flex-wrap justify-center gap-4', children: (string) $actions}

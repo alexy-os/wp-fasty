@@ -32,7 +32,7 @@
 		{capture $titleHtml}{$page['title']}{/capture}
 		{include 'title/Title.latte', as: 1, size: '3xl', weight: 'bold', class: 'mb-6 tracking-tight md:text-4xl', children: (string) $titleHtml}
 
-		{$meta|noescape}
+		{$meta}
 
 		{if !empty($page['featuredImage']['url'])}
 			{capture $img}
