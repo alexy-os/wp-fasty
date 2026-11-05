@@ -15,6 +15,10 @@ namespace WPFastyTypes\Codex;
  * Default locale = settings.language (Mapper::locale).
  * Only published + public records; anything else is 404 (never 403). Errors: {error{code, message, status}}.
  * Bodies are exact bytes: rest_pre_serve_request prints them so WordPress does not re-encode the JSON.
+ *
+ * Open permission_callback (__return_true) is intentional: Codex is a public read API. /settings returns only
+ * Mapper::SETTINGS_PUBLIC_KEYS (site title/locale/currency, public contact block) — not WP admin settings,
+ * secrets, or private user data. Keep that allowlist when adding fields.
  */
 final class Rest
 {

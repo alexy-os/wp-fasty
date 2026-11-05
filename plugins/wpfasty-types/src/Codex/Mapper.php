@@ -17,6 +17,20 @@ final class Mapper
     public const EPOCH = '1970-01-01T00:00:00Z';
     public const SETTINGS_ID = 'site';
 
+    /**
+     * Intentionally public SettingsV04 keys for GET /wpfasty/v1/codex/settings (open REST).
+     * Contact / hours / map are site-facing (same fields the Contact admin page labels public).
+     * Never add admin-only options, secrets, or PII beyond published site contact here.
+     *
+     * @var list<string>
+     */
+    public const SETTINGS_PUBLIC_KEYS = [
+        'id', 'locale', 'title', 'description', 'language', 'timezone',
+        'front_page_id', 'posts_page_id', 'posts_per_page', 'comments_open', 'currency',
+        'contact', 'hours', 'hours_exceptions', 'map',
+        'origin', 'version', 'created_at', 'updated_at',
+    ];
+
     public function __construct(private readonly Site $site)
     {
     }
@@ -286,6 +300,7 @@ final class Mapper
 
     /**
      * Site settings (SettingsV04), as the contract adapter fromWpSettings maps them.
+     * Output is clipped to SETTINGS_PUBLIC_KEYS (public Codex read API allowlist).
      *
      * @return array<string, mixed>
      */
@@ -318,7 +333,7 @@ final class Mapper
         $s['created_at'] = self::EPOCH;
         $s['updated_at'] = self::EPOCH;
 
-        return $s;
+        return array_intersect_key($s, array_flip(self::SETTINGS_PUBLIC_KEYS));
     }
 
     /** created/updated term meta, clock filterable (demo seeding pins it for golden files). */

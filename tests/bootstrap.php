@@ -290,9 +290,19 @@ if (!function_exists('has_custom_logo')) {
         return false;
     }
 }
+if (!function_exists('get_locale')) {
+    function get_locale(): string
+    {
+        return (string) ($GLOBALS['wp_test_locale'] ?? 'en_US');
+    }
+}
 if (!function_exists('get_option')) {
     function get_option(string $key, mixed $default = false): mixed
     {
+        if (array_key_exists($key, $GLOBALS['wp_test_options'] ?? [])) {
+            return $GLOBALS['wp_test_options'][$key];
+        }
+
         return $default;
     }
 }
