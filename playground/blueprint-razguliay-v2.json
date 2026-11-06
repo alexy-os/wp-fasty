@@ -1,0 +1,164 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "meta": {
+    "title": "Razguliay — child theme + ModulY cart (0.2.2 Tailwind)",
+    "description": "Installable Razguliay brand pack 0.2.2 (Tailwind @apply brand.css, no Hero inline styles): wp-fasty child theme, builder landing, live cart. No checkout.",
+    "author": "aiveotech"
+  },
+  "landingPage": "/",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin"
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wp-fasty.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/wp-fasty.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/latte-shop.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/latte-shop.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wpfasty-types.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/wpfasty-types.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/wpfasty-builder.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/wpfasty-builder.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/moduly.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/moduly-cart.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/moduly-cart.zip"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/brand-importer.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/brand-importer.zip?v=0.2.2"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/razguliay-brand-pack.zip",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/razguliay-brand-pack.zip?v=0.2.2"
+      }
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/rg-install.php",
+      "data": {
+        "resource": "url",
+        "url": "https://wordpress-playground-cors-proxy.net/?https://github.com/alexy-os/wp-fasty/releases/download/playground/rg-install.php?v=0.2.2"
+      }
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wp-fasty.zip",
+      "extractToPath": "/wordpress/wp-content/themes"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/latte-shop.zip",
+      "extractToPath": "/wordpress/wp-content/themes"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wpfasty-types.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/wpfasty-builder.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/moduly.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "unzip",
+      "zipPath": "/tmp/brand-importer.zip",
+      "extractToPath": "/wordpress/wp-content/plugins"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "wpfasty-types/wpfasty-types.php"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "wpfasty-builder/wpfasty-builder.php"
+    },
+    {
+      "step": "activateTheme",
+      "themeFolderName": "latte-shop"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "moduly/moduly.php"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "brand-importer/brand-importer.php"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php @mkdir('/wordpress/wp-content/uploads/moduly', 0755, true); copy('/tmp/moduly-cart.zip', '/wordpress/wp-content/uploads/moduly/cart.zip');"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; $p = PhpFasty\\Moduly\\Wp\\Plugin::instance(); if (!$p) { throw new Exception('ModulY did not boot'); } $p->modules->install('/tmp/moduly-cart.zip', true);"
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "permalink_structure": "/%postname%/",
+        "blogname": "Razguliay",
+        "blogdescription": "Restaurant Essentuki"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require '/tmp/rg-install.php';"
+    }
+  ]
+}

@@ -80,3 +80,15 @@ loaded through the WordPress Playground CORS proxy (`https://wordpress-playgroun
 asset downloads send no CORS headers). The **Playground** workflow rebuilds them and replaces the changed ones with
 `tools/playground-release.sh --push`, then downloads every asset back through the proxy and fails on any mismatch.
 Since 2026-11-04 all blueprints (`press`, `folio`, `shop`, `shop-twig`, `shop-modules`, `market`, `shop/`) and `urls.txt` load from this release.
+
+## Razguliay (brand pack)
+
+Public CORS mirror of `aiveotech/clients` release `razguliay@0.2.2` (CLI-built brand pack; do not hand-assemble zips).
+
+- Brand pack zip: `https://github.com/alexy-os/wp-fasty/releases/download/playground/razguliay-brand-pack.zip` (sha256 `4ebe66bf5d94e86832a9d60381b1c226d2e2060c83a531fb76eb2f57acae3c1d`)
+- Customer bundle: `…/razguliay-customer-bundle.zip`
+- Blueprint: [`blueprint-razguliay-v2.json`](./blueprint-razguliay-v2.json) (also release asset). Cache-buster `?v=0.2.2` on the brand zip URL so playground.wordpress.net / CORS proxy do not keep an older inline-styles pack.
+- Open: `https://playground.wordpress.net/?blueprint-url=https%3A%2F%2Fwordpress-playground-cors-proxy.net%2F%3Fhttps%3A%2F%2Fgithub.com%2Falexy-os%2Fwp-fasty%2Freleases%2Fdownload%2Fplayground%2Fblueprint-razguliay-v2.json%3Fv%3D0.2.2`
+
+Hero uses Tailwind-compiled `styles/brand.css` (`brand.src.css` has `@apply`); Latte views have no `style=` attributes.
+
