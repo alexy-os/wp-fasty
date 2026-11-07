@@ -25,3 +25,11 @@ Non-live regressions exercise SDK error/cancelled, stream/wait errors, stuck str
 Owner approved at most one live smoke after this patch, with no automatic retry. If credentials are available only in the owner's local-wp vault, the owner performs it after updating; no credential transfer or vault extraction. Before the smoke review the current page and ask only to rewrite existing block text, preserving structure. Review the proposal/draft, never auto-publish. Collect safe audit stages and actual usage if reported. A failure remains a failure, not an excuse for another paid turn.
 
 Reference: https://cursor.com/docs/api/sdk/typescript (Run stream/wait/cancel and local Agent.getRun).
+
+## Published-page follow-up (owner clarification)
+
+The failing rewrite used an already published page; the later successful live greeting used a draft. The owner has already performed the successful greeting smoke: do not initiate another paid test. Greeting success does not accept the original content-rewrite path.
+
+`PageOperations::snapshot` reads `Store::get(page, true)`, which falls back to the published entry only when draft metadata is absent. Source/catalog, revision and active page policy are assembled before sending; there is no SDK retry or publication-status branch. Apply calls the same revision-guarded `Store::save(..., false)` for either status, never agent publication. Existing page-specific draft/brief/history can legitimately differ. This establishes intended isolation, not why the earlier run timed out.
+
+The NON-LIVE PHP → worker regression now runs the **same existing-text rewrite intent** on draft and published-only three-block pages. It requires block details before changing title props; preserves IDs/order/variants/bindings; verifies proposal alone writes nothing; explicit Apply increments only draft revision; live layout and WordPress post status remain byte-identical. This is fixture/tool-contract evidence, not a real model rewrite test or proof that the original timeout is resolved.

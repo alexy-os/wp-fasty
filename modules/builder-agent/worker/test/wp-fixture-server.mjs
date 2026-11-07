@@ -9,6 +9,17 @@ const store=new TurnStore(':memory:');
 const server=workerServer({token:'nonlive-'.repeat(5),store,runner:async body=>{
  const policy=policySession(body.context.agentPolicy);policy.getSkill({id:'block-selection'});
  const search=await catalogSession(body.context);
+ if(body.content.includes('NON-LIVE rewrite existing text')){
+  assert.equal(body.context.blocks.length,3);
+  const proposal=body.context.blocks.map(old=>{
+   const changed={...old,props:{...old.props,title:'Мастерская: '+old.id}};
+   assert.throws(()=>search.validateChanges([changed]),/catalog_details_required/);
+   const details=search.details({blockId:old.block,variant:old.variant});
+   assert.ok(details.props.some(p=>p.name==='title'&&p.type==='string'));
+   search.validateChanges([changed]);return changed;
+  });
+  return {agentPolicy:policy.provenance(),answer:'NON-LIVE text rewrite only',proposal};
+ }
  const assembly=body.content.includes('NON-LIVE page assembly');
  const specs=assembly?['hero','about','cta']:['about'];
  const proposal=specs.map(spec=>{
