@@ -57,14 +57,14 @@ and authoritative catalog remain unchanged. Nothing publishes automatically.
 ## Secrets without plaintext (local-wp and other hosts)
 
 - Worker secrets source (first match): `WPFB_WORKER_SECRETS=stdin` -> one JSON object
-  `{"token":"...","cursorKey":"..."}` on stdin then EOF (local-wp feeds it from its age vault);
+  `{"token":"...","cursorKey":"...","jevKey":"..."}` (`cursorKey`, `jevKey` optional; `jevKey` is reserved: kept in memory, no Jev requests are made) on stdin then EOF (local-wp feeds it from its age vault);
   `WPFB_WORKER_TOKEN_FILE=/path` (file must be 0600 on POSIX); legacy `WPFB_WORKER_TOKEN` env.
   Secret env vars are deleted from `process.env` after reading. With `cursorKey` the worker uses it
   when a turn arrives without credentials, so WordPress never needs to store or send the key.
 - WordPress reads, before its options: `$_SERVER['WPFB_WORKER_TOKEN']`, `$_SERVER['WPFB_WORKER_PORT']`,
   `$_SERVER['WPFB_WORKER_KEY']==='managed'` (server/FastCGI params set by the host, e.g. local-wp per
   request). Then nothing secret is stored in `wpfb_chat_settings`; settings show "Managed by host".
-- `POST /status` (authenticated, empty body) -> `{"active":bool,"activeTurnId":string|null,"credentials":"managed"|"request"}`. `activeTurnId` is an opaque random id per running turn (not the requestId; no prompt, page or secret). No drain/interlock: a host stop during a turn still interrupts it.
+- `POST /status` (authenticated, empty body) -> `{"active":bool,"activeTurnId":string|null,"credentials":"managed"|"request","jev":"managed"|"none"}`. `activeTurnId` is an opaque random id per running turn (not the requestId; no prompt, page or secret). No drain/interlock: a host stop during a turn still interrupts it.
 - WordPress (`Chat.php`): with `WPFB_WORKER_KEY=managed` the host is the only credential source. An empty/absent `WPFB_WORKER_TOKEN` fails closed (`wpfb_secret_unavailable`, 503, "Vault locked / secret unavailable"), with no fallback to `wpfb_chat_settings`. The settings page then shows availability only and never accepts or saves the Cursor key, token or port (Clear of an old stored copy is allowed). Legacy/manual settings apply only without the marker.
   Hosts check it before stop/restart/port change so a running turn is not cut silently.
 - SDK child env: PATH, HOME, NODE_ENV, TEMP/TMP/TMPDIR (data dir), and on Windows SystemRoot, SystemDrive,
