@@ -95,3 +95,14 @@ suggestions remain unchanged. Full repo parity/phpstan/deptrac/codex gates unrun
 Do not distribute the candidate or remove Creator until an approved real SDK
 turn and actual browser test demonstrate the same saved revision in chat,
 structural draft and the existing Latte iframe, with reload/history verified.
+
+### Local runtime setup follow-up
+
+Our isolated WP can now run the real same-host worker without provider credentials:
+wp-fasty renderer + Builder activated deliberately, existing Creator stays active.
+A private generated loopback token authenticates transport; no provider key is
+retrieved or copied. Safe history metadata now distinguishes configuration from
+provider readiness; without a Cursor key, input is disabled and no generation is
+attempted. Linux foreground/service and later Windows foreground/status commands
+are in the worker README. Browser and paid/live acceptance remain outstanding;
+no replacement ZIP is issued by this setup follow-up.

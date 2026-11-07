@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { ChatResult, ChatTurn } from "./client";
+  import type { ChatHistory, ChatResult, ChatTurn } from "./client";
   import Block from "../compose/Block.svelte";
   import Text from "../ui/text/Text.svelte";
   import Box from "../ui/box/Box.svelte";
@@ -12,7 +12,7 @@
 
   let { source, items, blocks, selected, history, send, apply }: {
     source: string; items: Item[]; blocks: BlockSpec[]; selected: string | null;
-    history: () => Promise<{turns: ChatTurn[]}>;
+    history: () => Promise<ChatHistory>;
     send: (content: string, requestId: string) => Promise<ChatResult>;
     apply: (requestId: string) => Promise<void>;
   } = $props();
@@ -24,7 +24,7 @@
   let pendingId = $state<string | null>(null);
   let pendingContent = $state("");
   async function load() {
-    try { turns = (await history()).turns; ready = true; error = ""; }
+    try { const data = await history(); turns = data.turns; ready = data.availability?.configured === true; error = ready ? "" : data.availability?.message ?? copy.unavailable; }
     catch (e) { error = (e as Error).message; ready = false; }
   }
   onMount(() => { void load(); });

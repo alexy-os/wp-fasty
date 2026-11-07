@@ -108,3 +108,46 @@ This candidate still needs owner-approved ONE real SDK/Grok turn and actual
 browser acceptance: send → structural proposal → apply → same saved revision in
 existing Latte iframe → reload history, stale-edit conflict, no automatic publish.
 Do not distribute it as live-accepted or remove the old Creator plugin/data yet.
+
+### Later Windows/LocalWP reproducible foreground setup (not run on the owner's PC)
+
+In LocalWP's site shell, confirm the PHP site is actually local to this Windows
+host. Locate `<site>\app\public` and the installed plugin's `worker` folder.
+Use PowerShell (adapt the two paths):
+
+```powershell
+node --version # must be 24+
+Set-Location 'C:\path\to\site\app\public\wp-content\plugins\wpfasty-builder\worker'
+npm ci --ignore-scripts --workspaces=false
+$env:WPFB_WORDPRESS_ROOT = 'C:\path\to\site\app\public'
+$env:WPFB_WORKER_DATA = "$env:LOCALAPPDATA\WPFastYBuilder\data"
+# Enter the independently generated shared token already saved in WP settings.
+# Secure input avoids a literal secret in PowerShell history; never a provider key.
+$secure = Read-Host 'Local worker shared token' -AsSecureString
+$env:WPFB_WORKER_TOKEN = [System.Net.NetworkCredential]::new('', $secure).Password
+node .\server.mjs
+```
+
+In another shell, status checks without any secret:
+
+```powershell
+Get-NetTCPConnection -LocalAddress 127.0.0.1 -LocalPort 18991 -State Listen |
+  Select-Object LocalAddress,LocalPort,OwningProcess
+curl.exe -s -o NUL -w "%{http_code}\n" -X POST http://127.0.0.1:18991/history
+# Expected401: unauthenticated access is forbidden (not a failed health test).
+```
+
+Keep the worker terminal open; Ctrl+C stops ONLY this worker. For a later
+scheduled task/service, load the three environment variables from an ACL-protected
+file outside the document root; never put a token/key into task command arguments.
+No Windows service/autostart installer is supplied or validated yet. Do not use
+WSL, containers, public binding or port-security changes to substitute for the
+same-host requirement. Incus orchestration remains explicitly out of scope.
+
+### Availability semantics
+
+Authenticated WP history includes only safe configuration metadata: model id and
+whether a Cursor key is configured. The chat input is disabled when unconfigured,
+while saved conversations/proposals remain visible. “Configured” is NOT a claim
+that credentials are valid, Grok is accessible, or live acceptance has passed.
+Provider/model discovery happens on an explicit send, never on history/health.

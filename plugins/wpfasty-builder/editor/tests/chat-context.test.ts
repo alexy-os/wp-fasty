@@ -23,3 +23,10 @@ test("panel delegates to protected WP API and never injects model HTML", () => {
   expect(code).toContain('await apply(requestId)');
   expect(code).not.toMatch(/<(div|button|section|pre|p|h2)\b/);
 });
+
+// Configuration is not provider readiness; history must fail closed for sending.
+test("chat remains unavailable without explicit safe server configuration metadata", () => {
+  const code = readFileSync(new URL("../src/chat/ChatPanel.svelte", import.meta.url), "utf8");
+  expect(code).toContain("data.availability?.configured === true");
+  expect(code).toContain("disabled={!ready || busy}");
+});

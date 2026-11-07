@@ -87,6 +87,9 @@ final class Chat
     {
         $result = self::worker('/history', self::scope((int) $request['id']));
         if (!is_wp_error($result)) {
+            $settings = (array) get_option(self::OPTION, []);
+            $configured = !empty($settings['cursor_key']);
+            $result['availability'] = ['configured' => $configured, 'model' => 'grok-4.7', 'message' => $configured ? 'Grok configured; provider access is checked only when you send.' : 'Cursor API key is not configured. Add it server-side in Settings → Builder chat. No model request has been sent.'];
             // Recover completed worker proposals even if the original PHP request timed out.
             foreach (($result['turns'] ?? []) as $turn) {
                 if ('done' !== ($turn['state'] ?? '') || !is_array($turn['proposal'] ?? null) || !is_string($turn['source'] ?? null) || !preg_match('/^[a-zA-Z0-9_-]{8,100}$/', $turn['requestId'] ?? '')) { continue; }

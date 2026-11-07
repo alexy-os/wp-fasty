@@ -16,7 +16,7 @@ export function api(cfg: Config) {
     return body as T;
   }
   return {
-    chatHistory: () => call<{ turns: import("./chat/client").ChatTurn[] }>(`/chat/${cfg.page}/history`),
+    chatHistory: () => call<import("./chat/client").ChatHistory>(`/chat/${cfg.page}/history`),
     chatTurn: (content: string, requestId: string) => call<import("./chat/client").ChatResult>(`/chat/${cfg.page}/turn`, {method: "POST", body: JSON.stringify({content, requestId})}),
     chatApply: (requestId: string) => call<{version: number}>(`/chat/${cfg.page}/apply`, {method: "POST", body: JSON.stringify({requestId})}),
     /** one block's HTML, as the page template renders it (POST /render-block) */
