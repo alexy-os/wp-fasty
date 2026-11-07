@@ -47,3 +47,8 @@ The existing shared checkout/local WP are not deleted. No owner-machine, worker 
 Deployment: ship/update the matching parent theme and Builder core together for server-side preview mode.
 An old parent cannot consume the new request-local color-scheme filter; plugin-only rollout is not claimed.
 Existing child themes need no duplicate Builder skin; custom shells must retain language_attributes/wp_head.
+
+Fixture isolation: invoke with `wp --skip-themes eval ...`; the fixture switches to its disposable child and
+explicitly requires the actual parent's `functions.php`. This prevents the previous inactive theme's callbacks
+(e.g. Twenty Twenty-Five looking for its style.min.css under WP FastY) from contaminating the simulated request.
+No product/theme/security gate or PHP notice is disabled. This is a CLI cold-boot correction, not a frontend fix.

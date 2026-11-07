@@ -88,6 +88,6 @@ behavior remains unchanged. Preview mode writes no site settings or live localSt
 A custom document shell must retain WordPress `language_attributes()` / `wp_head()` to participate.
 
 Token import/export and a versioned SkinDefinition/catalog engine remain future work, not implemented.
-NON-LIVE regression: `wp eval 'require "tools/qa/theme-appearance-contract.php";'` on an isolated WP.
+NON-LIVE regression: `wp --skip-themes eval 'require "tools/qa/theme-appearance-contract.php";'` on an isolated WP.
 It creates/removes its own fixture themes/pages, uses original synthetic test fonts and restores the active theme.
 Never run this fixture on a customer/production installation.

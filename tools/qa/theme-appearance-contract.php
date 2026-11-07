@@ -1,6 +1,6 @@
 <?php
 
-/** NON-LIVE, own disposable WP only. Run with wp eval 'require "tools/qa/theme-appearance-contract.php";'. */
+/** NON-LIVE, own disposable WP only. Run with wp --skip-themes eval 'require "tools/qa/theme-appearance-contract.php";'. */
 declare(strict_types=1);
 
 use WPFasty\Core\Container;

@@ -465,7 +465,9 @@ jobs:
       - name: Theme inheritance — NON-LIVE actual WP manual Builder, light/dark, fonts and scoped overrides
         run: |
           cd /tmp/wp
-          wp eval 'require getenv("GITHUB_WORKSPACE")."/tools/qa/theme-appearance-contract.php";'
+          # A fresh request must not retain the previous Twenty Twenty-Five enqueue callbacks after switch_theme().
+          # The fixture explicitly loads the real selected parent functions.php and renders its actual theme pipeline.
+          wp --skip-themes eval 'require getenv("GITHUB_WORKSPACE")."/tools/qa/theme-appearance-contract.php";'
 
       - name: Verified published ModulY + unsigned development fixture (no signing keys)
         run: |
