@@ -29,7 +29,7 @@ export function api(cfg: Config) {
       call<Catalog>(`/catalog?source=${encodeURIComponent(source)}&collection=${encodeURIComponent(collection)}`),
     /** link-token targets of the site (GET /links), for the link picker */
     links: () => call<LinkIndex>("/links"),
-    layout: () => call<{ layout: Obj | null; published: boolean; previewUrl: string; permalink: string }>(`/layout/${cfg.page}`),
+    layout: () => call<{ layout: Obj | null; published: boolean; previewUrl: string; permalink: string }>(`/layout/${cfg.page}`, { cache: "no-store" }),
     /** a draft page with the starter's blocks in its Builder draft (POST /pages) */
     createPage: (title: string, slug: string, starter: string) =>
       call<NewPage>("/pages", { method: "POST", body: JSON.stringify({ title, slug, starter }) }),

@@ -1,6 +1,8 @@
 /** Application copy, not content baked into block templates. */
 export const chatCopy = {
   tab: "Chat",
+  stalePreview: "The applied draft could not be reloaded at its saved revision. Check history before retrying.",
+  previewFailed: "Draft may already be applied, but its preview did not finish loading. Reload the page; do not send another model request.",
   blocks: "Blocks",
   panel: "Builder assistant",
   unavailable: "Agent runtime not connected. No messages are sent and no page changes are made here.",

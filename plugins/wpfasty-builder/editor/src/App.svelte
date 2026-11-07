@@ -4,7 +4,8 @@
   import UiBox from "./ui/box/Box.svelte";
   import { chatCopy } from "./chat/content";
   let paletteTab = $state<"blocks" | "chat">("blocks");
-  import { onMount, untrack } from "svelte";
+  import { onMount, untrack, tick } from "svelte";
+  import { applyAndRefresh, previewSource, PreviewReload, requireDraftVersion } from "./preview";
   import FieldRenderer from "./fields/FieldRenderer.svelte";
   import type { FieldCtx } from "./fields/context";
   import { bindableOf, blockConfig, NO_SETTINGS } from "./fields/schema";
@@ -60,6 +61,10 @@
   let frame = $state<HTMLIFrameElement | null>(null);
   let list = $state<HTMLOListElement | null>(null);
   let reloadKey = $state(0);
+  let previewRevision = $state(0);
+  let applying = $state(false);
+  let previewGeneration = 0;
+  const previewReload = new PreviewReload();
   let device = $state<"desktop" | "mobile">("desktop");
   let advanced = $state(false);
   let advancedError = $state("");
@@ -89,17 +94,18 @@
         }
       : null,
   );
-  const frameSrc = $derived(previewUrl ? `${previewUrl}&wpfb_r=${reloadKey}` : "");
+  const frameSrc = $derived(previewSource(previewUrl, previewRevision, reloadKey));
   const titleOf = (it: Item) => blocks.get(it.block)?.title ?? it.block;
 
   onMount(() => {
-    init();
+    void init().catch(() => {});
     window.addEventListener("resize", schedule);
     window.addEventListener("keydown", keydown);
     const toggle = document.getElementById(TOGGLE_ID);
     const switchMode = () => theme.toggle();
     toggle?.addEventListener("click", switchMode);
     return () => {
+      previewReload.fail();
       window.removeEventListener("resize", schedule);
       window.removeEventListener("keydown", keydown);
       toggle?.removeEventListener("click", switchMode);
@@ -112,21 +118,25 @@
     frame?.contentDocument?.documentElement.classList.toggle(DARK_CLASS, theme.dark);
   });
 
-  async function init() {
+  async function init(minimumVersion = 0) {
     try {
       const layout = await client.layout();
+      requireDraftVersion(Number(layout.layout?.version ?? 0), minimumVersion);
       const meta = (layout.layout?.metadata ?? {}) as Obj;
       const saved = (getPath(meta, ["blocks", "value"]) ?? []) as unknown as Item[];
       if (!config.source && typeof getPath(meta, ["source", "value"]) === "string") source = getPath(meta, ["source", "value"]) as string;
       store.load(saved.map((b) => ({ ...b, props: isObj(b.props) ? b.props : {}, bindings: isObj(b.bindings) ? b.bindings : {} })));
       draftVersion = Number(layout.layout?.version ?? 0);
+      if (!layout.previewUrl) throw new Error(chatCopy.previewFailed);
       previewUrl = layout.previewUrl;
+      if (!applying) previewRevision = draftVersion;
       published = layout.published;
       await loadCatalog();
       void links.ensure();
       status = "idle";
     } catch (e) {
       fail(e);
+      throw e;
     }
   }
 
@@ -150,16 +160,19 @@
    * undo step; commits with the same `key` within a second (typing in one field) are one step.
    */
   function commit(next: Item[], ids: string[] = [], reload = false, key: string | null = null) {
+    if (applying) return;
     store.commit(next, key);
     changed(ids, reload);
   }
 
   function undo() {
+    if (applying) return;
     const ids = store.undo();
     if (ids) changed(ids);
   }
 
   function redo() {
+    if (applying) return;
     const ids = store.redo();
     if (ids) changed(ids);
   }
@@ -178,6 +191,8 @@
 
   /** re-renders one block of the preview in place; the latest request per block wins */
   async function renderBlock(id: string) {
+    if (applying) return;
+    const generation = previewGeneration;
     const it = store.items.find((i) => i.id === id);
     if (!it) return;
     const n = (renderSeq.get(id) ?? 0) + 1;
@@ -185,7 +200,7 @@
     const t = performance.now();
     try {
       const res = await client.renderBlock(source, clone(it));
-      if (renderSeq.get(id) !== n) return;
+      if (applying || generation !== previewGeneration || renderSeq.get(id) !== n) return;
       const el = wrapper(id);
       if (!el) {
         reloadAfterSave = true;
@@ -195,6 +210,7 @@
       renderMs = Math.round(performance.now() - t);
       schedule();
     } catch {
+      if (generation !== previewGeneration || applying) return;
       reloadAfterSave = true;
     }
   }
@@ -236,11 +252,13 @@
 
   /** before leaving for a new page: the draft change still waiting for its save is saved now */
   async function flush() {
-    if (status === "saving") await save(false);
+    if (status === "saving") await save(false, true);
+    await saveQueue;
   }
 
   let saveQueue: Promise<void> = Promise.resolve();
-  function save(publish: boolean) {
+  function save(publish: boolean, internal = false) {
+    if (applying && !internal) return saveQueue;
     clearTimeout(timer);
     saveQueue = saveQueue.then(() => performSave(publish));
     return saveQueue;
@@ -258,10 +276,39 @@
       if (reloadAfterSave) {
         reloadAfterSave = false;
         scrollY = frame?.contentWindow?.scrollY ?? 0;
+        previewRevision = draftVersion;
         reloadKey++;
       }
     } catch (e) {
       fail(e);
+    }
+  }
+
+  async function applyChat(requestId: string) {
+    if (applying) return;
+    applying = true;
+    clearTimeout(timer);
+    previewGeneration++;
+    renderSeq.clear();
+    try {
+      await applyAndRefresh(requestId, {
+        flush: async () => { await flush(); if (status === "error") throw new Error(message); },
+        apply: client.chatApply,
+        load: init,
+        refresh: async () => {
+          reloadAfterSave = false;
+          scrollY = frame?.contentWindow?.scrollY ?? 0;
+          previewRevision = draftVersion;
+          reloadKey++;
+          const loaded = previewReload.start(previewSource(previewUrl, draftVersion, reloadKey));
+          await Promise.all([tick(), loaded]);
+        },
+      });
+    } catch (e) {
+      fail(e);
+      throw e;
+    } finally {
+      applying = false;
     }
   }
 
@@ -337,6 +384,7 @@
   }
 
   function usePage(page: TemplatePage) {
+    if (applying) return;
     if (store.items.length && !confirm("Replace the blocks of this page with the template page?")) return;
     const next: Item[] = [];
     for (const b of page.blocks) next.push({ ...makeItem(b.block, b.variant, next), props: clone(b.props) });
@@ -345,6 +393,7 @@
   }
 
   async function switchCollection(id: string) {
+    if (applying) return;
     collection = id;
     await loadCatalog();
     const url = new URL(location.href);
@@ -534,6 +583,7 @@
     const doc = frame?.contentDocument;
     const win = frame?.contentWindow;
     if (!doc || !win) return;
+    previewReload.loaded(doc.URL, !!doc.querySelector(".wpfb-page"));
     doc.documentElement.classList.toggle(DARK_CLASS, theme.dark);
     // the canvas scrolls inside the preview page: its scrollbar thin, on the theme's own tokens (light and dark), set
     // here so only the editor's preview gets it, never the theme or the front
@@ -573,8 +623,8 @@
     </div>
     <div class="wpfb-bar-mid">
       <div class="wpfb-history" role="group" aria-label="History">
-        <button type="button" class="wpfb-icon" title="Undo (Ctrl+Z)" aria-label="Undo" aria-keyshortcuts="Control+Z Meta+Z" disabled={!store.canUndo} onclick={undo}><Icon icon={Undo2} /></button>
-        <button type="button" class="wpfb-icon" title="Redo (Ctrl+Shift+Z)" aria-label="Redo" aria-keyshortcuts="Control+Shift+Z Meta+Shift+Z Control+Y" disabled={!store.canRedo} onclick={redo}><Icon icon={Redo2} /></button>
+        <button type="button" class="wpfb-icon" title="Undo (Ctrl+Z)" aria-label="Undo" aria-keyshortcuts="Control+Z Meta+Z" disabled={applying || !store.canUndo} onclick={undo}><Icon icon={Undo2} /></button>
+        <button type="button" class="wpfb-icon" title="Redo (Ctrl+Shift+Z)" aria-label="Redo" aria-keyshortcuts="Control+Shift+Z Meta+Shift+Z Control+Y" disabled={applying || !store.canRedo} onclick={redo}><Icon icon={Redo2} /></button>
       </div>
       <div class="wpfb-status" role="status" aria-live="polite" title={status === "error" || status === "saved" ? message : undefined}>
         {#if status === "loading"}Loading…{:else if status === "saving"}Saving draft…{:else if status === "error"}<span class="wpfb-error">{message}</span>{:else}{message}{/if}
@@ -590,8 +640,8 @@
     </div>
     <div class="wpfb-actions">
       <a class="button" href={config.permalink} target="_blank" rel="noopener">View page</a>
-      <button type="button" class="button" onclick={() => save(false)}>Save draft</button>
-      {#if config.canPublish}<button type="button" class="button button-primary" onclick={() => save(true)}>Publish</button>{/if}
+      <button type="button" class="button" disabled={applying} onclick={() => save(false)}>Save draft</button>
+      {#if config.canPublish}<button type="button" class="button button-primary" disabled={applying} onclick={() => save(true)}>Publish</button>{/if}
       <button type="button" class="wpfb-icon" aria-controls="wpfb-inspector" aria-expanded={layout.rightOpen} aria-keyshortcuts="]"
         title="{layout.rightOpen ? 'Hide' : 'Show'} inspector (])" aria-label="{layout.rightOpen ? 'Hide' : 'Show'} inspector"
         onclick={() => layout.toggle("right")}><Icon icon={layout.rightOpen ? PanelRightClose : PanelRightOpen} /></button>
@@ -608,7 +658,7 @@
       {#if paletteTab === "chat"}
         <ChatPanel {source} items={store.items} blocks={[...blocks.values()]} selected={store.selected}
           history={client.chatHistory} send={async (content, requestId) => { await flush(); if (status === "error") throw new Error(message); return client.chatTurn(content, requestId); }}
-          apply={async (requestId) => { await flush(); if (status === "error") throw new Error(message); await client.chatApply(requestId); await init(); }} />
+          apply={applyChat} />
       {:else}
       <div class="wpfb-section">
         <label class="wpfb-heading" for="wpfb-collection">Collection</label>
@@ -651,7 +701,7 @@
             <!-- sandbox without allow-scripts: no script of the preview page (nor an injected handler) runs in the
                  editor's origin; allow-same-origin keeps contentDocument for the overlay, selection and render-block
                  swaps (the editor's own listeners run in the editor). tests/security.test.ts -->
-            <iframe bind:this={frame} src={frameSrc} title="Page preview" sandbox="allow-same-origin" onload={framed}></iframe>
+            <iframe bind:this={frame} src={frameSrc} title="Page preview" sandbox="allow-same-origin" onload={framed} onerror={() => previewReload.fail()}></iframe>
           {/key}
           <Overlay hover={hoverBox} selected={selBox} drop={dropY} label={current ? `${titleOf(current)} · ${human(current.variant)}` : ""}
             first={currentIndex <= 0} last={currentIndex === store.items.length - 1}

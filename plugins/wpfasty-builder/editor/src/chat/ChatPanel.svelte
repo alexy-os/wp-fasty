@@ -43,7 +43,7 @@
     if (busy) return;
     busy = true;
     try { await apply(requestId); await load(); }
-    catch(e) { error = (e as Error).message; }
+    catch(e) { await load(); error = (e as Error).message; }
     finally { busy = false; }
   }
   const context = $derived(builderContext(source, items, blocks, selected));
