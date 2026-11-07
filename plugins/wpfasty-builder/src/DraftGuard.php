@@ -13,7 +13,11 @@ final class DraftGuard
         if (!add_option($key, time(), '', false)) {
             return new \WP_Error('wpfb_busy', 'Another draft save is active; retry after it completes.', ['status' => 409]);
         }
-        try { return $operation(); } finally { delete_option($key); }
+        try {
+            return $operation();
+        } finally {
+            delete_option($key);
+        }
     }
 
     public static function version(int $page): int
@@ -24,9 +28,10 @@ final class DraftGuard
     public static function save(int $page, array $layout, bool $publish, ?int $expected): mixed
     {
         return self::locked($page, static function () use ($page, $layout, $publish, $expected) {
-            if (null !== $expected && $expected !== self::version($page)) {
+            if (null !== $expected && self::version($page) !== $expected) {
                 return new \WP_Error('wpfb_revision_conflict', 'Draft changed. Reload before saving.', ['status' => 409]);
             }
+
             return Store::save($page, $layout, $publish);
         });
     }
