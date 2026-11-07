@@ -64,7 +64,8 @@ and authoritative catalog remain unchanged. Nothing publishes automatically.
 - WordPress reads, before its options: `$_SERVER['WPFB_WORKER_TOKEN']`, `$_SERVER['WPFB_WORKER_PORT']`,
   `$_SERVER['WPFB_WORKER_KEY']==='managed'` (server/FastCGI params set by the host, e.g. local-wp per
   request). Then nothing secret is stored in `wpfb_chat_settings`; settings show "Managed by host".
-- `POST /status` (authenticated, empty body) -> `{"active":bool,"credentials":"managed"|"request"}`.
+- `POST /status` (authenticated, empty body) -> `{"active":bool,"activeTurnId":string|null,"credentials":"managed"|"request"}`. `activeTurnId` is an opaque random id per running turn (not the requestId; no prompt, page or secret). No drain/interlock: a host stop during a turn still interrupts it.
+- WordPress (`Chat.php`): with `WPFB_WORKER_KEY=managed` the host is the only credential source. An empty/absent `WPFB_WORKER_TOKEN` fails closed (`wpfb_secret_unavailable`, 503, "Vault locked / secret unavailable"), with no fallback to `wpfb_chat_settings`. The settings page then shows availability only and never accepts or saves the Cursor key, token or port (Clear of an old stored copy is allowed). Legacy/manual settings apply only without the marker.
   Hosts check it before stop/restart/port change so a running turn is not cut silently.
 - SDK child env: PATH, HOME, NODE_ENV, TEMP/TMP/TMPDIR (data dir), and on Windows SystemRoot, SystemDrive,
   windir, ComSpec, PATHEXT, USERPROFILE/APPDATA/LOCALAPPDATA (data dir). The child exits when the

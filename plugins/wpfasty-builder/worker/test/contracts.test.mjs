@@ -75,13 +75,15 @@ test('NON-LIVE /status is authenticated, reports active turn and managed key wit
  const auth={Authorization:'Bearer '+token};
  try{
   assert.equal((await req('/status',{})).status,401);
-  let st=await req('/status',{},auth);assert.equal(st.status,200);assert.deepEqual(JSON.parse(st.raw),{active:false,credentials:'managed'});
+  let st=await req('/status',{},auth);assert.equal(st.status,200);assert.deepEqual(JSON.parse(st.raw),{active:false,activeTurnId:null,credentials:'managed'});
   assert.equal(st.raw.includes('TEST_MANAGED_KEY'),false);
   const pending=req('/turn',body(),auth);
   await new Promise(r=>setTimeout(r,50));
-  assert.equal(JSON.parse((await req('/status',{},auth)).raw).active,true);
+  const busy=JSON.parse((await req('/status',{},auth)).raw);assert.equal(busy.active,true);
+  assert.match(busy.activeTurnId,/^[0-9a-f-]{36}$/);assert.notEqual(busy.activeTurnId,body().requestId);
+  assert.deepEqual(Object.keys(busy).sort(),['active','activeTurnId','credentials']);
   release();assert.equal((await pending).status,200);assert.equal(seen,'TEST_MANAGED_KEY');
-  assert.equal(JSON.parse((await req('/status',{},auth)).raw).active,false);
+  assert.deepEqual(JSON.parse((await req('/status',{},auth)).raw),{active:false,activeTurnId:null,credentials:'managed'});
   assert.equal(JSON.stringify(store.history('site-test-a:10')).includes('TEST_MANAGED_KEY'),false);
  }finally{await new Promise(r=>server.close(r));store.db.close();}
 });

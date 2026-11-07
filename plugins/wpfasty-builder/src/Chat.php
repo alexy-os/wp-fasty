@@ -43,6 +43,97 @@ final class Chat
         return 'managed' === ($_SERVER['WPFB_WORKER_KEY'] ?? ''); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Host flag: exact fixed-literal comparison; never forwarded raw.
     }
 
+    /**
+     * Worker credentials for one request. With the host marker (WPFB_WORKER_KEY=managed) the host is the
+     * only source: an absent host token fails closed (vault locked) and the WP database is never consulted.
+     * Legacy/manual settings are used only without the marker.
+     *
+     * @return array{token: string, cursor: ?string}|array{error: string, message: string}
+     */
+    public static function credentials(array $settings, bool $managed, ?string $hostToken, bool $withKey): array
+    {
+        if ($managed) {
+            if (null === $hostToken) {
+                return ['error' => 'secret_unavailable', 'message' => __('Vault locked / secret unavailable: the host did not supply the Builder worker token. Unlock local-wp and retry. No model request was sent.', 'wpfasty-builder')];
+            }
+
+            return ['token' => $hostToken, 'cursor' => null];
+        }
+        $token = $hostToken ?? (is_string($settings['worker_token'] ?? null) ? $settings['worker_token'] : '');
+        $cursor = is_string($settings['cursor_key'] ?? null) && '' !== $settings['cursor_key'] ? $settings['cursor_key'] : null;
+        if (strlen($token) < 32 || ($withKey && null === $cursor)) {
+            return ['error' => 'chat_unconfigured', 'message' => __('Configure Builder chat in Settings → Builder chat. No model request was sent.', 'wpfasty-builder')];
+        }
+
+        return ['token' => $token, 'cursor' => $withKey ? $cursor : null];
+    }
+
+    /**
+     * Applies the settings form. Managed by host: Cursor key, worker token and port are never accepted or
+     * saved (only Clear of an old stored copy is honoured).
+     */
+    public static function mergeSettings(array $settings, mixed $post, bool $managed): array
+    {
+        $post = is_array($post) ? $post : [];
+        foreach (['cursor_key', 'jev_key', 'worker_token'] as $field) {
+            if (isset($post['clear_'.$field])) {
+                unset($settings[$field]);
+                continue;
+            }
+            if ($managed && 'jev_key' !== $field) {
+                continue;
+            }
+            $value = $post[$field] ?? '';
+            $value = is_string($value) ? trim($value) : '';
+            if ('' !== $value && strlen($value) <= 4096) {
+                $settings[$field] = $value;
+            }
+        }
+        if (!$managed) {
+            $port = $post['worker_port'] ?? '';
+            $port = is_string($port) ? trim($port) : 'invalid';
+            if ('' !== $port) {
+                $valid = self::validPort($port);
+                if (null === $valid) {
+                    $settings['_invalid_port'] = true;
+                } else {
+                    $settings['worker_port'] = $valid;
+                }
+            }
+        }
+
+        return $settings;
+    }
+
+    /** Credential rows of the settings form. Managed by host: availability only, no inputs, no values. */
+    public static function credentialsHtml(array $settings, bool $managed, bool $hostTokenPresent): string
+    {
+        $labels = ['cursor_key' => __('Cursor API key', 'wpfasty-builder'), 'jev_key' => __('Jev key (reserved; search unavailable)', 'wpfasty-builder'), 'worker_token' => __('Local worker shared token (at least 32 characters)', 'wpfasty-builder')];
+        $clear = static fn (string $field): string => ' <label><input type="checkbox" name="clear_'.esc_attr($field).'"> '.esc_html__('Clear', 'wpfasty-builder').'</label>';
+        $html = '';
+        if ($managed) {
+            $state = $hostTokenPresent ? __('available', 'wpfasty-builder') : __('unavailable (vault locked)', 'wpfasty-builder');
+            $html .= '<div class="notice notice-info inline"><p>'.esc_html__('Managed by host (local-wp vault): the Cursor key, worker token and port are supplied per request and are never stored in this database.', 'wpfasty-builder').'</p></div>';
+            foreach (['cursor_key', 'worker_token'] as $field) {
+                $html .= '<p>'.esc_html($labels[$field]).': '.esc_html__('Managed by host', 'wpfasty-builder').' — '.esc_html($state)
+                    .(empty($settings[$field]) ? '' : ' ('.esc_html__('an old stored copy exists', 'wpfasty-builder').')'.$clear($field)).'</p>';
+            }
+            $html .= '<p>'.esc_html__('Local worker port', 'wpfasty-builder').': '.esc_html__('Managed by host', 'wpfasty-builder').'</p>';
+            $fields = ['jev_key'];
+        } else {
+            $fields = ['cursor_key', 'jev_key', 'worker_token'];
+        }
+        foreach ($fields as $field) {
+            $html .= '<p><label>'.esc_html($labels[$field]).'<br><input type="password" autocomplete="new-password" name="'.esc_attr($field).'" value="" class="regular-text"></label> '
+                .esc_html(empty($settings[$field]) ? __('Not set', 'wpfasty-builder') : __('Configured (masked)', 'wpfasty-builder')).$clear($field).'</p>';
+        }
+        if (!$managed) {
+            $html .= '<p><label>'.esc_html__('Local worker port (1024-65535, host fixed 127.0.0.1)', 'wpfasty-builder').'<br><input type="number" min="1024" max="65535" step="1" name="worker_port" value="'.esc_attr((string) self::port()).'" class="small-text"></label></p>';
+        }
+
+        return $html;
+    }
+
     public static function register(): void
     {
         add_action('rest_api_init', [self::class, 'routes']);
@@ -58,27 +149,11 @@ final class Chat
         }
         $settings = (array) get_option(self::OPTION, []);
         if ('POST' === sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'] ?? '')) && check_admin_referer('wpfb_chat_settings')) {
-            foreach (['cursor_key', 'jev_key', 'worker_token'] as $field) {
-                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Opaque credentials must not be text-sanitized; unslash here, then enforce scalar type and existing 4096-byte bound before storage.
-                $value = wp_unslash($_POST[$field] ?? '');
-                $value = is_string($value) ? trim($value) : '';
-                if ('' !== $value && strlen($value) <= 4096) {
-                    $settings[$field] = $value;
-                }
-                if (isset($_POST['clear_'.$field])) {
-                    unset($settings[$field]);
-                }
-            }
-            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Unslash form input; validPort below strictly validates the complete value before storage.
-            $port = wp_unslash($_POST['worker_port'] ?? '');
-            $port = is_string($port) ? trim($port) : 'invalid';
-            if ('' !== $port) {
-                $valid = self::validPort($port);
-                if (null === $valid) {
-                    echo '<div class="notice notice-error"><p>Worker port must be an integer 1024-65535. Port unchanged.</p></div>';
-                } else {
-                    $settings['worker_port'] = $valid;
-                }
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Opaque credentials are not text-sanitized; mergeSettings enforces scalar type, the 4096-byte bound and the managed-host rule.
+            $settings = self::mergeSettings($settings, wp_unslash($_POST), self::hostManagedKey());
+            if (isset($settings['_invalid_port'])) {
+                unset($settings['_invalid_port']);
+                echo '<div class="notice notice-error"><p>'.esc_html__('Worker port must be an integer 1024-65535. Port unchanged.', 'wpfasty-builder').'</p></div>';
             }
             update_option(self::OPTION, $settings, false);
             echo '<div class="notice notice-success"><p>Settings saved server-side. Blank fields preserve existing values.</p></div>';
@@ -86,18 +161,7 @@ final class Chat
         echo '<div class="wrap"><h1>Builder chat</h1><p>Node 24 worker on this WordPress host: '.esc_html(self::workerUrl()).'. Provider keys never enter the editor bundle. Grok is selected only if available to the Cursor key.</p>';
         echo '<p>Jev search is unavailable: the installed official extension documents typed decisions, not a search API. Its optional key is reserved; no Jev requests are made.</p><form method="post">';
         wp_nonce_field('wpfb_chat_settings');
-        $managed = ['cursor_key' => self::hostManagedKey(), 'worker_token' => null !== self::hostToken()];
-        if ($managed['cursor_key'] || $managed['worker_token']) {
-            echo '<div class="notice notice-info inline"><p>Managed by the host (local-wp vault): values are supplied per request and are not stored in this database. Tick Clear to remove an old stored copy.</p></div>';
-        }
-        foreach (['cursor_key' => 'Cursor API key', 'jev_key' => 'Jev key (reserved; search unavailable)', 'worker_token' => 'Local worker shared token (at least 32 characters)'] as $field => $label) {
-            if (!empty($managed[$field])) {
-                echo '<p>'.esc_html($label).': Managed by host'.(empty($settings[$field]) ? '' : ' (an old stored copy exists) <label><input type="checkbox" name="clear_'.esc_attr($field).'"> Clear</label>').'</p>';
-                continue;
-            }
-            echo '<p><label>'.esc_html($label).'<br><input type="password" autocomplete="new-password" name="'.esc_attr($field).'" value="" class="regular-text"></label> '.(empty($settings[$field]) ? 'Not set' : 'Configured (masked)').' <label><input type="checkbox" name="clear_'.esc_attr($field).'"> Clear</label></p>';
-        }
-        echo '<p><label>Local worker port (1024-65535, host fixed 127.0.0.1)<br><input type="number" min="1024" max="65535" step="1" name="worker_port" value="'.esc_attr((string) self::port()).'" class="small-text"></label></p>';
+        echo self::credentialsHtml($settings, self::hostManagedKey(), self::hostToken() !== null); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- credentialsHtml escapes every dynamic value.
         submit_button('Save');
         echo '</form></div>';
     }
@@ -124,7 +188,7 @@ final class Chat
         $result = self::worker('/history', self::scope((int) $request['id']));
         if (!is_wp_error($result)) {
             $settings = (array) get_option(self::OPTION, []);
-            $configured = self::hostManagedKey() || !empty($settings['cursor_key']);
+            $configured = self::hostManagedKey() ? null !== self::hostToken() : !empty($settings['cursor_key']);
             $unavailable = empty($result['turns']) ? 'Sending is unavailable until a Cursor API key is configured server-side in Settings → Builder chat.' : 'Sending is unavailable without a configured Cursor API key. Existing conversation history remains available. Configure credentials server-side in Settings → Builder chat.';
             $result['availability'] = ['configured' => $configured, 'model' => 'grok-4.7', 'message' => $configured ? 'Grok configured; provider access is checked only when you send.' : $unavailable];
             $currentVersion = DraftGuard::version((int) $request['id']);
@@ -281,14 +345,13 @@ final class Chat
 
     private static function worker(string $route, array $body, bool $withKey = false): mixed
     {
-        $settings = (array) get_option(self::OPTION, []);
-        $token = self::hostToken() ?? (string) ($settings['worker_token'] ?? '');
-        $managedKey = self::hostManagedKey();
-        if (strlen($token) < 32 || ($withKey && !$managedKey && empty($settings['cursor_key']))) {
-            return new \WP_Error('wpfb_chat_unconfigured', 'Configure Builder chat in Settings → Builder chat. No model request was sent.', ['status' => 503]);
+        $auth = self::credentials((array) get_option(self::OPTION, []), self::hostManagedKey(), self::hostToken(), $withKey);
+        if (isset($auth['error'])) {
+            return new \WP_Error('wpfb_'.$auth['error'], $auth['message'], ['status' => 503]);
         }
-        if ($withKey && !$managedKey) {
-            $body['credentials'] = ['cursor' => $settings['cursor_key']];
+        $token = $auth['token'];
+        if (null !== $auth['cursor']) {
+            $body['credentials'] = ['cursor' => $auth['cursor']];
         }
         $result = wp_remote_post(self::workerUrl().$route, ['timeout' => 100, 'redirection' => 0,
             'headers' => ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token], 'body' => wp_json_encode($body), 'limit_response_size' => 512000]);

@@ -70,6 +70,20 @@ try {
     contract(is_wp_error($result)&&$result->get_error_code() === 'wpfb_chat_unconfigured', 'missing config deterministic 503');
     remove_filter('pre_option_'.Chat::OPTION, $none);
     add_filter('pre_option_'.Chat::OPTION, $settings);
+    // Host marker without a host token (local-wp vault locked): fail closed, never fall back to the DB copy.
+    $_SERVER['WPFB_WORKER_KEY'] = 'managed';
+    unset($_SERVER['WPFB_WORKER_TOKEN']);
+    $sent = false;
+    $spy = static function ($pre) use (&$sent) {
+        $sent = true;
+
+        return $pre;
+    };
+    add_filter('pre_http_request', $spy, 1);
+    $locked = Chat::history($request('history'));
+    remove_filter('pre_http_request', $spy, 1);
+    contract(is_wp_error($locked) && 'wpfb_secret_unavailable' === $locked->get_error_code() && !$sent, 'managed marker + no host token fails closed without DB fallback or worker request');
+    unset($_SERVER['WPFB_WORKER_KEY']);
     if (!getenv('WPFB_CONTRACT_HTTP')) {
         add_filter('pre_http_request', $http, 10, 3);
     }
