@@ -1,4 +1,9 @@
 <script lang="ts">
+  import ChatPanel from "./chat/ChatPanel.svelte";
+  import UiButton from "./ui/button/Button.svelte";
+  import UiBox from "./ui/box/Box.svelte";
+  import { chatCopy } from "./chat/content";
+  let paletteTab = $state<"blocks" | "chat">("blocks");
   import { onMount, untrack } from "svelte";
   import FieldRenderer from "./fields/FieldRenderer.svelte";
   import type { FieldCtx } from "./fields/context";
@@ -587,6 +592,14 @@
 
   <div class="wpfb-main">
     <aside id="wpfb-palette" class="wpfb-palette wpfb-scroll" aria-label="Blocks" hidden={!layout.leftOpen}>
+      <UiBox tag="div" class="wpfb-section wpfb-seg" role="group" aria-label={chatCopy.panel}>
+        <UiButton aria-pressed={paletteTab === "blocks" ? "true" : "false"} aria-controls="wpfb-palette-content" onclick={() => (paletteTab = "blocks")}>{chatCopy.blocks}</UiButton>
+        <UiButton aria-pressed={paletteTab === "chat" ? "true" : "false"} aria-controls="wpfb-palette-content" onclick={() => (paletteTab = "chat")}>{chatCopy.tab}</UiButton>
+      </UiBox>
+      <UiBox tag="div" id="wpfb-palette-content" class="wpfb-palette-content">
+      {#if paletteTab === "chat"}
+        <ChatPanel {source} items={store.items} blocks={[...blocks.values()]} selected={store.selected} />
+      {:else}
       <div class="wpfb-section">
         <label class="wpfb-heading" for="wpfb-collection">Collection</label>
         <select id="wpfb-collection" class="wpfb-search" value={collection} onchange={(e) => switchCollection(e.currentTarget.value)}>
@@ -608,6 +621,8 @@
           onadd={(block, variant) => add(block, variant, store.selected ? currentIndex + 1 : store.items.length)}
           ondrag={(c) => { card = c; if (!c) dragDone(); }} />
       </div>
+      {/if}
+      </UiBox>
     </aside>
 
     {#if layout.leftOpen}

@@ -272,3 +272,11 @@
 .wpfb-peek-body img { display: block; width: 480px; max-width: 100%; height: auto; border: 1px solid var(--wpfb-line); border-radius: var(--wpfb-radius); background: var(--wpfb-surface); }
 @keyframes wpfb-peek-in { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .wpfb-peek { animation: none; } }
+
+/* Chat scaffold is read-only until a server-side runtime has been selected. No new canvas. */
+.wpfb-chat { display: flex; flex-direction: column; gap: 8px; }
+.wpfb-chat textarea { width: 100%; }
+.wpfb-chat-context { border: 1px solid var(--wpfb-line); padding: 8px; }
+.wpfb-chat-context pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; }
+
+.wpfb-palette-content { display: flex; flex: 1; min-height: 0; flex-direction: column; }
