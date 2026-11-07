@@ -30,6 +30,7 @@
   import { defaultSource } from "./sources";
   import { LinkStore, setLinks } from "./links.svelte";
   import { ThemeMode } from "./theme.svelte";
+  import { PreviewAppearance, previewChoices, previewAppearanceLabel, type PreviewMode } from "./preview-appearance";
   import { DARK_CLASS, TOGGLE_ID } from "./theme";
 
   let { config: initial }: { config: Config } = $props();
@@ -50,6 +51,11 @@
   const layout = new PanelLayout(config.user);
   /** dark mode (localStorage, per user), switched from the toolbar button of Admin::darkSwitch */
   const theme = new ThemeMode(config.user);
+  let appearance = $state.raw(new PreviewAppearance());
+  const previewScheme = $derived(appearance.scheme(theme.dark));
+  function setPreviewMode(mode: PreviewMode) {
+    if (!applying) appearance = new PreviewAppearance(mode);
+  }
   let resizing = $state(false);
   /** the "New page" panel (?new=1 opens it on load) */
   let newOpen = $state(config.newPage === true);
@@ -95,7 +101,7 @@
         }
       : null,
   );
-  const frameSrc = $derived(previewSource(previewUrl, previewRevision, reloadKey, theme.dark ? "dark" : "light"));
+  const frameSrc = $derived(previewSource(previewUrl, previewRevision, reloadKey, previewScheme));
   const titleOf = (it: Item) => blocks.get(it.block)?.title ?? it.block;
 
   onMount(() => {
@@ -303,7 +309,7 @@
           scrollY = frame?.contentWindow?.scrollY ?? 0;
           previewRevision = draftVersion;
           reloadKey++;
-          const loaded = previewReload.start(previewSource(previewUrl, draftVersion, reloadKey, theme.dark ? "dark" : "light"));
+          const loaded = previewReload.start(previewSource(previewUrl, draftVersion, reloadKey, previewScheme));
           await Promise.all([tick(), loaded]);
         },
       });
@@ -696,6 +702,14 @@
     {/if}
 
     <section class="wpfb-canvas" aria-label="Preview">
+      <UiBox tag="div" class="wpfb-preview-toolbar">
+        <UiBox tag="div" class="wpfb-seg" role="group" aria-label={previewAppearanceLabel}>
+          {#each previewChoices as choice (choice.mode)}
+            <UiButton aria-pressed={appearance.mode === choice.mode ? "true" : "false"}
+              disabled={applying} onclick={() => setPreviewMode(choice.mode)}>{choice.label}</UiButton>
+          {/each}
+        </UiBox>
+      </UiBox>
       {#if layout.focus}
         <button type="button" class="button wpfb-unfocus" title="Exit focus mode (F or Esc)" aria-keyshortcuts="F Escape"
           onclick={() => layout.toggleFocus()}><Icon icon={Minimize2} /> Exit focus</button>

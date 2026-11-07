@@ -85,9 +85,9 @@ test("a superseded navigation rejects old waiter and cannot satisfy newer target
 test("App connects Apply, revision-aware src and iframe lifecycle; keeps sandbox and prevents stale patches", () => {
   const app = readFileSync(new URL("../src/App.svelte", import.meta.url), "utf8");
   expect(app).toContain("apply: applyExternal");
-  expect(app).toContain('const frameSrc = $derived(previewSource(previewUrl, previewRevision, reloadKey, theme.dark ? "dark" : "light"))');
+  expect(app).toContain('const frameSrc = $derived(previewSource(previewUrl, previewRevision, reloadKey, previewScheme))');
   expect(app).toContain("requireDraftVersion(Number(layout.layout?.version ?? 0), minimumVersion)");
-  expect(app).toContain('previewSource(previewUrl, draftVersion, reloadKey, theme.dark ? "dark" : "light")');
+  expect(app).toContain('previewSource(previewUrl, draftVersion, reloadKey, previewScheme)');
   expect(app).not.toContain('documentElement.classList.toggle(DARK_CLASS');
   expect(app).toContain('if (!applying) theme.toggle()');
   expect(app).toContain('toggle?.toggleAttribute("disabled", applying)');

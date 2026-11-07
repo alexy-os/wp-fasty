@@ -4,6 +4,9 @@ export const previewCopy = { stalePreview: "Draft changed. Reload before refresh
 export function previewSource(url: string, version: number, reload: number, scheme: "light" | "dark" = "light"): string {
   if (!url) return "";
   const next = new URL(url);
+  if (!next.searchParams.has("wpfb_preview") || !next.searchParams.get("_wpnonce")) {
+    throw new Error(previewCopy.previewFailed);
+  }
   next.searchParams.set("wpfb_r", `${version}-${reload}`);
   next.searchParams.set("wpfb_scheme", scheme);
   return next.href;

@@ -50,8 +50,9 @@ body:has(#wpfasty-builder) #wpbody-content { padding-bottom: 0; }
 /* focus mode: canvas only, over the whole window (the block overlay and its toolbar stay) */
 .wpfb-app.is-focus { position: fixed; inset: 0; z-index: 100000; height: auto; min-height: 0; margin: 0; border: 0; }
 .wpfb-unfocus { position: absolute; right: 16px; bottom: 16px; z-index: 3; box-shadow: var(--wpfb-shadow); }
-.wpfb-canvas { position: relative; background: var(--wpfb-canvas); overflow: hidden; display: flex; justify-content: center; }
-.wpfb-frame-wrap { position: relative; width: 100%; height: 100%; }
+.wpfb-canvas { position: relative; background: var(--wpfb-canvas); overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+.wpfb-preview-toolbar { flex: none; width: 100%; box-sizing: border-box; padding: 8px; background: var(--wpfb-surface); border-bottom: 1px solid var(--wpfb-line); }
+.wpfb-frame-wrap { position: relative; flex: 1; min-height: 0; width: 100%; }
 .wpfb-frame-wrap.is-mobile { width: 392px; border-inline: 1px solid var(--wpfb-line); }
 .wpfb-frame-wrap iframe { width: 100%; height: 100%; border: 0; background: var(--wpfb-surface); display: block; }
 .wpfb-empty { position: absolute; top: 40%; color: var(--wpfb-text-muted); }

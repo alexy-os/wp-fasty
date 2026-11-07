@@ -115,12 +115,14 @@ try {
     $check(str_contains($liveHtml, 'wpfb-page'), 'real published Builder page uses active theme shell');
     $check(str_contains($liveHtml, 'latte-skin-fonts-css'), 'real live page includes active child font stylesheet');
     $draftBeforePreview = get_post_meta($page, WPFastyBuilder\Store::DRAFT, true);
+    $check(!str_contains(Front::previewUrl($page), 'wpfb_scheme'), 'server preview base URL stores no temporary preference');
     $front = $styles->registered;
     foreach (['light', 'dark'] as $scheme) {
         $_GET = [
             'wpfb_preview' => '1', '_wpnonce' => wp_create_nonce('wpfb_preview_'.$page), 'wpfb_scheme' => $scheme,
         ];
         $check(Front::isPreview($page), 'nonce-protected draft preview');
+        $check(!str_contains((string) wp_get_canonical_url($page), 'wpfb_'), 'public canonical never receives preview query');
         $check(apply_filters('wpfasty_color_scheme', null) === $scheme, 'effective scheme is server supplied');
         $html = $render();
         $document = new WP_HTML_Tag_Processor($html);

@@ -52,3 +52,26 @@ Fixture isolation: invoke with `wp --skip-themes eval ...`; the fixture switches
 explicitly requires the actual parent's `functions.php`. This prevents the previous inactive theme's callbacks
 (e.g. Twenty Twenty-Five looking for its style.min.css under WP FastY) from contaminating the simulated request.
 No product/theme/security gate or PHP notice is disabled. This is a CLI cold-boot correction, not a frontend fix.
+
+## t216 — follow interface with a memory-only preview override
+
+Default selection is «Как в интерфейсе»: it follows the existing WordPress admin-bar Builder button
+`Admin::darkSwitch` (`#wpfb-dark-toggle`) and `ThemeMode.dark`. That source exists, is scoped to the Builder
+screen and already remembers its interface preference per user. This repository does not supply a universal
+WordPress dark-mode switch for every admin screen; no such system is invented here. The public theme's
+`wpfasty-color-scheme` preference is separate and unchanged.
+
+The control above the iframe offers follow / Light / Dark. Only a component-owned immutable selection is
+replaced; reload constructs follow again. No additional localStorage/sessionStorage/cookie/Application entry,
+page metadata or site option. An override changes only the iframe's effective server scheme, not admin/chat,
+block cards, the existing global toggle, saved layout or the published site. Switching back to follow uses
+current interface state, not a captured old value. Both controls retain the existing Apply navigation guard.
+
+The same authenticated server preview URL carries the resolved light/dark value; the URL helper refuses
+non-preview/missing-nonce URLs. Public View page continues to use config.permalink; canonical links and the
+server-provided base preview URL have no temporary preference. PHP still checks nonce and edit capability;
+no scripts are added to the sandbox and no Node/ModulY dependency is introduced.
+
+Regression evidence: default/follow transitions, both overrides, reset/new instance, invalid selection,
+no persistence dependency, immutable public URL, old-mode navigation rejection, App/toolbar wiring and real
+WordPress canonical/base URL separation. No visual GUI verification is claimed.
