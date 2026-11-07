@@ -32,6 +32,8 @@ and authoritative catalog remain unchanged. Nothing publishes automatically.
    WPFB_WORDPRESS_ROOT=/var/www/wordpress
    WPFB_WORKER_DATA=/var/lib/wpfasty-builder
    WPFB_WORKER_TOKEN=<independent cryptographically random shared token, >=32 chars>
+   # optional, default 18991; must equal Settings → Builder chat → Local worker port
+   WPFB_WORKER_PORT=18991
    ```
    Generate the shared token into a private file (do not print it into logs).
    Never reuse a provider key as this token. Worker data must be outside the real
@@ -57,7 +59,9 @@ and authoritative catalog remain unchanged. Nothing publishes automatically.
 - Same-origin WP REST: `/wp-json/wpfasty-builder/v1/chat/<page-id>/history`,
   `/turn`, `/apply`. Explicit `wp_rest` nonce + `edit_page` capability, page-only.
   Settings require manage_options and a settings nonce.
-- WP alone contacts fixed `http://127.0.0.1:18991`; no configurable upstream,
+- WP alone contacts `http://127.0.0.1:<worker_port>` (default 18991). Only the port is
+  configurable: worker env `WPFB_WORKER_PORT` and WP option `wpfb_chat_settings.worker_port`
+  must match (integer 1024-65535; anything else is rejected). Host stays fixed loopback; no configurable upstream,
   redirects, CORS, client worker token, arbitrary network proxy, or shell tool.
   Worker checks exact local Host, rejects Origin, and authenticates every route.
 - The worker calls official SDK model discovery and selects only **grok-4.7**.

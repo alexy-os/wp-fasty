@@ -8,7 +8,28 @@ final class Chat
 {
     public const OPTION = 'wpfb_chat_settings';
     public const SLUG = 'wpfasty-builder-chat';
-    private const WORKER = 'http://127.0.0.1:18991';
+    public const DEFAULT_PORT = 18991;
+
+    /** Worker port from settings: integer 1024-65535, host is always fixed loopback 127.0.0.1. */
+    public static function port(): int
+    {
+        $settings = (array) get_option(self::OPTION, []);
+        $port = self::validPort($settings['worker_port'] ?? null);
+        return $port ?? self::DEFAULT_PORT;
+    }
+
+    public static function validPort(mixed $value): ?int
+    {
+        if (is_int($value)) { $value = (string) $value; }
+        if (!is_string($value) || !preg_match('/^[1-9][0-9]{3,4}$/', $value)) { return null; }
+        $port = (int) $value;
+        return ($port >= 1024 && $port <= 65535) ? $port : null;
+    }
+
+    private static function workerUrl(): string
+    {
+        return 'http://127.0.0.1:'.self::port();
+    }
 
     public static function register(): void
     {
@@ -28,15 +49,22 @@ final class Chat
                 if ('' !== $value && strlen($value) <= 4096) { $settings[$field] = $value; }
                 if (isset($_POST['clear_'.$field])) { unset($settings[$field]); }
             }
+            $port = trim((string) wp_unslash($_POST['worker_port'] ?? ''));
+            if ('' !== $port) {
+                $valid = self::validPort($port);
+                if (null === $valid) { echo '<div class="notice notice-error"><p>Worker port must be an integer 1024-65535. Port unchanged.</p></div>'; }
+                else { $settings['worker_port'] = $valid; }
+            }
             update_option(self::OPTION, $settings, false);
             echo '<div class="notice notice-success"><p>Settings saved server-side. Blank fields preserve existing values.</p></div>';
         }
-        echo '<div class="wrap"><h1>Builder chat</h1><p>Node 24 worker on this WordPress host: '.esc_html(self::WORKER).'. Provider keys never enter the editor bundle. Grok is selected only if available to the Cursor key.</p>';
+        echo '<div class="wrap"><h1>Builder chat</h1><p>Node 24 worker on this WordPress host: '.esc_html(self::workerUrl()).'. Provider keys never enter the editor bundle. Grok is selected only if available to the Cursor key.</p>';
         echo '<p>Jev search is unavailable: the installed official extension documents typed decisions, not a search API. Its optional key is reserved; no Jev requests are made.</p><form method="post">';
         wp_nonce_field('wpfb_chat_settings');
         foreach (['cursor_key' => 'Cursor API key', 'jev_key' => 'Jev key (reserved; search unavailable)', 'worker_token' => 'Local worker shared token (at least 32 characters)'] as $field => $label) {
             echo '<p><label>'.esc_html($label).'<br><input type="password" autocomplete="new-password" name="'.esc_attr($field).'" value="" class="regular-text"></label> '.(empty($settings[$field]) ? 'Not set' : 'Configured (masked)').' <label><input type="checkbox" name="clear_'.esc_attr($field).'"> Clear</label></p>';
         }
+        echo '<p><label>Local worker port (1024-65535, host fixed 127.0.0.1)<br><input type="number" min="1024" max="65535" step="1" name="worker_port" value="'.esc_attr((string) self::port()).'" class="small-text"></label></p>';
         submit_button('Save'); echo '</form></div>';
     }
 
@@ -70,7 +98,7 @@ final class Chat
             return new \WP_Error('wpfb_chat_unconfigured', 'Configure Builder chat in Settings → Builder chat. No model request was sent.', ['status' => 503]);
         }
         if ($withKey) { $body['credentials'] = ['cursor' => $settings['cursor_key']]; }
-        $result = wp_remote_post(self::WORKER.$route, ['timeout' => 100, 'redirection' => 0,
+        $result = wp_remote_post(self::workerUrl().$route, ['timeout' => 100, 'redirection' => 0,
             'headers' => ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$settings['worker_token']], 'body' => wp_json_encode($body), 'limit_response_size' => 512000]);
         if (is_wp_error($result)) { return new \WP_Error('wpfb_worker_offline', 'Local Builder worker is unreachable. Start Node worker on this WordPress host; no automatic retry.', ['status' => 503]); }
         $data = json_decode((string) wp_remote_retrieve_body($result), true);

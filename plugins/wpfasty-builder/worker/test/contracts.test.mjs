@@ -61,3 +61,8 @@ test('NON-LIVE SDK adapter propagates exact Grok id, custom-only tools and no am
  assert.deepEqual(Object.keys(options.local.customTools).sort(),['catalog_lookup','propose_layout']);assert.equal(sent.includes('TEST_ONLY'),false);
  fake.Cursor.models.list=async()=>[{id:'other-model'}];await assert.rejects(()=>run({...body(),credentials:{cursor:'TEST_ONLY'}}),/configured_grok_model_unavailable/);
 });
+test('NON-LIVE WPFB_WORKER_PORT accepts only integer 1024-65535; default 18991',async()=>{
+ const {workerPort}=await import('../server.mjs');
+ assert.equal(workerPort(undefined),18991);assert.equal(workerPort(''),18991);assert.equal(workerPort('19000'),19000);assert.equal(workerPort('65535'),65535);
+ for(const bad of ['80','1023','65536','0','-1','19000.5',' 19000','0x4a38','127.0.0.1:19000','http://127.0.0.1:19000','19000/x','abc'])assert.throws(()=>workerPort(bad),/WPFB_WORKER_PORT/);
+});

@@ -4,6 +4,15 @@ import { resolve,isAbsolute,relative,sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { TurnStore,WorkerError,authenticated } from './core.mjs';
 import {isolatedRunner} from './isolated-runner.mjs';
+export const DEFAULT_WORKER_PORT=18991;
+/** WPFB_WORKER_PORT: optional decimal integer 1024-65535 (default 18991). Host is never configurable: always 127.0.0.1. */
+export function workerPort(value){
+ if(value===undefined||value==='')return DEFAULT_WORKER_PORT;
+ if(typeof value!=='string'||!/^[1-9][0-9]{3,4}$/.test(value))throw new Error('WPFB_WORKER_PORT must be an integer 1024-65535');
+ const port=Number(value);
+ if(port<1024||port>65535)throw new Error('WPFB_WORKER_PORT must be an integer 1024-65535');
+ return port;
+}
 export function workerServer({token,store,runner}) {
  let active=false;
  return createServer(async(req,res)=>{
@@ -25,6 +34,7 @@ export function workerServer({token,store,runner}) {
  });
 }
 if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
+ const port=workerPort(process.env.WPFB_WORKER_PORT);
  const token=process.env.WPFB_WORKER_TOKEN;
  if(!token||token.length<32)throw new Error('WPFB_WORKER_TOKEN must contain at least 32 characters');
  process.umask(0o077);
@@ -36,5 +46,6 @@ if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
  const store=new TurnStore(resolve(dir,'turns.sqlite'));
  const server=workerServer({token,store,runner:isolatedRunner(dir)});
  server.requestTimeout=100000;server.headersTimeout=10000;server.maxConnections=8;
- server.listen(18991,'127.0.0.1',()=>console.log('Builder worker listening on loopback:18991; no live acceptance performed'));
+ server.on('error',e=>{console.error('Builder worker cannot listen on 127.0.0.1:'+port+': '+(e.code||'error'));process.exit(1);});
+ server.listen(port,'127.0.0.1',()=>console.log('Builder worker listening on loopback:'+port+'; no live acceptance performed'));
 }
