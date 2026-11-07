@@ -32,7 +32,7 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: "1.4.4" # Builder assets are verified with this Bun release.
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -150,6 +150,11 @@ jobs:
           bun run --cwd plugins/wpfasty-builder/editor check
           bun run --cwd plugins/wpfasty-builder/editor test
           bun run --cwd plugins/wpfasty-builder/editor build
+          git diff --exit-code -- plugins/wpfasty-builder/assets
+          # A matching first build must also be byte-identical on rebuild; never suppress asset drift.
+          sha256sum plugins/wpfasty-builder/assets/editor.{js,css} > "$RUNNER_TEMP/builder-assets.sha256"
+          bun run --cwd plugins/wpfasty-builder/editor build
+          sha256sum -c "$RUNNER_TEMP/builder-assets.sha256"
           git diff --exit-code -- plugins/wpfasty-builder/assets
 
       - name: PHPUnit (themes, types, builder compiler/links)
