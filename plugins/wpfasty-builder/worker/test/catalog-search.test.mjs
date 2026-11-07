@@ -37,7 +37,7 @@ test('NON-LIVE actual multilingual synonyms, OR/AND and top-k, no full catalog/s
 test('NON-LIVE canonical case-preserving mapping, target/variant/source authority and exact details',async()=>{
  for(const target of ['latte','twig']){
   const c=context(target),s=await catalogSession(c,resource);
-  const hero=s.details({blockId:'hero',variant:'centered'});assert.equal(hero.assetId,'block.hero/centered');assert.equal(hero.version.target,target);assert.ok(hero.props.length);
+  const hero=s.details({blockId:'hero',variant:'centered'});assert.equal(hero.assetId,'block.hero/centered');assert.equal(hero.version.target,target);assert.ok(hero.props.length);assert.ok(hero.records.ActionSet,'selected prop types resolve transitively');
   assert.equal(s.details({blockId:'hero',variant:'twoActions'}).variant,'twoActions');
   assert.throws(()=>s.details({blockId:'hero',variant:'twoactions'}),/unavailable/);
   assert.throws(()=>s.details({blockId:'missing',variant:'centered'}),/unavailable/);
@@ -79,6 +79,7 @@ test('NON-LIVE copied worker resource loads without npm, source repo or network 
  const dir=mkdtempSync(join(tmpdir(),'wpfb-resource-'));
  cpSync(new URL('../',import.meta.url),dir,{recursive:true,filter:p=>!p.includes('node_modules')&&!p.includes('/test/')});
  const url=pathToFileURL(join(dir,'catalog-search.mjs')).href;
- const code=`import {loadCatalog} from ${JSON.stringify(url)}; const r=await loadCatalog(); if(r.index.counts.block!==532)process.exit(1); console.log('NON-LIVE standalone resource OK');`;
+ const policyUrl=pathToFileURL(join(dir,'policy.mjs')).href;
+ const code=`import {policySession} from ${JSON.stringify(policyUrl)}; if(!policySession().getSkill({id:'page-review'}).instructions)process.exit(1); import {loadCatalog} from ${JSON.stringify(url)}; const r=await loadCatalog(); if(r.index.counts.block!==532)process.exit(1); console.log('NON-LIVE standalone resource OK');`;
  assert.match(execFileSync(process.execPath,['--input-type=module','-e',code],{cwd:tmpdir(),env:{PATH:process.env.PATH},encoding:'utf8'}),/standalone resource OK/);
 });

@@ -1,0 +1,60 @@
+{
+    "schema": "wpfasty-agent-policy/1",
+    "policyVersion": 1,
+    "briefVersion": 1,
+    "product": "Converse, explain and review. For layout changes search the installed catalog, inspect exact block details, then propose a draft. Never invent facts or publish.",
+    "site": {
+        "language": "",
+        "tone": "",
+        "audience": "",
+        "brand": "",
+        "facts": ""
+    },
+    "brief": "",
+    "allowedTools": [
+        "search_catalog",
+        "get_block_details",
+        "propose_layout"
+    ],
+    "skillIndex": [
+        {
+            "id": "block-selection",
+            "version": 1,
+            "purpose": "Select compatible installed blocks",
+            "triggers": [
+                "new section",
+                "layout change"
+            ],
+            "requiredTools": [
+                "search_catalog",
+                "get_block_details",
+                "propose_layout"
+            ]
+        },
+        {
+            "id": "text-editing",
+            "version": 1,
+            "purpose": "Edit copy without changing structure",
+            "triggers": [
+                "headline",
+                "copy edit"
+            ],
+            "requiredTools": [
+                "get_block_details",
+                "propose_layout"
+            ]
+        },
+        {
+            "id": "page-review",
+            "version": 1,
+            "purpose": "Review the provided saved layout",
+            "triggers": [
+                "review",
+                "critique"
+            ],
+            "requiredTools": [
+                "get_block_details"
+            ]
+        }
+    ]
+}

@@ -126,6 +126,9 @@ try {
     contract($again instanceof WP_REST_Response && DraftGuard::version($page) === $version, 'apply retry idempotent');
     $history = Chat::history($request('history'))->get_data();
     $application = $history['turns'][0]['application'] ?? [];
+    if (getenv('WPFB_CONTRACT_HTTP')) {
+        contract(($history['turns'][0]['agentPolicy']['policyVersion'] ?? 0) >= 1 && ($history['turns'][0]['agentPolicy']['loadedSkills'][0]['id'] ?? '') === 'block-selection', 'actual WP-worker HTTP history preserves locked policy/loaded-skill versions');
+    }
     contract(($application['state'] ?? '') === 'applied' && ($application['appliedVersion'] ?? 0) === $version && false === ($application['canApply'] ?? true), 'applied history reload joins persisted WP revision and hides reapply');
     $noKey = static fn () => ['worker_port' => $fixturePort, 'worker_token' => str_repeat('nonlive-', 5)];
     add_filter('pre_option_'.Chat::OPTION, $noKey, 20);

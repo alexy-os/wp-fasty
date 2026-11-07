@@ -51,6 +51,7 @@ final class Plugin
         Front::register();
         Rest::register();
         Chat::register();
+        AgentPolicy::register();
         if (is_admin()) {
             Admin::register();
         }

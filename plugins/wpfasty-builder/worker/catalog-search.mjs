@@ -19,6 +19,8 @@ function safeTree(value,depth=0){
 export function validateIndex(index){
  check(plain(index)&&index.version==='0'&&Array.isArray(index.facets)&&index.facets.length<=24&&Array.isArray(index.assets)&&index.assets.length<=10000);
  safeTree(index);
+ check(plain(index.counts)&&['block','screen','blockSpecs'].every(k=>Number.isSafeInteger(index.counts[k])&&index.counts[k]>=0));
+ check(index.counts.block===index.assets.filter(a=>a.type==='block').length&&index.counts.screen===index.assets.filter(a=>a.type==='screen').length&&index.counts.blockSpecs===new Set(index.assets.filter(a=>a.type==='block').map(a=>a.group)).size);
  const facets=new Map();
  for(const f of index.facets){
   check(id(f.id)&&!facets.has(f.id)&&Array.isArray(f.values)&&f.values.length<=1000&&plain(f.label)&&text(f.label.en,200));
@@ -43,7 +45,9 @@ export async function loadCatalog(directory=new URL('./catalog/',import.meta.url
   const manifest=JSON.parse(read('manifest.json',16000));
   check(manifest.schema==='wpfasty-local-search/1'&&manifest.license==='MIT'&&plain(manifest.files));
   for(const name of ['stock.v0.json','engine/model.mjs','engine/query.mjs','engine/search.mjs','LICENSE'])check(sha(read(name,name==='stock.v0.json'?3*1024*1024:100000))===manifest.files[name]);
-  const index=validateIndex(JSON.parse(read('stock.v0.json',3*1024*1024)));
+  const stock=read('stock.v0.json',3*1024*1024);
+  const index=validateIndex(JSON.parse(stock));
+  check(manifest.stockBytes===stock.length&&manifest.stockVersion===index.version&&JSON.stringify(manifest.counts)===JSON.stringify(index.counts)&&/^[a-f0-9]{40}$/.test(manifest.source?.commit));
   const {digest,...body}=index;check(digest===manifest.stockDigest&&digest==='sha256:'+sha(JSON.stringify(body)));
   const engine=await import(new URL('engine/search.mjs',directory).href);
   return {index,manifest,engine,prepared:engine.prepare(index)};
@@ -53,7 +57,7 @@ let bundled;
 const bundledCatalog=()=>bundled??=loadCatalog();
 const pair=(b,v)=>`${b}/${v}`;
 const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
-const byteCap=value=>{check(Buffer.byteLength(JSON.stringify(value))<=48000,'catalog_detail_too_large');return value;};
+const byteCap=(value,code='catalog_detail_too_large')=>{check(Buffer.byteLength(JSON.stringify(value))<=48000,code);return value;};
 export async function catalogSession(context,resource){
  check(plain(context)&&Array.isArray(context.catalog)&&context.catalog.length<=1000,'catalog_context_invalid');
  check(['latte','twig'].includes(context.target),'catalog_target_unsupported');
@@ -87,13 +91,18 @@ export async function catalogSession(context,resource){
   for(const [f,values] of Object.entries(filters))check(valueSets.has(f)&&Array.isArray(values)&&values.length<=8&&values.every(v=>valueSets.get(f).has(v)));
   const state={q:(args.q??'').trim().replace(/\s+/g,' '),filters,spec:args.spec??'',variants:args.variants??'one',sort:args.sort??null,page:1};
   const out=engine.search(scoped,state),limit=args.limit??5;
-  return {version,availability:descriptor.availability,total:out.results.length,matchedVariants:out.matched,limit,results:out.results.slice(0,limit).map(a=>({assetId:a.id,blockId:a.preview.block,variant:a.variant,title:a.title,description:blocks.get(a.preview.block).docs??a.subtitle,variantDescription:a.subtitle,labels:a.labels,draftFacets:a.weak})),...(out.results.length?{}:{diagnostic:eligible.length?'no_matches':'no_compatible_installed_assets'})};
+  return byteCap({version,availability:descriptor.availability,total:out.results.length,matchedVariants:out.matched,limit,results:out.results.slice(0,limit).map(a=>({assetId:a.id,blockId:a.preview.block,variant:a.variant,title:a.title,description:blocks.get(a.preview.block).docs??a.subtitle,variantDescription:a.subtitle,labels:a.labels,draftFacets:a.weak})),...(out.results.length?{}:{diagnostic:eligible.length?'no_matches':'no_compatible_installed_assets'})},'catalog_search_too_large');
  }
  function details(args){
   check(plain(args)&&Object.keys(args).every(k=>['blockId','variant'].includes(k))&&id(args.blockId)&&id(args.variant));
   const key=pair(args.blockId,args.variant);check(eligiblePairs.has(key),'catalog_block_unavailable');
   const {block,variant}=available.get(key);
-  const records=Object.fromEntries((block.data??[]).filter(d=>id(d.record?.toLowerCase())).map(d=>[d.record,context.records?.[d.record]]).filter(([,v])=>v!==undefined));
+  // Resolve only the selected schema's transitive record types (e.g. Hero -> ActionSet), not the entire catalog.
+  const records={},queue=[];
+  const addType=type=>{const source=typeof type==='string'?type:plain(type)&&typeof type.ts==='string'?type.ts:'';for(const name of source.match(/\b[A-Z][A-Za-z0-9_]*/g)??[])if(context.records&&own(context.records,name)&&!badKey(name)&&!own(records,name)&&!queue.includes(name))queue.push(name);};
+  for(const prop of block.props??[])addType(prop.type);
+  for(const data of block.data??[])addType(data.record);
+  while(queue.length){check(Object.keys(records).length<256,'catalog_detail_too_large');const name=queue.shift();records[name]=context.records[name];for(const field of Array.isArray(records[name])?records[name]:[])addType(field.type);}
   const result=byteCap({version,assetId:'block.'+key,blockId:block.id,variant:variant.id,title:block.title??index.assets.find(a=>a.id==='block.'+key)?.title,description:block.docs??'',props:block.props??[],defaults:block.defaults??{},data:block.data??[],variantSet:variant.set??{},records});
   safeTree(result);inspected.add(key);return result;
  }

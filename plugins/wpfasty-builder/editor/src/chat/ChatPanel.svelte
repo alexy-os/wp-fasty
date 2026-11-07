@@ -3,7 +3,7 @@
   import { onMount, tick } from "svelte";
   import type { ChatHistory, ChatResult, ChatTurn, ChatProgress } from "./client";
   import { watchProgress } from "./progress";
-  import { usageLabel } from "./presentation";
+  import { usageLabel, policyLabel } from "./presentation";
   import MessageBody from "./MessageBody.svelte";
   import CodeBox from "./CodeBox.svelte";
   import Block from "../compose/Block.svelte";
@@ -85,6 +85,7 @@
     {#if !turns.length}<Text tag="p" class="wpfb-chat-caption">{copy.empty}</Text>{/if}
     {#each turns as turn (turn.requestId)}
       {@const application = proposalPresentation(turn)}
+      {@const policy = policyLabel(turn.agentPolicy)}
       <Box tag="div" class="wpfb-chat-turn">
         <Box tag="div" class="wpfb-chat-message wpfb-chat-user">
           <Text tag="p" class="wpfb-chat-role">{copy.user}</Text>
@@ -103,12 +104,13 @@
             </Box>
           {/if}
           <Text tag="p" class="wpfb-chat-usage">{usageLabel(turn.usage)}</Text>
+          {#if policy}<Text tag="p" class="wpfb-chat-caption">{policy}</Text>{/if}
         </Box>
       </Box>
     {/each}
     {#if sending}
       <Box tag="div" class="wpfb-chat-message wpfb-chat-user"><Text tag="p" class="wpfb-chat-role">{copy.user}</Text><Text tag="p" class="wpfb-chat-prose">{pendingContent}</Text></Box>
-      <Text tag="p" class="wpfb-chat-notice" role="status">{progressMissing ? copy.progressUnavailable : activity?.tool ? `${activity.tool.name === "propose_layout" ? copy.proposalTool : copy.catalogTool} · ${copy.toolStatus[activity.tool.status]}` : copy.requestPending}</Text>
+      <Text tag="p" class="wpfb-chat-notice" role="status">{progressMissing ? copy.progressUnavailable : activity?.tool ? `${activity.tool.name === "propose_layout" ? copy.proposalTool : activity.tool.name === "get_skill" ? copy.skillTool : copy.catalogTool} · ${copy.toolStatus[activity.tool.status]}` : copy.requestPending}</Text>
     {/if}
   </Box>
   <Box tag="div" class="wpfb-chat-composer">

@@ -32,7 +32,7 @@ agent acceptance. No model requests are needed for the checks below.
 | Security boundary | GET progress uses same per-page edit capability and nonce as history/apply, not lifecycle /status. Host/site/page/request are never supplied by the browser to choose a worker target. Fixed authenticated 127.0.0.1 only. |
 | Least disclosure | Worker callback, child IPC, persistence and PHP all allowlist public telemetry; tool args/results/thinking/arbitrary names are dropped. Counts are finite bounded non-negative integers. No keys in JS/bootstrap/history/usage/progress. |
 | Durable truth | Missing or old usage is unavailable, not zero; reported zero is retained. Final cumulative SDK usage is persisted once and replayed unchanged. No invented prices/cost estimates. Existing application metadata remains the only applied-state authority. |
-| Real progress, no simulated tools | Only SDK tool_call events for catalog_lookup/propose_layout. Latest event replaces previous; final answer replaces progress. Unknown/unavailable observation is explicit, never a timer claiming tool work. |
+| Real progress, no simulated tools | Only SDK tool_call events for search_catalog/get_block_details/get_skill/propose_layout (legacy catalog_lookup accepted for old history). Latest event replaces previous; final answer replaces progress. Unknown/unavailable observation is explicit, never a timer claiming tool work. |
 | Race/cleanup | One GET in flight, exact request-id check, monotonic event sequence, terminal cleanup; unmount, timeout and errors abort observation, never resubmit a paid turn. Worker drops transient tool state on failure/success. |
 | Safe content rendering | Chat composition is included in the blocking UI8Kit source gate. Small Markdown subset via escaped UI8Kit primitives, no raw model HTML or active Markdown links. JSON is losslessly lexed to escaped spans, bounded scrolling and 11px monospace. |
 | Native admin UX | Scoped editor-only WP gutters removed; WordPress menu/topbar stay intact. Selected registered admin colour scheme supplies accent with contrast-selected foreground; all chrome uses tokens. Manual dark mode remains optional, canvas branding stays separate. |
@@ -59,3 +59,18 @@ agent acceptance. No model requests are needed for the checks below.
   check, not proven by static/source/unit tests. Do not present fixtures as live.
 - The host must update its worker resource together with this source. The plugin
   cannot make an older local-wp resource pin contain a new worker module.
+
+## Follow-on: release-only local retrieval + Agent policy
+
+- See `builder-local-search.md` and `builder-agent-policy.md` for pinned MIT source,
+  measured NON-LIVE retrieval bounds and reproducible commands.
+- `catalog_lookup` was replaced by bounded `search_catalog` + exact installed
+  `get_block_details`; historical progress names remain accepted. `get_skill`
+  progressively loads enabled versioned app-level instructions, never permissions.
+- New `AgentPolicyDefinition` is a pure, blocking BuilderContract domain; WordPress
+  roles/nonces/versioned options+meta/atomic CAS/UI stay in the AgentPolicy adapter.
+- Global/site and per-page active snapshots, skill/tool intersection before SDK
+  creation, audit provenance, no auto-publish, policy preview golden parity,
+  unauthorized/CSRF/XSS/CAS/retention/page-isolation regression tests added.
+- No direct SDK systemPrompt override, network search/updater, vault/schema migration,
+  production Windows/live-model/browser acceptance or owner's resource update claimed.

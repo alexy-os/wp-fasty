@@ -50,7 +50,7 @@ final class ArchitectureTest extends TestCase
     public function testBuilderTelemetryAndPaletteContractsCallNoWordPressFunction(): void
     {
         $wp = self::wordPressFunctions();
-        foreach (['ChatTelemetry', 'AdminPalette'] as $class) {
+        foreach (['ChatTelemetry', 'AdminPalette', 'AgentPolicyDefinition'] as $class) {
             $file = dirname(__DIR__).'/plugins/wpfasty-builder/src/'.$class.'.php';
             foreach (self::functionCalls((string) file_get_contents($file)) as $name) {
                 self::assertArrayNotHasKey(strtolower($name), $wp, $class.': '.$name);

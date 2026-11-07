@@ -197,7 +197,7 @@ reasoning tokens, when reported, are a subset and are not added again.
 
 Authenticated POST `/progress` takes `{site, page, requestId}` and returns only
 `{requestId, state, sequence, tool}`. Tool is null or the allowlisted
-`{name: catalog_lookup|propose_layout, status: running|completed|error}`.
+`{name: search_catalog|get_block_details|get_skill|propose_layout, status: running|completed|error}`.
 No arguments, results, arbitrary tool names, thinking text or credentials cross
 this transport. Activity is ephemeral, only the latest event is retained and
 it is discarded on completion/failure; terminal state is read from the durable
@@ -269,3 +269,18 @@ network/model retry. A module-local immutable map is reused within its process;
 site/page installed intersections and inspected-detail sets are never shared.
 The existing SDK child is still created per turn; there is no cross-turn cache
 service. Deterministic fixtures are NON-LIVE; Windows/live SDK use is not proven.
+
+## Application Agent policy and progressive skills
+
+See `docs/agent/builder-agent-policy.md` in the source repository. WordPress's separate
+Agent policy UI versions nonsensitive Builder/Site instructions and enabled skill
+registry; Page Agent brief is edit_post-scoped. Active versions are snapshotted per
+turn, not re-read mid-run. `policy.mjs` intersects configured tools with the code
+allowlist BEFORE SDK Agent.create. `get_skill` loads only enabled entries whose
+required tools are actually allowed; it cannot grant tools or change policy.
+This is application-level prompt assembly, not a native SDK systemPrompt override
+or filesystem skills. Initial context contains only the index, not all skill text.
+Result/history has version-only provenance and actually loaded skill versions.
+The current resource needs policy.mjs + policy-default.json as well as catalog/;
+refresh the host's separately pinned worker resource too. No model/browser/Windows
+acceptance or owner-machine update is implied by NON-LIVE fixtures.

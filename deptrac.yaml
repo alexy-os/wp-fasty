@@ -36,7 +36,7 @@ deptrac:
         - { type: classLike, value: '^WPFasty\\Template\\.*' }
     - name: BuilderContract
       collectors:
-        - { type: classLike, value: '^WPFastyBuilder\\(ChatTelemetry|AdminPalette)$' }
+        - { type: classLike, value: '^WPFastyBuilder\\(ChatTelemetry|AdminPalette|AgentPolicyDefinition)$' }
     # Adapter\WordPress: hooks, theme service, plugins wiring into WP
     - name: Adapter\WordPress
       collectors:
@@ -50,7 +50,7 @@ deptrac:
           must:
             - { type: classLike, value: '^WPFastyBuilder\\.*' }
           must_not:
-            - { type: classLike, value: '^WPFastyBuilder\\(ChatTelemetry|AdminPalette)$' }
+            - { type: classLike, value: '^WPFastyBuilder\\(ChatTelemetry|AdminPalette|AgentPolicyDefinition)$' }
         - { type: classLike, value: '^WPFastyTypes\\.*' }
     # Templates: WordPress template-hierarchy entry files (index.php, single.php, functions.php, ...)
     - name: Templates

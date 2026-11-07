@@ -273,7 +273,12 @@ final class Chat
         if ([] === $defs) {
             return new \WP_Error('wpfb_catalog_unavailable', 'Catalog definition unavailable.', ['status' => 503]);
         }
-        $context = ['source' => $source, 'target' => $catalog->runtime(), 'version' => Cast::int($entry['version'] ?? 0), 'records' => $catalog->meta()['records'] ?? [], 'catalog' => $defs, 'blocks' => Cast::path($entry, 'metadata', 'blocks', 'value') ?? []];
+        try {
+            $agentPolicy = AgentPolicy::context($page);
+        } catch (\InvalidArgumentException) {
+            return new \WP_Error('wpfb_agent_policy_invalid', 'Active Agent policy is invalid. Review its versioned configuration; no model request was sent.', ['status' => 503]);
+        }
+        $context = ['source' => $source, 'target' => $catalog->runtime(), 'agentPolicy' => $agentPolicy, 'version' => Cast::int($entry['version'] ?? 0), 'records' => $catalog->meta()['records'] ?? [], 'catalog' => $defs, 'blocks' => Cast::path($entry, 'metadata', 'blocks', 'value') ?? []];
         $result = self::worker('/turn', self::scope($page) + ['requestId' => $id, 'content' => $content, 'context' => $context], true);
         if (is_wp_error($result)) {
             return $result;
@@ -406,7 +411,7 @@ final class Chat
         $data = json_decode((string) wp_remote_retrieve_body($result), true);
         $status = (int) wp_remote_retrieve_response_code($result);
         if (200 !== $status || !is_array($data)) {
-            $safe = ['configured_grok_model_unavailable', 'worker_unauthorized', 'worker_busy', 'idempotency_conflict', 'turn_not_replayable_check_history', 'page_busy_or_interrupted', 'agent_failed_no_automatic_retry', 'invalid_turn', 'catalog_map_unavailable', 'catalog_context_invalid', 'catalog_target_unsupported'];
+            $safe = ['configured_grok_model_unavailable', 'worker_unauthorized', 'worker_busy', 'idempotency_conflict', 'turn_not_replayable_check_history', 'page_busy_or_interrupted', 'agent_failed_no_automatic_retry', 'invalid_turn', 'catalog_map_unavailable', 'catalog_context_invalid', 'catalog_target_unsupported', 'policy_context_invalid'];
             $error = is_array($data) ? ($data['error'] ?? null) : null;
             $code = in_array($error, $safe, true) ? $error : 'worker_failure';
 

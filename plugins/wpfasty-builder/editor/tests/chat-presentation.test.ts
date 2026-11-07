@@ -27,3 +27,10 @@ test("chat components use escaped primitive composition, real poll callback, ind
  for(const name of ["ChatPanel.svelte","MessageBody.svelte","CodeBox.svelte"]){expect(read(name)).not.toContain("{@html");expect(read(name)).not.toMatch(/<(?:div|p|span|pre|code|button)\b/);}
  const panel=read("ChatPanel.svelte");expect(panel).toContain('usageLabel(turn.usage)');expect(panel).toContain('watchProgress(progress, requestId');expect(panel).toContain('disposed = true; stopObserving?.()');expect(panel).toContain('wpfb-chat-user');expect(panel).toContain('wpfb-chat-assistant');
 });
+
+test('NON-LIVE policy provenance footer does not invent versions or render instruction text', async () => {
+  const {policyLabel} = await import('../src/chat/presentation');
+  expect(policyLabel(null)).toBeNull();
+  expect(policyLabel({policyVersion:9,briefVersion:3,policyDigest:'sha256:'+'a'.repeat(64),loadedSkills:[{id:'page-review',version:2}]})).toBe('Policy v9 · brief v3 · skills page-review@2');
+  expect(policyLabel({policyVersion:0,briefVersion:1,policyDigest:'',loadedSkills:[]})).toBeNull();
+});

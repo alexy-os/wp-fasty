@@ -460,6 +460,11 @@ jobs:
           wp rewrite structure '/%postname%/' --hard
           wp theme list --fields=name,version,status
 
+      - name: Agent policy — NON-LIVE WP nonce, role, page scope, XSS and storage CAS contracts
+        run: |
+          cd /tmp/wp
+          wp eval-file "$GITHUB_WORKSPACE/tools/sdk/builder-policy-contract.php"
+
       - name: Theme Check — no REQUIRED issues (wp-fasty.zip, twig.zip, every packaged site, latte-skin from repo)
         run: |
           cd /tmp/wp

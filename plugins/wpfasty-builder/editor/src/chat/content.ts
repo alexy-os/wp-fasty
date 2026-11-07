@@ -5,6 +5,8 @@ export const chatCopy = {
   requestPending: "Request in progress. No tool activity reported yet.",
   progressUnavailable: "Tool progress unavailable. The request may still be running; check history before retrying.",
   observation: "Leaving this tab stops progress display, not the agent. Completed work remains in history.",
+  policy: (version: number, brief: number, skills: string) => `Policy v${version} · brief v${brief}${skills ? ` · skills ${skills}` : ""}`,
+  skillTool: "Loading skill",
   catalogTool: "Catalog lookup",
   proposalTool: "Draft proposal",
   toolStatus: {running: "running", completed: "completed", error: "failed"},

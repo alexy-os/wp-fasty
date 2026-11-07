@@ -1,0 +1,68 @@
+{
+    "schema": "wpfasty-agent-policy/1",
+    "policyVersion": 1,
+    "briefVersion": 1,
+    "definition": {
+        "product": "Converse, explain and review. For layout changes search the installed catalog, inspect exact block details, then propose a draft. Never invent facts or publish.",
+        "site": {
+            "language": "",
+            "tone": "",
+            "audience": "",
+            "brand": "",
+            "facts": ""
+        },
+        "tools": [
+            "search_catalog",
+            "get_block_details",
+            "propose_layout"
+        ],
+        "skills": [
+            {
+                "id": "block-selection",
+                "version": 1,
+                "enabled": true,
+                "purpose": "Select compatible installed blocks",
+                "triggers": [
+                    "new section",
+                    "layout change"
+                ],
+                "instructions": "Map the visitor goal to structural roles such as hero, products, pricing or menu. A niche such as sneakers or sushi is content, not a new filter or invented block. Use valid facets, search a shortlist, inspect exact details, preserve existing blocks and propose only on request.",
+                "requiredTools": [
+                    "search_catalog",
+                    "get_block_details",
+                    "propose_layout"
+                ]
+            },
+            {
+                "id": "text-editing",
+                "version": 1,
+                "enabled": true,
+                "purpose": "Edit copy without changing structure",
+                "triggers": [
+                    "headline",
+                    "copy edit"
+                ],
+                "instructions": "Inspect the exact current block and variant. Change only requested text props, preserving ids, variant, bindings and other props. Ask for missing factual details; never invent prices or claims. Propose; do not apply.",
+                "requiredTools": [
+                    "get_block_details",
+                    "propose_layout"
+                ]
+            },
+            {
+                "id": "page-review",
+                "version": 1,
+                "enabled": true,
+                "purpose": "Review the provided saved layout",
+                "triggers": [
+                    "review",
+                    "critique"
+                ],
+                "instructions": "Review the provided layout and user brief. Explain structure, accessibility and copy limitations. Use installed details if needed. Do not imply browser, web, analytics or visual inspection; do not change layout unless requested.",
+                "requiredTools": [
+                    "get_block_details"
+                ]
+            }
+        ]
+    },
+    "brief": ""
+}

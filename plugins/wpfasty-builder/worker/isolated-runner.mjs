@@ -23,7 +23,7 @@ export function isolatedRunner(dataDir,spawn=fork) {
   const timer=setTimeout(()=>finish(new WorkerError('agent_failed_no_automatic_retry',502)),95000);
   child.on('error',()=>finish(new WorkerError('agent_failed_no_automatic_retry',502)));
   child.on('exit',()=>finish(new WorkerError('agent_failed_no_automatic_retry',502)));
-  child.on('message',msg=>{if(settled)return;if(msg?.progress){const safe=toolProgress(msg.progress);if(safe)onProgress(safe);return;}if(msg?.ok)finish(null,msg.result);else finish(new WorkerError(['configured_grok_model_unavailable','catalog_map_unavailable','catalog_context_invalid','catalog_target_unsupported'].includes(msg?.code)?msg.code:'agent_failed_no_automatic_retry',['configured_grok_model_unavailable','catalog_map_unavailable','catalog_context_invalid','catalog_target_unsupported'].includes(msg?.code)?503:502));});
+  child.on('message',msg=>{if(settled)return;if(msg?.progress){const safe=toolProgress(msg.progress);if(safe)onProgress(safe);return;}if(msg?.ok)finish(null,msg.result);else finish(new WorkerError(['configured_grok_model_unavailable','catalog_map_unavailable','catalog_context_invalid','catalog_target_unsupported','policy_context_invalid'].includes(msg?.code)?msg.code:'agent_failed_no_automatic_retry',['configured_grok_model_unavailable','catalog_map_unavailable','catalog_context_invalid','catalog_target_unsupported','policy_context_invalid'].includes(msg?.code)?503:502));});
   child.send({dataDir,body});
  });
 }
