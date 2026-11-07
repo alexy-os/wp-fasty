@@ -466,7 +466,7 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/moduly"
           curl -fsSL --retry 3 https://github.com/phpfasty/wpmodules/releases/download/edge/moduly.zip -o "$RUNNER_TEMP/moduly.zip"
-          echo "0e3bea84798ea10f302f5252e8f48af883359979c5a87afbf5ddb97bc1401f15  $RUNNER_TEMP/moduly.zip" | sha256sum -c -
+          echo "179fb042a6624ad1df1ccfcef5a5086fff91e85234bb6b3e5d122b5d36565407  $RUNNER_TEMP/moduly.zip" | sha256sum -c -
           unzip -q "$RUNNER_TEMP/moduly.zip" -d "$RUNNER_TEMP/moduly"
           echo "WPFB_MODULY_RUNTIME=$RUNNER_TEMP/moduly/moduly" >> "$GITHUB_ENV"
           WPFB_MODULY_RUNTIME="$RUNNER_TEMP/moduly/moduly" bun tools/builder/pack-agent.ts

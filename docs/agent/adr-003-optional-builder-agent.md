@@ -96,3 +96,14 @@ browser acceptance is separate; PHP and static bundle tests are not screenshots.
 
 Related: [governance ADR](adr-002-builder-agent-governance.md),
 [roadmap](builder-agent-roadmap.md), [engineering checklist](builder-chat-engineering-checklist.md).
+
+### Published-fixture provenance correction
+
+The first CI run correctly rejected the cached Playground ZIP hash. The public
+`edge/moduly.zip` is SHA256
+`179fb042a6624ad1df1ccfcef5a5086fff91e85234bb6b3e5d122b5d36565407`,
+confirmed against upstream SHA256SUMS. ZIP-tree comparison found no added/removed
+files and ONLY `moduly/readme.txt` changed (cart 0.4.1 changelog). Every PHP/runtime
+file is byte-identical to the locally tested audited fixture. The checksum gate
+was retained, pin reviewed/corrected, and fixtures rerun against that exact public
+artifact; no code, signature policy or security check was loosened.
