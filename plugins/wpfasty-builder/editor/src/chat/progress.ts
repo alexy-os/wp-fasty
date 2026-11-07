@@ -12,8 +12,10 @@ export function watchProgress(fetch: (id: string, signal: AbortSignal) => Promis
       const result = await fetch(id, controller.signal);
       if (stopped) return;
       if (result.requestId !== id) throw new Error("progress_scope_mismatch");
-      if (Number.isSafeInteger(result.sequence) && result.sequence >= sequence) { sequence = result.sequence; update(result); }
       if (result.state === "done" || result.state === "failed") { update({...result, tool: null}); stop(); return; }
+      // A serialized stream cannot move backwards: worker restart/invalid observation, not current tool activity.
+      if (!Number.isSafeInteger(result.sequence) || result.sequence < sequence) throw new Error("progress_sequence_reset");
+      sequence = result.sequence; update(result);
       timer = setTimeout(() => { void poll(); }, interval);
     } catch { if (!stopped) { unavailable(); stop(); } }
   }
