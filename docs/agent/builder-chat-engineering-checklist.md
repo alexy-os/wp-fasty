@@ -85,7 +85,7 @@ policy/history. Symfony/security rules and the immutable sandbox stay enabled.
 Production signing, refreshed local-wp resources and Windows GUI verification remain
 release prerequisites rather than silently assumed test coverage.
 
-Local extraction evidence: 498 PHPUnit tests / 7723 assertions; 112 editor tests;
+Local extraction evidence: 498 PHPUnit tests / 7725 assertions; 112 editor tests;
 26 NON-LIVE worker tests; maximum PHPStan, Deptrac zero violations and Rector clean;
 Symfony PHPCS zero errors (existing WordPress/style warnings remain visible).
 Both core/Agent JS+CSS bundles rebuild byte-identically. Renderer parity passes,

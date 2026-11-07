@@ -1,7 +1,9 @@
 <?php
 
 /** NON-LIVE: wp --path=OUR_ISOLATED_WP eval-file tools/sdk/builder-wp-contract.php. Never call on a customer site. */
-require_once dirname(__DIR__, 2).'/plugins/wpfasty-builder/wpfasty-builder.php';
+if (!class_exists(WPFastyBuilder\PageOperations::class)) {
+    throw new RuntimeException('Activate the packaged Builder core before running this integration fixture.');
+}
 require_once __DIR__.'/agent-module-fixture.php';
 use WPFastyBuilder\Chat;
 use WPFastyBuilder\DraftGuard;

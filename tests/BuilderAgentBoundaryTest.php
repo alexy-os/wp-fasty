@@ -19,6 +19,9 @@ final class BuilderAgentBoundaryTest extends TestCase
         $app = file_get_contents($root.'/plugins/wpfasty-builder/editor/src/App.svelte');
         self::assertStringNotContainsString('ChatPanel', $app);
         self::assertStringNotContainsString('chatHistory', file_get_contents($root.'/plugins/wpfasty-builder/editor/src/api.ts'));
+        foreach (['builder-wp-contract.php', 'builder-policy-contract.php'] as $fixture) {
+            self::assertStringNotContainsString('/plugins/wpfasty-builder/wpfasty-builder.php', file_get_contents($root.'/tools/sdk/'.$fixture), 'Integration must exercise the active packaged core, not boot a second source copy.');
+        }
     }
 
     public function testAgentUsesRealOptionalModuleLifecycleAndPreservesData(): void

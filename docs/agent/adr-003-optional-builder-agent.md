@@ -107,3 +107,7 @@ files and ONLY `moduly/readme.txt` changed (cart 0.4.1 changelog). Every PHP/run
 file is byte-identical to the locally tested audited fixture. The checksum gate
 was retained, pin reviewed/corrected, and fixtures rerun against that exact public
 artifact; no code, signature policy or security check was loosened.
+
+The integration fixtures require the already active packaged core; they must not
+`require` a second repository copy of the plugin and accidentally override its
+resource directory. A regression assertion prevents that source/ZIP substitution.

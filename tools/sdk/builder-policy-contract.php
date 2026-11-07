@@ -1,6 +1,8 @@
 <?php
 
-require_once dirname(__DIR__, 2).'/plugins/wpfasty-builder/wpfasty-builder.php';
+if (!class_exists(WPFastyBuilder\PageOperations::class)) {
+    throw new RuntimeException('Activate the packaged Builder core before running this integration fixture.');
+}
 require_once __DIR__.'/agent-module-fixture.php';
 
 /* NON-LIVE on OUR isolated WP only. Disposable users/pages; restore nonsensitive policy option. */
