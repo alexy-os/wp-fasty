@@ -104,6 +104,7 @@ try {
     $check(current_user_can('edit_page', $page), 'fixture editor can edit only its authorized preview');
     $saved = WPFastyBuilder\Store::save($page, ['source' => 'ui8kit', 'blocks' => []], true);
     $check(!is_wp_error($saved), 'manual Builder layout saved through authoritative PHP validation');
+    do_action('wpfb_nonlive_appearance_page', $page);
     $theme = WPFasty\Core\Application::getInstance()->get('theme');
     $render = static function () use ($theme): string {
         $view = $theme->resolveView();
@@ -112,6 +113,7 @@ try {
     };
     $_GET = [];
     $liveHtml = $render();
+    do_action('wpfb_nonlive_appearance_render', $liveHtml, $page, false, 'live');
     $check(str_contains($liveHtml, 'wpfb-page'), 'real published Builder page uses active theme shell');
     $check(str_contains($liveHtml, 'latte-skin-fonts-css'), 'real live page includes active child font stylesheet');
     $draftBeforePreview = get_post_meta($page, WPFastyBuilder\Store::DRAFT, true);
@@ -125,6 +127,7 @@ try {
         $check(!str_contains((string) wp_get_canonical_url($page), 'wpfb_'), 'public canonical never receives preview query');
         $check(apply_filters('wpfasty_color_scheme', null) === $scheme, 'effective scheme is server supplied');
         $html = $render();
+        do_action('wpfb_nonlive_appearance_render', $html, $page, true, $scheme);
         $document = new WP_HTML_Tag_Processor($html);
         $document->next_tag('HTML');
         $check(

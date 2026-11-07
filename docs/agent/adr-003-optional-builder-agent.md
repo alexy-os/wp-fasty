@@ -111,3 +111,39 @@ artifact; no code, signature policy or security check was loosened.
 The integration fixtures require the already active packaged core; they must not
 `require` a second repository copy of the plugin and accidentally override its
 resource directory. A regression assertion prevents that source/ZIP substitution.
+
+## t220/t223 — signed coordinated rollout delivered
+
+The earlier release blockers above are historical, not the current deployment
+status. First production module release: [Builder Agent 0.1.0](https://github.com/phpfasty/wpmodules/releases/tag/builder-agent-v0.1.0).
+Its reviewed source is wp-fasty `a5f7ab17136e108073a099ca1dfa63d5af3e6ceb`;
+manual core/theme ZIPs from `7530cd7` are byte-unchanged and compatible.
+The [publisher pipeline](https://github.com/phpfasty/wpmodules/commit/77009f2c3cdc44c8998ae04c138f58d2bf4b016c)
+stages only 33 reviewed source digests, requires green source CI, uses the
+existing protected CI MODULY_SIGNING_KEY only in the signing step, verifies
+Ed25519 against the existing embedded phpfasty public key, compares repeat
+packages and publishes an immutable version with source/checksum provenance.
+No key was generated, copied into Builder, exposed, or added to WordPress trust.
+
+[local-wp compatibility build](https://github.com/fastygo/local-wp/commit/183d929fe3d2afc74f40fb45a0fa6a6a79c07c3a)
+pins all 20 worker resources (nested catalog/engine/policy plus GPL/MIT licenses)
+from that exact source. Their hashes equal the signed module's worker files.
+Readiness checks authenticated history AND protocol `wpfasty-agent/1` with
+`local-search/1`, `policy/1`; legacy status parsing remains usable to stop an
+incompatible known process. Private data/vault/config stay outside runtime.
+Native Windows/Linux CI builds and no-model portable SDK/worker lifecycle checks
+passed. This is not a Windows GUI or paid model acceptance claim.
+
+Real production-trust install/lifecycle and PHP→HTTP worker checks were run on
+isolated box WordPress using the published signed archive with unsigned mode
+disabled. The unchanged verifier separately rejected the development archive.
+The page-assembly fixture now shares the real appearance fixture: injected
+runner searches installed hero/about/CTA, proves details-required before each
+change, gets details and validates the proposal. Chat alone saves nothing;
+explicit human apply persists three blocks through PHP validation. The actual
+child/base font/token pipeline renders them in light/dark draft previews while
+the human-published layout remains unchanged. Existing invalid-block, stale
+revision, no-key/offline and human-only publish regressions remain in place.
+No owner-machine installation, vault migration, paid SDK turn or screenshot
+was performed. Use a new site for smoke testing; WP Reset does not erase the
+manager's separate worker data or encrypted vault.

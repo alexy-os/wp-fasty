@@ -513,6 +513,8 @@ jobs:
           cd /tmp/wp
           wp eval 'ini_set("error_log", "/tmp/builder-agent-http.log"); require getenv("GITHUB_WORKSPACE")."/tools/sdk/builder-wp-contract.php";'
           php "$GITHUB_WORKSPACE/tools/sdk/assert-module-fixture-log.php" /tmp/builder-agent-http.log
+          wp --skip-themes eval 'ini_set("error_log", "/tmp/builder-page-assembly.log"); require getenv("GITHUB_WORKSPACE")."/tools/sdk/builder-page-assembly-contract.php";'
+          php "$GITHUB_WORKSPACE/tools/sdk/assert-module-fixture-log.php" /tmp/builder-page-assembly.log
 
       - name: Theme Check — no REQUIRED issues (wp-fasty.zip, twig.zip, every packaged site, latte-skin from repo)
         run: |

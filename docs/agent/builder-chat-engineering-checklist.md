@@ -93,3 +93,14 @@ Both core/Agent JS+CSS bundles rebuild byte-identically. Renderer parity passes,
 cases and 86 theme cases report zero problems. Real ModulY install/enable/disable/
 re-enable and PHP→Node HTTP fixtures pass with only expected success audit records.
 These are local deterministic results; GitHub's final run remains the CI authority.
+
+### t220/t223 release completion
+
+- Signed immutable Builder Agent 0.1.0: existing phpfasty CI key, existing trust;
+  approved source digests, production verifier + real WP lifecycle, unsigned rejected.
+- local-wp 183d929: all 20 resources pinned, exact module hash parity, protocol/caps
+  handshake; native Windows/Linux worker smoke and GUI compilation passed in CI.
+- NON-LIVE page assembly: search → required details → proposal → explicit apply →
+  persisted three-block draft → actual theme light/dark/font preview; live unchanged.
+- No paid model turn or owner's Windows GUI/install acceptance is implied.
+  [Current rollout provenance and remaining acceptance limits](adr-003-optional-builder-agent.md#t220t223--signed-coordinated-rollout-delivered).
