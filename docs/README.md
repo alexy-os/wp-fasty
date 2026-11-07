@@ -28,3 +28,7 @@ deep dive lives in [`.project/`](../.project/).
 | [`.cursor/rules/`](../.cursor/rules/) | Cursor agent enforcement |
 | [`.dev/README.md`](../.dev/README.md) | Docker / WSL local WordPress |
 | Codegen `docs/` | Brick contracts, parity, PHP complex parts |
+
+## Builder agent
+
+[Staged roadmap](agent/builder-agent-roadmap.md) · [ADR-002](agent/adr-002-builder-agent-governance.md)

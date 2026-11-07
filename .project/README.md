@@ -28,3 +28,9 @@ ui8px, ARIA, Latte) lives in [`docs/`](../docs/) — do not duplicate it here.
 - Not brick product specs (codegen `bricks/`)
 - Not a dump of deleted experimental themes
 - Not a second copy of `docs/`
+
+## Builder agent evolution
+
+The canonical [agent roadmap](../docs/agent/builder-agent-roadmap.md) and
+[ADR-002](../docs/agent/adr-002-builder-agent-governance.md) record local search/policy implementation
+and separately scoped future Jev, evidence, professional assessment and personal-block plans.
