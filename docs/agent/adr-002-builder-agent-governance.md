@@ -3,6 +3,7 @@
 Date: 2026-11-07 (Europe/Moscow, UTC+3).
 Status: **accepted architecture direction** (owner t188/t189/t197), with explicit implementation boundaries.
 Companion: [staged roadmap and acceptance](builder-agent-roadmap.md).
+Future scenario catalog: [ADR-005 — 12 Jev orchestrator scenarios](adr-005-jev-orchestrator-scenarios.md).
 Supersedes no renderer or sandbox decision in [ADR-001](adr-001-architecture.md).
 
 ## Context

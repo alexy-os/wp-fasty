@@ -44,6 +44,10 @@ no SkinDefinition engine, catalog skin indexing or new settings/updater service 
 
 ## 1. Optional Jev advisor and local evidence dataset — future
 
+[ADR-005: все 12 сценариев Jev для оркестратора](adr-005-jev-orchestrator-scenarios.md) сохраняет точные
+названия/идеи owner Page и отделяет будущие адаптации от API и реализованных функций. Это proposed scope,
+не включённая интеграция: главный агент вправе отвергать advice и уточнять/повторять запросы.
+
 ### Jev decision adapter (not a replacement search provider)
 
 Use local retrieval first, then optionally ask TypeSafe about an ambiguous shortlist of roughly ten compatible
