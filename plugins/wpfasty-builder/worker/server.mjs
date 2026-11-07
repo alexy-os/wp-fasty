@@ -50,13 +50,14 @@ export function workerServer({token,store,runner,cursorKey='',jevKey='',secrets=
    if(!['127.0.0.1:'+req.socket.localPort,'localhost:'+req.socket.localPort].includes(req.headers.host)||req.headers.origin) throw new WorkerError('host_or_origin_forbidden',403);
    if(!authenticated(req.headers.authorization,token)) throw new WorkerError('worker_unauthorized',401);
    if(req.method==='POST'&&req.url==='/status')return reply(200,{active,activeTurnId,credentials:cursorKey?'managed':'request',secrets:held});
-   if(req.method!=='POST'||!['/turn','/history'].includes(req.url)) throw new WorkerError('not_found',404);
+   if(req.method!=='POST'||!['/turn','/history','/progress'].includes(req.url)) throw new WorkerError('not_found',404);
    const chunks=[];let bytes=0;for await(const chunk of req){bytes+=chunk.length;if(bytes>768000)throw new WorkerError('payload_too_large',413);chunks.push(chunk);}
    const raw=Buffer.concat(chunks).toString('utf8');
    let body;try{body=JSON.parse(raw);}catch{throw new WorkerError('invalid_json');}
    if(!body || typeof body!=='object' || Array.isArray(body) || !/^[a-z0-9_-]{8,80}$/i.test(body.site||'')||!Number.isSafeInteger(body.page)||body.page<1)throw new WorkerError('invalid_scope');
    const scope=body.site+':'+body.page;
    if(req.url==='/history')return reply(200,{turns:store.history(scope)});
+   if(req.url==='/progress'){if(typeof body.requestId!=='string'||!/^[a-z0-9_-]{8,100}$/i.test(body.requestId))throw new WorkerError('invalid_request');return reply(200,store.progress(scope,body.requestId));}
    if(active)throw new WorkerError('worker_busy',429);
    active=true;activeTurnId=randomUUID();
    try{return reply(200,await store.turn({...body,...(!body.credentials?.cursor&&cursorKey?{credentials:{cursor:cursorKey}}:{}),history:store.history(scope)},runner));}finally{active=false;activeTurnId=null;}

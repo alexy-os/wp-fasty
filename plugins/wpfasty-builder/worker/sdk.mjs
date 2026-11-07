@@ -1,8 +1,9 @@
+import { tokenUsage, sdkToolProgress } from './telemetry.mjs';
 import { mkdirSync,appendFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { validateProposal, WorkerError } from './core.mjs';
 /** Real supported SDK; no custom HTTP inference implementation or provider substitution. */
-export function sdkRunner(dataDir,loadSdk=()=>import('@cursor/sdk')) {
+export function sdkRunner(dataDir,loadSdk=()=>import('@cursor/sdk'),onProgress=()=>{}) {
  return async body => {
   const audit=(stage,extra={})=>appendFileSync(resolve(dataDir,'live-audit.jsonl'),JSON.stringify({at:new Date().toISOString(),requestId:body.requestId,stage,...extra})+'\n',{mode:0o600});
   audit('sdk_preflight');
@@ -28,12 +29,19 @@ export function sdkRunner(dataDir,loadSdk=()=>import('@cursor/sdk')) {
    audit('run_created',{runId:run.id});
    let timer;
    try {
-    const result=await Promise.race([run.wait(),new Promise((_,reject)=>{timer=setTimeout(()=>{void run.cancel();reject(new Error('turn_timeout'));},90000);})]);
+    // stream() observes the same run; it does not send another prompt or bill another user turn.
+    const observed=async()=>{
+     if(typeof run.stream==='function'&&run.supports?.('stream')!==false){
+      for await(const message of run.stream()){const safe=sdkToolProgress(message);if(safe)onProgress(safe);}
+     }
+     return run.wait();
+    };
+    const result=await Promise.race([observed(),new Promise((_,reject)=>{timer=setTimeout(()=>{void run.cancel();reject(new Error('turn_timeout'));},90000);})]);
     if(result.model?.id && result.model.id!==model.id) throw new Error('unexpected_model');
     if(result.status!=='finished') throw new Error('agent_not_finished');
     const evidence={selectedModelId:model.id,reportedModelId:result.model?.id??null,runId:run.id,agentId:agent.agentId,startedAt,finishedAt:new Date().toISOString(),elapsedMs:Math.round(performance.now()-started)};
     audit('run_finished',{...evidence,status:result.status,proposalBlocks:proposal?.length??0});
-    return {answer:result.result||'',proposal,evidence};
+    return {answer:result.result||'',proposal,evidence,usage:tokenUsage(result.usage)};
    } finally {clearTimeout(timer);}
   } finally {agent.close();}
  };

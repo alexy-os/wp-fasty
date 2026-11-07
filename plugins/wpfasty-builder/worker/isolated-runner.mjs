@@ -1,3 +1,4 @@
+import {toolProgress} from './telemetry.mjs';
 import {fork} from 'node:child_process';
 import {mkdirSync} from 'node:fs';
 import {resolve} from 'node:path';
@@ -13,16 +14,16 @@ export function childEnv(dataDir,parent=process.env,platform=process.platform){
 }
 import {WorkerError} from './core.mjs';
 /** Dedicated child: a hard wall limit includes SDK import, model discovery and bootstrap. */
-export function isolatedRunner(dataDir) {
- return body=>new Promise((resolve,reject)=>{
+export function isolatedRunner(dataDir,spawn=fork) {
+ return (body,onProgress=()=>{})=>new Promise((resolve,reject)=>{
   const env=childEnv(dataDir);for(const d of [env.TEMP,env.APPDATA,env.LOCALAPPDATA])if(d)mkdirSync(d,{recursive:true,mode:0o700});
-  const child=fork(new URL('./sdk-child.mjs',import.meta.url),[],{execArgv:['--max-old-space-size=512'],env,stdio:['ignore','ignore','ignore','ipc']});
+  const child=spawn(new URL('./sdk-child.mjs',import.meta.url),[],{execArgv:['--max-old-space-size=512'],env,stdio:['ignore','ignore','ignore','ipc']});
   let settled=false;
   const finish=(error,result)=>{if(settled)return;settled=true;clearTimeout(timer);child.kill('SIGKILL');error?reject(error):resolve(result);};
   const timer=setTimeout(()=>finish(new WorkerError('agent_failed_no_automatic_retry',502)),95000);
   child.on('error',()=>finish(new WorkerError('agent_failed_no_automatic_retry',502)));
   child.on('exit',()=>finish(new WorkerError('agent_failed_no_automatic_retry',502)));
-  child.on('message',msg=>{if(msg?.ok)finish(null,msg.result);else finish(new WorkerError(msg?.code==='configured_grok_model_unavailable'?msg.code:'agent_failed_no_automatic_retry',msg?.code==='configured_grok_model_unavailable'?503:502));});
+  child.on('message',msg=>{if(settled)return;if(msg?.progress){const safe=toolProgress(msg.progress);if(safe)onProgress(safe);return;}if(msg?.ok)finish(null,msg.result);else finish(new WorkerError(msg?.code==='configured_grok_model_unavailable'?msg.code:'agent_failed_no_automatic_retry',msg?.code==='configured_grok_model_unavailable'?503:502));});
   child.send({dataDir,body});
  });
 }

@@ -183,3 +183,39 @@ Applied proposals show the historical applied revision and have no Apply button;
 stale proposals are disabled. Replaying an already-applied request never writes
 again, even if the current draft has since advanced. Configuration-unavailable
 copy preserves/acknowledges existing history instead of claiming no request ever ran.
+
+
+## Response usage and real tool activity
+
+SDK `@cursor/sdk` 1.3.0 exposes `Run.stream()` (`tool_call` events) and
+`RunResult.usage` (cumulative token counts for that run). Observing a stream is
+not a second `send()`. We persist the final reported counts once, not a sum of
+possibly repeated events. Older history and missing/invalid telemetry return
+`usage: null`; no token estimates, prices or fabricated zeroes are displayed.
+No billing API is called. Counts include input/output/cache read/cache write;
+reasoning tokens, when reported, are a subset and are not added again.
+
+Authenticated POST `/progress` takes `{site, page, requestId}` and returns only
+`{requestId, state, sequence, tool}`. Tool is null or the allowlisted
+`{name: catalog_lookup|propose_layout, status: running|completed|error}`.
+No arguments, results, arbitrary tool names, thinking text or credentials cross
+this transport. Activity is ephemeral, only the latest event is retained and
+it is discarded on completion/failure; terminal state is read from the durable
+turn store. Another site/page/request gets `unknown` and no activity.
+
+WordPress exposes same-origin GET `/wpfasty-builder/v1/chat/<page>/progress` with
+a REST nonce plus the same `edit_page` capability check as history/apply. The
+browser polls one request at a time, bounded to 100 seconds. Tab unmount,
+completion, observation failure and timeout abort polling. This **does not
+cancel or retry** the paid agent request; after navigating away, check history.
+The existing draft revision lock, explicit Apply, idempotent replay and manual
+Publish are unchanged.
+
+Visible progress during a long turn requires the WordPress host to serve at
+least two concurrent PHP requests. A single-process `php -S` or single-slot
+FastCGI host queues GET progress behind POST turn and cannot show intermediate
+events. This is a host concurrency requirement, not permission to bypass WP
+nonce checks, expose the worker port or weaken the iframe sandbox. Windows
+host/live streaming has not been accepted with this increment. The local-wp
+worker resource must include the new `telemetry.mjs` and use this commit, not an
+older pinned worker build; its vault contract and SDK lockfile are unchanged.
