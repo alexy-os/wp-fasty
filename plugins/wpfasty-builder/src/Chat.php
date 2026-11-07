@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace WPFastyBuilder;
 
 /** Same-origin WP boundary. No worker/provider credentials in bootstrap or REST responses. */
@@ -18,7 +19,7 @@ final class Chat
         if (null !== $host) {
             return $host;
         }
-        $settings = (array) get_option(self::OPTION, []);
+        $settings = Cast::map(get_option(self::OPTION, []));
         $port = self::validPort($settings['worker_port'] ?? null);
 
         return $port ?? self::DEFAULT_PORT;
@@ -48,6 +49,8 @@ final class Chat
      * only source: an absent host token fails closed (vault locked) and the WP database is never consulted.
      * Legacy/manual settings are used only without the marker.
      *
+     * @param array<string, mixed> $settings
+     *
      * @return array{token: string, cursor: ?string}|array{error: string, message: string}
      */
     public static function credentials(array $settings, bool $managed, ?string $hostToken, bool $withKey): array
@@ -71,6 +74,10 @@ final class Chat
     /**
      * Applies the settings form. Managed by host: Cursor key, worker token and port are never accepted or
      * saved (only Clear of an old stored copy is honoured).
+     *
+     * @param array<string, mixed> $settings
+     *
+     * @return array<string, mixed>
      */
     public static function mergeSettings(array $settings, mixed $post, bool $managed): array
     {
@@ -105,7 +112,11 @@ final class Chat
         return $settings;
     }
 
-    /** Credential rows of the settings form. Managed by host: availability only, no inputs, no values. */
+    /**
+     * Credential rows of the settings form. Managed by host: availability only, no inputs, no values.
+     *
+     * @param array<string, mixed> $settings
+     */
     public static function credentialsHtml(array $settings, bool $managed, bool $hostTokenPresent): string
     {
         $labels = ['cursor_key' => __('Cursor API key', 'wpfasty-builder'), 'jev_key' => __('Jev key (reserved; search unavailable)', 'wpfasty-builder'), 'worker_token' => __('Local worker shared token (at least 32 characters)', 'wpfasty-builder')];
@@ -147,8 +158,12 @@ final class Chat
         if (!current_user_can('manage_options')) {
             wp_die('Insufficient capabilities.');
         }
-        $settings = (array) get_option(self::OPTION, []);
-        if ('POST' === sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'] ?? '')) && check_admin_referer('wpfb_chat_settings')) {
+        $settings = Cast::map(get_option(self::OPTION, []));
+        $method = '';
+        if (isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD'])) {
+            $method = sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD']));
+        }
+        if ('POST' === $method && check_admin_referer('wpfb_chat_settings')) {
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Opaque credentials are not text-sanitized; mergeSettings enforces scalar type, the 4096-byte bound and the managed-host rule.
             $settings = self::mergeSettings($settings, wp_unslash($_POST), self::hostManagedKey());
             if (isset($settings['_invalid_port'])) {
@@ -161,48 +176,62 @@ final class Chat
         echo '<div class="wrap"><h1>Builder chat</h1><p>Node 24 worker on this WordPress host: '.esc_html(self::workerUrl()).'. Provider keys never enter the editor bundle. Grok is selected only if available to the Cursor key.</p>';
         echo '<p>Jev search is unavailable: the installed official extension documents typed decisions, not a search API. Its optional key is reserved; no Jev requests are made.</p><form method="post">';
         wp_nonce_field('wpfb_chat_settings');
-        echo self::credentialsHtml($settings, self::hostManagedKey(), self::hostToken() !== null); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- credentialsHtml escapes every dynamic value.
+        echo self::credentialsHtml($settings, self::hostManagedKey(), null !== self::hostToken()); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- credentialsHtml escapes every dynamic value.
         submit_button('Save');
         echo '</form></div>';
     }
 
     public static function allowed(\WP_REST_Request $request): bool
     {
-        $page = (int) $request['id'];
+        $page = Cast::int($request['id']);
 
-        return false !== wp_verify_nonce($request->get_header('X-WP-Nonce'), 'wp_rest')
+        return false !== wp_verify_nonce($request->get_header('X-WP-Nonce') ?? '', 'wp_rest')
             && 'page' === get_post_type($page) && current_user_can('edit_page', $page);
     }
 
     public static function routes(): void
     {
-        foreach (['history' => 'GET', 'turn' => 'POST', 'apply' => 'POST'] as $action => $method) {
+        foreach (['history' => 'GET', 'progress' => 'GET', 'turn' => 'POST', 'apply' => 'POST'] as $action => $method) {
             register_rest_route(Rest::NS, '/chat/(?P<id>\d+)/'.$action, [
                 'methods' => $method, 'callback' => [self::class, $action], 'permission_callback' => [self::class, 'allowed'],
             ]);
         }
     }
 
+    /** Read-only, same per-page capability/nonce check as history. Never starts or retries an agent. */
+    public static function progress(\WP_REST_Request $request): mixed
+    {
+        $id = $request->get_param('requestId');
+        if (!is_string($id) || !preg_match('/^[a-zA-Z0-9_-]{8,100}$/', $id)) {
+            return new \WP_Error('wpfb_chat_invalid', 'Valid requestId required.', ['status' => 400]);
+        }
+        $result = self::worker('/progress', self::scope(Cast::int($request['id'])) + ['requestId' => $id]);
+
+        return is_wp_error($result) ? $result : new \WP_REST_Response(ChatTelemetry::progress($result, $id));
+    }
+
     public static function history(\WP_REST_Request $request): mixed
     {
-        $result = self::worker('/history', self::scope((int) $request['id']));
+        $result = self::worker('/history', self::scope(Cast::int($request['id'])));
         if (!is_wp_error($result)) {
-            $settings = (array) get_option(self::OPTION, []);
+            $settings = Cast::map(get_option(self::OPTION, []));
             $configured = self::hostManagedKey() ? null !== self::hostToken() : !empty($settings['cursor_key']);
             $unavailable = empty($result['turns']) ? 'Sending is unavailable until a Cursor API key is configured server-side in Settings → Builder chat.' : 'Sending is unavailable without a configured Cursor API key. Existing conversation history remains available. Configure credentials server-side in Settings → Builder chat.';
             $result['availability'] = ['configured' => $configured, 'model' => 'grok-4.7', 'message' => $configured ? 'Grok configured; provider access is checked only when you send.' : $unavailable];
-            $currentVersion = DraftGuard::version((int) $request['id']);
+            $currentVersion = DraftGuard::version(Cast::int($request['id']));
             // Recover completed worker proposals even if the original PHP request timed out.
-            foreach (($result['turns'] ?? []) as $index => $turn) {
-                if ('done' !== ($turn['state'] ?? '') || !is_array($turn['proposal'] ?? null) || !is_string($turn['source'] ?? null) || !preg_match('/^[a-zA-Z0-9_-]{8,100}$/', $turn['requestId'] ?? '')) {
+            $result['turns'] = array_values(array_filter(Cast::list($result['turns'] ?? []), is_array(...)));
+            foreach ($result['turns'] as $index => $turn) {
+                $result['turns'][$index]['usage'] = ChatTelemetry::usage($turn['usage'] ?? null);
+                if ('done' !== ($turn['state'] ?? '') || !is_array($turn['proposal'] ?? null) || !is_string($turn['source'] ?? null) || !is_string($turn['requestId'] ?? null) || !preg_match('/^[a-zA-Z0-9_-]{8,100}$/', $turn['requestId'])) {
                     continue;
                 }
                 $key = '_wpfb_chat_'.$turn['requestId'];
-                add_post_meta((int) $request['id'], $key, wp_slash(wp_json_encode(['source' => $turn['source'], 'blocks' => $turn['proposal'], 'version' => $turn['baseVersion'] ?? -1])), true);
+                add_post_meta(Cast::int($request['id']), $key, wp_slash(wp_json_encode(['source' => $turn['source'], 'blocks' => $turn['proposal'], 'version' => $turn['baseVersion'] ?? -1])), true);
                 // WP owns draft application; worker history owns generation. Never infer apply state from prose.
-                $saved = json_decode((string) get_post_meta((int) $request['id'], $key, true), true);
-                $applied = isset($saved['applied']) ? (int) $saved['applied'] : null;
-                $base = (int) ($saved['version'] ?? -1);
+                $saved = Cast::map(json_decode(Cast::string(get_post_meta(Cast::int($request['id']), $key, true)), true));
+                $applied = isset($saved['applied']) ? Cast::int($saved['applied']) : null;
+                $base = Cast::int($saved['version'] ?? -1);
                 $state = null !== $applied ? 'applied' : ($base === $currentVersion ? 'pending' : 'stale');
                 $result['turns'][$index]['application'] = ['state' => $state, 'baseVersion' => $base, 'appliedVersion' => $applied, 'currentVersion' => $currentVersion, 'canApply' => 'pending' === $state];
             }
@@ -216,14 +245,14 @@ final class Chat
         if (strlen($request->get_body()) > 12000) {
             return new \WP_Error('wpfb_chat_too_large', 'Message too large.', ['status' => 413]);
         }
-        $page = (int) $request['id'];
-        $body = (array) $request->get_json_params();
+        $page = Cast::int($request['id']);
+        $body = Cast::map($request->get_json_params());
         $id = $body['requestId'] ?? '';
         $content = $body['content'] ?? '';
         if (!is_string($id) || !is_string($content) || !preg_match('/^[a-zA-Z0-9_-]{8,100}$/', $id) || '' === trim($content) || strlen($content) > 8000) {
             return new \WP_Error('wpfb_chat_invalid', 'Valid requestId and message required.', ['status' => 400]);
         }
-        $cache = json_decode((string) get_post_meta($page, '_wpfb_turn_'.$id, true), true);
+        $cache = json_decode(Cast::string(get_post_meta($page, '_wpfb_turn_'.$id, true)), true);
         if (is_array($cache)) {
             if (($cache['hash'] ?? '') !== hash('sha256', $content)) {
                 return new \WP_Error('wpfb_idempotency_conflict', 'Request id reused with different content.', ['status' => 409]);
@@ -232,23 +261,24 @@ final class Chat
             return new \WP_REST_Response($cache['result']);
         }
         $entry = Store::get($page, true) ?? [];
-        $source = (string) ($entry['metadata']['source']['value'] ?? 'ui8kit');
+        $source = Cast::string(Cast::path($entry, 'metadata', 'source', 'value') ?? 'ui8kit');
         $catalog = Sources::catalog($source);
         if (null === $catalog) {
             return new \WP_Error('wpfb_source', 'Unknown catalog source.', ['status' => 400]);
         }
         $defs = [];
         foreach (($catalog->forEditor(null)['blocks'] ?? []) as $block) {
-            $defs[] = ['id' => $block['id'], 'props' => $block['props'] ?? [], 'defaults' => $block['defaults'] ?? [], 'data' => $block['data'] ?? [], 'variants' => array_map(static fn (array $variant): array => ['id' => $variant['id'], 'template' => $variant['template'], 'set' => $variant['set'] ?? []], $block['variants'] ?? [])];
+            $defs[] = ['id' => $block['id'], 'props' => $block['props'] ?? [], 'defaults' => $block['defaults'] ?? [], 'data' => $block['data'] ?? [], 'variants' => array_map(static fn (mixed $variant): array => ['id' => Cast::path($variant, 'id'), 'template' => Cast::path($variant, 'template'), 'set' => Cast::path($variant, 'set') ?? []], Cast::list($block['variants'] ?? []))];
         }
         if ([] === $defs) {
             return new \WP_Error('wpfb_catalog_unavailable', 'Catalog definition unavailable.', ['status' => 503]);
         }
-        $context = ['source' => $source, 'version' => (int) ($entry['version'] ?? 0), 'records' => $catalog->meta()['records'] ?? [], 'catalog' => $defs, 'blocks' => $entry['metadata']['blocks']['value'] ?? []];
+        $context = ['source' => $source, 'version' => Cast::int($entry['version'] ?? 0), 'records' => $catalog->meta()['records'] ?? [], 'catalog' => $defs, 'blocks' => Cast::path($entry, 'metadata', 'blocks', 'value') ?? []];
         $result = self::worker('/turn', self::scope($page) + ['requestId' => $id, 'content' => $content, 'context' => $context], true);
         if (is_wp_error($result)) {
             return $result;
         }
+        $result['usage'] = ChatTelemetry::usage($result['usage'] ?? null);
         if (isset($result['proposal']) && is_array($result['proposal'])) {
             add_post_meta($page, '_wpfb_chat_'.$id, wp_slash(wp_json_encode(['source' => $source, 'blocks' => $result['proposal'], 'version' => $result['baseVersion'] ?? -1])), true);
         }
@@ -262,17 +292,20 @@ final class Chat
         if (strlen($request->get_body()) > 12000) {
             return new \WP_Error('wpfb_chat_too_large', 'Request too large.', ['status' => 413]);
         }
-        $page = (int) $request['id'];
-        $body = (array) $request->get_json_params();
-        $id = (string) ($body['requestId'] ?? '');
+        $page = Cast::int($request['id']);
+        $body = Cast::map($request->get_json_params());
+        $id = $body['requestId'] ?? '';
+        if (!is_string($id)) {
+            return new \WP_Error('wpfb_chat_invalid', 'Invalid requestId.', ['status' => 400]);
+        }
         if (!preg_match('/^[a-zA-Z0-9_-]{8,100}$/', $id)) {
             return new \WP_Error('wpfb_chat_invalid', 'Invalid requestId.', ['status' => 400]);
         }
 
         return DraftGuard::locked($page, static function () use ($page, $id) {
             $key = '_wpfb_chat_'.$id;
-            $proposal = json_decode((string) get_post_meta($page, $key, true), true);
-            if (!is_array($proposal)) {
+            $proposal = json_decode(Cast::string(get_post_meta($page, $key, true)), true);
+            if (!is_array($proposal) || !is_string($proposal['source'] ?? null)) {
                 return new \WP_Error('wpfb_chat_missing', 'No saved proposal for this page.', ['status' => 404]);
             }
             if (isset($proposal['applied'])) {
@@ -291,13 +324,16 @@ final class Chat
                     return new \WP_Error('wpfb_chat_schema', 'Invalid structural block.', ['status' => 400]);
                 }
                 $ids[$block['id']] = true;
-                if (null === $catalog->variant((string) ($block['block'] ?? ''), (string) ($block['variant'] ?? ''))) {
+                if (null === $catalog->variant(Cast::string($block['block'] ?? ''), Cast::string($block['variant'] ?? ''))) {
                     return new \WP_Error('wpfb_chat_invalid_catalog', 'Proposal references unknown catalog block/variant.', ['status' => 400]);
                 }
             }
             $previous = Store::get($page, true) ?? [];
-            $layout = ['source' => $proposal['source'], 'blocks' => $proposal['blocks'], 'collection' => $previous['metadata']['collection']['value'] ?? ''];
+            $layout = ['source' => $proposal['source'], 'blocks' => $proposal['blocks'], 'collection' => Cast::path($previous, 'metadata', 'collection', 'value') ?? ''];
             $post = get_post($page);
+            if (!$post instanceof \WP_Post) {
+                return new \WP_Error('wpfb_chat_missing', 'Page no longer exists.', ['status' => 404]);
+            }
             $base = $previous + ['id' => 'layout-'.$page, 'locale' => 'en', 'slug' => $post->post_name ?: 'page-'.$page, 'title' => $post->post_title, 'status' => 'draft', 'version' => 1, 'created_at' => gmdate('c'), 'updated_at' => gmdate('c')];
             $base['page_id'] = $page;
             [, $issues] = Layout::normalize($layout, $proposal['source'], $catalog, array_keys(DataSources::all()), $base);
@@ -308,7 +344,7 @@ final class Chat
             if (is_wp_error($saved)) {
                 return $saved;
             }
-            $proposal['applied'] = (int) $saved[0]['version'];
+            $proposal['applied'] = Cast::int($saved[0]['version']);
             update_post_meta($page, $key, wp_slash(wp_json_encode($proposal)));
 
             return new \WP_REST_Response(['applied' => true, 'version' => $proposal['applied']]);
@@ -332,20 +368,25 @@ final class Chat
         return 'http://127.0.0.1:'.self::port();
     }
 
+    /** @return array{site: string, page: int} */
     private static function scope(int $page): array
     {
-        $site = (string) get_option('wpfb_chat_site_id', '');
+        $site = Cast::string(get_option('wpfb_chat_site_id', ''));
         if ('' === $site) {
             add_option('wpfb_chat_site_id', wp_generate_uuid4(), '', false);
-            $site = (string) get_option('wpfb_chat_site_id');
+            $site = Cast::string(get_option('wpfb_chat_site_id'));
         }
 
         return ['site' => $site, 'page' => $page];
     }
 
-    private static function worker(string $route, array $body, bool $withKey = false): mixed
+    /** @param array<string, mixed> $body
+     *
+     * @return array<string, mixed>|\WP_Error
+     */
+    private static function worker(string $route, array $body, bool $withKey = false): array|\WP_Error
     {
-        $auth = self::credentials((array) get_option(self::OPTION, []), self::hostManagedKey(), self::hostToken(), $withKey);
+        $auth = self::credentials(Cast::map(get_option(self::OPTION, [])), self::hostManagedKey(), self::hostToken(), $withKey);
         if (isset($auth['error'])) {
             return new \WP_Error('wpfb_'.$auth['error'], $auth['message'], ['status' => 503]);
         }
@@ -353,8 +394,12 @@ final class Chat
         if (null !== $auth['cursor']) {
             $body['credentials'] = ['cursor' => $auth['cursor']];
         }
-        $result = wp_remote_post(self::workerUrl().$route, ['timeout' => 100, 'redirection' => 0,
-            'headers' => ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token], 'body' => wp_json_encode($body), 'limit_response_size' => 512000]);
+        $json = wp_json_encode($body);
+        if (false === $json) {
+            return new \WP_Error('wpfb_worker_invalid_payload', 'Cannot encode worker request.', ['status' => 400]);
+        }
+        $result = wp_remote_post(self::workerUrl().$route, ['timeout' => '/progress' === $route ? 3 : 100, 'redirection' => 0,
+            'headers' => ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token], 'body' => $json, 'limit_response_size' => 512000]);
         if (is_wp_error($result)) {
             return new \WP_Error('wpfb_worker_offline', 'Local Builder worker is unreachable. Start Node worker on this WordPress host; no automatic retry.', ['status' => 503]);
         }
@@ -362,11 +407,12 @@ final class Chat
         $status = (int) wp_remote_retrieve_response_code($result);
         if (200 !== $status || !is_array($data)) {
             $safe = ['configured_grok_model_unavailable', 'worker_unauthorized', 'worker_busy', 'idempotency_conflict', 'turn_not_replayable_check_history', 'page_busy_or_interrupted', 'agent_failed_no_automatic_retry', 'invalid_turn'];
-            $code = in_array($data['error'] ?? '', $safe, true) ? $data['error'] : 'worker_failure';
+            $error = is_array($data) ? ($data['error'] ?? null) : null;
+            $code = in_array($error, $safe, true) ? $error : 'worker_failure';
 
             return new \WP_Error('wpfb_'.$code, $code, ['status' => in_array($status, [400, 401, 409, 429, 503], true) ? $status : 502]);
         }
 
-        return $data;
+        return Cast::map($data);
     }
 }

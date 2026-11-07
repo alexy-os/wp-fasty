@@ -173,6 +173,15 @@ jobs:
           OUT="$RUNNER_TEMP/gates" bash tools/qa/ui-gates.sh
           { echo "### UI8Kit gates"; echo "theme html: $(tail -1 "$RUNNER_TEMP/gates/theme-html.txt")"; } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Node 24 for Builder worker contracts (no SDK/model calls)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.1"
+      - name: Builder worker — NON-LIVE SDK event, usage, replay, auth and scope isolation contracts
+        run: node --test plugins/wpfasty-builder/worker/test/*.test.mjs
+      - name: PHPStan maximum level — no baseline or suppressions
+        run: composer phpstan
+
       - name: PHPCS (Symfony standard + WordPress security, phpcs.xml.dist; errors fail the build)
         run: composer phpcs
 

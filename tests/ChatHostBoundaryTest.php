@@ -10,11 +10,6 @@ use WPFastyBuilder\Chat;
 /** Non-live boundary checks: fake host parameters only, no WP configuration or provider calls. */
 final class ChatHostBoundaryTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        unset($_SERVER['WPFB_WORKER_PORT'], $_SERVER['WPFB_WORKER_TOKEN'], $_SERVER['WPFB_WORKER_KEY']);
-    }
-
     public function testPortValidationRejectsPartialOrMalformedInput(): void
     {
         foreach ([null, [], '18991extra', '<b>18991</b>', '18%00991', '018991', '1023', '65536'] as $value) {
@@ -110,5 +105,10 @@ final class ChatHostBoundaryTest extends TestCase
         $manual = Chat::credentialsHtml([], false, false);
         self::assertStringContainsString('name="cursor_key"', $manual);
         self::assertStringNotContainsString('Managed by host', $manual);
+    }
+
+    protected function tearDown(): void
+    {
+        unset($_SERVER['WPFB_WORKER_PORT'], $_SERVER['WPFB_WORKER_TOKEN'], $_SERVER['WPFB_WORKER_KEY']);
     }
 }

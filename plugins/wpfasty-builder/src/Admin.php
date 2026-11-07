@@ -150,6 +150,13 @@ final class Admin
                 (string) filemtime($css),
             );
         }
+        // Registered admin scheme only; this never colours the separate Latte/Twig canvas.
+        $schemes = Cast::map($GLOBALS['_wp_admin_css_colors'] ?? null);
+        $scheme = $schemes[Cast::string(get_user_option('admin_color'))] ?? null;
+        $palette = AdminPalette::css(is_object($scheme) ? ($scheme->colors ?? null) : null);
+        if ('' !== $palette) {
+            wp_add_inline_style('wpfasty-builder-editor', $palette);
+        }
         $common = [
             'rest' => esc_url_raw(rest_url(Rest::NS)),
             'nonce' => wp_create_nonce('wp_rest'),

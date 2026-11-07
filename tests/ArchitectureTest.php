@@ -47,6 +47,17 @@ final class ArchitectureTest extends TestCase
         self::assertSame([], $calls);
     }
 
+    public function testBuilderTelemetryAndPaletteContractsCallNoWordPressFunction(): void
+    {
+        $wp = self::wordPressFunctions();
+        foreach (['ChatTelemetry', 'AdminPalette'] as $class) {
+            $file = dirname(__DIR__).'/plugins/wpfasty-builder/src/'.$class.'.php';
+            foreach (self::functionCalls((string) file_get_contents($file)) as $name) {
+                self::assertArrayNotHasKey(strtolower($name), $wp, $class.': '.$name);
+            }
+        }
+    }
+
     public function testDetectorSeesAWordPressCall(): void
     {
         self::assertSame(

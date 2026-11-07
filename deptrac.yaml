@@ -34,6 +34,9 @@ deptrac:
     - name: Renderer
       collectors:
         - { type: classLike, value: '^WPFasty\\Template\\.*' }
+    - name: BuilderContract
+      collectors:
+        - { type: classLike, value: '^WPFastyBuilder\\(ChatTelemetry|AdminPalette)$' }
     # Adapter\WordPress: hooks, theme service, plugins wiring into WP
     - name: Adapter\WordPress
       collectors:
@@ -43,7 +46,11 @@ deptrac:
         - { type: classLike, value: '^WPFasty\\Data\\ContextFactory$' }
         - { type: classLike, value: '^WPFasty\\Types\\Registry$' }
         - { type: classLike, value: '^WPFasty\\Theme\\.*' }
-        - { type: classLike, value: '^WPFastyBuilder\\.*' }
+        - type: bool
+          must:
+            - { type: classLike, value: '^WPFastyBuilder\\.*' }
+          must_not:
+            - { type: classLike, value: '^WPFastyBuilder\\(ChatTelemetry|AdminPalette)$' }
         - { type: classLike, value: '^WPFastyTypes\\.*' }
     # Templates: WordPress template-hierarchy entry files (index.php, single.php, functions.php, ...)
     - name: Templates
@@ -54,9 +61,10 @@ deptrac:
       collectors:
         - { type: directory, value: 'vendor/php-stubs/wordpress-stubs/.*' }
   ruleset:
+    BuilderContract: ~
     Core: ~
     ViewModel: [Core]
     Renderer: [Core, WordPress]
-    Adapter\WordPress: [Core, ViewModel, Renderer, WordPress]
+    Adapter\WordPress: [Core, ViewModel, Renderer, WordPress, BuilderContract]
     Templates: [Core, ViewModel, Renderer, Adapter\WordPress, WordPress]
     WordPress: ~

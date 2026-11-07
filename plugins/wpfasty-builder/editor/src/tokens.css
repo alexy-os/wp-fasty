@@ -4,10 +4,13 @@
  * .wpfb-tokens: the same tokens for editor parts mounted outside the editor (the "New page" panel of the page chooser).
  */
 .wpfb-app, .wpfb-tokens {
-  --wpfb-accent: var(--wp-admin-theme-color, #2271b1);
-  --wpfb-accent-strong: var(--wp-admin-theme-color-darker-10, #135e96);
+  --wpfb-accent: var(--wpfb-admin-accent, var(--wp-admin-theme-color, #2271b1));
+  --wpfb-accent-strong: color-mix(in srgb, var(--wpfb-accent) 75%, #1d2327);
   --wpfb-accent-soft: color-mix(in srgb, var(--wpfb-accent) 12%, transparent);
-  --wpfb-on-accent: #fff;
+  --wpfb-on-accent: var(--wpfb-admin-on-accent, #fff);
+  --wpfb-code-key: #135e96;
+  --wpfb-code-string: #006b35;
+  --wpfb-code-number: #8b3900;
   --wpfb-surface: #fff;
   --wpfb-surface-muted: #f6f7f7;
   --wpfb-canvas: #f0f0f1;
@@ -21,9 +24,11 @@
 }
 
 /* dark mode (class "dark" on .wpfb-app, the toolbar switch): the wp-admin dark greys of the toolbar and menu; the accent
-   keeps the admin colour scheme, lighter where it is text on the dark surface. Also on the wp-admin page around a dark
-   editor (#wpwrap), so its gutter is not a light frame. */
-.wpfb-app.dark, #wpwrap:has(.wpfb-app.dark) {
+   keeps the admin colour scheme, lighter where it is text on the dark surface. Only the editor changes; the WordPress menu and toolbar keep the active host scheme. */
+.wpfb-app.dark {
+  --wpfb-code-key: #9ecbff;
+  --wpfb-code-string: #8ad1a1;
+  --wpfb-code-number: #f4bb8c;
   --wpfb-accent-strong: color-mix(in srgb, var(--wpfb-accent) 56%, #fff);
   --wpfb-accent-soft: color-mix(in srgb, var(--wpfb-accent) 28%, transparent);
   --wpfb-surface: #1d2327;

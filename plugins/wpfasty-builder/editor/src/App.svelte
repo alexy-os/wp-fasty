@@ -657,7 +657,7 @@
       <UiBox tag="div" id="wpfb-palette-content" class="wpfb-palette-content">
       {#if paletteTab === "chat"}
         <ChatPanel {source} items={store.items} blocks={[...blocks.values()]} selected={store.selected}
-          history={client.chatHistory} send={async (content, requestId) => { await flush(); if (status === "error") throw new Error(message); return client.chatTurn(content, requestId); }}
+          history={client.chatHistory} progress={client.chatProgress} send={async (content, requestId) => { await flush(); if (status === "error") throw new Error(message); return client.chatTurn(content, requestId); }}
           apply={applyChat} />
       {:else}
       <div class="wpfb-section">

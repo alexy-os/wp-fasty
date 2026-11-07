@@ -16,7 +16,8 @@ export function api(cfg: Config) {
     return body as T;
   }
   return {
-    chatHistory: () => call<import("./chat/client").ChatHistory>(`/chat/${cfg.page}/history`),
+    chatProgress: (requestId: string, signal: AbortSignal) => call<import("./chat/client").ChatProgress>(`/chat/${cfg.page}/progress?requestId=${encodeURIComponent(requestId)}`, {signal, cache: "no-store"}),
+    chatHistory: () => call<import("./chat/client").ChatHistory>(`/chat/${cfg.page}/history`, {cache: "no-store"}),
     chatTurn: (content: string, requestId: string) => call<import("./chat/client").ChatResult>(`/chat/${cfg.page}/turn`, {method: "POST", body: JSON.stringify({content, requestId})}),
     chatApply: (requestId: string) => call<{version: number}>(`/chat/${cfg.page}/apply`, {method: "POST", body: JSON.stringify({requestId})}),
     /** one block's HTML, as the page template renders it (POST /render-block) */
