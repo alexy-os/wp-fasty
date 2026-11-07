@@ -1,4 +1,4 @@
-import { tokenUsage, toolProgress, policyProvenance } from './telemetry.mjs';
+import { tokenUsage, toolProgress, policyProvenance, agentFailures } from './telemetry.mjs';
 import { DatabaseSync } from 'node:sqlite';
 import { createHash, timingSafeEqual } from 'node:crypto';
 export class WorkerError extends Error { constructor(code, status=400) { super(code); this.status=status; } }
@@ -48,8 +48,8 @@ export class TurnStore {
    this.db.prepare("UPDATE turns SET state='done',result=? WHERE scope=? AND request=?").run(JSON.stringify(safe),scope,requestId);
    return safe;
   } catch(e) {
-   this.db.prepare("UPDATE turns SET state='failed',result=? WHERE scope=? AND request=?").run(JSON.stringify({content,error:'agent_failed_no_automatic_retry'}),scope,requestId);
-   if(e instanceof WorkerError && ['configured_grok_model_unavailable','catalog_map_unavailable','catalog_context_invalid','catalog_target_unsupported','policy_context_invalid'].includes(e.message)) throw e;
+   this.db.prepare("UPDATE turns SET state='failed',result=? WHERE scope=? AND request=?").run(JSON.stringify({content,error:e instanceof WorkerError&&agentFailures.includes(e.message)?e.message:'agent_failed_no_automatic_retry',usage:tokenUsage(e?.usage)}),scope,requestId);
+   if(e instanceof WorkerError && [...agentFailures,'configured_grok_model_unavailable','catalog_map_unavailable','catalog_context_invalid','catalog_target_unsupported','policy_context_invalid'].includes(e.message)) throw e;
    throw new WorkerError('agent_failed_no_automatic_retry',502);
   } finally {this.activity.delete(scope+':'+requestId);}
  }

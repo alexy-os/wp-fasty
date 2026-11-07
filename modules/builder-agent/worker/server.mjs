@@ -49,7 +49,7 @@ export function workerServer({token,store,runner,cursorKey='',jevKey='',secrets=
   try {
    if(!['127.0.0.1:'+req.socket.localPort,'localhost:'+req.socket.localPort].includes(req.headers.host)||req.headers.origin) throw new WorkerError('host_or_origin_forbidden',403);
    if(!authenticated(req.headers.authorization,token)) throw new WorkerError('worker_unauthorized',401);
-   if(req.method==='POST'&&req.url==='/status')return reply(200,{active,activeTurnId,protocol:'wpfasty-agent/1',capabilities:['local-search/1','policy/1'],credentials:cursorKey?'managed':'request',secrets:held});
+   if(req.method==='POST'&&req.url==='/status')return reply(200,{active,activeTurnId,protocol:'wpfasty-agent/1',capabilities:['local-search/1','policy/1','diagnostics/1'],credentials:cursorKey?'managed':'request',secrets:held});
    if(req.method!=='POST'||!['/turn','/history','/progress'].includes(req.url)) throw new WorkerError('not_found',404);
    const chunks=[];let bytes=0;for await(const chunk of req){bytes+=chunk.length;if(bytes>768000)throw new WorkerError('payload_too_large',413);chunks.push(chunk);}
    const raw=Buffer.concat(chunks).toString('utf8');

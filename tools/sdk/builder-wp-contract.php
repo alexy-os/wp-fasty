@@ -45,7 +45,7 @@ $http = static function ($pre, $args, $url) use ($fixturePort) {
         return $pre;
     }
     if (str_ends_with($url, '/status')) {
-        return ['response' => ['code' => 200], 'headers' => [], 'body' => wp_json_encode(['protocol' => 'wpfasty-agent/1', 'capabilities' => ['local-search/1', 'policy/1']])];
+        return ['response' => ['code' => 200], 'headers' => [], 'body' => wp_json_encode(['protocol' => 'wpfasty-agent/1', 'capabilities' => ['local-search/1', 'policy/1', 'diagnostics/1']])];
     }
     if (str_ends_with($url, '/progress')) {
         $scope = json_decode($args['body'], true);
@@ -161,6 +161,14 @@ try {
     $invalid = Chat::apply($request('apply', ['requestId' => 'invalid-0001']));
     contract(is_wp_error($invalid) && 400 === $invalid->get_error_data()['status'], 'unknown catalog proposal rejected');
     remove_filter('pre_http_request', $http, 10);
+    foreach (['agent_sdk_timeout_no_automatic_retry', 'agent_watchdog_timeout_no_automatic_retry', 'agent_stream_failed_no_automatic_retry', 'agent_wait_failed_no_automatic_retry', 'agent_sdk_error_no_automatic_retry', 'agent_sdk_cancelled_no_automatic_retry', 'agent_child_exit_no_automatic_retry', 'agent_child_spawn_failed_no_automatic_retry', 'PRIVATE_SECRET'] as $failure) {
+        $failed = static fn ($pre, $args, $url) => ['response' => ['code' => str_ends_with($url, '/status') ? 200 : 502], 'headers' => [], 'body' => wp_json_encode(str_ends_with($url, '/status') ? ['protocol' => 'wpfasty-agent/1', 'capabilities' => ['local-search/1', 'policy/1', 'diagnostics/1']] : ['error' => $failure, 'message' => 'PRIVATE_SECRET', 'stack' => 'PRIVATE_SECRET'])];
+        add_filter('pre_http_request', $failed, 10, 3);
+        $error = Chat::history($request('history'));
+        contract(is_wp_error($error) && 502 === $error->get_error_data()['status'] && !str_contains($error->get_error_message(), 'PRIVATE_SECRET'), 'safe diagnostic or closed unknown error');
+        contract('wpfb_'.('PRIVATE_SECRET' === $failure ? 'worker_failure' : $failure) === $error->get_error_code(), 'diagnostic code retained without raw worker details');
+        remove_filter('pre_http_request', $failed, 10);
+    }
     $offline = static fn () => new WP_Error('offline', 'NON-LIVE offline fixture');
     add_filter('pre_http_request', $offline, 10, 3);
     $error = Chat::history($request('history'));

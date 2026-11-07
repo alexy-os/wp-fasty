@@ -39,9 +39,9 @@ final class BuilderAgentBoundaryTest extends TestCase
 
     public function testWorkerHandshakeFailsClosedForOldAndMalformedResources(): void
     {
-        foreach ([null, [], ['active' => false, 'credentials' => 'managed'], ['protocol' => 'wpfasty-agent/2', 'capabilities' => ['local-search/1', 'policy/1']], ['protocol' => 'wpfasty-agent/1', 'capabilities' => ['local-search/1']]] as $status) {
+        foreach ([['protocol' => 'wpfasty-agent/1', 'capabilities' => ['local-search/1', 'policy/1']], null, [], ['active' => false, 'credentials' => 'managed'], ['protocol' => 'wpfasty-agent/2', 'capabilities' => ['local-search/1', 'policy/1', 'diagnostics/1']], ['protocol' => 'wpfasty-agent/1', 'capabilities' => ['local-search/1']]] as $status) {
             self::assertFalse(\WPFastyBuilder\WorkerProtocol::compatible($status));
         }
-        self::assertTrue(\WPFastyBuilder\WorkerProtocol::compatible(['protocol' => 'wpfasty-agent/1', 'capabilities' => ['local-search/1', 'policy/1']]));
+        self::assertTrue(\WPFastyBuilder\WorkerProtocol::compatible(['protocol' => 'wpfasty-agent/1', 'capabilities' => ['local-search/1', 'policy/1', 'diagnostics/1']]));
     }
 }

@@ -13,6 +13,6 @@ final class WorkerProtocol
             return false;
         }
 
-        return in_array('local-search/1', $status['capabilities'], true) && in_array('policy/1', $status['capabilities'], true);
+        return in_array('local-search/1', $status['capabilities'], true) && in_array('policy/1', $status['capabilities'], true) && in_array('diagnostics/1', $status['capabilities'], true);
     }
 }

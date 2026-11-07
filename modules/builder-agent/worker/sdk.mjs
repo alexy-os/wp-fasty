@@ -1,15 +1,15 @@
 import {policySession} from './policy.mjs';
 import {catalogSession,catalogTool} from './catalog-search.mjs';
-import { tokenUsage, sdkToolProgress } from './telemetry.mjs';
-import { mkdirSync,appendFileSync } from 'node:fs';
+import { tokenUsage, sdkToolProgress, auditWriter, safeErrorCode, diagnosticEvent } from './telemetry.mjs';
+import { mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { validateProposal, WorkerError } from './core.mjs';
 /** Real supported SDK; no custom HTTP inference implementation or provider substitution. */
-export function sdkRunner(dataDir,loadSdk=()=>import('@cursor/sdk'),onProgress=()=>{}) {
+export function sdkRunner(dataDir,loadSdk=()=>import('@cursor/sdk'),onProgress=()=>{},timing={}) {
  return async body => {
   const policy=policySession(body.context.agentPolicy);
   const catalog=await catalogSession(body.context);
-  const audit=(stage,extra={})=>appendFileSync(resolve(dataDir,'live-audit.jsonl'),JSON.stringify({at:new Date().toISOString(),requestId:body.requestId,stage,...extra})+'\n',{mode:0o600});
+  const audit=auditWriter(dataDir,body.requestId);
   audit('sdk_preflight');
   if(!body.credentials?.cursor) throw new WorkerError('cursor_key_missing',503);
   const {Agent,Cursor,JsonlLocalAgentStore}=await loadSdk();
@@ -35,22 +35,53 @@ export function sdkRunner(dataDir,loadSdk=()=>import('@cursor/sdk'),onProgress=(
    audit('send_start',{selectedModelId:model.id,agentId:agent.agentId});
    const run=await agent.send(prompt);
    audit('run_created',{runId:run.id});
-   let timer;
-   try {
-    // stream() observes the same run; it does not send another prompt or bill another user turn.
-    const observed=async()=>{
-     if(typeof run.stream==='function'&&run.supports?.('stream')!==false){
-      for await(const message of run.stream()){const safe=sdkToolProgress(message);if(safe)onProgress(safe);}
-     }
-     return run.wait();
-    };
-    const result=await Promise.race([observed(),new Promise((_,reject)=>{timer=setTimeout(()=>{void run.cancel();reject(new Error('turn_timeout'));},90000);})]);
-    if(result.model?.id && result.model.id!==model.id) throw new Error('unexpected_model');
-    if(result.status!=='finished') throw new Error('agent_not_finished');
-    const evidence={selectedModelId:model.id,reportedModelId:result.model?.id??null,runId:run.id,agentId:agent.agentId,startedAt,finishedAt:new Date().toISOString(),elapsedMs:Math.round(performance.now()-started)};
-    audit('run_finished',{...evidence,status:result.status,proposalBlocks:proposal?.length??0});
-    return {answer:result.result||'',proposal,evidence,usage:tokenUsage(result.usage),agentPolicy:policy.provenance()};
-   } finally {clearTimeout(timer);}
-  } finally {agent.close();}
+   const result=await observeRun(run,(stage,extra)=>audit(stage,{runId:run.id,agentId:agent.agentId,...extra}),onProgress,{...timing,timeoutMs:Math.max(1,Math.min(timing.timeoutMs??90000,(timing.deadlineAt??Infinity)-Date.now()))});
+   if(result.model?.id && result.model.id!==model.id) throw new WorkerError('agent_sdk_error_no_automatic_retry',502);
+   const evidence={selectedModelId:model.id,reportedModelId:result.model?.id??null,runId:run.id,agentId:agent.agentId,startedAt,finishedAt:new Date().toISOString(),elapsedMs:Math.round(performance.now()-started)};
+   audit('run_finished',{...evidence,status:result.status});
+   return {answer:result.result||'',proposal,evidence,usage:tokenUsage(result.usage),agentPolicy:policy.provenance()};
+  } finally {await boundedCleanup(()=>agent.close(),timing.cleanupMs??1000,audit,'close');}
  };
+}
+
+/** Cleanup is bounded: never await a transport cancellation indefinitely; never mark SDK storage terminal ourselves. */
+async function boundedCleanup(action,ms,audit,stage){
+ let timer;
+ try {await Promise.race([Promise.resolve().then(action).then(()=>audit(stage+'_completed'),error=>audit(stage+'_error',{errorCode:safeErrorCode(error)})),new Promise(resolve=>{timer=setTimeout(()=>{audit(stage+'_timeout');resolve();},ms);})]);}
+ finally {clearTimeout(timer);}
+}
+/** Observe one run only. Terminal wait is independent of stream completion. No retry/send/resume. */
+export async function observeRun(run,audit,onProgress=()=>{},{timeoutMs=90000,cleanupMs=1000,drainMs=25}={}){
+ let timer,drainTimer,active=true,last={},eventCount=0;
+ let stream;
+ const failure=(part,error)=>{audit(part+'_error',{...last,errorCode:safeErrorCode(error)});return new WorkerError('agent_'+part+'_failed_no_automatic_retry',502);};
+ try {
+  stream=(async()=>{
+   if(typeof run.stream==='function'&&run.supports?.('stream')!==false){
+    audit('stream_start');
+    try {for await(const message of run.stream()){if(!active)break;last={...last,...diagnosticEvent(message)};if(eventCount++<128)audit('stream_event',last);const safe=sdkToolProgress(message);if(safe)onProgress(safe);}}
+    catch(error){if(active)throw failure('stream',error);}
+    if(active)audit('stream_end',last);
+   }
+  })();
+  const waited=Promise.resolve().then(()=>{audit('wait_start');return run.wait();}).catch(error=>{throw failure('wait',error);}).then(async result=>{
+   // Persist terminal evidence BEFORE validating status. A failed run can still have usage.
+   audit('sdk_terminal',{...last,status:['finished','error','cancelled'].includes(result?.status)?result.status:'unknown',errorCode:safeErrorCode(result?.error),usage:tokenUsage(result?.usage)});
+   if(result?.status!=='finished'){
+    const error=new WorkerError(result?.status==='cancelled'?'agent_sdk_cancelled_no_automatic_retry':'agent_sdk_error_no_automatic_retry',502);error.usage=tokenUsage(result?.usage);throw error;
+   }
+   // Allow finite progress streams to drain, but a stuck stream cannot hide a finished Run.
+   await Promise.race([stream,new Promise(resolve=>{drainTimer=setTimeout(resolve,drainMs);})]);return result;
+  });
+  return await Promise.race([waited,stream.then(()=>new Promise(()=>{})),new Promise((_,reject)=>{timer=setTimeout(()=>{audit('sdk_timeout',{...last,status:'running'});reject(new WorkerError('agent_sdk_timeout_no_automatic_retry',502));},timeoutMs);})]);
+ }catch(error){
+  active=false;
+  if(!['agent_sdk_error_no_automatic_retry','agent_sdk_cancelled_no_automatic_retry'].includes(error?.message)){
+   audit('cancel_requested',last);
+   if(run.supports?.('cancel')===false)audit('cancel_unsupported');
+   else await boundedCleanup(()=>run.cancel(),cleanupMs,audit,'cancel');
+  }
+  error.usage=tokenUsage(error.usage)??tokenUsage(run.usage);
+  throw error;
+ }finally {active=false;clearTimeout(timer);clearTimeout(drainTimer);}
 }

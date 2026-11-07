@@ -368,7 +368,7 @@ final class Chat
             return new \WP_Error('wpfb_worker_offline', 'Local Agent worker is unreachable. Manual Builder is unaffected.', ['status' => 503]);
         }
         if (200 !== wp_remote_retrieve_response_code($health) || !WorkerProtocol::compatible(json_decode(wp_remote_retrieve_body($health), true))) {
-            return new \WP_Error('wpfb_worker_incompatible', 'Refresh the installed worker resource: Agent protocol 1, local-search/1 and policy/1 are required. This operation sent no model request. Manual Builder is unaffected.', ['status' => 503]);
+            return new \WP_Error('wpfb_worker_incompatible', 'Refresh the installed worker resource: Agent protocol 1, local-search/1, policy/1 and diagnostics/1 are required. This operation sent no model request. Manual Builder is unaffected.', ['status' => 503]);
         }
 
         if (null !== $auth['cursor']) {
@@ -386,11 +386,21 @@ final class Chat
         $data = json_decode((string) wp_remote_retrieve_body($result), true);
         $status = (int) wp_remote_retrieve_response_code($result);
         if (200 !== $status || !is_array($data)) {
+            $diagnostics = [
+                'agent_sdk_timeout_no_automatic_retry' => 'Agent reached the 90-second execution deadline. Cancellation was requested; remote completion and billing are not confirmed. No automatic retry. Check the local audit.',
+                'agent_watchdog_timeout_no_automatic_retry' => 'Agent child exceeded the 95-second watchdog and was stopped. Remote completion and billing are not confirmed. No automatic retry. Check the local audit.',
+                'agent_stream_failed_no_automatic_retry' => 'Agent event stream failed. Check the local audit for the safe SDK code. No automatic retry.',
+                'agent_wait_failed_no_automatic_retry' => 'Waiting for the Agent result failed. Check the local audit for the safe SDK code. No automatic retry.',
+                'agent_sdk_error_no_automatic_retry' => 'SDK reported an unsuccessful Agent result. Check the local audit for the safe SDK code. No automatic retry.',
+                'agent_sdk_cancelled_no_automatic_retry' => 'SDK reported the Agent run cancelled. No automatic retry.',
+                'agent_child_exit_no_automatic_retry' => 'Agent child exited before returning a result. Check the local audit for exit metadata. No automatic retry.',
+                'agent_child_spawn_failed_no_automatic_retry' => 'Agent child could not start or communicate. Check the local audit. No automatic retry.',
+            ];
             $safe = ['configured_grok_model_unavailable', 'worker_unauthorized', 'worker_busy', 'idempotency_conflict', 'turn_not_replayable_check_history', 'page_busy_or_interrupted', 'agent_failed_no_automatic_retry', 'invalid_turn', 'catalog_map_unavailable', 'catalog_context_invalid', 'catalog_target_unsupported', 'policy_context_invalid'];
             $error = is_array($data) ? ($data['error'] ?? null) : null;
-            $code = in_array($error, $safe, true) ? $error : 'worker_failure';
+            $code = in_array($error, [...$safe, ...array_keys($diagnostics)], true) ? $error : 'worker_failure';
 
-            return new \WP_Error('wpfb_'.$code, $code, ['status' => in_array($status, [400, 401, 409, 429, 503], true) ? $status : 502]);
+            return new \WP_Error('wpfb_'.$code, $diagnostics[$code] ?? $code, ['status' => in_array($status, [400, 401, 409, 429, 503], true) ? $status : 502]);
         }
 
         return Cast::map($data);

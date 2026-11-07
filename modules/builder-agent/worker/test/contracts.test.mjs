@@ -72,7 +72,7 @@ test('NON-LIVE generic secrets: count only in /status, CURSOR_API_KEY drives the
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
  try{
   const raw=await new Promise((resolve,reject)=>{const r=request('http://127.0.0.1:'+server.address().port+'/status',{method:'POST',headers:{Host:'127.0.0.1:'+server.address().port,'Content-Type':'application/json',Authorization:'Bearer '+token}},res=>{let b='';res.on('data',c=>b+=c);res.on('end',()=>resolve(b));});r.on('error',reject);r.end('{}');});
-  assert.deepEqual(JSON.parse(raw),{active:false,activeTurnId:null,protocol:'wpfasty-agent/1',capabilities:['local-search/1','policy/1'],credentials:'managed',secrets:3});
+  assert.deepEqual(JSON.parse(raw),{active:false,activeTurnId:null,protocol:'wpfasty-agent/1',capabilities:['local-search/1','policy/1','diagnostics/1'],credentials:'managed',secrets:3});
   for(const s of ['TEST_GENERIC','SOME_OTHER','THIRD'])assert.equal(raw.includes(s),false);
  }finally{await new Promise(r=>server.close(r));store.db.close();}
 });
@@ -85,7 +85,7 @@ test('NON-LIVE /status is authenticated, reports active turn and managed key wit
  const auth={Authorization:'Bearer '+token};
  try{
   assert.equal((await req('/status',{})).status,401);
-  let st=await req('/status',{},auth);assert.equal(st.status,200);assert.deepEqual(JSON.parse(st.raw),{active:false,activeTurnId:null,protocol:'wpfasty-agent/1',capabilities:['local-search/1','policy/1'],credentials:'managed',secrets:2});
+  let st=await req('/status',{},auth);assert.equal(st.status,200);assert.deepEqual(JSON.parse(st.raw),{active:false,activeTurnId:null,protocol:'wpfasty-agent/1',capabilities:['local-search/1','policy/1','diagnostics/1'],credentials:'managed',secrets:2});
   assert.equal(st.raw.includes('TEST_MANAGED_KEY'),false);assert.equal(st.raw.includes('TEST_MANAGED_JEV'),false);
   const pending=req('/turn',body(),auth);
   await new Promise(r=>setTimeout(r,50));
@@ -93,7 +93,7 @@ test('NON-LIVE /status is authenticated, reports active turn and managed key wit
   assert.match(busy.activeTurnId,/^[0-9a-f-]{36}$/);assert.notEqual(busy.activeTurnId,body().requestId);
   assert.deepEqual(Object.keys(busy).sort(),['active','activeTurnId','capabilities','credentials','protocol','secrets']);
   release();assert.equal((await pending).status,200);assert.equal(seen,'TEST_MANAGED_KEY');
-  assert.deepEqual(JSON.parse((await req('/status',{},auth)).raw),{active:false,activeTurnId:null,protocol:'wpfasty-agent/1',capabilities:['local-search/1','policy/1'],credentials:'managed',secrets:2});
+  assert.deepEqual(JSON.parse((await req('/status',{},auth)).raw),{active:false,activeTurnId:null,protocol:'wpfasty-agent/1',capabilities:['local-search/1','policy/1','diagnostics/1'],credentials:'managed',secrets:2});
   assert.equal(JSON.stringify(store.history('site-test-a:10')).includes('TEST_MANAGED_KEY'),false);
  }finally{await new Promise(r=>server.close(r));store.db.close();}
 });

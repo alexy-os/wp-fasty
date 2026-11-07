@@ -7,7 +7,7 @@ installation is separate from explicit enablement. No automatic activation here.
 Disabling preserves all page drafts/history and active/draft policy versions.
 
 Requires active Builder PageOperations API 1 and Node 24 resource advertising
-`wpfasty-agent/1`, `local-search/1`, `policy/1`. No model call is required for status.
+`wpfasty-agent/1`, `local-search/1`, `policy/1`, `diagnostics/1`. No model call is required for status.
 The old local-wp resource pinned to 873b00d is intentionally rejected by Agent PHP;
 manual editing remains available. A future authorized manager release must refresh
 its pinned worker path/full resource list. `resource.json` is not an installer.
@@ -33,3 +33,5 @@ the existing embedded phpfasty public key. Never copy that key to this repositor
 The manager must pin this complete worker tree, including the worker LICENSE,
 local catalog, engine and policy resources. Windows/Linux native no-model checks
 are not proof of a live model turn or owner-machine GUI acceptance.
+
+See [ADR 006 — Run diagnostics and deadlines](../../docs/agent/adr-006-run-diagnostics-and-deadlines.md) for Agent 0.1.1 timeout handling, safe audit and one-run smoke limits.
