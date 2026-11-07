@@ -1,4 +1,4 @@
-# Builder local Node worker — candidate, not live/browser accepted
+# Builder local Node worker — candidate, not production/user-machine accepted
 
 This extends the existing visual Builder, not the separate Creator plugin. No CR,
 external Session backend, VPS, or browser provider key is required. WordPress and
@@ -13,7 +13,7 @@ and authoritative catalog remain unchanged. Nothing publishes automatically.
   Node >=22.13; this worker requires 24).
 - From this `worker` directory run `npm ci --ignore-scripts --workspaces=false`.
   Keep platform optional dependencies; do not copy Linux node_modules to Windows.
-  Linux SDK import-only smoke passed; no paid inference has been performed.
+  Linux SDK import and one explicitly authorized local Grok turn passed. No further paid tests are authorized by that acceptance.
 - SDK publishes a win32-x64 optional package, but this increment has NOT been
   tested on Windows. Native Windows Node24 and Windows PHP must share loopback.
   Windows service setup is manual (the Linux systemd file does not work there).
@@ -104,10 +104,12 @@ removes a disposable page, overrides settings/runtime per request, tests actual
 catalog draft persistence and never changes saved credentials/theme activation.
 Production worker has no mock-mode HTTP flag.
 
-This candidate still needs owner-approved ONE real SDK/Grok turn and actual
-browser acceptance: send → structural proposal → apply → same saved revision in
-existing Latte iframe → reload history, stale-edit conflict, no automatic publish.
-Do not distribute it as live-accepted or remove the old Creator plugin/data yet.
+One authorized local SDK/Grok turn completed: its validated structural proposal was
+applied to draft only; real Latte output and durable history passed, and the browser
+confirmed the saved title. The follow-up applied-history presentation fix still
+needs a read-only browser recheck. Windows/user-machine installation and production
+release are NOT accepted by those local results. Any new paid turn needs separate
+authorization. Do not remove the old Creator plugin/data yet.
 
 ### Later Windows/LocalWP reproducible foreground setup (not run on the owner's PC)
 
@@ -151,3 +153,12 @@ whether a Cursor key is configured. The chat input is disabled when unconfigured
 while saved conversations/proposals remain visible. “Configured” is NOT a claim
 that credentials are valid, Grok is accessible, or live acceptance has passed.
 Provider/model discovery happens on an explicit send, never on history/health.
+
+### Reloaded proposal state
+
+Worker history records generation, not WordPress draft application. WP joins each
+history proposal with its saved application marker and current draft revision.
+Applied proposals show the historical applied revision and have no Apply button;
+stale proposals are disabled. Replaying an already-applied request never writes
+again, even if the current draft has since advanced. Configuration-unavailable
+copy preserves/acknowledges existing history instead of claiming no request ever ran.

@@ -89,11 +89,20 @@ final class Chat
         if (!is_wp_error($result)) {
             $settings = (array) get_option(self::OPTION, []);
             $configured = !empty($settings['cursor_key']);
-            $result['availability'] = ['configured' => $configured, 'model' => 'grok-4.7', 'message' => $configured ? 'Grok configured; provider access is checked only when you send.' : 'Cursor API key is not configured. Add it server-side in Settings → Builder chat. No model request has been sent.'];
+            $unavailable = empty($result['turns']) ? 'Sending is unavailable until a Cursor API key is configured server-side in Settings → Builder chat.' : 'Sending is unavailable without a configured Cursor API key. Existing conversation history remains available. Configure credentials server-side in Settings → Builder chat.';
+            $result['availability'] = ['configured' => $configured, 'model' => 'grok-4.7', 'message' => $configured ? 'Grok configured; provider access is checked only when you send.' : $unavailable];
+            $currentVersion = DraftGuard::version((int) $request['id']);
             // Recover completed worker proposals even if the original PHP request timed out.
-            foreach (($result['turns'] ?? []) as $turn) {
+            foreach (($result['turns'] ?? []) as $index => $turn) {
                 if ('done' !== ($turn['state'] ?? '') || !is_array($turn['proposal'] ?? null) || !is_string($turn['source'] ?? null) || !preg_match('/^[a-zA-Z0-9_-]{8,100}$/', $turn['requestId'] ?? '')) { continue; }
-                add_post_meta((int) $request['id'], '_wpfb_chat_'.$turn['requestId'], wp_slash(wp_json_encode(['source' => $turn['source'], 'blocks' => $turn['proposal'], 'version' => $turn['baseVersion'] ?? -1])), true);
+                $key = '_wpfb_chat_'.$turn['requestId'];
+                add_post_meta((int) $request['id'], $key, wp_slash(wp_json_encode(['source' => $turn['source'], 'blocks' => $turn['proposal'], 'version' => $turn['baseVersion'] ?? -1])), true);
+                // WP owns draft application; worker history owns generation. Never infer apply state from prose.
+                $saved = json_decode((string) get_post_meta((int) $request['id'], $key, true), true);
+                $applied = isset($saved['applied']) ? (int) $saved['applied'] : null;
+                $base = (int) ($saved['version'] ?? -1);
+                $state = null !== $applied ? 'applied' : ($base === $currentVersion ? 'pending' : 'stale');
+                $result['turns'][$index]['application'] = ['state' => $state, 'baseVersion' => $base, 'appliedVersion' => $applied, 'currentVersion' => $currentVersion, 'canApply' => 'pending' === $state];
             }
         }
         return is_wp_error($result) ? $result : new \WP_REST_Response($result);
@@ -137,7 +146,7 @@ final class Chat
         return DraftGuard::locked($page, static function () use ($page, $id) {
             $key = '_wpfb_chat_'.$id; $proposal = json_decode((string) get_post_meta($page, $key, true), true);
             if (!is_array($proposal)) { return new \WP_Error('wpfb_chat_missing', 'No saved proposal for this page.', ['status' => 404]); }
-            if (isset($proposal['applied'])) { return new \WP_REST_Response(['applied' => true, 'version' => $proposal['applied'], 'replay' => true]); }
+            if (isset($proposal['applied'])) { return new \WP_REST_Response(['applied' => true, 'version' => $proposal['applied'], 'currentVersion' => DraftGuard::version($page), 'replay' => true]); }
             if (($proposal['version'] ?? -1) !== DraftGuard::version($page)) { return new \WP_Error('wpfb_revision_conflict', 'Draft changed. Request a new proposal.', ['status' => 409]); }
             $catalog = Sources::catalog($proposal['source']);
             if (null === $catalog || !is_array($proposal['blocks']) || count($proposal['blocks']) > 100) { return new \WP_Error('wpfb_chat_schema', 'Invalid proposal.', ['status' => 400]); }

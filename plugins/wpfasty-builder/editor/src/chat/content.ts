@@ -14,5 +14,9 @@ export const chatCopy = {
   pending: "Waiting for local worker…",
   failed: "Request failed. Check history before retrying; no automatic paid retry.",
   label: "Message to Builder assistant",
-  proposal: "Proposed structural draft (not applied)",
+  proposal: "Structural proposal",
+  pendingProposal: "Not yet applied to this draft.",
+  staleProposal: "Draft changed since this proposal; it cannot be applied.",
+  unknownProposal: "Application status unavailable. Reload history before applying.",
+  appliedProposal: (applied: number, current: number) => `Applied to draft revision ${applied}. Current draft revision ${current}.`,
 } as const;

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { proposalPresentation } from "./proposal";
   import { onMount } from "svelte";
   import type { ChatHistory, ChatResult, ChatTurn } from "./client";
   import Block from "../compose/Block.svelte";
@@ -52,13 +53,15 @@
   <Text tag="h2" class="wpfb-heading">{copy.panel}</Text>
   {#if !ready}<Text tag="p" role="status">{error || copy.unavailable}</Text>{/if}
   {#each turns as turn (turn.requestId)}
+    {@const application = proposalPresentation(turn)}
     <Box tag="div" class="wpfb-chat-message">
       <Text tag="p">{turn.content ?? ""}</Text>
       <Text tag="p">{turn.answer ?? turn.error ?? turn.state}</Text>
       {#if turn.proposal}
         <Text tag="p">{copy.proposal}</Text>
+        <Text tag="p">{application.state === "applied" ? copy.appliedProposal(application.appliedVersion!, application.currentVersion!) : application.state === "pending" ? copy.pendingProposal : application.state === "stale" ? copy.staleProposal : copy.unknownProposal}</Text>
         <Text tag="pre">{JSON.stringify(turn.proposal, null, 2)}</Text>
-        <Button class="button" disabled={busy} onclick={() => accept(turn.requestId)}>{copy.apply}</Button>
+        {#if application.canApply}<Button class="button" disabled={busy} onclick={() => accept(turn.requestId)}>{copy.apply}</Button>{/if}
       {/if}
     </Box>
   {/each}

@@ -17,11 +17,15 @@ $request = static function(string $action, array $body=[]) use ($page): WP_REST_
 $settings = static fn() => ['worker_token'=>str_repeat('nonlive-',5), 'cursor_key'=>'TEST_ONLY_NO_PROVIDER_KEY'];
 $http = static function($pre,$args,$url) {
     if (!str_starts_with($url,'http://127.0.0.1:18991/')) return $pre;
-    if (str_ends_with($url,'/history')) return ['response'=>['code'=>200],'body'=>'{"turns":[]}','headers'=>[]];
+    if (str_ends_with($url,'/history')) {
+        $scope=json_decode($args['body'],true);$cached=json_decode((string)get_post_meta((int)$scope['page'],'_wpfb_turn_fixture-turn-0001',true),true);
+        $turns=is_array($cached)?[array_merge($cached['result'],['requestId'=>'fixture-turn-0001','state'=>'done'])]:[];
+        return ['response'=>['code'=>200],'body'=>wp_json_encode(['turns'=>$turns]),'headers'=>[]];
+    }
     $body=json_decode($args['body'],true); contract(($body['credentials']['cursor']??'')==='TEST_ONLY_NO_PROVIDER_KEY','credential server-side only');
     contract(($args['redirection']??-1)===0,'no worker redirects');
     $block=$body['context']['catalog'][0];
-    return ['response'=>['code'=>200],'headers'=>[],'body'=>wp_json_encode(['answer'=>'NON-LIVE structural proposal','proposal'=>[['id'=>'fixture-about','block'=>$block['id'],'variant'=>$block['variants'][0]['id'],'props'=>(object)[],'bindings'=>(object)[]]],'baseVersion'=>$body['context']['version']])];
+    return ['response'=>['code'=>200],'headers'=>[],'body'=>wp_json_encode(['source'=>$body['context']['source'],'answer'=>'NON-LIVE structural proposal','proposal'=>[['id'=>'fixture-about','block'=>$block['id'],'variant'=>$block['variants'][0]['id'],'props'=>(object)[],'bindings'=>(object)[]]],'baseVersion'=>$body['context']['version']])];
 };
 try {
     wp_set_current_user((int)$admin[0]);
@@ -44,10 +48,18 @@ try {
     $version=DraftGuard::version($page);contract($version===1,'draft revision incremented');
     contract(Store::get($page,false)===null,'apply never publishes');
     $again=Chat::apply($request('apply',['requestId'=>'fixture-turn-0001']));contract($again instanceof WP_REST_Response && DraftGuard::version($page)===$version,'apply retry idempotent');
+    $history=Chat::history($request('history'))->get_data();$application=$history['turns'][0]['application']??[];
+    contract(($application['state']??'')==='applied'&&($application['appliedVersion']??0)===$version&&false===($application['canApply']??true),'applied history reload joins persisted WP revision and hides reapply');
+    $noKey=static fn()=>['worker_token'=>str_repeat('nonlive-',5)];add_filter('pre_option_'.Chat::OPTION,$noKey,20);
+    $history=Chat::history($request('history'))->get_data();contract(false===$history['availability']['configured']&&str_contains($history['availability']['message'],'Existing conversation history remains available')&&!str_contains($history['availability']['message'],'No model request has been sent'),'removed key keeps truthful existing history');remove_filter('pre_option_'.Chat::OPTION,$noKey,20);
+
     $replay=Chat::turn($request('turn',['requestId'=>'fixture-turn-0001','content'=>'NON-LIVE test draft']));contract($replay instanceof WP_REST_Response,'turn replay after revision change no provider call');
     $conflict=Chat::turn($request('turn',['requestId'=>'fixture-turn-0001','content'=>'different']));contract(is_wp_error($conflict)&&$conflict->get_error_data()['status']===409,'request content conflict 409');
     $stale=Chat::turn($request('turn',['requestId'=>'fixture-turn-0002','content'=>'NON-LIVE stale proposal']));
     $save=DraftGuard::save($page,['source'=>'ui8kit','blocks'=>[]],false,$version);contract(!is_wp_error($save),'visual draft shares revision lock');
+    $current=DraftGuard::version($page);$replay=Chat::apply($request('apply',['requestId'=>'fixture-turn-0001']));
+    contract($replay instanceof WP_REST_Response&&$replay->get_data()['version']===$version&&$replay->get_data()['currentVersion']===$current&&DraftGuard::version($page)===$current,'historical applied replay reports both revisions without modifying newer draft');
+
     $stale=Chat::apply($request('apply',['requestId'=>'fixture-turn-0002']));contract(is_wp_error($stale)&&$stale->get_error_data()['status']===409,'stale proposal rejected');
     $save=DraftGuard::save($page,['source'=>'ui8kit','blocks'=>[]],false,$version);contract(is_wp_error($save)&&$save->get_error_data()['status']===409,'stale visual save rejected');
     add_post_meta($page,'_wpfb_chat_invalid-0001',wp_slash(wp_json_encode(['source'=>'ui8kit','version'=>DraftGuard::version($page),'blocks'=>[['id'=>'wrong','block'=>'does-not-exist','variant'=>'fake','props'=>[],'bindings'=>[]]]])),true);
