@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { mkdirSync,realpathSync } from 'node:fs';
+import { mkdirSync,realpathSync,readFileSync,statSync } from 'node:fs';
 import { resolve,isAbsolute,relative,sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { TurnStore,WorkerError,authenticated } from './core.mjs';
@@ -13,13 +13,32 @@ export function workerPort(value){
  if(port<1024||port>65535)throw new Error('WPFB_WORKER_PORT must be an integer 1024-65535');
  return port;
 }
-export function workerServer({token,store,runner}) {
+/**
+ * Secrets source, in order: WPFB_WORKER_SECRETS=stdin (one JSON object {token, cursorKey?} on stdin, then EOF;
+ * used by local-wp, values come from its age vault), WPFB_WORKER_TOKEN_FILE (0600 file holding the token),
+ * legacy WPFB_WORKER_TOKEN env. Secrets are removed from process.env after reading.
+ */
+export function readSecrets(env=process.env,stdin=()=>readFileSync(0,'utf8')){
+ let token='',cursorKey='';
+ if(env.WPFB_WORKER_SECRETS==='stdin'){
+  let v;try{v=JSON.parse(stdin());}catch{throw new Error('WPFB_WORKER_SECRETS=stdin expects one JSON object on stdin');}
+  token=typeof v?.token==='string'?v.token:'';cursorKey=typeof v?.cursorKey==='string'?v.cursorKey:'';
+ }else if(env.WPFB_WORKER_TOKEN_FILE){
+  const f=env.WPFB_WORKER_TOKEN_FILE;
+  if(process.platform!=='win32'&&(statSync(f).mode&0o077))throw new Error('WPFB_WORKER_TOKEN_FILE must not be readable by group/others (chmod 600)');
+  token=readFileSync(f,'utf8').trim();
+ }else token=env.WPFB_WORKER_TOKEN||'';
+ delete env.WPFB_WORKER_TOKEN;delete env.WPFB_WORKER_SECRETS;
+ return {token,cursorKey};
+}
+export function workerServer({token,store,runner,cursorKey=''}) {
  let active=false;
  return createServer(async(req,res)=>{
   const reply=(status,data)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
   try {
    if(!['127.0.0.1:'+req.socket.localPort,'localhost:'+req.socket.localPort].includes(req.headers.host)||req.headers.origin) throw new WorkerError('host_or_origin_forbidden',403);
    if(!authenticated(req.headers.authorization,token)) throw new WorkerError('worker_unauthorized',401);
+   if(req.method==='POST'&&req.url==='/status')return reply(200,{active,credentials:cursorKey?'managed':'request'});
    if(req.method!=='POST'||!['/turn','/history'].includes(req.url)) throw new WorkerError('not_found',404);
    const chunks=[];let bytes=0;for await(const chunk of req){bytes+=chunk.length;if(bytes>768000)throw new WorkerError('payload_too_large',413);chunks.push(chunk);}
    const raw=Buffer.concat(chunks).toString('utf8');
@@ -29,14 +48,14 @@ export function workerServer({token,store,runner}) {
    if(req.url==='/history')return reply(200,{turns:store.history(scope)});
    if(active)throw new WorkerError('worker_busy',429);
    active=true;
-   try{return reply(200,await store.turn({...body,history:store.history(scope)},runner));}finally{active=false;}
+   try{return reply(200,await store.turn({...body,...(!body.credentials?.cursor&&cursorKey?{credentials:{cursor:cursorKey}}:{}),history:store.history(scope)},runner));}finally{active=false;}
   }catch(e){reply(e instanceof WorkerError?e.status:500,{error:e instanceof WorkerError?e.message:'worker_failure'});}
  });
 }
 if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
  const port=workerPort(process.env.WPFB_WORKER_PORT);
- const token=process.env.WPFB_WORKER_TOKEN;
- if(!token||token.length<32)throw new Error('WPFB_WORKER_TOKEN must contain at least 32 characters');
+ const {token,cursorKey}=readSecrets();
+ if(!token||token.length<32)throw new Error('worker token must contain at least 32 characters');
  process.umask(0o077);
  if(!isAbsolute(process.env.WPFB_WORKER_DATA||'')||!isAbsolute(process.env.WPFB_WORDPRESS_ROOT||'')) throw new Error('Absolute WPFB_WORKER_DATA and WPFB_WORDPRESS_ROOT are required. Data MUST be outside the web root.');
  const wp=realpathSync(process.env.WPFB_WORDPRESS_ROOT);
@@ -44,7 +63,7 @@ if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
  const dir=realpathSync(process.env.WPFB_WORKER_DATA),rel=relative(wp,dir);
  if(!(rel==='..'||rel.startsWith('..'+sep)) || isAbsolute(rel)) throw new Error('Worker data must be outside WordPress web root');
  const store=new TurnStore(resolve(dir,'turns.sqlite'));
- const server=workerServer({token,store,runner:isolatedRunner(dir)});
+ const server=workerServer({token,store,cursorKey,runner:isolatedRunner(dir)});
  server.requestTimeout=100000;server.headersTimeout=10000;server.maxConnections=8;
  server.on('error',e=>{console.error('Builder worker cannot listen on 127.0.0.1:'+port+': '+(e.code||'error'));process.exit(1);});
  server.listen(port,'127.0.0.1',()=>console.log('Builder worker listening on loopback:'+port+'; no live acceptance performed'));

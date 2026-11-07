@@ -54,6 +54,22 @@ and authoritative catalog remain unchanged. Nothing publishes automatically.
 5. Open a page in the **existing** Builder and select **Chat**. Missing settings
    or an offline worker show deterministic503 errors, not fake assistant replies.
 
+## Secrets without plaintext (local-wp and other hosts)
+
+- Worker secrets source (first match): `WPFB_WORKER_SECRETS=stdin` -> one JSON object
+  `{"token":"...","cursorKey":"..."}` on stdin then EOF (local-wp feeds it from its age vault);
+  `WPFB_WORKER_TOKEN_FILE=/path` (file must be 0600 on POSIX); legacy `WPFB_WORKER_TOKEN` env.
+  Secret env vars are deleted from `process.env` after reading. With `cursorKey` the worker uses it
+  when a turn arrives without credentials, so WordPress never needs to store or send the key.
+- WordPress reads, before its options: `$_SERVER['WPFB_WORKER_TOKEN']`, `$_SERVER['WPFB_WORKER_PORT']`,
+  `$_SERVER['WPFB_WORKER_KEY']==='managed'` (server/FastCGI params set by the host, e.g. local-wp per
+  request). Then nothing secret is stored in `wpfb_chat_settings`; settings show "Managed by host".
+- `POST /status` (authenticated, empty body) -> `{"active":bool,"credentials":"managed"|"request"}`.
+  Hosts check it before stop/restart/port change so a running turn is not cut silently.
+- SDK child env: PATH, HOME, NODE_ENV, TEMP/TMP/TMPDIR (data dir), and on Windows SystemRoot, SystemDrive,
+  windir, ComSpec, PATHEXT, USERPROFILE/APPDATA/LOCALAPPDATA (data dir). The child exits when the
+  worker's IPC channel closes (no orphan after a worker crash).
+
 ## Actual boundaries and behavior
 
 - Same-origin WP REST: `/wp-json/wpfasty-builder/v1/chat/<page-id>/history`,

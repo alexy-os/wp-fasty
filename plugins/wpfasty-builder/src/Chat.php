@@ -13,6 +13,8 @@ final class Chat
     /** Worker port from settings: integer 1024-65535, host is always fixed loopback 127.0.0.1. */
     public static function port(): int
     {
+        $host = self::validPort($_SERVER['WPFB_WORKER_PORT'] ?? null);
+        if (null !== $host) { return $host; }
         $settings = (array) get_option(self::OPTION, []);
         $port = self::validPort($settings['worker_port'] ?? null);
         return $port ?? self::DEFAULT_PORT;
@@ -24,6 +26,22 @@ final class Chat
         if (!is_string($value) || !preg_match('/^[1-9][0-9]{3,4}$/', $value)) { return null; }
         $port = (int) $value;
         return ($port >= 1024 && $port <= 65535) ? $port : null;
+    }
+
+    /**
+     * Host-supplied worker token (e.g. a FastCGI param set per request by local-wp from its age vault).
+     * Never stored in the DB. Falls back to the legacy wpfb_chat_settings.worker_token option.
+     */
+    private static function hostToken(): ?string
+    {
+        $value = $_SERVER['WPFB_WORKER_TOKEN'] ?? null;
+        return (is_string($value) && strlen($value) >= 32 && strlen($value) <= 4096) ? $value : null;
+    }
+
+    /** The host's worker holds the Cursor key itself (local-wp vault); WP must not send or store one. */
+    public static function hostManagedKey(): bool
+    {
+        return 'managed' === ($_SERVER['WPFB_WORKER_KEY'] ?? '');
     }
 
     private static function workerUrl(): string
@@ -61,7 +79,15 @@ final class Chat
         echo '<div class="wrap"><h1>Builder chat</h1><p>Node 24 worker on this WordPress host: '.esc_html(self::workerUrl()).'. Provider keys never enter the editor bundle. Grok is selected only if available to the Cursor key.</p>';
         echo '<p>Jev search is unavailable: the installed official extension documents typed decisions, not a search API. Its optional key is reserved; no Jev requests are made.</p><form method="post">';
         wp_nonce_field('wpfb_chat_settings');
+        $managed = ['cursor_key' => self::hostManagedKey(), 'worker_token' => null !== self::hostToken()];
+        if ($managed['cursor_key'] || $managed['worker_token']) {
+            echo '<div class="notice notice-info inline"><p>Managed by the host (local-wp vault): values are supplied per request and are not stored in this database. Tick Clear to remove an old stored copy.</p></div>';
+        }
         foreach (['cursor_key' => 'Cursor API key', 'jev_key' => 'Jev key (reserved; search unavailable)', 'worker_token' => 'Local worker shared token (at least 32 characters)'] as $field => $label) {
+            if (!empty($managed[$field])) {
+                echo '<p>'.esc_html($label).': Managed by host'.(empty($settings[$field]) ? '' : ' (an old stored copy exists) <label><input type="checkbox" name="clear_'.esc_attr($field).'"> Clear</label>').'</p>';
+                continue;
+            }
             echo '<p><label>'.esc_html($label).'<br><input type="password" autocomplete="new-password" name="'.esc_attr($field).'" value="" class="regular-text"></label> '.(empty($settings[$field]) ? 'Not set' : 'Configured (masked)').' <label><input type="checkbox" name="clear_'.esc_attr($field).'"> Clear</label></p>';
         }
         echo '<p><label>Local worker port (1024-65535, host fixed 127.0.0.1)<br><input type="number" min="1024" max="65535" step="1" name="worker_port" value="'.esc_attr((string) self::port()).'" class="small-text"></label></p>';
@@ -94,12 +120,14 @@ final class Chat
     private static function worker(string $route, array $body, bool $withKey = false): mixed
     {
         $settings = (array) get_option(self::OPTION, []);
-        if (strlen((string) ($settings['worker_token'] ?? '')) < 32 || ($withKey && empty($settings['cursor_key']))) {
+        $token = self::hostToken() ?? (string) ($settings['worker_token'] ?? '');
+        $managedKey = self::hostManagedKey();
+        if (strlen($token) < 32 || ($withKey && !$managedKey && empty($settings['cursor_key']))) {
             return new \WP_Error('wpfb_chat_unconfigured', 'Configure Builder chat in Settings → Builder chat. No model request was sent.', ['status' => 503]);
         }
-        if ($withKey) { $body['credentials'] = ['cursor' => $settings['cursor_key']]; }
+        if ($withKey && !$managedKey) { $body['credentials'] = ['cursor' => $settings['cursor_key']]; }
         $result = wp_remote_post(self::workerUrl().$route, ['timeout' => 100, 'redirection' => 0,
-            'headers' => ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$settings['worker_token']], 'body' => wp_json_encode($body), 'limit_response_size' => 512000]);
+            'headers' => ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token], 'body' => wp_json_encode($body), 'limit_response_size' => 512000]);
         if (is_wp_error($result)) { return new \WP_Error('wpfb_worker_offline', 'Local Builder worker is unreachable. Start Node worker on this WordPress host; no automatic retry.', ['status' => 503]); }
         $data = json_decode((string) wp_remote_retrieve_body($result), true);
         $status = (int) wp_remote_retrieve_response_code($result);
@@ -116,7 +144,7 @@ final class Chat
         $result = self::worker('/history', self::scope((int) $request['id']));
         if (!is_wp_error($result)) {
             $settings = (array) get_option(self::OPTION, []);
-            $configured = !empty($settings['cursor_key']);
+            $configured = self::hostManagedKey() || !empty($settings['cursor_key']);
             $unavailable = empty($result['turns']) ? 'Sending is unavailable until a Cursor API key is configured server-side in Settings → Builder chat.' : 'Sending is unavailable without a configured Cursor API key. Existing conversation history remains available. Configure credentials server-side in Settings → Builder chat.';
             $result['availability'] = ['configured' => $configured, 'model' => 'grok-4.7', 'message' => $configured ? 'Grok configured; provider access is checked only when you send.' : $unavailable];
             $currentVersion = DraftGuard::version((int) $request['id']);

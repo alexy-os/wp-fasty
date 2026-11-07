@@ -66,3 +66,39 @@ test('NON-LIVE WPFB_WORKER_PORT accepts only integer 1024-65535; default 18991',
  assert.equal(workerPort(undefined),18991);assert.equal(workerPort(''),18991);assert.equal(workerPort('19000'),19000);assert.equal(workerPort('65535'),65535);
  for(const bad of ['80','1023','65536','0','-1','19000.5',' 19000','0x4a38','127.0.0.1:19000','http://127.0.0.1:19000','19000/x','abc'])assert.throws(()=>workerPort(bad),/WPFB_WORKER_PORT/);
 });
+test('NON-LIVE /status is authenticated, reports active turn and managed key without the value; managed key reaches runner',async()=>{
+ const store=new TurnStore(':memory:');const token='test-token-not-a-provider-key-000000000';let release,seen;
+ const runner=b=>{seen=b.credentials?.cursor;return new Promise(r=>{release=()=>r({answer:'NON-LIVE',proposal})});};
+ const server=workerServer({store,token,runner,cursorKey:'TEST_MANAGED_KEY'});
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port;
+ const req=(path,b,headers={})=>new Promise((resolve,reject)=>{const r=request(base+path,{method:'POST',headers:{Host:'127.0.0.1:'+server.address().port,'Content-Type':'application/json',...headers}},res=>{let raw='';res.on('data',c=>raw+=c);res.on('end',()=>resolve({status:res.statusCode,raw}));});r.on('error',reject);r.end(JSON.stringify(b));});
+ const auth={Authorization:'Bearer '+token};
+ try{
+  assert.equal((await req('/status',{})).status,401);
+  let st=await req('/status',{},auth);assert.equal(st.status,200);assert.deepEqual(JSON.parse(st.raw),{active:false,credentials:'managed'});
+  assert.equal(st.raw.includes('TEST_MANAGED_KEY'),false);
+  const pending=req('/turn',body(),auth);
+  await new Promise(r=>setTimeout(r,50));
+  assert.equal(JSON.parse((await req('/status',{},auth)).raw).active,true);
+  release();assert.equal((await pending).status,200);assert.equal(seen,'TEST_MANAGED_KEY');
+  assert.equal(JSON.parse((await req('/status',{},auth)).raw).active,false);
+  assert.equal(JSON.stringify(store.history('site-test-a:10')).includes('TEST_MANAGED_KEY'),false);
+ }finally{await new Promise(r=>server.close(r));store.db.close();}
+});
+test('NON-LIVE secrets come from stdin JSON, a 0600 file or legacy env, and are removed from env',async()=>{
+ const {readSecrets}=await import('../server.mjs');
+ let env={WPFB_WORKER_SECRETS:'stdin',WPFB_WORKER_TOKEN:'x'};
+ assert.deepEqual(readSecrets(env,()=>JSON.stringify({token:'t'.repeat(40),cursorKey:'k'})),{token:'t'.repeat(40),cursorKey:'k'});
+ assert.equal('WPFB_WORKER_TOKEN' in env,false);
+ const dir=mkdtempSync(join(tmpdir(),'wpfb-'));const f=join(dir,'token');
+ const {writeFileSync,chmodSync}=await import('node:fs');writeFileSync(f,'f'.repeat(40)+'\n');chmodSync(f,0o600);
+ assert.equal(readSecrets({WPFB_WORKER_TOKEN_FILE:f}).token,'f'.repeat(40));
+ if(process.platform!=='win32'){chmodSync(f,0o644);assert.throws(()=>readSecrets({WPFB_WORKER_TOKEN_FILE:f}),/chmod 600/);}
+ assert.equal(readSecrets({WPFB_WORKER_TOKEN:'e'.repeat(40)}).token,'e'.repeat(40));
+});
+test('NON-LIVE SDK child env: no parent secrets; Windows gets SystemRoot/TEMP/USERPROFILE',async()=>{
+ const {childEnv}=await import('../isolated-runner.mjs');
+ const parent={PATH:'/bin',WPFB_WORKER_TOKEN:'secret',SystemRoot:'C:\\Windows',ComSpec:'C:\\Windows\\system32\\cmd.exe'};
+ const w=childEnv('/data',parent,'win32');assert.equal(w.SystemRoot,'C:\\Windows');assert.ok(w.TEMP&&w.USERPROFILE==='/data'&&w.APPDATA);assert.equal(JSON.stringify(w).includes('secret'),false);
+ const l=childEnv('/data',parent,'linux');assert.equal(l.SystemRoot,undefined);assert.equal(JSON.stringify(l).includes('secret'),false);
+});
