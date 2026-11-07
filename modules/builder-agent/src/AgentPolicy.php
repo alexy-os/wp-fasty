@@ -19,10 +19,13 @@ final class AgentPolicy
             add_submenu_page('edit.php?post_type=page', 'Agent brief', 'Agent brief', 'edit_pages', 'wpfasty-agent-brief', [self::class, 'screen']);
         });
         add_action('admin_post_wpfb_agent_policy', [self::class, 'submit']);
-        add_action('rest_api_init', static function (): void {
-            register_rest_route('wpfasty-builder/v1', '/agent-policy', ['methods' => 'GET,POST', 'callback' => [self::class, 'endpoint'], 'permission_callback' => [self::class, 'allowed']]);
-            register_rest_route('wpfasty-builder/v1', '/agent-brief/(?P<id>\d+)', ['methods' => 'GET,POST', 'callback' => [self::class, 'endpoint'], 'permission_callback' => [self::class, 'pageAllowed']]);
-        });
+        add_action('rest_api_init', [self::class, 'routes']);
+    }
+
+    public static function routes(): void
+    {
+        register_rest_route('wpfasty-builder/v1', '/agent-policy', ['methods' => 'GET,POST', 'callback' => [self::class, 'endpoint'], 'permission_callback' => [self::class, 'allowed']]);
+        register_rest_route('wpfasty-builder/v1', '/agent-brief/(?P<id>\d+)', ['methods' => 'GET,POST', 'callback' => [self::class, 'endpoint'], 'permission_callback' => [self::class, 'pageAllowed']]);
     }
 
     public static function roles(): void
@@ -38,14 +41,14 @@ final class AgentPolicy
 
     public static function allowed(\WP_REST_Request $request): bool
     {
-        return current_user_can(self::CAP) && (bool) wp_verify_nonce($request->get_header('X-WP-Nonce') ?? '', 'wp_rest');
+        return AgentModule::enabled() && current_user_can(self::CAP) && (bool) wp_verify_nonce($request->get_header('X-WP-Nonce') ?? '', 'wp_rest');
     }
 
     public static function pageAllowed(\WP_REST_Request $request): bool
     {
         $id = Cast::int($request['id']);
 
-        return $id > 0 && 'page' === get_post_type($id) && current_user_can('edit_post', $id) && (bool) wp_verify_nonce($request->get_header('X-WP-Nonce') ?? '', 'wp_rest');
+        return AgentModule::enabled() && $id > 0 && 'page' === get_post_type($id) && current_user_can('edit_post', $id) && (bool) wp_verify_nonce($request->get_header('X-WP-Nonce') ?? '', 'wp_rest');
     }
 
     /**
@@ -152,8 +155,11 @@ final class AgentPolicy
 
     public static function screen(): void
     {
-        $page = isset($_GET['post']) && is_string($_GET['post']) ? absint(wp_unslash($_GET['post'])) : 0;
-        $briefScreen = isset($_GET['page']) && is_string($_GET['page']) && 'wpfasty-agent-brief' === sanitize_key(wp_unslash($_GET['page']));
+        if (!AgentModule::enabled()) {
+            wp_die('Agent module is disabled.', '', ['response' => 403]);
+        }
+        $page = absint(WordPressInput::query('post'));
+        $briefScreen = 'wpfasty-agent-brief' === sanitize_key(WordPressInput::query('page'));
         if ((!$briefScreen && !current_user_can(self::CAP)) || ($briefScreen && (!$page || !current_user_can('edit_post', $page) || 'page' !== get_post_type($page)))) {
             if ($briefScreen && current_user_can('edit_pages')) {
                 echo '<div class="wrap"><h1>Agent brief</h1><form method="get"><input type="hidden" name="post_type" value="page"><input type="hidden" name="page" value="wpfasty-agent-brief"><label>Page ID <input name="post" type="number" min="1" required></label> <button class="button">Open page brief</button></form></div>';
@@ -214,11 +220,12 @@ final class AgentPolicy
     private static function post(string $key): string
     {
         check_admin_referer('wpfb_agent_policy');
-        if (!isset($_POST[$key]) || !is_string($_POST[$key])) {
+        $form = WordPressInput::form('wpfb_agent_policy');
+        if (!isset($form[$key]) || !is_string($form[$key])) {
             return '';
         }
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Strict JSON document validation follows; lossy text sanitization would corrupt policy data.
-        $value = wp_unslash($_POST[$key]);
+        $value = $form[$key];
 
         return strlen($value) <= 100000 ? $value : '';
     }

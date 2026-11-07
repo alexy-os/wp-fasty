@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build && node build-css.mjs",
+    "build": "vite build && node build-css.mjs && vite build --config vite.agent.config.ts",
     "build:js": "vite build",
     "build:css": "node build-css.mjs",
     "check": "svelte-check --tsconfig ./tsconfig.json",

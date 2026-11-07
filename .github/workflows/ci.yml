@@ -40,6 +40,7 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: composer, wp-cli
           coverage: none
+          extensions: zip
 
       - name: PHP security floor (8.5 >= 8.5.12, 8.2 >= 8.2.35; CVE-2026-109618/109619 fixed 2026-10-21)
         run: php -r '$f=["8.5"=>"8.5.12","8.2"=>"8.2.35"][PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION]??null; echo PHP_VERSION,PHP_EOL; if($f&&version_compare(PHP_VERSION,$f,"<")){fwrite(STDERR,"::error::PHP ".PHP_VERSION." < safe floor $f\n");exit(1);}'
@@ -150,12 +151,12 @@ jobs:
           bun run --cwd plugins/wpfasty-builder/editor check
           bun run --cwd plugins/wpfasty-builder/editor test
           bun run --cwd plugins/wpfasty-builder/editor build
-          git diff --exit-code -- plugins/wpfasty-builder/assets
+          git diff --exit-code -- plugins/wpfasty-builder/assets modules/builder-agent/assets
           # A matching first build must also be byte-identical on rebuild; never suppress asset drift.
-          sha256sum plugins/wpfasty-builder/assets/editor.{js,css} > "$RUNNER_TEMP/builder-assets.sha256"
+          sha256sum plugins/wpfasty-builder/assets/editor.{js,css} modules/builder-agent/assets/agent.{js,css} > "$RUNNER_TEMP/builder-assets.sha256"
           bun run --cwd plugins/wpfasty-builder/editor build
           sha256sum -c "$RUNNER_TEMP/builder-assets.sha256"
-          git diff --exit-code -- plugins/wpfasty-builder/assets
+          git diff --exit-code -- plugins/wpfasty-builder/assets modules/builder-agent/assets
 
       - name: PHPUnit (themes, types, builder compiler/links)
         run: composer test
@@ -180,7 +181,7 @@ jobs:
       - name: Builder local search — offline pinned engine and map reproduce
         run: bun tools/builder/local-search-build.ts --check
       - name: Builder worker — NON-LIVE SDK event, usage, replay, auth and scope isolation contracts
-        run: node --test plugins/wpfasty-builder/worker/test/*.test.mjs
+        run: node --test modules/builder-agent/worker/test/*.test.mjs
       - name: PHPStan maximum level — no baseline or suppressions
         run: composer phpstan
 
@@ -330,6 +331,7 @@ jobs:
           php-version: "8.2"
           tools: composer
           coverage: none
+          extensions: zip
 
       - name: Cache composer downloads
         uses: actions/cache@v4
@@ -408,7 +410,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: wp-cli
-          extensions: mysqli, gd
+          extensions: mysqli, gd, zip
           coverage: none
 
       - name: PHP security floor (8.5 >= 8.5.12, 8.2 >= 8.2.35; CVE-2026-109618/109619 fixed 2026-10-21)
@@ -460,10 +462,50 @@ jobs:
           wp rewrite structure '/%postname%/' --hard
           wp theme list --fields=name,version,status
 
-      - name: Agent policy — NON-LIVE WP nonce, role, page scope, XSS and storage CAS contracts
+      - name: Verified published ModulY + unsigned development fixture (no signing keys)
+        run: |
+          mkdir -p "$RUNNER_TEMP/moduly"
+          curl -fsSL --retry 3 https://github.com/phpfasty/wpmodules/releases/download/edge/moduly.zip -o "$RUNNER_TEMP/moduly.zip"
+          echo "0e3bea84798ea10f302f5252e8f48af883359979c5a87afbf5ddb97bc1401f15  $RUNNER_TEMP/moduly.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/moduly.zip" -d "$RUNNER_TEMP/moduly"
+          echo "WPFB_MODULY_RUNTIME=$RUNNER_TEMP/moduly/moduly" >> "$GITHUB_ENV"
+          WPFB_MODULY_RUNTIME="$RUNNER_TEMP/moduly/moduly" bun tools/builder/pack-agent.ts
+          sha256sum var/build/builder-agent-unsigned.zip > "$RUNNER_TEMP/agent-package.sha256"
+          WPFB_MODULY_RUNTIME="$RUNNER_TEMP/moduly/moduly" bun tools/builder/pack-agent.ts
+          sha256sum -c "$RUNNER_TEMP/agent-package.sha256"
+
+      - name: Optional Agent lifecycle + manual core — NON-LIVE actual ModulY kernel/installer
+        env:
+          WP_ENVIRONMENT_TYPE: local
         run: |
           cd /tmp/wp
-          wp eval-file "$GITHUB_WORKSPACE/tools/sdk/builder-policy-contract.php"
+          wp eval 'ini_set("error_log", "/tmp/builder-agent-lifecycle.log"); require getenv("GITHUB_WORKSPACE")."/tools/sdk/builder-wp-contract.php";'
+          php "$GITHUB_WORKSPACE/tools/sdk/assert-module-fixture-log.php" /tmp/builder-agent-lifecycle.log
+
+      - name: Agent policy — NON-LIVE WP nonce, role, page scope, XSS and storage CAS contracts
+        env:
+          WP_ENVIRONMENT_TYPE: local
+        run: |
+          cd /tmp/wp
+          wp eval 'ini_set("error_log", "/tmp/builder-agent-policy.log"); require getenv("GITHUB_WORKSPACE")."/tools/sdk/builder-policy-contract.php";'
+          php "$GITHUB_WORKSPACE/tools/sdk/assert-module-fixture-log.php" /tmp/builder-agent-policy.log
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.1"
+      - name: Real PHP to Node module resource — NON-LIVE runner, bundled map and policy
+        env:
+          WP_ENVIRONMENT_TYPE: local
+          WPFB_CONTRACT_HTTP: "1"
+          WPFB_CONTRACT_PORT: "18788"
+        run: |
+          node modules/builder-agent/worker/test/wp-fixture-server.mjs > "$RUNNER_TEMP/agent-http.log" 2>&1 &
+          fixture=$!
+          trap 'kill "$fixture" 2>/dev/null || true; wait "$fixture" 2>/dev/null || true' EXIT
+          curl -fsS --retry 5 --retry-delay 1 --retry-connrefused -X POST -H 'Authorization: Bearer nonlive-nonlive-nonlive-nonlive-nonlive-' http://127.0.0.1:18788/status > /dev/null
+          cd /tmp/wp
+          wp eval 'ini_set("error_log", "/tmp/builder-agent-http.log"); require getenv("GITHUB_WORKSPACE")."/tools/sdk/builder-wp-contract.php";'
+          php "$GITHUB_WORKSPACE/tools/sdk/assert-module-fixture-log.php" /tmp/builder-agent-http.log
 
       - name: Theme Check — no REQUIRED issues (wp-fasty.zip, twig.zip, every packaged site, latte-skin from repo)
         run: |

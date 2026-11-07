@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Text from "../ui/text/Text.svelte";
+  import Text from "../../../plugins/wpfasty-builder/editor/src/ui/text/Text.svelte";
   import { jsonTokens } from "./presentation";
   let { value, json = true }: { value: string; json?: boolean } = $props();
   const tokens = $derived(json ? jsonTokens(value) : [{text: value, kind: "plain"}]);

@@ -9,6 +9,7 @@ $finder = (new PhpCsFixer\Finder())
     ->in([
         __DIR__.'/themes',
         __DIR__.'/plugins',
+        __DIR__.'/modules',
         __DIR__.'/presets',
         __DIR__.'/tools',
         __DIR__.'/tests',

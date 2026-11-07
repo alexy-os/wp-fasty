@@ -11,7 +11,7 @@ OUT=${OUT:-${TMPDIR:-/tmp}/wpfasty-gates}  # not under dist/ (dist/*/ are site p
 mkdir -p "$OUT"
 $G source themes/wp-fasty/views presets/blocks presets/archetypes themes/latte-press/views themes/latte-folio/views \
   themes/latte-shop/views themes/latte-skin plugins/wpfasty-builder/sources/ui8kit/latte plugins/wpfasty-builder/sources/ui8kit/twig \
-  plugins/wpfasty-builder/editor/src/chat \
+  modules/builder-agent/editor \
   --exclude themes/wp-fasty/kit --exclude themes/wp-fasty/twig/kit \
   --exclude plugins/wpfasty-builder/sources/ui8kit/latte/ui --exclude plugins/wpfasty-builder/sources/ui8kit/twig/ui
 php tools/qa/gate-cases.php blocks "$OUT/blocks.json"

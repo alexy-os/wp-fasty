@@ -4,7 +4,7 @@ import {resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 const root=resolve(import.meta.dir,'../..');
 const vendor=resolve(root,'tools/vendor/facet-search');
-const out=resolve(root,'plugins/wpfasty-builder/worker/catalog');
+const out=resolve(root,'modules/builder-agent/worker/catalog');
 const lock=JSON.parse(readFileSync(resolve(vendor,'provenance.json'),'utf8'));
 const sha=(b:string|Buffer)=>createHash('sha256').update(b).digest('hex');
 const check=process.argv.includes('--check');

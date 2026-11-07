@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-07T11:32:53+00:00\n"
+"POT-Creation-Date: 2026-11-07T17:59:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wpfasty-builder\n"
@@ -29,162 +29,97 @@ msgstr ""
 msgid "alexy-os"
 msgstr ""
 
-#: src/Admin.php:48
-#: src/Admin.php:49
-#: src/Admin.php:261
+#: src/Admin.php:53
+#: src/Admin.php:54
+#: src/Admin.php:274
 msgid "Builder"
 msgstr ""
 
-#: src/Admin.php:55
-#: src/Admin.php:56
-#: src/Admin.php:307
+#: src/Admin.php:60
+#: src/Admin.php:61
+#: src/Admin.php:320
 msgid "Builder sources"
 msgstr ""
 
-#: src/Admin.php:87
+#: src/Admin.php:92
 msgid "Edit with Builder"
 msgstr ""
 
-#: src/Admin.php:120
+#: src/Admin.php:125
 msgid "Add New with Builder"
 msgstr ""
 
-#: src/Admin.php:223
+#: src/Admin.php:236
 msgid "Dark mode"
 msgstr ""
 
-#: src/Admin.php:242
+#: src/Admin.php:255
 msgid "Sorry, you are not allowed to use the builder."
 msgstr ""
 
-#: src/Admin.php:246
+#: src/Admin.php:259
 msgid "Loading the builder…"
 msgstr ""
 
-#: src/Admin.php:251
+#: src/Admin.php:264
 msgid "The editor build is missing: run the editor build (plugins/wpfasty-builder/editor)."
 msgstr ""
 
-#: src/Admin.php:265
+#: src/Admin.php:278
 msgid "Choose a page to build. Pages with a published layout render it on the front end."
 msgstr ""
 
-#: src/Admin.php:273
+#: src/Admin.php:286
 msgid "built"
 msgstr ""
 
-#: src/Admin.php:288
+#: src/Admin.php:301
 msgid "New page"
 msgstr ""
 
-#: src/Admin.php:305
-#: src/Admin.php:359
+#: src/Admin.php:318
+#: src/Admin.php:372
 msgid "Sorry, you are not allowed to manage builder sources."
 msgstr ""
 
-#: src/Admin.php:309
+#: src/Admin.php:322
 msgid "Source"
 msgstr ""
 
-#: src/Admin.php:310
+#: src/Admin.php:323
 msgid "Collections"
 msgstr ""
 
-#: src/Admin.php:328
+#: src/Admin.php:341
 msgid "Import a remote source"
 msgstr ""
 
 #. translators: %1$s: site engine (latte or twig)
-#: src/Admin.php:332
+#: src/Admin.php:345
 #, php-format
 msgid "The URL must be a %1$s block registry (catalog.json + blocks.zip), e.g. https://registry.buildy.tw/%1$s/wpfasty/v1.0.0/."
 msgstr ""
 
-#: src/Admin.php:336
+#: src/Admin.php:349
 msgid "Remote templates compile through an allowlist of tags and functions."
 msgstr ""
 
-#: src/Admin.php:341
+#: src/Admin.php:354
 msgid "Id"
 msgstr ""
 
-#: src/Admin.php:345
+#: src/Admin.php:358
 msgid "URL"
 msgstr ""
 
-#: src/Admin.php:349
+#: src/Admin.php:362
 msgid "Import"
 msgstr ""
 
 #. translators: 1: number of blocks, 2: number of collections
-#: src/Admin.php:371
+#: src/Admin.php:384
 #, php-format
 msgid "Imported %1$d blocks and %2$d collections."
-msgstr ""
-
-#: src/Chat.php:57
-msgid "Vault locked / secret unavailable: the host did not supply the Builder worker token. Unlock local-wp and retry. No model request was sent."
-msgstr ""
-
-#: src/Chat.php:65
-msgid "Configure Builder chat in Settings → Builder chat. No model request was sent."
-msgstr ""
-
-#: src/Chat.php:111
-msgid "Cursor API key"
-msgstr ""
-
-#: src/Chat.php:111
-msgid "Jev key (reserved; search unavailable)"
-msgstr ""
-
-#: src/Chat.php:111
-msgid "Local worker shared token (at least 32 characters)"
-msgstr ""
-
-#: src/Chat.php:112
-msgid "Clear"
-msgstr ""
-
-#: src/Chat.php:115
-msgid "available"
-msgstr ""
-
-#: src/Chat.php:115
-msgid "unavailable (vault locked)"
-msgstr ""
-
-#: src/Chat.php:116
-msgid "Managed by host (local-wp vault): the Cursor key, worker token and port are supplied per request and are never stored in this database."
-msgstr ""
-
-#: src/Chat.php:118
-#: src/Chat.php:121
-msgid "Managed by host"
-msgstr ""
-
-#: src/Chat.php:119
-msgid "an old stored copy exists"
-msgstr ""
-
-#: src/Chat.php:121
-msgid "Local worker port"
-msgstr ""
-
-#: src/Chat.php:128
-msgid "Not set"
-msgstr ""
-
-#: src/Chat.php:128
-msgid "Configured (masked)"
-msgstr ""
-
-#: src/Chat.php:131
-msgid "Local worker port (1024-65535, host fixed 127.0.0.1)"
-msgstr ""
-
-#: src/Chat.php:156
-msgid "Worker port must be an integer 1024-65535. Port unchanged."
 msgstr ""
 
 #: src/Compiler.php:170

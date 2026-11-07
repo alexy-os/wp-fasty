@@ -7,7 +7,23 @@
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "types": ["svelte"]
+    "types": [
+      "svelte"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "svelte": [
+        "./node_modules/svelte/types/index.d.ts"
+      ],
+      "svelte/*": [
+        "./node_modules/svelte/*"
+      ]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.svelte"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.svelte",
+    "../../../modules/builder-agent/editor/**/*.ts",
+    "../../../modules/builder-agent/editor/**/*.svelte"
+  ]
 }

@@ -1,4 +1,4 @@
-import type { BlockSpec, Item } from "../types";
+import type { BlockSpec, Item } from "../../../plugins/wpfasty-builder/editor/src/types";
 
 /** Read-only structural context for a future server agent. Never a summary DTO or HTML. */
 export function builderContext(source: string, items: Item[], blocks: BlockSpec[], selected: string | null) {

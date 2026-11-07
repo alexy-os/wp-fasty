@@ -1,6 +1,6 @@
 import {test, expect} from "bun:test";
-import {watchProgress} from "../src/chat/progress";
-import type {ChatProgress} from "../src/chat/client";
+import {watchProgress} from "../../../../modules/builder-agent/editor/progress";
+import type {ChatProgress} from "../../../../modules/builder-agent/editor/client";
 const event=(id="fixture-request",sequence=1):ChatProgress=>({requestId:id,state:"pending",sequence,tool:{name:"catalog_lookup",status:"running"}});
 const drain=()=>new Promise<void>(r=>queueMicrotask(()=>queueMicrotask(r)));
 test("NON-LIVE unmount/cancel aborts in-flight GET; late response cannot repaint disposed page",async()=>{

@@ -26,9 +26,10 @@ done
 rm -f "$OUT/wpfasty-types.zip"
 (cd plugins && zip -qr "$OUT/wpfasty-types.zip" wpfasty-types)
 
+# Manual Builder only: Agent lives outside the plugin in modules/builder-agent.
 # Page builder (wp-admin only; the editor sources and node_modules stay out, the built assets go in).
 rm -f "$OUT/wpfasty-builder.zip"
-BUILDER_X=("wpfasty-builder/worker/node_modules/*" "wpfasty-builder/worker/.env*" "wpfasty-builder/editor/*" "wpfasty-builder/primitives/*/ui8kit.lock.json" "wpfasty-builder/primitives/*/ui8kit.config.json")
+BUILDER_X=("wpfasty-builder/editor/*" "wpfasty-builder/primitives/*/ui8kit.lock.json" "wpfasty-builder/primitives/*/ui8kit.config.json")
 while read -r f; do [ -n "$f" ] && BUILDER_X+=("$f"); done < <(untracked plugins)
 (cd plugins && zip -qr "$OUT/wpfasty-builder.zip" wpfasty-builder -x "${BUILDER_X[@]}")
 # Twig build of the builder: the Latte runtime's bundled source and primitives stay out (ADR-001, K7).

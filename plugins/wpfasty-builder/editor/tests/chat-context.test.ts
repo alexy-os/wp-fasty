@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
-import { builderContext } from "../src/chat/context";
+import { builderContext } from "../../../../modules/builder-agent/editor/context";
 import type { BlockSpec, Item } from "../src/types";
 
 const catalog = [{ id: "hero", variants: [{ id: "centered", template: "blocks/hero-classic.latte" }] }] as BlockSpec[];
@@ -17,7 +17,7 @@ test("unknown variant is flagged, never converted to an invented template", () =
   expect(context.blocks[0]!.template).toBe(null);
 });
 test("panel delegates to protected WP API and never injects model HTML", () => {
-  const code = readFileSync(new URL("../src/chat/ChatPanel.svelte", import.meta.url), "utf8");
+  const code = readFileSync(new URL("../../../../modules/builder-agent/editor/ChatPanel.svelte", import.meta.url), "utf8");
   expect(code).not.toMatch(/fetch\(|@html|\.save\(/);
   expect(code).toContain("disabled={!ready || busy}");
   expect(code).toContain('await apply(requestId)');
@@ -26,7 +26,7 @@ test("panel delegates to protected WP API and never injects model HTML", () => {
 
 // Configuration is not provider readiness; history must fail closed for sending.
 test("chat remains unavailable without explicit safe server configuration metadata", () => {
-  const code = readFileSync(new URL("../src/chat/ChatPanel.svelte", import.meta.url), "utf8");
+  const code = readFileSync(new URL("../../../../modules/builder-agent/editor/ChatPanel.svelte", import.meta.url), "utf8");
   expect(code).toContain("data.availability?.configured === true");
   expect(code).toContain("disabled={!ready || busy}");
 });

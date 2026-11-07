@@ -140,3 +140,11 @@ Implemented foundation is not a promise to integrate every future item. Reassess
 quality/resource results, security review and owner approval. Keep search purely local unless a new decision
 explicitly approves an optional advisor; MCP is not inherently more accurate and is not needed for this MVP.
 Shared manager controls future independent workers; no VPS, Docker/Incus or public listener is required here.
+
+
+### Optional module boundary
+
+Implemented extraction: [ADR-003](adr-003-optional-builder-agent.md). Manual core and
+optional ModulY Agent are one codebase. Deployment still requires a trusted-signed
+module and a coordinated local-wp resource refresh; neither is silently installed
+on a user machine by this source change.

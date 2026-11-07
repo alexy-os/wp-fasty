@@ -50,8 +50,6 @@ final class Plugin
         self::$dir = dirname($file);
         Front::register();
         Rest::register();
-        Chat::register();
-        AgentPolicy::register();
         if (is_admin()) {
             Admin::register();
         }

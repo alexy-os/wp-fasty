@@ -15,7 +15,7 @@ final class Chat
     public static function port(): int
     {
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Host parameter, not form input; validPort strictly validates digits/range without transforming it.
-        $host = self::validPort($_SERVER['WPFB_WORKER_PORT'] ?? null);
+        $host = self::validPort(WordPressInput::server('WPFB_WORKER_PORT'));
         if (null !== $host) {
             return $host;
         }
@@ -41,7 +41,7 @@ final class Chat
     /** The host's worker holds the Cursor key itself (local-wp vault); WP must not send or store one. */
     public static function hostManagedKey(): bool
     {
-        return 'managed' === ($_SERVER['WPFB_WORKER_KEY'] ?? ''); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Host flag: exact fixed-literal comparison; never forwarded raw.
+        return 'managed' === WordPressInput::server('WPFB_WORKER_KEY'); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Host flag: exact fixed-literal comparison; never forwarded raw.
     }
 
     /**
@@ -155,17 +155,14 @@ final class Chat
 
     public static function settings(): void
     {
-        if (!current_user_can('manage_options')) {
+        if (!AgentModule::enabled() || !current_user_can('manage_options')) {
             wp_die('Insufficient capabilities.');
         }
         $settings = Cast::map(get_option(self::OPTION, []));
-        $method = '';
-        if (isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD'])) {
-            $method = sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD']));
-        }
+        $method = WordPressInput::server('REQUEST_METHOD');
         if ('POST' === $method && check_admin_referer('wpfb_chat_settings')) {
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Opaque credentials are not text-sanitized; mergeSettings enforces scalar type, the 4096-byte bound and the managed-host rule.
-            $settings = self::mergeSettings($settings, wp_unslash($_POST), self::hostManagedKey());
+            $settings = self::mergeSettings($settings, WordPressInput::form('wpfb_chat_settings'), self::hostManagedKey());
             if (isset($settings['_invalid_port'])) {
                 unset($settings['_invalid_port']);
                 echo '<div class="notice notice-error"><p>'.esc_html__('Worker port must be an integer 1024-65535. Port unchanged.', 'wpfasty-builder').'</p></div>';
@@ -185,7 +182,7 @@ final class Chat
     {
         $page = Cast::int($request['id']);
 
-        return false !== wp_verify_nonce($request->get_header('X-WP-Nonce') ?? '', 'wp_rest')
+        return AgentModule::enabled() && false !== wp_verify_nonce($request->get_header('X-WP-Nonce') ?? '', 'wp_rest')
             && 'page' === get_post_type($page) && current_user_can('edit_page', $page);
     }
 
@@ -260,25 +257,17 @@ final class Chat
 
             return new \WP_REST_Response($cache['result']);
         }
-        $entry = Store::get($page, true) ?? [];
-        $source = Cast::string(Cast::path($entry, 'metadata', 'source', 'value') ?? 'ui8kit');
-        $catalog = Sources::catalog($source);
-        if (null === $catalog) {
-            return new \WP_Error('wpfb_source', 'Unknown catalog source.', ['status' => 400]);
+        $context = PageOperations::snapshot($page);
+        if (is_wp_error($context)) {
+            return $context;
         }
-        $defs = [];
-        foreach (($catalog->forEditor(null)['blocks'] ?? []) as $block) {
-            $defs[] = ['id' => $block['id'], 'title' => $block['title'] ?? '', 'docs' => $block['docs'] ?? '', 'props' => $block['props'] ?? [], 'defaults' => $block['defaults'] ?? [], 'data' => $block['data'] ?? [], 'variants' => array_map(static fn (mixed $variant): array => ['id' => Cast::path($variant, 'id'), 'template' => Cast::path($variant, 'template'), 'set' => Cast::path($variant, 'set') ?? []], Cast::list($block['variants'] ?? []))];
-        }
-        if ([] === $defs) {
-            return new \WP_Error('wpfb_catalog_unavailable', 'Catalog definition unavailable.', ['status' => 503]);
-        }
+        $source = Cast::string($context['source']);
         try {
             $agentPolicy = AgentPolicy::context($page);
         } catch (\InvalidArgumentException) {
             return new \WP_Error('wpfb_agent_policy_invalid', 'Active Agent policy is invalid. Review its versioned configuration; no model request was sent.', ['status' => 503]);
         }
-        $context = ['source' => $source, 'target' => $catalog->runtime(), 'agentPolicy' => $agentPolicy, 'version' => Cast::int($entry['version'] ?? 0), 'records' => $catalog->meta()['records'] ?? [], 'catalog' => $defs, 'blocks' => Cast::path($entry, 'metadata', 'blocks', 'value') ?? []];
+        $context['agentPolicy'] = $agentPolicy;
         $result = self::worker('/turn', self::scope($page) + ['requestId' => $id, 'content' => $content, 'context' => $context], true);
         if (is_wp_error($result)) {
             return $result;
@@ -319,33 +308,10 @@ final class Chat
             if (($proposal['version'] ?? -1) !== DraftGuard::version($page)) {
                 return new \WP_Error('wpfb_revision_conflict', 'Draft changed. Request a new proposal.', ['status' => 409]);
             }
-            $catalog = Sources::catalog($proposal['source']);
-            if (null === $catalog || !is_array($proposal['blocks']) || count($proposal['blocks']) > 100) {
+            if (!is_array($proposal['blocks'] ?? null)) {
                 return new \WP_Error('wpfb_chat_schema', 'Invalid proposal.', ['status' => 400]);
             }
-            $ids = [];
-            foreach ($proposal['blocks'] as $block) {
-                if (!is_array($block) || !is_string($block['id'] ?? null) || !preg_match(Catalog::IDENT, $block['id']) || isset($ids[$block['id']]) || !is_array($block['props'] ?? null) || !is_array($block['bindings'] ?? null)) {
-                    return new \WP_Error('wpfb_chat_schema', 'Invalid structural block.', ['status' => 400]);
-                }
-                $ids[$block['id']] = true;
-                if (null === $catalog->variant(Cast::string($block['block'] ?? ''), Cast::string($block['variant'] ?? ''))) {
-                    return new \WP_Error('wpfb_chat_invalid_catalog', 'Proposal references unknown catalog block/variant.', ['status' => 400]);
-                }
-            }
-            $previous = Store::get($page, true) ?? [];
-            $layout = ['source' => $proposal['source'], 'blocks' => $proposal['blocks'], 'collection' => Cast::path($previous, 'metadata', 'collection', 'value') ?? ''];
-            $post = get_post($page);
-            if (!$post instanceof \WP_Post) {
-                return new \WP_Error('wpfb_chat_missing', 'Page no longer exists.', ['status' => 404]);
-            }
-            $base = $previous + ['id' => 'layout-'.$page, 'locale' => 'en', 'slug' => $post->post_name ?: 'page-'.$page, 'title' => $post->post_title, 'status' => 'draft', 'version' => 1, 'created_at' => gmdate('c'), 'updated_at' => gmdate('c')];
-            $base['page_id'] = $page;
-            [, $issues] = Layout::normalize($layout, $proposal['source'], $catalog, array_keys(DataSources::all()), $base);
-            if ([] !== $issues) {
-                return new \WP_Error('wpfb_chat_schema', 'Proposal failed Builder schema validation.', ['status' => 400, 'issues' => $issues]);
-            }
-            $saved = Store::save($page, $layout, false);
+            $saved = PageOperations::replaceLocked($page, $proposal['source'], $proposal['blocks'], Cast::int($proposal['version']));
             if (is_wp_error($saved)) {
                 return $saved;
             }
@@ -363,7 +329,7 @@ final class Chat
     private static function hostToken(): ?string
     {
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Host-injected opaque token; preserve exact bytes, with string/length validation below.
-        $value = $_SERVER['WPFB_WORKER_TOKEN'] ?? null;
+        $value = WordPressInput::server('WPFB_WORKER_TOKEN');
 
         return (is_string($value) && strlen($value) >= 32 && strlen($value) <= 4096) ? $value : null;
     }
@@ -396,6 +362,15 @@ final class Chat
             return new \WP_Error('wpfb_'.$auth['error'], $auth['message'], ['status' => 503]);
         }
         $token = $auth['token'];
+        $health = wp_remote_post(self::workerUrl().'/status', ['timeout' => 3, 'redirection' => 0,
+            'headers' => ['Content-Type' => 'application/json', 'Authorization' => 'Bearer '.$token], 'body' => '{}', 'limit_response_size' => 4096]);
+        if (is_wp_error($health)) {
+            return new \WP_Error('wpfb_worker_offline', 'Local Agent worker is unreachable. Manual Builder is unaffected.', ['status' => 503]);
+        }
+        if (200 !== wp_remote_retrieve_response_code($health) || !WorkerProtocol::compatible(json_decode(wp_remote_retrieve_body($health), true))) {
+            return new \WP_Error('wpfb_worker_incompatible', 'Refresh the installed worker resource: Agent protocol 1, local-search/1 and policy/1 are required. This operation sent no model request. Manual Builder is unaffected.', ['status' => 503]);
+        }
+
         if (null !== $auth['cursor']) {
             $body['credentials'] = ['cursor' => $auth['cursor']];
         }

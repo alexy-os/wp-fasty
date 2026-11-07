@@ -6,6 +6,7 @@ deptrac:
     - ./themes/wp-fasty/classes
     - ./themes/wp-fasty
     - ./plugins/wpfasty-builder/src
+    - ./modules/builder-agent/src
     - ./plugins/wpfasty-types/src
     - ./vendor/php-stubs/wordpress-stubs
   exclude_files:
@@ -36,7 +37,13 @@ deptrac:
         - { type: classLike, value: '^WPFasty\\Template\\.*' }
     - name: BuilderContract
       collectors:
-        - { type: classLike, value: '^WPFastyBuilder\\(ChatTelemetry|AdminPalette|AgentPolicyDefinition)$' }
+        - { type: classLike, value: '^WPFastyBuilder\\AdminPalette$' }
+    - name: AgentContract
+      collectors:
+        - { type: classLike, value: '^WPFastyBuilder\\(ChatTelemetry|AgentPolicyDefinition|WorkerProtocol)$' }
+    - name: AgentAdapter
+      collectors:
+        - { type: classLike, value: '^WPFastyBuilder\\(Chat|AgentPolicy|AgentModule|WordPressInput)$' }
     # Adapter\WordPress: hooks, theme service, plugins wiring into WP
     - name: Adapter\WordPress
       collectors:
@@ -50,7 +57,7 @@ deptrac:
           must:
             - { type: classLike, value: '^WPFastyBuilder\\.*' }
           must_not:
-            - { type: classLike, value: '^WPFastyBuilder\\(ChatTelemetry|AdminPalette|AgentPolicyDefinition)$' }
+            - { type: classLike, value: '^WPFastyBuilder\\(ChatTelemetry|AdminPalette|AgentPolicyDefinition|WorkerProtocol|Chat|AgentPolicy|AgentModule|WordPressInput)$' }
         - { type: classLike, value: '^WPFastyTypes\\.*' }
     # Templates: WordPress template-hierarchy entry files (index.php, single.php, functions.php, ...)
     - name: Templates
@@ -62,6 +69,8 @@ deptrac:
         - { type: directory, value: 'vendor/php-stubs/wordpress-stubs/.*' }
   ruleset:
     BuilderContract: ~
+    AgentContract: ~
+    AgentAdapter: [AgentContract, Adapter\WordPress, BuilderContract, WordPress]
     Core: ~
     ViewModel: [Core]
     Renderer: [Core, WordPress]

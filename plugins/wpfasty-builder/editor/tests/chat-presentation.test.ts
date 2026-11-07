@@ -1,7 +1,7 @@
 import {test, expect} from "bun:test";
 import {readFileSync} from "node:fs";
-import {messageParts, inlineParts, jsonTokens, usageLabel} from "../src/chat/presentation";
-import {chatCopy as copy} from "../src/chat/content";
+import {messageParts, inlineParts, jsonTokens, usageLabel} from "../../../../modules/builder-agent/editor/presentation";
+import {chatCopy as copy} from "../../../../modules/builder-agent/editor/content";
 test("NON-LIVE actual usage is not estimated; old/unreported history stays unavailable, reported zero stays zero", () => {
  expect(usageLabel()).toBe(copy.usageUnavailable);
  expect(usageLabel(null)).toBe(copy.usageUnavailable);
@@ -23,13 +23,13 @@ test("NON-LIVE JSON lexing is lossless for whitespace, escapes, Unicode and adve
  for(const value of [JSON.stringify({title:'x\"<>&',emoji:'☀',n:-1.4e20,none:null},null,2),'\n"unterminated \n - foo', '123\ntrue null <tag>']) expect(jsonTokens(value).map(t=>t.text).join("")).toBe(value);
 });
 test("chat components use escaped primitive composition, real poll callback, independent role cards and telemetry footer", () => {
- const read=(name:string)=>readFileSync(new URL('../src/chat/'+name,import.meta.url),'utf8');
+ const read=(name:string)=>readFileSync(new URL('../../../../modules/builder-agent/editor/'+name,import.meta.url),'utf8');
  for(const name of ["ChatPanel.svelte","MessageBody.svelte","CodeBox.svelte"]){expect(read(name)).not.toContain("{@html");expect(read(name)).not.toMatch(/<(?:div|p|span|pre|code|button)\b/);}
  const panel=read("ChatPanel.svelte");expect(panel).toContain('usageLabel(turn.usage)');expect(panel).toContain('watchProgress(progress, requestId');expect(panel).toContain('disposed = true; stopObserving?.()');expect(panel).toContain('wpfb-chat-user');expect(panel).toContain('wpfb-chat-assistant');
 });
 
 test('NON-LIVE policy provenance footer does not invent versions or render instruction text', async () => {
-  const {policyLabel} = await import('../src/chat/presentation');
+  const {policyLabel} = await import('../../../../modules/builder-agent/editor/presentation');
   expect(policyLabel(null)).toBeNull();
   expect(policyLabel({policyVersion:9,briefVersion:3,policyDigest:'sha256:'+'a'.repeat(64),loadedSkills:[{id:'page-review',version:2}]})).toBe('Policy v9 · brief v3 · skills page-review@2');
   expect(policyLabel({policyVersion:0,briefVersion:1,policyDigest:'',loadedSkills:[]})).toBeNull();

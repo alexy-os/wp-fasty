@@ -23,6 +23,7 @@ return RectorConfig::configure()
     ->withPaths([
         __DIR__.'/themes/wp-fasty/classes',
         __DIR__.'/plugins/wpfasty-builder/src',
+        __DIR__.'/modules/builder-agent/src',
         __DIR__.'/plugins/wpfasty-types/src',
     ])
     ->withBootstrapFiles([__DIR__.'/themes/wp-fasty/vendor/autoload.php'])

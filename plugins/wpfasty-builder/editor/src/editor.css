@@ -277,31 +277,4 @@ body:has(#wpfasty-builder) #wpbody-content { padding-bottom: 0; }
 
 /* Chat scaffold is read-only until a server-side runtime has been selected. No new canvas. */
 /* Native admin chat chrome; client/template branding is confined to the sandboxed canvas. */
-.wpfb-chat { display: flex; flex: 1; min-height: 0; flex-direction: column; gap: 16px; }
-.wpfb-palette:has(.wpfb-chat) { overflow: hidden; }
-.wpfb-chat-header, .wpfb-chat-composer { display: flex; flex: 0 0 auto; flex-direction: column; gap: 8px; }
-.wpfb-chat-header { padding-bottom: 8px; border-bottom: 1px solid var(--wpfb-line); }
-.wpfb-chat-transcript { min-height: 80px; flex: 1 1 auto; overflow: auto; display: flex; flex-direction: column; gap: 16px; scrollbar-gutter: stable; }
-.wpfb-chat-turn { display: flex; flex-direction: column; gap: 8px; }
-.wpfb-chat-message { min-width: 0; padding: 8px; border: 1px solid var(--wpfb-line); border-radius: var(--wpfb-radius); display: flex; flex-direction: column; gap: 8px; overflow-wrap: anywhere; }
-.wpfb-chat-user { margin-left: 16px; background: var(--wpfb-surface-muted); }
-.wpfb-chat-assistant { margin-right: 8px; border-left: 2px solid var(--wpfb-accent); background: var(--wpfb-surface); }
-.wpfb-chat-role { font-size: 11px; font-weight: 600; letter-spacing: .02em; color: var(--wpfb-text-muted); }
-.wpfb-chat-prose { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.6; }
-.wpfb-chat-prose code { background: var(--wpfb-surface-muted); font-size: 11px; }
-.wpfb-chat-caption, .wpfb-chat-usage { font-size: 11px; line-height: 1.5; color: var(--wpfb-text-muted); overflow-wrap: anywhere; }
-.wpfb-chat-usage { border-top: 1px solid var(--wpfb-line-soft); padding-top: 8px; font-variant-numeric: tabular-nums; }
-.wpfb-chat-proposal { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--wpfb-line-soft); padding-top: 8px; }
-.wpfb-chat-code { margin: 0; max-height: 240px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: 8px; border: 1px solid var(--wpfb-line); border-radius: var(--wpfb-radius); background: var(--wpfb-surface-muted); }
-.wpfb-chat-code code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; line-height: 1.6; }
-.wpfb-code-key { color: var(--wpfb-code-key); }
-.wpfb-code-string { color: var(--wpfb-code-string); }
-.wpfb-code-number, .wpfb-code-literal { color: var(--wpfb-code-number); }
-.wpfb-chat-composer { border-top: 1px solid var(--wpfb-line); padding-top: 8px; }
-.wpfb-chat textarea { width: 100%; resize: vertical; max-height: 160px; background: var(--wpfb-surface); color: var(--wpfb-text); border-color: var(--wpfb-line); }
-.wpfb-chat-disclosure { font-size: 11px !important; text-align: left; white-space: normal !important; }
-.wpfb-chat-context { max-height: 200px; overflow: auto; }
-.wpfb-chat-notice { border-left: 2px solid var(--wpfb-accent); padding: 8px; background: var(--wpfb-surface-muted); font-size: 12px; overflow-wrap: anywhere; }
-@media screen and (max-width: 782px) { .wpfb-app { height: calc(100dvh - var(--wp-admin--admin-bar--height, 46px)); } }
-
-.wpfb-palette-content { display: flex; flex: 1; min-height: 0; flex-direction: column; }
+.wpfb-feature {display: flex; flex: 1; min-height: 0; flex-direction: column;}

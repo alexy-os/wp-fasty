@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Text from "../ui/text/Text.svelte";
+  import Text from "../../../plugins/wpfasty-builder/editor/src/ui/text/Text.svelte";
   import CodeBox from "./CodeBox.svelte";
   import { messageParts, inlineParts } from "./presentation";
   let { value }: { value: string } = $props();

@@ -1,4 +1,4 @@
-import { chatCopy } from "./chat/content";
+export const previewCopy = { stalePreview: "Draft changed. Reload before refreshing the preview.", previewFailed: "The saved server preview could not be loaded. Reload and retry." };
 
 /** Keep the real, nonce-protected server preview; change only its cache key. */
 export function previewSource(url: string, version: number, reload: number): string {
@@ -10,7 +10,7 @@ export function previewSource(url: string, version: number, reload: number): str
 
 export function requireDraftVersion(actual: unknown, expected: number): void {
   if (!Number.isSafeInteger(expected) || expected < 0 || !Number.isSafeInteger(actual) || Number(actual) < expected) {
-    throw new Error(chatCopy.stalePreview);
+    throw new Error(previewCopy.stalePreview);
   }
 }
 
@@ -38,7 +38,7 @@ export class PreviewReload {
     const pending = this.pending;
     this.pending = null;
     clearTimeout(pending.timer);
-    pending.reject(new Error(chatCopy.previewFailed));
+    pending.reject(new Error(previewCopy.previewFailed));
   }
 }
 

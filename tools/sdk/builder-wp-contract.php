@@ -2,6 +2,7 @@
 
 /** NON-LIVE: wp --path=OUR_ISOLATED_WP eval-file tools/sdk/builder-wp-contract.php. Never call on a customer site. */
 require_once dirname(__DIR__, 2).'/plugins/wpfasty-builder/wpfasty-builder.php';
+require_once __DIR__.'/agent-module-fixture.php';
 use WPFastyBuilder\Chat;
 use WPFastyBuilder\DraftGuard;
 use WPFastyBuilder\Store;
@@ -40,6 +41,9 @@ $settings = static fn () => ['worker_port' => $fixturePort, 'worker_token' => st
 $http = static function ($pre, $args, $url) use ($fixturePort) {
     if (!str_starts_with($url, 'http://127.0.0.1:'.$fixturePort.'/')) {
         return $pre;
+    }
+    if (str_ends_with($url, '/status')) {
+        return ['response' => ['code' => 200], 'headers' => [], 'body' => wp_json_encode(['protocol' => 'wpfasty-agent/1', 'capabilities' => ['local-search/1', 'policy/1']])];
     }
     if (str_ends_with($url, '/progress')) {
         $scope = json_decode($args['body'], true);

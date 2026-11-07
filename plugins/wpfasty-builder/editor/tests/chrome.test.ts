@@ -25,7 +25,7 @@ describe("canvas block toolbar", () => {
 describe("scrollbars", () => {
   test("every scrolling area of the editor has .wpfb-scroll", () => {
     const css = read("editor.css");
-    const markup = ["App.svelte", "BlockCards.svelte", "NewPage.svelte", "TemplatePages.svelte", "fields/LinkPicker.svelte", "chat/ChatPanel.svelte", "chat/CodeBox.svelte"].map(read).join("\n");
+    const markup = ["App.svelte", "BlockCards.svelte", "NewPage.svelte", "TemplatePages.svelte", "fields/LinkPicker.svelte", "../../../../modules/builder-agent/editor/ChatPanel.svelte", "../../../../modules/builder-agent/editor/CodeBox.svelte"].map(read).join("\n");
     const scrollers = [...css.matchAll(/^([^{\n]+)\{[^}]*overflow(?:-[xy])?: (?:auto|scroll)/gm)]
       .flatMap((m) => m[1]!.split(",").map((s) => s.trim()))
       .map((s) => s.replace(/^\./, ""));

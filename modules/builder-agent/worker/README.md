@@ -1,3 +1,7 @@
+> This resource now belongs to optional ModulY `builder-agent`, not manual Builder.
+> Read [module setup](../README.md) and [ADR-003](../../../docs/agent/adr-003-optional-builder-agent.md)
+> before deployment. Existing local-wp’s 873b00d resource/file-list does not update itself.
+
 # Builder local Node worker — candidate, not production/user-machine accepted
 
 This extends the existing visual Builder, not the separate Creator plugin. No CR,

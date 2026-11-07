@@ -1,9 +1,10 @@
 <script lang="ts">
-  import ChatPanel from "./chat/ChatPanel.svelte";
+  import {featureCopy} from "./features";
+  import OptionalPanel from "./OptionalPanel.svelte";
   import UiButton from "./ui/button/Button.svelte";
   import UiBox from "./ui/box/Box.svelte";
-  import { chatCopy } from "./chat/content";
-  let paletteTab = $state<"blocks" | "chat">("blocks");
+  import { previewCopy } from "./preview";
+  let paletteTab = $state("blocks");
   import { onMount, untrack, tick } from "svelte";
   import { applyAndRefresh, previewSource, PreviewReload, requireDraftVersion } from "./preview";
   import FieldRenderer from "./fields/FieldRenderer.svelte";
@@ -127,7 +128,7 @@
       if (!config.source && typeof getPath(meta, ["source", "value"]) === "string") source = getPath(meta, ["source", "value"]) as string;
       store.load(saved.map((b) => ({ ...b, props: isObj(b.props) ? b.props : {}, bindings: isObj(b.bindings) ? b.bindings : {} })));
       draftVersion = Number(layout.layout?.version ?? 0);
-      if (!layout.previewUrl) throw new Error(chatCopy.previewFailed);
+      if (!layout.previewUrl) throw new Error(previewCopy.previewFailed);
       previewUrl = layout.previewUrl;
       if (!applying) previewRevision = draftVersion;
       published = layout.published;
@@ -284,7 +285,7 @@
     }
   }
 
-  async function applyChat(requestId: string) {
+  async function applyExternal(requestId: string, operation: (id: string) => Promise<{version: number}>) {
     if (applying) return;
     applying = true;
     clearTimeout(timer);
@@ -293,7 +294,7 @@
     try {
       await applyAndRefresh(requestId, {
         flush: async () => { await flush(); if (status === "error") throw new Error(message); },
-        apply: client.chatApply,
+        apply: operation,
         load: init,
         refresh: async () => {
           reloadAfterSave = false;
@@ -650,15 +651,18 @@
 
   <div class="wpfb-main">
     <aside id="wpfb-palette" class="wpfb-palette wpfb-scroll" aria-label="Blocks" hidden={!layout.leftOpen}>
-      <UiBox tag="div" class="wpfb-section wpfb-seg" role="group" aria-label={chatCopy.panel}>
-        <UiButton aria-pressed={paletteTab === "blocks" ? "true" : "false"} aria-controls="wpfb-palette-content" onclick={() => (paletteTab = "blocks")}>{chatCopy.blocks}</UiButton>
-        <UiButton aria-pressed={paletteTab === "chat" ? "true" : "false"} aria-controls="wpfb-palette-content" onclick={() => (paletteTab = "chat")}>{chatCopy.tab}</UiButton>
+      {#if config.features?.length}
+      <UiBox tag="div" class="wpfb-section wpfb-seg" role="group" aria-label={featureCopy.panels}>
+        <UiButton aria-pressed={paletteTab === "blocks" ? "true" : "false"} aria-controls="wpfb-palette-content" onclick={() => (paletteTab = "blocks")}>{featureCopy.blocks}</UiButton>
+        {#each config.features as feature (feature.id)}
+        <UiButton aria-pressed={paletteTab === feature.id ? "true" : "false"} aria-controls="wpfb-palette-content" onclick={() => (paletteTab = feature.id)}>{feature.label}</UiButton>
+        {/each}
       </UiBox>
+      {/if}
       <UiBox tag="div" id="wpfb-palette-content" class="wpfb-palette-content">
-      {#if paletteTab === "chat"}
-        <ChatPanel {source} items={store.items} blocks={[...blocks.values()]} selected={store.selected}
-          history={client.chatHistory} progress={client.chatProgress} send={async (content, requestId) => { await flush(); if (status === "error") throw new Error(message); return client.chatTurn(content, requestId); }}
-          apply={applyChat} />
+      {#if paletteTab !== "blocks" && config.features?.some(feature => feature.id === paletteTab)}
+        <OptionalPanel id={paletteTab} context={{config, source, items: store.items, blocks: [...blocks.values()], selected: store.selected,
+          request: client.request, beforeOperation: async () => {await flush(); if (status === "error") throw new Error(message);}, apply: applyExternal}} />
       {:else}
       <div class="wpfb-section">
         <label class="wpfb-heading" for="wpfb-collection">Collection</label>

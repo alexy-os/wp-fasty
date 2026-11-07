@@ -1,6 +1,6 @@
 /** NON-LIVE, reproducible local retrieval microbenchmark. Not tokens/model latency or Windows acceptance. */
 import {readFileSync} from 'node:fs';
-import {catalogSession,loadCatalog} from '../../plugins/wpfasty-builder/worker/catalog-search.mjs';
+import {catalogSession,loadCatalog} from '../../modules/builder-agent/worker/catalog-search.mjs';
 const catalog=JSON.parse(readFileSync(new URL('../../plugins/wpfasty-builder/sources/ui8kit/latte/catalog.json',import.meta.url)));
 const before=process.memoryUsage(),cpu=process.cpuUsage(),start=performance.now();
 const resource=await loadCatalog();

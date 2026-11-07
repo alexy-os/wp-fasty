@@ -22,6 +22,7 @@
     <file>index.php</file>
     <file>themes</file>
     <file>plugins</file>
+    <file>modules</file>
     <file>presets</file>
     <file>tools</file>
     <file>tests</file>
@@ -100,6 +101,7 @@
                 <element key="themes/wp-fasty/classes" value="WPFasty"/>
                 <element key="plugins/wpfasty-types/src" value="WPFastyTypes"/>
                 <element key="plugins/wpfasty-builder/src" value="WPFastyBuilder"/>
+                <element key="modules/builder-agent/src" value="WPFastyBuilder"/>
                 <element key="tests" value="WPFasty\Tests"/>
             </property>
         </properties>

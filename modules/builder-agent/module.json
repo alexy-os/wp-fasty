@@ -1,0 +1,49 @@
+{
+    "$schema": "https://moduly.phpfasty.dev/schema/module-1.json",
+    "id": "builder-agent",
+    "name": "Builder Agent",
+    "version": "0.1.0",
+    "publisher": "phpfasty",
+    "license": "GPL-2.0-or-later",
+    "description": "Optional Builder Agent; requires Builder page operations API 1 and authenticated worker capabilities. Manual Builder needs neither ModulY nor Node.",
+    "requires": {
+        "core": "^0.1",
+        "php": ">=8.2",
+        "wp": ">=7.1.4"
+    },
+    "provides": {
+        "features": [
+            "builder-agent"
+        ],
+        "types": [],
+        "capabilities": []
+    },
+    "permissions": [
+        "http:outbound:127.0.0.1",
+        "db:options",
+        "db:postmeta",
+        "rest:admin",
+        "capabilities:add"
+    ],
+    "entry": "WPFastyBuilder\\AgentModule",
+    "autoload": {
+        "psr-4": {
+            "WPFastyBuilder\\": "src/"
+        }
+    },
+    "settings": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+    },
+    "endpoints": {
+        "actions": [
+            "wpfb_agent_asset"
+        ],
+        "rest": [
+            "wpfasty-builder/v1/chat",
+            "wpfasty-builder/v1/agent-policy",
+            "wpfasty-builder/v1/agent-brief"
+        ]
+    }
+}

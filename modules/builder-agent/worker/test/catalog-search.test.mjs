@@ -7,8 +7,8 @@ import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {catalogSession,loadCatalog,catalogTool,validateIndex} from '../catalog-search.mjs';
 import {sdkRunner} from '../sdk.mjs';
-const catalog=JSON.parse(readFileSync(new URL('../../sources/ui8kit/latte/catalog.json',import.meta.url)));
-const context=(target='latte')=>({source:'ui8kit',target,catalog:target==='latte'?catalog.blocks:JSON.parse(readFileSync(new URL('../../sources/ui8kit/twig/catalog.json',import.meta.url))).blocks,records:catalog.records,blocks:[],version:1});
+const catalog=JSON.parse(readFileSync(new URL('../../../../plugins/wpfasty-builder/sources/ui8kit/latte/catalog.json',import.meta.url)));
+const context=(target='latte')=>({source:'ui8kit',target,catalog:target==='latte'?catalog.blocks:JSON.parse(readFileSync(new URL('../../../../plugins/wpfasty-builder/sources/ui8kit/twig/catalog.json',import.meta.url))).blocks,records:catalog.records,blocks:[],version:1});
 const resource=await loadCatalog();
 test('NON-LIVE official Stock query parity after installed-target intersection; facets and soft ranking',async()=>{
  const ctx=context(),session=await catalogSession(ctx,resource);

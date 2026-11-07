@@ -1,6 +1,9 @@
 <?php
 
-/** NON-LIVE on OUR isolated WP only. Disposable users/pages; restore nonsensitive policy option. */
+require_once dirname(__DIR__, 2).'/plugins/wpfasty-builder/wpfasty-builder.php';
+require_once __DIR__.'/agent-module-fixture.php';
+
+/* NON-LIVE on OUR isolated WP only. Disposable users/pages; restore nonsensitive policy option. */
 use WPFastyBuilder\AgentPolicy as Policy;
 use WPFastyBuilder\AgentPolicyDefinition as Definition;
 

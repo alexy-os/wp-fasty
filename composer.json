@@ -25,7 +25,10 @@
     "autoload-dev": {
         "psr-4": {
             "WPFasty\\Tests\\": "tests/",
-            "WPFastyBuilder\\": "plugins/wpfasty-builder/src/",
+            "WPFastyBuilder\\": [
+                "plugins/wpfasty-builder/src/",
+                "modules/builder-agent/src/"
+            ],
             "WPFastyTypes\\Codex\\": "plugins/wpfasty-types/src/Codex/"
         }
     },

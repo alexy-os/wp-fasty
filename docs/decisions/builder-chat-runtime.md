@@ -76,7 +76,7 @@ official Cursor SDK1.3.0. No separate Creator data/plugin was removed. No server
 was restarted on the external VPS and no provider key/model turn was used.
 
 The chosen implementation and operator instructions live in
-`plugins/wpfasty-builder/worker/README.md`. It preserves catalog-resolved
+`modules/builder-agent/worker/README.md`. It preserves catalog-resolved
 structural proposals, existing Latte/Twig output, explicit draft apply, per-page
 SQLite history, request idempotency and shared revision locks. No decorative
 model picker; Grok4.7 is selected only if the actual Cursor account lists it.

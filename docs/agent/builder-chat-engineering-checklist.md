@@ -74,3 +74,22 @@ agent acceptance. No model requests are needed for the checks below.
   unauthorized/CSRF/XSS/CAS/retention/page-isolation regression tests added.
 - No direct SDK systemPrompt override, network search/updater, vault/schema migration,
   production Windows/live-model/browser acceptance or owner's resource update claimed.
+
+
+## Optional Agent extraction (ADR-003)
+
+See [actual boundaries, prior ModulY audit evidence and rollout limitations](adr-003-optional-builder-agent.md).
+Regression fixtures use the real published ModulY installer/kernel, not a fabricated
+module API. Core-alone and disabled/offline Agent preserve manual editing and existing
+policy/history. Symfony/security rules and the immutable sandbox stay enabled.
+Production signing, refreshed local-wp resources and Windows GUI verification remain
+release prerequisites rather than silently assumed test coverage.
+
+Local extraction evidence: 498 PHPUnit tests / 7723 assertions; 112 editor tests;
+26 NON-LIVE worker tests; maximum PHPStan, Deptrac zero violations and Rector clean;
+Symfony PHPCS zero errors (existing WordPress/style warnings remain visible).
+Both core/Agent JS+CSS bundles rebuild byte-identically. Renderer parity passes,
+482 variants per engine match render-block fragments; UI8Kit source, 964 block
+cases and 86 theme cases report zero problems. Real ModulY install/enable/disable/
+re-enable and PHP→Node HTTP fixtures pass with only expected success audit records.
+These are local deterministic results; GitHub's final run remains the CI authority.

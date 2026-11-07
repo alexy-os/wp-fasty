@@ -1,4 +1,4 @@
-import type { Item } from "../types";
+import type { Item } from "../../../plugins/wpfasty-builder/editor/src/types";
 export interface ChatResult { answer: string; content: string; proposal: Item[] | null; baseVersion: number; usage?: TokenUsage | null; agentPolicy?: AgentPolicyProvenance | null }
 export interface ChatTurn extends Partial<ChatResult> { requestId: string; state: string; error?: string; application?: ProposalApplication }
 

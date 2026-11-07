@@ -7,10 +7,14 @@ parameters:
     paths:
         - themes/wp-fasty/classes
         - plugins/wpfasty-builder/src
+        - modules/builder-agent/src
         - plugins/wpfasty-types/src
     bootstrapFiles:
         - themes/wp-fasty/vendor/autoload.php
     scanFiles:
+        - tests/fixtures/moduly-sdk/ModuleInterface.php
+        - tests/fixtures/moduly-sdk/HostInterface.php
+        - tests/fixtures/moduly-sdk/ModuleContext.php
         - themes/wp-fasty/includes/base-theme.php
         - plugins/wpfasty-builder/sources/ui8kit/latte/php/OrganismExtension.php
         - plugins/wpfasty-builder/sources/ui8kit/twig/php/OrganismExtension.php

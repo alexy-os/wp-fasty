@@ -2,6 +2,7 @@ export type Json = string | number | boolean | null | Json[] | { [k: string]: Js
 export type Obj = { [k: string]: Json };
 
 export interface Config {
+  features?: {id: string; label: string}[];
   rest: string; nonce: string; page: number; title: string; source: string; collection: string;
   permalink: string; canPublish: boolean; editUrl: string;
   /** the current user id (per-user layout in localStorage); absent in older bootstrap data */

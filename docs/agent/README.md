@@ -25,3 +25,5 @@ Rules for editing this folder:
 - [Roadmap: local foundation, Jev/evidence, assessor cabinet, personal blocks](builder-agent-roadmap.md)
 - [ADR-002: governance and implementation boundaries](adr-002-builder-agent-governance.md)
 - [Implemented local search](builder-local-search.md) · [Implemented Agent policy](builder-agent-policy.md)
+
+- [ADR-003: optional Builder Agent / prior ModulY audit and rollout](adr-003-optional-builder-agent.md)

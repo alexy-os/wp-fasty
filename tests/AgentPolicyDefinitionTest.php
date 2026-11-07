@@ -71,7 +71,7 @@ final class AgentPolicyDefinitionTest extends TestCase
 
     public function testBundledDefaultAndEffectivePreviewMatchActualWorkerPayload(): void
     {
-        $bundled = json_decode((string) file_get_contents(dirname(__DIR__).'/plugins/wpfasty-builder/worker/policy-default.json'), true);
+        $bundled = json_decode((string) file_get_contents(dirname(__DIR__).'/modules/builder-agent/worker/policy-default.json'), true);
         self::assertSame(Policy::defaults(), $bundled['definition']);
         $preview = AgentPolicy::preview($bundled);
         self::assertSame(json_decode((string) file_get_contents(__DIR__.'/fixtures/agent-policy/effective.v1.json'), true), $preview);

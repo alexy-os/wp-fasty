@@ -31,6 +31,11 @@ final class Admin
     /** the editor is enqueued on this request (a page is open in the builder) */
     private static bool $editor = false;
 
+    public static function isEditor(string $hook): bool
+    {
+        return '' !== self::$hook && self::$hook === $hook;
+    }
+
     public static function register(): void
     {
         add_action('admin_menu', [self::class, 'menu']);
@@ -186,6 +191,7 @@ final class Admin
             $collection = Cast::string(Cast::path($entry, 'metadata', 'collection', 'value') ?? '');
         }
         $config = $common + [
+            'features' => apply_filters('wpfasty_builder_features', []),
             'page' => $id,
             'title' => get_the_title($id),
             'source' => $source,

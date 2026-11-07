@@ -51,7 +51,7 @@ final class ArchitectureTest extends TestCase
     {
         $wp = self::wordPressFunctions();
         foreach (['ChatTelemetry', 'AdminPalette', 'AgentPolicyDefinition'] as $class) {
-            $file = dirname(__DIR__).'/plugins/wpfasty-builder/src/'.$class.'.php';
+            $file = dirname(__DIR__).('AdminPalette' === $class ? '/plugins/wpfasty-builder/src/' : '/modules/builder-agent/src/').$class.'.php';
             foreach (self::functionCalls((string) file_get_contents($file)) as $name) {
                 self::assertArrayNotHasKey(strtolower($name), $wp, $class.': '.$name);
             }

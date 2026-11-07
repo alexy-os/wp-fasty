@@ -6,12 +6,12 @@
   import { usageLabel, policyLabel } from "./presentation";
   import MessageBody from "./MessageBody.svelte";
   import CodeBox from "./CodeBox.svelte";
-  import Block from "../compose/Block.svelte";
-  import Text from "../ui/text/Text.svelte";
-  import Box from "../ui/box/Box.svelte";
-  import Button from "../ui/button/Button.svelte";
-  import Textarea from "../ui/textarea/Textarea.svelte";
-  import type { BlockSpec, Item } from "../types";
+  import Block from "../../../plugins/wpfasty-builder/editor/src/compose/Block.svelte";
+  import Text from "../../../plugins/wpfasty-builder/editor/src/ui/text/Text.svelte";
+  import Box from "../../../plugins/wpfasty-builder/editor/src/ui/box/Box.svelte";
+  import Button from "../../../plugins/wpfasty-builder/editor/src/ui/button/Button.svelte";
+  import Textarea from "../../../plugins/wpfasty-builder/editor/src/ui/textarea/Textarea.svelte";
+  import type { BlockSpec, Item } from "../../../plugins/wpfasty-builder/editor/src/types";
   import { builderContext } from "./context";
   import { chatCopy as copy } from "./content";
 
