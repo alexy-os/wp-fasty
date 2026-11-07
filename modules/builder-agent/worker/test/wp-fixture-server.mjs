@@ -12,7 +12,7 @@ const server=workerServer({token:'nonlive-'.repeat(5),store,runner:async body=>{
  if(body.content.includes('NON-LIVE rewrite existing text')){
   assert.equal(body.context.blocks.length,3);
   const proposal=body.context.blocks.map(old=>{
-   const changed={...old,props:{...old.props,title:'Мастерская: '+old.id}};
+   const changed={...old,props:{...old.props,title:'Мастерская: '+old.id},bindings:{...old.bindings}};
    assert.throws(()=>search.validateChanges([changed]),/catalog_details_required/);
    const details=search.details({blockId:old.block,variant:old.variant});
    assert.ok(details.props.some(p=>p.name==='title'&&p.type==='string'));
