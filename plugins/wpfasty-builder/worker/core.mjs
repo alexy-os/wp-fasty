@@ -35,7 +35,7 @@ export class TurnStore {
   try {
    const result=await run(body);
    if(result.proposal) validateProposal(result.proposal,context.catalog);
-   const safe={content,source:context.source,answer:String(result.answer||'').slice(0,32000),proposal:result.proposal||null,baseVersion:context.version};
+   const safe={content,source:context.source,answer:String(result.answer||'').slice(0,32000),proposal:result.proposal||null,baseVersion:context.version,...(result.evidence?{evidence:result.evidence}:{})};
    this.db.prepare("UPDATE turns SET state='done',result=? WHERE scope=? AND request=?").run(JSON.stringify(safe),scope,requestId);
    return safe;
   } catch(e) {

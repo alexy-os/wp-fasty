@@ -2,7 +2,7 @@
 import {test} from 'node:test';
 import {request} from 'node:http';
 import assert from 'node:assert/strict';
-import {mkdtempSync} from 'node:fs';
+import {mkdtempSync,readFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {TurnStore,validateProposal} from '../core.mjs';
@@ -54,8 +54,9 @@ test('NON-LIVE interrupted durable page fails closed after process restart',asyn
 test('NON-LIVE SDK adapter propagates exact Grok id, custom-only tools and no ambient config',async()=>{
  const {sdkRunner}=await import('../sdk.mjs');let options,sent,closed=false;
  const fake={Cursor:{models:{list:async o=>{assert.equal(o.apiKey,'TEST_ONLY');return [{id:'grok-4.7'}];}}},JsonlLocalAgentStore:class{},Agent:{create:async o=>{options=o;return {send:async text=>{sent=text;return {wait:async()=>({status:'finished',model:{id:'grok-4.7'},result:'NON-LIVE SDK contract'}),cancel:async()=>{}};},close:()=>{closed=true;}};}}};
- const run=sdkRunner(mkdtempSync(join(tmpdir(),'wpfb-sdk-')),async()=>fake);
- await run({...body(),credentials:{cursor:'TEST_ONLY'}});
+ const dir=mkdtempSync(join(tmpdir(),'wpfb-sdk-'));const run=sdkRunner(dir,async()=>fake);
+ const result=await run({...body(),credentials:{cursor:'TEST_ONLY'}});
+ assert.equal(result.evidence.selectedModelId,'grok-4.7');assert.equal(result.evidence.reportedModelId,'grok-4.7');assert.ok(result.evidence.elapsedMs>=0);assert.equal(readFileSync(join(dir,'live-audit.jsonl'),'utf8').includes('TEST_ONLY'),false);
  assert.equal(options.model.id,'grok-4.7');assert.deepEqual(options.tools,['mcp']);assert.deepEqual(options.mcpServers,{});assert.deepEqual(options.local.settingSources,[]);assert.equal(options.local.enableAgentRetries,false);assert.equal(closed,true);
  assert.deepEqual(Object.keys(options.local.customTools).sort(),['catalog_lookup','propose_layout']);assert.equal(sent.includes('TEST_ONLY'),false);
  fake.Cursor.models.list=async()=>[{id:'other-model'}];await assert.rejects(()=>run({...body(),credentials:{cursor:'TEST_ONLY'}}),/configured_grok_model_unavailable/);
