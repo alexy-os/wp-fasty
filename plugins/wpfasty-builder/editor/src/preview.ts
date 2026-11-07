@@ -1,10 +1,11 @@
 export const previewCopy = { stalePreview: "Draft changed. Reload before refreshing the preview.", previewFailed: "The saved server preview could not be loaded. Reload and retry." };
 
-/** Keep the real, nonce-protected server preview; change only its cache key. */
-export function previewSource(url: string, version: number, reload: number): string {
+/** Keep the real, nonce-protected server preview; carry a transient server-rendered color scheme, never a live preference. */
+export function previewSource(url: string, version: number, reload: number, scheme: "light" | "dark" = "light"): string {
   if (!url) return "";
   const next = new URL(url);
   next.searchParams.set("wpfb_r", `${version}-${reload}`);
+  next.searchParams.set("wpfb_scheme", scheme);
   return next.href;
 }
 

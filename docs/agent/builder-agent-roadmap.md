@@ -33,6 +33,15 @@ No Jev calls, dataset collection/export, assessor service, personal-block runtim
   Plugin/worker releases must ship the whole worker resource (catalog, engine, policy files); updating the plugin
   does not silently refresh an already installed local-wp resource. No new ZIP is delivered in this workstream.
 
+## Theme inheritance — accepted t211, implemented independently of Agent
+
+[ADR-004](adr-004-theme-appearance-inheritance.md), [theme author contract](../theme-authoring.md#7-one-appearance-source-for-live-pages-and-builder).
+Live Builder pages/draft iframe inherit active theme tokens and actual supplied font enqueues through the same
+WordPress theme pipeline; admin appearance stays native. Preview light/dark is server-rendered and transient,
+with unchanged sandbox and no Agent/ModulY/Node requirement. Existing WP Additional CSS is update-safe and scoped
+to the exact active child; no implicit transfer to another theme. Import/export of tokens remains **future only**;
+no SkinDefinition engine, catalog skin indexing or new settings/updater service is part of this implementation.
+
 ## 1. Optional Jev advisor and local evidence dataset — future
 
 ### Jev decision adapter (not a replacement search provider)

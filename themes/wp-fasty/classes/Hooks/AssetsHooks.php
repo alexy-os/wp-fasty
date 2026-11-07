@@ -10,6 +10,7 @@ final class AssetsHooks extends AbstractHooks
     {
         $this->addAction('wp_enqueue_scripts', 'enqueue');
         $this->addAction('wp_head', 'printColorSchemeScript', 1);
+        add_filter('language_attributes', [$this, 'languageAttributes']);
     }
 
     /**
@@ -18,12 +19,32 @@ final class AssetsHooks extends AbstractHooks
      */
     public function printColorSchemeScript(): void
     {
+        if (null !== $this->colorScheme()) {
+            return;
+        }
         wp_print_inline_script_tag(
             '(function(){var d;try{var s=localStorage.getItem("wpfasty-color-scheme");'
             .'d=s?s==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;}catch(e){d=false;}'
             .'document.documentElement.classList.toggle("dark",d);})();',
             ['id' => 'wpfasty-color-scheme']
         );
+    }
+
+    /** A forced server scheme is request-local (e.g. an authenticated, script-free editor preview). */
+    public function languageAttributes(string $attributes): string
+    {
+        $scheme = $this->colorScheme();
+        if (null === $scheme) {
+            return $attributes;
+        }
+        $tag = new \WP_HTML_Tag_Processor('<html '.$attributes.'>');
+        $tag->next_tag();
+        $tag->remove_class('dark');
+        if ('dark' === $scheme) {
+            $tag->add_class('dark');
+        }
+
+        return substr($tag->get_updated_html(), 6, -1);
     }
 
     public function enqueue(): void
@@ -39,10 +60,17 @@ final class AssetsHooks extends AbstractHooks
             [],
             $parentVer
         );
+        $parentFonts = $this->fonts(
+            'wpfasty-fonts',
+            get_template_directory(),
+            get_template_directory_uri(),
+            ['wpfasty-theme'],
+            $parentVer
+        );
         wp_enqueue_style(
             'wpfasty-tokens',
             get_template_directory_uri().'/assets/css/tokens.css',
-            ['wpfasty-theme'],
+            $parentFonts,
             $parentVer
         );
 
@@ -92,16 +120,33 @@ final class AssetsHooks extends AbstractHooks
         $tokenDeps = ['wpfasty-tokens'];
         $baseDir = function_exists('wpfasty_base_theme_dir') ? wpfasty_base_theme_dir() : '';
         $baseTokens = '' !== $baseDir && function_exists('wpfasty_base_theme_uri');
-        if ($baseTokens && is_file($baseDir.'/assets/css/tokens.css')) {
-            wp_enqueue_style(
-                'wpfasty-base-tokens',
-                wpfasty_base_theme_uri().'/assets/css/tokens.css',
-                ['wpfasty-tokens'],
-                $childVer
+        if ($baseTokens) {
+            $baseVer = wp_get_theme(basename($baseDir))->get('Version') ?: $childVer;
+            $tokenDeps = $this->fonts(
+                'wpfasty-base-fonts',
+                $baseDir,
+                wpfasty_base_theme_uri(),
+                $tokenDeps,
+                $baseVer
             );
-            $tokenDeps[] = 'wpfasty-base-tokens';
+            if (is_file($baseDir.'/assets/css/tokens.css')) {
+                wp_enqueue_style(
+                    'wpfasty-base-tokens',
+                    wpfasty_base_theme_uri().'/assets/css/tokens.css',
+                    $tokenDeps,
+                    $baseVer
+                );
+                $tokenDeps = ['wpfasty-base-tokens'];
+            }
         }
 
+        $tokenDeps = $this->fonts(
+            'latte-skin-fonts',
+            get_stylesheet_directory(),
+            get_stylesheet_directory_uri(),
+            $tokenDeps,
+            $childVer
+        );
         $childTokens = get_stylesheet_directory().'/assets/css/tokens.css';
         if (is_file($childTokens)) {
             wp_enqueue_style(
@@ -110,6 +155,7 @@ final class AssetsHooks extends AbstractHooks
                 $tokenDeps,
                 $childVer
             );
+            $tokenDeps = ['latte-skin-tokens'];
         }
 
         $childStyle = get_stylesheet_directory().'/style.css';
@@ -117,9 +163,34 @@ final class AssetsHooks extends AbstractHooks
             wp_enqueue_style(
                 'latte-skin-style',
                 get_stylesheet_uri(),
-                ['wpfasty-tokens'],
+                $tokenDeps,
                 $childVer
             );
         }
+    }
+
+    private function colorScheme(): ?string
+    {
+        $scheme = apply_filters('wpfasty_color_scheme', null);
+
+        return in_array($scheme, ['light', 'dark'], true) ? $scheme : null;
+    }
+
+    /**
+     * Optional self-hosted @font-face definitions. The theme, not Builder/admin, owns family, weight and files.
+     *
+     * @param list<string> $dependencies
+     *
+     * @return list<string>
+     */
+    private function fonts(string $handle, string $directory, string $uri, array $dependencies, string $version): array
+    {
+        $file = $directory.'/assets/css/fonts.css';
+        if (!is_file($file)) {
+            return $dependencies;
+        }
+        wp_enqueue_style($handle, $uri.'/assets/css/fonts.css', $dependencies, $version);
+
+        return [$handle];
     }
 }

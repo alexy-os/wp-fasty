@@ -14,10 +14,14 @@ declare(strict_types=1);
 /** Absolute directory of the base theme of the active child, or '' (none, unknown or not a direct child). */
 function wpfasty_base_theme_dir(): string
 {
-    static $dir = null;
-    if (is_string($dir)) {
+    static $cachedTheme = '';
+    static $dir = '';
+    // Keep the one-entry cache, but follow switch_theme() in the same request (Customizer/CLI).
+    $theme = get_template().'|'.get_stylesheet();
+    if ($cachedTheme === $theme) {
         return $dir;
     }
+    $cachedTheme = $theme;
     $dir = '';
     if (get_stylesheet() === get_template()) {
         return $dir;

@@ -15,6 +15,14 @@ test("real server preview URL retains nonce, page query and hash; revisions and 
   expect(new URL(previewSource(a.href, 2, 1)).searchParams.getAll("wpfb_r")).toEqual(["2-1"]);
   expect(previewSource("", 0, 0)).toBe("");
 });
+test("appearance is server-side, transient and part of navigation identity", () => {
+  const dark = new URL(previewSource(url, 1, 0, "dark"));
+  const light = new URL(previewSource(dark.href, 1, 0, "light"));
+  expect(dark.searchParams.get("wpfb_scheme")).toBe("dark");
+  expect(light.searchParams.getAll("wpfb_scheme")).toEqual(["light"]);
+  expect(dark.searchParams.get("_wpnonce")).toBe("fake");
+  expect(dark.href).not.toBe(light.href);
+});
 test("stale or malformed persisted revisions fail before preview refresh", () => {
   for (const [actual, expected] of [[0, 1], [1, NaN], [1, -1], ["1", 1], [1.5, 1]]) {
     expect(() => requireDraftVersion(actual, expected as number)).toThrow();
@@ -77,9 +85,13 @@ test("a superseded navigation rejects old waiter and cannot satisfy newer target
 test("App connects Apply, revision-aware src and iframe lifecycle; keeps sandbox and prevents stale patches", () => {
   const app = readFileSync(new URL("../src/App.svelte", import.meta.url), "utf8");
   expect(app).toContain("apply: applyExternal");
-  expect(app).toContain("const frameSrc = $derived(previewSource(previewUrl, previewRevision, reloadKey))");
+  expect(app).toContain('const frameSrc = $derived(previewSource(previewUrl, previewRevision, reloadKey, theme.dark ? "dark" : "light"))');
   expect(app).toContain("requireDraftVersion(Number(layout.layout?.version ?? 0), minimumVersion)");
-  expect(app).toContain("previewSource(previewUrl, draftVersion, reloadKey)");
+  expect(app).toContain('previewSource(previewUrl, draftVersion, reloadKey, theme.dark ? "dark" : "light")');
+  expect(app).not.toContain('documentElement.classList.toggle(DARK_CLASS');
+  expect(app).toContain('if (!applying) theme.toggle()');
+  expect(app).toContain('toggle?.toggleAttribute("disabled", applying)');
+  expect(app).toContain('toggle?.removeAttribute("disabled")');
   expect(app).toContain("previewReload.loaded(doc.URL, !!doc.querySelector(\".wpfb-page\"))");
   expect(app).toContain("generation !== previewGeneration");
   expect(app).toContain("await saveQueue");

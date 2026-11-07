@@ -462,6 +462,11 @@ jobs:
           wp rewrite structure '/%postname%/' --hard
           wp theme list --fields=name,version,status
 
+      - name: Theme inheritance — NON-LIVE actual WP manual Builder, light/dark, fonts and scoped overrides
+        run: |
+          cd /tmp/wp
+          wp eval 'require getenv("GITHUB_WORKSPACE")."/tools/qa/theme-appearance-contract.php";'
+
       - name: Verified published ModulY + unsigned development fixture (no signing keys)
         run: |
           mkdir -p "$RUNNER_TEMP/moduly"

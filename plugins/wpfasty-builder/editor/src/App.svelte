@@ -95,7 +95,7 @@
         }
       : null,
   );
-  const frameSrc = $derived(previewSource(previewUrl, previewRevision, reloadKey));
+  const frameSrc = $derived(previewSource(previewUrl, previewRevision, reloadKey, theme.dark ? "dark" : "light"));
   const titleOf = (it: Item) => blocks.get(it.block)?.title ?? it.block;
 
   onMount(() => {
@@ -103,20 +103,22 @@
     window.addEventListener("resize", schedule);
     window.addEventListener("keydown", keydown);
     const toggle = document.getElementById(TOGGLE_ID);
-    const switchMode = () => theme.toggle();
+    const switchMode = () => { if (!applying) theme.toggle(); };
     toggle?.addEventListener("click", switchMode);
     return () => {
       previewReload.fail();
       window.removeEventListener("resize", schedule);
       window.removeEventListener("keydown", keydown);
       toggle?.removeEventListener("click", switchMode);
+      toggle?.removeAttribute("disabled");
     };
   });
 
-  // dark mode outside this component: the toolbar switch's pressed state and the preview page's root class
+  // Only toolbar state lives here; the authenticated server preview renders its own root scheme.
   $effect(() => {
-    document.getElementById(TOGGLE_ID)?.setAttribute("aria-pressed", String(theme.dark));
-    frame?.contentDocument?.documentElement.classList.toggle(DARK_CLASS, theme.dark);
+    const toggle = document.getElementById(TOGGLE_ID);
+    toggle?.setAttribute("aria-pressed", String(theme.dark));
+    toggle?.toggleAttribute("disabled", applying);
   });
 
   async function init(minimumVersion = 0) {
@@ -301,7 +303,7 @@
           scrollY = frame?.contentWindow?.scrollY ?? 0;
           previewRevision = draftVersion;
           reloadKey++;
-          const loaded = previewReload.start(previewSource(previewUrl, draftVersion, reloadKey));
+          const loaded = previewReload.start(previewSource(previewUrl, draftVersion, reloadKey, theme.dark ? "dark" : "light"));
           await Promise.all([tick(), loaded]);
         },
       });
@@ -585,7 +587,6 @@
     const win = frame?.contentWindow;
     if (!doc || !win) return;
     previewReload.loaded(doc.URL, !!doc.querySelector(".wpfb-page"));
-    doc.documentElement.classList.toggle(DARK_CLASS, theme.dark);
     // the canvas scrolls inside the preview page: its scrollbar thin, on the theme's own tokens (light and dark), set
     // here so only the editor's preview gets it, never the theme or the front
     doc.documentElement.style.setProperty("scrollbar-width", "thin");

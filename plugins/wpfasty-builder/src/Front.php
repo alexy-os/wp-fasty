@@ -25,6 +25,7 @@ final class Front
         add_filter('wpfasty_context', [self::class, 'context'], 20, 2);
         add_action('wp_enqueue_scripts', [self::class, 'styles'], 20);
         add_action('template_redirect', [self::class, 'previewGuard'], 1);
+        add_filter('wpfasty_color_scheme', [self::class, 'colorScheme']);
         add_action('wp_head', [Pager::class, 'head'], 5);
     }
 
@@ -64,6 +65,22 @@ final class Front
             ['wpfb_preview' => 1, '_wpnonce' => wp_create_nonce('wpfb_preview_'.$pageId)],
             (string) get_permalink($pageId),
         );
+    }
+
+    /** Preview-only presentation; never stores or overrides the live site's color preference. */
+    public static function colorScheme(mixed $value): mixed
+    {
+        $id = is_page() ? (int) get_queried_object_id() : 0;
+        if ($id <= 0 || !self::isPreview($id)) {
+            return $value;
+        }
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- isPreview() verifies the page nonce/capability above
+        $scheme = isset($_GET['wpfb_scheme']) && is_string($_GET['wpfb_scheme'])
+            ? sanitize_key(wp_unslash($_GET['wpfb_scheme']))
+            : 'light';
+        // phpcs:enable
+
+        return 'dark' === $scheme ? 'dark' : 'light';
     }
 
     public static function previewGuard(): void

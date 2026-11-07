@@ -1,0 +1,1 @@
+Original synthetic TrueType regression fixtures, under the repository license. Generated with FontTools 4.65.0 FontBuilder: only a space and a rectangular A glyph, weights 400/700; family WPFB Appearance Fixture. No third-party font outlines or commercial font files. These are test data, not theme fonts.
