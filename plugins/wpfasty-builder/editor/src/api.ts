@@ -16,6 +16,9 @@ export function api(cfg: Config) {
     return body as T;
   }
   return {
+    chatHistory: () => call<{ turns: import("./chat/client").ChatTurn[] }>(`/chat/${cfg.page}/history`),
+    chatTurn: (content: string, requestId: string) => call<import("./chat/client").ChatResult>(`/chat/${cfg.page}/turn`, {method: "POST", body: JSON.stringify({content, requestId})}),
+    chatApply: (requestId: string) => call<{version: number}>(`/chat/${cfg.page}/apply`, {method: "POST", body: JSON.stringify({requestId})}),
     /** one block's HTML, as the page template renders it (POST /render-block) */
     renderBlock: (source: string, item: Item) =>
       call<{ id: string; html: string; issues: Issue[] }>("/render-block", {
@@ -30,10 +33,10 @@ export function api(cfg: Config) {
     /** a draft page with the starter's blocks in its Builder draft (POST /pages) */
     createPage: (title: string, slug: string, starter: string) =>
       call<NewPage>("/pages", { method: "POST", body: JSON.stringify({ title, slug, starter }) }),
-    save: (source: string, collection: string, blocks: Item[], publish: boolean) =>
+    save: (source: string, collection: string, blocks: Item[], publish: boolean, expectedVersion?: number) =>
       call<{ layout: Obj; issues: Issue[]; published: boolean; previewUrl: string }>(`/layout/${cfg.page}`, {
         method: "POST",
-        body: JSON.stringify({ publish, layout: { source, collection, blocks } }),
+        body: JSON.stringify({ publish, expectedVersion, layout: { source, collection, blocks } }),
       }),
   };
 }

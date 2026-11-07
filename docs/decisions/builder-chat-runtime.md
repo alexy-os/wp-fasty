@@ -65,3 +65,33 @@ Validation on this increment: editor check 0 errors / 0 warnings; editor tests
 93 passed / 0 failed; existing PHP BuilderTest 16 tests / 635 assertions passed;
 new ChatPanel source gate 0 problems; Svelte autofixer no issues; production
 IIFE editor.js/editor.css built. No browser or paid runtime acceptance performed.
+
+
+## Same-host Node choice: functional non-live candidate
+
+Owner selected Node worker on the WordPress server, without VPS/CR. The scaffold
+above is historical: chat now delegates to nonce/capability-protected same-origin
+WP routes, server-only masked settings, authenticated loopback worker and pinned
+official Cursor SDK1.3.0. No separate Creator data/plugin was removed. No server
+was restarted on the external VPS and no provider key/model turn was used.
+
+The chosen implementation and operator instructions live in
+`plugins/wpfasty-builder/worker/README.md`. It preserves catalog-resolved
+structural proposals, existing Latte/Twig output, explicit draft apply, per-page
+SQLite history, request idempotency and shared revision locks. No decorative
+model picker; Grok4.7 is selected only if the actual Cursor account lists it.
+Jev search is intentionally unavailable pending a verified search API contract.
+
+Validation: SDK dependency install/import only; six NON-LIVE worker tests,
+93 editor tests, editor typecheck and production build, existing PHP BuilderTest
+16 tests/635 assertions; own isolated WordPress contract fixture checks nonce,
+capability, masked settings, offline503, real catalog draft save, no publish,
+stale409 and retries. The WP-to-Node HTTP path also passed with an explicitly
+injected NON-LIVE loopback runner. Temporary fixture service stopped; original
+WP plugin activation/theme/settings retained. These are NOT live-model or browser
+acceptance. New ChatPanel autofixer and UI8Kit source gate clean; legacy App
+suggestions remain unchanged. Full repo parity/phpstan/deptrac/codex gates unrun.
+
+Do not distribute the candidate or remove Creator until an approved real SDK
+turn and actual browser test demonstrate the same saved revision in chat,
+structural draft and the existing Latte iframe, with reload/history verified.

@@ -1,0 +1,26 @@
+# Operator example: adapt paths/user; never place actual keys in this tracked file.
+[Unit]
+Description=WP FastY Builder same-host worker
+After=network-online.target
+
+[Service]
+Type=simple
+User=wpfasty-builder
+Group=wpfasty-builder
+WorkingDirectory=/var/www/wordpress/wp-content/plugins/wpfasty-builder/worker
+EnvironmentFile=/etc/wpfasty-builder/worker.env
+ExecStart=/usr/bin/node server.mjs
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/wpfasty-builder
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryMax=768M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

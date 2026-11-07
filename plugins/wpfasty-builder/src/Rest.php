@@ -144,7 +144,8 @@ final class Rest
             return $e;
         }
         $body = $r->get_json_params();
-        $result = Store::save($id, Cast::map($body['layout'] ?? []), $publish);
+        $expected = isset($body['expectedVersion']) ? (int) $body['expectedVersion'] : null;
+        $result = DraftGuard::save($id, Cast::map($body['layout'] ?? []), $publish, $expected);
         if ($result instanceof \WP_Error) {
             return $result;
         }

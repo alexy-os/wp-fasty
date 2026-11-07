@@ -16,10 +16,10 @@ test("unknown variant is flagged, never converted to an invented template", () =
   expect(context.blocks[0]!.catalogValid).toBe(false);
   expect(context.blocks[0]!.template).toBe(null);
 });
-test("offline panel cannot send requests, inject HTML or mutate a layout", () => {
+test("panel delegates to protected WP API and never injects model HTML", () => {
   const code = readFileSync(new URL("../src/chat/ChatPanel.svelte", import.meta.url), "utf8");
-  expect(code).not.toMatch(/fetch\(|@html|onSend|\.save\(/);
-  expect(code).toContain("<Textarea disabled");
-  expect(code).toContain('<Button disabled');
+  expect(code).not.toMatch(/fetch\(|@html|\.save\(/);
+  expect(code).toContain("disabled={!ready || busy}");
+  expect(code).toContain('await apply(requestId)');
   expect(code).not.toMatch(/<(div|button|section|pre|p|h2)\b/);
 });

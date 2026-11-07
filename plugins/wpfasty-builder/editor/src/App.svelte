@@ -63,6 +63,7 @@
   let device = $state<"desktop" | "mobile">("desktop");
   let advanced = $state(false);
   let advancedError = $state("");
+  let draftVersion = $state(0);
   let renderMs = $state<number | null>(null);
   let scrollY = 0;
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -118,6 +119,7 @@
       const saved = (getPath(meta, ["blocks", "value"]) ?? []) as unknown as Item[];
       if (!config.source && typeof getPath(meta, ["source", "value"]) === "string") source = getPath(meta, ["source", "value"]) as string;
       store.load(saved.map((b) => ({ ...b, props: isObj(b.props) ? b.props : {}, bindings: isObj(b.bindings) ? b.bindings : {} })));
+      draftVersion = Number(layout.layout?.version ?? 0);
       previewUrl = layout.previewUrl;
       published = layout.published;
       await loadCatalog();
@@ -237,11 +239,17 @@
     if (status === "saving") await save(false);
   }
 
-  async function save(publish: boolean) {
+  let saveQueue: Promise<void> = Promise.resolve();
+  function save(publish: boolean) {
     clearTimeout(timer);
+    saveQueue = saveQueue.then(() => performSave(publish));
+    return saveQueue;
+  }
+  async function performSave(publish: boolean) {
     status = "saving";
     try {
-      const res = await client.save(source, collection, clone(store.items), publish);
+      const res = await client.save(source, collection, clone(store.items), publish, draftVersion);
+      draftVersion = Number(res.layout.version ?? draftVersion);
       published = res.published;
       previewUrl = res.previewUrl;
       const warn = res.issues.filter((i) => !i.code.startsWith("core."));
@@ -598,7 +606,9 @@
       </UiBox>
       <UiBox tag="div" id="wpfb-palette-content" class="wpfb-palette-content">
       {#if paletteTab === "chat"}
-        <ChatPanel {source} items={store.items} blocks={[...blocks.values()]} selected={store.selected} />
+        <ChatPanel {source} items={store.items} blocks={[...blocks.values()]} selected={store.selected}
+          history={client.chatHistory} send={async (content, requestId) => { await flush(); if (status === "error") throw new Error(message); return client.chatTurn(content, requestId); }}
+          apply={async (requestId) => { await flush(); if (status === "error") throw new Error(message); await client.chatApply(requestId); await init(); }} />
       {:else}
       <div class="wpfb-section">
         <label class="wpfb-heading" for="wpfb-collection">Collection</label>
