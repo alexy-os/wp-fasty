@@ -66,6 +66,16 @@ test('NON-LIVE WPFB_WORKER_PORT accepts only integer 1024-65535; default 18991',
  assert.equal(workerPort(undefined),18991);assert.equal(workerPort(''),18991);assert.equal(workerPort('19000'),19000);assert.equal(workerPort('65535'),65535);
  for(const bad of ['80','1023','65536','0','-1','19000.5',' 19000','0x4a38','127.0.0.1:19000','http://127.0.0.1:19000','19000/x','abc'])assert.throws(()=>workerPort(bad),/WPFB_WORKER_PORT/);
 });
+test('NON-LIVE generic secrets: count only in /status, CURSOR_API_KEY drives the SDK, no values reported',async()=>{
+ const store=new TurnStore(':memory:');const token='test-token-not-a-provider-key-000000000';
+ const server=workerServer({store,token,runner:async()=>({}),secrets:{CURSOR_API_KEY:'TEST_GENERIC_CURSOR',SOME_OTHER:'TEST_GENERIC_OTHER',THIRD:'x'}});
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));
+ try{
+  const raw=await new Promise((resolve,reject)=>{const r=request('http://127.0.0.1:'+server.address().port+'/status',{method:'POST',headers:{Host:'127.0.0.1:'+server.address().port,'Content-Type':'application/json',Authorization:'Bearer '+token}},res=>{let b='';res.on('data',c=>b+=c);res.on('end',()=>resolve(b));});r.on('error',reject);r.end('{}');});
+  assert.deepEqual(JSON.parse(raw),{active:false,activeTurnId:null,credentials:'managed',secrets:3});
+  for(const s of ['TEST_GENERIC','SOME_OTHER','THIRD'])assert.equal(raw.includes(s),false);
+ }finally{await new Promise(r=>server.close(r));store.db.close();}
+});
 test('NON-LIVE /status is authenticated, reports active turn and managed key without the value; managed key reaches runner',async()=>{
  const store=new TurnStore(':memory:');const token='test-token-not-a-provider-key-000000000';let release,seen;
  const runner=b=>{seen=b.credentials?.cursor;return new Promise(r=>{release=()=>r({answer:'NON-LIVE',proposal})});};
@@ -75,23 +85,26 @@ test('NON-LIVE /status is authenticated, reports active turn and managed key wit
  const auth={Authorization:'Bearer '+token};
  try{
   assert.equal((await req('/status',{})).status,401);
-  let st=await req('/status',{},auth);assert.equal(st.status,200);assert.deepEqual(JSON.parse(st.raw),{active:false,activeTurnId:null,credentials:'managed',jev:'managed'});
+  let st=await req('/status',{},auth);assert.equal(st.status,200);assert.deepEqual(JSON.parse(st.raw),{active:false,activeTurnId:null,credentials:'managed',secrets:2});
   assert.equal(st.raw.includes('TEST_MANAGED_KEY'),false);assert.equal(st.raw.includes('TEST_MANAGED_JEV'),false);
   const pending=req('/turn',body(),auth);
   await new Promise(r=>setTimeout(r,50));
   const busy=JSON.parse((await req('/status',{},auth)).raw);assert.equal(busy.active,true);
   assert.match(busy.activeTurnId,/^[0-9a-f-]{36}$/);assert.notEqual(busy.activeTurnId,body().requestId);
-  assert.deepEqual(Object.keys(busy).sort(),['active','activeTurnId','credentials','jev']);
+  assert.deepEqual(Object.keys(busy).sort(),['active','activeTurnId','credentials','secrets']);
   release();assert.equal((await pending).status,200);assert.equal(seen,'TEST_MANAGED_KEY');
-  assert.deepEqual(JSON.parse((await req('/status',{},auth)).raw),{active:false,activeTurnId:null,credentials:'managed',jev:'managed'});
+  assert.deepEqual(JSON.parse((await req('/status',{},auth)).raw),{active:false,activeTurnId:null,credentials:'managed',secrets:2});
   assert.equal(JSON.stringify(store.history('site-test-a:10')).includes('TEST_MANAGED_KEY'),false);
  }finally{await new Promise(r=>server.close(r));store.db.close();}
 });
 test('NON-LIVE secrets come from stdin JSON, a 0600 file or legacy env, and are removed from env',async()=>{
  const {readSecrets}=await import('../server.mjs');
  let env={WPFB_WORKER_SECRETS:'stdin',WPFB_WORKER_TOKEN:'x'};
- assert.deepEqual(readSecrets(env,()=>JSON.stringify({token:'t'.repeat(40),cursorKey:'k'})),{token:'t'.repeat(40),cursorKey:'k',jevKey:''});
- assert.deepEqual(readSecrets({WPFB_WORKER_SECRETS:'stdin'},()=>JSON.stringify({token:'t'.repeat(40),cursorKey:'k',jevKey:'j'})),{token:'t'.repeat(40),cursorKey:'k',jevKey:'j'});
+ assert.deepEqual(readSecrets(env,()=>JSON.stringify({token:'t'.repeat(40),cursorKey:'k'})),{token:'t'.repeat(40),cursorKey:'k',jevKey:'',secrets:{CURSOR_API_KEY:'k'}});
+ assert.deepEqual(readSecrets({WPFB_WORKER_SECRETS:'stdin'},()=>JSON.stringify({token:'t'.repeat(40),cursorKey:'k',jevKey:'j'})),{token:'t'.repeat(40),cursorKey:'k',jevKey:'j',secrets:{CURSOR_API_KEY:'k',JEV_API_KEY:'j'}});
+ const g=readSecrets({WPFB_WORKER_SECRETS:'stdin'},()=>JSON.stringify({token:'t'.repeat(40),secrets:{CURSOR_API_KEY:'c2',OTHER_1:'o'}}));
+ assert.deepEqual(g,{token:'t'.repeat(40),cursorKey:'c2',jevKey:'',secrets:{CURSOR_API_KEY:'c2',OTHER_1:'o'}});
+ for(const bad of [{secrets:[]},{secrets:{'bad name':'x'}},{secrets:{A:1}}])assert.throws(()=>readSecrets({WPFB_WORKER_SECRETS:'stdin'},()=>JSON.stringify({token:'t'.repeat(40),...bad})),/NAME: string/);
  assert.equal('WPFB_WORKER_TOKEN' in env,false);
  const dir=mkdtempSync(join(tmpdir(),'wpfb-'));const f=join(dir,'token');
  const {writeFileSync,chmodSync}=await import('node:fs');writeFileSync(f,'f'.repeat(40)+'\n');chmodSync(f,0o600);

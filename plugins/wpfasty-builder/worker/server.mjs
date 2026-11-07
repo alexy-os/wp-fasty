@@ -15,32 +15,41 @@ export function workerPort(value){
  return port;
 }
 /**
- * Secrets source, in order: WPFB_WORKER_SECRETS=stdin (one JSON object {token, cursorKey?, jevKey?} on stdin, then EOF;
+ * Secrets source, in order: WPFB_WORKER_SECRETS=stdin (one JSON object {token, secrets?: {NAME: value}} on stdin; legacy cursorKey/jevKey map to CURSOR_API_KEY/JEV_API_KEY, then EOF;
  * used by local-wp, values come from its age vault), WPFB_WORKER_TOKEN_FILE (0600 file holding the token),
  * legacy WPFB_WORKER_TOKEN env. Secrets are removed from process.env after reading.
  */
 export function readSecrets(env=process.env,stdin=()=>readFileSync(0,'utf8')){
- let token='',cursorKey='',jevKey='';
+ let token='',cursorKey='',jevKey='';const secrets={};
  if(env.WPFB_WORKER_SECRETS==='stdin'){
   let v;try{v=JSON.parse(stdin());}catch{throw new Error('WPFB_WORKER_SECRETS=stdin expects one JSON object on stdin');}
-  token=typeof v?.token==='string'?v.token:'';cursorKey=typeof v?.cursorKey==='string'?v.cursorKey:'';
-  jevKey=typeof v?.jevKey==='string'?v.jevKey:''; // reserved: kept in memory only, no Jev requests are made
+  token=typeof v?.token==='string'?v.token:'';
+  if(v?.secrets!=null&&(typeof v.secrets!=='object'||Array.isArray(v.secrets)))throw new Error('secrets must be an object of NAME: string');
+  for(const [k,val] of Object.entries(v?.secrets||{})){
+   if(!/^[A-Z0-9_]{1,64}$/.test(k)||typeof val!=='string')throw new Error('secrets must be an object of NAME: string');
+   secrets[k]=val;
+  }
+  if(typeof v?.cursorKey==='string'&&v.cursorKey&&!secrets.CURSOR_API_KEY)secrets.CURSOR_API_KEY=v.cursorKey;
+  if(typeof v?.jevKey==='string'&&v.jevKey&&!secrets.JEV_API_KEY)secrets.JEV_API_KEY=v.jevKey;
+  cursorKey=secrets.CURSOR_API_KEY||'';jevKey=secrets.JEV_API_KEY||''; // other secrets: kept in memory only, never used or reported
  }else if(env.WPFB_WORKER_TOKEN_FILE){
   const f=env.WPFB_WORKER_TOKEN_FILE;
   if(process.platform!=='win32'&&(statSync(f).mode&0o077))throw new Error('WPFB_WORKER_TOKEN_FILE must not be readable by group/others (chmod 600)');
   token=readFileSync(f,'utf8').trim();
  }else token=env.WPFB_WORKER_TOKEN||'';
  delete env.WPFB_WORKER_TOKEN;delete env.WPFB_WORKER_SECRETS;
- return {token,cursorKey,jevKey};
+ return {token,cursorKey,jevKey,secrets};
 }
-export function workerServer({token,store,runner,cursorKey='',jevKey=''}) {
+export function workerServer({token,store,runner,cursorKey='',jevKey='',secrets={}}) {
+ cursorKey=secrets.CURSOR_API_KEY||cursorKey;
+ const held=new Set([...Object.keys(secrets),...(cursorKey?['CURSOR_API_KEY']:[]),...(jevKey?['JEV_API_KEY']:[])]).size;
  let active=false,activeTurnId=null;
  return createServer(async(req,res)=>{
   const reply=(status,data)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
   try {
    if(!['127.0.0.1:'+req.socket.localPort,'localhost:'+req.socket.localPort].includes(req.headers.host)||req.headers.origin) throw new WorkerError('host_or_origin_forbidden',403);
    if(!authenticated(req.headers.authorization,token)) throw new WorkerError('worker_unauthorized',401);
-   if(req.method==='POST'&&req.url==='/status')return reply(200,{active,activeTurnId,credentials:cursorKey?'managed':'request',jev:jevKey?'managed':'none'});
+   if(req.method==='POST'&&req.url==='/status')return reply(200,{active,activeTurnId,credentials:cursorKey?'managed':'request',secrets:held});
    if(req.method!=='POST'||!['/turn','/history'].includes(req.url)) throw new WorkerError('not_found',404);
    const chunks=[];let bytes=0;for await(const chunk of req){bytes+=chunk.length;if(bytes>768000)throw new WorkerError('payload_too_large',413);chunks.push(chunk);}
    const raw=Buffer.concat(chunks).toString('utf8');
@@ -56,7 +65,7 @@ export function workerServer({token,store,runner,cursorKey='',jevKey=''}) {
 }
 if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
  const port=workerPort(process.env.WPFB_WORKER_PORT);
- const {token,cursorKey,jevKey}=readSecrets();
+ const {token,cursorKey,jevKey,secrets}=readSecrets();
  if(!token||token.length<32)throw new Error('worker token must contain at least 32 characters');
  process.umask(0o077);
  if(!isAbsolute(process.env.WPFB_WORKER_DATA||'')||!isAbsolute(process.env.WPFB_WORDPRESS_ROOT||'')) throw new Error('Absolute WPFB_WORKER_DATA and WPFB_WORDPRESS_ROOT are required. Data MUST be outside the web root.');
@@ -65,7 +74,7 @@ if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
  const dir=realpathSync(process.env.WPFB_WORKER_DATA),rel=relative(wp,dir);
  if(!(rel==='..'||rel.startsWith('..'+sep)) || isAbsolute(rel)) throw new Error('Worker data must be outside WordPress web root');
  const store=new TurnStore(resolve(dir,'turns.sqlite'));
- const server=workerServer({token,store,cursorKey,jevKey,runner:isolatedRunner(dir)});
+ const server=workerServer({token,store,cursorKey,jevKey,secrets,runner:isolatedRunner(dir)});
  server.requestTimeout=100000;server.headersTimeout=10000;server.maxConnections=8;
  server.on('error',e=>{console.error('Builder worker cannot listen on 127.0.0.1:'+port+': '+(e.code||'error'));process.exit(1);});
  server.listen(port,'127.0.0.1',()=>console.log('Builder worker listening on loopback:'+port+'; no live acceptance performed'));
