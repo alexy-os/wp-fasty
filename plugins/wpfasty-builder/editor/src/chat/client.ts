@@ -8,4 +8,4 @@ export interface ProposalApplication { state: "pending" | "applied" | "stale"; b
 
 /** Actual cumulative counts of this SDK run; legacy history or unreported telemetry stays null. */
 export interface TokenUsage { inputTokens: number; outputTokens: number; cacheReadTokens: number; cacheWriteTokens: number; totalTokens: number; reasoningTokens?: number }
-export interface ChatProgress { requestId: string; state: "unknown" | "pending" | "done" | "failed"; sequence: number; tool: { name: "catalog_lookup" | "propose_layout"; status: "running" | "completed" | "error" } | null }
+export interface ChatProgress { requestId: string; state: "unknown" | "pending" | "done" | "failed"; sequence: number; tool: { name: "catalog_lookup" | "search_catalog" | "get_block_details" | "propose_layout"; status: "running" | "completed" | "error" } | null }

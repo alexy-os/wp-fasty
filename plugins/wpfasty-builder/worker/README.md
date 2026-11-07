@@ -219,3 +219,53 @@ nonce checks, expose the worker port or weaken the iframe sandbox. Windows
 host/live streaming has not been accepted with this increment. The local-wp
 worker resource must include the new `telemetry.mjs` and use this commit, not an
 older pinned worker build; its vault contract and SDK lockfile are unchanged.
+
+## Release-bundled local catalog search (no update service)
+
+`catalog/stock.v0.json`, `catalog/manifest.json`, `catalog/engine/*.mjs` and
+`catalog/LICENSE` ship WITH this worker inside the Builder plugin. Updates happen
+only with a reviewed plugin/worker release. There is no HTTP/MCP search service,
+updater, network fallback, auto-install, separate mutable cache or model search.
+Search runs without npm access; the agent still needs the existing locked SDK
+installation described above. The host's **installed worker resource must be
+refreshed** to this release too: updating WP PHP alone cannot replace an older
+local-wp resource. No resource on the owner's computer was updated here.
+
+Upstream: `codegen-x/ui8kit@6b2e71b56375cf3aab161a755c8eee806e7309fb`, root MIT
+license, Copyright (c) 2026 CodeGen-X. Its npm `private:true` flag prevents package
+publication, not use under that license. Original engine TS and provenance hashes
+are in `tools/vendor/facet-search`; the snapshot and license retain upstream bytes.
+Build/check offline with pinned Bun 1.4.4:
+
+```
+bun tools/builder/local-search-build.ts
+bun tools/builder/local-search-build.ts --check
+node --test plugins/wpfasty-builder/worker/test/*.test.mjs
+node tools/builder/local-search-bench.mjs
+```
+
+The pure upstream engine preserves OR-within/AND-across facets, lexical prefix
+ranking, multilingual labels/synonyms, soft industry ranking and deterministic
+sort/collapse. The supported block facets/values are exposed as bounded query
+schema + descriptors, not instructions or a semantic model. Search tools replace
+the old full-catalog `catalog_lookup`: `search_catalog` returns 5 cards by default,
+maximum10; `get_block_details` requires exact case-preserving blockId+variant and
+returns only that installed prop schema/defaults/data/records (48 KB cap). Both
+remain within the shared16-call budget. Proposal changes require inspected details;
+unchanged existing blocks can be preserved without inventing replacements.
+
+Canonical mapping: Stock `block.hero/twoActions` maps to WordPress block `hero`,
+variant `twoActions`, NOT a registry organism alias. Target is the actual catalog's
+`runtime()` (`latte` or `twig` only), with matching installed template extension.
+The current bundled WP catalog has93 blocks/482 variants; all482 intersect Stock,
+which contains112 blocks/532 variants. The other50 variants and all80 screens are
+not proposed as installed blocks. Other catalog sources are explicitly unmapped,
+not interpreted as UI8Kit by coincidental ids. PHP schema/revision/Apply/Publish
+validation remains authoritative and unchanged.
+
+At load, fixed local resources are size/schema/hash/digest checked (snapshot ≤3MiB).
+Corruption/mismatch fails with `catalog_map_unavailable`, not a catalog dump or a
+network/model retry. A module-local immutable map is reused within its process;
+site/page installed intersections and inspected-detail sets are never shared.
+The existing SDK child is still created per turn; there is no cross-turn cache
+service. Deterministic fixtures are NON-LIVE; Windows/live SDK use is not proven.

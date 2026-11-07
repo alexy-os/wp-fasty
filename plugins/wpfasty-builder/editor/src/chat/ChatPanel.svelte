@@ -108,7 +108,7 @@
     {/each}
     {#if sending}
       <Box tag="div" class="wpfb-chat-message wpfb-chat-user"><Text tag="p" class="wpfb-chat-role">{copy.user}</Text><Text tag="p" class="wpfb-chat-prose">{pendingContent}</Text></Box>
-      <Text tag="p" class="wpfb-chat-notice" role="status">{progressMissing ? copy.progressUnavailable : activity?.tool ? `${activity.tool.name === "catalog_lookup" ? copy.catalogTool : copy.proposalTool} · ${copy.toolStatus[activity.tool.status]}` : copy.requestPending}</Text>
+      <Text tag="p" class="wpfb-chat-notice" role="status">{progressMissing ? copy.progressUnavailable : activity?.tool ? `${activity.tool.name === "propose_layout" ? copy.proposalTool : copy.catalogTool} · ${copy.toolStatus[activity.tool.status]}` : copy.requestPending}</Text>
     {/if}
   </Box>
   <Box tag="div" class="wpfb-chat-composer">

@@ -50,7 +50,7 @@ final class ChatTelemetry
         $safe['state'] = $value['state'];
         $safe['sequence'] = is_int($value['sequence'] ?? null) && $value['sequence'] >= 0 ? $value['sequence'] : 0;
         $tool = $value['tool'] ?? null;
-        if ('pending' === $safe['state'] && is_array($tool) && in_array($tool['name'] ?? null, ['catalog_lookup', 'propose_layout'], true) && in_array($tool['status'] ?? null, ['running', 'completed', 'error'], true)) {
+        if ('pending' === $safe['state'] && is_array($tool) && in_array($tool['name'] ?? null, ['catalog_lookup', 'search_catalog', 'get_block_details', 'propose_layout'], true) && in_array($tool['status'] ?? null, ['running', 'completed', 'error'], true)) {
             $safe['tool'] = ['name' => $tool['name'], 'status' => $tool['status']];
         }
 

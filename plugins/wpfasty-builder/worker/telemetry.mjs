@@ -7,12 +7,12 @@ export function tokenUsage(value) {
  return safe;
 }
 export function toolProgress(value) {
- if(!value||!['catalog_lookup','propose_layout'].includes(value.name)||!['running','completed','error'].includes(value.status))return null;
+ if(!value||!['catalog_lookup','search_catalog','get_block_details','propose_layout'].includes(value.name)||!['running','completed','error'].includes(value.status))return null;
  return {name:value.name,status:value.status};
 }
 /** Only real tool_call SDK events, allowlisting known custom tools; never forward arbitrary event text. */
 export function sdkToolProgress(message) {
  if(message?.type!=='tool_call'||typeof message.name!=='string')return null;
- const name=['catalog_lookup','propose_layout'].find(n=>message.name===n||message.name.endsWith('__'+n));
+ const name=['catalog_lookup','search_catalog','get_block_details','propose_layout'].find(n=>message.name===n||message.name.endsWith('__'+n));
  return toolProgress({name,status:message.status});
 }

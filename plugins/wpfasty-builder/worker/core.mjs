@@ -49,7 +49,7 @@ export class TurnStore {
    return safe;
   } catch(e) {
    this.db.prepare("UPDATE turns SET state='failed',result=? WHERE scope=? AND request=?").run(JSON.stringify({content,error:'agent_failed_no_automatic_retry'}),scope,requestId);
-   if(e instanceof WorkerError && e.message==='configured_grok_model_unavailable') throw e;
+   if(e instanceof WorkerError && ['configured_grok_model_unavailable','catalog_map_unavailable','catalog_context_invalid','catalog_target_unsupported'].includes(e.message)) throw e;
    throw new WorkerError('agent_failed_no_automatic_retry',502);
   } finally {this.activity.delete(scope+':'+requestId);}
  }

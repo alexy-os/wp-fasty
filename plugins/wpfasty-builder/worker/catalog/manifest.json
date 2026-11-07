@@ -1,0 +1,26 @@
+{
+  "schema": "wpfasty-local-search/1",
+  "engine": "@ui8kit/facet-search@0.0.0",
+  "source": {
+    "repository": "https://github.com/codegen-x/ui8kit",
+    "commit": "6b2e71b56375cf3aab161a755c8eee806e7309fb",
+    "stockPath": "apps/stock/content/assets.v0.json"
+  },
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 CodeGen-X",
+  "stockVersion": "0",
+  "stockDigest": "sha256:a9d256e6935c6a8d579f86d634eebb46dfe36cacd02d9e4e2a0fdce4ff41664a",
+  "stockBytes": 673108,
+  "counts": {
+    "block": 532,
+    "screen": 80,
+    "blockSpecs": 112
+  },
+  "files": {
+    "engine/model.mjs": "7e31ea13baa426e47c9ecce1efcdba3eeed8774b5ce022f559c5c01e9d8e51a7",
+    "engine/query.mjs": "2f8ba9f42f387daf3db1fb4c5ebbd61f146aa88fd76719230e838ca17ed91680",
+    "engine/search.mjs": "5347b8a21bc856406df61f1f616895007f1d603a97678012aa759a585d0e4bd2",
+    "LICENSE": "2e650c19a0c2bdf0ae66c0882a532715f538fc34bc1fa4909a24383c2c8f3c87",
+    "stock.v0.json": "75840504dfaf7e6cd08fa2ff507e7d1bcda620156bba315f6e05a5d44f13dc08"
+  }
+}

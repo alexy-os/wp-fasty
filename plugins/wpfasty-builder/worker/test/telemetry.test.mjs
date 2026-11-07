@@ -11,7 +11,7 @@ import {sdkRunner} from '../sdk.mjs';
 import {isolatedRunner} from '../isolated-runner.mjs';
 import {tokenUsage,sdkToolProgress} from '../telemetry.mjs';
 const usage={inputTokens:100,outputTokens:20,cacheReadTokens:5,cacheWriteTokens:3,totalTokens:128};
-const body=()=>({site:'site-fixture-a',page:12,requestId:'fixture-request-1',content:'NON-LIVE fixture',context:{source:'ui8kit',version:2,blocks:[],catalog:[]}});
+const body=()=>({site:'site-fixture-a',page:12,requestId:'fixture-request-1',content:'NON-LIVE fixture',context:{source:'ui8kit',target:'latte',version:2,blocks:[],catalog:[]}});
 test('NON-LIVE allowlisted SDK tool events and unknown usage; no arguments, results, thinking, arbitrary names',()=>{
  assert.equal(tokenUsage(null),null);assert.equal(tokenUsage({...usage,inputTokens:'100'}),null);assert.equal(tokenUsage({...usage,totalTokens:Infinity}),null);
  assert.deepEqual(tokenUsage({...usage,secret:'PRIVATE_FIXTURE'}),usage);

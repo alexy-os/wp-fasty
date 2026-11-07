@@ -7,7 +7,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {TurnStore,validateProposal} from '../core.mjs';
 import {workerServer} from '../server.mjs';
-const body=()=>({site:'site-test-a',page:10,requestId:'request-0001',content:'build draft',context:{source:'ui8kit',version:1,blocks:[],catalog:[{id:'hero',variants:[{id:'centered'}]}]}});
+const body=()=>({site:'site-test-a',page:10,requestId:'request-0001',content:'build draft',context:{source:'ui8kit',target:'latte',version:1,blocks:[],catalog:[{id:'hero',variants:[{id:'centered'}]}]}});
 const proposal=[{id:'hero-main',block:'hero',variant:'centered',props:{title:'Hello'},bindings:{}}];
 test('NON-LIVE durable replay and mismatched key conflict; credentials never stored',async()=>{
  const file=join(mkdtempSync(join(tmpdir(),'wpfb-')),'turns.sqlite');let calls=0;
@@ -58,7 +58,7 @@ test('NON-LIVE SDK adapter propagates exact Grok id, custom-only tools and no am
  const result=await run({...body(),credentials:{cursor:'TEST_ONLY'}});
  assert.equal(result.evidence.selectedModelId,'grok-4.7');assert.equal(result.evidence.reportedModelId,'grok-4.7');assert.ok(result.evidence.elapsedMs>=0);assert.equal(readFileSync(join(dir,'live-audit.jsonl'),'utf8').includes('TEST_ONLY'),false);
  assert.equal(options.model.id,'grok-4.7');assert.deepEqual(options.tools,['mcp']);assert.deepEqual(options.mcpServers,{});assert.deepEqual(options.local.settingSources,[]);assert.equal(options.local.enableAgentRetries,false);assert.equal(closed,true);
- assert.deepEqual(Object.keys(options.local.customTools).sort(),['catalog_lookup','propose_layout']);assert.equal(sent.includes('TEST_ONLY'),false);
+ assert.deepEqual(Object.keys(options.local.customTools).sort(),['get_block_details','propose_layout','search_catalog']);assert.equal(sent.includes('TEST_ONLY'),false);
  fake.Cursor.models.list=async()=>[{id:'other-model'}];await assert.rejects(()=>run({...body(),credentials:{cursor:'TEST_ONLY'}}),/configured_grok_model_unavailable/);
 });
 test('NON-LIVE WPFB_WORKER_PORT accepts only integer 1024-65535; default 18991',async()=>{

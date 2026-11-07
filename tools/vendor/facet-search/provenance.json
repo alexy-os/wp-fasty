@@ -1,0 +1,18 @@
+{
+  "repository": "https://github.com/codegen-x/ui8kit",
+  "commit": "6b2e71b56375cf3aab161a755c8eee806e7309fb",
+  "package": "@ui8kit/facet-search",
+  "packageVersion": "0.0.0",
+  "packagePrivate": true,
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 CodeGen-X",
+  "sources": {
+    "model.ts": "0b5bb2f688eeab138389b3b77351b140a21cf42fe6ee63aa62efaf37b09cda4d",
+    "query.ts": "c3cbc5e73283ae25a7c2d26fd3efdfc5a2a3852a5f905f0ad4c14188d61e3488",
+    "search.ts": "cabee42eaf2e0c3217bb918d357e5176af5fdee4bab61a7bf134cd00af27e6a1",
+    "LICENSE": "2e650c19a0c2bdf0ae66c0882a532715f538fc34bc1fa4909a24383c2c8f3c87"
+  },
+  "stockPath": "apps/stock/content/assets.v0.json",
+  "stockSha256": "75840504dfaf7e6cd08fa2ff507e7d1bcda620156bba315f6e05a5d44f13dc08",
+  "stockDigest": "sha256:a9d256e6935c6a8d579f86d634eebb46dfe36cacd02d9e4e2a0fdce4ff41664a"
+}

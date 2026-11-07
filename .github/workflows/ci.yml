@@ -177,6 +177,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "24.22.1"
+      - name: Builder local search — offline pinned engine and map reproduce
+        run: bun tools/builder/local-search-build.ts --check
       - name: Builder worker — NON-LIVE SDK event, usage, replay, auth and scope isolation contracts
         run: node --test plugins/wpfasty-builder/worker/test/*.test.mjs
       - name: PHPStan maximum level — no baseline or suppressions
