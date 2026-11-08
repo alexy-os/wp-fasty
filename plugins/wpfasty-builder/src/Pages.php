@@ -54,6 +54,10 @@ final class Pages
         }
         $id = (int) $id;
         $blocks = 0;
+        if (null === $layout) {
+            update_post_meta($id, PageOnboarding::MARKER, '1');
+            update_post_meta($id, PageOnboarding::SHELL, 'blank');
+        }
         if (null !== $layout) {
             $result = ($save ?? [Store::class, 'save'])($id, $layout, false);
             if ($result instanceof \WP_Error) {

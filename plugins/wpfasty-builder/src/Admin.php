@@ -193,6 +193,7 @@ final class Admin
         $config = $common + [
             'features' => apply_filters('wpfasty_builder_features', []),
             'page' => $id,
+            'onboarding' => PageOnboarding::eligible($id),
             'title' => get_the_title($id),
             'source' => $source,
             'collection' => $collection,

@@ -46,6 +46,9 @@ final class RestSecurityTest extends TestCase
         'POST /render-block page=7' => ['editor', 'administrator', 'ms-admin'],
         'POST /render-block page=5' => ['page-owner', 'editor', 'administrator', 'ms-admin'],
         'POST /render-block' => ['page-owner', 'editor', 'administrator', 'ms-admin'],
+        'POST /onboarding/7' => ['editor', 'administrator', 'ms-admin'],
+        'POST /onboarding/5' => ['page-owner', 'editor', 'administrator', 'ms-admin'],
+        'POST /onboarding/9' => [],
         'POST /pages' => ['page-owner', 'editor', 'administrator', 'ms-admin'],
         'POST /sources' => ['administrator'],
     ];
@@ -54,14 +57,14 @@ final class RestSecurityTest extends TestCase
     {
         $routes = array_keys($GLOBALS['wp_test_routes']);
         self::assertEqualsCanonicalizing(
-            array_map(static fn (string $r): string => Rest::NS.$r, ['/catalog', '/links', '/layout/(?P<id>\d+)', '/render-block', '/pages', '/sources']),
+            array_map(static fn (string $r): string => Rest::NS.$r, ['/catalog', '/links', '/layout/(?P<id>\d+)', '/render-block', '/pages', '/sources', '/onboarding/(?P<id>\d+)']),
             $routes,
             'a new route needs a row in ALLOWED',
         );
         foreach (self::ALLOWED as $call => $allowed) {
             preg_match('#^(GET|POST) (/[a-z-]+)(?:/(\d+))?(?: page=(\d+))?$#', $call, $m);
             $method = $m[1];
-            $route = '/layout' === $m[2] ? '/layout/(?P<id>\d+)' : $m[2];
+            $route = in_array($m[2], ['/layout', '/onboarding'], true) ? $m[2].'/(?P<id>\d+)' : $m[2];
             $params = ($m[3] ?? '') !== '' ? ['id' => (int) $m[3]] : [];
             $json = ($m[4] ?? '') !== '' ? ['page' => (int) $m[4]] : [];
             $perm = self::permission($route, $method);

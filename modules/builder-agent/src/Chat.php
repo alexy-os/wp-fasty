@@ -249,9 +249,31 @@ final class Chat
         if (!is_string($id) || !is_string($content) || !preg_match('/^[a-zA-Z0-9_-]{8,100}$/', $id) || '' === trim($content) || strlen($content) > 8000) {
             return new \WP_Error('wpfb_chat_invalid', 'Valid requestId and message required.', ['status' => 400]);
         }
+        $workerContent = $content;
+        if (isset($body['screenId'])) {
+            if (!is_string($body['screenId'])) {
+                return new \WP_Error('wpfb_screen_reference', 'Invalid screen reference.', ['status' => 400]);
+            }
+            $snapshot = PageOperations::snapshot($page);
+            if (is_wp_error($snapshot)) {
+                return $snapshot;
+            }
+            if (!class_exists(PageOnboarding::class)) {
+                return new \WP_Error('wpfb_screen_reference', 'Screen references require the compatible Builder update.', ['status' => 400]);
+            }
+            $reference = PageOnboarding::reference(Cast::string($snapshot['source']), $body['screenId']);
+            if (null === $reference) {
+                return new \WP_Error('wpfb_screen_reference', 'Screen is not installed or compatible.', ['status' => 400]);
+            }
+            $encoded = wp_json_encode(['userRequest' => $content, 'referenceScreenData' => $reference]);
+            if (!is_string($encoded) || strlen($encoded) > 8000) {
+                return new \WP_Error('wpfb_screen_reference_size', 'The screen and prompt exceed the bounded reference size. Shorten the prompt or remove the reference.', ['status' => 400]);
+            }
+            $workerContent = $encoded;
+        }
         $cache = json_decode(Cast::string(get_post_meta($page, '_wpfb_turn_'.$id, true)), true);
         if (is_array($cache)) {
-            if (($cache['hash'] ?? '') !== hash('sha256', $content)) {
+            if (($cache['hash'] ?? '') !== hash('sha256', $workerContent)) {
                 return new \WP_Error('wpfb_idempotency_conflict', 'Request id reused with different content.', ['status' => 409]);
             }
 
@@ -268,7 +290,7 @@ final class Chat
             return new \WP_Error('wpfb_agent_policy_invalid', 'Active Agent policy is invalid. Review its versioned configuration; no model request was sent.', ['status' => 503]);
         }
         $context['agentPolicy'] = $agentPolicy;
-        $result = self::worker('/turn', self::scope($page) + ['requestId' => $id, 'content' => $content, 'context' => $context], true);
+        $result = self::worker('/turn', self::scope($page) + ['requestId' => $id, 'content' => $workerContent, 'context' => $context], true);
         if (is_wp_error($result)) {
             return $result;
         }
@@ -276,7 +298,7 @@ final class Chat
         if (isset($result['proposal']) && is_array($result['proposal'])) {
             add_post_meta($page, '_wpfb_chat_'.$id, wp_slash(wp_json_encode(['source' => $source, 'blocks' => $result['proposal'], 'version' => $result['baseVersion'] ?? -1])), true);
         }
-        add_post_meta($page, '_wpfb_turn_'.$id, wp_slash(wp_json_encode(['hash' => hash('sha256', $content), 'result' => $result])), true);
+        add_post_meta($page, '_wpfb_turn_'.$id, wp_slash(wp_json_encode(['hash' => hash('sha256', $workerContent), 'result' => $result])), true);
 
         return new \WP_REST_Response($result);
     }

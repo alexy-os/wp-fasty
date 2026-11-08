@@ -62,6 +62,9 @@ final class Rest
             ['methods' => 'GET', 'callback' => [self::class, 'getLayout'], 'permission_callback' => $page],
             ['methods' => 'POST', 'callback' => [self::class, 'saveLayout'], 'permission_callback' => $page],
         ]);
+        register_rest_route(self::NS, '/onboarding/(?P<id>\d+)', [
+            'methods' => 'POST', 'callback' => [PageOnboarding::class, 'finish'], 'permission_callback' => $page,
+        ]);
         register_rest_route(self::NS, '/render-block', [
             'methods' => 'POST',
             'callback' => [self::class, 'renderBlock'],
@@ -102,6 +105,7 @@ final class Rest
 
         return new \WP_REST_Response([
             'source' => Cast::string($r['source']),
+            'screens' => PageOnboarding::screens($catalog, Sources::get(Cast::string($r['source']))),
             'sources' => array_map(
                 static fn ($s): array => ['id' => $s->id(), 'label' => $s->label()],
                 array_values(Sources::all()),

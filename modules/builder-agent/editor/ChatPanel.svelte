@@ -15,13 +15,16 @@
   import { builderContext } from "./context";
   import { chatCopy as copy } from "./content";
 
-  let { source, items, blocks, selected, history, progress, send, apply }: {
+  let { source, items, blocks, selected, history, progress, send, apply, attachment, clearAttachment }: {
     source: string; items: Item[]; blocks: BlockSpec[]; selected: string | null;
+    attachment?: {id:string;label:string;json:string}|null; clearAttachment?:()=>void;
     history: () => Promise<ChatHistory>;
     progress: (requestId: string, signal: AbortSignal) => Promise<ChatProgress>;
     send: (content: string, requestId: string) => Promise<ChatResult>;
     apply: (requestId: string) => Promise<void>;
   } = $props();
+  let showAttachment=$state(false);
+  const attachmentCopy={reference:"Reference screen",json:"Show reference JSON",remove:"Remove reference"};
   let turns = $state<ChatTurn[]>([]);
   let draft = $state("");
   let busy = $state(false);
@@ -114,6 +117,7 @@
     {/if}
   </Box>
   <Box tag="div" class="wpfb-chat-composer">
+    {#if attachment}<Box tag="div" class="wpfb-chat-attachment"><Text tag="span">{attachmentCopy.reference}: {attachment.label}</Text><Button disabled={busy} onclick={()=>clearAttachment?.()}>{attachmentCopy.remove}</Button><Button aria-expanded={showAttachment?'true':'false'} onclick={()=>showAttachment=!showAttachment}>{attachmentCopy.json}</Button>{#if showAttachment}<CodeBox value={attachment.json} />{/if}</Box>{/if}
     <Textarea bind:value={draft} disabled={!ready || busy} aria-label={copy.label} placeholder={copy.label} rows="3" />
     <Button disabled={!ready || busy || !draft.trim()} class="button button-primary" onclick={submit}>{busy ? copy.pending : pendingId && draft.trim() === pendingContent ? copy.retry : copy.send}</Button>
     {#if ready && error}<Text tag="p" class="wpfb-chat-notice" role="alert">{error}</Text>{/if}

@@ -1,5 +1,13 @@
 <script lang="ts">
   import {featureCopy} from "./features";
+  import OnboardingChoices from './OnboardingChoices.svelte';
+  import OnboardingScreens from './OnboardingScreens.svelte';
+  import {canOnboard,onboardingCopy,type PageShell} from './onboarding';
+  let onboarding = $state(false);
+  let started = false;
+  let shell = $state<PageShell>('blank');
+  let selectedScreen = $state<TemplatePage|null>(null);
+  let featurePending = $state(false);
   import OptionalPanel from "./OptionalPanel.svelte";
   import UiButton from "./ui/button/Button.svelte";
   import UiBox from "./ui/box/Box.svelte";
@@ -60,6 +68,7 @@
   /** the "New page" panel (?new=1 opens it on load) */
   let newOpen = $state(config.newPage === true);
   let source = $state(config.source || "ui8kit");
+  const attachment = $derived(selectedScreen?{id:selectedScreen.id,label:human(selectedScreen.id),json:JSON.stringify({source,blocks:selectedScreen.blocks},null,2)}:null);
   let collection = $state(config.collection || "");
   let previewUrl = $state("");
   let published = $state(false);
@@ -140,6 +149,11 @@
       previewUrl = layout.previewUrl;
       if (!applying) previewRevision = draftVersion;
       published = layout.published;
+      if (!started) {
+        started = true;
+        onboarding = canOnboard(config.onboarding===true,published,saved.length);
+        if (onboarding) {layoutStateNew(); paletteTab=config.features?.[0]?.id??'blocks';}
+      }
       await loadCatalog();
       void links.ensure();
       status = "idle";
@@ -149,6 +163,13 @@
     }
   }
 
+  function layoutStateNew(){layout.leftCollapsed=true;layout.rightCollapsed=true;layout.focus=false;}
+  function openPanels(){layout.leftCollapsed=false;layout.rightCollapsed=false;layout.focus=false;}
+  async function prepareFeature(){
+    if(onboarding){await client.finishOnboarding(shell);onboarding=false;openPanels();await init();}
+    await flush();if(status==='error')throw new Error(message);
+  }
+  async function manualOnboarding(){try{await prepareFeature();paletteTab='blocks';}catch(error){fail(error);}}
   async function loadCatalog() {
     const next = await client.catalog(source, collection);
     if (next.collection === null) collection = "";
@@ -616,7 +637,7 @@
   }
 </script>
 
-<div class={["wpfb-app", { "is-dragging": drag !== null, "is-resizing": resizing, "is-focus": layout.focus, [DARK_CLASS]: theme.dark }]}
+<div class={["wpfb-app", { "is-dragging": drag !== null, "is-resizing": resizing, "is-focus": layout.focus, "is-onboarding": onboarding, [DARK_CLASS]: theme.dark }]}
   style:--wpfb-col-left={layout.leftOpen ? `${layout.left}px` : "0px"} style:--wpfb-col-right={layout.rightOpen ? `${layout.right}px` : "0px"}
   style:--wpfb-bar-left={layout.leftOpen ? `${layout.left}px` : "auto"} style:--wpfb-bar-right={layout.rightOpen ? `${layout.right}px` : "auto"}>
   <header class="wpfb-bar" hidden={layout.focus}>
@@ -657,8 +678,12 @@
   </header>
 
   <div class="wpfb-main">
-    <aside id="wpfb-palette" class="wpfb-palette wpfb-scroll" aria-label="Blocks" hidden={!layout.leftOpen}>
-      {#if config.features?.length}
+    <aside id="wpfb-palette" class="wpfb-palette wpfb-scroll" aria-label="Blocks" hidden={!layout.leftOpen && !onboarding}>
+      {#if onboarding}
+      <OnboardingChoices value={shell} onchange={value=>shell=value} />
+      <UiButton class="wpfb-onboarding-manual" onclick={manualOnboarding}>{onboardingCopy.manual}</UiButton>
+      {/if}
+      {#if config.features?.length && !onboarding}
       <UiBox tag="div" class="wpfb-section wpfb-seg" role="group" aria-label={featureCopy.panels}>
         <UiButton aria-pressed={paletteTab === "blocks" ? "true" : "false"} aria-controls="wpfb-palette-content" onclick={() => (paletteTab = "blocks")}>{featureCopy.blocks}</UiButton>
         {#each config.features as feature (feature.id)}
@@ -669,8 +694,8 @@
       <UiBox tag="div" id="wpfb-palette-content" class="wpfb-palette-content">
       {#if paletteTab !== "blocks" && config.features?.some(feature => feature.id === paletteTab)}
         <OptionalPanel id={paletteTab} context={{config, source, items: store.items, blocks: [...blocks.values()], selected: store.selected,
-          request: client.request, beforeOperation: async () => {await flush(); if (status === "error") throw new Error(message);}, apply: applyExternal}} />
-      {:else}
+          request: client.request, beforeOperation: prepareFeature, onActivity: value=>{featurePending=value;}, attachment, clearAttachment:()=>selectedScreen=null, apply: applyExternal}} />
+      {:else if !onboarding}
       <div class="wpfb-section">
         <label class="wpfb-heading" for="wpfb-collection">Collection</label>
         <select id="wpfb-collection" class="wpfb-search" value={collection} onchange={(e) => switchCollection(e.currentTarget.value)}>
@@ -694,6 +719,9 @@
       </div>
       {/if}
       </UiBox>
+      {#if onboarding && config.features?.length}
+      <OnboardingScreens pages={catalog?.screens??[]} dark={theme.dark} onselect={page=>selectedScreen=page} />
+      {/if}
     </aside>
 
     {#if layout.leftOpen}
@@ -701,7 +729,8 @@
         onresize={(px) => layout.setWidth("left", px)} onreset={() => layout.reset("left")} ondragging={(on) => (resizing = on)} />
     {/if}
 
-    <section class="wpfb-canvas" aria-label="Preview">
+    <section class="wpfb-canvas" aria-label="Preview" aria-busy={featurePending}>
+      {#if featurePending}<UiBox tag="div" class="wpfb-agent-skeleton" role="status"><UiBox tag="div" class="wpfb-skeleton-line" /><UiBox tag="div" class="wpfb-skeleton-block" /><UiBox tag="div" class="wpfb-skeleton-line" />{onboardingCopy.pending}</UiBox>{/if}
       <UiBox tag="div" class="wpfb-preview-toolbar">
         <UiBox tag="div" class="wpfb-seg" role="group" aria-label={previewAppearanceLabel}>
           {#each previewChoices as choice (choice.mode)}

@@ -2,6 +2,7 @@ export type Json = string | number | boolean | null | Json[] | { [k: string]: Js
 export type Obj = { [k: string]: Json };
 
 export interface Config {
+  onboarding?: boolean;
   features?: {id: string; label: string}[];
   rest: string; nonce: string; page: number; title: string; source: string; collection: string;
   permalink: string; canPublish: boolean; editUrl: string;
@@ -41,6 +42,7 @@ export interface DataSource {
 export interface Binding { source: string; limit: number; term?: string; sale?: boolean; map?: Record<string, string> }
 export interface Item { id: string; block: string; variant: string; props: Obj; bindings: Record<string, Binding> }
 export interface Catalog {
+  screens?: TemplatePage[];
   source: string; sources: { id: string; label: string }[]; collections: { id: string; label: string; type: string; blocks: number }[];
   dataSources: DataSource[]; meta: Obj; collection: Collection | null; blocks: BlockSpec[];
 }

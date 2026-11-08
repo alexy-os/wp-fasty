@@ -2,7 +2,7 @@
     "$schema": "https://moduly.phpfasty.dev/schema/module-1.json",
     "id": "builder-agent",
     "name": "Builder Agent",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "publisher": "phpfasty",
     "license": "GPL-2.0-or-later",
     "description": "Optional Builder Agent; requires Builder page operations API 1 and authenticated worker capabilities. Manual Builder needs neither ModulY nor Node.",

@@ -35,3 +35,13 @@ local catalog, engine and policy resources. Windows/Linux native no-model checks
 are not proof of a live model turn or owner-machine GUI acceptance.
 
 See [ADR 006 — Run diagnostics and deadlines](../../docs/agent/adr-006-run-diagnostics-and-deadlines.md) for Agent 0.1.1 timeout handling, safe audit and one-run smoke limits.
+
+## 0.1.2 — new-page screen references
+
+Optional composer attachment support for installed screen JSON. Card selection is local
+reference data only; sending resolves the screen ID through the installed Builder adapter
+and binds the canonical reference to the existing idempotent request hash. Arbitrary client
+JSON is ignored; unknown/oversized references fail before a worker call. The new manual-core
+page shells do not depend on this module. Human Apply and publication boundaries are unchanged.
+The 0.1.1 diagnostic worker is unchanged; this is a new immutable signed module, not an
+overwrite of 0.1.1. Compatible Builder/theme packages must be installed for onboarding.

@@ -1,0 +1,4 @@
+import {test,expect} from 'bun:test';
+import {canOnboard,screenCards,shellChoices} from '../src/onboarding';
+test('only explicitly new empty unpublished pages onboard; no status inference for existing pages',()=>{expect(canOnboard(true,false,0)).toBe(true);for(const args of [[false,false,0],[true,true,0],[true,false,1]] as [boolean,boolean,number][])expect(canOnboard(...args)).toBe(false);expect(shellChoices.map(x=>x.id)).toEqual(['standard','blank','sidebar']);});
+test('show at most twelve real compatible installed screens, never padding invented cards',()=>{expect(screenCards([])).toEqual([]);const pages=Array.from({length:20},(_,i)=>({id:String(i),blocks:[{block:'hero',variant:'centered',props:{}}],preview:{src:'/installed.webp',width:640,height:1000}}));expect(screenCards(pages)).toHaveLength(12);expect(screenCards([{...pages[0],preview:undefined}])).toEqual([]);});

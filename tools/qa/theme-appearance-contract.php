@@ -22,6 +22,7 @@ $originalGet = $_GET;
 $hadServerName = isset($_SERVER['SERVER_NAME']);
 $_SERVER['SERVER_NAME'] ??= 'localhost';
 $names = ['wpfb-appearance-base', 'wpfb-appearance-child'];
+$fixtureParent = 'twig' === getenv('WPFB_QA_THEME_PARENT') ? 'twig' : 'wp-fasty';
 $files = [];
 $cssPosts = [];
 $page = 0;
@@ -49,7 +50,7 @@ try {
     foreach ($names as $name) {
         $dir = $root.'/'.$name;
         $extends = str_ends_with($name, 'child') ? "Extends: wpfb-appearance-base\n" : '';
-        $write($dir.'/style.css', "/*\nTheme Name: NON-LIVE $name\nTemplate: wp-fasty\nVersion: 1.0.0\n$extends*/\n");
+        $write($dir.'/style.css', "/*\nTheme Name: NON-LIVE $name\nTemplate: $fixtureParent\nVersion: 1.0.0\n$extends*/\n");
         $write(
             $dir.'/assets/css/tokens.css',
             ':root{--font-body:"WPFB Appearance Fixture",serif;'
@@ -173,6 +174,21 @@ try {
         $draftBeforePreview === get_post_meta($page, WPFastyBuilder\Store::DRAFT, true),
         'preview scheme leaves persisted layout data unchanged'
     );
+    // Real renderer, not a template-string assertion; old pages retain their original shell.
+    $originalShellContext = Front::context(['widgets' => ['sidebar' => 'existing-sidebar']]);
+    $check('existing-sidebar' === $originalShellContext['widgets']['sidebar'], 'legacy page sidebar unchanged without shell metadata');
+    foreach (['blank', 'standard', 'sidebar'] as $mode) {
+        update_post_meta($page, WPFastyBuilder\PageOnboarding::SHELL, $mode);
+        $shellHtml = $render();
+        $shellDocument = new WP_HTML_Tag_Processor($shellHtml);
+        $hasHeader = $shellDocument->next_tag('HEADER');
+        $shellDocument = new WP_HTML_Tag_Processor($shellHtml);
+        $hasFooter = $shellDocument->next_tag('FOOTER');
+        $check(('blank' !== $mode) === $hasHeader, $mode.' rendered header contract');
+        $check(('blank' !== $mode) === $hasFooter, $mode.' rendered footer contract');
+        $check(('sidebar' === $mode) === str_contains($shellHtml, 'w-full shrink-0 py-12 md:w-64'), $mode.' rendered sidebar contract');
+    }
+    delete_post_meta($page, WPFastyBuilder\PageOnboarding::SHELL);
     $_GET['wpfb_scheme'] = ['dark'];
     $check(
         'light' === apply_filters('wpfasty_color_scheme', null),

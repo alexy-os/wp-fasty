@@ -92,6 +92,7 @@ final class PagesTest extends TestCase
         });
         $this->assertIsArray($out);
         $this->assertSame([], $saved, 'empty: no Builder draft');
+        $this->assertSame(['_wpfb_onboarding' => '1', '_wpfb_page_shell' => 'blank'], $GLOBALS['wpfb_pages']['meta'][101]);
         $this->assertSame(['id' => 101, 'slug' => 'summer-sale', 'blocks' => 0], ['id' => $out['id'], 'slug' => $out['slug'], 'blocks' => $out['blocks']]);
         $this->assertSame('http://example.test/wp-admin/edit.php?post_type=page&page=wpfasty-builder&post=101', $out['url']);
         $this->assertSame([[

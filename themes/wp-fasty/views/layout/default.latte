@@ -13,9 +13,9 @@
 	{if ($shell ?? 'classic') === 'app-shell'}
 		{include 'layout/app-shell.latte'}
 	{else}
-		{include 'layout/parts/header.latte'}
+		{if ($builder_shell ?? '') !== 'blank'}{include 'layout/parts/header.latte'}{/if}
 
-		{if !empty($widgets['sidebar'])}
+		{if ($builder_shell ?? '') === 'sidebar' || !empty($widgets['sidebar'])}
 			{capture $c_ui3}
 				{capture $c_ui1}
 					{do_action 'before_content'}
@@ -34,7 +34,7 @@
 			{/capture}{include 'box/Box.latte', tag: 'main', class: 'site-content', children: (string) $c_ui4, attrs: ['id' => 'content']}
 		{/if}
 
-		{include 'layout/parts/footer.latte'}
+		{if ($builder_shell ?? '') !== 'blank'}{include 'layout/parts/footer.latte'}{/if}
 	{/if}
 
 	{wp_footer}

@@ -161,3 +161,24 @@ Implemented extraction: [ADR-003](adr-003-optional-builder-agent.md). Manual cor
 optional ModulY Agent are one codebase. Deployment still requires a trusted-signed
 module and a coordinated local-wp resource refresh; neither is silently installed
 on a user machine by this source change.
+
+### New-page onboarding and shared content (current implementation work)
+
+WP BuildY and standalone Creator consume the **same codegen-x content provider** and common
+block/screen JSON contracts, not separately authored catalogs. See [provider and adapter
+boundaries](builder-registry.md#shared-provider-and-consumer-adapters). Current WP onboarding
+uses the pinned bundled snapshot, with no runtime provider fetch or autonomous update.
+
+Only newly created empty Builder drafts enter onboarding. Three manual-core page shells
+(standard without sidebar, blank by default, sidebar) do not require the optional Agent.
+When Agent is enabled, up to twelve compatible installed screen previews provide removable,
+expandable JSON references in the existing composer. Selection preserves the typed prompt
+and performs neither insertion nor a model call. The server resolves the screen ID against
+the installed adapter; arbitrary client JSON is not accepted as authoritative context.
+Sending transitions to normal panels with a pending preview skeleton; existing proposal,
+schema/details validation and human Apply remain mandatory, with no automatic publication.
+
+Future only: recommend those screens by site business/niche; generate unique designs through
+the same authoritative schema validator. Neither a recommender nor free-form schema bypass
+is implemented or authorized by this note. No codegen-x/Creator repository changes are needed
+for this WP work.

@@ -137,7 +137,14 @@ final class Front
         $context['wpfb'] = null !== $entry ? self::bound($entry, $context) : [];
         // record tokens of every block ({post:}, {product:}, {term:}, {price:}, {stock:}): one query per type
         Links::prime(null !== $entry ? array_column(Layout::blocks($entry), 'props') : []);
-        $context['widgets'] = ['sidebar' => ''] + Cast::map($context['widgets'] ?? []);
+        $mode = get_post_meta(self::$page, PageOnboarding::SHELL, true);
+        if (in_array($mode, ['blank', 'standard', 'sidebar'], true)) {
+            $context['builder_shell'] = $mode;
+            $context['shell'] = 'classic';
+        }
+        if (in_array($mode, ['blank', 'standard'], true)) {
+            $context['widgets'] = ['sidebar' => ''] + Cast::map($context['widgets'] ?? []);
+        }
 
         return $context;
     }

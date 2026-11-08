@@ -13,9 +13,9 @@
 	{% if (shell ?? 'classic') == 'app-shell' %}
 		{% include 'layout/app-shell.html.twig' %}
 	{% else %}
-		{% include 'layout/parts/header.html.twig' %}
+		{% if builder_shell|default('') != 'blank' %}{% include 'layout/parts/header.html.twig' %}{% endif %}
 
-		{% if widgets.sidebar ?? false %}
+		{% if builder_shell|default('') == 'sidebar' or (widgets.sidebar ?? false) %}
 			{% set c_ui3 %}
 				{% set c_ui1 %}
 					{{ do_action('before_content') }}
@@ -34,7 +34,7 @@
 			{% endset %}{% include 'box/Box.html.twig' with {'tag': 'main', 'class': 'site-content', 'children': c_ui4, 'attrs': {'id': 'content'}} only %}
 		{% endif %}
 
-		{% include 'layout/parts/footer.html.twig' %}
+		{% if builder_shell|default('') != 'blank' %}{% include 'layout/parts/footer.html.twig' %}{% endif %}
 	{% endif %}
 
 	{{ wp_footer() }}

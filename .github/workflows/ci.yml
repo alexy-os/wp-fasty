@@ -469,6 +469,17 @@ jobs:
           # The fixture explicitly loads the real selected parent functions.php and renders its actual theme pipeline.
           wp --skip-themes eval 'require getenv("GITHUB_WORKSPACE")."/tools/qa/theme-appearance-contract.php";'
 
+      - name: New-page onboarding — NON-LIVE packaged adapters, shells and installed screen references
+        run: |
+          cd /tmp/wp
+          for engine in latte twig; do
+            use-builder "$engine"
+            WPFB_QA_ENGINE="$engine" wp --skip-themes eval 'require getenv("GITHUB_WORKSPACE")."/tools/qa/onboarding-contract.php";'
+            parent=wp-fasty; [ "$engine" != twig ] || parent=twig
+            WPFB_QA_THEME_PARENT="$parent" wp --skip-themes eval 'require getenv("GITHUB_WORKSPACE")."/tools/qa/theme-appearance-contract.php";'
+          done
+          use-builder latte
+
       - name: Verified published ModulY + unsigned development fixture (no signing keys)
         run: |
           mkdir -p "$RUNNER_TEMP/moduly"

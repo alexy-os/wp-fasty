@@ -20,6 +20,14 @@ const server=workerServer({token:'nonlive-'.repeat(5),store,runner:async body=>{
   });
   return {agentPolicy:policy.provenance(),answer:'NON-LIVE text rewrite only',proposal};
  }
+ if(body.content.includes('NON-LIVE screen reference')){
+  const envelope=JSON.parse(body.content);
+  assert.equal(envelope.userRequest,'NON-LIVE screen reference');
+  assert.equal(envelope.referenceScreenData.schema,'wpfasty-screen-reference/1');
+  assert.equal(envelope.referenceScreenData.source,body.context.source);
+  assert.ok(envelope.referenceScreenData.blocks.length>0);
+  assert.ok(!body.content.includes('MALICIOUS_CLIENT_JSON'));
+ }
  const assembly=body.content.includes('NON-LIVE page assembly');
  const specs=assembly?['hero','about','cta']:['about'];
  const proposal=specs.map(spec=>{

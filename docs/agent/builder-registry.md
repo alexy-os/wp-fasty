@@ -2,6 +2,32 @@
 
 One registry per runtime; a registry never contains or points to the other runtime (ADR-001, K7).
 
+## Shared provider and consumer adapters
+
+**codegen-x is the common content provider for WP BuildY and standalone Creator.**
+Blocks and screens have shared, versioned JSON contracts; these are not two independently
+maintained content catalogs. Runtime-specific registry files are generated projections of
+the same provider snapshot, not separate sources of truth.
+
+This WP release consumes the existing **versioned bundled snapshot** with recorded source
+commit/digest. Neither opening the Builder, selecting a screen nor submitting its reference
+performs a runtime request to codegen-x or silently updates the snapshot. Updating that
+snapshot is a separate explicit, verified release operation. Future release-time automation
+may fetch a pinned codegen-x revision in CI, run shared contract and consumer-adapter
+compatibility gates, then bundle the verified snapshot with the plugin release. This pipeline
+is planned only; this change does not implement CI fetching or runtime updates. This change does not modify
+codegen-x or Creator repositories, nor claim their current implementations were changed.
+
+The installed consumer adapter owns compatibility mapping: site engine, block/variant IDs,
+props/bindings, schema validation and installed-template availability. A shared JSON contract
+is not permission to bypass those checks or execute provider content. The WP onboarding grid
+uses at most 12 compatible installed screens from this snapshot; a selected screen is chat
+reference data only, never an automatic insertion, model request or publication.
+
+Niche-dependent recommendations and unique design generation are future work, not implemented
+here. Any future generated layout must pass the same authoritative schema/compatibility
+validation and explicit human Apply flow.
+
 ## URLs
 
 | | Latte | Twig |

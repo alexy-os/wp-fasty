@@ -73,3 +73,12 @@ if (!function_exists('get_option')) {
         return $default;
     }
 }
+
+if (!function_exists('update_post_meta')) {
+    function update_post_meta(int $id, string $key, mixed $value): bool
+    {
+        $GLOBALS['wpfb_pages']['meta'][$id][$key] = $value;
+
+        return true;
+    }
+}

@@ -122,3 +122,5 @@ try {
     }
 }
 echo "NON-LIVE published/draft existing-text rewrite checks complete; no model calls.\n";
+
+require __DIR__.'/builder-screen-reference-contract.php';
