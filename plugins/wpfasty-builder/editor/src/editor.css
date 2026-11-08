@@ -282,7 +282,7 @@ body:has(#wpfasty-builder) #wpbody-content { padding-bottom: 0; }
 /* New-page onboarding is transient. Existing user panel preferences are never written here. */
 .wpfb-app.is-onboarding .wpfb-main {display:block;overflow:auto;}
 .wpfb-app.is-onboarding .wpfb-bar,.wpfb-app.is-onboarding .wpfb-canvas,.wpfb-app.is-onboarding .wpfb-inspector,.wpfb-app.is-onboarding .wpfb-splitter{display:none;}
-.wpfb-app.is-onboarding .wpfb-palette {display:flex;width:min(100%,960px);height:auto;min-height:100%;margin:auto;padding:48px 24px;overflow:visible;gap:24px;border:0;justify-content:center;}
+.wpfb-app.is-onboarding .wpfb-palette {display:flex;flex-direction:column;width:min(100%,960px);height:auto;min-height:100%;margin:auto;padding:48px 24px;overflow:visible;gap:24px;border:0;justify-content:center;}
 .wpfb-app.is-onboarding .wpfb-palette-content {flex:0 0 auto;width:min(100%,640px);align-self:center;}
 .wpfb-app.is-onboarding .wpfb-chat-header,.wpfb-app.is-onboarding .wpfb-chat-transcript {display:none;}
 .wpfb-onboarding-choices {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;width:min(100%,640px);margin-inline:auto;}
