@@ -27,3 +27,4 @@ Rules for editing this folder:
 - [Implemented local search](builder-local-search.md) · [Implemented Agent policy](builder-agent-policy.md)
 
 - [ADR-003: optional Builder Agent / prior ModulY audit and rollout](adr-003-optional-builder-agent.md)
+- [Refactor spec: single block provider, Ask/Build/Create, session standard (2026-11-10)](builder-refactor-single-provider.md)
