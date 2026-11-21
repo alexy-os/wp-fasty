@@ -10,8 +10,8 @@ const svelte = files(src).filter((f) => f.endsWith(".svelte"));
 const code = files(src).filter((f) => /\.(svelte|ts)$/.test(f));
 
 describe("preview iframe", () => {
-  // the page preview (App) and the live block prototypes of the cards (BlockCards, ADR-007): same sandbox
-  const framed = ["App.svelte", "BlockCards.svelte"];
+  // the page preview (App) and the live block prototypes of the block and starter cards (ADR-007): same sandbox
+  const framed = ["App.svelte", "BlockCards.svelte", "OnboardingStarters.svelte"];
   const frames = framed.flatMap((f) => [...readFileSync(join(src, f), "utf8").matchAll(/<iframe\b[^>]*>/g)].map((m) => m[0]));
   test("every iframe is sandboxed with allow-same-origin only (no allow-scripts)", () => {
     expect(frames.length).toBe(framed.length);
@@ -20,6 +20,12 @@ describe("preview iframe", () => {
       expect(sb).not.toBeNull();
       const tokens = (sb?.[1] ?? "").split(/\s+/).filter(Boolean);
       expect(tokens).toEqual(["allow-same-origin"]);
+    }
+  });
+  test("a card iframe only loads a prototype document (prototypeSource: page preview nonce, no srcdoc)", () => {
+    for (const f of frames.slice(1)) {
+      expect(f).toMatch(/\ssrc=\{prototypeSource\(/);
+      expect(f).not.toMatch(/srcdoc/);
     }
   });
   test("no other file creates an iframe", () => {

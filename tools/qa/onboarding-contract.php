@@ -40,6 +40,15 @@ try {
     $installed = WPFastyBuilder\Sources::catalog('ui8kit');
     $check($installed instanceof Catalog, 'active adapter has installed catalog');
     $check(null === PageOnboarding::reference('ui8kit', 'press:home'), 'removed screens cannot be referenced');
+    $starters = WPFastyBuilder\Starters::forEditor();
+    $check(['shop', 'folio', 'press'] === array_column($starters, 'id'), 'three Simple starter cards');
+    foreach ($starters as $s) {
+        $ref = PageOnboarding::reference('ui8kit', $s['id']);
+        $check(is_array($ref) && 'ui8kit' === $ref['source'] && count($ref['blocks']) === $s['blocks'] && count($s['items']) === $s['blocks'], $s['id'].': Chat reference = the server starter file');
+        $check(strlen((string) wp_json_encode($ref)) < 7000, $s['id'].': reference fits the bounded Chat reference size');
+    }
+    $check(null === PageOnboarding::reference('other', 'shop'), 'a starter of another source is not referenced');
+    $check(null === PageOnboarding::reference('ui8kit', 'uninstalled'), 'unknown reference cannot be resolved');
     foreach (['standard', 'blank', 'sidebar'] as $mode) {
         $page = Pages::create('NON-LIVE onboarding '.$mode, '', 'empty');
         $check(is_array($page), 'new page created');
@@ -61,10 +70,29 @@ try {
         $again = PageOnboarding::finish($request);
         $check(is_wp_error($again) && 'wpfb_onboarding_conflict' === $again->get_error_code(), 'repeat transition conflicts');
     }
+    foreach (['shop', 'folio', 'press'] as $starterId) {
+        $page = Pages::create('NON-LIVE onboarding starter '.$starterId, '', 'empty');
+        $check(is_array($page), 'new page created');
+        $id = $page['id'];
+        $ids[] = $id;
+        $request = new WP_REST_Request('POST');
+        $request['id'] = $id;
+        $request->set_header('content-type', 'application/json');
+        $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+        $request->set_body((string) wp_json_encode(['mode' => 'standard', 'starter' => 'nope']));
+        $bad = PageOnboarding::finish($request);
+        $check(is_wp_error($bad) && 'wpfb_starter' === $bad->get_error_code() && PageOnboarding::eligible($id), 'unknown starter refused, page unchanged');
+        $request->set_body((string) wp_json_encode(['mode' => 'standard', 'starter' => $starterId, 'blocks' => [['block' => 'evil']]]));
+        $result = PageOnboarding::finish($request);
+        $check(is_array($result) && 'standard' === $result['mode'], $starterId.': starter applied'.(is_wp_error($result) ? ': '.$result->get_error_code() : ''));
+        $draft = WPFastyBuilder\Layout::blocks(Store::get($id, true) ?? []);
+        $expected = WPFastyBuilder\Starters::get($starterId);
+        $check(null !== $expected && array_column($draft, 'block') === array_column($expected['layout']['blocks'], 'block'), $starterId.': draft = server starter blocks (client blocks ignored)');
+        $check(!Store::has($id) && !PageOnboarding::eligible($id), $starterId.': draft only, onboarding finished');
+    }
     $old = wp_insert_post(['post_type' => 'page', 'post_status' => 'draft', 'post_title' => 'NON-LIVE existing draft']);
     $ids[] = $old;
     $check(!PageOnboarding::eligible($old), 'existing empty page remains unchanged');
-    $check(null === PageOnboarding::reference('ui8kit', 'uninstalled:screen'), 'unknown reference cannot be resolved');
     echo 'Onboarding contract passed: '.$assertions." assertions; no model or provider requests.\n";
 } finally {
     foreach ($ids as $id) {

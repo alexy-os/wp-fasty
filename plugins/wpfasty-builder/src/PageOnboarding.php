@@ -28,11 +28,18 @@ final class PageOnboarding
             return new \WP_Error('wpfb_page_shell', 'Unsupported page layout.', ['status' => 400]);
         }
 
-        return DraftGuard::locked($id, static function () use ($id, $mode): array|\WP_Error {
+        $starterId = $body['starter'] ?? '';
+        $starter = is_string($starterId) && '' !== $starterId ? Starters::get(sanitize_key($starterId)) : null;
+        if ('' !== $starterId && null === $starter) {
+            return new \WP_Error('wpfb_starter', 'This starter is not available on this site.', ['status' => 400]);
+        }
+
+        return DraftGuard::locked($id, static function () use ($id, $mode, $starter): array|\WP_Error {
             if (!self::eligible($id) || 0 !== DraftGuard::version($id)) {
                 return new \WP_Error('wpfb_onboarding_conflict', 'The page is no longer new and empty. Reload the Builder.', ['status' => 409]);
             }
-            $result = PageOperations::replaceLocked($id, 'ui8kit', [], 0);
+            // a starter's blocks come from the plugin's own starter file (Starters), never from the request
+            $result = PageOperations::replaceLocked($id, null !== $starter ? self::source($starter) : 'ui8kit', null !== $starter ? self::blocks($starter) : [], 0);
             if (is_wp_error($result)) {
                 return $result;
             }
@@ -44,35 +51,44 @@ final class PageOnboarding
     }
 
     /**
-     * Optional Agent reference port: an exact page of an installed template collection, never client JSON. The bundled
-     * Simple source has no template pages (ADR-007); its twelve old screens and their presentation were removed.
+     * Agent reference port (Chat attachment of an onboarding card; modules/builder-agent Chat::turn `screenId`): the
+     * composition of a starter available on this site (Starters::get), read from the plugin's own starter file, never
+     * from client JSON; null when the starter is unknown, unavailable or of another source. It replaces the scan of
+     * installed template collections, which was deleted with the collections (ADR-007).
      *
-     * @return array<string, mixed>|null
+     * @return array{schema: string, source: string, id: string, blocks: list<array<string, mixed>>}|null
      */
     public static function reference(string $source, string $id): ?array
     {
-        $catalog = Sources::catalog($source);
-        if (null === $catalog || strlen($id) > 160) {
+        $starter = 1 === preg_match('/^[a-z0-9_-]{1,64}$/', $id) ? Starters::get($id) : null;
+        if (null === $starter || self::source($starter) !== $source) {
             return null;
         }
-        foreach ($catalog->collections() as $collection) {
-            if ('template' !== ($collection['type'] ?? '')) {
-                continue;
-            }
-            foreach (Cast::list($collection['pages'] ?? []) as $page) {
-                if (!is_array($page) || Cast::string($collection['id']).':'.Cast::string($page['id'] ?? '') !== $id || [] === ($page['blocks'] ?? [])) {
-                    continue;
-                }
-                foreach (Cast::list($page['blocks']) as $block) {
-                    if (null === $catalog->variant(Cast::string(Cast::path($block, 'block')), Cast::string(Cast::path($block, 'variant')))) {
-                        return null;
-                    }
-                }
 
-                return ['schema' => 'wpfasty-screen-reference/1', 'source' => $source, 'id' => $id, 'blocks' => $page['blocks']];
-            }
+        return ['schema' => 'wpfasty-screen-reference/1', 'source' => $source, 'id' => $id, 'blocks' => self::blocks($starter)];
+    }
+
+    /** @param array{layout: array<string, mixed>} $starter */
+    private static function source(array $starter): string
+    {
+        return sanitize_key(Cast::string($starter['layout']['source'] ?? 'ui8kit'));
+    }
+
+    /**
+     * The blocks of a starter as layout blocks (Layout::normalize sanitizes them again on save).
+     *
+     * @param array{layout: array<string, mixed>} $starter
+     *
+     * @return list<array<string, mixed>>
+     */
+    private static function blocks(array $starter): array
+    {
+        $out = [];
+        foreach (Cast::list($starter['layout']['blocks'] ?? []) as $b) {
+            $b = Cast::map($b);
+            $out[] = ['id' => Cast::string($b['id'] ?? ''), 'block' => Cast::string($b['block'] ?? ''), 'variant' => Cast::string($b['variant'] ?? ''), 'props' => Cast::map($b['props'] ?? []), 'bindings' => Cast::map($b['bindings'] ?? [])];
         }
 
-        return null;
+        return $out;
     }
 }

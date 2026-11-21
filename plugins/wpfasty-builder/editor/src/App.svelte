@@ -1,11 +1,14 @@
 <script lang="ts">
   import {featureCopy} from "./features";
   import OnboardingChoices from './OnboardingChoices.svelte';
-  import {canOnboard,onboardingCopy,type PageShell} from './onboarding';
+  import OnboardingStarters from './OnboardingStarters.svelte';
+  import {canOnboard,onboardingCopy,starterAttachment,type PageShell} from './onboarding';
   let onboarding = $state(false);
   let started = false;
   let shell = $state<PageShell>('blank');
-  let selectedScreen = $state<TemplatePage|null>(null);
+  /** the onboarding starter attached to Chat (its card), null when none */
+  let attachedStarter = $state<Starter|null>(null);
+  let starting = $state(false);
   let featurePending = $state(false);
   import OptionalPanel from "./OptionalPanel.svelte";
   import UiButton from "./ui/button/Button.svelte";
@@ -32,7 +35,7 @@
     PanelRightOpen, Redo2, RotateCcw, Smartphone, Trash2, Undo2,
   } from "./icons";
   import { api } from "./api";
-  import type { BlockSpec, Binding, Box, Catalog, Config, Item, Json, Obj, RecordField, TemplatePage } from "./types";
+  import type { BlockSpec, Binding, Box, Catalog, Config, Item, Json, Obj, RecordField, Starter, TemplatePage } from "./types";
   import { clone, getPath, human, isObj, kindOf, merge, missingBlocks, newId, setPath } from "./util";
   import { defaultSource } from "./sources";
   import { LinkStore, setLinks } from "./links.svelte";
@@ -67,7 +70,7 @@
   /** the "New page" panel (?new=1 opens it on load) */
   let newOpen = $state(config.newPage === true);
   let source = $state(config.source || "ui8kit");
-  const attachment = $derived(selectedScreen?{id:selectedScreen.id,label:human(selectedScreen.id),json:JSON.stringify({source,blocks:selectedScreen.blocks},null,2)}:null);
+  const attachment = $derived(attachedStarter ? starterAttachment(attachedStarter, source) : null);
   let collection = $state(config.collection || "");
   let previewUrl = $state("");
   let published = $state(false);
@@ -167,6 +170,14 @@
   async function prepareFeature(){
     if(onboarding){await client.finishOnboarding(shell);onboarding=false;openPanels();await init();}
     await flush();if(status==='error')throw new Error(message);
+  }
+  /** an onboarding card: the starter's blocks become the draft (server-side, from the plugin's starter file) */
+  async function applyStarter(starter: Starter){
+    if(starting)return;
+    starting=true;
+    try{await client.finishOnboarding(shell,starter.id);onboarding=false;attachedStarter=null;openPanels();paletteTab='blocks';await init();}
+    catch(error){fail(error);}
+    finally{starting=false;}
   }
   async function manualOnboarding(){try{await prepareFeature();paletteTab='blocks';}catch(error){fail(error);}}
   async function loadCatalog() {
@@ -693,7 +704,7 @@
       <UiBox tag="div" id="wpfb-palette-content" class="wpfb-palette-content">
       {#if paletteTab !== "blocks" && config.features?.some(feature => feature.id === paletteTab)}
         <OptionalPanel id={paletteTab} context={{config, source, items: store.items, blocks: [...blocks.values()], selected: store.selected,
-          request: client.request, beforeOperation: prepareFeature, onActivity: value=>{featurePending=value;}, attachment, clearAttachment:()=>selectedScreen=null, apply: applyExternal}} />
+          request: client.request, beforeOperation: prepareFeature, onActivity: value=>{featurePending=value;}, attachment, clearAttachment: () => (attachedStarter = null), apply: applyExternal}} />
       {:else if !onboarding}
       <div class="wpfb-section">
         <label class="wpfb-heading" for="wpfb-collection">Collection</label>
@@ -718,6 +729,10 @@
       </div>
       {/if}
       </UiBox>
+      {#if onboarding}
+      <OnboardingStarters starters={config.starters ?? []} {previewUrl} dark={theme.dark} busy={starting} chat={(config.features?.length ?? 0) > 0}
+        attached={attachedStarter?.id ?? null} onapply={applyStarter} onattach={(starter) => (attachedStarter = starter)} />
+      {/if}
     </aside>
 
     {#if layout.leftOpen}

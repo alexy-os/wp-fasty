@@ -17,7 +17,7 @@ export function api(cfg: Config) {
   }
   return {
     request: call,
-    finishOnboarding: (mode: string) => call(`/onboarding/${cfg.page}`, {method:'POST',body:JSON.stringify({mode})}),
+    finishOnboarding: (mode: string, starter = "") => call(`/onboarding/${cfg.page}`, {method:'POST',body:JSON.stringify(starter ? {mode, starter} : {mode})}),
     /** one block's HTML, as the page template renders it (POST /render-block) */
     renderBlock: (source: string, item: Item) =>
       call<{ id: string; html: string; issues: Issue[] }>("/render-block", {

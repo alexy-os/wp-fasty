@@ -114,9 +114,10 @@ final class Starters
     }
 
     /**
-     * What the panel shows: id, label, description and the number of blocks of each available starter.
+     * What the "New page" panel and the onboarding cards show: id, label, description, the number of blocks and the
+     * block / variant of each block of every available starter (the cards draw them as live prototypes).
      *
-     * @return list<array{id: string, label: string, description: string, blocks: int}>
+     * @return list<array{id: string, label: string, description: string, blocks: int, items: list<array{block: string, variant: string}>}>
      */
     public static function forEditor(): array
     {
@@ -125,6 +126,10 @@ final class Starters
             'label' => $s['label'],
             'description' => $s['description'],
             'blocks' => count(Cast::list($s['layout']['blocks'] ?? [])),
+            'items' => array_map(static fn (mixed $b): array => [
+                'block' => Cast::string(Cast::map($b)['block'] ?? ''),
+                'variant' => Cast::string(Cast::map($b)['variant'] ?? ''),
+            ], Cast::list($s['layout']['blocks'] ?? [])),
         ], self::available());
     }
 

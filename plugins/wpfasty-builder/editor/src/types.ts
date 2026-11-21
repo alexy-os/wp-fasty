@@ -14,7 +14,7 @@ export interface Config {
   newPage?: boolean;
 }
 /** a starter set: the blocks of a demo landing, put into the Builder draft of a new page */
-export interface Starter { id: string; label: string; description: string; blocks: number }
+export interface Starter { id: string; label: string; description: string; blocks: number; items?: { block: string; variant: string }[] }
 /** POST /pages: the new draft page and its Builder URL */
 export interface NewPage { id: number; slug: string; url: string; blocks: number }
 export interface PropSpec { name: string; type: string | { ts?: string; record?: string }; optional: boolean; docs: string }
