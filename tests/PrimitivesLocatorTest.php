@@ -29,7 +29,7 @@ final class PrimitivesLocatorTest extends TestCase
 
     public function testComposeFieldsMapStateErrorToAriaInvalid(): void
     {
-        // kit-compose form fields (ui8kit/compose, tools/builder/export-ui8kit.ts): state error → recipe + aria-invalid
+        // kit-compose form fields (ui8kit/compose, the theme's pinned kit-compose copy): state error → recipe + aria-invalid
         $this->assertFileExists($this->theme().'/ui8kit/compose/Input.latte');
         $this->assertFileExists($this->theme().'/twig/ui8kit/compose/Input.html.twig');
         foreach ([\CodegenX\Compose\Latte\Compose::class, \CodegenX\Compose\Twig\Compose::class] as $compose) {
@@ -63,9 +63,9 @@ final class PrimitivesLocatorTest extends TestCase
 
     public function testCodegenRecipesAreThePinnedKitCompose(): void
     {
-        // presets/components/<recipe>.json = codegen-x packages/kit-compose/variants at the builder source commit
+        // the theme kit recipes = the compose data the Builder ships (the pinned UI8Kit CLI, sources/ui8kit/<runtime>/php)
         $root = dirname(__DIR__);
-        $compose = json_decode((string) file_get_contents($root.'/plugins/wpfasty-builder/sources/ui8kit/latte/compose/compose.json'), true);
+        $compose = json_decode((string) file_get_contents($root.'/plugins/wpfasty-builder/sources/ui8kit/latte/php/compose.json'), true);
         foreach (['alert', 'badge', 'button', 'card', 'iconbadge', 'input', 'textarea', 'label', 'link', 'stack', 'title'] as $name) {
             $recipe = Kit::recipe($name);
             $cgx = $compose['recipes'][$name];

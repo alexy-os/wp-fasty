@@ -28,3 +28,4 @@ Rules for editing this folder:
 
 - [ADR-003: optional Builder Agent / prior ModulY audit and rollout](adr-003-optional-builder-agent.md)
 - [Refactor spec: single block provider, Ask/Build/Create, session standard (2026-11-10)](builder-refactor-single-provider.md)
+- [ADR-007: UI8Kit Simple blocks only, live theme prototypes, pure constructor](adr-007-simple-blocks-live-prototypes.md) — supersedes the block line of the refactor spec

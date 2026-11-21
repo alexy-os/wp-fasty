@@ -49,12 +49,11 @@ final class CodexCompatTest extends TestCase
         $this->assertSame('folder', $r('metadata.icon.value', $s['product_cats'])['default']);
     }
 
-    public function testRecordPlanOfTheBundledCatalog(): void
+    public function testRecordPlanOfADataSlot(): void
     {
-        $catalog = new Catalog(json_decode((string) file_get_contents(
-            dirname(__DIR__).'/plugins/wpfasty-builder/sources/ui8kit/latte/catalog.json',
-        ), true));
-        $slot = $catalog->slot('posts', 'grid', 'posts');
+        // the generic planner over data slots of a catalog (fixtures: no bundled Simple block declares data, ADR-007)
+        $slots = json_decode((string) file_get_contents(__DIR__.'/fixtures/builder-slots.json'), true);
+        $slot = $slots['posts'];
         $this->assertSame('post', $slot['kind']);
         $folio = self::sources('folio');
         $plan = DataSources::plan($slot, $folio['projects'], ['author' => 'metadata.client.value']);
@@ -64,8 +63,8 @@ final class CodexCompatTest extends TestCase
         $this->assertSame('slug|route', $plan['href'][0], 'the catalog maps href itself');
         $this->assertSame('featured_media_id|media', $plan['image'][0]);
         $this->assertSame('auto', DataSources::level($slot, $folio['posts']));
-        $this->assertSame('manual', DataSources::level((array) $catalog->slot('products', 'grid3', 'products'), $folio['posts']));
-        $products = (array) $catalog->slot('products', 'grid3', 'products');
+        $this->assertSame('manual', DataSources::level($slots['products'], $folio['posts']));
+        $products = $slots['products'];
         $this->assertSame('auto', DataSources::level($products, self::sources('shop')['products']), 'R1/R2/R5/R6');
     }
 

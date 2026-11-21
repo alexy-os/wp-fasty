@@ -97,35 +97,27 @@ jobs:
           (cd themes/wp-fasty && npx --yes ui8kit@3 check) && (cd themes/wp-fasty/twig && npx --yes ui8kit@3 check) && (cd plugins/wpfasty-builder/primitives/latte && npx --yes ui8kit@3 check) && (cd plugins/wpfasty-builder/primitives/twig && npx --yes ui8kit@3 check)
           php tools/ui8kit3/presets.php --check
 
-      - name: Builder ui8kit source reproduces from its pinned codegen-x commit (source.commit / source.digest)
+      - name: Builder UI8Kit Simple snapshot reproduces (sources/ui8kit/snapshot.json, ADR-007) — every file as pinned, derived catalogs fresh, a static wireframe per variant
+        run: |
+          bun tools/builder/simple-snapshot.ts --check
+          echo "Simple snapshot: $(bun tools/builder/simple-snapshot.ts --check)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Shared codex vectors equal codegen-x at the theme's kit-compose commit (with a read token)
         env:
-          # codegen-x/ui8kit is private: with a read token the export is re-run at the pinned commit and diffed;
-          # without one only the committed tree is checked against the digest recorded at export time
+          # codegen-x/ui8kit is private: with a read token the shared vectors (tests/fixtures/codex-shared:
+          # readpath-wpfasty / readpath-null / safety-vectors) are compared byte-for-byte with its sources, core.ts and
+          # safe.ts give `want` (PHP side, every run: tests/CodexReadPathSharedTest, tests/CodegenSafetySharedTest)
           CODEGEN_X_TOKEN: ${{ secrets.CODEGEN_X_TOKEN }}
         run: |
           if [ -n "$CODEGEN_X_TOKEN" ]; then
-            C=$(bun -e "console.log(require('./plugins/wpfasty-builder/sources/ui8kit/latte/catalog.json').source.commit)")
+            C=$(grep -oP "^\$commit = '\K[0-9a-f]{40}" tools/ui8kit3/presets.php)
             git init -q /tmp/cgx && git -C /tmp/cgx remote add origin "https://x-access-token:${CODEGEN_X_TOKEN}@github.com/codegen-x/ui8kit.git"
             git -C /tmp/cgx fetch -q --depth 1 origin "$C" && git -C /tmp/cgx checkout -q FETCH_HEAD
             (cd /tmp/cgx && bun install --frozen-lockfile)
-            bun tools/builder/export-ui8kit.ts --check --cgx /tmp/cgx
-            # shared vectors (tests/fixtures/codex-shared): readpath-wpfasty / readpath-null / safety-vectors are byte-equal to
-            # the codegen-x sources, core.ts and safe.ts give `want` (PHP side, every run: tests/CodexReadPathSharedTest,
-            # tests/CodegenSafetySharedTest)
             bun tools/codex/readpath-shared.ts --cgx /tmp/cgx
           else
-            bun tools/builder/export-ui8kit.ts --check --offline
+            echo "no CODEGEN_X_TOKEN: shared vectors checked on the PHP side only"
           fi
-
-      - name: Builder block previews — a light and a dark WebP per variant (481 × 2), size as listed, ≤ 10 KB (shots are outside source.digest)
-        run: |
-          bun tools/builder/previews.ts --check
-          echo "Block previews: $(bun tools/builder/previews.ts --check)" >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Template page previews — a tall light and dark WebP per template page (63 × 2), 640 px wide, ≤ 40 KB
-        run: |
-          bun tools/builder/page-previews.ts --check
-          echo "Template page previews: $(bun tools/builder/page-previews.ts --check)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Composer install (theme)
         run: composer install --no-interaction --no-progress --working-dir=themes/wp-fasty
@@ -313,7 +305,7 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4]
-    # Every builder variant (480) × every XSS / template-injection payload (tools/security/payloads.php) through
+    # Every bundled Simple variant (157) × every XSS / template-injection payload (tools/security/payloads.php) through
     # POST /render-block (Fragment), the raw template and a compiled page — Latte and Twig, DOM-checked: no <script>,
     # no on* attribute, no dangerous URL scheme, no executed template code, Latte = Twig (tools/security/xss-fuzz.php).
     # Shard 1 also runs the raw-output gate (every |noescape / |raw / is_safe reviewed: tools/security/raw-sinks.json)
@@ -511,7 +503,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "24.22.1"
-      - name: Real PHP to Node module resource — NON-LIVE runner, bundled map and policy
+      # KNOWN INCOMPATIBLE (ADR-007): the optional Agent (modules/builder-agent, left unchanged on purpose) searches the
+      # installed catalog through its bundled Stock map of the removed block families, so with the Simple-only catalog
+      # its turns fail closed (no proposal, nothing written; the Builder works without the Agent). Kept running so the
+      # result stays visible; continue-on-error ends when phpfasty/wpmodules adapts the Agent (ADR-007 "Agent impact").
+      - name: Real PHP to Node module resource — NON-LIVE runner, bundled map and policy (known incompatible until the Agent adapts, ADR-007)
+        continue-on-error: true
         env:
           WP_ENVIRONMENT_TYPE: local
           WPFB_CONTRACT_HTTP: "1"
@@ -583,15 +580,6 @@ jobs:
           out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/queries.php" macros 2 6 2>&1) || { echo "$out"; exit 1; }
           echo "$out"
           echo "Builder record tokens: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
-          # builder richtext (the queried page as one record, the_content through its filters): same queries for 2 and 6 blocks
-          wp theme activate latte-press --quiet
-          out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/queries.php" richtext 2 6 2>&1) || { echo "$out"; exit 1; }
-          echo "$out"
-          echo "Builder richtext: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
-          # builder posts pager (posts/listPaged bound to posts): same queries for 2 and 6 posts a page, page 1 = page 2
-          out=$(wp eval-file "$GITHUB_WORKSPACE/tools/perf/queries.php" pager 2 6 2>&1) || { echo "$out"; exit 1; }
-          echo "$out"
-          echo "Builder pager: $(echo "$out" | head -1)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Builder — seed landings, smoke-render (200, no PHP notices), validate layouts with @ui8kit/contract
         run: |

@@ -150,13 +150,13 @@ final class SecurityXssTest extends TestCase
             $deep = ['n' => $deep];
         }
         [$entry, $issues] = Layout::normalize(['blocks' => [[
-            'id' => 'h', 'block' => 'pagehead', 'variant' => 'start', 'props' => [
+            'id' => 'h', 'block' => 'hero-simple', 'variant' => 'mediaEnd', 'props' => [
                 'title' => ['__html' => '<script>alert(1)</script>'],
-                'text' => '<img src=x onerror=alert(1)>Text',
-                'cta' => "Go\x00\x01",
-                'href' => 'jav&#x09;ascript:alert(1)',
+                'description' => '<img src=x onerror=alert(1)>Text',
+                'actionLabel' => "Go\x00\x01",
+                'actionHref' => 'jav&#x09;ascript:alert(1)',
                 'level' => '<b>2</b>',
-                'imageSrc' => 'javascript:alert(1)',
+                'image' => 'javascript:alert(1)',
                 'extra' => ['n' => ['__html' => '<i>x</i>', 'k' => '<svg onload=alert(1)>v']],
                 'deep' => $deep,
             ],
@@ -164,11 +164,11 @@ final class SecurityXssTest extends TestCase
         $props = (array) Layout::blocks($entry)[0]['props'];
         $codes = array_column($issues, 'code');
         self::assertArrayNotHasKey('title', $props, 'a marker or an object where the sample has text is dropped');
-        self::assertSame('Text', $props['text']);
-        self::assertSame('Go', $props['cta']);
-        self::assertSame('#/', $props['href']);
+        self::assertSame('Text', $props['description']);
+        self::assertSame('Go', $props['actionLabel']);
+        self::assertSame('#/', $props['actionHref']);
         self::assertArrayNotHasKey('level', $props, 'a string where the sample has a number is dropped');
-        self::assertSame('', $props['imageSrc']);
+        self::assertSame('', $props['image']);
         self::assertSame(['n' => ['k' => 'v']], $props['extra']);
         self::assertContains('layout.prop_type', $codes);
         self::assertContains('layout.props_too_deep', $codes);
@@ -230,7 +230,7 @@ final class SecurityXssTest extends TestCase
 
             return is_string($v) ? $p : $v;
         };
-        foreach ([['pagehead', 'start'], ['cta', 'card'], ['about', 'split'], ['richtext', 'sidebar']] as [$block, $variant]) {
+        foreach ([['hero-simple', 'mediaEnd'], ['cta-simple', 'center'], ['stats-simple', 'cols3'], ['faq-simple', 'list'], ['header-simple', 'inline']] as [$block, $variant]) {
             $base = [];
             foreach (['latte', 'twig'] as $engine) {
                 [$catalog, $r] = self::runtime($engine);

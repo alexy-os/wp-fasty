@@ -57,12 +57,15 @@ final class PagesTest extends TestCase
     public function testOnlyStartersThatFitTheSiteAreOffered(): void
     {
         $this->assertSame(['shop', 'folio', 'press'], array_column(Starters::forEditor(), 'id'));
-        $this->assertSame(4, Starters::forEditor()[0]['blocks']);
+        $this->assertSame(5, Starters::forEditor()[0]['blocks']);
         $this->assertArrayNotHasKey('layout', Starters::forEditor()[0]);
         $catalog = new Catalog((new LocalSource('ui8kit', $this->plugin.'/sources/ui8kit/latte', 'latte'))->catalog());
         [$shop] = Starters::shipped();
-        // no products on this site (theme without the product type): the shop starter is not offered
-        $this->assertFalse(Starters::fits($shop, $catalog, ['posts', 'projects']));
+        // Simple starters bind no data: they fit any site of the runtime; a starter that binds a missing source does not
+        $this->assertTrue(Starters::fits($shop, $catalog, []));
+        $bound = $shop;
+        $bound['layout']['blocks'][1]['bindings'] = ['items' => ['source' => 'products']];
+        $this->assertFalse(Starters::fits($bound, $catalog, ['posts', 'projects']));
         $broken = $shop;
         $broken['layout']['blocks'][0]['variant'] = 'no-such-variant';
         $this->assertFalse(Starters::fits($broken, $catalog, ['posts', 'products', 'projects']));
@@ -117,7 +120,7 @@ final class PagesTest extends TestCase
             return [['metadata' => ['blocks' => ['value' => $layout['blocks']]]], []];
         });
         $this->assertIsArray($out);
-        $this->assertSame(4, $out['blocks']);
+        $this->assertSame(5, $out['blocks']);
         [$shop] = Starters::shipped();
         $this->assertSame([[101, $shop['layout'], false]], $calls, 'the draft, not published');
         $this->assertArrayNotHasKey('page_template', $GLOBALS['wpfb_pages']['inserted'][0]);

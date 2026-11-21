@@ -29,20 +29,17 @@ try {
     wp_set_current_user((int) ($admins[0] ?? 0));
     foreach (WPFastyBuilder\Plugin::runtimes() as $engine) {
         $source = new LocalSource('ui8kit', WPFastyBuilder\Plugin::$dir.'/sources/ui8kit/'.$engine, $engine);
-        $screens = PageOnboarding::screens(new Catalog($source->catalog()), $source);
-        $check(12 === count($screens), $engine.': twelve installed screens');
-        $check(count(array_unique(array_column($screens, 'id'))) === count($screens), $engine.': stable unique IDs');
-        foreach ($screens as $screen) {
-            $check([] !== $screen['blocks'] && isset($screen['preview']), $engine.': real blocks and preview');
-            $check(strlen((string) wp_json_encode(['referenceScreenData' => $screen, 'userRequest' => 'Fill coherently'])) < 8000, $engine.': bounded composer reference');
+        $catalog = new Catalog($source->catalog());
+        $check([] === $catalog->collections(), $engine.': no bundled template screens or collections');
+        $blocks = $source->catalog()['blocks'] ?? [];
+        $check(is_array($blocks) && 52 === count($blocks), $engine.': Simple catalog available for insertion');
+        foreach (is_array($blocks) ? $blocks : [] as $block) {
+            $check(is_array($block) && 1 === ($block['contract']['version'] ?? null), $engine.': block-contract/v1');
         }
     }
     $installed = WPFastyBuilder\Sources::catalog('ui8kit');
     $check($installed instanceof Catalog, 'active adapter has installed catalog');
-    $installedScreens = PageOnboarding::screens($installed, WPFastyBuilder\Sources::get('ui8kit'));
-    $reference = PageOnboarding::reference('ui8kit', $installedScreens[0]['id']);
-    $check(is_array($reference) && $reference['blocks'] === $installedScreens[0]['blocks'], 'reference JSON resolved from installed source only');
-    $check('wpfasty-screen-reference/1' === $reference['schema'], 'versioned reference envelope');
+    $check(null === PageOnboarding::reference('ui8kit', 'press:home'), 'removed screens cannot be referenced');
     foreach (['standard', 'blank', 'sidebar'] as $mode) {
         $page = Pages::create('NON-LIVE onboarding '.$mode, '', 'empty');
         $check(is_array($page), 'new page created');

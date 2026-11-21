@@ -49,11 +49,22 @@ final class BuilderTest extends TestCase
                 $this->assertStringEndsWith('.html.twig', $v['template']);
             }
         }
-        $this->assertNotNull(self::catalog()->variant('posts', 'magazine'));
-        $this->assertSame(['posts' => 'post', 'filter.topics' => 'topic'], self::catalog()->bindable('posts', 'grid'));
-        $blog = self::catalog()->forEditor('content-blog');
-        $this->assertContains('posts', array_column($blog['blocks'], 'id'));
-        $this->assertNotContains('cart', array_column($blog['blocks'], 'id'));
+        // UI8Kit Simple only (ADR-007): 52 block-contract/v1 blocks, no data bindings, no collections
+        $this->assertCount(52, $data['blocks']);
+        $this->assertSame(157, array_sum(array_map(static fn ($b): int => count($b['variants']), $data['blocks'])));
+        $this->assertSame([], $data['collections']);
+        $this->assertNotNull(self::catalog()->variant('hero-simple', 'mediaEnd'));
+        $this->assertSame([], self::catalog()->bindable('hero-simple', 'mediaEnd'));
+        foreach ($data['blocks'] as $b) {
+            $this->assertSame(1, $b['contract']['version'], $b['id']);
+            $this->assertSame([], $b['data'], $b['id']);
+            foreach ($b['variants'] as $v) {
+                $this->assertSame([], $v['bindings'], $b['id'].'/'.$v['id']);
+                foreach ($b['axes'] as $axis => $values) {
+                    $this->assertContains($v['set'][$axis] ?? null, $values, $b['id'].'/'.$v['id'].' '.$axis);
+                }
+            }
+        }
     }
 
     public function testCatalogCheckRejectsBadTemplates(): void
@@ -76,25 +87,29 @@ final class BuilderTest extends TestCase
         [$entry, $issues] = Layout::normalize([
             'collection' => 'nope',
             'blocks' => [
-                ['block' => 'pagehead', 'variant' => 'start', 'props' => ['title' => '<script>x</script>Hi', 'href' => 'javascript:alert(1)']],
-                ['id' => 'news', 'block' => 'posts', 'variant' => 'grid', 'props' => ['posts' => [['id' => 'stale']]],
-                    'bindings' => ['posts' => ['source' => 'posts', 'limit' => 99, 'term' => 'De sign!', 'sale' => 'yes'], 'bad' => ['source' => 'posts']], ],
+                ['block' => 'hero-simple', 'variant' => 'mediaEnd', 'props' => ['title' => '<script>x</script>Hi', 'actionHref' => 'javascript:alert(1)', 'image' => 'javascript:alert(1)', 'level' => 'two']],
+                ['id' => 'news', 'block' => 'stories-simple', 'variant' => 'cols3', 'props' => ['stories' => [['id' => 's1', 'title' => '<b>T</b>', 'href' => 'data:text/html,x']]],
+                    'bindings' => ['stories' => ['source' => 'posts']], ],
                 ['block' => 'missing', 'variant' => 'x'],
-                ['id' => 'news', 'block' => 'stats', 'variant' => 'plain4', 'bindings' => ['stats' => ['source' => 'evil']]],
+                ['id' => 'news', 'block' => 'cta-simple', 'variant' => 'center', 'props' => ['title' => ['not' => 'text']]],
             ],
         ], 'ui8kit', self::catalog(), ['posts'], self::base());
         $codes = array_column($issues, 'code');
-        $this->assertContains('layout.binding_path_unknown', $codes);
+        $this->assertContains('layout.binding_path_unknown', $codes, 'Simple blocks declare no data bindings');
         $this->assertContains('layout.block_unknown', $codes);
-        $this->assertContains('layout.binding_source_unknown', $codes);
+        $this->assertContains('layout.prop_type', $codes);
         $this->assertSame([], array_filter($codes, static fn (string $c): bool => str_starts_with($c, 'core.')));
         $blocks = Layout::blocks($entry);
         $this->assertCount(3, $blocks);
         $this->assertSame('xHi', $blocks[0]['props']['title']);
-        $this->assertSame('#/', $blocks[0]['props']['href']);
-        $this->assertSame(['source' => 'posts', 'limit' => 24, 'term' => 'design'], $blocks[1]['bindings']['posts']);
-        $this->assertArrayNotHasKey('posts', $blocks[1]['props'], 'bound paths drop their literal value');
+        $this->assertSame('#/', $blocks[0]['props']['actionHref']);
+        $this->assertStringNotContainsString('javascript', (string) ($blocks[0]['props']['image'] ?? ''));
+        $this->assertArrayNotHasKey('level', $blocks[0]['props'], 'a setting of the wrong type is dropped');
+        $this->assertSame('T', $blocks[1]['props']['stories'][0]['title']);
+        $this->assertSame('#/', $blocks[1]['props']['stories'][0]['href']);
+        $this->assertSame([], $blocks[1]['bindings']);
         $this->assertSame('newsx', $blocks[2]['id'], 'block ids stay unique');
+        $this->assertArrayNotHasKey('title', $blocks[2]['props']);
         $this->assertSame('', $entry['metadata']['collection']['value']);
         $this->assertSame('layout', $entry['kind']);
         $this->assertTrue(Layout::safeHref('{page:about}#team'));
@@ -106,11 +121,6 @@ final class BuilderTest extends TestCase
         }
         $this->assertFalse(Layout::safeHref('javascript:{tel}'));
         $this->assertFalse(Layout::safeHref('{open-now}'));
-        [$sale] = Layout::normalize([
-            'blocks' => [['id' => 'sale', 'block' => 'products', 'variant' => 'grid3',
-                'bindings' => ['products' => ['source' => 'products', 'limit' => 4, 'sale' => true]], ], ],
-        ], 'ui8kit', self::catalog(), ['products'], self::base());
-        $this->assertSame(['source' => 'products', 'limit' => 4, 'sale' => true], Layout::blocks($sale)[0]['bindings']['products']);
     }
 
     public function testEntryCoreChecks(): void
@@ -151,23 +161,19 @@ final class BuilderTest extends TestCase
     public function testTwigCompileRendersTheSameHtmlAsLatte(): void
     {
         [$entry] = Layout::normalize(['blocks' => [
-            ['id' => 'intro', 'block' => 'pagehead', 'variant' => 'start', 'props' => ['title' => "It's <Builder> \\ page"]],
-            ['id' => 'news', 'block' => 'posts', 'variant' => 'grid', 'bindings' => ['posts' => ['source' => 'posts']]],
+            ['id' => 'intro', 'block' => 'intro-simple', 'variant' => 'start', 'props' => ['title' => "It's <Builder> \\ page"]],
+            ['id' => 'faq', 'block' => 'faq-simple', 'variant' => 'list', 'props' => ['items' => [['id' => 'q1', 'title' => 'A "real" question', 'description' => 'Yes.']]]],
             ['id' => 'gone', 'block' => 'nope', 'variant' => 'x'],
-        ], ], 'ui8kit', self::catalog(), ['posts'], self::base());
+        ], ], 'ui8kit', self::catalog(), [], self::base());
         $latte = Compiler::compile($entry, self::catalog());
         $twig = Compiler::compile($entry, self::twigCatalog(), 'twig');
         // no cross-runtime compile: a Latte catalog gives a Twig page nothing to render, and vice versa
         $this->assertStringNotContainsString('wpfb_block', Compiler::compile($entry, self::catalog(), 'twig'));
         $this->assertStringNotContainsString('wpfb_block', Compiler::compile($entry, self::twigCatalog(), 'latte'));
         $this->assertStringStartsWith(Compiler::marker($entry, 'twig'), $twig);
-        $this->assertStringContainsString("{{ wpfb_block('ui8kit', 'blocks/post-grid.html.twig'", $twig);
-        $this->assertStringContainsString("wpfb['news']['posts'] ?? []", $twig);
-        $post = ['id' => 'post-1', 'title' => 'A "real" post', 'excerpt' => 'E', 'category' => 'News', 'author' => 'Ann',
-            'date' => 'Oct 1, 2026', 'minutes' => 2, 'icon' => 'file-text', 'href' => 'https://example.test/a/', 'image' => 'https://example.test/a.jpg', ];
+        $this->assertStringContainsString("{{ wpfb_block('ui8kit', 'blocks/faq-simple.html.twig'", $twig);
         $rl = new BlockRenderer(['ui8kit' => self::latteSource()], null);
         $rt = new BlockRenderer(['ui8kit' => self::twigSource()], null);
-        $ctx = ['wpfb' => ['news' => ['posts' => [$post]]]];
         $l = new Engine();
         $l->setLoader(new StringLoader(['page' => $latte]));
         $l->addFunction('wpfb_block', static fn (string $s, string $t, array $p): string => $rl->render($s, $t, $p));
@@ -175,10 +181,12 @@ final class BuilderTest extends TestCase
         $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader(['page' => $twig]), ['autoescape' => 'html']);
         $env->registerUndefinedFunctionCallback(static fn (string $n): \Twig\TwigFunction|false => 'wpfb_block' === $n ? new \Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
         $strip = require dirname(__DIR__).'/tools/parity/normalize-dom.php';
-        $a = $strip($l->renderToString('page', $ctx));
-        $this->assertStringContainsString('A &quot;real&quot; post', $a);
-        $this->assertSame($a, $strip($env->render('page', $ctx)));
-        $this->assertSame($strip($l->renderToString('page', [])), $strip($env->render('page', [])));
+        $raw = $l->renderToString('page', []);
+        $this->assertStringContainsString('A "real" question', html_entity_decode(strip_tags($raw)));
+        $this->assertStringNotContainsString('<Builder>', $raw, 'tags never reach a saved prop');
+        $this->assertStringNotContainsString('<!-- wpfasty-builder', $raw);
+        $a = $strip($raw);
+        $this->assertSame($a, $strip($env->render('page', [])));
     }
 
     public function testTwigBlocksNeedNoLatteAndMatchLatteBlocks(): void
@@ -186,15 +194,15 @@ final class BuilderTest extends TestCase
         $dom = require dirname(__DIR__).'/tools/parity/normalize-dom.php';
         $rt = new BlockRenderer(['ui8kit' => self::twigSource()], null);
         $rl = new BlockRenderer(['ui8kit' => self::latteSource()], null);
-        $props = (array) self::catalog()->variant('pagehead', 'start')['props'];
+        $props = (array) self::catalog()->variant('hero-simple', 'mediaEnd')['props'];
         $props['title'] = 'Hi <b> & "q"';
-        $html = $rt->render('ui8kit', 'blocks/page-intro.html.twig', $props);
+        $html = $rt->render('ui8kit', 'blocks/hero-simple.html.twig', $props);
         $this->assertStringContainsString('Hi &lt;b&gt; &amp;', $html);
-        $this->assertSame($dom($rl->render('ui8kit', 'blocks/page-intro.latte', $props)), $dom($html));
+        $this->assertSame($dom($rl->render('ui8kit', 'blocks/hero-simple.latte', $props)), $dom($html));
         $this->assertSame('', $rt->render('ui8kit', '../x.html.twig', []));
         // Isolated runtimes: no source ever renders the other runtime's template — no fallback in either direction.
-        $this->assertSame('', $rt->render('ui8kit', 'blocks/page-intro.latte', $props));
-        $this->assertSame('', $rl->render('ui8kit', 'blocks/page-intro.html.twig', $props));
+        $this->assertSame('', $rt->render('ui8kit', 'blocks/hero-simple.latte', $props));
+        $this->assertSame('', $rl->render('ui8kit', 'blocks/hero-simple.html.twig', $props));
         $dir = sys_get_temp_dir().'/wpfb-notwig-'.getmypid();
         @mkdir($dir.'/blocks', 0777, true);
         file_put_contents($dir.'/blocks/x.latte', '<p>{$p[\'t\']}</p>');
@@ -202,6 +210,24 @@ final class BuilderTest extends TestCase
         $this->assertSame('<p>ok</p>', $only->render('n', 'blocks/x.latte', ['t' => 'ok']));
         $this->assertSame('', $only->render('n', 'blocks/x.html.twig', ['t' => 'ok']), 'a Latte-only source has no Twig block');
         $this->assertSame('', $rt->render('ui8kit', 'blocks/no-such-block.html.twig', []));
+    }
+
+    public function testSimpleCompositionsUseThePluginsComposeCopy(): void
+    {
+        // LinkButton exists only in the CLI compose data: a theme's older CodegenX\Compose must not change the recipes
+        foreach (['latte' => self::LATTE, 'twig' => self::TWIG] as $runtime => $dir) {
+            $props = (array) self::catalog()->variant('cta-simple', 'center')['props'];
+            $props['actionLabel'] = 'Go';
+            $props['actionHref'] = '/go/';
+            $src = 'twig' === $runtime ? self::twigSource() : self::latteSource();
+            $html = (new BlockRenderer(['ui8kit' => $src], null))->render('ui8kit', 'blocks/cta-simple'.Catalog::RUNTIMES[$runtime], $props);
+            $this->assertMatchesRegularExpression('#<a[^>]+href="/go/"[^>]*data-slot="button"|<a[^>]+data-slot="button"[^>]*href="/go/"#', $html, $runtime);
+            $this->assertStringNotContainsString('<!-- wpfasty-builder', $html, $runtime);
+        }
+        foreach (glob(self::LATTE.'/compose/*.latte') ?: [] as $f) {
+            $this->assertStringNotContainsString('\\CodegenX\\Compose\\', (string) file_get_contents($f), basename($f));
+        }
+        $this->assertTrue(class_exists(BlockRenderer::COMPOSE['latte'], false) || BlockRenderer::loadRuntime());
     }
 
     public function testTwigSandboxRejectsUnsafeTemplates(): void
@@ -253,34 +279,6 @@ final class BuilderTest extends TestCase
             'x' => '{{ '.Compiler::literal($value, [], [], true).'|json_encode|raw }}',
         ]));
         $this->assertSame($value, json_decode($env->render('x'), true));
-    }
-
-    public function testCompiledTemplateRendersBoundData(): void
-    {
-        [$entry] = Layout::normalize(['blocks' => [
-            ['id' => 'intro', 'block' => 'pagehead', 'variant' => 'start', 'props' => ['title' => 'Builder page']],
-            ['id' => 'news', 'block' => 'posts', 'variant' => 'grid', 'bindings' => ['posts' => ['source' => 'posts']]],
-        ], ], 'ui8kit', self::catalog(), ['posts'], self::base());
-        $tpl = Compiler::compile($entry, self::catalog());
-        $this->assertStringContainsString("wpfb_block('ui8kit', 'blocks/post-grid.latte'", $tpl);
-        $this->assertStringContainsString("\$wpfb['news']['posts']", $tpl);
-        $this->assertStringNotContainsString('post-static-first', $tpl, 'sample records of a bound path are not compiled in');
-
-        $post = ['id' => 'post-1', 'title' => 'A real post', 'excerpt' => 'E', 'category' => 'News', 'author' => 'Ann',
-            'date' => 'Oct 1, 2026', 'minutes' => 2, 'icon' => 'file-text', 'href' => 'https://example.test/a/', 'image' => 'https://example.test/a.jpg', ];
-        foreach ([false, true] as $guarded) {
-            $renderer = new BlockRenderer(['ui8kit' => self::latteSource($guarded)], null);
-            $theme = new Engine();
-            $theme->setStrictTypes(true);
-            $theme->setLoader(new StringLoader(['page' => $tpl]));
-            $theme->addFunction('wpfb_block', static fn (string $s, string $t, array $p): string => $renderer->render($s, $t, $p));
-            $html = $theme->renderToString('page', ['wpfb' => ['news' => ['posts' => [$post]]]]);
-            $this->assertStringContainsString('Builder page', $html);
-            $this->assertStringContainsString('A real post', $html);
-            $this->assertStringContainsString('href="https://example.test/a/"', $html);
-            $this->assertStringContainsString('https://example.test/a.jpg', $html);
-            $this->assertStringNotContainsString('<!-- wpfasty-builder', $html);
-        }
     }
 
     public function testGuardRejectsUnsafeTemplates(): void

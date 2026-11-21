@@ -8,11 +8,9 @@ use CodegenX\Organisms\Latte\Runtime as LatteRuntime;
 use CodegenX\Organisms\Twig\Runtime as TwigRuntime;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use WPFastyBuilder\BlockRenderer;
 use WPFastyBuilder\Codex\ReadPath;
 use WPFastyBuilder\DataSources;
 use WPFastyBuilder\Safe;
-use WPFastyBuilder\Source\LocalSource;
 
 require_once __DIR__.'/fixtures/links-stubs.php';
 require_once __DIR__.'/fixtures/rest-stubs.php';
@@ -126,45 +124,6 @@ final class CodegenSafetySharedTest extends TestCase
     {
         yield 'latte' => ['latte'];
         yield 'twig' => ['twig'];
-    }
-
-    #[DataProvider('engines')]
-    public function testSlotPropIsRawOnlyAsCapturedMarkup(string $engine): void
-    {
-        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
-        $r = new BlockRenderer(['ui8kit' => $src], null);
-        $tpl = 'latte' === $engine ? 'blocks/section-frame.latte' : 'blocks/section-frame.html.twig';
-        foreach (['start', 'end'] as $side) {
-            foreach (['split', 'stack'] as $layout) {
-                $p = ['title' => 'T', 'layout' => $layout, 'media' => ['show' => true, 'side' => $side], 'aside' => self::XSS];
-                $html = $r->render('ui8kit', $tpl, $p);
-                self::assertStringNotContainsString('<img src=x', $html, "$engine $layout $side");
-                self::assertStringNotContainsString('<script>', $html, "$engine $layout $side");
-                self::assertStringContainsString('&lt;img src=x onerror=alert(1)&gt;', $html, "$engine $layout $side");
-                $p['aside'] = ['__html' => '<b data-x="1">captured</b>'];
-                self::assertStringContainsString('<b data-x="1">captured</b>', $r->render('ui8kit', $tpl, $p));
-            }
-        }
-    }
-
-    #[DataProvider('engines')]
-    public function testRichTextSideNoteNeedsItsMarkup(string $engine): void
-    {
-        $src = new LocalSource('ui8kit', self::SRC.'/'.$engine, $engine);
-        $r = new BlockRenderer(['ui8kit' => $src], null);
-        $tpl = 'latte' === $engine ? 'blocks/rich-text.latte' : 'blocks/rich-text.html.twig';
-        $base = ['id' => 'rt', 'title' => 'T', 'content' => ['__html' => '<p>Body</p>'], 'layout' => 'sidebar'];
-        // the adapter's answer for a blank side note (ReadPath |html, DataSources::trusted after kses): absent
-        foreach (['', '  ', "\n\t"] as $blank) {
-            self::assertNull(ReadPath::read(['v' => $blank], 'v|html'));
-            self::assertNull(DataSources::trusted(['__html' => $blank], false));
-            self::assertNull(DataSources::trusted(['__html' => $blank], true));
-        }
-        $none = $r->render('ui8kit', $tpl, $base + ['aside' => ['title' => 'Note', 'content' => null]]);
-        self::assertStringNotContainsString('richtext-aside', $none);
-        $some = $r->render('ui8kit', $tpl, $base + ['aside' => ['title' => 'Note', 'content' => ['__html' => '<p>N</p>']]]);
-        self::assertStringContainsString('data-testid="richtext-aside"', $some);
-        self::assertStringContainsString('<p>N</p>', $some);
     }
 
     /** @return array<string, mixed> */
