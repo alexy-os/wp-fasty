@@ -29,6 +29,9 @@ onboarding screens built from those families.
    CLI's (`WPFastyBuilder\Kit\{Latte,Twig}\Compose`, `<engine>/php/Compose.php` + `compose.json`): Latte compositions
    are rewritten to call it, Twig registers `compose_props` / `compose_rc` / `compose_join` to it. Theme kit presets keep
    reading the theme's own kit-compose build (`tools/ui8kit3/presets.php`), so the theme is unchanged.
+   One reviewed brick fix (`kitBrick`): Latte >= 3.1.7 checks every URL attribute of `n:attr` and emptied the
+   data:image placeholders of media-frame (Twig kept them), so `Image.src` is an expression attribute with `|nocheck`,
+   its value still checked by `UI8Kit\Latte\Rt::imgUrlOrNull` (safe URLs, data:image only).
 4. **Live prototypes, script-free.** A card is `<iframe sandbox="allow-same-origin">` (no `allow-scripts`; CSP unchanged)
    on the page preview URL (`wpfb_preview` + page nonce + `edit_page`) with `wpfb_prototypes=<block>` and
    `#<block>--<variant>`. `Front::prototypes()` prints the theme's real `wp_head()` — parent and child tokens, fonts and
@@ -68,4 +71,5 @@ parity (52 blocks / 157 variants DOM-identical Latte = Twig), render-block check
 check/test/build, `simple-snapshot.ts --check`, registry build/verify, MCP smoke, packaging. Locally on a WP 7.1.4
 (SQLite) site: onboarding contract (both engines), theme appearance contract, landing seeding + `@ui8kit/contract`
 layout validation, N+1 guards, prototype route (light/dark, 404s) and headless-Chrome shots of the prototype document.
-Not verified: the editor UI with the cards in a real browser session.
+Not verified: the editor UI with the cards in a real browser session. Not done: publishing registry v4.0.0 to
+registry.buildy.tw (the optional "Published registries" workflow fails until it is published).
