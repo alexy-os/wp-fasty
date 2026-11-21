@@ -164,6 +164,20 @@ function kitComposition(cli: string, engine: Engine, rel: string): string {
   return cli.replaceAll(from, `\\${KIT_NS.latte}\\Compose::props(`);
 }
 
+/**
+ * A CLI brick, as copied, except one reviewed Latte fix: Latte >= 3.1.7 runs Filters::checkUrl on every URL attribute
+ * of `n:attr`, which empties the built-in data:image placeholders of media-frame (Twig keeps them; Rt::imgUrlOrNull
+ * already allows only data:image/(png|jpeg|gif|webp|avif|svg+xml) besides safe URLs). `src` moves out of n:attr into
+ * an expression attribute with |nocheck — the same value, still null-dropped, still checked by Rt::imgUrlOrNull.
+ */
+function kitBrick(cli: Buffer, engine: Engine, rel: string): Buffer {
+  if (engine !== "latte" || rel !== "ui/image/Image.latte") return cli;
+  const from = "<img n:attr=\"[\n  'src' => \\UI8Kit\\Latte\\Rt::imgUrlOrNull($src),\n";
+  const text = cli.toString("utf8");
+  if (!text.includes(from)) fail(`latte ${rel}: the reviewed src attribute of n:attr changed (re-review kitBrick)`);
+  return Buffer.from(text.replace(from, "<img src={\\UI8Kit\\Latte\\Rt::imgUrlOrNull($src)|nocheck} n:attr=\"[\n"), "utf8");
+}
+
 /** structural wireframe only: allowlisted tags and attributes, no text, no URLs, no inline style */
 function checkWireframe(key: string, html: string): void {
   if (/<!--|<script|<style|javascript:|\son[a-z]+=|\sstyle=|\shref=|\ssrc=/i.test(html)) fail(`${key}: wireframe has a forbidden construct`);
@@ -252,7 +266,8 @@ function refresh(): void {
     const src = join(dir, "src");
     for (const rel of files(src)) {
       const bytes = readFileSync(join(src, rel));
-      if (/^(blocks|ui)\//.test(rel)) write(join(OUT, engine, rel), bytes);
+      if (rel.startsWith("blocks/")) write(join(OUT, engine, rel), bytes);
+      else if (rel.startsWith("ui/")) write(join(OUT, engine, rel), kitBrick(bytes, engine, rel));
       else if (rel.startsWith("organisms/")) write(join(OUT, engine, "php", rel.slice("organisms/".length)), bytes);
       else if (rel === "compose/Compose.php") write(join(OUT, engine, "php/Compose.php"), kitCompose(bytes.toString("utf8"), engine));
       else if (rel === "compose/compose.json") write(join(OUT, engine, "php/compose.json"), bytes);

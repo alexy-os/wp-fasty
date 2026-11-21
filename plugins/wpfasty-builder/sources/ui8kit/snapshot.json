@@ -108,7 +108,7 @@
     "latte/php/Runtime.php": "44a9a2a54747e0f95973459eb63373099ae9698c701f5985dba27773d6209bf2",
     "latte/php/compose.json": "0b2da150013e08566bcac895c9e44686d3c2c80ca65e7b4dc5234c53b74dda2d",
     "latte/ui/box/Box.latte": "b6248c3890fff7aefc01915de3ffac58a20b8805c29469770ad91a7295b53f8b",
-    "latte/ui/image/Image.latte": "4e77898b098d6f6a96a8dc14243f556f01b82f736fc9056623616e2c62f1fd5d",
+    "latte/ui/image/Image.latte": "daca4b86bcefdeea53bbde9e7bbddc5beb9c81881c4bcf2b9d5d55ecb2cfffa5",
     "latte/ui/image/Picture.latte": "57f07fea310c83ce0b837aa753ecb1be2264f2cb701e852be1b2072a1d019a7b",
     "latte/ui/image/Source.latte": "c0fc48f8647d7d873d1ad770f5293dc3039714066b0441fb81e4e9ed25213f09",
     "latte/ui/link/Link.latte": "d46b1bdb6e7fd95c0b322491d482bf0be972e63508d69cbe9cc37d9bfa3024c0",
@@ -217,5 +217,5 @@
     "twig/ui/text/Text.html.twig": "365b146fe897398883ea8b5152639596fd4b9c5aa4c21812adaa16511ff7d9a3",
     "twig/ui8kit.lock.json": "0d95e29bc8acd53a30513b64a7a7eabbf3ef8ba4b98d300b7ccad892137262d9"
   },
-  "digest": "sha256:395ef41b6138bd07c13adf0e7a414c6bddbc738d30e4ac7e0199a57d84c584a4"
+  "digest": "sha256:0492ec69acf6745484c5aea4625a72e4db2cfa2fd3bb8fe1e5d0d1444cffd900"
 }

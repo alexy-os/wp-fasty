@@ -12,8 +12,7 @@
   ?string $decoding = null,
   array $attrs = [],
 }
-<img n:attr="[
-  'src' => \UI8Kit\Latte\Rt::imgUrlOrNull($src),
+<img src={\UI8Kit\Latte\Rt::imgUrlOrNull($src)|nocheck} n:attr="[
   'alt' => $alt,
   'class' => \UI8Kit\Latte\Rt::orNull(\UI8Kit\Latte\Classes::imageClasses(['class' => $class, 'src' => $src, 'alt' => $alt, 'srcSet' => $srcSet, 'sizes' => $sizes, 'width' => $width, 'height' => $height, 'loading' => $loading, 'decoding' => $decoding])),
   'srcset' => \UI8Kit\Latte\Rt::orNull($srcSet),
