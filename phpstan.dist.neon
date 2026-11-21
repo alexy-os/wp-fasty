@@ -18,5 +18,7 @@ parameters:
         - themes/wp-fasty/includes/base-theme.php
         - plugins/wpfasty-builder/sources/ui8kit/latte/php/OrganismExtension.php
         - plugins/wpfasty-builder/sources/ui8kit/twig/php/OrganismExtension.php
+        - plugins/wpfasty-builder/sources/ui8kit/latte/php/Compose.php
+        - plugins/wpfasty-builder/sources/ui8kit/twig/php/Compose.php
     tmpDir: var/cache/phpstan
     treatPhpDocTypesAsCertain: false

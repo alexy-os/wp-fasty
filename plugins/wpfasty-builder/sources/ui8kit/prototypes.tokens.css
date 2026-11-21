@@ -1,0 +1,47 @@
+/*
+ * Per-element design tokens, as in codegen-x/ui8kit kit.css (UI8KIT-2.0 §11). A shape keeps plain utilities and a data-slot;
+ * the theme writes CSS variables on <html> (packages/theme: tokenVars, densityVars). No shadow or size utilities in markup.
+ *
+ * Radius: --radius-<element>; unset: the site radius (--radius); the badge: the pill. Text bars and headings follow --radius;
+ * the avatar stays a circle.
+ */
+[data-slot="button"].rounded { border-radius: var(--radius-button, var(--radius)); }
+[data-slot="card"].rounded { border-radius: var(--radius-card, var(--radius)); }
+[data-slot="media-frame"].rounded { border-radius: var(--radius-media, var(--radius)); }
+[data-slot="badge"].rounded-full { border-radius: var(--radius-badge, calc(infinity * 1px)); }
+
+/*
+ * Shadow per element (card, media; alert has no shape here): --shadow-<element> is var(--shadow-sm), var(--shadow-md) (the
+ * skin's own scale, per mode) or none. Unset: no shadow. Only the constructor's shapes (data-shape / data-role), never app chrome.
+ */
+[data-role="surface"][data-slot="card"] { box-shadow: var(--shadow-card, 0 0 #0000); }
+[data-role="media"][data-slot="media-frame"] { box-shadow: var(--shadow-media, 0 0 #0000); }
+
+/*
+ * Density per element (codegen-x density-badge / -button / -card): the step writes --h-button / --w-button, --h-badge /
+ * --w-badge, --pad-card; the defaults are the class values (h-10 w-24, h-6 w-16, p-6). Scoped to the shapes by data-shape /
+ * data-role, so a kit Button in the app chrome (also data-slot="button", h-10) never changes size.
+ */
+[data-shape="cta"][data-slot="button"] { height: var(--h-button, 40px); width: var(--w-button, 96px); }
+[data-shape="badge"][data-slot="badge"] { height: var(--h-badge, 24px); width: var(--w-badge, 64px); }
+[data-role="surface"][data-slot="card"] { padding: var(--pad-card, 24px); }
+
+/*
+ * Shape colours: the bars of text and headings are the most frequent rectangles and must stay visible (WCAG 1.4.11
+ * non-text contrast, at least 3:1 against the background and the card, light and dark). They do not take bg-muted /
+ * bg-secondary (too pale in light mode) but two shape tokens, mixed in CSS (oklab) from the skin's foreground over its
+ * background, so the heading is always darker than the text and both follow the skin and the mode:
+ *   --shape-heading   default: foreground 92% (light: at least 4.7:1 on background and card, every skin)
+ *   --shape-text      default: foreground 72% (light: at least 3.2:1; dark: at least 4.8:1)
+ * muted-foreground is not the base: in several skins it is too light for 3:1 once mixed.
+ * A skin overrides either per mode (set --shape-heading / --shape-text). The fallback mixes at the element, so a scoped
+ * theme (a skin card) gets its own values. Scoped to the shapes by data-shape / data-role, never app chrome.
+ */
+[data-shape][data-role="heading"],
+[data-shape][data-role="heading-lg"] {
+  background-color: var(--shape-heading, color-mix(in oklab, var(--foreground) 92%, var(--background)));
+}
+[data-shape="text-line"],
+[data-shape="text"] > * {
+  background-color: var(--shape-text, color-mix(in oklab, var(--foreground) 72%, var(--background)));
+}

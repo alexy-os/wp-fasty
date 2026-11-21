@@ -5,24 +5,8 @@
       "why": "rendered output of another generated template, which escapes its own props (Latte og_include returns the HTML the included template produced)"
     },
     {
-      "pattern": "^include\\(",
-      "why": "Twig include() of a generated primitive (Button/Icon/Link/Text/Box): output of an autoescaped template; inline <svg> children are generator string literals, labels are piped through |e"
-    },
-    {
       "pattern": "^\\(?\\$?children( \\?\\? '')?\\)?$",
       "why": "slot of a primitive or organism: every `children` a generated block passes is a fragment it captured itself ({capture} / (string) $c_N, 3658 places in latte+twig blocks/); catalog blocks are rendered with ['p' => props] only (BlockRenderer::render), so `$children` is never a layout or data value (Fragment, Front and the compiled page pass props only; Layout::clean strip_tags + escapes strings and drops __html). codegen-x prints children raw on the server runtimes without a marker check (not changed in 832d7f17)"
-    },
-    {
-      "pattern": "^og_slot\\(",
-      "why": "slot props of sub-templates (section-frame, page-header, panel, section-head, \u2026; codegen-x since 41706af7): og_slot (Runtime::slot = Runtime::html) prints only the TrustedHtml marker that og_markup() made of a fragment the calling generated template captured; any other value \u2014 a plain string, also one a layout could put on a catalog block \u2014 is escaped. Checked by tests/CodegenSafetySharedTest (direct render with a plain string, Latte and Twig) and the fuzz; so no longer restricted to templates outside the catalog"
-    },
-    {
-      "pattern": "^og_html\\(",
-      "why": "TrustedHtml ({__html}) printed by og_html (Runtime::html): a non-marker value is escaped, a blank marker never reaches it (ReadPath |html and DataSources::trusted give null); markers come only from DataSources \u2014 the_content of the current post as is, every other {__html} (meta, records) through wp_kses_post (DataSources::trusted); layouts cannot carry __html (Layout::untrust)"
-    },
-    {
-      "pattern": "^og_lucide\\(",
-      "why": "inline SVG of a bundled Lucide icon looked up by name in icons/lucide-icons.json (unknown name \u2192 circle); attributes come from the bundled JSON"
     }
   ],
   "views": [
@@ -201,7 +185,7 @@
     {
       "file": "themes/wp-fasty/classes/Template/TwigRenderer.php",
       "name": "apply_filters",
-      "why": "WordPress filter output (e.g. the_content) \u2014 same trust as core templates calling apply_filters"
+      "why": "WordPress filter output (e.g. the_content) — same trust as core templates calling apply_filters"
     },
     {
       "file": "themes/wp-fasty/classes/Template/TwigRenderer.php",

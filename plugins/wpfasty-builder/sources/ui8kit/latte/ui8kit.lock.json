@@ -1,0 +1,780 @@
+{
+  "lockVersion": 2,
+  "cli": "3.5.0",
+  "items": {
+    "registry.buildy.tw|latte|amenities-simple": {
+      "name": "amenities-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/amenities-simple.latte": "a50d11913a10c4d1063a9c008cdcb61fb8562dcd9559bd7f7311ec3350d24a87"
+      }
+    },
+    "registry.buildy.tw|latte|article-lead": {
+      "name": "article-lead",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/article-lead.latte": "3c6187aa4aad24a6a8103531eccf1436cc75641bb68488f5994fb79fd91d22f6"
+      }
+    },
+    "registry.buildy.tw|latte|article-simple": {
+      "name": "article-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/article-simple.latte": "3a2cd2fda263e22ecf8a73ecc5367aab1e522ef6fc56f651998d7e0aa343f19d"
+      }
+    },
+    "registry.buildy.tw|latte|badge": {
+      "name": "badge",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Badge.latte": "f42d9bd1e5059c6f01c9f1082d362cde1236b803085a25ce31ea1a48f8ec5187"
+      }
+    },
+    "registry.buildy.tw|latte|block": {
+      "name": "block",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Block.latte": "99636925721e4968eeb94d113a6539ef47e248fed6aa47b287bced855bf276fe"
+      }
+    },
+    "registry.buildy.tw|latte|box": {
+      "name": "box",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Box.latte": "c44f8ab63a0bf4796d255ce2606eef0e4cdee0f020eae03bd90c4df83e767a7c"
+      }
+    },
+    "registry.buildy.tw|latte|card": {
+      "name": "card",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Card.latte": "102e7c8f50594b529d97e8369614b03468927bc03f08e1d9762bf033515ab297"
+      }
+    },
+    "registry.buildy.tw|latte|cases-simple": {
+      "name": "cases-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/cases-simple.latte": "49957a963722d4fb1fc863aed7a0fa526dbe18cc056f6c4a6b10714d2b141279"
+      }
+    },
+    "registry.buildy.tw|latte|chapters-simple": {
+      "name": "chapters-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/chapters-simple.latte": "1e290088ed4f1183923613a491d5fbe3b5fc560da0c5978bdf3b6b1a6e899777"
+      }
+    },
+    "registry.buildy.tw|latte|choice-links": {
+      "name": "choice-links",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/choice-links.latte": "0f6eecf5b8486b3b1569fd24e58da0754162c76d7565d2d0dbfd65365ddf414f"
+      }
+    },
+    "registry.buildy.tw|latte|collections-simple": {
+      "name": "collections-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/collections-simple.latte": "7ba360c0c8705d9b6da7e8ee275539c52c2773edccf983e39519b073dd207b7b"
+      }
+    },
+    "registry.buildy.tw|latte|compare-simple": {
+      "name": "compare-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/compare-simple.latte": "dcc740f47679fb037d66c43d2e1aca97c8e1b465ebc7c716ae756da5a762331c"
+      }
+    },
+    "registry.buildy.tw|latte|contacts-simple": {
+      "name": "contacts-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/contacts-simple.latte": "a56ca22b347c3abdb7fd5640b1f7762cd175f49418ff0380798d8465b2c4ba02"
+      }
+    },
+    "registry.buildy.tw|latte|container": {
+      "name": "container",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Container.latte": "9895a2ccc7d580464366802806ba7ca2fe5d2af0a7be8399c660c0bd43dcb61d"
+      }
+    },
+    "registry.buildy.tw|latte|course-outline": {
+      "name": "course-outline",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/course-outline.latte": "8233b544f661c834c252ee43c965134cc04b53d2b269b5c19204aafaec2857bf"
+      }
+    },
+    "registry.buildy.tw|latte|cta-simple": {
+      "name": "cta-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/cta-simple.latte": "183379c4a416058a3c6121888d52855db382e9677b34fbc13f1029a9bd87dc9e"
+      }
+    },
+    "registry.buildy.tw|latte|delivery-simple": {
+      "name": "delivery-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/delivery-simple.latte": "ddd2c55bd716723e6ec4400a221b2e8636bf884f5f0184c1e7d2beb5ee48072e"
+      }
+    },
+    "registry.buildy.tw|latte|digital-simple": {
+      "name": "digital-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/digital-simple.latte": "20bc4ddc914253e3dd70b3c553a6ae7b91026b8d2817a97deff01f4442f97879"
+      }
+    },
+    "registry.buildy.tw|latte|error-simple": {
+      "name": "error-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/error-simple.latte": "b4735258bd10cad2b16897ae704671a90ea5ef277a86279c433ceb098a6e1145"
+      }
+    },
+    "registry.buildy.tw|latte|event-intro": {
+      "name": "event-intro",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/event-intro.latte": "24260810d635da57294bd2f8f68b142867a77840ba5b9d5c9c8a840ad71fbd13"
+      }
+    },
+    "registry.buildy.tw|latte|faq-simple": {
+      "name": "faq-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/faq-simple.latte": "9997f24c008d2302515be96a8359e3c3569e5b6928375caf36cd78b8fc029b73"
+      }
+    },
+    "registry.buildy.tw|latte|feature-showcase-simple": {
+      "name": "feature-showcase-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/feature-showcase-simple.latte": "3a5e8b7c706e5cd9a527c67c7a0fde5e8a0ac75349c65204618699d981c775d3"
+      }
+    },
+    "registry.buildy.tw|latte|features-simple": {
+      "name": "features-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/features-simple.latte": "a5a32a9790acb7b78bd4bd5f03452192c1a62c7409e75706a859cbefa4ff5963"
+      }
+    },
+    "registry.buildy.tw|latte|figure-simple": {
+      "name": "figure-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/figure-simple.latte": "ffaa3a4a61a84221918c74c14954cba767e3cb70f74ead91dd5f1d126748cc9f"
+      }
+    },
+    "registry.buildy.tw|latte|footer-simple": {
+      "name": "footer-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/footer-simple.latte": "eb5671a438a4b09e3bf9a5e6ebc75f3152360c45459c3865d1cec9bb45593687"
+      }
+    },
+    "registry.buildy.tw|latte|gallery-hero": {
+      "name": "gallery-hero",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/gallery-hero.latte": "93640658a7f3f494671d4cef97d15e960b6a19939eea56571a2863d0c237ed9b"
+      }
+    },
+    "registry.buildy.tw|latte|group": {
+      "name": "group",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Group.latte": "053b2b7ca5284ea49577bcd1f852bd5c11f91de4e62192babe2e43532e2e7a0c"
+      }
+    },
+    "registry.buildy.tw|latte|guarantees-simple": {
+      "name": "guarantees-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/guarantees-simple.latte": "3cd9cf8c9fa1c61e19adb6d38cea003e540f196f467ae652ae24f3be3d82af61"
+      }
+    },
+    "registry.buildy.tw|latte|header-simple": {
+      "name": "header-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/header-simple.latte": "e390fe0faeae0f72de170db81a5068a8b192f605f1fee793dd6ee4df0ee52cd2"
+      }
+    },
+    "registry.buildy.tw|latte|hero-simple": {
+      "name": "hero-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/hero-simple.latte": "a4fa6cf782c29f622f77409284f7bb73d62543c5f6964a8071235fac076309a0"
+      }
+    },
+    "registry.buildy.tw|latte|hours-simple": {
+      "name": "hours-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/hours-simple.latte": "64eb4d1ce9bd02efa57750bc9d9b6e82863085fddd9606297730ac3e78733d4b"
+      }
+    },
+    "registry.buildy.tw|latte|image": {
+      "name": "image",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Image.latte": "8baeafd363ae43d79d49c19afcc2d4ae83a245cdf3bc641256fcff16ff14c090"
+      }
+    },
+    "registry.buildy.tw|latte|intro-simple": {
+      "name": "intro-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/intro-simple.latte": "ce0bfed940b4a55eada0bbffdc41a90526d4b3e99c6fe36de77ffc89ac71e31f"
+      }
+    },
+    "registry.buildy.tw|latte|kit-box": {
+      "name": "kit-box",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/ui/box/Box.latte": "b6248c3890fff7aefc01915de3ffac58a20b8805c29469770ad91a7295b53f8b"
+      }
+    },
+    "registry.buildy.tw|latte|kit-image": {
+      "name": "kit-image",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/ui/image/Image.latte": "4e77898b098d6f6a96a8dc14243f556f01b82f736fc9056623616e2c62f1fd5d",
+        "src/ui/image/Picture.latte": "57f07fea310c83ce0b837aa753ecb1be2264f2cb701e852be1b2072a1d019a7b",
+        "src/ui/image/Source.latte": "c0fc48f8647d7d873d1ad770f5293dc3039714066b0441fb81e4e9ed25213f09"
+      }
+    },
+    "registry.buildy.tw|latte|kit-link": {
+      "name": "kit-link",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/ui/link/Link.latte": "d46b1bdb6e7fd95c0b322491d482bf0be972e63508d69cbe9cc37d9bfa3024c0"
+      }
+    },
+    "registry.buildy.tw|latte|kit-text": {
+      "name": "kit-text",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/ui/text/Text.latte": "b7e88881d06b5c391e197087c39995ac3e45075e8a105ca5f8e7eaccad64ec07"
+      }
+    },
+    "registry.buildy.tw|latte|link": {
+      "name": "link",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Link.latte": "638c4b22b1cb1a3656de887c5e64bc60097080215e9bd86a44270c3a9ff34513"
+      }
+    },
+    "registry.buildy.tw|latte|link-button": {
+      "name": "link-button",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/LinkButton.latte": "0e92c417a93561dd27f5149d956655f1c633791d24d40a14b0bf4986716b2830"
+      }
+    },
+    "registry.buildy.tw|latte|link-plain": {
+      "name": "link-plain",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/LinkPlain.latte": "7086af7612ce8ac396c0b5072c72e701b3ddc39fc97433d4ecfcb3b8fcef0223"
+      }
+    },
+    "registry.buildy.tw|latte|list": {
+      "name": "list",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/List.latte": "9487c6aa556589006bec1af55d2099e84ca621a46df23b53d8f2aef552469437"
+      }
+    },
+    "registry.buildy.tw|latte|list-item": {
+      "name": "list-item",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/ListItem.latte": "068debd5f41fcfd070ac02968704d670e4210c68279937868d2aece884991f84"
+      }
+    },
+    "registry.buildy.tw|latte|locations-simple": {
+      "name": "locations-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/locations-simple.latte": "165f411fb645f8935b45c9a0153506d7ec21fdbe78fc205397f7f027bb1f82e7"
+      }
+    },
+    "registry.buildy.tw|latte|logos-simple": {
+      "name": "logos-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/logos-simple.latte": "1347285b177818f74265a3a4da13fdebba2f482b03e019e055eb50b3db0776ec"
+      }
+    },
+    "registry.buildy.tw|latte|media-frame": {
+      "name": "media-frame",
+      "type": "registry:component",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/media-frame.latte": "22b541e3a6e0a5440d29d891a617e233ade0679dc62d5e70ce567ac74be16cc2"
+      }
+    },
+    "registry.buildy.tw|latte|menu-simple": {
+      "name": "menu-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/menu-simple.latte": "47a87752c2224ef53ef11893c08ef083ac09de488ed20451c44ed03a5d3a306d"
+      }
+    },
+    "registry.buildy.tw|latte|offers-simple": {
+      "name": "offers-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/offers-simple.latte": "e5db7ef85a89b191605d099b6386af1c16b32c845072ed1029821f3c29cd8ec9"
+      }
+    },
+    "registry.buildy.tw|latte|photos-simple": {
+      "name": "photos-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/photos-simple.latte": "493cc8ed8eb1f61e9e53677e83f15f7e7d266f527f02dc46d198a48da0924f10"
+      }
+    },
+    "registry.buildy.tw|latte|presets": {
+      "name": "presets",
+      "type": "registry:lib",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/presets/defaults.json": "eb1fbc364e4219e4adde7908a859e1e2153665d01a9acb7de5b116b703a4df9f",
+        "src/blocks/recipes/avatar.variants.json": "9590951af31740cda35d23d3b7af1cff0920a8e177766c49fcfa85602b0e8d2e",
+        "src/blocks/recipes/badge-square.variants.json": "d9eaa4b55c6710affcd1101199321c9920940bab02dea5c6d78b4a2b43da5bab",
+        "src/blocks/recipes/file-tree-item.variants.json": "1f554cf622646e0cba5188535de6beaa0a24cbf06469b8ed67cb6c54ac21684d",
+        "src/blocks/recipes/icon-tab.variants.json": "084415b96337485086cc0d175c68361638a3b5361129bab471641d7f9b662005",
+        "src/blocks/recipes/logo-sidebar.variants.json": "76d46d56dcf5012a1a814faf9c978896c6ebec477de58edd18a4c462c10c4831",
+        "src/blocks/recipes/media-frame.variants.json": "66e806756d1c685e9dddf21f559884ede9d0824dc9e9258bc35434adba22a7f7",
+        "src/blocks/recipes/nav-item-content.variants.json": "7918ca7821cd00827d2191f8863b3689cb97759620e62651070f220b0afd0d7f",
+        "src/blocks/recipes/nav-item.variants.json": "4cd0ca1c66fd3d7095c1fc77f0ddde08509dc4ca01b05763f3033e647e53e956",
+        "src/blocks/recipes/section-column.variants.json": "fa6e3feda495df5ec7ad0ad34fac9b9adec8e19fe6a0f8b356f68fbcbe3bb50b",
+        "src/blocks/recipes/section-frame.variants.json": "a1d839c9637be8deb1aa264c6231e1b2322fdef2003efecb09459d5a5dbcf569",
+        "src/blocks/recipes/section-head.variants.json": "c5ab7e927ea7a95d6067591e0e8c2abf2d5103e766b7cf3371cec68f868ad2d8",
+        "src/blocks/recipes/sidebar-panel.variants.json": "cd7b7497c9b0559c667a97682ff90e22d5cfebe69a888ce99ece133907e01a48",
+        "src/blocks/recipes/switcher-item.variants.json": "6d07b0f5aad4e0bef04b2787d9572bf3e6fcf916193642df9a05194f8b5831da",
+        "src/blocks/recipes/switcher.variants.json": "379e3b44e3e4dcb9dc7078122f48d340f79209e626ccc2703d17fd863f48922d"
+      }
+    },
+    "registry.buildy.tw|latte|pricing-simple": {
+      "name": "pricing-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/pricing-simple.latte": "d519193c7bc396e218466409db4d1a8d1b89df6d1eece969d0207db525c2633d"
+      }
+    },
+    "registry.buildy.tw|latte|product-reviews": {
+      "name": "product-reviews",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/product-reviews.latte": "9bdafabd9edf15f4e47ee65cf2e574b775da46f5d28742b7be1f62eb9868f60f"
+      }
+    },
+    "registry.buildy.tw|latte|product-simple": {
+      "name": "product-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/product-simple.latte": "48b09956ad3df58e7c250510c44f1ee77a37c378a62c5c60e06e1ebb073fc072"
+      }
+    },
+    "registry.buildy.tw|latte|products-simple": {
+      "name": "products-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/products-simple.latte": "1004b3c958e64c702756e164721d2778be377830d7844b1bae95018b2ee14ebc"
+      }
+    },
+    "registry.buildy.tw|latte|profile-intro": {
+      "name": "profile-intro",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/profile-intro.latte": "b0263bc70cd6518e6b4bbdcab50fbb028acdf0dc00f147ea9ed1d5034e754c43"
+      }
+    },
+    "registry.buildy.tw|latte|promo-simple": {
+      "name": "promo-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/promo-simple.latte": "a5f3cdf22ca30eb46d0068dce59b31c107c6b6dea5db63fd3dbf014712f0aa57"
+      }
+    },
+    "registry.buildy.tw|latte|pull-quote-simple": {
+      "name": "pull-quote-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/pull-quote-simple.latte": "85cc49dcd3c510e8979c6272d2fee872225678a93b65f3501bca84c4a31407cc"
+      }
+    },
+    "registry.buildy.tw|latte|purchase-simple": {
+      "name": "purchase-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/purchase-simple.latte": "01a5e553eae4c133ac24a61b6705d79e9ed5f8ec169645d8b9d1d2ae51976d94"
+      }
+    },
+    "registry.buildy.tw|latte|rating-simple": {
+      "name": "rating-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/rating-simple.latte": "6b2942d488b9b5e7a4b394975c8a74ca5d6ece37c558a20e3efe71ae6edc6c09"
+      }
+    },
+    "registry.buildy.tw|latte|recipes": {
+      "name": "recipes",
+      "type": "registry:lib",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Compose.php": "527b36a33f26dfb791c5e985a85131d1fbf74d36907e6d5b18eb03d743c420cf",
+        "src/compose/compose.json": "0b2da150013e08566bcac895c9e44686d3c2c80ca65e7b4dc5234c53b74dda2d"
+      }
+    },
+    "registry.buildy.tw|latte|rooms-simple": {
+      "name": "rooms-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/rooms-simple.latte": "10acf440862a9ded700d4be52769b6da6940a3bdda1f395598e751413f02c2d1"
+      }
+    },
+    "registry.buildy.tw|latte|services-simple": {
+      "name": "services-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/services-simple.latte": "15383a6128e7a8433b89d3a3a48af5b708cd888992409e56066f4b64779667cd"
+      }
+    },
+    "registry.buildy.tw|latte|specs-simple": {
+      "name": "specs-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/specs-simple.latte": "f5fbc2a734a559a7cac6b82730d15d9131de36ade65ab7619c908a1b76b9bb9b"
+      }
+    },
+    "registry.buildy.tw|latte|split-simple": {
+      "name": "split-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/split-simple.latte": "f719edf2077b2a8673a9fd285730f97afa5992d5b27438b05d64c85750845632"
+      }
+    },
+    "registry.buildy.tw|latte|stack": {
+      "name": "stack",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Stack.latte": "bc73465e1392203ede73e7744f5b2dee102978015e0bcd3e5557204518c7f9a7"
+      }
+    },
+    "registry.buildy.tw|latte|stats-simple": {
+      "name": "stats-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/stats-simple.latte": "29dad0cc0196da8da92f59794b4cba0028e630fbc007fbc56805e5c9a8e2ad5a"
+      }
+    },
+    "registry.buildy.tw|latte|steps-simple": {
+      "name": "steps-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/steps-simple.latte": "b11baf106327030866c8ba7f1f172ee73fe7dbaaa8a2f98c836c33356a1030db"
+      }
+    },
+    "registry.buildy.tw|latte|store-policies": {
+      "name": "store-policies",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/store-policies.latte": "485a0be848e1c3244719cf19ef32c07b66891c4c95528226e5d030e434f7e54d"
+      }
+    },
+    "registry.buildy.tw|latte|stories-simple": {
+      "name": "stories-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/stories-simple.latte": "ff711cc7f79e66646758771dd5bb46b19d35c6e272d44a6e6a27b22cc8a2138e"
+      }
+    },
+    "registry.buildy.tw|latte|team-simple": {
+      "name": "team-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/team-simple.latte": "1bc4784a25615881264a59124b851d1240c1f5a48c055bc791a4ea2f796c7c9d"
+      }
+    },
+    "registry.buildy.tw|latte|testimonials-simple": {
+      "name": "testimonials-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/testimonials-simple.latte": "a0132d797493f42d8e46ad6551b1edb70523227508ff3714169bc6d06346388f"
+      }
+    },
+    "registry.buildy.tw|latte|text": {
+      "name": "text",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Text.latte": "b3182b8c1dbceee0534beabb9ccddddf555636995c8413659a85184c6bbe3a61"
+      }
+    },
+    "registry.buildy.tw|latte|timeline-simple": {
+      "name": "timeline-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/timeline-simple.latte": "584514b430e7a9ec35166e53c4eb8cc15862cd8ce5f2393235c586995b7b59d3"
+      }
+    },
+    "registry.buildy.tw|latte|title": {
+      "name": "title",
+      "type": "registry:ui",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/compose/Title.latte": "9feeb3179921a1fe2319691692ce1686825ccc6150079c9899254d373c5221bc"
+      }
+    },
+    "registry.buildy.tw|latte|topics-simple": {
+      "name": "topics-simple",
+      "type": "registry:block",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/blocks/topics-simple.latte": "306d10b308fed97f07e9255ac054ffa6a52555235f93604e9cbd34ec967c3ded"
+      }
+    },
+    "registry.buildy.tw|latte|utils": {
+      "name": "utils",
+      "type": "registry:utils",
+      "source": "https://registry.buildy.tw/latte",
+      "version": "0.1.0",
+      "runtime": "latte",
+      "files": {
+        "src/composer.json": "023e7a0336e00f957c8e4c27998bc8919d1ec0fd09e268854433b380a2ce7fc2",
+        "src/organisms/CnMerge.php": "0c8bd740261db9c4406994ebecc906ec79a1fb2f52faec428fcf09cb6266f622",
+        "src/organisms/OrganismExtension.php": "2623f150ae3a105b5eb74f089e49a7e3981c4b0ad30a9b69ebad466c6fe7ea0e",
+        "src/organisms/Runtime.php": "44a9a2a54747e0f95973459eb63373099ae9698c701f5985dba27773d6209bf2",
+        "src/runtime/Classes.php": "cda172aa3738e54211a326dfdedd435ec06c44dd0faa67c339baa95b43a328b7",
+        "src/runtime/CnMerge.php": "e96bcc7cd220f3666925dff533b9c1d079674dae4ad9b6b74cc1d5d649cfb81b",
+        "src/runtime/Rt.php": "3ec5f7d9ccead8f9f1ec368328b0041e5b014254aed9a02a0012e189569c13da",
+        "src/runtime/Tags.php": "d3b228f1b839911f9e2e2bf499880f8523a258b324428ff054706c6961775ab8"
+      }
+    }
+  }
+}

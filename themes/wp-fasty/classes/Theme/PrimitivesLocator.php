@@ -26,7 +26,7 @@ final class PrimitivesLocator
      * Latte root chain of the primitives: our kit compositions (`kit/ui`, middle layer over Box/Text with
      * presets) before the UI8Kit 3 primitives installed by `npx ui8kit@3 add --all` (`ui8kit/ui`, PSR-4
      * `UI8Kit\\Latte\\` → `ui8kit/runtime/`), then `ui8kit/` itself for the kit-compose form fields
-     * (`compose/Input.latte` & co with `state`, exported by tools/builder/export-ui8kit.ts; they include `../ui/…`).
+     * (`compose/Input.latte` & co with `state`, pinned kit-compose copy of codegen-x 4be6a994; they include `../ui/…`).
      * Without a UI8Kit 3 install: the legacy package directory.
      *
      * @return list<string>

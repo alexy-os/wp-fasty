@@ -1,0 +1,19 @@
+{
+  "$comment": "Pins of the bundled block source (ADR-007: UI8Kit Simple blocks only). `bun tools/builder/simple-snapshot.ts` (network) refreshes sources/ui8kit from exactly these inputs; `--check` is offline. Never edit the generated files by hand.",
+  "catalogVersion": "4.0.0",
+  "cli": "ui8kit@3.5.0",
+  "registry": "https://registry.buildy.tw",
+  "contracts": {
+    "repo": "buildytech/chat",
+    "commit": "b41c414fc09773de7b5b6ed83ea0bbbacebd1cf0",
+    "blocks": "packages/builder-core/src/catalog/blocks.json",
+    "props": "registry/props.v0.json",
+    "config": "catalog/snapshot.config.json"
+  },
+  "prototypes": {
+    "repo": "ui8kit/prototypes",
+    "commit": "8748fcb3b6df5767e10e8cb8ad937ad7ddf80cab",
+    "snapshots": "packages/blocks/catalog/snapshots",
+    "tokens": "packages/blocks/src/tokens.css"
+  }
+}

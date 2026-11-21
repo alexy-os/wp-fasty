@@ -359,7 +359,7 @@ async function packTheme(id: string, engine: "latte" | "twig" = "latte", vendorC
         // UI8Kit 3 runtime installed by the ui8kit CLI (Latte build only)
         ...(engine === "latte" && existsSync(join(stagedTheme, "ui8kit", "runtime")) ? { "UI8Kit\\Latte\\": "ui8kit/runtime/" } : {}),
         ...(engine === "twig" && existsSync(join(stagedTheme, "twig", "ui8kit", "runtime")) ? { "UI8Kit\\Twig\\": "twig/ui8kit/runtime/" } : {}),
-        // kit-compose form fields (Input/Textarea/Select with `state`), exported by tools/builder/export-ui8kit.ts
+        // kit-compose form fields (Input/Textarea/Select with `state`), pinned kit-compose copy of codegen-x 4be6a994
         ...(engine === "latte" && existsSync(join(stagedTheme, "ui8kit", "compose")) ? { "CodegenX\\Compose\\Latte\\": "ui8kit/compose/" } : {}),
         ...(engine === "twig" && existsSync(join(stagedTheme, "twig", "ui8kit", "compose")) ? { "CodegenX\\Compose\\Twig\\": "twig/ui8kit/compose/" } : {}),
       },

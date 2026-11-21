@@ -13,9 +13,9 @@
  *                                       (theme runtime, shipped in wp-fasty.zip)
  *
  * Codegen recipes (owner policy: UI8Kit first, wp-fasty moves to the codegen recipe): the components in CODEGEN take
- * their recipe from codegen-x/ui8kit `packages/kit-compose/variants/<id>.variants.json` at the commit the builder
- * source is pinned to (`plugins/wpfasty-builder/sources/ui8kit/latte/compose/compose.json`, the kit-compose build
- * of that commit, `catalog.json` source.commit); card parts are the kit-compose CardHeader/Title/Description/Content/
+ * their recipe from codegen-x/ui8kit `packages/kit-compose/variants/<id>.variants.json`, read from the theme's own
+ * kit-compose build (`themes/wp-fasty/ui8kit/compose/compose.json`; the Builder's Simple snapshot carries its own,
+ * newer copy since ADR-007 and does not change the theme recipes); card parts are the kit-compose CardHeader/Title/Description/Content/
  * Footer compositions (their `extra`). `--cgx <dir>` also compares them with a codegen-x checkout. Build-time only:
  * the themes read their own `kit/presets.json` and never the plugin.
  *
@@ -113,8 +113,9 @@ foreach (COMPONENTS as $name) {
 }
 
 emit:
-$compose = json_decode((string) file_get_contents("{$root}/plugins/wpfasty-builder/sources/ui8kit/latte/compose/compose.json"), true, 512, JSON_THROW_ON_ERROR);
-$commit = (string) json_decode((string) file_get_contents("{$root}/plugins/wpfasty-builder/sources/ui8kit/latte/catalog.json"), true, 512, JSON_THROW_ON_ERROR)['source']['commit'];
+$compose = json_decode((string) file_get_contents("{$root}/themes/wp-fasty/ui8kit/compose/compose.json"), true, 512, JSON_THROW_ON_ERROR);
+// the codegen-x/ui8kit commit of the theme's kit-compose build (themes/wp-fasty/ui8kit/compose)
+$commit = '4be6a99410121ba0b42b64826f58a343c535a4df';
 $emptyRecipe = static fn (string $base): array => ['base' => $base, 'keys' => [], 'defaults' => (object) [], 'byKey' => (object) [], 'compound' => []];
 foreach (CODEGEN as $name) {
     $r = $compose['recipes'][$name] ?? null;
