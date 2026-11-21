@@ -25,6 +25,12 @@ final class Sources
     private static array $catalogs = [];
     private static ?string $engine = null;
 
+    /** The bundled UI8Kit Simple snapshot: block contracts and script-free structural prototypes (ADR-007). */
+    public static function simple(): Simple\SimpleLine
+    {
+        return new Simple\SimpleLine(Plugin::$dir.'/sources/ui8kit');
+    }
+
     /** @return array<string, SourceInterface> */
     public static function all(): array
     {

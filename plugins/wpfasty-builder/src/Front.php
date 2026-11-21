@@ -25,6 +25,7 @@ final class Front
         add_filter('wpfasty_context', [self::class, 'context'], 20, 2);
         add_action('wp_enqueue_scripts', [self::class, 'styles'], 20);
         add_action('template_redirect', [self::class, 'previewGuard'], 1);
+        add_action('template_redirect', [self::class, 'prototypes'], 2);
         add_filter('wpfasty_color_scheme', [self::class, 'colorScheme']);
         add_action('wp_head', [Pager::class, 'head'], 5);
     }
@@ -95,6 +96,46 @@ final class Front
             add_filter('show_admin_bar', '__return_false');
             header('X-Robots-Tag: noindex');
         }
+    }
+
+    /**
+     * The live prototype sheet of one Simple block (ADR-007): the page preview URL (nonce + capability, previewGuard)
+     * plus `wpfb_prototypes=<item>` renders the theme's real <head> (child tokens, fonts, the forced light/dark scheme
+     * of `wpfb_scheme`) around the block's static structural wireframes; CSS :target shows the one variant of the
+     * fragment (#<item>--<variant>). Bundled, script-free markup only; the editor frames it sandboxed without scripts.
+     */
+    public static function prototypes(): void
+    {
+        $id = is_page() ? (int) get_queried_object_id() : 0;
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- isPreview() verifies the page nonce/capability
+        $item = isset($_GET['wpfb_prototypes']) && is_string($_GET['wpfb_prototypes'])
+            ? sanitize_key(wp_unslash($_GET['wpfb_prototypes']))
+            : '';
+        // phpcs:enable
+        if ('' === $item || $id <= 0 || !self::isPreview($id)) {
+            return;
+        }
+        $sheet = Sources::simple()->sheet($item);
+        if (null === $sheet) {
+            status_header(404);
+            exit;
+        }
+        $css = Plugin::$dir.'/assets/prototypes.css';
+        if (is_file($css)) {
+            wp_enqueue_style('wpfasty-builder-prototypes', plugins_url('assets/prototypes.css', Plugin::$file), [], (string) filemtime($css));
+        }
+        add_filter('show_admin_bar', '__return_false');
+        // the admin bar is initialised before template_redirect: drop its styles (and their 32 px html bump) too
+        add_action('wp_enqueue_scripts', static function (): void {
+            wp_dequeue_style('admin-bar');
+        }, PHP_INT_MAX);
+        echo '<!doctype html><html ';
+        language_attributes();
+        echo '><head><meta charset="'.esc_attr(get_bloginfo('charset')).'"><meta name="robots" content="noindex">';
+        wp_head();
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- bundled structural wireframes, SimpleLine::wireframe()-checked
+        echo '</head><body class="wpfb-protos-body">'.$sheet.'</body></html>';
+        exit;
     }
 
     public static function view(mixed $view): mixed

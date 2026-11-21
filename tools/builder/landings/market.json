@@ -1,31 +1,122 @@
 {
-  "page": { "title": "WP FastY", "slug": "home" },
+  "page": {
+    "title": "WP FastY",
+    "slug": "home"
+  },
   "front": true,
   "layout": {
     "source": "ui8kit",
-    "collection": "commerce-shop",
+    "collection": "",
     "blocks": [
-      { "id": "intro", "block": "pagehead", "variant": "center",
-        "props": { "title": "Готовые сайты, темы и плагины для WordPress", "text": "Быстрые, доступные и без конструкторов страниц. Скачивание сразу после оплаты, обновления и поддержка автора.", "cta": "Смотреть каталог", "href": "{archive:product}" } },
-      { "id": "categories", "block": "categories", "variant": "tiles",
-        "props": { "label": "Разделы каталога" },
-        "bindings": { "categories": { "source": "product_cats", "limit": 3 } } },
-      { "id": "popular", "block": "products", "variant": "grid4",
-        "props": { "title": "Популярное", "rating": "show", "action": "none" },
-        "bindings": { "products": { "source": "products", "limit": 4 } } },
-      { "id": "why", "block": "features", "variant": "grid",
-        "props": { "title": "Почему WP FastY", "item": "card",
-          "features": [
-            { "id": "why-review", "title": "Ручная проверка", "text": "Код, безопасность и скорость проверяются до публикации.", "icon": "shield-check" },
-            { "id": "why-license", "title": "Понятные лицензии", "text": "Обычная и расширенная лицензии с прозрачными условиями.", "icon": "file-text" },
-            { "id": "why-download", "title": "Мгновенное скачивание", "text": "Подписанные ссылки сразу после оплаты и в письме.", "icon": "zap" }
-          ],
-          "action": { "label": "Весь каталог", "href": "{archive:product}" } } },
-      { "id": "sale", "block": "products", "variant": "grid3",
-        "props": { "title": "Со скидкой", "rating": "show", "action": "none" },
-        "bindings": { "products": { "source": "products", "limit": 3, "sale": true } } },
-      { "id": "authors", "block": "cta", "variant": "banner",
-        "props": { "title": "Продаёте свои темы и плагины?", "text": "Станьте автором WP FastY: проверка, витрина и выплаты — на нас.", "actions": { "cta": "Условия", "href": "{page:oferta}", "mode": "one" } } }
+      {
+        "id": "intro",
+        "block": "intro-simple",
+        "variant": "center",
+        "props": {
+          "badge": "Market",
+          "title": "Everything for a fast WordPress site",
+          "description": "Themes, blocks and tools that load in a blink.",
+          "actionLabel": "Browse products",
+          "actionHref": "{archive:product}"
+        }
+      },
+      {
+        "id": "collections",
+        "block": "collections-simple",
+        "variant": "cards4",
+        "props": {
+          "title": "Categories",
+          "description": "Start where you need.",
+          "items": [
+            {
+              "id": "collection-1",
+              "title": "Themes",
+              "href": "#"
+            },
+            {
+              "id": "collection-2",
+              "title": "Blocks",
+              "href": "#"
+            },
+            {
+              "id": "collection-3",
+              "title": "Plugins",
+              "href": "#"
+            },
+            {
+              "id": "collection-4",
+              "title": "Bundles",
+              "href": "#"
+            }
+          ]
+        }
+      },
+      {
+        "id": "products",
+        "block": "products-simple",
+        "variant": "cards3",
+        "props": {
+          "title": "Popular",
+          "description": "What other sites run.",
+          "items": [
+            {
+              "id": "product-1",
+              "title": "Press theme",
+              "price": "$59",
+              "href": "#"
+            },
+            {
+              "id": "product-2",
+              "title": "Shop theme",
+              "price": "$79",
+              "href": "#"
+            },
+            {
+              "id": "product-3",
+              "title": "Builder",
+              "price": "$0",
+              "href": "#"
+            }
+          ]
+        }
+      },
+      {
+        "id": "guarantees",
+        "block": "guarantees-simple",
+        "variant": "strip3",
+        "props": {
+          "title": "Built right",
+          "description": "The same rules for every product.",
+          "items": [
+            {
+              "id": "guarantee-1",
+              "title": "Fast",
+              "text": "Small pages, no blocking scripts."
+            },
+            {
+              "id": "guarantee-2",
+              "title": "Accessible",
+              "text": "Checked against WCAG AA."
+            },
+            {
+              "id": "guarantee-3",
+              "title": "Yours",
+              "text": "GPL, no lock-in."
+            }
+          ]
+        }
+      },
+      {
+        "id": "cta",
+        "block": "cta-simple",
+        "variant": "between",
+        "props": {
+          "title": "Questions before you buy?",
+          "description": "We answer every message.",
+          "actionLabel": "Browse products",
+          "actionHref": "{archive:product}"
+        }
+      }
     ]
   }
 }

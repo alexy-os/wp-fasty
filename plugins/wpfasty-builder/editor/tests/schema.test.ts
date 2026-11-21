@@ -37,8 +37,21 @@ describe("parseType", () => {
   });
 });
 
+/** generic records of the type grammar (the bundled Simple catalog has flat records only) */
+const fixtureRecords: Record<string, RecordField[]> = {
+  Stat: [
+    { name: "id", type: "string" }, { name: "label", type: "string" }, { name: "value", type: "string" },
+    { name: "icon", type: "string" }, { name: "hint", type: "string" },
+  ],
+  LinkActions: [
+    { name: "mode", type: '"one" | "two"', optional: true, default: "one" }, { name: "cta", type: "string" },
+    { name: "href", type: "string", optional: true },
+  ],
+  AboutMeLabels: [{ name: "level", type: "string" }],
+};
+
 describe("fields", () => {
-  const records = catalog("latte").records;
+  const records = fixtureRecords;
   test("a list of records is an array field with the record's fields", () => {
     const f = fieldOf("stats", parseType("Stat[]"), records) as Extract<Field, { type: "array" }>;
     expect(f.type).toBe("array");
@@ -74,7 +87,7 @@ describe("fields", () => {
 });
 
 describe("sample keys without a declared type", () => {
-  const records = catalog("latte").records;
+  const records = fixtureRecords;
   test("a sample value has a type: scalars, objects by keys, lists by the union of their items", () => {
     expect(typeOfSample("x")).toEqual({ kind: "string" });
     expect(typeOfSample(2)).toEqual({ kind: "number" });
@@ -89,10 +102,10 @@ describe("sample keys without a declared type", () => {
     expect(f.objectFields.title!.type).toBe("text");
     expect(f.objectFields.lead!.type).toBe("textarea");
   });
-  test("a sample prop the block does not declare gets a field (hero prompt: composer, nav, badge mark)", () => {
-    const hero = catalog("latte").blocks.find((b) => b.id === "hero")!;
-    const cfg = blockConfig(hero, records);
-    expect(cfg.fields.composer?.type).toBe("object");
+  test("a sample prop the block does not declare gets a field", () => {
+    const block = { id: "x", title: "X", docs: "", group: "g", axes: {}, defaults: {}, props: [], data: [],
+      variants: [{ id: "a", set: {}, organism: "X", template: "blocks/x.latte", props: { nav: { links: [{ label: "A" }] }, badgeMark: "N" }, bindings: [] }] } as BlockSpec;
+    const cfg = blockConfig(block, records);
     expect(cfg.fields.nav?.type).toBe("object");
     expect((cfg.fields.nav as Extract<Field, { type: "object" }>).objectFields.links?.type).toBe("array");
     expect(cfg.fields.badgeMark?.type).toBe("text");
@@ -102,7 +115,7 @@ describe("sample keys without a declared type", () => {
   });
 });
 
-describe("bundled catalogs", () => {
+describe("bundled catalogs (UI8Kit Simple, block-contract/v1)", () => {
   for (const runtime of ["latte", "twig"]) {
     test(`${runtime}: every record a prop names is in catalog.records; no prop falls back to raw JSON`, () => {
       const { blocks, records } = catalog(runtime);
@@ -114,25 +127,23 @@ describe("bundled catalogs", () => {
       };
       for (const b of blocks) for (const [k, f] of Object.entries(blockConfig(b, records).fields)) walk(`${b.id}.${k}`, f);
       expect(json).toEqual([]);
-      expect(blocks.length).toBe(93);
+      expect(blocks.length).toBe(52);
+      expect(blocks.every((b) => b.contract?.version === 1 && b.data.length === 0)).toBe(true);
     });
-    test(`${runtime}: richtext — the fields the current page fills (title, content, cover, meta, side note body) are not editable`, () => {
+    test(`${runtime}: content model fields and settings are fields; the axes are the variant's`, () => {
       const { blocks, records } = catalog(runtime);
-      const rt = blocks.find((b) => b.id === "richtext")!;
-      const cfg = blockConfig(rt, records);
-      for (const k of ["title", "content", "media", "meta"]) expect(cfg.fields[k]).toBeUndefined();
-      const aside = cfg.fields.aside as Extract<Field, { type: "object" }>;
-      expect(Object.keys(aside.objectFields)).toEqual(["title"]);
-      expect(cfg.fields.level?.type).toBeDefined();
-      for (const v of rt.variants) expect(v.current?.map((c) => c.path.join("."))).toContain("content");
+      const hero = blocks.find((b) => b.id === "hero-simple")!;
+      const cfg = blockConfig(hero, records);
+      for (const k of ["badge", "title", "description", "image", "imageAlt", "actionLabel", "actionHref", "padding", "align", "level"]) expect(cfg.fields[k]).toBeDefined();
+      for (const k of Object.keys(hero.axes)) expect(cfg.fields[k]).toBeUndefined();
+      expect(cfg.fields.padding).toMatchObject({ type: "radio" });
+      expect(hero.variants.find((v) => v.id === "mediaEnd")?.label).toBe("Picture at the end");
     });
-    test(`${runtime}: posts — the pager the adapter fills (page, pages, texts, url, firstUrl) is not editable, its mode is`, () => {
+    test(`${runtime}: a list of the content model is an array of its record`, () => {
       const { blocks, records } = catalog(runtime);
-      const posts = blocks.find((b) => b.id === "posts")!;
-      expect(posts.variants.map((v) => v.id)).toEqual(expect.arrayContaining(["listPaged", "listLinks"]));
-      const pager = blockConfig(posts, records).fields.pager as Extract<Field, { type: "object" }>;
-      expect(Object.keys(pager.objectFields)).toEqual(["mode"]);
-      expect(records.PostPager?.map((f) => f.name)).toEqual(["mode", "page", "pages", "label", "summary", "previous", "next", "pageLabel", "url", "firstUrl"]);
+      const stats = blockConfig(blocks.find((b) => b.id === "stats-simple")!, records).fields.items as Extract<Field, { type: "array" }>;
+      expect(stats.type).toBe("array");
+      expect(Object.keys(stats.arrayFields)).toEqual(["id", "value", "title", "description"]);
     });
   }
 });

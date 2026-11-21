@@ -1,7 +1,7 @@
 {
   "id": "folio",
   "label": "Portfolio",
-  "description": "A portfolio: intro, selected projects and a call to action.",
+  "description": "A studio front: hero, selected work and a call to action.",
   "landing": "tools/builder/landings/folio.json",
   "layout": {
     "source": "ui8kit",
@@ -9,50 +9,59 @@
     "blocks": [
       {
         "id": "intro",
-        "block": "pagehead",
-        "variant": "start",
+        "block": "hero-simple",
+        "variant": "mediaEnd",
         "props": {
-          "title": "Calm, fast digital products",
-          "text": "Product design and front-end work for teams who care about the details.",
-          "cta": "See the work",
-          "href": "{archive:project}"
+          "badge": "Studio",
+          "title": "Design and code for the web",
+          "description": "A small studio for brands, products and sites that need to last.",
+          "actionLabel": "See the work",
+          "actionHref": "{posts}",
+          "secondaryActionLabel": "Services",
+          "secondaryActionHref": "{page:services}"
         }
       },
       {
         "id": "work",
-        "block": "posts",
-        "variant": "grid",
+        "block": "cases-simple",
+        "variant": "cards3",
         "props": {
           "title": "Selected work",
-          "meta": "short",
-          "action": {
-            "label": "All projects",
-            "href": "{archive:project}"
-          }
-        },
-        "bindings": {
-          "posts": {
-            "source": "projects",
-            "limit": 6,
-            "map": {
-              "author": "metadata.client.value",
-              "date": "metadata.year.value"
+          "description": "A few projects we are proud of.",
+          "items": [
+            {
+              "id": "case-1",
+              "client": "Northwind",
+              "title": "A storefront rebuilt",
+              "result": "Pages twice as fast",
+              "href": "{posts}"
+            },
+            {
+              "id": "case-2",
+              "client": "Lumen",
+              "title": "A design system",
+              "result": "One kit, four products",
+              "href": "{posts}"
+            },
+            {
+              "id": "case-3",
+              "client": "Atlas",
+              "title": "A content site",
+              "result": "Editors publish alone",
+              "href": "{posts}"
             }
-          }
+          ]
         }
       },
       {
-        "id": "contact",
-        "block": "cta",
-        "variant": "banner",
+        "id": "cta",
+        "block": "cta-simple",
+        "variant": "center",
         "props": {
           "title": "Have a project in mind?",
-          "text": "Tell me about it, I reply within two working days.",
-          "actions": {
-            "cta": "Get in touch",
-            "href": "{page:contact}",
-            "mode": "one"
-          }
+          "description": "Tell us about it; we answer within two days.",
+          "actionLabel": "Start a project",
+          "actionHref": "{page:services}"
         }
       }
     ]

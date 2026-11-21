@@ -8,13 +8,15 @@ import { human } from "./util";
 
 export interface Card {
   key: string; block: string; variant: string; title: string; label: string; group: string;
+  prototype?: boolean;
   preview?: { src: string; dark?: string; width: number; height: number };
 }
 
 /** every variant of the blocks, in catalog order */
 export function cardsOf(blocks: BlockSpec[]): Card[] {
   return blocks.flatMap((b) => b.variants.map((v) => ({
-    key: `${b.id}/${v.id}`, block: b.id, variant: v.id, title: b.title, label: human(v.id), group: b.group,
+    key: `${b.id}/${v.id}`, block: b.id, variant: v.id, title: b.title, label: v.label ?? human(v.id), group: b.group,
+    ...(b.contract?.version === 1 ? { prototype: true } : {}),
     ...(v.preview ? { preview: v.preview } : {}),
   })));
 }

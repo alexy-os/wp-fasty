@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace WPFastyBuilder;
 
-use WPFastyBuilder\Source\SourceInterface;
-
 /** Manual-core new-page presentation. No Agent, SDK or worker dependency. */
 final class PageOnboarding
 {
@@ -45,7 +43,10 @@ final class PageOnboarding
         });
     }
 
-    /** Resolve a reference only from this installed runtime's bounded screen index, never client JSON.
+    /**
+     * Optional Agent reference port: an exact page of an installed template collection, never client JSON. The bundled
+     * Simple source has no template pages (ADR-007); its twelve old screens and their presentation were removed.
+     *
      * @return array<string, mixed>|null
      */
     public static function reference(string $source, string $id): ?array
@@ -54,45 +55,24 @@ final class PageOnboarding
         if (null === $catalog || strlen($id) > 160) {
             return null;
         }
-        foreach (self::screens($catalog, Sources::get($source)) as $screen) {
-            if ($id === $screen['id']) {
-                return ['schema' => 'wpfasty-screen-reference/1', 'source' => $source, 'id' => $id, 'blocks' => $screen['blocks']];
-            }
-        }
-
-        return null;
-    }
-
-    /** @return list<array<string, mixed>> */
-    public static function screens(Catalog $catalog, ?SourceInterface $source): array
-    {
-        $pages = [];
         foreach ($catalog->collections() as $collection) {
             if ('template' !== ($collection['type'] ?? '')) {
                 continue;
             }
-            $full = Previews::attachPages($catalog->collection(Cast::string($collection['id'])), $source);
-            foreach (Cast::list($full['pages'] ?? []) as $page) {
-                if (!is_array($page) || !isset($page['preview']) || [] === ($page['blocks'] ?? [])) {
+            foreach (Cast::list($collection['pages'] ?? []) as $page) {
+                if (!is_array($page) || Cast::string($collection['id']).':'.Cast::string($page['id'] ?? '') !== $id || [] === ($page['blocks'] ?? [])) {
                     continue;
                 }
-                $page = Cast::map($page);
-                $valid = true;
                 foreach (Cast::list($page['blocks']) as $block) {
                     if (null === $catalog->variant(Cast::string(Cast::path($block, 'block')), Cast::string(Cast::path($block, 'variant')))) {
-                        $valid = false;
+                        return null;
                     }
                 }
-                if ($valid) {
-                    $page['id'] = Cast::string($collection['id']).':'.Cast::string($page['id']);
-                    $pages[] = $page;
-                }
-                if (12 === count($pages)) {
-                    return $pages;
-                }
+
+                return ['schema' => 'wpfasty-screen-reference/1', 'source' => $source, 'id' => $id, 'blocks' => $page['blocks']];
             }
         }
 
-        return $pages;
+        return null;
     }
 }

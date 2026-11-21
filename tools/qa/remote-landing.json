@@ -1,10 +1,20 @@
 {
-  "page": { "title": "Remote registry", "slug": "remote-registry" },
+  "page": {
+    "title": "Remote registry",
+    "slug": "remote-registry"
+  },
   "layout": {
     "source": "reg",
     "blocks": [
-      { "id": "intro", "block": "pagehead", "variant": "start", "props": { "title": "From the registry", "text": "Blocks of an imported registry of the site runtime.", "cta": "Read the latest", "href": "{posts}" } },
-      { "id": "latest", "block": "posts", "variant": "magazine", "props": { "title": "Latest stories" }, "bindings": { "posts": { "source": "posts", "limit": 4 } } }
+      {
+        "id": "intro",
+        "block": "intro-simple",
+        "variant": "center",
+        "props": {
+          "title": "From the registry",
+          "description": "Simple blocks of an imported registry of the site runtime."
+        }
+      }
     ]
   }
 }

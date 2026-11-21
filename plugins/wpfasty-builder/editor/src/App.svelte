@@ -1,7 +1,6 @@
 <script lang="ts">
   import {featureCopy} from "./features";
   import OnboardingChoices from './OnboardingChoices.svelte';
-  import OnboardingScreens from './OnboardingScreens.svelte';
   import {canOnboard,onboardingCopy,type PageShell} from './onboarding';
   let onboarding = $state(false);
   let started = false;
@@ -713,15 +712,12 @@
       {/if}
       <div class="wpfb-section is-cards">
         <h2 class="wpfb-heading">Blocks</h2>
-        <BlockCards blocks={catalog?.blocks ?? []} collections={catalog?.collections ?? []} dark={theme.dark}
+        <BlockCards blocks={catalog?.blocks ?? []} collections={catalog?.collections ?? []} dark={theme.dark} {previewUrl}
           onadd={(block, variant) => add(block, variant, store.selected ? currentIndex + 1 : store.items.length)}
           ondrag={(c) => { card = c; if (!c) dragDone(); }} />
       </div>
       {/if}
       </UiBox>
-      {#if onboarding && config.features?.length}
-      <OnboardingScreens pages={catalog?.screens??[]} dark={theme.dark} onselect={page=>selectedScreen=page} />
-      {/if}
     </aside>
 
     {#if layout.leftOpen}

@@ -1,68 +1,119 @@
 {
   "id": "shop",
   "label": "Shop",
-  "description": "A shop front: intro, two product grids and a call to action.",
+  "description": "A shop front: hero, new arrivals, collections, policies and a call to action.",
   "landing": "tools/builder/landings/shop.json",
   "layout": {
     "source": "ui8kit",
-    "collection": "commerce-shop",
+    "collection": "",
     "blocks": [
       {
         "id": "intro",
-        "block": "pagehead",
-        "variant": "start",
+        "block": "hero-simple",
+        "variant": "mediaEnd",
         "props": {
-          "title": "Everyday goods, simply made",
-          "text": "Kitchen, home and accessories from small workshops.",
-          "cta": "Browse the shop",
-          "href": "{archive:product}"
+          "badge": "New season",
+          "title": "Made to be worn every day",
+          "description": "Simple pieces in honest materials, shipped in two days.",
+          "actionLabel": "Shop now",
+          "actionHref": "{archive:product}"
         }
       },
       {
-        "id": "new",
-        "block": "products",
-        "variant": "grid3",
+        "id": "products",
+        "block": "products-simple",
+        "variant": "cards3",
         "props": {
-          "title": "New in the shop",
-          "rating": "hide",
-          "action": "none"
-        },
-        "bindings": {
-          "products": {
-            "source": "products",
-            "limit": 6
-          }
+          "title": "New arrivals",
+          "description": "Just in this week.",
+          "items": [
+            {
+              "id": "product-1",
+              "title": "Linen shirt",
+              "price": "$49",
+              "href": "#"
+            },
+            {
+              "id": "product-2",
+              "title": "Canvas tote",
+              "price": "$24",
+              "href": "#"
+            },
+            {
+              "id": "product-3",
+              "title": "Wool scarf",
+              "price": "$39",
+              "href": "#"
+            }
+          ]
         }
       },
       {
-        "id": "kitchen",
-        "block": "products",
-        "variant": "grid4",
+        "id": "collections",
+        "block": "collections-simple",
+        "variant": "cards4",
         "props": {
-          "title": "For the kitchen",
-          "rating": "hide",
-          "action": "none"
-        },
-        "bindings": {
-          "products": {
-            "source": "products",
-            "limit": 4,
-            "term": "kitchen"
-          }
+          "title": "Collections",
+          "description": "Find your fit.",
+          "items": [
+            {
+              "id": "collection-1",
+              "title": "Shirts",
+              "href": "#"
+            },
+            {
+              "id": "collection-2",
+              "title": "Bags",
+              "href": "#"
+            },
+            {
+              "id": "collection-3",
+              "title": "Knitwear",
+              "href": "#"
+            },
+            {
+              "id": "collection-4",
+              "title": "Accessories",
+              "href": "#"
+            }
+          ]
         }
       },
       {
-        "id": "about",
-        "block": "cta",
-        "variant": "banner",
+        "id": "policies",
+        "block": "store-policies",
+        "variant": "cols3",
         "props": {
-          "title": "Made to last",
-          "text": "We work with a handful of makers and keep the range small on purpose.",
-          "actions": {
-            "cta": "About us",
-            "href": "{page:about}",
-            "mode": "one"
-          }
+          "title": "Shopping with us",
+          "description": "The small print, in plain words.",
+          "items": [
+            {
+              "id": "policy-1",
+              "title": "Free shipping",
+              "description": "On every order over $50."
+            },
+            {
+              "id": "policy-2",
+              "title": "Easy returns",
+              "description": "Thirty days, no questions."
+            },
+            {
+              "id": "policy-3",
+              "title": "Secure payment",
+              "description": "Cards and wallets, encrypted."
+            }
+          ]
+        }
+      },
+      {
+        "id": "cta",
+        "block": "cta-simple",
+        "variant": "center",
+        "props": {
+          "title": "Ten percent off your first order",
+          "description": "Join the list for new arrivals and sales.",
+          "actionLabel": "Shop the sale",
+          "actionHref": "{page:sale}"
         }
       }
     ]

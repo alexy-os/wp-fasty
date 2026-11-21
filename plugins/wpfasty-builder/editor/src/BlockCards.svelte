@@ -6,13 +6,16 @@
   import Icon from "./Icon.svelte";
   import { ImageOff, LayoutGrid, Search } from "./icons";
   import { CAPTION, cardsOf, filterCards, GAP, gridOf, groupsOf, MIME, rowOf, windowOf, type Card } from "./cards";
+  import { prototypeSource } from "./prototype";
   import { previewSrc } from "./theme";
   import type { BlockSpec, Collection } from "./types";
 
-  let { blocks, collections, dark = false, onadd, ondrag }: {
+  let { blocks, collections, dark = false, previewUrl = "", onadd, ondrag }: {
     blocks: BlockSpec[];
     /** the editor's dark mode: dark preview shots */
     dark?: boolean;
+    /** the actual authenticated server preview of this page */
+    previewUrl?: string;
     collections: Pick<Collection, "id" | "label" | "type">[];
     onadd: (block: string, variant: string) => void;
     /** a card drag starts (the card) or ends (null) */
@@ -112,7 +115,11 @@
                 onclick={() => onadd(c.block, c.variant)} onfocus={() => (active = i)} onkeydown={(e) => key(e, i)}
                 ondragstart={(e) => dragStart(e, c)} ondragend={() => ondrag(null)}>
                 <span class="wpfb-card-media" style:height="{grid.imageHeight - 2}px">
-                  {#if c.preview}
+                  {#if c.prototype && previewUrl}
+                    <iframe class="wpfb-card-prototype" src={prototypeSource(previewUrl, c.block, c.variant, dark)}
+                      title={`${c.title} · ${c.label}`} sandbox="allow-same-origin" loading="lazy" aria-hidden="true" tabindex="-1"
+                      width="1024" height="576" style:transform="scale({(grid.cardWidth - 2) / 1024})"></iframe>
+                  {:else if c.preview}
                     <img src={previewSrc(c.preview, dark)} onerror={(e) => fallback(e, c)} width={c.preview.width} height={c.preview.height} alt="" loading="lazy" decoding="async" draggable="false" />
                   {:else}
                     <Icon icon={ImageOff} size={16} />
@@ -128,3 +135,8 @@
     {/if}
   </div>
 </div>
+
+<style>
+  .wpfb-card-media { position: relative; overflow: hidden; }
+  .wpfb-card-prototype { position: absolute; top: 0; left: 0; width: 1024px; height: 576px; border: 0; pointer-events: none; transform-origin: top left; }
+</style>

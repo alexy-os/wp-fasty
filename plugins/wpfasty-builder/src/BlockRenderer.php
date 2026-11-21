@@ -21,6 +21,12 @@ final class BlockRenderer
 {
     public const TWIG_EXT = '.html.twig';
 
+    /** the compose class of each runtime (sources/ui8kit/<runtime>/php/Compose.php, tools/builder/simple-snapshot.ts) */
+    public const COMPOSE = [
+        'latte' => Kit\Latte\Compose::class,
+        'twig' => Kit\Twig\Compose::class,
+    ];
+
     /** @var array<string, \Latte\Engine> */
     private array $engines = [];
 
@@ -134,7 +140,9 @@ final class BlockRenderer
             'autoescape' => 'html', 'strict_variables' => false, 'cache' => $tmp ?? false, 'auto_reload' => true,
         ]);
         $env->addExtension(new \UI8Kit\Twig\TwigExtension());
-        $env->addExtension(new \CodegenX\Compose\Twig\ComposeExtension());
+        foreach (['compose_props' => 'props', 'compose_rc' => 'rc', 'compose_join' => 'join'] as $name => $method) {
+            $env->addFunction(new \Twig\TwigFunction($name, [self::COMPOSE['twig'], $method]));
+        }
         $env->addExtension(new \CodegenX\Organisms\Twig\OrganismExtension($bundled ?? $root));
         if ($loader instanceof TwigSourceLoader) {
             $env->addExtension(self::sandbox($env, $loader));
@@ -191,15 +199,10 @@ final class BlockRenderer
             return false;
         }
         $root = self::bundled($runtime);
-        // compose/*.php declare CodegenX\Compose\{Latte,Twig}\<file>; the parent theme ships the same classes
-        // (ui8kit/compose, twig/ui8kit/compose: kit-compose form fields, same commit and compose.json), so a class
-        // already defined or autoloadable is used, not redeclared (like Primitives::loadRuntime)
-        $ns = 'twig' === $runtime ? 'CodegenX\\Compose\\Twig\\' : 'CodegenX\\Compose\\Latte\\';
-        $files = array_values(array_filter(
-            glob($root.'/compose/*.php') ?: [],
-            static fn (string $f): bool => !class_exists($ns.basename($f, '.php'))
-        ));
-        foreach (['CnMerge', 'Runtime', 'OrganismExtension'] as $f) {
+        // php/Compose.php: the plugin's namespaced copy of the CLI compose data (WPFastyBuilder\Kit\<Runtime>), so a
+        // theme shipping another CodegenX\Compose version never changes the recipes of the Builder's blocks
+        $files = [];
+        foreach (['Compose', 'CnMerge', 'Runtime', 'OrganismExtension'] as $f) {
             $files[] = "$root/php/$f.php";
         }
         foreach ($files as $file) {

@@ -14,117 +14,118 @@
     "blocks": [
       {
         "id": "intro",
-        "block": "pagehead",
+        "block": "intro-simple",
         "variant": "start",
         "props": {
           "title": "Services",
-          "text": "Design and front-end work, from the first sketch to a site that ships.",
-          "cta": "Start a project",
-          "href": "{page:contact}"
+          "description": "From the first sketch to a site your team runs alone."
         }
       },
       {
         "id": "services",
-        "block": "features",
-        "variant": "grid",
+        "block": "services-simple",
+        "variant": "cards3",
         "props": {
-          "title": "What I can help with",
-          "item": "card",
-          "features": [
+          "title": "What we do",
+          "description": "Three ways to work together.",
+          "items": [
             {
-              "id": "service-product",
-              "title": "Product design",
-              "text": "Flows, screens and prototypes tested with real users.",
-              "icon": "palette"
+              "id": "service-1",
+              "title": "Brand and design",
+              "description": "Identity, type, colour and a kit to use them.",
+              "price": "From $4,000",
+              "href": "#"
             },
             {
-              "id": "service-web",
-              "title": "Front-end development",
-              "text": "Fast, accessible sites built on plain templates.",
-              "icon": "zap"
+              "id": "service-2",
+              "title": "Sites and stores",
+              "description": "Fast, accessible WordPress sites.",
+              "price": "From $8,000",
+              "href": "#"
             },
             {
-              "id": "service-brand",
-              "title": "Branding",
-              "text": "Identity, type and a small system that stays consistent.",
-              "icon": "sparkles"
-            }
-          ],
-          "action": {
-            "label": "See the work",
-            "href": "{archive:project}"
-          }
-        }
-      },
-      {
-        "id": "process",
-        "block": "steps",
-        "variant": "row",
-        "props": {
-          "title": "How a project runs",
-          "steps": [
-            {
-              "id": "step-call",
-              "title": "Intro call",
-              "text": "We talk about the goal, the audience and the timeline.",
-              "icon": "phone"
-            },
-            {
-              "id": "step-plan",
-              "title": "Plan",
-              "text": "A short written plan with scope and milestones.",
-              "icon": "clipboard-list"
-            },
-            {
-              "id": "step-build",
-              "title": "Design and build",
-              "text": "Weekly check-ins with something you can click.",
-              "icon": "layout-grid"
-            },
-            {
-              "id": "step-launch",
-              "title": "Launch",
-              "text": "Release, hand-over and a month of support.",
-              "icon": "rocket"
+              "id": "service-3",
+              "title": "Care",
+              "description": "Updates, fixes and small changes every month.",
+              "price": "From $400 a month",
+              "href": "#"
             }
           ]
         }
       },
       {
-        "id": "recent",
-        "block": "posts",
-        "variant": "twoUp",
+        "id": "steps",
+        "block": "steps-simple",
+        "variant": "row4",
         "props": {
-          "title": "Recent projects",
-          "meta": "short",
-          "action": {
-            "label": "All projects",
-            "href": "{archive:project}"
-          }
-        },
-        "bindings": {
-          "posts": {
-            "source": "projects",
-            "limit": 4,
-            "map": {
-              "author": "metadata.client.value",
-              "date": "metadata.year.value"
+          "title": "How it works",
+          "description": "Four steps, no surprises.",
+          "steps": [
+            {
+              "id": "step-1",
+              "label": "01",
+              "title": "Talk",
+              "description": "We learn your goals and constraints."
+            },
+            {
+              "id": "step-2",
+              "label": "02",
+              "title": "Plan",
+              "description": "A scope, a schedule and a price."
+            },
+            {
+              "id": "step-3",
+              "label": "03",
+              "title": "Build",
+              "description": "Weekly demos on a real site."
+            },
+            {
+              "id": "step-4",
+              "label": "04",
+              "title": "Launch",
+              "description": "Training, handover and care."
             }
-          }
+          ]
         }
       },
       {
-        "id": "contact",
-        "block": "cta",
-        "variant": "banner",
+        "id": "quotes",
+        "block": "testimonials-simple",
+        "variant": "cols3",
         "props": {
-          "title": "Have a project in mind?",
-          "text": "Tell me about it, I reply within two working days.",
-          "actions": {
-            "cta": "Get in touch",
-            "href": "{page:contact}",
-            "mode": "one"
-          }
+          "title": "Clients say",
+          "description": "Short words from long projects.",
+          "quotes": [
+            {
+              "id": "quote-1",
+              "quote": "They shipped what they promised, on time.",
+              "title": "Ana Reyes",
+              "description": "Northwind"
+            },
+            {
+              "id": "quote-2",
+              "quote": "Our editors finally publish without help.",
+              "title": "Tom Berg",
+              "description": "Atlas"
+            },
+            {
+              "id": "quote-3",
+              "quote": "A kit we still use every day.",
+              "title": "Mia Chen",
+              "description": "Lumen"
+            }
+          ]
+        }
+      },
+      {
+        "id": "cta",
+        "block": "cta-simple",
+        "variant": "between",
+        "props": {
+          "title": "Let us talk",
+          "description": "A short call is the best first step.",
+          "actionLabel": "See the work",
+          "actionHref": "{posts}"
         }
       }
     ]

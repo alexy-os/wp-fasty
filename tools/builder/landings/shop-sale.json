@@ -1,25 +1,102 @@
 {
-  "page": { "title": "Sale", "slug": "sale" },
+  "page": {
+    "title": "Sale",
+    "slug": "sale"
+  },
   "front": false,
-  "menu": { "location": "primary", "label": "Sale" },
+  "menu": {
+    "location": "primary",
+    "label": "Sale"
+  },
   "layout": {
     "source": "ui8kit",
-    "collection": "commerce-shop",
+    "collection": "",
     "blocks": [
-      { "id": "intro", "block": "pagehead", "variant": "start",
-        "props": { "title": "On sale now", "text": "A few favourites at a lower price while stock lasts.", "cta": "Browse the shop", "href": "{archive:product}" } },
-      { "id": "sale", "block": "products", "variant": "grid3",
-        "props": { "title": "Reduced prices", "rating": "hide", "action": "none" },
-        "bindings": { "products": { "source": "products", "limit": 6, "sale": true } } },
-      { "id": "categories", "block": "categories", "variant": "tiles",
-        "props": { "label": "Shop by category" },
-        "bindings": { "categories": { "source": "product_cats", "limit": 6 } } },
-      { "id": "home", "block": "products", "variant": "grid4",
-        "props": { "title": "For the home", "rating": "hide", "action": "none" },
-        "bindings": { "products": { "source": "products", "limit": 4, "term": "home" } } },
-      { "id": "back", "block": "cta", "variant": "banner",
-        "props": { "title": "Looking for something else?", "text": "The full range is in the shop, sorted by category.",
-          "actions": { "cta": "Go to the shop", "href": "{archive:product}", "mode": "one" } } }
+      {
+        "id": "promo",
+        "block": "promo-simple",
+        "variant": "mediaEnd",
+        "props": {
+          "badge": "Sale",
+          "title": "Up to 40% off",
+          "deadline": "Ends Sunday",
+          "description": "Last pieces of the season, while stock lasts.",
+          "code": "SEASON40",
+          "actionLabel": "Shop the sale",
+          "actionHref": "{archive:product}"
+        }
+      },
+      {
+        "id": "products",
+        "block": "products-simple",
+        "variant": "denseGrid",
+        "props": {
+          "title": "On sale now",
+          "description": "Prices as marked.",
+          "items": [
+            {
+              "id": "sale-1",
+              "title": "Linen shirt",
+              "price": "$49",
+              "href": "#"
+            },
+            {
+              "id": "sale-2",
+              "title": "Canvas tote",
+              "price": "$24",
+              "href": "#"
+            },
+            {
+              "id": "sale-3",
+              "title": "Wool scarf",
+              "price": "$39",
+              "href": "#"
+            }
+          ]
+        }
+      },
+      {
+        "id": "guarantees",
+        "block": "guarantees-simple",
+        "variant": "strip4",
+        "props": {
+          "title": "Why buy here",
+          "description": "Every order, every time.",
+          "items": [
+            {
+              "id": "guarantee-1",
+              "title": "Fast delivery",
+              "text": "Shipped within two days."
+            },
+            {
+              "id": "guarantee-2",
+              "title": "Free returns",
+              "text": "Thirty days to decide."
+            },
+            {
+              "id": "guarantee-3",
+              "title": "Real support",
+              "text": "People, not bots."
+            },
+            {
+              "id": "guarantee-4",
+              "title": "Fair prices",
+              "text": "No hidden fees."
+            }
+          ]
+        }
+      },
+      {
+        "id": "cta",
+        "block": "cta-simple",
+        "variant": "center",
+        "props": {
+          "title": "Not on sale?",
+          "description": "See the whole collection.",
+          "actionLabel": "All products",
+          "actionHref": "{archive:product}"
+        }
+      }
     ]
   }
 }

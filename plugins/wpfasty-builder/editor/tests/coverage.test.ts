@@ -11,7 +11,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { BlockSpec, Json, RecordField } from "../src/types";
 import { ADAPTER_RECORDS, blockConfig, NO_SETTINGS, type Field } from "../src/fields/schema";
-import { isObj, missingBlocks } from "../src/util";
+import { isObj } from "../src/util";
 
 const plugin = join(import.meta.dir, "../..");
 const read = (p: string) => JSON.parse(readFileSync(p, "utf8"));
@@ -66,8 +66,9 @@ for (const runtime of ["latte", "twig"]) {
     const uses = usesOf(cat);
 
     test("the sources are all there", () => {
-      expect(uses.filter((u) => u.where === "card").length).toBe(482);
-      expect(new Set(uses.filter((u) => u.where.startsWith("template page")).map((u) => u.where)).size).toBe(63);
+      // the UI8Kit Simple blocks only (block-contract/v1, ADR-007); no template pages
+      expect(uses.filter((u) => u.where === "card").length).toBe(157);
+      expect(uses.filter((u) => u.where.startsWith("template page")).length).toBe(0);
       expect(uses.filter((u) => u.where.startsWith("starter")).length).toBeGreaterThan(0);
       expect(uses.filter((u) => u.where.startsWith("landing")).length).toBeGreaterThan(0);
     });
@@ -75,10 +76,6 @@ for (const runtime of ["latte", "twig"]) {
     test("every block and variant is in the catalog (outside its collection too)", () => {
       const bad = uses.filter((u) => !blocks.get(u.block)?.variants.some((v) => v.id === u.variant)).map((u) => `${u.block}:${u.variant} (${u.where})`);
       expect(bad).toEqual([]);
-      // a starter may use a block its collection does not list: the editor loads it from the whole catalog
-      const press = uses.filter((u) => u.where === "starter press.json");
-      const col = cat.collections.find((c) => c.id === press[0]?.collection);
-      expect(missingBlocks(press, col!.blocks.map((id) => ({ id }))).every((id) => blocks.has(id))).toBe(true);
     });
 
     test("every block has typed fields (NO_SETTINGS: none, on purpose)", () => {
@@ -102,6 +99,8 @@ for (const runtime of ["latte", "twig"]) {
           const out: string[] = [];
           for (const [k, v] of Object.entries(isObj(props) ? props : {})) {
             if (k === "id" || k === "className") continue;
+            // an axis of a block-contract/v1 block is the variant's (a variant switch), not a field
+            if (b.contract && k in b.axes) continue;
             // a prop the WordPress adapter fills (the pager: page, pages, texts) is reachable only through its kept fields
             const prop = b.props.find((p) => p.name === k);
             const keep = prop && typeof prop.type === "object" && prop.type.record ? ADAPTER_RECORDS[prop.type.record] : undefined;

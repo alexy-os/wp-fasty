@@ -277,7 +277,10 @@ export function blockConfig(block: BlockSpec, records: Record<string, RecordFiel
     const type = axis?.length ? ({ kind: "enum", options: axis } as TypeNode) : parseType(tsOf(p.type));
     fields[p.name] = fieldOf(p.name, type, records, sample[p.name], p.docs || undefined);
   }
-  for (const [k, v] of Object.entries(sample)) if (!fields[k] && !HIDDEN_PROPS.includes(k)) fields[k] = fieldOf(k, typeOfSample(v), records, v);
+  // a block-contract/v1 block: its axes are the variant's (`set`); a variant switch changes them, never a field
+  const axes = block.contract ? Object.keys(block.axes) : [];
+  for (const k of axes) delete fields[k];
+  for (const [k, v] of Object.entries(sample)) if (!fields[k] && !HIDDEN_PROPS.includes(k) && !axes.includes(k)) fields[k] = fieldOf(k, typeOfSample(v), records, v);
   for (const v of block.variants) for (const c of v.current ?? []) dropPath(fields, c.path);
   for (const p of block.props) {
     const keep = typeof p.type === "object" && p.type.record ? ADAPTER_RECORDS[p.type.record] : undefined;

@@ -100,12 +100,10 @@ final class Rest
         }
         $col = Cast::string($r['collection']);
         $editor = $catalog->forEditor('' !== $col && null !== $catalog->collection($col) ? $col : null);
-        $editor['blocks'] = Previews::attach($editor['blocks'], Sources::get(Cast::string($r['source'])));
-        $editor['collection'] = Previews::attachPages($editor['collection'], Sources::get(Cast::string($r['source'])));
 
         return new \WP_REST_Response([
             'source' => Cast::string($r['source']),
-            'screens' => PageOnboarding::screens($catalog, Sources::get(Cast::string($r['source']))),
+            'screens' => [], // no bundled screen compositions (ADR-007)
             'sources' => array_map(
                 static fn ($s): array => ['id' => $s->id(), 'label' => $s->label()],
                 array_values(Sources::all()),
