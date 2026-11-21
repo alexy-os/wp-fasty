@@ -11,11 +11,11 @@ const base = "http://site.test/home/?wpfb_preview=1&_wpnonce=abc123";
 const catalog = JSON.parse(readFileSync(join(import.meta.dir, "../../sources/ui8kit/latte/catalog.json"), "utf8")) as { blocks: BlockSpec[] };
 
 describe("prototype cards", () => {
-  test("every Simple variant is a live prototype card with its contract label", () => {
+  test("every Simple block is a live prototype card; its variants keep their contract labels", () => {
     const cards = cardsOf(catalog.blocks);
-    expect(cards.length).toBe(157);
-    expect(cards.every((c) => c.prototype === true && !c.preview)).toBe(true);
-    expect(cards.find((c) => c.key === "hero-simple/mediaEnd")?.label).toBe("Picture at the end");
+    expect(cards.length).toBe(52);
+    expect(cards.every((c) => c.prototype === true)).toBe(true);
+    expect(cards.find((c) => c.key === "hero-simple")?.variants.find((v) => v.id === "mediaEnd")?.label).toBe("Picture at the end");
   });
   test("the sheet URL keeps the preview nonce, adds the block and the scheme; the variant is the fragment", () => {
     const u = new URL(prototypeSource(base, "hero-simple", "mediaEnd", true));

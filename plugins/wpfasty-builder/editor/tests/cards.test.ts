@@ -1,48 +1,63 @@
 import { describe, expect, test } from "bun:test";
-import { cardsOf, filterCards, gridOf, groupsOf, windowOf } from "../src/cards";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { cardsOf, columnsOf, filterCards, groupsOf, pick, selectedOf } from "../src/cards";
 import type { BlockSpec } from "../src/types";
 
-const block = (id: string, title: string, group: string, variants: string[], preview = true) => ({
-  id, title, group, docs: "", axes: {}, defaults: {}, props: [], data: [],
-  variants: variants.map((v) => ({ id: v, set: {}, organism: "", template: "", props: {}, bindings: [],
-    ...(preview ? { preview: { src: `p/${id}/${v}.webp`, width: 320, height: 180 } } : {}) })),
+const block = (id: string, title: string, group: string, axes: Record<string, string[]>, variants: [string, Record<string, string>, string?][]) => ({
+  id, title, group, docs: "", axes, defaults: {}, props: [], data: [], contract: { item: id, version: 1, model: `${id}@1` },
+  variants: variants.map(([v, set, label]) => ({ id: v, set, ...(label ? { label } : {}), organism: "", template: "", props: {}, bindings: [] })),
 }) as BlockSpec;
-const blocks = [block("hero", "Hero", "hero", ["split", "centered"]), block("faq", "FAQ", "faq", ["list"]), block("cta", "Call to action", "cta", ["banner"], false)];
+const hero = block("hero", "Hero", "hero", { media: ["end", "start", "top"], ratio: ["landscape", "portrait"] }, [
+  ["mediaEnd", { media: "end", ratio: "landscape" }, "Picture at the end"], ["mediaStart", { media: "start", ratio: "landscape" }],
+  ["mediaTop", { media: "top", ratio: "landscape" }], ["portraitEnd", { media: "end", ratio: "portrait" }],
+]);
+const intro = block("intro", "Intro", "hero", { place: ["middle", "bottom"] }, [["a", { place: "middle" }], ["b", { place: "middle" }], ["c", { place: "bottom" }]]);
+const faq = block("faq", "FAQ", "faq", {}, [["list", {}]]);
+const catalog = JSON.parse(readFileSync(join(import.meta.dir, "../../sources/ui8kit/latte/catalog.json"), "utf8")) as { blocks: BlockSpec[] };
 
-describe("cards", () => {
-  test("one card per variant, in catalog order, with its preview", () => {
-    const cards = cardsOf(blocks);
-    expect(cards.map((c) => c.key)).toEqual(["hero/split", "hero/centered", "faq/list", "cta/banner"]);
-    expect(cards[0]).toEqual({ key: "hero/split", block: "hero", variant: "split", title: "Hero", label: "Split", group: "hero", preview: { src: "p/hero/split.webp", width: 320, height: 180 } });
-    expect(cards[3]!.preview).toBeUndefined();
+describe("cards: one per block with a variant switcher", () => {
+  test("one card per block, in catalog order; axes that tell the variants apart, values in the block's order", () => {
+    const [h, i, f] = cardsOf([hero, intro, faq]);
+    expect([h!.key, i!.key, f!.key]).toEqual(["hero", "intro", "faq"]);
+    expect(h!.axes.map((a) => [a.name, a.values.map((v) => v.value)])).toEqual([["media", ["end", "start", "top"]], ["ratio", ["landscape", "portrait"]]]);
+    expect(h!.variants[0]).toEqual({ id: "mediaEnd", label: "Picture at the end", set: { media: "end", ratio: "landscape" } });
+    // two variants share the same axis values: the labelled variants are the switcher
+    expect(i!.axes).toEqual([]);
+    expect(f!.variants.length).toBe(1);
   });
-  test("search (every word) and category", () => {
-    const cards = cardsOf(blocks);
-    expect(filterCards(cards, "hero cent", "").map((c) => c.key)).toEqual(["hero/centered"]);
-    expect(filterCards(cards, "", "faq").map((c) => c.key)).toEqual(["faq/list"]);
-    expect(filterCards(cards, "ACTION", "").map((c) => c.key)).toEqual(["cta/banner"]);
-    expect(filterCards(cards, "split", "faq")).toEqual([]);
+  test("an axis choice keeps the other axis values when a variant has them, else the first match", () => {
+    const [h] = cardsOf([hero]);
+    expect(pick(h!, "mediaEnd", "media", "start")).toBe("mediaStart");
+    expect(pick(h!, "mediaEnd", "ratio", "portrait")).toBe("portraitEnd");
+    expect(pick(h!, "portraitEnd", "media", "top")).toBe("mediaTop");
+    expect(pick(h!, "mediaEnd", "media", "nowhere")).toBe("mediaEnd");
+    expect(selectedOf(h!, undefined).id).toBe("mediaEnd");
+    expect(selectedOf(h!, "gone").id).toBe("mediaEnd");
   });
-  test("categories labelled like the catalog's group collections", () => {
-    expect(groupsOf(blocks, [{ id: "cta", label: "Calls to action", type: "group" }, { id: "hero", label: "Template", type: "template" }]))
-      .toEqual([{ id: "cta", label: "Calls to action", count: 1 }, { id: "faq", label: "Faq", count: 1 }, { id: "hero", label: "Hero", count: 2 }]);
+  test("search (every word, variant labels too) and category; categories count blocks", () => {
+    const cards = cardsOf([hero, intro, faq]);
+    expect(filterCards(cards, "picture end", "").map((c) => c.key)).toEqual(["hero"]);
+    expect(filterCards(cards, "", "faq").map((c) => c.key)).toEqual(["faq"]);
+    expect(filterCards(cards, "list", "hero")).toEqual([]);
+    expect(groupsOf([hero, intro, faq])).toEqual([{ id: "faq", label: "Faq", count: 1 }, { id: "hero", label: "Hero", count: 2 }]);
   });
-});
-
-describe("virtual grid", () => {
-  test("columns by width, 16:9 images", () => {
-    expect(gridOf(264, 474)).toMatchObject({ cols: 1, cardWidth: 264, imageHeight: 149, rowHeight: 205, rows: 474 });
-    expect(gridOf(416, 10)).toMatchObject({ cols: 2, cardWidth: 204, rows: 5 });
-    expect(gridOf(100, 3).cols).toBe(1);
+  test("every Simple block is one live prototype card; every variant is reachable from its switcher", () => {
+    const cards = cardsOf(catalog.blocks);
+    expect(cards.length).toBe(52);
+    expect(cards.reduce((n, c) => n + c.variants.length, 0)).toBe(157);
+    for (const c of cards) {
+      expect(c.prototype).toBe(true);
+      if (!c.axes.length) continue;
+      const reached = new Set<string>([c.variants[0]!.id]);
+      for (let round = 0; round < 4; round++)
+        for (const from of [...reached]) for (const a of c.axes) for (const x of a.values) reached.add(pick(c, from, a.name, x.value));
+      expect([...reached].sort()).toEqual(c.variants.map((v) => v.id).sort());
+    }
   });
-  test("only the rows in view (+ overscan) are rendered", () => {
-    const g = gridOf(264, 474);
-    expect(windowOf(g, 474, 0, 600)).toEqual({ from: 0, to: 5, offset: 0 });
-    const w = windowOf(g, 474, 205 * 100, 600);
-    expect(w).toEqual({ from: 98, to: 105, offset: 98 * 205 });
-    expect(windowOf(g, 474, 1e9, 600).to).toBe(474);
-    expect(windowOf(g, 0, 0, 600)).toEqual({ from: 0, to: 0, offset: 0 });
-    const g2 = gridOf(416, 474);
-    expect(windowOf(g2, 474, 0, 600).to - windowOf(g2, 474, 0, 600).from).toBeLessThanOrEqual(2 * 8);
+  test("columns by width", () => {
+    expect(columnsOf(264)).toEqual({ cols: 1, cardWidth: 264 });
+    expect(columnsOf(416)).toEqual({ cols: 2, cardWidth: 204 });
+    expect(columnsOf(100).cols).toBe(1);
   });
 });

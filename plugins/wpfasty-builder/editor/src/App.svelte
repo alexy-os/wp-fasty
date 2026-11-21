@@ -723,7 +723,7 @@
       {/if}
       <div class="wpfb-section is-cards">
         <h2 class="wpfb-heading">Blocks</h2>
-        <BlockCards blocks={catalog?.blocks ?? []} collections={catalog?.collections ?? []} dark={theme.dark} {previewUrl}
+        <BlockCards blocks={catalog?.blocks ?? []} dark={theme.dark} {previewUrl}
           onadd={(block, variant) => add(block, variant, store.selected ? currentIndex + 1 : store.items.length)}
           ondrag={(c) => { card = c; if (!c) dragDone(); }} />
       </div>

@@ -209,17 +209,24 @@ body:has(#wpfasty-builder) #wpbody-content { padding-bottom: 0; }
 .wpfb-root .wpfb-app .wpfb-cards-search input[type="search"] { width: 100%; max-width: none; padding-left: 32px; }
 .wpfb-cards-count { display: flex; align-items: center; gap: 8px; margin: 8px 0; color: var(--wpfb-text-muted); font-size: 12px; line-height: 16px; }
 .wpfb-cards-scroll { position: relative; flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
-.wpfb-cards-space { position: relative; }
-.wpfb-cards-grid { display: grid; grid-template-columns: repeat(var(--wpfb-cards-cols, 1), minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; will-change: transform; }
+.wpfb-cards-grid { display: grid; grid-template-columns: repeat(var(--wpfb-cards-cols, 1), minmax(0, 1fr)); align-items: start; margin: 0; padding: 0; list-style: none; }
 .wpfb-cards-grid > li { margin: 0; min-width: 0; }
-.wpfb-card { box-sizing: border-box; display: flex; flex-direction: column; width: 100%; padding: 0; border: 1px solid var(--wpfb-line-soft); border-radius: 0; background: var(--wpfb-surface); color: var(--wpfb-text); text-align: left; cursor: grab; }
-.wpfb-card:hover, .wpfb-card:focus-visible { background: var(--wpfb-accent-soft); border-color: var(--wpfb-accent-soft); box-shadow: inset 2px 0 0 var(--wpfb-accent); outline: 0; }
+.wpfb-card { box-sizing: border-box; display: flex; flex-direction: column; width: 100%; border: 1px solid var(--wpfb-line-soft); background: var(--wpfb-surface); color: var(--wpfb-text); cursor: grab; }
 .wpfb-card:active { cursor: grabbing; }
-.wpfb-card-media { flex: none; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--wpfb-canvas); color: var(--wpfb-text-muted); border-bottom: 1px solid var(--wpfb-line-soft); }
-.wpfb-card-media img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.wpfb-card-main { display: flex; flex-direction: column; width: 100%; padding: 0 0 8px; border: 0; background: transparent; color: inherit; text-align: left; cursor: inherit; }
+.wpfb-card-main:hover, .wpfb-card-main:focus-visible { background: var(--wpfb-accent-soft); box-shadow: inset 2px 0 0 var(--wpfb-accent); outline: 0; }
+.wpfb-card-media { flex: none; display: block; overflow: hidden; background: var(--wpfb-canvas); border-bottom: 1px solid var(--wpfb-line-soft); }
 .wpfb-card-title, .wpfb-card-variant { padding: 0 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; line-height: 16px; }
 .wpfb-card-title { margin-top: 8px; font-weight: 600; }
 .wpfb-card-variant { color: var(--wpfb-text-muted); }
+/* variant switcher of a card: one chip row per design axis, or the labelled variants */
+.wpfb-card-switch { display: flex; flex-direction: column; gap: 4px; padding: 0 8px 8px; }
+.wpfb-card-axis { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.wpfb-card-axis-name { min-width: 48px; color: var(--wpfb-text-muted); font-size: 12px; line-height: 16px; }
+.wpfb-card-chip { padding: 0 8px; min-height: 24px; border: 1px solid var(--wpfb-line); border-radius: var(--wpfb-radius); background: var(--wpfb-surface); color: var(--wpfb-text); font-size: 12px; line-height: 16px; cursor: pointer; }
+.wpfb-card-chip[aria-pressed="true"] { border-color: var(--wpfb-accent); background: var(--wpfb-accent-soft); }
+.wpfb-card-chip:focus-visible { outline: 2px solid var(--wpfb-accent); outline-offset: 1px; }
+.wpfb-root .wpfb-app .wpfb-card-variants { width: 100%; max-width: none; min-height: 24px; font-size: 12px; }
 .wpfb-droplayer { position: absolute; inset: 0; z-index: 4; }
 
 /* dark mode (.wpfb-app.dark, tokens.css): wp-admin's own controls inside the editor follow the tokens too, and the

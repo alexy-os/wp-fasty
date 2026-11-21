@@ -26,7 +26,6 @@ export interface Variant {
   id: string; label?: string; set: Obj; organism: string; template: string; props: Obj; bindings: { path: string[]; data: string; pick?: string }[];
   /** paths the record of the current route fills (data `scope: "current"`: richtext title, content…); not editable */
   current?: { path: string[]; data: string; field: string }[];
-  preview?: { src: string; dark?: string; width: number; height: number };
 }
 export interface BlockSpec {
   contract?: { item: string; version: number; model: string };
