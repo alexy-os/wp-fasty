@@ -110,7 +110,8 @@ jobs:
           CODEGEN_X_TOKEN: ${{ secrets.CODEGEN_X_TOKEN }}
         run: |
           if [ -n "$CODEGEN_X_TOKEN" ]; then
-            C=$(grep -oP "^\$commit = '\K[0-9a-f]{40}" tools/ui8kit3/presets.php)
+            C=$(sed -n "s/^\$commit = '\([0-9a-f]\{40\}\)';$/\1/p" tools/ui8kit3/presets.php)
+            [ -n "$C" ] || { echo "::error::no kit-compose commit in tools/ui8kit3/presets.php"; exit 1; }
             git init -q /tmp/cgx && git -C /tmp/cgx remote add origin "https://x-access-token:${CODEGEN_X_TOKEN}@github.com/codegen-x/ui8kit.git"
             git -C /tmp/cgx fetch -q --depth 1 origin "$C" && git -C /tmp/cgx checkout -q FETCH_HEAD
             (cd /tmp/cgx && bun install --frozen-lockfile)
