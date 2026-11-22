@@ -65,6 +65,14 @@ sha256 `d80ad33b958e574c3242676dc07094240ac673f85ed33024e4183e4b54fc013c`, `twig
 v3.1.0: re-export from codegen-x `4be6a994` (kit-compose field `state: 'error'` implies `aria-invalid`); same blocks and
 variants as v3.0.0, v3.0.0 stays published unchanged.
 
+v4.0.0 (published, ADR-007): UI8Kit Simple, block-contract/v1, 52 blocks / 157 variants, no data bindings and no
+collections. Published from wp-fasty `0cc6b7b` (ui8kit/site `fe247e6`, `WPFASTY_COMMIT` pinned, byte-identical to the
+CI artifact `dist-php8.2/registry` of run 44965892504); `latest` -> v4.0.0, v1.0.0–v3.1.0 unchanged. `latte` blocks.zip
+sha256 `c8e34430c5f47861314c3025a2ed902bebede955c9ceb707e92558d30dd4b825`, catalog.json
+`682642600a09ba93712e7c822265632b064002b552d85f7d5a0cae148000df45`; `twig` blocks.zip
+`fee7a07cbf3c0d648adbeaaec0083b9b2d27f71bce8177117a96ba77966e5a70`, catalog.json
+`f8e882ec76addf5028036c3ed241560c88f67f89c1623768debf747e967f542e`.
+
 Workflow `Published registries` (`.github/workflows/registry-published.yml`, separate from CI, never blocks it; after
 each green CI run on main, daily and on demand) compares the published `v<version>/` and `latest/` byte for byte
 (sha256, size) with `dist/registry` built from source in that CI run, runs `registry:verify` on the URLs, and imports
