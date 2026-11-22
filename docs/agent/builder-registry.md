@@ -73,25 +73,16 @@ both published registries into a real WordPress (latte-shop on wp-fasty.zip, lat
 
 ## Files
 
-- `catalog.json` — the builder catalog (blocks, variants, props, bindings, collections) with:
+- `catalog.json` — the builder catalog (blocks, variants, props; since v4.0.0 no data bindings and no collections, ADR-007) with:
   - `"$schema": "https://github.com/alexy-os/wp-fasty/plugins/wpfasty-builder/catalog@2"`, `"format": 2`
   - `"runtime": "latte" | "twig"`, `"templates"` = the same value
   - `"version"`: semver of the registry (= directory name without `v`)
   - `"source": {repo, commit}` — the codegen-x commit both runtimes were generated from
   - `"records": {<Name>: [{name, type, optional?, docs?, default?}]}` — record types the props name (`Stat[]`,
     `LinkActions`…), transitively; `type` is the TS type string (editor fields: `editor/src/fields/schema.ts`)
-  - `blocks[].data[]` with `"scope": "current"` (codegen-x, since `485a53b6`: the `richtext` block) — one record of the
-    current route, not a list: `sample` is that record on the codegen-x fixtures (offline renders, previews); variants
-    list in `current: [{path, data, field}]` the props it fills (`title`, `content`, `media.src`…). Those paths are not
-    in the variant `props`, not bindable and never taken from a layout; on a site the plugin fills them from the
-    queried post (`DataSources::current`: Codex entry, `content` = `the_content` after its filters). Trusted markup
-    (`TrustedHtml`, `{"__html": …}`, the `|html` pipe) only comes from there: layout props drop `__html` keys and
-    catalog sample props lose the marker (`Layout::untrust`), so markup from a layout or a remote catalog is escaped
-  - `PostPager` props (codegen-x since `4d33299f`: `posts:listPaged`) — filled by the plugin, not by a layout: a layout
-    keeps only `mode` (`none` | `pages`, `Layout::normalize`); with `mode: pages` and a bound list the block's own
-    `WP_Query` runs with found rows on the requested page (`paged`, `page` on a static front page) and `Pager::value`
-    gives `page`, `pages` and translated labels (text domain `wpfasty-builder`); `pages ≤ 1` → no pager. The block has
-    no links (codegen buttons), so the plugin prints `<link rel=prev|next>` (`esc_url(get_pagenum_link())`) in the head
+  - v3.x only (removed in v4.0.0 with the data-binding engine, ADR-007): `blocks[].data[]` (bound lists and the
+    `scope: "current"` record), variant `bindings` / `current`, `PostPager` props filled by the plugin, `collections`.
+    The v4.0.0 plugin ignores them in an imported registry: a block renders its own props.
   - `"archive": {"file": "blocks.zip", "bytes": n, "sha256": "…"}`
   - variant templates in the runtime's extension: `blocks/<name>.latte` or `blocks/<name>.html.twig`
 - `blocks.zip` — `blocks/` and `ui/` of that runtime only (`.latte` or `.twig`, `.json`, `.md`; no PHP). The PHP
