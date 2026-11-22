@@ -86,7 +86,7 @@
     "latte/blocks/testimonials-simple.latte": "a0132d797493f42d8e46ad6551b1edb70523227508ff3714169bc6d06346388f",
     "latte/blocks/timeline-simple.latte": "584514b430e7a9ec35166e53c4eb8cc15862cd8ce5f2393235c586995b7b59d3",
     "latte/blocks/topics-simple.latte": "306d10b308fed97f07e9255ac054ffa6a52555235f93604e9cbd34ec967c3ded",
-    "latte/catalog.json": "ea0644de462cc2d8d825dc9bf27fea2bf4f2b406d78c055bdae104dc95341961",
+    "latte/catalog.json": "673e668c6b0468db974231b6fe4c0d8600500f3331e43e690e25d357dcabf261",
     "latte/compose/Badge.latte": "442b73dc5317725b381277a2d694e9fdc64a0a788a66819b023fd9a7b89417fa",
     "latte/compose/Block.latte": "f3cd92b143a4f42169c61a0250e9e5b2220f6aa97070fbcaa3d7b12b983fcf40",
     "latte/compose/Box.latte": "5447aaf8bf655de66c1096b3ba3adccd5522294d02d616ff6cb92586b2235ec7",
@@ -188,7 +188,7 @@
     "twig/blocks/testimonials-simple.html.twig": "dfb987603554652375d6438750eaf52ab2fa1ff103106e5234d5039ce751c391",
     "twig/blocks/timeline-simple.html.twig": "1ef5230956ae018d3223e88521e182407ca7e92c036d557a965a7bbf4123f60a",
     "twig/blocks/topics-simple.html.twig": "505972ecbe9f669f2df02eb1ece570e7a8a55a94b50886c58260c4cd0bf54194",
-    "twig/catalog.json": "c4c56a3d9235ee82b7f70fd04dea279a3382316f896e0113d7f40fc96f969405",
+    "twig/catalog.json": "8c4f903950e6043a1f62e80e5fcc25596fc890c6fd49a54203cdd4bcc2be3326",
     "twig/compose/Badge.html.twig": "2ad73d68245ec091d4cf29f75aa692e90607017789d5fe5970b4a50a345aac04",
     "twig/compose/Block.html.twig": "30fe0e5fff3f6d013dbb8429457acb60d77518574f559fd77515b508fc8e66b1",
     "twig/compose/Box.html.twig": "bea13cf821dcfd3ee6456a0596df75baec9aa19094eed7a8a03783b2769d9762",
@@ -217,5 +217,5 @@
     "twig/ui/text/Text.html.twig": "365b146fe897398883ea8b5152639596fd4b9c5aa4c21812adaa16511ff7d9a3",
     "twig/ui8kit.lock.json": "0d95e29bc8acd53a30513b64a7a7eabbf3ef8ba4b98d300b7ccad892137262d9"
   },
-  "digest": "sha256:0492ec69acf6745484c5aea4625a72e4db2cfa2fd3bb8fe1e5d0d1444cffd900"
+  "digest": "sha256:2fef916fd6ad48af19693a423b9a457fce28607e9a3098b5f0af8528f3b18ff7"
 }

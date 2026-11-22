@@ -7,7 +7,6 @@ namespace WPFastyBuilder;
 /**
  * wp-admin: the builder screen (Pages → Builder, edit_pages) and the sources screen (Settings → Builder sources,
  * manage_options). The editor script and styles are enqueued on the builder screen only.
- * Open a collection with ?collection=<id> to show only its blocks in the sidebar.
  * New pages: "Add New with Builder" next to "Add New" on Pages, "New page" on the Builder screen (page chooser and
  * editor bar) open the "New page" panel of the editor script (?new=1 opens it on load); Pages::create makes the draft.
  * The dark mode switch of the editor is the last item of the toolbar (admin bar), on the editor screen only; the
@@ -71,14 +70,9 @@ final class Admin
         return add_query_arg(['page' => self::SLUG, 'new' => 1], admin_url('edit.php?post_type=page'));
     }
 
-    public static function url(int $pageId, string $collection = ''): string
+    public static function url(int $pageId): string
     {
-        $args = ['page' => self::SLUG, 'post' => $pageId];
-        if ('' !== $collection) {
-            $args['collection'] = $collection;
-        }
-
-        return add_query_arg($args, admin_url('edit.php?post_type=page'));
+        return add_query_arg(['page' => self::SLUG, 'post' => $pageId], admin_url('edit.php?post_type=page'));
     }
 
     /**
@@ -173,7 +167,7 @@ final class Admin
             wp_add_inline_script(
                 'wpfasty-builder-editor',
                 'window.WPFastyBuilderConfig = '.wp_json_encode($common + [
-                    'page' => 0, 'title' => '', 'source' => '', 'collection' => '', 'permalink' => '',
+                    'page' => 0, 'title' => '', 'source' => '', 'permalink' => '',
                     'canPublish' => false, 'editUrl' => '',
                 ], self::JSON).';',
                 'before',
@@ -181,14 +175,10 @@ final class Admin
 
             return;
         }
-        $collection = sanitize_key(self::query('collection'));
         $source = sanitize_key(self::query('source'));
         $entry = Store::get($id, true);
         if ('' === $source) {
             $source = Cast::string(Cast::path($entry, 'metadata', 'source', 'value') ?? 'ui8kit');
-        }
-        if ('' === $collection) {
-            $collection = Cast::string(Cast::path($entry, 'metadata', 'collection', 'value') ?? '');
         }
         $config = $common + [
             'features' => apply_filters('wpfasty_builder_features', []),
@@ -196,7 +186,6 @@ final class Admin
             'onboarding' => PageOnboarding::eligible($id),
             'title' => get_the_title($id),
             'source' => $source,
-            'collection' => $collection,
             'permalink' => (string) get_permalink($id),
             'canPublish' => current_user_can('publish_pages'),
             'editUrl' => (string) get_edit_post_link($id, 'raw'),
@@ -321,20 +310,14 @@ final class Admin
         echo '<div class="wrap"><h1>'.esc_html__('Builder sources', 'wpfasty-builder').'</h1>';
         echo self::takeNotice(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped there
         echo '<table class="widefat striped"><thead><tr><th>'.esc_html__('Source', 'wpfasty-builder').'</th><th>'
-            .esc_html__('Collections', 'wpfasty-builder').'</th></tr></thead><tbody>';
+            .esc_html__('Blocks', 'wpfasty-builder').'</th></tr></thead><tbody>';
         foreach (Sources::all() as $src) {
             $catalog = Sources::catalog($src->id());
-            $links = [];
-            foreach ($catalog?->collections() ?? [] as $c) {
-                if ('template' === $c['type']) {
-                    $links[] = esc_html($c['label']).' <code>'.esc_html($c['id']).'</code>';
-                }
-            }
             printf(
-                '<tr><td><strong>%s</strong><br><code>%s</code></td><td>%s</td></tr>',
+                '<tr><td><strong>%s</strong><br><code>%s</code></td><td>%d</td></tr>',
                 esc_html($src->label()),
                 esc_html($src->id()),
-                wp_kses_post(implode(', ', $links)),
+                count($catalog?->forEditor()['blocks'] ?? []),
             );
         }
         echo '</tbody></table>';
@@ -343,7 +326,7 @@ final class Admin
             echo '<p>'.esc_html(sprintf(
                 // phpcs:disable Generic.Files.LineLength.TooLong -- a translatable literal must stay one string.
                 /* translators: %1$s: site engine (latte or twig) */
-                __('The URL must be a %1$s block registry (catalog.json + blocks.zip), e.g. https://registry.buildy.tw/%1$s/wpfasty/v1.0.0/.', 'wpfasty-builder'),
+                __('The URL must be a %1$s block registry (catalog.json + blocks.zip), e.g. https://registry.buildy.tw/%1$s/wpfasty/v4.0.0/.', 'wpfasty-builder'),
                 // phpcs:enable Generic.Files.LineLength.TooLong
                 (string) Plugin::engine(),
             )).' '
@@ -381,10 +364,9 @@ final class Admin
         try {
             $s = Sources::import($id, $url);
             self::notice('success', sprintf(
-                /* translators: 1: number of blocks, 2: number of collections */
-                __('Imported %1$d blocks and %2$d collections.', 'wpfasty-builder'),
+                /* translators: %d: number of blocks */
+                __('Imported %d blocks.', 'wpfasty-builder'),
                 $s['blocks'],
-                $s['collections'],
             ));
         } catch (\Throwable $e) {
             self::notice('error', $e->getMessage());

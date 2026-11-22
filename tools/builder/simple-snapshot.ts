@@ -144,7 +144,7 @@ function deriveCatalog(contracts: Schema, props: Schema, engine: Engine): Schema
     label: "UI8Kit Simple blocks (block-contract/v1)",
     source: { repo: CONFIG.contracts.repo, commit: CONFIG.contracts.commit, cli: CONFIG.cli, prototypes: CONFIG.prototypes },
     contract: "block-contract/v1: flat content of the block's model (contracts.json); no data bindings",
-    records, blocks, collections: [],
+    records, blocks,
   };
 }
 

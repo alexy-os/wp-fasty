@@ -9,7 +9,7 @@ use WP_REST_Request;
 /**
  * REST API of the editor (namespace wpfasty-builder/v1). Every route needs a logged-in user with the capability
  * named below and the wp_rest nonce (X-WP-Nonce), which the editor receives from wp_add_inline_script.
- *   GET  /catalog?source=&collection=   edit_pages   blocks of a source (or of one collection), data sources
+ *   GET  /catalog?source=               edit_pages   the blocks of a source, data sources
  *   GET  /links                         edit_pages   link-token targets of the site (Links::index): site, pages,
  *                                                    sections with the URL of each token, for the editor's link picker;
  *                                                    posts, products (price, stock) and terms (Records::index)
@@ -46,7 +46,6 @@ final class Rest
             'permission_callback' => static fn (): bool => current_user_can('edit_pages'),
             'args' => [
                 'source' => ['type' => 'string', 'default' => 'ui8kit', 'sanitize_callback' => 'sanitize_key'],
-                'collection' => ['type' => 'string', 'default' => '', 'sanitize_callback' => 'sanitize_key'],
             ],
         ]);
         register_rest_route(self::NS, '/links', [
@@ -98,17 +97,14 @@ final class Rest
         if (null === $catalog) {
             return new \WP_Error('wpfb_source', __('Unknown source.', 'wpfasty-builder'), ['status' => 404]);
         }
-        $col = Cast::string($r['collection']);
-        $editor = $catalog->forEditor('' !== $col && null !== $catalog->collection($col) ? $col : null);
+        $editor = $catalog->forEditor();
 
         return new \WP_REST_Response([
             'source' => Cast::string($r['source']),
-            'screens' => [], // no bundled screen compositions (ADR-007)
             'sources' => array_map(
                 static fn ($s): array => ['id' => $s->id(), 'label' => $s->label()],
                 array_values(Sources::all()),
             ),
-            'collections' => $catalog->collections(),
             'dataSources' => array_values(DataSources::all($catalog)),
         ] + $editor);
     }

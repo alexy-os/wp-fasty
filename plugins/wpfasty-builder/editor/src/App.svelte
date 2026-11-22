@@ -25,7 +25,6 @@
   import Splitter from "./Splitter.svelte";
   import BlockCards from "./BlockCards.svelte";
   import NewPage from "./NewPage.svelte";
-  import TemplatePages from "./TemplatePages.svelte";
   import { MIME, type Card } from "./cards";
   import { PanelLayout } from "./layout.svelte";
   import { isTyping, shortcutOf } from "./layout";
@@ -35,8 +34,8 @@
     PanelRightOpen, Redo2, RotateCcw, Smartphone, Trash2, Undo2,
   } from "./icons";
   import { api } from "./api";
-  import type { BlockSpec, Binding, Box, Catalog, Config, Item, Json, Obj, RecordField, Starter, TemplatePage } from "./types";
-  import { clone, getPath, human, isObj, kindOf, merge, missingBlocks, newId, setPath } from "./util";
+  import type { BlockSpec, Binding, Box, Catalog, Config, Item, Json, Obj, RecordField, Starter } from "./types";
+  import { clone, getPath, human, isObj, kindOf, merge, newId, setPath } from "./util";
   import { defaultSource } from "./sources";
   import { LinkStore, setLinks } from "./links.svelte";
   import { ThemeMode } from "./theme.svelte";
@@ -52,10 +51,6 @@
   setLinks(links);
 
   let catalog = $state<Catalog | null>(null);
-  /** specs of the whole source when the layout holds blocks outside the open collection (a starter or a page saved
-   *  under a collection that does not list all its blocks): the inspector still opens them; the cards stay the
-   *  collection's */
-  let outside = $state.raw<BlockSpec[]>([]);
   const store = new EditorStore();
   /** column widths, collapsed columns (localStorage, per user) and focus mode */
   const layout = new PanelLayout(config.user);
@@ -71,7 +66,6 @@
   let newOpen = $state(config.newPage === true);
   let source = $state(config.source || "ui8kit");
   const attachment = $derived(attachedStarter ? starterAttachment(attachedStarter, source) : null);
-  let collection = $state(config.collection || "");
   let previewUrl = $state("");
   let published = $state(false);
   let status = $state<"loading" | "idle" | "saving" | "saved" | "error">("loading");
@@ -93,7 +87,7 @@
   /** the preview must reload after the next save (it does not show the saved layout yet) */
   let reloadAfterSave = false;
 
-  const blocks = $derived(new Map([...outside, ...(catalog?.blocks ?? [])].map((b) => [b.id, b])));
+  const blocks = $derived(new Map((catalog?.blocks ?? []).map((b) => [b.id, b])));
   const current = $derived(store.current);
   const currentIndex = $derived(store.index);
   const currentBlock = $derived(current ? blocks.get(current.block) ?? null : null);
@@ -181,10 +175,7 @@
   }
   async function manualOnboarding(){try{await prepareFeature();paletteTab='blocks';}catch(error){fail(error);}}
   async function loadCatalog() {
-    const next = await client.catalog(source, collection);
-    if (next.collection === null) collection = "";
-    outside = missingBlocks(store.items, next.blocks).length ? (await client.catalog(source, "")).blocks : [];
-    catalog = next;
+    catalog = await client.catalog(source);
   }
 
   function fail(e: unknown) {
@@ -306,7 +297,7 @@
   async function performSave(publish: boolean) {
     status = "saving";
     try {
-      const res = await client.save(source, collection, clone(store.items), publish, draftVersion);
+      const res = await client.save(source, clone(store.items), publish, draftVersion);
       draftVersion = Number(res.layout.version ?? draftVersion);
       published = res.published;
       previewUrl = res.previewUrl;
@@ -421,25 +412,6 @@
     } catch (e) {
       advancedError = (e as Error).message;
     }
-  }
-
-  function usePage(page: TemplatePage) {
-    if (applying) return;
-    if (store.items.length && !confirm("Replace the blocks of this page with the template page?")) return;
-    const next: Item[] = [];
-    for (const b of page.blocks) next.push({ ...makeItem(b.block, b.variant, next), props: clone(b.props) });
-    store.selected = null;
-    commit(next, [], true);
-  }
-
-  async function switchCollection(id: string) {
-    if (applying) return;
-    collection = id;
-    await loadCatalog();
-    const url = new URL(location.href);
-    if (id) url.searchParams.set("collection", id);
-    else url.searchParams.delete("collection");
-    history.replaceState(null, "", url);
   }
 
   function select(id: string | null, scroll = false) {
@@ -706,21 +678,6 @@
         <OptionalPanel id={paletteTab} context={{config, source, items: store.items, blocks: [...blocks.values()], selected: store.selected,
           request: client.request, beforeOperation: prepareFeature, onActivity: value=>{featurePending=value;}, attachment, clearAttachment: () => (attachedStarter = null), apply: applyExternal}} />
       {:else if !onboarding}
-      <div class="wpfb-section">
-        <label class="wpfb-heading" for="wpfb-collection">Collection</label>
-        <select id="wpfb-collection" class="wpfb-search" value={collection} onchange={(e) => switchCollection(e.currentTarget.value)}>
-          <option value="">All blocks</option>
-          {#each catalog?.collections ?? [] as c (c.id)}
-            <option value={c.id}>{c.type === "template" ? "Template: " : ""}{c.label} ({c.blocks})</option>
-          {/each}
-        </select>
-      </div>
-      {#if catalog?.collection?.pages?.length}
-        <div class="wpfb-section">
-          <h2 class="wpfb-heading">Template pages</h2>
-          <TemplatePages pages={catalog.collection.pages} collection={catalog.collection.label} dark={theme.dark} onuse={usePage} />
-        </div>
-      {/if}
       <div class="wpfb-section is-cards">
         <h2 class="wpfb-heading">Blocks</h2>
         <BlockCards blocks={catalog?.blocks ?? []} dark={theme.dark} {previewUrl}
@@ -774,7 +731,7 @@
         </div>
       {/if}
       {#if store.items.length === 0 && status !== "loading"}
-        <p class="wpfb-empty">Drag a block from the left, or pick a template page.</p>
+        <p class="wpfb-empty">Drag a block from the left.</p>
       {/if}
     </section>
 

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-07T17:59:29+00:00\n"
+"POT-Creation-Date: 2026-11-21T23:59:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wpfasty-builder\n"
@@ -29,97 +29,97 @@ msgstr ""
 msgid "alexy-os"
 msgstr ""
 
+#: src/Admin.php:52
 #: src/Admin.php:53
-#: src/Admin.php:54
-#: src/Admin.php:274
+#: src/Admin.php:264
 msgid "Builder"
 msgstr ""
 
+#: src/Admin.php:59
 #: src/Admin.php:60
-#: src/Admin.php:61
-#: src/Admin.php:320
+#: src/Admin.php:310
 msgid "Builder sources"
 msgstr ""
 
-#: src/Admin.php:92
+#: src/Admin.php:86
 msgid "Edit with Builder"
 msgstr ""
 
-#: src/Admin.php:125
+#: src/Admin.php:119
 msgid "Add New with Builder"
 msgstr ""
 
-#: src/Admin.php:236
+#: src/Admin.php:226
 msgid "Dark mode"
 msgstr ""
 
-#: src/Admin.php:255
+#: src/Admin.php:245
 msgid "Sorry, you are not allowed to use the builder."
 msgstr ""
 
-#: src/Admin.php:259
+#: src/Admin.php:249
 msgid "Loading the builder…"
 msgstr ""
 
-#: src/Admin.php:264
+#: src/Admin.php:254
 msgid "The editor build is missing: run the editor build (plugins/wpfasty-builder/editor)."
 msgstr ""
 
-#: src/Admin.php:278
+#: src/Admin.php:268
 msgid "Choose a page to build. Pages with a published layout render it on the front end."
 msgstr ""
 
-#: src/Admin.php:286
+#: src/Admin.php:276
 msgid "built"
 msgstr ""
 
-#: src/Admin.php:301
+#: src/Admin.php:291
 msgid "New page"
 msgstr ""
 
-#: src/Admin.php:318
-#: src/Admin.php:372
+#: src/Admin.php:308
+#: src/Admin.php:356
 msgid "Sorry, you are not allowed to manage builder sources."
 msgstr ""
 
-#: src/Admin.php:322
+#: src/Admin.php:312
 msgid "Source"
 msgstr ""
 
-#: src/Admin.php:323
-msgid "Collections"
+#: src/Admin.php:313
+msgid "Blocks"
 msgstr ""
 
-#: src/Admin.php:341
+#: src/Admin.php:325
 msgid "Import a remote source"
 msgstr ""
 
 #. translators: %1$s: site engine (latte or twig)
-#: src/Admin.php:345
+#: src/Admin.php:329
 #, php-format
-msgid "The URL must be a %1$s block registry (catalog.json + blocks.zip), e.g. https://registry.buildy.tw/%1$s/wpfasty/v1.0.0/."
+msgid "The URL must be a %1$s block registry (catalog.json + blocks.zip), e.g. https://registry.buildy.tw/%1$s/wpfasty/v4.0.0/."
 msgstr ""
 
-#: src/Admin.php:349
+#: src/Admin.php:333
 msgid "Remote templates compile through an allowlist of tags and functions."
 msgstr ""
 
-#: src/Admin.php:354
+#: src/Admin.php:338
 msgid "Id"
 msgstr ""
 
-#: src/Admin.php:358
+#: src/Admin.php:342
 msgid "URL"
 msgstr ""
 
-#: src/Admin.php:362
+#: src/Admin.php:346
 msgid "Import"
 msgstr ""
 
-#. translators: 1: number of blocks, 2: number of collections
-#: src/Admin.php:384
+#. translators: %d: number of blocks
+#: src/Admin.php:368
 #, php-format
-msgid "Imported %1$d blocks and %2$d collections."
+msgid "Imported %d blocks."
 msgstr ""
 
 #: src/Compiler.php:170
@@ -134,7 +134,7 @@ msgstr ""
 msgid "Read more"
 msgstr ""
 
-#: src/Front.php:75
+#: src/Front.php:93
 msgid "This preview link has expired."
 msgstr ""
 
@@ -265,21 +265,21 @@ msgstr ""
 msgid "Out of stock"
 msgstr ""
 
-#: src/Rest.php:96
-#: src/Rest.php:180
+#: src/Rest.php:98
+#: src/Rest.php:178
 #: src/Store.php:106
 msgid "Unknown source."
 msgstr ""
 
-#: src/Rest.php:139
+#: src/Rest.php:137
 msgid "You cannot publish pages."
 msgstr ""
 
-#: src/Rest.php:210
+#: src/Rest.php:208
 msgid "Unknown block or variant."
 msgstr ""
 
-#: src/Rest.php:243
+#: src/Rest.php:241
 msgid "The request is too large."
 msgstr ""
 
@@ -287,37 +287,37 @@ msgstr ""
 msgid "Blog"
 msgstr ""
 
-#: src/Sources.php:96
+#: src/Sources.php:102
 msgid "WP FastY Builder: the active theme has no WP FastY renderer; landings do not render."
 msgstr ""
 
 #. translators: 1: site engine (latte or twig), 2: engines of this plugin build
-#: src/Sources.php:106
+#: src/Sources.php:112
 #, php-format
 msgid "WP FastY Builder: this site renders %1$s, but this plugin build ships %2$s blocks only. Install the %1$s build of the plugin."
 msgstr ""
 
 #. translators: 1: source id, 2: its runtime, 3: site engine
-#: src/Sources.php:121
+#: src/Sources.php:127
 #, php-format
 msgid "WP FastY Builder: source %1$s holds %2$s blocks; this site renders %3$s. Import the %3$s registry of this source."
 msgstr ""
 
 #. translators: 1: site engine, 2: list of source:template
-#: src/Sources.php:133
+#: src/Sources.php:139
 #, php-format
 msgid "WP FastY Builder: blocks missing from the %1$s sources render nothing: %2$s"
 msgstr ""
 
-#: src/Sources.php:174
+#: src/Sources.php:180
 msgid "The active theme has no WP FastY renderer."
 msgstr ""
 
-#: src/Sources.php:177
+#: src/Sources.php:183
 msgid "The source id must be a short lowercase name other than ui8kit."
 msgstr ""
 
-#: src/Sources.php:181
+#: src/Sources.php:187
 msgid "The source URL is not a valid public http(s) URL."
 msgstr ""
 

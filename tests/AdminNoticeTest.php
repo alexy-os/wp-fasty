@@ -27,7 +27,7 @@ final class AdminNoticeTest extends TestCase
             Admin::takeNotice(),
         );
         self::assertSame('', Admin::takeNotice(), 'shown once');
-        Admin::notice('<script>', 'Imported 3 blocks and 1 collections.');
+        Admin::notice('<script>', 'Imported 3 blocks.');
         self::assertStringStartsWith('<div class="notice notice-success">', Admin::takeNotice(), 'type from an allowlist');
     }
 

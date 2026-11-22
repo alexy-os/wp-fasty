@@ -16,8 +16,3 @@ export function darkKey(user?: number | null): string {
 export function parseDark(raw: string | null): boolean {
   return raw === "1";
 }
-
-/** the card image for the mode: the dark shot in dark mode when there is one, else the light one */
-export function previewSrc(preview: { src: string; dark?: string }, dark: boolean): string {
-  return dark && preview.dark ? preview.dark : preview.src;
-}

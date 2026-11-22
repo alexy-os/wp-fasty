@@ -7,7 +7,7 @@ namespace WPFastyBuilder;
 /**
  * A page layout as a @ui8kit/contract v0.4 entry of kind "layout":
  *   { id, locale, kind: "layout", status, visibility, slug, title, version, created_at, updated_at,
- *     metadata: { source: {value}, collection: {value}, page_id: {value}, blocks: {value: [ {id, block, variant,
+ *     metadata: { source: {value}, page_id: {value}, blocks: {value: [ {id, block, variant,
  * props, bindings} ]} } }
  * `props` are overrides of the variant sample props; `bindings` map a bindable path ("posts", "filter.topics")
  * to a data source {source, limit, term, sale}. normalize() sanitizes untrusted input and reports contract issues.
@@ -30,7 +30,7 @@ final class Layout
     /**
      * Sanitizes a layout payload against a catalog and the known data sources.
      *
-     * @param array<string, mixed> $in          untrusted payload: {source, collection, blocks:[...]}, or a full entry
+     * @param array<string, mixed> $in          untrusted payload: {source, blocks:[...]}, or a full entry
      * @param list<string>         $dataSources ids accepted in bindings
      * @param array<string, mixed> $base        id, locale, slug, title, status, version, created_at, updated_at, page_id
      *
@@ -46,7 +46,6 @@ final class Layout
         $issues = [];
         $meta = is_array($in['metadata'] ?? null) ? $in['metadata'] : null;
         $blocksIn = null !== $meta ? (Cast::path($meta, 'blocks', 'value') ?? []) : ($in['blocks'] ?? []);
-        $collection = null !== $meta ? (Cast::path($meta, 'collection', 'value') ?? '') : ($in['collection'] ?? '');
         $blocks = [];
         $seen = [];
         foreach (array_slice(is_array($blocksIn) ? array_values($blocksIn) : [], 0, self::MAX_BLOCKS) as $i => $b) {
@@ -137,8 +136,6 @@ final class Layout
                 'at most '.self::MAX_BLOCKS.' blocks',
             );
         }
-        $known = is_string($collection) && ('' === $collection || null !== $catalog->collection($collection));
-        $collection = $known ? $collection : '';
         $entry = [
             'id' => Cast::string($base['id'] ?? ''),
             'locale' => Cast::string($base['locale'] ?? 'en'),
@@ -149,7 +146,6 @@ final class Layout
             'title' => Cast::string($base['title'] ?? ''),
             'metadata' => [
                 'source' => ['value' => $sourceId],
-                'collection' => ['value' => $collection],
                 'page_id' => ['value' => Cast::string($base['page_id'] ?? '')],
                 'blocks' => ['value' => $blocks],
             ],
@@ -241,7 +237,6 @@ final class Layout
                     'description' => 'a page built from catalog blocks; rendered as a Latte template',
                     'fields' => [
                         ['id' => 'source', 'label' => 'Source', 'type' => 'string', 'required' => true],
-                        ['id' => 'collection', 'label' => 'Collection', 'type' => 'string'],
                         ['id' => 'page_id', 'label' => 'Page', 'type' => 'string', 'required' => true],
                         ['id' => 'blocks', 'label' => 'Blocks', 'type' => 'collection', 'required' => true, 'items' => [
                             'id' => 'item', 'label' => 'Block', 'type' => 'object', 'fields' => [

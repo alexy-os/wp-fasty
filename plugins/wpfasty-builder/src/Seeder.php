@@ -6,7 +6,7 @@ namespace WPFastyBuilder;
 
 /**
  * Publishes a landing from a spec:
- * { page: {title, slug}, front: bool, menu?: {location, label?}, layout: {source, collection, blocks} }.
+ * { page: {title, slug}, front: bool, menu?: {location, label?}, layout: {source, blocks} }.
  * Used by tools/builder/seed-landing.php (WP-CLI) and the Playground blueprints. The page is created when no page
  * has the slug; with front=true it becomes the static front page (and a "blog" page takes the posts list when the
  * site showed posts on the front). With menu, the page is appended to the nav menu assigned to that location

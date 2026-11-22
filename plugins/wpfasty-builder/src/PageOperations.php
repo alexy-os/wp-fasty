@@ -29,7 +29,7 @@ final class PageOperations
             return new \WP_Error('wpfb_source', 'Unknown catalog source.', ['status' => 400]);
         }
         $defs = [];
-        foreach (($catalog->forEditor(null)['blocks'] ?? []) as $block) {
+        foreach ($catalog->forEditor()['blocks'] as $block) {
             $defs[] = ['id' => $block['id'], 'title' => $block['title'] ?? '', 'docs' => $block['docs'] ?? '', 'props' => $block['props'] ?? [], 'defaults' => $block['defaults'] ?? [], 'data' => $block['data'] ?? [], 'variants' => array_map(static fn (mixed $variant): array => ['id' => Cast::path($variant, 'id'), 'template' => Cast::path($variant, 'template'), 'set' => Cast::path($variant, 'set') ?? []], Cast::list($block['variants'] ?? []))];
         }
         if ([] === $defs) {
@@ -67,7 +67,7 @@ final class PageOperations
             }
         }
         $previous = Store::get($page, true) ?? [];
-        $layout = ['source' => $source, 'blocks' => $blocks, 'collection' => Cast::path($previous, 'metadata', 'collection', 'value') ?? ''];
+        $layout = ['source' => $source, 'blocks' => $blocks];
         $post = get_post($page);
         if (!$post instanceof \WP_Post) {
             return new \WP_Error('wpfb_layout_missing', 'Page no longer exists.', ['status' => 404]);

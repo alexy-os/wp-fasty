@@ -6,7 +6,6 @@
   "front": true,
   "layout": {
     "source": "ui8kit",
-    "collection": "",
     "blocks": [
       {
         "id": "intro",

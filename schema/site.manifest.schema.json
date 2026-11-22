@@ -442,7 +442,6 @@
           "required": ["source", "blocks"],
           "properties": {
             "source": { "const": "ui8kit" },
-            "collection": { "type": "string" },
             "blocks": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/layoutBlock" } }
           }
         }

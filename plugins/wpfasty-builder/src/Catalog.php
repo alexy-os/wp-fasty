@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace WPFastyBuilder;
 
 /**
- * Read access to a catalog.json: blocks with their variants (template, evaluated sample props, bindable paths)
- * and collections (a group of blocks, or a template set with pages).
+ * Read access to a catalog.json: blocks with their variants (template, evaluated sample props, bindable paths).
  */
 final class Catalog
 {
@@ -17,8 +16,6 @@ final class Catalog
 
     /** @var array<string, array<string, mixed>> */
     private array $blocks = [];
-    /** @var array<string, array<string, mixed>> */
-    private array $collections = [];
 
     /** @param array<string, mixed> $data */
     public function __construct(private readonly array $data)
@@ -26,11 +23,6 @@ final class Catalog
         foreach ((array) ($data['blocks'] ?? []) as $b) {
             if (is_array($b) && is_string($b['id'] ?? null)) {
                 $this->blocks[$b['id']] = Cast::map($b);
-            }
-        }
-        foreach ((array) ($data['collections'] ?? []) as $c) {
-            if (is_array($c) && is_string($c['id'] ?? null)) {
-                $this->collections[$c['id']] = Cast::map($c);
             }
         }
     }
@@ -74,11 +66,6 @@ final class Catalog
                 } elseif (!is_array($v['props'] ?? null)) {
                     $errors[] = "blocks[$i].variants[$j].props must be an object";
                 }
-            }
-        }
-        foreach ((array) ($c['collections'] ?? []) as $i => $col) {
-            if (!is_array($col) || !is_string($col['id'] ?? null) || !is_array($col['blocks'] ?? null)) {
-                $errors[] = "collections[$i] needs an id and blocks";
             }
         }
 
@@ -169,7 +156,7 @@ final class Catalog
     public function meta(): array
     {
         $out = $this->data;
-        unset($out['blocks'], $out['collections']);
+        unset($out['blocks'], $out['collections']); // collections: ignored key of older registries
 
         return $out;
     }
@@ -190,28 +177,6 @@ final class Catalog
         }
 
         return null;
-    }
-
-    /** @return array<string, mixed>|null */
-    public function collection(string $id): ?array
-    {
-        return $this->collections[$id] ?? null;
-    }
-
-    /** @return list<array{id: string, label: string, type: string, blocks: int}> */
-    public function collections(): array
-    {
-        $out = [];
-        foreach ($this->collections as $c) {
-            $out[] = [
-                'id' => Cast::string($c['id']),
-                'label' => Cast::string($c['label'] ?? $c['id']),
-                'type' => Cast::string($c['type'] ?? 'group'),
-                'blocks' => count((array) $c['blocks']),
-            ];
-        }
-
-        return $out;
     }
 
     /**
@@ -384,29 +349,13 @@ final class Catalog
     }
 
     /**
-     * The blocks the editor offers: those of a collection (with its pages), or all of them.
+     * The blocks the editor offers: every block of the catalog, with the catalog's meta.
      *
-     * @return array{
-     *   meta: array<string, mixed>,
-     *   collection: array<string, mixed>|null,
-     *   blocks: list<array<string, mixed>>
-     * }
+     * @return array{meta: array<string, mixed>, blocks: list<array<string, mixed>>}
      */
-    public function forEditor(?string $collection): array
+    public function forEditor(): array
     {
-        $col = null !== $collection ? $this->collection($collection) : null;
-        $ids = null !== $col ? array_values(array_unique(array_map(
-            Cast::string(...),
-            (array) ($col['blocks'] ?? []),
-        ))) : array_keys($this->blocks);
-        $blocks = [];
-        foreach ($ids as $id) {
-            if (isset($this->blocks[$id])) {
-                $blocks[] = $this->blocks[$id];
-            }
-        }
-
-        return ['meta' => $this->meta(), 'collection' => $col, 'blocks' => $blocks];
+        return ['meta' => $this->meta(), 'blocks' => array_values($this->blocks)];
     }
 
     /**

@@ -24,18 +24,17 @@ export function api(cfg: Config) {
         method: "POST",
         body: JSON.stringify({ source, page: cfg.page, id: item.id, block: item.block, variant: item.variant, props: item.props, bindings: item.bindings }),
       }),
-    catalog: (source: string, collection: string) =>
-      call<Catalog>(`/catalog?source=${encodeURIComponent(source)}&collection=${encodeURIComponent(collection)}`),
+    catalog: (source: string) => call<Catalog>(`/catalog?source=${encodeURIComponent(source)}`),
     /** link-token targets of the site (GET /links), for the link picker */
     links: () => call<LinkIndex>("/links"),
     layout: () => call<{ layout: Obj | null; published: boolean; previewUrl: string; permalink: string }>(`/layout/${cfg.page}`, { cache: "no-store" }),
     /** a draft page with the starter's blocks in its Builder draft (POST /pages) */
     createPage: (title: string, slug: string, starter: string) =>
       call<NewPage>("/pages", { method: "POST", body: JSON.stringify({ title, slug, starter }) }),
-    save: (source: string, collection: string, blocks: Item[], publish: boolean, expectedVersion?: number) =>
+    save: (source: string, blocks: Item[], publish: boolean, expectedVersion?: number) =>
       call<{ layout: Obj; issues: Issue[]; published: boolean; previewUrl: string }>(`/layout/${cfg.page}`, {
         method: "POST",
-        body: JSON.stringify({ publish, expectedVersion, layout: { source, collection, blocks } }),
+        body: JSON.stringify({ publish, expectedVersion, layout: { source, blocks } }),
       }),
   };
 }

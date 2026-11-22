@@ -81,7 +81,7 @@ final class RemoteSource implements SourceInterface
     /**
      * Downloads the registry of this runtime, validates it and replaces the local copy.
      *
-     * @return array{blocks: int, collections: int, runtime: string, version: string}
+     * @return array{blocks: int, runtime: string, version: string}
      */
     public function import(): array
     {
@@ -140,6 +140,7 @@ final class RemoteSource implements SourceInterface
             self::rmrf($tmp);
             throw new \RuntimeException(sprintf('%s lacks %d %s template(s) of its catalog, e.g. %s', $file, count($missing), $this->runtime, (string) ($missing[0] ?? 'blocks/')));
         }
+        unset($catalog['collections']); // template collections are not imported (ADR-007)
         $json = (string) json_encode($catalog, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         file_put_contents($tmp.'/catalog.json', $json);
         self::rmrf($this->dir);
@@ -148,7 +149,6 @@ final class RemoteSource implements SourceInterface
 
         return [
             'blocks' => count((array) ($catalog['blocks'] ?? [])),
-            'collections' => count((array) ($catalog['collections'] ?? [])),
             'runtime' => $this->runtime,
             'version' => \WPFastyBuilder\Cast::string($catalog['version'] ?? ''),
         ];

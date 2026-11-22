@@ -1,6 +1,6 @@
 /**
- * Gate: every block the editor offers (the cards: every variant of the catalog) and every block of the template pages,
- * the starters and the demo landings is recognised by the editor and opens editable fields in the inspector — the
+ * Gate: every block the editor offers (the cards: every variant of the catalog) and every block of the starters
+ * and the demo landings is recognised by the editor and opens editable fields in the inspector — the
  * block and variant are in the catalog, the block config has fields (or the block is listed in NO_SETTINGS), no field
  * is only raw JSON, and every value the variant sample or the layout sets (texts, lists, nested objects) is reachable
  * through a typed field, never only through "Advanced (JSON)". The live check of the same (a click on every block in
@@ -15,20 +15,19 @@ import { isObj } from "../src/util";
 
 const plugin = join(import.meta.dir, "../..");
 const read = (p: string) => JSON.parse(readFileSync(p, "utf8"));
-type Cat = { blocks: BlockSpec[]; records: Record<string, RecordField[]>; collections: { id: string; blocks: string[]; pages?: { id: string; blocks: { block: string; variant: string; props: Json }[] }[] }[] };
-type Use = { where: string; collection: string; block: string; variant: string; props: Json };
+type Cat = { blocks: BlockSpec[]; records: Record<string, RecordField[]> };
+type Use = { where: string; block: string; variant: string; props: Json };
 
 function usesOf(cat: Cat): Use[] {
   const out: Use[] = [];
-  for (const b of cat.blocks) for (const v of b.variants) out.push({ where: "card", collection: "", block: b.id, variant: v.id, props: {} });
-  for (const c of cat.collections) for (const p of c.pages ?? []) for (const b of p.blocks) out.push({ where: `template page ${c.id}/${p.id}`, collection: c.id, ...b });
+  for (const b of cat.blocks) for (const v of b.variants) out.push({ where: "card", block: b.id, variant: v.id, props: {} });
   const layouts: [string, string][] = [
     ...readdirSync(join(plugin, "starters")).map((f) => [`starter ${f}`, join(plugin, "starters", f)] as [string, string]),
     ...readdirSync(join(plugin, "../../tools/builder/landings")).map((f) => [`landing ${f}`, join(plugin, "../../tools/builder/landings", f)] as [string, string]),
   ];
   for (const [where, file] of layouts) {
     const l = read(file).layout;
-    for (const b of l.blocks) out.push({ where, collection: l.collection ?? "", block: b.block, variant: b.variant, props: b.props ?? {} });
+    for (const b of l.blocks) out.push({ where, block: b.block, variant: b.variant, props: b.props ?? {} });
   }
   return out;
 }
@@ -59,7 +58,7 @@ function unreached(f: Field, v: Json | undefined, path: string, out: string[]) {
 }
 
 for (const runtime of ["latte", "twig"]) {
-  describe(`${runtime}: every block of the cards, template pages, starters and landings opens fields`, () => {
+  describe(`${runtime}: every block of the cards, starters and landings opens fields`, () => {
     const cat = read(join(plugin, `sources/ui8kit/${runtime}/catalog.json`)) as Cat;
     const blocks = new Map(cat.blocks.map((b) => [b.id, b]));
     const configs = new Map(cat.blocks.map((b) => [b.id, blockConfig(b, cat.records)]));
@@ -68,12 +67,12 @@ for (const runtime of ["latte", "twig"]) {
     test("the sources are all there", () => {
       // the UI8Kit Simple blocks only (block-contract/v1, ADR-007); no template pages
       expect(uses.filter((u) => u.where === "card").length).toBe(157);
-      expect(uses.filter((u) => u.where.startsWith("template page")).length).toBe(0);
+      expect(cat).not.toHaveProperty("collections");
       expect(uses.filter((u) => u.where.startsWith("starter")).length).toBeGreaterThan(0);
       expect(uses.filter((u) => u.where.startsWith("landing")).length).toBeGreaterThan(0);
     });
 
-    test("every block and variant is in the catalog (outside its collection too)", () => {
+    test("every block and variant is in the catalog", () => {
       const bad = uses.filter((u) => !blocks.get(u.block)?.variants.some((v) => v.id === u.variant)).map((u) => `${u.block}:${u.variant} (${u.where})`);
       expect(bad).toEqual([]);
     });

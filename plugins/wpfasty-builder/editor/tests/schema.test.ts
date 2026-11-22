@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { BlockSpec, RecordField } from "../src/types";
 import { blockConfig, emptyOf, fieldOf, mergeSamples, parseType, summaryOf, typeOfSample, type Field } from "../src/fields/schema";
-import { missingBlocks } from "../src/util";
 
 const catalog = (runtime: string) =>
   JSON.parse(readFileSync(join(import.meta.dir, `../../sources/ui8kit/${runtime}/catalog.json`), "utf8")) as {
@@ -109,9 +108,6 @@ describe("sample keys without a declared type", () => {
     expect(cfg.fields.nav?.type).toBe("object");
     expect((cfg.fields.nav as Extract<Field, { type: "object" }>).objectFields.links?.type).toBe("array");
     expect(cfg.fields.badgeMark?.type).toBe("text");
-  });
-  test("blocks of a layout outside the loaded specs", () => {
-    expect(missingBlocks([{ block: "a" }, { block: "cta" }, { block: "cta" }], [{ id: "a" }])).toEqual(["cta"]);
   });
 });
 

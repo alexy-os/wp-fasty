@@ -171,7 +171,7 @@ final class Sources
     /**
      * Adds or refreshes a remote source (canImport(); the caller checks the capability and nonce).
      *
-     * @return array{blocks: int, collections: int, runtime: string, version: string}
+     * @return array{blocks: int, runtime: string, version: string}
      */
     public static function import(string $id, string $url): array
     {

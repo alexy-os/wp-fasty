@@ -4,7 +4,7 @@ export type Obj = { [k: string]: Json };
 export interface Config {
   onboarding?: boolean;
   features?: {id: string; label: string}[];
-  rest: string; nonce: string; page: number; title: string; source: string; collection: string;
+  rest: string; nonce: string; page: number; title: string; source: string;
   permalink: string; canPublish: boolean; editUrl: string;
   /** the current user id (per-user layout in localStorage); absent in older bootstrap data */
   user?: number;
@@ -32,9 +32,6 @@ export interface BlockSpec {
   id: string; title: string; docs: string; group: string; axes: Record<string, string[]>; defaults: Obj;
   props: PropSpec[]; data: { as: string; kind: string; record: string; fields: Record<string, string>; scope?: "current"; sample?: Obj }[]; variants: Variant[];
 }
-export interface Collection { id: string; label: string; type: string; docs?: string; blocks: string[]; pages?: TemplatePage[] }
-/** a page of a template collection; `preview`: its tall page shot (file pixels, 640 wide), light and dark */
-export interface TemplatePage { id: string; blocks: { block: string; variant: string; props: Obj }[]; preview?: { src: string; dark?: string; width: number; height: number } }
 /** a site data source; `kinds` = data kinds it fills exactly or by an auto rule, `levels` their Compat level */
 export interface DataSource {
   id: string; label: string; kinds: string[]; levels?: Record<string, "exact" | "auto">; type: string; object: string; purchasable?: boolean;
@@ -42,9 +39,8 @@ export interface DataSource {
 export interface Binding { source: string; limit: number; term?: string; sale?: boolean; map?: Record<string, string> }
 export interface Item { id: string; block: string; variant: string; props: Obj; bindings: Record<string, Binding> }
 export interface Catalog {
-  screens?: TemplatePage[];
-  source: string; sources: { id: string; label: string }[]; collections: { id: string; label: string; type: string; blocks: number }[];
-  dataSources: DataSource[]; meta: Obj; collection: Collection | null; blocks: BlockSpec[];
+  source: string; sources: { id: string; label: string }[];
+  dataSources: DataSource[]; meta: Obj; blocks: BlockSpec[];
 }
 export interface Issue { code: string; path: string; message: string }
 /** a rectangle in preview viewport coordinates (= overlay coordinates) */

@@ -26,7 +26,6 @@ const catalog = json(join(root, "plugins/wpfasty-builder/sources/ui8kit/latte/ca
 const variants = new Map<string, Set<string>>(
   catalog.blocks.map((b: J) => [b.id, new Set((b.variants ?? []).map((v: J) => v.id))]),
 );
-const collections = new Set(catalog.collections.map((c: J) => c.id));
 
 /** Archetype code relies on these post types (names + capabilities are hard-wired in the child PHP). */
 const ARCHETYPE_TYPES: Record<string, { name: string; capability?: string }[]> = {
@@ -118,8 +117,6 @@ function semantic(m: J, err: (msg: string) => void): void {
     if (spec.front) fronts++;
     if (slugs.has(spec.page.slug)) err(`${at}: duplicate page slug "${spec.page.slug}"`);
     slugs.add(spec.page.slug);
-    if (spec.layout.collection && !collections.has(spec.layout.collection))
-      err(`${at}: unknown catalog collection "${spec.layout.collection}"`);
     const ids = new Set<string>();
     for (const [j, b] of spec.layout.blocks.entries()) {
       if (b.id && ids.has(b.id)) err(`${at}: blocks[${j}] duplicate id "${b.id}"`);

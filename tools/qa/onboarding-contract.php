@@ -30,7 +30,7 @@ try {
     foreach (WPFastyBuilder\Plugin::runtimes() as $engine) {
         $source = new LocalSource('ui8kit', WPFastyBuilder\Plugin::$dir.'/sources/ui8kit/'.$engine, $engine);
         $catalog = new Catalog($source->catalog());
-        $check([] === $catalog->collections(), $engine.': no bundled template screens or collections');
+        $check(!isset($source->catalog()['collections']) && !method_exists($catalog, 'collections'), $engine.': no template collections');
         $blocks = $source->catalog()['blocks'] ?? [];
         $check(is_array($blocks) && 52 === count($blocks), $engine.': Simple catalog available for insertion');
         foreach (is_array($blocks) ? $blocks : [] as $block) {

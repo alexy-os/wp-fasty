@@ -5,7 +5,6 @@
   "landing": "tools/builder/landings/shop.json",
   "layout": {
     "source": "ui8kit",
-    "collection": "",
     "blocks": [
       {
         "id": "intro",

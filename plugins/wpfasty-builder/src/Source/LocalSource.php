@@ -48,7 +48,7 @@ final class LocalSource implements SourceInterface
             $data = '' !== $raw ? json_decode($raw, true) : null;
             $data = is_array($data) ? Catalog::forRuntime(\WPFastyBuilder\Cast::map($data), $this->runtime) : null;
             $ok = null !== $data && Catalog::runtimeOf($data) === $this->runtime;
-            $this->catalog = $ok ? $data : ['runtime' => $this->runtime, 'blocks' => [], 'collections' => []];
+            $this->catalog = $ok ? $data : ['runtime' => $this->runtime, 'blocks' => []];
         }
 
         return $this->catalog;

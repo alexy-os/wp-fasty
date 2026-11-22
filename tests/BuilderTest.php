@@ -52,7 +52,7 @@ final class BuilderTest extends TestCase
         // UI8Kit Simple only (ADR-007): 52 block-contract/v1 blocks, no data bindings, no collections
         $this->assertCount(52, $data['blocks']);
         $this->assertSame(157, array_sum(array_map(static fn ($b): int => count($b['variants']), $data['blocks'])));
-        $this->assertSame([], $data['collections']);
+        $this->assertArrayNotHasKey('collections', $data);
         $this->assertNotNull(self::catalog()->variant('hero-simple', 'mediaEnd'));
         $this->assertSame([], self::catalog()->bindable('hero-simple', 'mediaEnd'));
         foreach ($data['blocks'] as $b) {
@@ -85,7 +85,6 @@ final class BuilderTest extends TestCase
     public function testNormalizeSanitizesAndValidates(): void
     {
         [$entry, $issues] = Layout::normalize([
-            'collection' => 'nope',
             'blocks' => [
                 ['block' => 'hero-simple', 'variant' => 'mediaEnd', 'props' => ['title' => '<script>x</script>Hi', 'actionHref' => 'javascript:alert(1)', 'image' => 'javascript:alert(1)', 'level' => 'two']],
                 ['id' => 'news', 'block' => 'stories-simple', 'variant' => 'cols3', 'props' => ['stories' => [['id' => 's1', 'title' => '<b>T</b>', 'href' => 'data:text/html,x']]],
@@ -110,7 +109,7 @@ final class BuilderTest extends TestCase
         $this->assertSame([], $blocks[1]['bindings']);
         $this->assertSame('newsx', $blocks[2]['id'], 'block ids stay unique');
         $this->assertArrayNotHasKey('title', $blocks[2]['props']);
-        $this->assertSame('', $entry['metadata']['collection']['value']);
+        $this->assertArrayNotHasKey('collection', $entry['metadata'], 'no template collections (ADR-007)');
         $this->assertSame('layout', $entry['kind']);
         $this->assertTrue(Layout::safeHref('{page:about}#team'));
         $this->assertTrue(Layout::safeHref('/shop/'));
@@ -326,10 +325,11 @@ final class BuilderTest extends TestCase
         $zip->close();
         $catalog = json_encode(['templates' => 'latte', 'label' => 'Remote', 'blocks' => [
             ['id' => 'hero', 'variants' => [['id' => 'a', 'template' => 'blocks/hero.latte', 'props' => ['title' => 'Hi']]]],
-        ], 'collections' => [], ]);
+        ], 'collections' => [['id' => 'old', 'blocks' => ['hero']]], ]);
         $fetch = static fn (string $url): string => str_ends_with($url, 'catalog.json') ? (string) $catalog : (string) file_get_contents($zipFile);
         $remote = new RemoteSource('remote', 'https://registry.example/ui', $dir, 'latte', $fetch);
-        $this->assertSame(['blocks' => 1, 'collections' => 0, 'runtime' => 'latte', 'version' => ''], $remote->import());
+        $this->assertSame(['blocks' => 1, 'runtime' => 'latte', 'version' => ''], $remote->import());
+        $this->assertArrayNotHasKey('collections', $remote->catalog(), 'template collections of a registry are not imported');
         $this->assertTrue($remote->imported());
         $this->assertFileExists($dir.'/blocks/hero.latte');
         $this->assertFileDoesNotExist($dir.'/php/Evil.php');
@@ -355,11 +355,10 @@ final class BuilderTest extends TestCase
             'format' => 2, 'runtime' => 'twig', 'templates' => 'twig', 'version' => '1.2.0', 'label' => 'Reg',
             'archive' => ['file' => 'blocks.zip', 'sha256' => hash('sha256', $zip)],
             'blocks' => [['id' => 'hero', 'variants' => [['id' => 'a', 'template' => 'blocks/hero.html.twig', 'props' => []]]]],
-            'collections' => [],
         ]);
         $fetchOf = static fn (string $cat, string $z): \Closure => static fn (string $url): string => str_ends_with($url, 'catalog.json') ? $cat : (str_ends_with($url, 'blocks.zip') ? $z : throw new \RuntimeException(sprintf('404 %s', $url)));
         $twig = new RemoteSource('reg', 'https://registry.example/twig/wpfasty/v1.2.0', $dir, 'twig', $fetchOf($catalog(), $zip));
-        $this->assertSame(['blocks' => 1, 'collections' => 0, 'runtime' => 'twig', 'version' => '1.2.0'], $twig->import());
+        $this->assertSame(['blocks' => 1, 'runtime' => 'twig', 'version' => '1.2.0'], $twig->import());
         $this->assertFileExists($dir.'/blocks/hero.html.twig');
         $this->assertFileDoesNotExist($dir.'/blocks/hero.latte', 'the other runtime is never stored');
         $this->assertFileDoesNotExist($dir.'/php/Evil.php');

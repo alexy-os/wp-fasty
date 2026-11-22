@@ -184,7 +184,7 @@ if ([] !== $items) {
     for ($i = 0; $i < $runs; ++$i) {
         $items[0]['props'] = array_merge((array) ($items[0]['props'] ?? []), ['title' => "Edited title $i"]);
         $t = microtime(true);
-        [, $saved] = $api('POST', "/layout/$pageId", ['publish' => false, 'layout' => ['source' => $source, 'collection' => $original['metadata']['collection']['value'] ?? '', 'blocks' => $items]]);
+        [, $saved] = $api('POST', "/layout/$pageId", ['publish' => false, 'layout' => ['source' => $source, 'blocks' => $items]]);
         $http('GET', (string) $saved['previewUrl']);
         $before[] = microtime(true) - $t;
         $t = microtime(true);
@@ -195,7 +195,7 @@ if ([] !== $items) {
     [] === $times || printf("render-block per variant: median %.0f ms, max %.0f ms\n", $med($times) * 1000, max($times) * 1000);
 }
 // restore the draft the page had (a page without a layout keeps an empty draft; its front end is unchanged)
-$api('POST', "/layout/$pageId", ['publish' => false, 'layout' => ['source' => $source, 'collection' => $original['metadata']['collection']['value'] ?? '', 'blocks' => $blocksOf($original)]]);
+$api('POST', "/layout/$pageId", ['publish' => false, 'layout' => ['source' => $source, 'blocks' => $blocksOf($original)]]);
 if ([] === $items) {
     echo "no layout on page $pageId: edit timing skipped (use a builder landing)\n";
 }
