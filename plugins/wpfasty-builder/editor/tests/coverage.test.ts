@@ -10,7 +10,7 @@ import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { BlockSpec, Json, RecordField } from "../src/types";
-import { ADAPTER_RECORDS, blockConfig, NO_SETTINGS, type Field } from "../src/fields/schema";
+import { blockConfig, NO_SETTINGS, type Field } from "../src/fields/schema";
 import { isObj } from "../src/util";
 
 const plugin = join(import.meta.dir, "../..");
@@ -41,7 +41,6 @@ function unreached(f: Field, v: Json | undefined, path: string, out: string[]) {
     case "boolean": if (typeof v !== "boolean") out.push(`${path}: boolean field, ${typeof v} value`); return;
     case "select": case "radio": if (!f.options.some((o) => o.value === v)) out.push(`${path}: ${JSON.stringify(v)} is not an option`); return;
     case "map": if (!isObj(v) || Object.values(v).some((x) => typeof x !== "string")) out.push(`${path}: map field, value not a string map`); return;
-    case "binding": unreached(f.field, v, path, out); return;
     case "array":
       if (!Array.isArray(v)) out.push(`${path}: list field, ${typeof v} value`);
       else v.forEach((x, i) => unreached(f.item, x, `${path}[${i}]`, out));
@@ -100,14 +99,6 @@ for (const runtime of ["latte", "twig"]) {
             if (k === "id" || k === "className") continue;
             // an axis of a block-contract/v1 block is the variant's (a variant switch), not a field
             if (b.contract && k in b.axes) continue;
-            // a prop the WordPress adapter fills (the pager: page, pages, texts) is reachable only through its kept fields
-            const prop = b.props.find((p) => p.name === k);
-            const keep = prop && typeof prop.type === "object" && prop.type.record ? ADAPTER_RECORDS[prop.type.record] : undefined;
-            if (keep && isObj(v)) {
-              const kept = Object.fromEntries(Object.entries(v).filter(([f]) => keep.includes(f)));
-              if (cfg.fields[k]) unreached(cfg.fields[k], kept, k, out);
-              continue;
-            }
             if (cfg.fields[k]) unreached(cfg.fields[k], v, k, out);
             else out.push(`${k}: no field`);
           }

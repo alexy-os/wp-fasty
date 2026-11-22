@@ -6,45 +6,23 @@ namespace WPFastyBuilder;
 
 /**
  * One block rendered on its own — the HTML the page template prints inside `<div data-wpfb-block="<id>">` for the same
- * block: the input is sanitized like a saved layout (Layout::normalize), the props are the ones Compiler writes into
- * the page (variant sample props, overrides, kind-aware labels) and every bound path is filled with the records the
- * page context would hold (`wpfb[<id>][<path>]`). The editor swaps this fragment into its preview instead of reloading
- * the page (REST POST /render-block). Only templates of the source's own runtime render (ADR-001, K7).
- *
- * @phpstan-import-type Binding from DataSources
+ * block: the input is sanitized like a saved layout (Layout::normalize) and the props are the ones Compiler writes into
+ * the page (variant sample props with the overrides on top). No data bindings (ADR-007). The editor swaps this
+ * fragment into its preview instead of reloading the page (REST POST /render-block). Only templates of the source's
+ * own runtime render (ADR-001, K7).
  */
 final class Fragment
 {
     /**
-     * @param array<string, mixed>                                                                                      $input       untrusted {id?, block, variant, props?, bindings?}
-     * @param list<string>                                                                                              $dataSources ids accepted in bindings
-     * @param callable(Binding, string, array<string, mixed>|null): list<array<string, mixed>>                          $resolve
-     *                                                                                                                               records of a binding (binding, data kind, Catalog::slot())
-     * @param callable(string, array<string, mixed>): string                                                            $render      HTML of a template
-     * @param (callable(array<string, mixed>): array<string, mixed>)|null                                               $current     the record of the current
-     *                                                                                                                               route for a current-scope slot (Catalog::currentSlot); null: none (those paths stay null, as on a page
-     *                                                                                                                               without the record)
-     * @param (callable(Binding, string, array<string, mixed>|null): array{0: list<array<string, mixed>>, 1: int})|null $paged       (binding, kind, slot) →
-     *                                                                                                                               [records, pages]: the first page of the list a pager pages and its number of pages (DataSources::paged
-     *                                                                                                                               on page 1); null: the list resolves as any binding, one page
-     * @param (callable(int): (array<string, mixed>|null))|null                                                         $pager       the pager group for a number of pages (the
-     *                                                                                                                               editor previews page 1: Pager::value(1, pages)); null: no pager
+     * @param array<string, mixed>                           $input  untrusted {id?, block, variant, props?}
+     * @param callable(string, array<string, mixed>): string $render HTML of a template
      *
      * @return array{id: string, html: string, issues: list<array{code: string, path: string, message: string}>}|null
      *                                                                                                                null when the block or variant is unknown or its template is not of the catalog's runtime
      */
-    public static function render(
-        Catalog $catalog,
-        string $sourceId,
-        array $input,
-        array $dataSources,
-        callable $resolve,
-        callable $render,
-        ?callable $current = null,
-        ?callable $paged = null,
-        ?callable $pager = null,
-    ): ?array {
-        [$entry, $issues] = Layout::normalize(['blocks' => [$input]], $sourceId, $catalog, $dataSources, [
+    public static function render(Catalog $catalog, string $sourceId, array $input, callable $render): ?array
+    {
+        [$entry, $issues] = Layout::normalize(['blocks' => [$input]], $sourceId, $catalog, [
             'id' => 'fragment',
             'slug' => 'fragment',
             'title' => '',
@@ -56,50 +34,18 @@ final class Fragment
         if (null === $b) {
             return null;
         }
-        $variant = (array) $catalog->variant(Cast::string($b['block']), Cast::string($b['variant']));
+        $variant = (array) $catalog->variant($b['block'], $b['variant']);
         $template = Cast::string($variant['template'] ?? '');
         $runtime = $catalog->runtime();
         $own = null !== $runtime && str_ends_with($template, Compiler::ENGINES[$runtime]);
         if (1 !== preg_match(Catalog::TEMPLATE, $template) || !$own) {
             return null;
         }
-        $props = Compiler::blockProps($variant, $b, $catalog);
-        $block = Cast::string($b['block']);
-        $variantId = Cast::string($b['variant']);
-        $kinds = $catalog->bindable($block, $variantId);
-        // the pager group (Pager): filled as on the page, null when the mode is not `pages` or on one page
-        $at = $catalog->pager($block, $variantId);
-        $active = null !== $at && null !== $pager
-            && Pager::active(Layout::merge((array) ($variant['props'] ?? []), (array) $b['props']), $at['path']);
-        $pages = 1;
-        foreach ($b['bindings'] as $path => $bind) {
-            $bind = DataSources::binding($bind);
-            if ($active && null !== $paged && $path === $at['list'] && null !== $bind && isset($kinds[$path])) {
-                [$records, $pages] = $paged($bind, $kinds[$path], $catalog->slot($block, $variantId, $path));
-                Layout::set($props, explode('.', $path), $records);
-                continue;
-            }
-            Layout::set(
-                $props,
-                explode('.', $path),
-                null !== $bind && isset($kinds[$path])
-                    ? $resolve($bind, $kinds[$path], $catalog->slot($block, $variantId, $path))
-                    : [],
-            );
-        }
-        if (null !== $current) {
-            foreach ($catalog->currentValues($block, $variantId, $current) as $path => $value) {
-                Layout::set($props, explode('.', $path), $value);
-            }
-        }
-        if (null !== $at) {
-            Layout::set($props, explode('.', $at['path']), $active ? $pager($pages) : null);
-        }
         $issues = array_values(array_filter(
             $issues,
             static fn (array $i): bool => !str_starts_with($i['code'], 'core.'),
         ));
 
-        return ['id' => Cast::string($b['id']), 'html' => $render($template, Cast::map($props)), 'issues' => $issues];
+        return ['id' => $b['id'], 'html' => $render($template, Compiler::blockProps($variant, $b)), 'issues' => $issues];
     }
 }

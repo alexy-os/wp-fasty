@@ -12,7 +12,7 @@ import MapField from "./MapField.svelte";
 import JsonField from "./JsonField.svelte";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const registry: Record<Exclude<FieldType, "binding">, Component<any>> & Partial<Record<FieldType, Component<any>>> = {
+export const registry: Record<FieldType, Component<any>> = {
   text: TextField,
   textarea: TextField,
   number: NumberField,

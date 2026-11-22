@@ -18,8 +18,8 @@ namespace WPFastyBuilder;
  *     becomes "" (the templates omit an empty URL attribute)
  *   - text: C0 control characters (but tab, line feed, carriage return) are removed (Latte refuses them in a
  *     compiled template; they have no use in a prop)
- * The TrustedHtml marker {"__html": …} is not touched here: only DataSources::current puts it on the props, after
- * wp_kses_post (DataSources::trusted) unless it is the_content.
+ * The TrustedHtml marker {"__html": …} is not touched here: no input sets it (Layout::clean drops `__html` keys,
+ * Layout::untrust flattens one in catalog samples).
  */
 final class Safe
 {

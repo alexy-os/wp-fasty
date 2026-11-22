@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace WPFastyBuilder;
 
 /**
- * Read access to a catalog.json: blocks with their variants (template, evaluated sample props, bindable paths).
+ * Read access to a catalog.json: blocks with their variants (template, evaluated sample props). No data bindings
+ * (ADR-007): a variant renders its own props.
  */
 final class Catalog
 {
@@ -180,175 +181,6 @@ final class Catalog
     }
 
     /**
-     * The data kind of every bindable path of a variant: "posts" => "post", "filter.topics" => "topic".
-     *
-     * @return array<string, string>
-     */
-    public function bindable(string $block, string $variant): array
-    {
-        $b = $this->block($block);
-        $v = $this->variant($block, $variant);
-        if (null === $b || null === $v) {
-            return [];
-        }
-        $kinds = [];
-        foreach ((array) ($b['data'] ?? []) as $d) {
-            if (is_array($d) && is_string($d['as'] ?? null)) {
-                $kinds[$d['as']] = Cast::string($d['kind'] ?? '');
-            }
-        }
-        $out = [];
-        foreach ((array) ($v['bindings'] ?? []) as $bind) {
-            if (is_array($bind) && is_array($bind['path'] ?? null)) {
-                $out[implode('.', Cast::strings($bind['path']))] = $kinds[Cast::string($bind['data'] ?? '')] ?? '';
-            }
-        }
-
-        return $out;
-    }
-
-    /**
-     * The data slot behind a bindable path: its kind, the record fields → readPath map of the catalog and the
-     * record's field definitions (name, type, optional), e.g. for "products": Product {name ← title, price ← …}.
-     *
-     * @return array{kind: string, record: string, fields: array<string, string>, defs: list<array<string, mixed>>}|null
-     */
-    public function slot(string $block, string $variant, string $path): ?array
-    {
-        $b = $this->block($block);
-        $v = $this->variant($block, $variant);
-        $as = null;
-        foreach ((array) ($v['bindings'] ?? []) as $bind) {
-            if (is_array($bind) && is_array($bind['path'] ?? null) && implode('.', Cast::strings($bind['path'])) === $path) {
-                $as = Cast::string($bind['data'] ?? '');
-            }
-        }
-        foreach ((array) ($b['data'] ?? []) as $d) {
-            if (is_array($d) && ($d['as'] ?? null) === $as) {
-                return self::slotOf(Cast::map($d), $this->data);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * The paths of a variant the record of the current route fills (codegen-x data `scope: "current"`, e.g. the
-     * richtext block: title ← entry.title, content ← entry.content): path => [data alias, record field]. They are not
-     * layout props and not bindable; the page reads them from wpfb[<block id>][<path>] like a binding.
-     *
-     * @return array<string, array{data: string, field: string}>
-     */
-    public function current(string $block, string $variant): array
-    {
-        $v = $this->variant($block, $variant);
-        $scoped = [];
-        foreach ((array) ($this->blocks[$block]['data'] ?? []) as $d) {
-            if (is_array($d) && ($d['scope'] ?? null) === 'current' && is_string($d['as'] ?? null)) {
-                $scoped[$d['as']] = true;
-            }
-        }
-        $out = [];
-        foreach ((array) ($v['current'] ?? []) as $c) {
-            $path = is_array($c) && is_array($c['path'] ?? null) ? implode('.', array_map(Cast::string(...), $c['path'])) : '';
-            $data = is_array($c) ? Cast::string($c['data'] ?? '') : '';
-            $field = is_array($c) ? Cast::string($c['field'] ?? '') : '';
-            if ('' !== $path && '' !== $field && isset($scoped[$data])) {
-                $out[$path] = ['data' => $data, 'field' => $field];
-            }
-        }
-
-        return $out;
-    }
-
-    /**
-     * The current-scope data slot of a block by its alias (as slot()), with the catalog's `sample` record (the
-     * record on the codegen-x fixtures, for offline renders).
-     *
-     * @return array{kind: string, record: string, fields: array<string, string>, defs: list<array<string, mixed>>,
-     *   sample: array<string, mixed>}|null
-     */
-    public function currentSlot(string $block, string $as): ?array
-    {
-        foreach ((array) ($this->blocks[$block]['data'] ?? []) as $d) {
-            if (is_array($d) && ($d['as'] ?? null) === $as && ($d['scope'] ?? null) === 'current') {
-                return self::slotOf(Cast::map($d), $this->data) + ['sample' => Cast::map($d['sample'] ?? [])];
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * The values of the current paths of a variant from one record per alias ($record(slot) → record):
-     * path => value, null when the record has no such field.
-     *
-     * @param callable(array<string, mixed>): array<string, mixed> $record
-     *
-     * @return array<string, mixed>
-     */
-    public function currentValues(string $block, string $variant, callable $record): array
-    {
-        $records = [];
-        $out = [];
-        foreach ($this->current($block, $variant) as $path => $c) {
-            if (!array_key_exists($c['data'], $records)) {
-                $slot = $this->currentSlot($block, $c['data']);
-                $records[$c['data']] = null !== $slot ? $record($slot) : [];
-            }
-            $out[$path] = $records[$c['data']][$c['field']] ?? null;
-        }
-
-        return $out;
-    }
-
-    /**
-     * The pager group of a block (a prop of a pager record type, Pager::RECORDS: PostGrid `pager`) and the list it
-     * pages (the variant's first bindable path, PostGrid `posts`): ['path' => 'pager', 'list' => 'posts']; null
-     * without one.
-     * The WordPress adapter fills the group (Pager); a layout sets only its `mode`.
-     *
-     * @return array{path: string, list: string}|null
-     */
-    public function pager(string $block, string $variant): ?array
-    {
-        $b = $this->block($block);
-        if (null === $b || null === $this->variant($block, $variant)) {
-            return null;
-        }
-        foreach ((array) ($b['props'] ?? []) as $prop) {
-            $record = is_array($prop) && is_array($prop['type'] ?? null) ? ($prop['type']['record'] ?? null) : null;
-            if (is_string($record) && in_array($record, Pager::RECORDS, true) && is_string($prop['name'] ?? null)) {
-                $list = array_key_first($this->bindable($block, $variant));
-
-                return ['path' => $prop['name'], 'list' => is_string($list) ? $list : ''];
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * The first data slot of each kind (what the editor rates a data source against).
-     *
-     * @return array<string, array<string, mixed>> kind → slot (as slot())
-     */
-    public function slotsByKind(): array
-    {
-        $out = [];
-        foreach ($this->blocks as $b) {
-            foreach ((array) ($b['data'] ?? []) as $d) {
-                $kind = is_array($d) && ($d['scope'] ?? null) !== 'current' ? Cast::string($d['kind'] ?? '') : '';
-                if ('' !== $kind && !isset($out[$kind])) {
-                    $out[$kind] = self::slotOf(Cast::map($d), $this->data);
-                }
-            }
-        }
-
-        return $out;
-    }
-
-    /**
      * The blocks the editor offers: every block of the catalog, with the catalog's meta.
      *
      * @return array{meta: array<string, mixed>, blocks: list<array<string, mixed>>}
@@ -356,23 +188,5 @@ final class Catalog
     public function forEditor(): array
     {
         return ['meta' => $this->meta(), 'blocks' => array_values($this->blocks)];
-    }
-
-    /**
-     * @param array<string, mixed> $d
-     * @param array<string, mixed> $data
-     *
-     * @return array{kind: string, record: string, fields: array<string, string>, defs: list<array<string, mixed>>}
-     */
-    private static function slotOf(array $d, array $data): array
-    {
-        $record = Cast::string($d['record'] ?? '');
-
-        return [
-            'kind' => Cast::string($d['kind'] ?? ''),
-            'record' => $record,
-            'fields' => array_map(Cast::string(...), Cast::map($d['fields'] ?? [])),
-            'defs' => array_values(array_map(Cast::map(...), array_filter((array) (Cast::path($data, 'records', $record) ?? []), 'is_array'))),
-        ];
     }
 }

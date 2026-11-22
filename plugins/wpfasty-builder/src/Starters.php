@@ -52,13 +52,11 @@ final class Starters
     }
 
     /**
-     * Whether a starter can be built here: every block / variant is in the catalog of its source, every bound data
-     * source exists.
+     * Whether a starter can be built here: every block / variant is in the catalog of its source.
      *
      * @param array<string, mixed> $starter
-     * @param list<string>         $dataSources
      */
-    public static function fits(array $starter, ?Catalog $catalog, array $dataSources): bool
+    public static function fits(array $starter, ?Catalog $catalog): bool
     {
         $blocks = Cast::path($starter, 'layout', 'blocks');
         if (null === $catalog || !is_array($blocks) || [] === $blocks) {
@@ -70,11 +68,6 @@ final class Starters
                 : null;
             if (null === $variant) {
                 return false;
-            }
-            foreach ((array) ($b['bindings'] ?? []) as $bind) {
-                if (!is_array($bind) || !in_array(Cast::string($bind['source'] ?? ''), $dataSources, true)) {
-                    return false;
-                }
             }
         }
 
@@ -89,11 +82,9 @@ final class Starters
     public static function available(): array
     {
         $out = [];
-        $data = null;
         foreach (self::shipped() as $s) {
             $catalog = Sources::catalog(sanitize_key(Cast::string($s['layout']['source'] ?? 'ui8kit')));
-            $data ??= array_keys(DataSources::all($catalog));
-            if (self::fits($s, $catalog, $data)) {
+            if (self::fits($s, $catalog)) {
                 $out[] = $s;
             }
         }

@@ -22,7 +22,7 @@ export function api(cfg: Config) {
     renderBlock: (source: string, item: Item) =>
       call<{ id: string; html: string; issues: Issue[] }>("/render-block", {
         method: "POST",
-        body: JSON.stringify({ source, page: cfg.page, id: item.id, block: item.block, variant: item.variant, props: item.props, bindings: item.bindings }),
+        body: JSON.stringify({ source, page: cfg.page, id: item.id, block: item.block, variant: item.variant, props: item.props }),
       }),
     catalog: (source: string) => call<Catalog>(`/catalog?source=${encodeURIComponent(source)}`),
     /** link-token targets of the site (GET /links), for the link picker */

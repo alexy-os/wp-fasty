@@ -4,10 +4,9 @@
  * XSS / SSTI fuzz of the builder catalog (CI gate). Every variant of the bundled ui8kit catalog (480), Latte and Twig,
  * every string prop of the variant sample, each payload of tools/security/payloads.php (`html` payloads in every
  * string prop, `url` payloads in every prop that may hold a URL). Three paths:
- *   fragment  POST /render-block: the props as layout overrides (Layout::normalize sanitizes them), bound lists and
- *             the current record filled with the payload too (CMS data is not stripped of tags), Fragment::render
+ *   fragment  POST /render-block: the props as layout overrides (Layout::normalize sanitizes them), Fragment::render
  *   raw       the template layer alone: props straight into Front::prepare + BlockRenderer, no layout sanitizing
- *             (what a catalog sample, a resolved token or a bound record reaches the templates as)
+ *             (what a catalog sample or a resolved token reaches the templates as)
  *   page      the compiled page (Compiler::compile → Latte / Twig source with the props as literals), 40 blocks a page:
  *             a prop must never become template code (SSTI) or break out of its literal
  * The HTML is parsed as DOM; a finding is any <script> element, on* attribute, javascript:/vbscript:/data: URL in a
@@ -126,7 +125,7 @@ $catalogL = $engines['latte']['catalog'];
     : [1, 1];
 $variants = [];
 $n = 0;
-foreach ($catalogL->forEditor(null)['blocks'] as $b) {
+foreach ($catalogL->forEditor()['blocks'] as $b) {
     if ('' !== $onlyBlock && $b['id'] !== $onlyBlock) {
         continue;
     }
@@ -137,46 +136,11 @@ foreach ($catalogL->forEditor(null)['blocks'] as $b) {
     }
 }
 
-/**
- * The inputs of one variant with $payload: layout overrides, bound records (sample props at the bound paths), the
- * current record (sample, content stays trusted markup of the adapter: the_content is the CMS's).
- */
+/** The layout overrides of one variant with $payload (no data bindings, ADR-007: the props are all a block gets). */
 $inputs = static function (WPFastyBuilder\Catalog $c, string $block, string $variant, string $payload, bool $url) use ($inject, $extra): array {
-    $v = (array) $c->variant($block, $variant);
-    $props = (array) ($v['props'] ?? []);
-    if ('#extra' === $payload) {
-        $props = $extra($props);
-        $bound = [];
-        foreach (array_keys($c->bindable($block, $variant)) as $path) {
-            $at = $props;
-            foreach (explode('.', $path) as $seg) {
-                $at = is_array($at) ? ($at[$seg] ?? null) : null;
-            }
-            $bound[$path] = is_array($at) ? $at : [];
-        }
+    $props = (array) (((array) $c->variant($block, $variant))['props'] ?? []);
 
-        return [$props, $bound, static fn (array $slot): array => $extra((array) ($slot['sample'] ?? []))];
-    }
-    $bound = [];
-    foreach (array_keys($c->bindable($block, $variant)) as $path) {
-        $at = $props;
-        foreach (explode('.', $path) as $seg) {
-            $at = is_array($at) ? ($at[$seg] ?? null) : null;
-        }
-        $bound[$path] = $inject(is_array($at) ? $at : [], $payload, $url);
-    }
-    $current = static function (array $slot) use ($inject, $payload, $url): array {
-        $rec = (array) ($slot['sample'] ?? []);
-        foreach ($rec as $k => $x) {
-            if (!(is_array($x) && array_key_exists('__html', $x))) {
-                $rec[$k] = $inject($x, $payload, $url, (string) $k);
-            }
-        }
-
-        return $rec;
-    };
-
-    return [$inject($props, $payload, $url), $bound, $current];
+    return '#extra' === $payload ? $extra($props) : $inject($props, $payload, $url);
 };
 
 $findings = [];
@@ -194,16 +158,7 @@ $baseline = [];
 foreach ($variants as [$block, $variant]) {
     foreach ($engines as $name => $e) {
         $c = $e['catalog'];
-        [$p, $bound, $current] = $inputs($c, $block, $variant, '', false);
-        $out = WPFastyBuilder\Fragment::render(
-            $c,
-            'ui8kit',
-            ['id' => 'b1', 'block' => $block, 'variant' => $variant],
-            [],
-            static fn (): array => [],
-            $e['render'],
-            static fn (array $slot): array => (array) ($slot['sample'] ?? []),
-        );
+        $out = WPFastyBuilder\Fragment::render($c, 'ui8kit', ['id' => 'b1', 'block' => $block, 'variant' => $variant], $e['render']);
         $baseline["$name|$block|$variant"] = $out['html'] ?? '';
     }
 }
@@ -218,36 +173,18 @@ foreach (['fragment', 'raw'] as $mode) {
                 $norm = [];
                 foreach ($engines as $name => $e) {
                     $c = $e['catalog'];
-                    [$props, $bound, $current] = $inputs($c, $block, $variant, $payload, 'url' === $list);
+                    $props = $inputs($c, $block, $variant, $payload, 'url' === $list);
                     if ('fragment' === $mode) {
-                        $kinds = $c->bindable($block, $variant);
                         $out = WPFastyBuilder\Fragment::render(
                             $c,
                             'ui8kit',
-                            [
-                                'id' => 'b1', 'block' => $block, 'variant' => $variant, 'props' => $props,
-                                'bindings' => array_map(static fn (): array => ['source' => 'fuzz'], $kinds),
-                            ],
-                            ['fuzz'],
-                            static function (array $bind, string $kind, ?array $slot) use ($bound, $kinds): array {
-                                $path = (string) array_search($kind, $kinds, true);
-
-                                return $bound[$path] ?? [];
-                            },
+                            ['id' => 'b1', 'block' => $block, 'variant' => $variant, 'props' => $props],
                             $e['render'],
-                            $current,
                         );
                         $html = $out['html'] ?? '';
                     } else {
                         $v = (array) $c->variant($block, $variant);
-                        $merged = $props;
-                        foreach ($bound as $path => $records) {
-                            WPFastyBuilder\Layout::set($merged, explode('.', $path), $records);
-                        }
-                        foreach ($c->currentValues($block, $variant, $current) as $path => $value) {
-                            WPFastyBuilder\Layout::set($merged, explode('.', $path), $value);
-                        }
-                        $html = ($e['render'])((string) $v['template'], $merged);
+                        $html = ($e['render'])((string) $v['template'], $props);
                     }
                     ++$renders;
                     if (str_contains(html_entity_decode($html, ENT_QUOTES | ENT_HTML5), 'alert(1)')) {
@@ -279,10 +216,10 @@ if (in_array('page', $modes, true)) {
                 foreach (array_chunk($variants, WPFastyBuilder\Layout::MAX_BLOCKS) as $ci => $chunk) {
                     $blocks = [];
                     foreach ($chunk as $i => [$block, $variant]) {
-                        [$props] = $inputs($c, $block, $variant, $payload, 'url' === $list);
+                        $props = $inputs($c, $block, $variant, $payload, 'url' === $list);
                         $blocks[] = ['id' => 'v'.$i, 'block' => $block, 'variant' => $variant, 'props' => $props];
                     }
-                    [$entry] = WPFastyBuilder\Layout::normalize(['blocks' => $blocks], 'ui8kit', $c, [], [
+                    [$entry] = WPFastyBuilder\Layout::normalize(['blocks' => $blocks], 'ui8kit', $c, [
                         'id' => 'layout-fuzz', 'slug' => 'fuzz', 'title' => $payload, 'version' => 1,
                         'created_at' => '2026-10-28T00:00:00Z', 'updated_at' => '2026-10-28T00:00:00Z',
                     ]);
@@ -294,13 +231,13 @@ if (in_array('page', $modes, true)) {
                             $l = new Latte\Engine();
                             $l->setLoader(new Latte\Loaders\StringLoader(['page' => $tpl]));
                             $l->addFunction('wpfb_block', static fn (string $s, string $t, array $p): string => $fn($t, $p));
-                            $page = $l->renderToString('page', ['wpfb' => []]);
+                            $page = $l->renderToString('page');
                         } else {
                             $env = new Twig\Environment(new Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
                             $env->registerUndefinedFunctionCallback(static fn (string $n): Twig\TwigFunction|false => 'wpfb_block' === $n
                                 ? new Twig\TwigFunction($n, static fn (string $s, string $t, array $p): string => $fn($t, $p), ['is_safe' => ['html']])
                             : false);
-                            $page = $env->render('page', ['wpfb' => []]);
+                            $page = $env->render('page');
                         }
                     } catch (Throwable $ex) {
                         $findings[] = [

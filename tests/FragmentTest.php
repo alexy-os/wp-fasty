@@ -38,31 +38,18 @@ final class FragmentTest extends TestCase
         $html = require dirname(__DIR__).'/tools/builder/fragment-html.php';
         foreach (['latte', 'twig'] as $engine) {
             [$catalog, $r] = self::runtime($engine);
-            [$entry] = Layout::normalize(['blocks' => self::layoutBlocks()], 'ui8kit', $catalog, ['posts'], [
+            [$entry] = Layout::normalize(['blocks' => self::layoutBlocks()], 'ui8kit', $catalog, [
                 'id' => 'layout-7', 'slug' => 'home', 'title' => 'Home', 'version' => 1,
                 'created_at' => '2026-10-17T01:00:00Z', 'updated_at' => '2026-10-17T01:00:00Z',
             ]);
             $page = self::page($engine, $catalog, $r, $entry);
             $this->assertCount(4, $page);
             foreach (self::layoutBlocks() as $b) {
-                $seen = [];
-                $out = Fragment::render(
-                    $catalog,
-                    'ui8kit',
-                    $b,
-                    ['posts'],
-                    static function (array $bind, string $kind) use (&$seen): array {
-                        $seen[] = $bind['source'].':'.$kind.':'.$bind['limit'];
-
-                        return [];
-                    },
-                    static fn (string $t, array $p): string => $r->render('ui8kit', $t, $p),
-                );
+                $out = Fragment::render($catalog, 'ui8kit', $b, static fn (string $t, array $p): string => $r->render('ui8kit', $t, $p));
                 $this->assertNotNull($out);
                 $this->assertSame($b['id'], $out['id']);
                 $this->assertStringNotContainsString('<!-- wpfasty-builder', $out['html']);
                 $this->assertSame($page[$b['id']], $html['inner']($out['html']), "$engine {$b['id']}");
-                $this->assertSame([], $seen, 'Simple blocks bind no data');
             }
         }
     }
@@ -74,17 +61,17 @@ final class FragmentTest extends TestCase
             'id' => 'bad id!', 'block' => 'intro-simple', 'variant' => 'start',
             'props' => ['title' => '<script>alert(1)</script>Hi', 'description' => str_repeat('x', 3000)],
             'bindings' => ['nope' => ['source' => 'posts'], 'title' => ['source' => 'evil']],
-        ], ['posts'], static fn (): array => [], static fn (string $t, array $p): string => json_encode($p) ?: '');
+        ], static fn (string $t, array $p): string => json_encode($p) ?: '');
         $this->assertNotNull($out);
         $this->assertSame('b1', $out['id']);
         $props = json_decode($out['html'], true);
         $this->assertSame('alert(1)Hi', $props['title']);
         $this->assertSame(2000, strlen($props['description']));
-        $this->assertSame(['layout.binding_path_unknown', 'layout.binding_path_unknown'], array_column($out['issues'], 'code'));
+        $this->assertSame(['layout.binding_unsupported'], array_column($out['issues'], 'code'), 'no data bindings (ADR-007)');
         // unknown block, unknown variant: nothing renders
         $none = static fn (): string => 'x';
-        $this->assertNull(Fragment::render($catalog, 'ui8kit', ['block' => 'nope', 'variant' => 'x'], [], static fn (): array => [], $none));
-        $this->assertNull(Fragment::render($catalog, 'ui8kit', ['block' => 'intro-simple', 'variant' => 'x'], [], static fn (): array => [], $none));
+        $this->assertNull(Fragment::render($catalog, 'ui8kit', ['block' => 'nope', 'variant' => 'x'], $none));
+        $this->assertNull(Fragment::render($catalog, 'ui8kit', ['block' => 'intro-simple', 'variant' => 'x'], $none));
     }
 
     public function testFragmentRendersOnlyTheCatalogRuntime(): void
@@ -93,9 +80,9 @@ final class FragmentTest extends TestCase
         $twigNamed = json_decode((string) json_encode((new LocalSource('ui8kit', self::SRC.'/latte', 'latte'))->catalog()), true);
         $twigNamed['runtime'] = $twigNamed['templates'] = 'twig';
         // a Twig catalog whose variant still names a .latte template is not rendered by a Twig site
-        $out = Fragment::render(new Catalog($twigNamed), 'ui8kit', ['block' => 'intro-simple', 'variant' => 'start'], [], static fn (): array => [], static fn (): string => 'x');
+        $out = Fragment::render(new Catalog($twigNamed), 'ui8kit', ['block' => 'intro-simple', 'variant' => 'start'], static fn (): string => 'x');
         $this->assertNull($out);
-        $this->assertNotNull(Fragment::render($latte, 'ui8kit', ['block' => 'intro-simple', 'variant' => 'start'], [], static fn (): array => [], static fn (): string => 'x'));
+        $this->assertNotNull(Fragment::render($latte, 'ui8kit', ['block' => 'intro-simple', 'variant' => 'start'], static fn (): string => 'x'));
     }
 
     public function testRestRenderBlock(): void
@@ -126,7 +113,7 @@ final class FragmentTest extends TestCase
         [$catalog, $r] = self::runtime('latte');
         $direct = $r->render('ui8kit', 'blocks/intro-simple.latte', Compiler::blockProps(
             (array) $catalog->variant('intro-simple', 'start'),
-            ['props' => ['title' => 'Live edit'], 'bindings' => []],
+            ['id' => 'intro', 'block' => 'intro-simple', 'variant' => 'start', 'props' => ['title' => 'Live edit']],
         ));
         $this->assertSame($direct, $data['html']);
 
@@ -162,7 +149,7 @@ final class FragmentTest extends TestCase
     private static function page(string $engine, Catalog $catalog, BlockRenderer $r, array $entry): array
     {
         $tpl = Compiler::compile($entry, $catalog, $engine);
-        $ctx = ['wpfb' => []];
+        $ctx = [];
         $fn = static fn (string $s, string $t, array $p): string => $r->render($s, $t, $p);
         if ('latte' === $engine) {
             $l = new Engine();

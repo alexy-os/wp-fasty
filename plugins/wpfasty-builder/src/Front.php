@@ -27,7 +27,6 @@ final class Front
         add_action('template_redirect', [self::class, 'previewGuard'], 1);
         add_action('template_redirect', [self::class, 'prototypes'], 2);
         add_filter('wpfasty_color_scheme', [self::class, 'colorScheme']);
-        add_action('wp_head', [Pager::class, 'head'], 5);
     }
 
     /**
@@ -175,7 +174,6 @@ final class Front
             return $context;
         }
         $entry = Store::get(self::$page, self::$preview);
-        $context['wpfb'] = null !== $entry ? self::bound($entry, $context) : [];
         // record tokens of every block ({post:}, {product:}, {term:}, {price:}, {stock:}): one query per type
         Links::prime(null !== $entry ? array_column(Layout::blocks($entry), 'props') : []);
         $mode = get_post_meta(self::$page, PageOnboarding::SHELL, true);
@@ -188,63 +186,6 @@ final class Front
         }
 
         return $context;
-    }
-
-    /**
-     * Data of every binding: [block id][path] => records; the pager group of a list block (Pager) at its path.
-     *
-     * @param array<string, mixed> $entry
-     * @param array<string, mixed> $context the theme context (ContextFactory: `pagination` of the main query)
-     *
-     * @return array<string, array<string, mixed>>
-     */
-    public static function bound(array $entry, array $context = []): array
-    {
-        $catalog = Sources::catalog(Cast::string(Cast::path($entry, 'metadata', 'source', 'value')));
-        $out = [];
-        foreach (Layout::blocks($entry) as $b) {
-            $kinds = $catalog?->bindable(Cast::string($b['block']), Cast::string($b['variant'])) ?? [];
-            // the pager (PostGrid `pager`): asked for by the variant / layout mode, filled here, null on one page
-            $pager = $catalog?->pager(Cast::string($b['block']), Cast::string($b['variant']));
-            $sample = (array) ($catalog?->variant(Cast::string($b['block']), Cast::string($b['variant']))['props'] ?? []);
-            $paged = null !== $pager && Pager::active(Layout::merge($sample, (array) $b['props']), $pager['path']);
-            foreach (Cast::map($b['bindings']) as $path => $bind) {
-                $bind = DataSources::binding($bind);
-                if (null !== $bind && isset($kinds[$path])) {
-                    $slot = $catalog?->slot(Cast::string($b['block']), Cast::string($b['variant']), Cast::string($path));
-                    if ($paged && Cast::string($path) === $pager['list']) {
-                        // the block's own query: the page of the request, its pages from the found rows of that query
-                        $page = Pager::request();
-                        [$records, $pages] = DataSources::paged($bind, $kinds[Cast::string($path)], $slot, $page);
-                        $out[Cast::string($b['id'])][Cast::string($path)] = $records;
-                        $out[Cast::string($b['id'])][$pager['path']] = Pager::value($page, $pages, Pager::urls());
-                        continue;
-                    }
-                    $out[Cast::string($b['id'])][Cast::string($path)] = DataSources::resolve(
-                        $bind,
-                        $kinds[Cast::string($path)],
-                        $slot,
-                    );
-                }
-            }
-            if (null !== $pager && !array_key_exists($pager['path'], $out[Cast::string($b['id'])] ?? [])) {
-                // no own query: the main query (ContextFactory pagination, else max_num_pages); a page has one page
-                $out[Cast::string($b['id'])][$pager['path']] = $paged
-                    ? Pager::value(...[...Pager::main($context), Pager::urls($context)])
-                    : null;
-            }
-            // the record of the current route (the queried post: richtext title, the_content…), read once per page
-            $current = $catalog?->currentValues(
-                Cast::string($b['block']),
-                Cast::string($b['variant']),
-                static fn (array $slot): array => DataSources::current($slot),
-            ) ?? [];
-            foreach ($current as $path => $value) {
-                $out[Cast::string($b['id'])][Cast::string($path)] = $value;
-            }
-        }
-
-        return $out;
     }
 
     public static function styles(): void

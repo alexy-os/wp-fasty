@@ -20,27 +20,21 @@ export interface NewPage { id: number; slug: string; url: string; blocks: number
 export interface PropSpec { name: string; type: string | { ts?: string; record?: string }; optional: boolean; docs: string }
 /** a field of a catalog record (catalog `records`, from the codegen-x specs) */
 export interface RecordField { name: string; type: string; optional?: boolean; docs?: string; default?: Json }
-/** preview: the card images of the variant (bundled sources: sources/<id>/previews): light `src`, dark-mode `dark`
- *  (when shot), CSS size */
+/** a variant of a block-contract/v1 block: `set` = its axis values; the card shows it live (prototype.ts) */
 export interface Variant {
-  id: string; label?: string; set: Obj; organism: string; template: string; props: Obj; bindings: { path: string[]; data: string; pick?: string }[];
-  /** paths the record of the current route fills (data `scope: "current"`: richtext title, content…); not editable */
-  current?: { path: string[]; data: string; field: string }[];
+  id: string; label?: string; set: Obj; organism: string; template: string; props: Obj;
 }
 export interface BlockSpec {
   contract?: { item: string; version: number; model: string };
   id: string; title: string; docs: string; group: string; axes: Record<string, string[]>; defaults: Obj;
-  props: PropSpec[]; data: { as: string; kind: string; record: string; fields: Record<string, string>; scope?: "current"; sample?: Obj }[]; variants: Variant[];
+  props: PropSpec[]; variants: Variant[];
 }
-/** a site data source; `kinds` = data kinds it fills exactly or by an auto rule, `levels` their Compat level */
-export interface DataSource {
-  id: string; label: string; kinds: string[]; levels?: Record<string, "exact" | "auto">; type: string; object: string; purchasable?: boolean;
-}
-export interface Binding { source: string; limit: number; term?: string; sale?: boolean; map?: Record<string, string> }
-export interface Item { id: string; block: string; variant: string; props: Obj; bindings: Record<string, Binding> }
+/** a block of the layout: props only, no data bindings (ADR-007). `bindings` is declared (never set) only so the
+ *  unchanged optional Agent module (modules/builder-agent/editor/context.ts) still type-checks; see ADR-007. */
+export interface Item { id: string; block: string; variant: string; props: Obj; bindings?: undefined }
 export interface Catalog {
   source: string; sources: { id: string; label: string }[];
-  dataSources: DataSource[]; meta: Obj; blocks: BlockSpec[];
+  meta: Obj; blocks: BlockSpec[];
 }
 export interface Issue { code: string; path: string; message: string }
 /** a rectangle in preview viewport coordinates (= overlay coordinates) */

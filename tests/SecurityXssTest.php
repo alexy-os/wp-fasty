@@ -12,7 +12,6 @@ use WPFastyBuilder\BlockRenderer;
 use WPFastyBuilder\Catalog;
 use WPFastyBuilder\Codex\ReadPath;
 use WPFastyBuilder\Compiler;
-use WPFastyBuilder\DataSources;
 use WPFastyBuilder\Fragment;
 use WPFastyBuilder\Front;
 use WPFastyBuilder\Layout;
@@ -177,17 +176,6 @@ final class SecurityXssTest extends TestCase
         self::assertStringNotContainsString('<', $json);
     }
 
-    public function testTrustedHtmlOfMetaIsKsesFiltered(): void
-    {
-        $GLOBALS['wp_test_kses'] = static fn (string $h): string => (string) preg_replace('#<script\b.*?</script>|\son\w+="[^"]*"#is', '', $h);
-        $aside = ['__html' => '<p onclick="x()">Note</p><script>alert(1)</script>'];
-        self::assertSame(['__html' => '<p>Note</p>'], DataSources::trusted($aside, false), 'meta / settings: wp_kses_post');
-        self::assertSame($aside, DataSources::trusted($aside, true), 'the_content of the current post: as filtered by WP');
-        self::assertNull(DataSources::trusted('<script>', false));
-        self::assertNull(DataSources::trusted(['__html' => ['x']], false));
-        self::assertNull(DataSources::trusted(null, true));
-    }
-
     public function testHtmlPipeOfANonStringIsNull(): void
     {
         // a blank string is absent too (codegen-x readPath since 89a08eff: PHP trim(), so a no-break space is text)
@@ -235,15 +223,14 @@ final class SecurityXssTest extends TestCase
             foreach (['latte', 'twig'] as $engine) {
                 [$catalog, $r] = self::runtime($engine);
                 $props = (array) ($catalog->variant($block, $variant)['props'] ?? []);
-                $base[$engine] = Fragment::render($catalog, 'ui8kit', ['id' => 'b', 'block' => $block, 'variant' => $variant, 'props' => $props], [], static fn (): array => [], static fn (string $t, array $p): string => $r->render('ui8kit', $t, Front::prepare($p)), static fn (array $s): array => (array) ($s['sample'] ?? []))['html'];
+                $base[$engine] = Fragment::render($catalog, 'ui8kit', ['id' => 'b', 'block' => $block, 'variant' => $variant, 'props' => $props], static fn (string $t, array $p): string => $r->render('ui8kit', $t, Front::prepare($p)))['html'];
             }
             foreach ($set as $payload) {
                 $out = [];
                 foreach (['latte', 'twig'] as $engine) {
                     [$catalog, $r] = self::runtime($engine);
                     $props = $put((array) ($catalog->variant($block, $variant)['props'] ?? []), $payload);
-                    $rec = static fn (array $s): array => $put((array) ($s['sample'] ?? []), $payload);
-                    $html = Fragment::render($catalog, 'ui8kit', ['id' => 'b', 'block' => $block, 'variant' => $variant, 'props' => $props], [], static fn (): array => [], static fn (string $t, array $p): string => $r->render('ui8kit', $t, Front::prepare($p)), $rec)['html'];
+                    $html = Fragment::render($catalog, 'ui8kit', ['id' => 'b', 'block' => $block, 'variant' => $variant, 'props' => $props], static fn (string $t, array $p): string => $r->render('ui8kit', $t, Front::prepare($p)))['html'];
                     self::assertSame([], $check($html, $payload, $base[$engine]), "$engine $block/$variant: $payload");
                     $out[$engine] = $dom($html);
                 }

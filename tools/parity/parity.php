@@ -11,7 +11,7 @@
  * (tools/parity/dump-context.php) or hand-written edge cases. WordPress functions come from tests/bootstrap.php stubs.
  *
  * Suite `builder`: every landing of tools/builder/landings/*.json is normalized and compiled by wpfasty-builder to
- * Latte and to Twig (Compiler), bound paths filled with the catalog sample records, and rendered as a full page of
+ * Latte and to Twig (Compiler) and rendered as a full page of
  * its archetype (child roots + the compiled view root) with both renderers — Latte page + Latte blocks vs Twig page
  * + Twig blocks; compared as DOM trees (normalize-dom.php).
  *
@@ -120,8 +120,7 @@ $builder = static function () use (
         $name = 'builder/'.basename($file, '.json');
         $arch = explode('-', basename($file, '.json'))[0];
         $spec = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
-        [$entry] = Layout::normalize($spec['layout'], 'ui8kit', $catalog, ['posts', 'projects', 'products', 'pages',
-            'topics', 'project_types', 'product_cats', ], ['id' => 'layout-'.$i, 'slug' => 'p', 'title' => 'P',
+        [$entry] = Layout::normalize($spec['layout'], 'ui8kit', $catalog, ['id' => 'layout-'.$i, 'slug' => 'p', 'title' => 'P',
                 'page_id' => $i + 1, 'version' => 1, 'created_at' => '2026-10-21T00:00:00Z',
                 'updated_at' => '2026-10-21T00:00:00Z', ]);
         $dir = "{$cache}/builder-views/{$i}";
@@ -138,27 +137,8 @@ $builder = static function () use (
             ++$fail;
             continue;
         }
-        // Bound paths get the catalog sample records of that path (what the editor previews).
-        $wpfb = [];
-        foreach (Layout::blocks($entry) as $b) {
-            $variant = $catalog->variant((string) $b['block'], (string) $b['variant']);
-            $props = Layout::merge((array) ($variant['props'] ?? []), $b['props']);
-            foreach (array_keys($b['bindings']) as $path) {
-                $v = $props;
-                foreach (explode('.', (string) $path) as $k) {
-                    $v = is_array($v) ? ($v[$k] ?? []) : [];
-                }
-                $wpfb[(string) $b['id']][(string) $path] = $v;
-            }
-            // paths of the current record (richtext): the catalog's fixture record
-            $sample = static fn (array $slot): array => (array) ($slot['sample'] ?? []);
-            foreach ($catalog->currentValues((string) $b['block'], (string) $b['variant'], $sample) as $path => $v) {
-                $wpfb[(string) $b['id']][(string) $path] = $v;
-            }
-        }
         $ctxFile = $root.'/tests/fixtures/parity/'.($contexts[$arch] ?? 'latte/page').'.json';
         $ctx = json_decode((string) file_get_contents($ctxFile), true, 512, JSON_THROW_ON_ERROR)['context'];
-        $ctx['wpfb'] = $wpfb;
         $ctx['widgets']['sidebar'] = '';
         $own = $suites[$arch] ?? $suites['latte'];
         $roots = [$dir, ...array_map(static fn (string $d): string => $root.'/'.$d, $own)];
@@ -235,16 +215,12 @@ $blocksSuite = static function () use ($root, $out): int {
     $blocks = 0;
     // the paths of a current-scope record (richtext title, content…) get the catalog's fixture record
     $cat = new Catalog($catalog);
-    $sample = static fn (array $slot): array => (array) ($slot['sample'] ?? []);
     foreach ((array) $catalog['blocks'] as $b) {
         ++$blocks;
         foreach ((array) $b['variants'] as $v) {
             ++$n;
             $name = "blocks/{$b['id']}/{$v['id']}";
             $tpl = (string) $v['template'];
-            foreach ($cat->currentValues((string) $b['id'], (string) $v['id'], $sample) as $path => $value) {
-                Layout::set($v['props'], explode('.', $path), $value);
-            }
             try {
                 $a = $dom($latte->render('ui8kit', $tpl, (array) $v['props']));
                 // the twig catalog's own template of the same block/variant (one catalog per runtime)

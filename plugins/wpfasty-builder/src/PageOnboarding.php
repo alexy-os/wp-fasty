@@ -86,7 +86,7 @@ final class PageOnboarding
         $out = [];
         foreach (Cast::list($starter['layout']['blocks'] ?? []) as $b) {
             $b = Cast::map($b);
-            $out[] = ['id' => Cast::string($b['id'] ?? ''), 'block' => Cast::string($b['block'] ?? ''), 'variant' => Cast::string($b['variant'] ?? ''), 'props' => Cast::map($b['props'] ?? []), 'bindings' => Cast::map($b['bindings'] ?? [])];
+            $out[] = ['id' => Cast::string($b['id'] ?? ''), 'block' => Cast::string($b['block'] ?? ''), 'variant' => Cast::string($b['variant'] ?? ''), 'props' => Cast::map($b['props'] ?? [])];
         }
 
         return $out;

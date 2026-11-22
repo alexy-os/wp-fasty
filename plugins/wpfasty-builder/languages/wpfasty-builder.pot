@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-21T23:59:40+00:00\n"
+"POT-Creation-Date: 2026-11-22T00:12:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: wpfasty-builder\n"
@@ -122,19 +122,7 @@ msgstr ""
 msgid "Imported %d blocks."
 msgstr ""
 
-#: src/Compiler.php:170
-msgid "View project"
-msgstr ""
-
-#: src/Compiler.php:171
-msgid "View product"
-msgstr ""
-
-#: src/Compiler.php:172
-msgid "Read more"
-msgstr ""
-
-#: src/Front.php:93
+#: src/Front.php:92
 msgid "This preview link has expired."
 msgstr ""
 
@@ -227,28 +215,6 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: src/Pager.php:127
-msgid "Pages of posts"
-msgstr ""
-
-#. translators: pager summary line: {0} the current page, {1} the number of pages (keep the braces).
-#: src/Pager.php:129
-msgid "Page {0} of {1}"
-msgstr ""
-
-#: src/Pager.php:130
-msgid "Previous page"
-msgstr ""
-
-#: src/Pager.php:131
-msgid "Next page"
-msgstr ""
-
-#. translators: accessible name of a page number button: {0} is the page number (keep the braces).
-#: src/Pager.php:133
-msgid "Page {0}"
-msgstr ""
-
 #: src/Pages.php:26
 msgid "Enter a title for the page."
 msgstr ""
@@ -265,21 +231,21 @@ msgstr ""
 msgid "Out of stock"
 msgstr ""
 
-#: src/Rest.php:98
-#: src/Rest.php:178
+#: src/Rest.php:96
+#: src/Rest.php:175
 #: src/Store.php:106
 msgid "Unknown source."
 msgstr ""
 
-#: src/Rest.php:137
+#: src/Rest.php:134
 msgid "You cannot publish pages."
 msgstr ""
 
-#: src/Rest.php:208
+#: src/Rest.php:192
 msgid "Unknown block or variant."
 msgstr ""
 
-#: src/Rest.php:241
+#: src/Rest.php:225
 msgid "The request is too large."
 msgstr ""
 

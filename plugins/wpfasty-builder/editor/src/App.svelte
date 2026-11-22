@@ -19,7 +19,7 @@
   import { applyAndRefresh, previewSource, PreviewReload, requireDraftVersion } from "./preview";
   import FieldRenderer from "./fields/FieldRenderer.svelte";
   import type { FieldCtx } from "./fields/context";
-  import { bindableOf, blockConfig, NO_SETTINGS } from "./fields/schema";
+  import { blockConfig, NO_SETTINGS } from "./fields/schema";
   import Icon from "./Icon.svelte";
   import Overlay from "./Overlay.svelte";
   import Splitter from "./Splitter.svelte";
@@ -34,9 +34,8 @@
     PanelRightOpen, Redo2, RotateCcw, Smartphone, Trash2, Undo2,
   } from "./icons";
   import { api } from "./api";
-  import type { BlockSpec, Binding, Box, Catalog, Config, Item, Json, Obj, RecordField, Starter } from "./types";
-  import { clone, getPath, human, isObj, kindOf, merge, newId, setPath } from "./util";
-  import { defaultSource } from "./sources";
+  import type { BlockSpec, Box, Catalog, Config, Item, Json, Obj, RecordField, Starter } from "./types";
+  import { clone, getPath, human, isObj, merge, newId, setPath } from "./util";
   import { LinkStore, setLinks } from "./links.svelte";
   import { ThemeMode } from "./theme.svelte";
   import { PreviewAppearance, previewChoices, previewAppearanceLabel, type PreviewMode } from "./preview-appearance";
@@ -97,13 +96,7 @@
   const blockCfg = $derived(currentBlock ? blockConfig(currentBlock, records) : null);
   const fieldCtx = $derived<FieldCtx | null>(
     current && currentBlock
-      ? {
-          overridden: (path) => getPath(current.props, path) !== undefined,
-          bindable: bindableOf(currentBlock, currentVariant ?? undefined),
-          bindings: current.bindings,
-          dataSources: catalog?.dataSources ?? [],
-          setBinding,
-        }
+      ? { overridden: (path) => getPath(current.props, path) !== undefined }
       : null,
   );
   const frameSrc = $derived(previewSource(previewUrl, previewRevision, reloadKey, previewScheme));
@@ -139,7 +132,7 @@
       const meta = (layout.layout?.metadata ?? {}) as Obj;
       const saved = (getPath(meta, ["blocks", "value"]) ?? []) as unknown as Item[];
       if (!config.source && typeof getPath(meta, ["source", "value"]) === "string") source = getPath(meta, ["source", "value"]) as string;
-      store.load(saved.map((b) => ({ ...b, props: isObj(b.props) ? b.props : {}, bindings: isObj(b.bindings) ? b.bindings : {} })));
+      store.load(saved.map((b) => ({ id: b.id, block: b.block, variant: b.variant, props: isObj(b.props) ? b.props : {} })));
       draftVersion = Number(layout.layout?.version ?? 0);
       if (!layout.previewUrl) throw new Error(previewCopy.previewFailed);
       previewUrl = layout.previewUrl;
@@ -344,16 +337,9 @@
   }
 
   // ---- block operations -----------------------------------------------------------------------------------------
-  /** a new block; lists bind to WordPress data by default when a source fits the kind */
+  /** a new block: the variant's sample props, no overrides */
   function makeItem(block: string, variant: string, taken: Item[]): Item {
-    const item: Item = { id: newId(taken, block), block, variant, props: {}, bindings: {} };
-    const b = blocks.get(block);
-    for (const bind of b?.variants.find((v) => v.id === variant)?.bindings ?? []) {
-      const kind = b ? kindOf(b, bind.data) : "";
-      const src = defaultSource(catalog?.dataSources ?? [], kind);
-      if (src) item.bindings[bind.path.join(".")] = { source: src.id, limit: 6 };
-    }
-    return item;
+    return { id: newId(taken, block), block, variant, props: {} };
   }
 
   function add(block: string, variant: string, at = store.items.length) {
@@ -392,15 +378,6 @@
 
   function setProp(path: string[], value: Json | undefined) {
     update((it) => ({ ...it, props: setPath(it.props, path, value) }), `prop:${path.join(".")}`);
-  }
-
-  function setBinding(path: string, b: Binding | null) {
-    update((it) => {
-      const bindings = { ...it.bindings };
-      if (b) bindings[path] = b;
-      else delete bindings[path];
-      return { ...it, bindings };
-    });
   }
 
   function commitAdvanced(text: string) {
@@ -775,7 +752,7 @@
           </div>
           <div class="wpfb-field">
             <label for="wpfb-variant">Variant</label>
-            <select id="wpfb-variant" value={current.variant} onchange={(e) => { const v = e.currentTarget.value; update((it) => ({ ...it, variant: v, bindings: {} })); }}>
+            <select id="wpfb-variant" value={current.variant} onchange={(e) => { const v = e.currentTarget.value; update((it) => ({ ...it, variant: v })); }}>
               {#each currentBlock.variants as v (v.id)}<option value={v.id}>{human(v.id)}</option>{/each}
             </select>
           </div>

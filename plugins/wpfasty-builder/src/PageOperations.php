@@ -30,7 +30,7 @@ final class PageOperations
         }
         $defs = [];
         foreach ($catalog->forEditor()['blocks'] as $block) {
-            $defs[] = ['id' => $block['id'], 'title' => $block['title'] ?? '', 'docs' => $block['docs'] ?? '', 'props' => $block['props'] ?? [], 'defaults' => $block['defaults'] ?? [], 'data' => $block['data'] ?? [], 'variants' => array_map(static fn (mixed $variant): array => ['id' => Cast::path($variant, 'id'), 'template' => Cast::path($variant, 'template'), 'set' => Cast::path($variant, 'set') ?? []], Cast::list($block['variants'] ?? []))];
+            $defs[] = ['id' => $block['id'], 'title' => $block['title'] ?? '', 'docs' => $block['docs'] ?? '', 'props' => $block['props'] ?? [], 'defaults' => $block['defaults'] ?? [], 'variants' => array_map(static fn (mixed $variant): array => ['id' => Cast::path($variant, 'id'), 'template' => Cast::path($variant, 'template'), 'set' => Cast::path($variant, 'set') ?? []], Cast::list($block['variants'] ?? []))];
         }
         if ([] === $defs) {
             return new \WP_Error('wpfb_catalog_unavailable', 'Catalog definition unavailable.', ['status' => 503]);
@@ -58,7 +58,7 @@ final class PageOperations
         }
         $ids = [];
         foreach ($blocks as $block) {
-            if (!is_array($block) || !is_string($block['id'] ?? null) || !preg_match(Catalog::IDENT, $block['id']) || isset($ids[$block['id']]) || !is_array($block['props'] ?? null) || !is_array($block['bindings'] ?? null)) {
+            if (!is_array($block) || !is_string($block['id'] ?? null) || !preg_match(Catalog::IDENT, $block['id']) || isset($ids[$block['id']]) || !is_array($block['props'] ?? null)) {
                 return new \WP_Error('wpfb_layout_schema', 'Invalid structural block.', ['status' => 400]);
             }
             $ids[$block['id']] = true;
@@ -74,7 +74,7 @@ final class PageOperations
         }
         $base = $previous + ['id' => 'layout-'.$page, 'locale' => 'en', 'slug' => $post->post_name ?: 'page-'.$page, 'title' => $post->post_title, 'status' => 'draft', 'version' => 1, 'created_at' => gmdate('c'), 'updated_at' => gmdate('c')];
         $base['page_id'] = $page;
-        [, $issues] = Layout::normalize($layout, $source, $catalog, array_keys(DataSources::all()), $base);
+        [, $issues] = Layout::normalize($layout, $source, $catalog, $base);
         if ([] !== $issues) {
             return new \WP_Error('wpfb_layout_schema', 'Layout failed Builder schema validation.', ['status' => 400, 'issues' => $issues]);
         }

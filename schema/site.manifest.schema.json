@@ -393,28 +393,7 @@
         "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "Unique within the layout." },
         "block": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
         "variant": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*$" },
-        "props": { "type": "object", "description": "Block props; strings may carry link tokens such as {home}, {posts}, {archive:<type>}." },
-        "bindings": {
-          "description": "Prop name → live data source (filled at render time).",
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["source"],
-            "properties": {
-              "source": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "Builder data source id (posts, pages, projects, products, product_cats, …)." },
-              "limit": { "type": "integer", "minimum": 1, "maximum": 24, "default": 6 },
-              "term": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-              "sale": { "type": "boolean" },
-              "map": {
-                "description": "Manual field mapping: record field → Codex readPath (path[|pipe[:arg]]), for slots the source does not fill exactly or by an auto rule.",
-                "type": "object",
-                "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9_]{0,62}$" },
-                "additionalProperties": { "type": "string", "maxLength": 200, "pattern": "^[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)*(\\|[a-z][a-z-]*(:[A-Za-z0-9_-]+)?)?$" }
-              }
-            }
-          }
-        }
+        "props": { "type": "object", "description": "Block props; strings may carry link tokens such as {home}, {posts}, {archive:<type>}. No data bindings (ADR-007)." }
       }
     },
     "landing": {

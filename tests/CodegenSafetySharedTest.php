@@ -9,7 +9,6 @@ use CodegenX\Organisms\Twig\Runtime as TwigRuntime;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use WPFastyBuilder\Codex\ReadPath;
-use WPFastyBuilder\DataSources;
 use WPFastyBuilder\Safe;
 
 require_once __DIR__.'/fixtures/links-stubs.php';
@@ -31,7 +30,7 @@ spl_autoload_register(static function (string $class): void {
  * codegen-x 832d7f17), held to the codegen-x vectors: tests/fixtures/codex-shared/safety-vectors.json is
  * packages/compose-gen/runtimes/core/test/safety-vectors.json byte for byte (bun tools/codex/readpath-shared.ts --cgx,
  * CI with CODEGEN_X_TOKEN). What these tests prove is what wp-fasty no longer guards twice (raw-sinks: og_slot in
- * any template); the adapter (Safe::props, Layout::clean, DataSources::trusted) stays as the input guard.
+ * any template); the adapter (Safe::props, Layout::clean, Layout::untrust) stays as the input guard.
  */
 final class CodegenSafetySharedTest extends TestCase
 {

@@ -54,12 +54,11 @@ final class BuilderTest extends TestCase
         $this->assertSame(157, array_sum(array_map(static fn ($b): int => count($b['variants']), $data['blocks'])));
         $this->assertArrayNotHasKey('collections', $data);
         $this->assertNotNull(self::catalog()->variant('hero-simple', 'mediaEnd'));
-        $this->assertSame([], self::catalog()->bindable('hero-simple', 'mediaEnd'));
         foreach ($data['blocks'] as $b) {
             $this->assertSame(1, $b['contract']['version'], $b['id']);
-            $this->assertSame([], $b['data'], $b['id']);
+            $this->assertArrayNotHasKey('data', $b, $b['id']);
             foreach ($b['variants'] as $v) {
-                $this->assertSame([], $v['bindings'], $b['id'].'/'.$v['id']);
+                $this->assertArrayNotHasKey('bindings', $v, $b['id'].'/'.$v['id']);
                 foreach ($b['axes'] as $axis => $values) {
                     $this->assertContains($v['set'][$axis] ?? null, $values, $b['id'].'/'.$v['id'].' '.$axis);
                 }
@@ -92,9 +91,9 @@ final class BuilderTest extends TestCase
                 ['block' => 'missing', 'variant' => 'x'],
                 ['id' => 'news', 'block' => 'cta-simple', 'variant' => 'center', 'props' => ['title' => ['not' => 'text']]],
             ],
-        ], 'ui8kit', self::catalog(), ['posts'], self::base());
+        ], 'ui8kit', self::catalog(), self::base());
         $codes = array_column($issues, 'code');
-        $this->assertContains('layout.binding_path_unknown', $codes, 'Simple blocks declare no data bindings');
+        $this->assertContains('layout.binding_unsupported', $codes, 'Simple blocks declare no data bindings');
         $this->assertContains('layout.block_unknown', $codes);
         $this->assertContains('layout.prop_type', $codes);
         $this->assertSame([], array_filter($codes, static fn (string $c): bool => str_starts_with($c, 'core.')));
@@ -106,7 +105,7 @@ final class BuilderTest extends TestCase
         $this->assertArrayNotHasKey('level', $blocks[0]['props'], 'a setting of the wrong type is dropped');
         $this->assertSame('T', $blocks[1]['props']['stories'][0]['title']);
         $this->assertSame('#/', $blocks[1]['props']['stories'][0]['href']);
-        $this->assertSame([], $blocks[1]['bindings']);
+        $this->assertArrayNotHasKey('bindings', $blocks[1]);
         $this->assertSame('newsx', $blocks[2]['id'], 'block ids stay unique');
         $this->assertArrayNotHasKey('title', $blocks[2]['props']);
         $this->assertArrayNotHasKey('collection', $entry['metadata'], 'no template collections (ADR-007)');
@@ -124,7 +123,7 @@ final class BuilderTest extends TestCase
 
     public function testEntryCoreChecks(): void
     {
-        [$entry] = Layout::normalize(['blocks' => []], 'ui8kit', self::catalog(), [], self::base());
+        [$entry] = Layout::normalize(['blocks' => []], 'ui8kit', self::catalog(), self::base());
         $this->assertSame([], Layout::check($entry));
         $entry['updated_at'] = '2026-10-16T00:00:00Z';
         $entry['locale'] = 'EN_us';
@@ -134,26 +133,13 @@ final class BuilderTest extends TestCase
         $this->assertSame('layout', Layout::manifest()['resources'][0]['record']['id']);
     }
 
-    public function testReadLabelIsKindAware(): void
-    {
-        $props = ['labels' => ['read' => 'Read the post', 'by' => 'By {0}']];
-        $projects = ['props' => [], 'bindings' => ['posts' => ['source' => 'projects']]];
-        $this->assertSame('View project', Compiler::readLabel($props, $projects)['labels']['read']);
-        $this->assertSame('By {0}', Compiler::readLabel($props, $projects)['labels']['by']);
-        $posts = ['props' => [], 'bindings' => ['posts' => ['source' => 'posts']]];
-        $this->assertSame('Read the post', Compiler::readLabel($props, $posts)['labels']['read']);
-        $own = ['props' => ['labels' => ['read' => 'Case study']], 'bindings' => ['posts' => ['source' => 'projects']]];
-        $this->assertSame('Read the post', Compiler::readLabel($props, $own)['labels']['read']);
-    }
-
     public function testLiteralEscapesStrings(): void
     {
-        $this->assertSame("['a' => 'It\\'s {x}', 'n' => [1, 2.5, true, null]]", Compiler::literal(['a' => "It's {x}", 'n' => [1, 2.5, true, null]], [], []));
-        $this->assertSame("['p' => (\$x)]", Compiler::literal(['p' => [1]], [], ['p' => '$x']));
+        $this->assertSame("['a' => 'It\\'s {x}', 'n' => [1, 2.5, true, null]]", Compiler::literal(['a' => "It's {x}", 'n' => [1, 2.5, true, null]]));
         $latte = new Engine();
         $latte->setLoader(new StringLoader());
         $value = ['q' => "a'b\\c {\$d} \"e\" */ {* f *}", 'list' => ['x', ['y' => 2]]];
-        $out = $latte->renderToString('{=json_encode('.Compiler::literal($value, [], []).')|noescape}');
+        $out = $latte->renderToString('{=json_encode('.Compiler::literal($value).')|noescape}');
         $this->assertSame($value, json_decode($out, true));
     }
 
@@ -163,7 +149,7 @@ final class BuilderTest extends TestCase
             ['id' => 'intro', 'block' => 'intro-simple', 'variant' => 'start', 'props' => ['title' => "It's <Builder> \\ page"]],
             ['id' => 'faq', 'block' => 'faq-simple', 'variant' => 'list', 'props' => ['items' => [['id' => 'q1', 'title' => 'A "real" question', 'description' => 'Yes.']]]],
             ['id' => 'gone', 'block' => 'nope', 'variant' => 'x'],
-        ], ], 'ui8kit', self::catalog(), [], self::base());
+        ], ], 'ui8kit', self::catalog(), self::base());
         $latte = Compiler::compile($entry, self::catalog());
         $twig = Compiler::compile($entry, self::twigCatalog(), 'twig');
         // no cross-runtime compile: a Latte catalog gives a Twig page nothing to render, and vice versa
@@ -275,7 +261,7 @@ final class BuilderTest extends TestCase
     {
         $value = ['a' => [1, 2.5, true, null, "q'\\"], 'b' => [], 'c' => ['x' => ['y' => 'z']], 'd' => -3];
         $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader([
-            'x' => '{{ '.Compiler::literal($value, [], [], true).'|json_encode|raw }}',
+            'x' => '{{ '.Compiler::literal($value, true).'|json_encode|raw }}',
         ]));
         $this->assertSame($value, json_decode($env->render('x'), true));
     }

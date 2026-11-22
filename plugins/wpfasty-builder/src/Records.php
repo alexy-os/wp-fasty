@@ -18,7 +18,7 @@ use WPFastyBuilder\Codex\ReadPath;
  *
  * Data contract (platform-neutral, no WordPress field names): a product is read as a Codex entry
  * (`metadata.<field>.value`, money in integer minor units) and formatted with the readPath pipes: amount = the
- * effective price (sale price when set and lower, as DataSources), currency =
+ * effective price (sale price when set and lower), currency =
  * `metadata.currency.value|settings:currency`, in stock = `metadata.<stock>.value|in-stock` (no stock value =
  * unlimited = in stock).
  * Degrades safely: no wpfasty-types, no purchasable kind, unknown taxonomy or slug → "#" for links, "" for text.
@@ -70,11 +70,11 @@ final class Records
             return self::$site;
         }
         $out = ['product' => null, 'taxonomies' => [], 'currency' => '', 'locale' => 'en'];
-        $site = class_exists(\WPFastyTypes\Codex\Site::class) ? DataSources::site() : null;
+        $site = class_exists(\WPFastyTypes\Codex\Site::class) ? SiteModels::site() : null;
         if (null === $site) {
             return self::$site = $out;
         }
-        foreach (DataSources::models() as $m) {
+        foreach (SiteModels::models() as $m) {
             if ($m['term'] || !is_array($m['purchasable']) || !post_type_exists($m['post_type'])) {
                 continue;
             }

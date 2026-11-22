@@ -1259,7 +1259,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "mediaEnd",
@@ -1287,8 +1286,7 @@
             "align": "start",
             "media": "end",
             "ratio": "landscape"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaStart",
@@ -1316,8 +1314,7 @@
             "align": "start",
             "media": "start",
             "ratio": "landscape"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaTop",
@@ -1345,8 +1342,7 @@
             "align": "center",
             "media": "top",
             "ratio": "landscape"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaBottom",
@@ -1374,8 +1370,7 @@
             "align": "center",
             "media": "bottom",
             "ratio": "landscape"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaEndPortrait",
@@ -1403,8 +1398,7 @@
             "align": "start",
             "media": "end",
             "ratio": "portrait"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaStartPortrait",
@@ -1432,8 +1426,7 @@
             "align": "start",
             "media": "start",
             "ratio": "portrait"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -1538,7 +1531,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "center",
@@ -1561,8 +1553,7 @@
             "padding": "standard",
             "align": "center",
             "place": "middle"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "start",
@@ -1585,8 +1576,7 @@
             "padding": "standard",
             "align": "start",
             "place": "middle"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "bottomStart",
@@ -1609,8 +1599,7 @@
             "padding": "standard",
             "align": "start",
             "place": "bottom"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "bottomCenter",
@@ -1633,8 +1622,7 @@
             "padding": "standard",
             "align": "center",
             "place": "bottom"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -1747,7 +1735,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "photos3",
@@ -1788,8 +1775,7 @@
             "align": "start",
             "media": "end",
             "count": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "photos4",
@@ -1830,8 +1816,7 @@
             "align": "start",
             "media": "end",
             "count": "4"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "photos3Start",
@@ -1872,8 +1857,7 @@
             "align": "start",
             "media": "start",
             "count": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "photos4Start",
@@ -1914,8 +1898,7 @@
             "align": "start",
             "media": "start",
             "count": "4"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "photos3Bottom",
@@ -1956,8 +1939,7 @@
             "align": "center",
             "media": "bottom",
             "count": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "photos4Bottom",
@@ -1998,8 +1980,7 @@
             "align": "center",
             "media": "bottom",
             "count": "4"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -2114,7 +2095,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "mediaEnd",
@@ -2138,8 +2118,7 @@
             "level": 2,
             "padding": "standard",
             "media": "end"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaStart",
@@ -2163,8 +2142,7 @@
             "level": 2,
             "padding": "standard",
             "media": "start"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -2258,7 +2236,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cols3",
@@ -2300,8 +2277,7 @@
             "layout": "stack",
             "cols": "3",
             "marker": "top"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cols2",
@@ -2343,8 +2319,7 @@
             "layout": "stack",
             "cols": "2",
             "marker": "top"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cols4",
@@ -2386,8 +2361,7 @@
             "layout": "stack",
             "cols": "4",
             "marker": "top"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "summaryRow",
@@ -2429,8 +2403,7 @@
             "layout": "aside",
             "cols": "3",
             "marker": "top"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "summaryGrid",
@@ -2472,8 +2445,7 @@
             "layout": "aside",
             "cols": "2",
             "marker": "top"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "inlineGrid",
@@ -2515,8 +2487,7 @@
             "layout": "stack",
             "cols": "2",
             "marker": "inline"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "checklist",
@@ -2558,8 +2529,7 @@
             "layout": "aside",
             "cols": "2",
             "marker": "inline"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -2648,7 +2618,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cols4",
@@ -2694,8 +2663,7 @@
             "align": "center",
             "cols": "4",
             "surface": "plain"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cols3",
@@ -2741,8 +2709,7 @@
             "align": "center",
             "cols": "3",
             "surface": "plain"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cols2",
@@ -2788,8 +2755,7 @@
             "align": "center",
             "cols": "2",
             "surface": "plain"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards4",
@@ -2835,8 +2801,7 @@
             "align": "center",
             "cols": "4",
             "surface": "cards"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -2925,7 +2890,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cols3",
@@ -2968,8 +2932,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards2",
@@ -3012,8 +2975,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "portraitRows",
@@ -3056,8 +3018,7 @@
             "align": "center",
             "layout": "rows",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "centered",
@@ -3100,8 +3061,7 @@
             "align": "center",
             "layout": "centered",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -3178,7 +3138,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "row",
@@ -3212,8 +3171,7 @@
             "padding": "standard",
             "align": "center",
             "surface": "plain"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards",
@@ -3247,8 +3205,7 @@
             "padding": "standard",
             "align": "center",
             "surface": "cards"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -3344,7 +3301,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cols3",
@@ -3386,8 +3342,7 @@
             "layout": "grid",
             "cols": "3",
             "surface": "plain"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cols2",
@@ -3429,8 +3384,7 @@
             "layout": "grid",
             "cols": "2",
             "surface": "plain"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cols4",
@@ -3472,8 +3426,7 @@
             "layout": "grid",
             "cols": "4",
             "surface": "plain"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards3",
@@ -3515,8 +3468,7 @@
             "layout": "grid",
             "cols": "3",
             "surface": "cards"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "portraitRow",
@@ -3558,8 +3510,7 @@
             "layout": "aside",
             "cols": "3",
             "surface": "plain"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "bylineCols3",
@@ -3601,8 +3552,7 @@
             "layout": "byline",
             "cols": "3",
             "surface": "cards"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "sideList",
@@ -3644,8 +3594,7 @@
             "layout": "list",
             "cols": "2",
             "surface": "plain"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -3729,7 +3678,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "row4",
@@ -3769,8 +3717,7 @@
             "padding": "standard",
             "align": "center",
             "cols": "4"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "grid3",
@@ -3810,8 +3757,7 @@
             "padding": "standard",
             "align": "center",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "diptych",
@@ -3851,8 +3797,7 @@
             "padding": "standard",
             "align": "center",
             "cols": "2"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -3940,7 +3885,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cols3",
@@ -3983,8 +3927,7 @@
             "align": "center",
             "layout": "grid",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "duo",
@@ -4027,8 +3970,7 @@
             "align": "center",
             "layout": "grid",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "related3",
@@ -4071,8 +4013,7 @@
             "align": "center",
             "layout": "compact",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -4155,7 +4096,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "grid2",
@@ -4190,8 +4130,7 @@
             "padding": "standard",
             "align": "start",
             "columns": "two"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "list",
@@ -4226,8 +4165,7 @@
             "padding": "standard",
             "align": "start",
             "columns": "one"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -4315,7 +4253,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "row4",
@@ -4361,8 +4298,7 @@
             "align": "center",
             "layout": "row",
             "cols": "4"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "row3",
@@ -4408,8 +4344,7 @@
             "align": "center",
             "layout": "row",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "column",
@@ -4455,8 +4390,7 @@
             "align": "start",
             "layout": "column",
             "cols": "4"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -4558,7 +4492,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "mediaEnd",
@@ -4595,8 +4528,7 @@
             "padding": "standard",
             "align": "start",
             "media": "end"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaStart",
@@ -4633,8 +4565,7 @@
             "padding": "standard",
             "align": "start",
             "media": "start"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaTop",
@@ -4671,8 +4602,7 @@
             "padding": "standard",
             "align": "center",
             "media": "top"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -4744,7 +4674,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "inline",
@@ -4778,8 +4707,7 @@
             "actionLabel": "Sample actionLabel",
             "actionHref": "#",
             "layout": "inline"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "linksEnd",
@@ -4813,8 +4741,7 @@
             "actionLabel": "Sample actionLabel",
             "actionHref": "#",
             "layout": "end"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "centered",
@@ -4848,8 +4775,7 @@
             "actionLabel": "Sample actionLabel",
             "actionHref": "#",
             "layout": "centered"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -4923,7 +4849,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "brandLinks",
@@ -4957,8 +4882,7 @@
             "copyright": "Sample copyright",
             "padding": "compact",
             "layout": "row"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "linkGrid",
@@ -4992,8 +4916,7 @@
             "copyright": "Sample copyright",
             "padding": "compact",
             "layout": "grid"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "centered",
@@ -5027,8 +4950,7 @@
             "copyright": "Sample copyright",
             "padding": "compact",
             "layout": "centered"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -5126,7 +5048,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "center",
@@ -5146,8 +5067,7 @@
             "level": 2,
             "padding": "standard",
             "align": "center"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "start",
@@ -5167,8 +5087,7 @@
             "level": 2,
             "padding": "standard",
             "align": "start"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -5276,7 +5195,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "portraitEnd",
@@ -5314,8 +5232,7 @@
             "padding": "standard",
             "align": "start",
             "media": "end"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "portraitStart",
@@ -5353,8 +5270,7 @@
             "padding": "standard",
             "align": "start",
             "media": "start"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "portraitTop",
@@ -5392,8 +5308,7 @@
             "padding": "standard",
             "align": "center",
             "media": "top"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -5478,7 +5393,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "inline",
@@ -5498,8 +5412,7 @@
             "level": 2,
             "padding": "standard",
             "layout": "bar"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "centered",
@@ -5519,8 +5432,7 @@
             "level": 2,
             "padding": "standard",
             "layout": "centered"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -5606,7 +5518,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "center",
@@ -5624,8 +5535,7 @@
             "level": 2,
             "padding": "standard",
             "align": "center"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "start",
@@ -5643,8 +5553,7 @@
             "level": 2,
             "padding": "standard",
             "align": "start"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -5728,7 +5637,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "wide",
@@ -5747,8 +5655,7 @@
             "credit": "Sample credit",
             "padding": "standard",
             "layout": "wide"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "captionEnd",
@@ -5767,8 +5674,7 @@
             "credit": "Sample credit",
             "padding": "standard",
             "layout": "end"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "captionStart",
@@ -5787,8 +5693,7 @@
             "credit": "Sample credit",
             "padding": "standard",
             "layout": "start"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -5865,7 +5770,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "standalone",
@@ -5884,8 +5788,7 @@
             "sourceHref": "#",
             "padding": "standard",
             "layout": "rule"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "centered",
@@ -5904,8 +5807,7 @@
             "sourceHref": "#",
             "padding": "standard",
             "layout": "centered"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -5988,7 +5890,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "column",
@@ -6023,8 +5924,7 @@
             "padding": "standard",
             "align": "start",
             "layout": "column"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "twoColumns",
@@ -6059,8 +5959,7 @@
             "padding": "standard",
             "align": "center",
             "layout": "columns"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -6172,7 +6071,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "mediaTop",
@@ -6195,8 +6093,7 @@
             "padding": "standard",
             "align": "start",
             "media": "top"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaStart",
@@ -6219,8 +6116,7 @@
             "padding": "standard",
             "align": "start",
             "media": "start"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaEnd",
@@ -6243,8 +6139,7 @@
             "padding": "standard",
             "align": "start",
             "media": "end"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -6332,7 +6227,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cards3",
@@ -6375,8 +6269,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards2",
@@ -6419,8 +6312,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "rows",
@@ -6463,8 +6355,7 @@
             "align": "center",
             "layout": "rows",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -6547,7 +6438,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "illustratedRows",
@@ -6588,8 +6478,7 @@
             "padding": "standard",
             "align": "center",
             "layout": "rows"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "paired",
@@ -6630,8 +6519,7 @@
             "padding": "standard",
             "align": "center",
             "layout": "paired"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -6719,7 +6607,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cards3",
@@ -6768,8 +6655,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards2",
@@ -6818,8 +6704,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "rows",
@@ -6868,8 +6753,7 @@
             "align": "start",
             "layout": "rows",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -6957,7 +6841,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cards3",
@@ -7003,8 +6886,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards2",
@@ -7050,8 +6932,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "rows",
@@ -7097,8 +6978,7 @@
             "align": "start",
             "layout": "rows",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -7199,7 +7079,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "mediaStart",
@@ -7236,8 +7115,7 @@
             "padding": "standard",
             "align": "start",
             "media": "start"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaEnd",
@@ -7274,8 +7152,7 @@
             "padding": "standard",
             "align": "start",
             "media": "end"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -7358,7 +7235,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "duo",
@@ -7392,8 +7268,7 @@
             "padding": "standard",
             "align": "center",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "duoStart",
@@ -7427,8 +7302,7 @@
             "padding": "standard",
             "align": "start",
             "cols": "2"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -7516,7 +7390,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cards3",
@@ -7559,8 +7432,7 @@
             "align": "center",
             "layout": "grid",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "denseGrid",
@@ -7603,8 +7475,7 @@
             "align": "center",
             "layout": "grid",
             "cols": "4"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "rows",
@@ -7647,8 +7518,7 @@
             "align": "start",
             "layout": "rows",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -7768,7 +7638,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "mediaStart",
@@ -7805,8 +7674,7 @@
             "padding": "standard",
             "align": "start",
             "media": "start"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaEnd",
@@ -7843,8 +7711,7 @@
             "padding": "standard",
             "align": "start",
             "media": "end"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaTop",
@@ -7881,8 +7748,7 @@
             "padding": "standard",
             "align": "start",
             "media": "top"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -7966,7 +7832,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cards4",
@@ -8010,8 +7875,7 @@
             "padding": "standard",
             "align": "center",
             "cols": "4"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards2",
@@ -8055,8 +7919,7 @@
             "padding": "standard",
             "align": "center",
             "cols": "2"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -8139,7 +8002,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "keyValue",
@@ -8174,8 +8036,7 @@
             "padding": "standard",
             "align": "center",
             "layout": "rows"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "twoColumns",
@@ -8210,8 +8071,7 @@
             "padding": "standard",
             "align": "center",
             "layout": "columns"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -8306,7 +8166,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "twoProducts",
@@ -8346,8 +8205,7 @@
             "padding": "standard",
             "align": "center",
             "width": "wide"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "narrow",
@@ -8387,8 +8245,7 @@
             "padding": "standard",
             "align": "center",
             "width": "narrow"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -8471,7 +8328,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "moduleRows",
@@ -8512,8 +8368,7 @@
             "padding": "standard",
             "align": "start",
             "layout": "rows"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards",
@@ -8554,8 +8409,7 @@
             "padding": "standard",
             "align": "start",
             "layout": "cards"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -8638,7 +8492,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "row",
@@ -8673,8 +8526,7 @@
             "padding": "standard",
             "align": "center",
             "layout": "row"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "grid",
@@ -8709,8 +8561,7 @@
             "padding": "standard",
             "align": "center",
             "layout": "grid"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -8801,7 +8652,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "panel",
@@ -8822,8 +8672,7 @@
             "level": 2,
             "padding": "standard",
             "layout": "panel"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "centered",
@@ -8844,8 +8693,7 @@
             "level": 2,
             "padding": "standard",
             "layout": "centered"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -8933,7 +8781,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cols3",
@@ -8973,8 +8820,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "rows",
@@ -9014,8 +8860,7 @@
             "align": "start",
             "layout": "rows",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -9103,7 +8948,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cards3",
@@ -9149,8 +8993,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "rows",
@@ -9196,8 +9039,7 @@
             "align": "center",
             "layout": "rows",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -9286,7 +9128,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cards3",
@@ -9335,8 +9176,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards2",
@@ -9385,8 +9225,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards4",
@@ -9435,8 +9274,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "4"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "rows",
@@ -9485,8 +9323,7 @@
             "align": "start",
             "layout": "rows",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -9596,7 +9433,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "center",
@@ -9621,8 +9457,7 @@
             "align": "center",
             "layout": "stack",
             "surface": "muted"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "start",
@@ -9647,8 +9482,7 @@
             "align": "start",
             "layout": "stack",
             "surface": "muted"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "between",
@@ -9673,8 +9507,7 @@
             "align": "start",
             "layout": "between",
             "surface": "muted"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "centerOutline",
@@ -9699,8 +9532,7 @@
             "align": "center",
             "layout": "stack",
             "surface": "outline"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "betweenOutline",
@@ -9725,8 +9557,7 @@
             "align": "start",
             "layout": "between",
             "surface": "outline"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -9850,7 +9681,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "mediaEnd",
@@ -9875,8 +9705,7 @@
             "padding": "standard",
             "align": "start",
             "media": "end"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaStart",
@@ -9901,8 +9730,7 @@
             "padding": "standard",
             "align": "start",
             "media": "start"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "mediaTop",
@@ -9927,8 +9755,7 @@
             "padding": "standard",
             "align": "center",
             "media": "top"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -10040,7 +9867,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "columns",
@@ -10081,8 +9907,7 @@
             "align": "start",
             "layout": "columns",
             "surface": "plain"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "columnsCard",
@@ -10123,8 +9948,7 @@
             "align": "start",
             "layout": "columns",
             "surface": "card"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "stack",
@@ -10165,8 +9989,7 @@
             "align": "center",
             "layout": "stack",
             "surface": "plain"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "stackCard",
@@ -10207,8 +10030,7 @@
             "align": "center",
             "layout": "stack",
             "surface": "card"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -10296,7 +10118,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cards3",
@@ -10345,8 +10166,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards2",
@@ -10395,8 +10215,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "rows",
@@ -10445,8 +10264,7 @@
             "align": "start",
             "layout": "rows",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -10534,7 +10352,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "strip4",
@@ -10576,8 +10393,7 @@
             "align": "center",
             "layout": "strip",
             "cols": "4"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "strip3",
@@ -10619,8 +10435,7 @@
             "align": "center",
             "layout": "strip",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards4",
@@ -10662,8 +10477,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "4"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards3",
@@ -10705,8 +10519,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -10794,7 +10607,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cards3",
@@ -10837,8 +10649,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards2",
@@ -10881,8 +10692,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "rows",
@@ -10925,8 +10735,7 @@
             "align": "start",
             "layout": "rows",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -11014,7 +10823,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cards3",
@@ -11060,8 +10868,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards2",
@@ -11107,8 +10914,7 @@
             "align": "center",
             "layout": "cards",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "rows",
@@ -11154,8 +10960,7 @@
             "align": "start",
             "layout": "rows",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -11243,7 +11048,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "column",
@@ -11277,8 +11081,7 @@
             "align": "start",
             "layout": "column",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "grid2",
@@ -11312,8 +11115,7 @@
             "align": "start",
             "layout": "grid",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "grid4",
@@ -11347,8 +11149,7 @@
             "align": "center",
             "layout": "grid",
             "cols": "4"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -11436,7 +11237,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "grid3",
@@ -11470,8 +11270,7 @@
             "align": "center",
             "layout": "grid",
             "cols": "3"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "grid2",
@@ -11505,8 +11304,7 @@
             "align": "center",
             "layout": "grid",
             "cols": "2"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "pills",
@@ -11540,8 +11338,7 @@
             "align": "center",
             "layout": "pills",
             "cols": "3"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -11624,7 +11421,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "rows",
@@ -11665,8 +11461,7 @@
             "padding": "standard",
             "align": "center",
             "layout": "rows"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "cards",
@@ -11707,8 +11502,7 @@
             "padding": "standard",
             "align": "center",
             "layout": "cards"
-          },
-          "bindings": []
+          }
         }
       ]
     },
@@ -11791,7 +11585,6 @@
           "docs": "accessible name of the landmark of this component when the page shows it more than once (a variant); replaces the heading name of the root landmark, follows the name of a nested one"
         }
       ],
-      "data": [],
       "variants": [
         {
           "id": "cards3",
@@ -11835,8 +11628,7 @@
             "padding": "standard",
             "align": "center",
             "layout": "cards"
-          },
-          "bindings": []
+          }
         },
         {
           "id": "rows",
@@ -11880,8 +11672,7 @@
             "padding": "standard",
             "align": "start",
             "layout": "rows"
-          },
-          "bindings": []
+          }
         }
       ]
     }

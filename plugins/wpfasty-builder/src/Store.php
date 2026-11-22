@@ -108,7 +108,7 @@ final class Store
         $prev = self::get($id, true);
         $now = gmdate('Y-m-d\\TH:i:s\\Z');
         $post = get_post($id);
-        [$entry, $issues] = Layout::normalize($layout, $sourceId, $catalog, array_keys(DataSources::all()), [
+        [$entry, $issues] = Layout::normalize($layout, $sourceId, $catalog, [
             'id' => 'layout-'.$id,
             'locale' => self::locale(),
             'slug' => null !== $post && '' !== $post->post_name ? $post->post_name : 'page-'.$id,

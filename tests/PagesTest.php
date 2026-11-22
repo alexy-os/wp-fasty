@@ -44,7 +44,7 @@ final class PagesTest extends TestCase
             $catalog = new Catalog((new LocalSource('ui8kit', $this->plugin.'/sources/ui8kit/'.$runtime, $runtime))->catalog());
             foreach (Starters::shipped() as $s) {
                 $this->assertTrue(Starters::fits($s, $catalog, ['posts', 'products', 'projects']), $runtime.' '.$s['id']);
-                [$entry, $issues] = Layout::normalize($s['layout'], 'ui8kit', $catalog, ['posts', 'products', 'projects'], [
+                [$entry, $issues] = Layout::normalize($s['layout'], 'ui8kit', $catalog, [
                     'id' => 'layout-1', 'locale' => 'en', 'slug' => 'x', 'title' => 'X', 'status' => 'draft', 'version' => 1,
                     'created_at' => '2026-10-28T00:00:00Z', 'updated_at' => '2026-10-28T00:00:00Z', 'page_id' => 1,
                 ]);
@@ -61,15 +61,12 @@ final class PagesTest extends TestCase
         $this->assertArrayNotHasKey('layout', Starters::forEditor()[0]);
         $catalog = new Catalog((new LocalSource('ui8kit', $this->plugin.'/sources/ui8kit/latte', 'latte'))->catalog());
         [$shop] = Starters::shipped();
-        // Simple starters bind no data: they fit any site of the runtime; a starter that binds a missing source does not
-        $this->assertTrue(Starters::fits($shop, $catalog, []));
-        $bound = $shop;
-        $bound['layout']['blocks'][1]['bindings'] = ['items' => ['source' => 'products']];
-        $this->assertFalse(Starters::fits($bound, $catalog, ['posts', 'projects']));
+        // Simple starters bind no data (ADR-007): they fit any site of the runtime
+        $this->assertTrue(Starters::fits($shop, $catalog));
         $broken = $shop;
         $broken['layout']['blocks'][0]['variant'] = 'no-such-variant';
-        $this->assertFalse(Starters::fits($broken, $catalog, ['posts', 'products', 'projects']));
-        $this->assertFalse(Starters::fits($shop, null, ['posts', 'products', 'projects']), 'source not installed');
+        $this->assertFalse(Starters::fits($broken, $catalog));
+        $this->assertFalse(Starters::fits($shop, null), 'source not installed');
     }
 
     public function testRouteNeedsEditPages(): void

@@ -3,7 +3,7 @@
  * (`"split" | "stacked"`, `Stat[]`, `LinkActions`, `Record<string, string>`…) and the catalog `records` become
  * field definitions; the editor renders each with a component of fields/registry.ts. Pure functions (bun test).
  */
-import type { BlockSpec, Json, Obj, PropSpec, RecordField, Variant } from "../types";
+import type { BlockSpec, Json, Obj, PropSpec, RecordField } from "../types";
 
 /** a parsed TS type */
 export type TypeNode =
@@ -28,7 +28,6 @@ export type Field =
   | { type: "array"; label: string; arrayFields: Record<string, Field>; item: Field; defaultItem: () => Json; summary: (item: Json, i: number) => string; docs?: string }
   | { type: "object"; label: string; objectFields: Record<string, Field>; docs?: string }
   | { type: "map"; label: string; docs?: string }
-  | { type: "binding"; label: string; kind: string; field: Field; docs?: string }
   | { type: "json"; label: string; docs?: string };
 export type FieldType = Field["type"];
 
@@ -256,16 +255,10 @@ export const NO_SETTINGS: string[] = [];
 /** props the inspector never shows: the block's own id and extra classes */
 export const HIDDEN_PROPS = ["id", "className"];
 
-/** record types the WordPress adapter fills (the pager of a list: page, pages and its texts, PHP Pager); the
- *  inspector keeps only the listed fields of such a prop (the mode), like the paths of the current record */
-export const ADAPTER_RECORDS: Record<string, string[]> = { PostPager: ["mode"] };
-
 /**
- * The config of one block: a field per prop (bindable paths wrapped in binding fields; no field for a path the record
- * of the current route fills, e.g. the richtext title and content: they come from the page, nor for the adapter's
- * fields of a pager, ADAPTER_RECORDS), defaults per variant. The
- * sample of the fields is every variant's sample merged, and sample keys the props or records do not declare get a
- * field typed by their value, so a text a variant shows is never reachable only through "Advanced (JSON)".
+ * The config of one block: a field per prop, defaults per variant (no data bindings, ADR-007). The sample of the fields
+ * is every variant's sample merged, and sample keys the props or records do not declare get a field typed by their
+ * value, so a text a variant shows is never reachable only through "Advanced (JSON)".
  */
 export function blockConfig(block: BlockSpec, records: Record<string, RecordField[]>): BlockConfig {
   const first = block.variants[0]?.props ?? {};
@@ -281,38 +274,11 @@ export function blockConfig(block: BlockSpec, records: Record<string, RecordFiel
   const axes = block.contract ? Object.keys(block.axes) : [];
   for (const k of axes) delete fields[k];
   for (const [k, v] of Object.entries(sample)) if (!fields[k] && !HIDDEN_PROPS.includes(k) && !axes.includes(k)) fields[k] = fieldOf(k, typeOfSample(v), records, v);
-  for (const v of block.variants) for (const c of v.current ?? []) dropPath(fields, c.path);
-  for (const p of block.props) {
-    const keep = typeof p.type === "object" && p.type.record ? ADAPTER_RECORDS[p.type.record] : undefined;
-    const f = keep ? fields[p.name] : undefined;
-    if (!keep || !f) continue;
-    if (f.type !== "object") { delete fields[p.name]; continue; }
-    for (const k of Object.keys(f.objectFields)) if (!keep.includes(k)) delete f.objectFields[k];
-    if (!Object.keys(f.objectFields).length) delete fields[p.name];
-  }
   return {
     label: block.title,
     fields,
     defaultProps: (variant) => block.variants.find((v) => v.id === variant)?.props ?? first,
   };
-}
-
-/** removes the field of a path the current record fills (and an object field left without fields) */
-function dropPath(fields: Record<string, Field>, path: string[]): void {
-  const [head, ...rest] = path;
-  const f = head === undefined ? undefined : fields[head];
-  if (!f) return;
-  if (!rest.length) { delete fields[head!]; return; }
-  if (f.type !== "object") return;
-  dropPath(f.objectFields, rest);
-  if (!Object.keys(f.objectFields).length) delete fields[head!];
-}
-
-/** bindable paths of a variant → data kind ("posts" → "post", "filter.topics" → "topic") */
-export function bindableOf(block: BlockSpec, variant: Variant | undefined): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const b of variant?.bindings ?? []) out[b.path.join(".")] = block.data.find((d) => d.as === b.data)?.kind ?? "";
-  return out;
 }
 
 /** a Config for every block of a catalog (Puck's `Config.components`) */

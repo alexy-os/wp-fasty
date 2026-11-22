@@ -35,8 +35,6 @@ if (!isset($args['live'])) {
         }
     }
     $fail = 0;
-    $sample = static fn (array $slot): array => (array) ($slot['sample'] ?? []);
-    $pagerOf = static fn (int $pages): ?array => WPFastyBuilder\Pager::value(2, $pages);
     foreach (['latte', 'twig'] as $engine) {
         $src = new WPFastyBuilder\Source\LocalSource('ui8kit', $root.'/plugins/wpfasty-builder/sources/ui8kit/'.$engine, $engine);
         $catalog = new WPFastyBuilder\Catalog($src->catalog());
@@ -51,37 +49,24 @@ if (!isset($args['live'])) {
         $same = $bytes = 0;
         $t0 = microtime(true);
         foreach (array_chunk($all, WPFastyBuilder\Layout::MAX_BLOCKS) as $chunk) {
-            [$entry] = WPFastyBuilder\Layout::normalize(['blocks' => $chunk], 'ui8kit', $catalog, [], [
+            [$entry] = WPFastyBuilder\Layout::normalize(['blocks' => $chunk], 'ui8kit', $catalog, [
                 'id' => 'layout-check', 'slug' => 'check', 'title' => 'Check', 'version' => 1,
                 'created_at' => '2026-10-24T00:00:00Z', 'updated_at' => '2026-10-24T00:00:00Z',
             ]);
             $tpl = WPFastyBuilder\Compiler::compile($entry, $catalog, $engine);
-            // the current record (richtext): the catalog's fixture record, on the page (wpfb) and in the fragment
-            $wpfb = [];
-            foreach ($chunk as $b) {
-                foreach ($catalog->currentValues($b['block'], $b['variant'], $sample) as $path => $value) {
-                    $wpfb[$b['id']][$path] = $value;
-                }
-                // the pager the adapter fills (posts listPaged): page 2 of 5, on the page and in the fragment
-                $at = $catalog->pager($b['block'], $b['variant']);
-                if (null !== $at) {
-                    $props = (array) ($catalog->variant($b['block'], $b['variant'])['props'] ?? []);
-                    $wpfb[$b['id']][$at['path']] = WPFastyBuilder\Pager::active($props, $at['path']) ? $pagerOf(5) : null;
-                }
-            }
             if ('latte' === $engine) {
                 $l = new Latte\Engine();
                 $l->setLoader(new Latte\Loaders\StringLoader(['page' => $tpl]));
                 $l->addFunction('wpfb_block', $fn);
-                $page = $l->renderToString('page', ['wpfb' => $wpfb]);
+                $page = $l->renderToString('page');
             } else {
                 $env = new Twig\Environment(new Twig\Loader\ArrayLoader(['page' => $tpl]), ['autoescape' => 'html']);
                 $env->registerUndefinedFunctionCallback(static fn (string $n): Twig\TwigFunction|false => 'wpfb_block' === $n ? new Twig\TwigFunction($n, $fn, ['is_safe' => ['html']]) : false);
-                $page = $env->render('page', ['wpfb' => $wpfb]);
+                $page = $env->render('page');
             }
             $blocks = $html['blocks']('<!doctype html><html><body>'.$page.'</body></html>');
             foreach ($chunk as $b) {
-                $out = WPFastyBuilder\Fragment::render($catalog, 'ui8kit', $b, [], static fn (): array => [], static fn (string $t, array $p): string => $r->render('ui8kit', $t, $p), $sample, null, static fn (): ?array => $pagerOf(5));
+                $out = WPFastyBuilder\Fragment::render($catalog, 'ui8kit', $b, static fn (string $t, array $p): string => $r->render('ui8kit', $t, $p));
                 $frag = null === $out ? null : $html['inner']($out['html']);
                 if (null === $frag || ($blocks[$b['id']] ?? null) !== $frag || str_contains($frag, '<!-- wpfasty-builder')) {
                     ++$fail;

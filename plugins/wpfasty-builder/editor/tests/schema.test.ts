@@ -103,7 +103,7 @@ describe("sample keys without a declared type", () => {
   });
   test("a sample prop the block does not declare gets a field", () => {
     const block = { id: "x", title: "X", docs: "", group: "g", axes: {}, defaults: {}, props: [], data: [],
-      variants: [{ id: "a", set: {}, organism: "X", template: "blocks/x.latte", props: { nav: { links: [{ label: "A" }] }, badgeMark: "N" }, bindings: [] }] } as BlockSpec;
+      variants: [{ id: "a", set: {}, organism: "X", template: "blocks/x.latte", props: { nav: { links: [{ label: "A" }] }, badgeMark: "N" } }] } as BlockSpec;
     const cfg = blockConfig(block, records);
     expect(cfg.fields.nav?.type).toBe("object");
     expect((cfg.fields.nav as Extract<Field, { type: "object" }>).objectFields.links?.type).toBe("array");
@@ -124,7 +124,7 @@ describe("bundled catalogs (UI8Kit Simple, block-contract/v1)", () => {
       for (const b of blocks) for (const [k, f] of Object.entries(blockConfig(b, records).fields)) walk(`${b.id}.${k}`, f);
       expect(json).toEqual([]);
       expect(blocks.length).toBe(52);
-      expect(blocks.every((b) => b.contract?.version === 1 && b.data.length === 0)).toBe(true);
+      expect(blocks.every((b) => b.contract?.version === 1 && !("data" in b) && b.variants.every((v) => !("bindings" in v)))).toBe(true);
     });
     test(`${runtime}: content model fields and settings are fields; the axes are the variant's`, () => {
       const { blocks, records } = catalog(runtime);

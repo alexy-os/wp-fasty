@@ -1,4 +1,4 @@
-import type { BlockSpec, Item, Json, Obj } from "./types";
+import type { Item, Json, Obj } from "./types";
 
 export const isObj = (v: unknown): v is Obj => typeof v === "object" && v !== null && !Array.isArray(v);
 export const clone = <T>(v: T): T => JSON.parse(JSON.stringify(v));
@@ -27,10 +27,6 @@ export function getPath(o: Json | undefined, path: string[]): Json | undefined {
   let cur: Json | undefined = o;
   for (const k of path) cur = isObj(cur) ? cur[k] : undefined;
   return cur;
-}
-
-export function kindOf(block: BlockSpec, data: string): string {
-  return block.data.find((d) => d.as === data)?.kind ?? "";
 }
 
 let n = 0;

@@ -6,7 +6,7 @@ import type { BlockSpec } from "../src/types";
 
 const block = (id: string, title: string, group: string, axes: Record<string, string[]>, variants: [string, Record<string, string>, string?][]) => ({
   id, title, group, docs: "", axes, defaults: {}, props: [], data: [], contract: { item: id, version: 1, model: `${id}@1` },
-  variants: variants.map(([v, set, label]) => ({ id: v, set, ...(label ? { label } : {}), organism: "", template: "", props: {}, bindings: [] })),
+  variants: variants.map(([v, set, label]) => ({ id: v, set, ...(label ? { label } : {}), organism: "", template: "", props: {} })),
 }) as BlockSpec;
 const hero = block("hero", "Hero", "hero", { media: ["end", "start", "top"], ratio: ["landscape", "portrait"] }, [
   ["mediaEnd", { media: "end", ratio: "landscape" }, "Picture at the end"], ["mediaStart", { media: "start", ratio: "landscape" }],

@@ -22,10 +22,8 @@ use WP_REST_Request;
  *   POST /sources                       manage_options + unfiltered_html  import a remote source {id, url}
  *                                                    (Sources::canImport: a source is templates, i.e. markup)
  *   POST /render-block                  edit_pages (edit_page with `page`)  one block's HTML for the live preview:
- *        {source?, page?, id?, block, variant, props?, bindings?} → {id, html, issues}; same sanitizing, props and
- *        bound data as the page template (Fragment), rendered by the site engine's BlockRenderer.
- *
- * @phpstan-import-type Binding from DataSources
+ *        {source?, page?, id?, block, variant, props?} → {id, html, issues}; same sanitizing and props as the page
+ *        template (Fragment), rendered by the site engine's BlockRenderer.
  */
 final class Rest
 {
@@ -105,7 +103,6 @@ final class Rest
                 static fn ($s): array => ['id' => $s->id(), 'label' => $s->label()],
                 array_values(Sources::all()),
             ),
-            'dataSources' => array_values(DataSources::all($catalog)),
         ] + $editor);
     }
 
@@ -182,27 +179,14 @@ final class Rest
             'block' => $body['block'] ?? null,
             'variant' => $body['variant'] ?? null,
             'props' => is_array($body['props'] ?? null) ? $body['props'] : [],
-            'bindings' => is_array($body['bindings'] ?? null) ? $body['bindings'] : [],
+            'bindings' => is_array($body['bindings'] ?? null) ? $body['bindings'] : [], // reported and dropped
         ];
         Links::prime($input['props']);
-        // the current record (richtext): the page being edited (edit_page checked by the route), as on its front end
-        $page = self::page($r);
-        $post = $page > 0 ? get_post($page) : null;
         $out = Fragment::render(
             $catalog,
             $source,
             $input,
-            array_keys(DataSources::all()),
-            [DataSources::class, 'resolve'],
             static fn (string $template, array $props): string => Front::block($source, $template, $props),
-            static fn (array $slot): array => $post instanceof \WP_Post ? DataSources::current($slot, $post) : [],
-            // the pager: the editor previews the first page of the list (pages of its own query), none on one page
-            /**
-             * @param Binding                   $bind
-             * @param array<string, mixed>|null $slot
-             */
-            static fn (array $bind, string $kind, ?array $slot): array => DataSources::paged($bind, $kind, $slot, 1),
-            static fn (int $pages): ?array => Pager::value(1, $pages),
         );
         if (null === $out) {
             return new \WP_Error('wpfb_block', __('Unknown block or variant.', 'wpfasty-builder'), ['status' => 400]);

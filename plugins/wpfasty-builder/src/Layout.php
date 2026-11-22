@@ -8,12 +8,12 @@ namespace WPFastyBuilder;
  * A page layout as a @ui8kit/contract v0.4 entry of kind "layout":
  *   { id, locale, kind: "layout", status, visibility, slug, title, version, created_at, updated_at,
  *     metadata: { source: {value}, page_id: {value}, blocks: {value: [ {id, block, variant,
- * props, bindings} ]} } }
- * `props` are overrides of the variant sample props; `bindings` map a bindable path ("posts", "filter.topics")
- * to a data source {source, limit, term, sale}. normalize() sanitizes untrusted input and reports contract issues.
+ * props} ]} } }
+ * `props` are overrides of the variant sample props. There are no data bindings (ADR-007): a `bindings` member of
+ * the input is reported (layout.binding_unsupported) and dropped. normalize() sanitizes untrusted input and reports
+ * contract issues.
  *
- * @phpstan-type LayoutBlock array{id: string, block: string, variant: string, props: array<string, mixed>,
- *   bindings: array<string, mixed>}
+ * @phpstan-type LayoutBlock array{id: string, block: string, variant: string, props: array<string, mixed>}
  */
 final class Layout
 {
@@ -24,15 +24,11 @@ final class Layout
     private const LOCALE = '/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/';
     private const RFC3339 = '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/';
 
-    /** readPath grammar of a manual field mapping (record field → path[|pipe[:arg]]) */
-    public const MAP_PATH = '/^[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)*(\\|[a-z][a-z-]*(:[A-Za-z0-9_-]+)?)?$/';
-
     /**
-     * Sanitizes a layout payload against a catalog and the known data sources.
+     * Sanitizes a layout payload against a catalog.
      *
-     * @param array<string, mixed> $in          untrusted payload: {source, blocks:[...]}, or a full entry
-     * @param list<string>         $dataSources ids accepted in bindings
-     * @param array<string, mixed> $base        id, locale, slug, title, status, version, created_at, updated_at, page_id
+     * @param array<string, mixed> $in   untrusted payload: {source, blocks:[...]}, or a full entry
+     * @param array<string, mixed> $base id, locale, slug, title, status, version, created_at, updated_at, page_id
      *
      * @return array{0: array<string, mixed>, 1: list<array{code: string, path: string, message: string}>}
      */
@@ -40,7 +36,6 @@ final class Layout
         array $in,
         string $sourceId,
         Catalog $catalog,
-        array $dataSources,
         array $base,
     ): array {
         $issues = [];
@@ -65,68 +60,16 @@ final class Layout
                 $id .= 'x';
             }
             $seen[$id] = true;
-            $bindable = $catalog->bindable($block, $variant);
-            $bindings = [];
-            foreach ((array) ($b['bindings'] ?? []) as $path => $bind) {
-                $path = (string) $path;
-                if (!isset($bindable[$path])) {
-                    $issues[] = self::issue(
-                        'layout.binding_path_unknown',
-                        "$p.bindings.$path",
-                        "$path is not bindable in $block/$variant",
-                    );
-                    continue;
-                }
-                $bind = Cast::map($bind);
-                $src = is_string($bind['source'] ?? null) ? $bind['source'] : '';
-                if (!in_array($src, $dataSources, true)) {
-                    $issues[] = self::issue(
-                        'layout.binding_source_unknown',
-                        "$p.bindings.$path",
-                        "unknown data source \"$src\"",
-                    );
-                    continue;
-                }
-                $limit = max(1, min(24, Cast::int($bind['limit'] ?? 6)));
-                $one = ['source' => $src, 'limit' => $limit];
-                $term = is_string($bind['term'] ?? null) ? strtolower((string) preg_replace(
-                    '/[^a-z0-9_-]/i',
-                    '',
-                    $bind['term'],
-                )) : '';
-                if ('' !== $term) {
-                    $one['term'] = $term;
-                }
-                if (($bind['sale'] ?? false) === true) {
-                    $one['sale'] = true;
-                }
-                $map = self::map($bind['map'] ?? null);
-                if ([] !== $map) {
-                    $one['map'] = $map;
-                }
-                $bindings[$path] = $one;
+            if ([] !== (array) ($b['bindings'] ?? [])) {
+                $issues[] = self::issue('layout.binding_unsupported', "$p.bindings", 'blocks have no data bindings; dropped');
             }
             $sample = (array) ($catalog->variant($block, $variant)['props'] ?? []);
             $props = self::clean(is_array($b['props'] ?? null) ? $b['props'] : [], 0, $sample, $issues, "$p.props");
-            // bound paths and the paths the current record fills (richtext title, content…) are never layout props
-            foreach ([...array_keys($bindings), ...array_keys($catalog->current($block, $variant))] as $path) {
-                self::unset($props, explode('.', (string) $path));
-            }
-            // the pager group is the adapter's (page, pages, texts: Pager); a layout keeps only its mode
-            $pager = $catalog->pager($block, $variant);
-            if (null !== $pager) {
-                $mode = is_array($props[$pager['path']] ?? null) ? ($props[$pager['path']]['mode'] ?? null) : null;
-                unset($props[$pager['path']]);
-                if (in_array($mode, Pager::MODES, true)) {
-                    $props[$pager['path']] = ['mode' => $mode];
-                }
-            }
             $blocks[] = [
                 'id' => $id,
                 'block' => $block,
                 'variant' => $variant,
                 'props' => (object) $props,
-                'bindings' => (object) $bindings,
             ];
         }
         if (is_array($blocksIn) && count($blocksIn) > self::MAX_BLOCKS) {
@@ -244,7 +187,6 @@ final class Layout
                                 ['id' => 'block', 'label' => 'Block', 'type' => 'string', 'required' => true],
                                 ['id' => 'variant', 'label' => 'Variant', 'type' => 'string', 'required' => true],
                                 ['id' => 'props', 'label' => 'Props', 'type' => 'json'],
-                                ['id' => 'bindings', 'label' => 'Bindings', 'type' => 'json'],
                             ],
                         ]],
                     ],
@@ -270,7 +212,6 @@ final class Layout
                     'block' => Cast::string($b['block'] ?? ''),
                     'variant' => Cast::string($b['variant'] ?? ''),
                     'props' => Cast::map($b['props'] ?? []),
-                    'bindings' => Cast::map($b['bindings'] ?? []),
                 ];
             }
         }
@@ -324,8 +265,8 @@ final class Layout
 
     /**
      * Props without trusted markup: every TrustedHtml marker ({"__html": "…"}) becomes its plain text, which the
-     * templates escape. Applied to the props of a catalog variant and a layout; trusted markup reaches a block only
-     * through the current record of the data adapter (DataSources::current), filled after this.
+     * templates escape. Applied to the props of a catalog variant and a layout: no input carries trusted markup into a
+     * block (defence in depth next to clean(), which drops `__html` keys).
      *
      * @param array<array-key, mixed> $v
      *
@@ -351,44 +292,6 @@ final class Layout
         return '' === $h || $plain
             || (1 === preg_match(Links::TOKEN, $h, $m, PREG_OFFSET_CAPTURE) && 0 === $m[0][1]
                 && !in_array($m[1][0], ['open-now', 'price', 'stock'], true)); // text tokens are never a link
-    }
-
-    /**
-     * Manual mapping of a binding: {record field: readPath}, invalid pairs dropped.
-     *
-     * @return array<string, string>
-     */
-    public static function map(mixed $map): array
-    {
-        $out = [];
-        foreach (is_array($map) ? $map : [] as $field => $path) {
-            if (is_string($field) && 1 === preg_match('/^[A-Za-z][A-Za-z0-9_]{0,62}$/', $field)
-                && is_string($path) && strlen($path) <= 200 && 1 === preg_match(self::MAP_PATH, $path)) {
-                $out[$field] = $path;
-            }
-        }
-        ksort($out, SORT_STRING);
-
-        return $out;
-    }
-
-    /**
-     * @param array<array-key, mixed> $a
-     * @param list<string>            $path
-     *
-     * @param-out array<array-key, mixed> $a
-     */
-    private static function unset(array &$a, array $path): void
-    {
-        $k = array_shift($path);
-        if (null === $k) {
-            return;
-        }
-        if ([] === $path) {
-            unset($a[$k]);
-        } elseif (is_array($a[$k] ?? null)) {
-            self::unset($a[$k], $path);
-        }
     }
 
     /**

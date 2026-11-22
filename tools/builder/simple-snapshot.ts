@@ -131,10 +131,10 @@ function deriveCatalog(contracts: Schema, props: Schema, engine: Engine): Schema
     return {
       id: b.item, title: b.title, docs: b.description, group: b.category,
       contract: { item: c.item, version: c.version, block: c.block, organism: c.organism, model: c.model },
-      axes: c.axes, defaults: c.defaults, props: propSpecs, data: [],
+      axes: c.axes, defaults: c.defaults, props: propSpecs,
       variants: c.variants.map((v: Schema) => ({
         id: v.id, label: v.label, set: v.axes, organism: c.organism, template: `blocks/${b.item}${ENGINES[engine]}`,
-        props: { ...base, ...v.axes, ...(v.settings ?? {}) }, bindings: [],
+        props: { ...base, ...v.axes, ...(v.settings ?? {}) },
       })),
     };
   });
